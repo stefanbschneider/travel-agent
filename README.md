@@ -1,9 +1,30 @@
+**Important links:**
+
+- Competition website: https://chinatravel-competition.github.io/IJCAI2026/
+- ChinaTravel GitHub repo: https://github.com/LAMDA-NeSy/ChinaTravel
+
+**Important commands:**
+
+Run the agent on the competition queries to create itineraries at `results/TPCAgent_TPCLLM_en`:
+```
+python run_tpc.py --splits tpc_phase1 --agent TPCAgent --llm TPCLLM --lang en
+```
+
+Evaluate the agent on the competition split:
+```
+python eval_tpc.py --splits tpc_phase1 --method TPCAgent_TPCLLM --lang en
+```
+
 **Notes:**
+
+Fixed setup:
 
 - I downloaded and added the environment datasets in English and Chinese from Google Drive and put them into the enviornment folder
 - I downloaded and put the competition queries into the correct data/en/ folder
 - I added the competition eval split to `chinatravel/evaluation/default_splits/tpc_phase1.txt`
 - I removed all these files from gitignore, so that I can easily add and commit them
+
+
 
 
 <center>
