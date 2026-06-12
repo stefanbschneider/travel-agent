@@ -2,8 +2,7 @@ import sys
 import os
 import time
 import math
-
-from chinatravel.environment.world_env import WorldEnv
+import json
 
 sys.path.append("./../../../")
 project_root_path = os.path.dirname(
@@ -14,7 +13,7 @@ if project_root_path not in sys.path:
     sys.path.insert(0, project_root_path)
 
 
-from agent.base import AbstractAgent, BaseAgent
+from agent.base import BaseAgent
 
 
 def add_minutes(time_str, minutes):
@@ -53,13 +52,73 @@ def is_open_during(attr, start_time, end_time):
 class TPCAgent(BaseAgent):
     def __init__(self, **kwargs):
         super().__init__(name="TPC", **kwargs)
+        self.parsed_constraints = self._load_parsed_constraints()
+        self._transport_constraints = {}
+
+    def _load_parsed_constraints(self):
+        constraints_path = os.path.join(project_root_path, "data", "en", "parsed_constraints.json")
+        try:
+            with open(constraints_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, dict):
+                return data
+        except Exception:
+            pass
+        return {}
+
+    def _norm_text(self, value):
+        return str(value).strip().lower() if value is not None else ""
+
+    def _match_constraint_text(self, candidate, constraint):
+        c = self._norm_text(candidate)
+        q = self._norm_text(constraint)
+        if not c or not q:
+            return False
+        return c == q or q in c or c in q
+
+    def _collect_constraints(self, query):
+        uid = str(query.get("uid", ""))
+        raw = self.parsed_constraints.get(uid, {})
+        if not isinstance(raw, dict):
+            return {}
+
+        constraints = {
+            k: v
+            for k, v in raw.items()
+            if k not in ["groups", "disjunctive"]
+        }
+        groups = raw.get("groups", [])
+        if raw.get("disjunctive") and isinstance(groups, list) and len(groups) > 0:
+            # For OR constraints, choose the first branch as primary guidance.
+            # We keep non-disjunctive constraints active and avoid enforcing all groups.
+            first_group = groups[0]
+            if isinstance(first_group, dict):
+                constraints.update(first_group)
+        return constraints
+
+    def _room_type_to_numbed(self, room_type):
+        if room_type is None:
+            return None
+        if isinstance(room_type, (int, float)):
+            try:
+                iv = int(room_type)
+                if iv in [1, 2]:
+                    return iv
+            except Exception:
+                return None
+        t = self._norm_text(room_type)
+        if any(k in t for k in ["single", "1", "one"]):
+            return 1
+        if any(k in t for k in ["double", "twin", "2", "two"]):
+            return 2
+        return None
 
     def run(self, query, prob_idx=None, oralce_translation=False):
         self.reset_clock()
 
         try:
             plan = self._build_plan(query)
-        except Exception as e:
+        except Exception:
             import traceback
             traceback.print_exc()
             plan = {
@@ -78,40 +137,163 @@ class TPCAgent(BaseAgent):
         start_city = query["start_city"]
         target_city = query["target_city"]
         days = query["days"]
+        constraints = self._collect_constraints(query)
+        self._transport_constraints = {
+            "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
+            "conditional_transport": constraints.get("conditional_transport", None),
+        }
 
-        env: WorldEnv = self.env
+        env = self.env
+        if env is None:
+            return {
+                "people_number": people,
+                "start_city": start_city,
+                "target_city": target_city,
+                "itinerary": [],
+            }
 
         # --- Get intercity transport (outbound + return) ---
-        outbound = self._get_intercity(env, start_city, target_city, "07:00")
-        return_transport = self._get_intercity(env, target_city, start_city, "17:00")
+        intercity_mode = constraints.get("intercity_mode", None)
+        outbound_pref = None
+        return_pref = None
+        if isinstance(intercity_mode, dict):
+            outbound_pref = intercity_mode.get("outbound", None)
+            return_pref = intercity_mode.get("return", None)
+        elif isinstance(intercity_mode, str):
+            outbound_pref = intercity_mode
+            return_pref = intercity_mode
+
+        outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref)
+        return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref)
         # If no return at 17:00, try earlier
         if return_transport is None:
-            return_transport = self._get_intercity(env, target_city, start_city, "14:00")
+            return_transport = self._get_intercity(env, target_city, start_city, "14:00", return_pref)
         if return_transport is None:
-            return_transport = self._get_intercity(env, target_city, start_city, "00:00")
+            return_transport = self._get_intercity(env, target_city, start_city, "00:00", return_pref)
 
         # --- Get one accommodation near the arrival/departure point ---
         arrival_pos = outbound["To"] if outbound else None
+        required_hotels = constraints.get("required_hotels", []) or []
+        excluded_hotels = constraints.get("excluded_hotels", []) or []
+        room_numbed = self._room_type_to_numbed(constraints.get("room_type", None))
+        hotel_type = constraints.get("hotel_type", None)
+        hotel_amenity = constraints.get("hotel_amenity", None)
+        hotel_nearby = constraints.get("hotel_nearby", None)
+
+        accom_df = env.accommodations.select(target_city, "name", lambda x: True)
+
+        def _hotel_ok(h):
+            name = str(h["name"])
+            if required_hotels and not any(self._match_constraint_text(name, n) for n in required_hotels):
+                return False
+            if excluded_hotels and any(self._match_constraint_text(name, n) for n in excluded_hotels):
+                return False
+            if room_numbed is not None:
+                try:
+                    if int(h["numbed"]) != room_numbed:
+                        return False
+                except Exception:
+                    return False
+            if hotel_type:
+                if not self._match_constraint_text(h.get("featurehoteltype", ""), hotel_type):
+                    return False
+            if hotel_amenity:
+                if not self._match_constraint_text(h.get("featurehoteltype", ""), hotel_amenity):
+                    return False
+            return True
+
         hotel = None
+        nearby_df = None
+        if isinstance(hotel_nearby, dict):
+            ref = hotel_nearby.get("reference", None)
+            dist_km = hotel_nearby.get("distance_km", 5)
+            if ref:
+                try:
+                    nearby_df = env.accommodations.nearby(target_city, ref, topk=20, dist=dist_km)
+                except Exception:
+                    nearby_df = None
+
+        if nearby_df is not None and not isinstance(nearby_df, str) and len(nearby_df) > 0:
+            for i in range(len(nearby_df)):
+                h = nearby_df.iloc[i]
+                if _hotel_ok(h):
+                    hotel = h
+                    break
+
         if arrival_pos:
             try:
                 nearby_hotels = env.accommodations.nearby(target_city, arrival_pos, topk=5, dist=20)
                 if not isinstance(nearby_hotels, str) and len(nearby_hotels) > 0:
-                    hotel = nearby_hotels.iloc[0]
+                    for i in range(len(nearby_hotels)):
+                        h = nearby_hotels.iloc[i]
+                        if _hotel_ok(h):
+                            hotel = h
+                            break
             except Exception:
                 pass
         if hotel is None:
-            accom_df = env.accommodations.select(target_city, "name", lambda x: True)
+            for i in range(len(accom_df)):
+                h = accom_df.iloc[i]
+                if _hotel_ok(h):
+                    hotel = h
+                    break
+        if hotel is None:
             hotel = accom_df.iloc[0]
         hotel_name = str(hotel["name"])
         rooms_needed = math.ceil(people / int(hotel["numbed"]))
 
         # --- Get attractions that are open during reasonable visit hours ---
+        required_attractions = constraints.get("required_attractions", []) or []
+        required_attraction_types = constraints.get("required_attraction_types", []) or []
+        excluded_attractions = constraints.get("excluded_attractions", []) or []
+        excluded_attraction_types = constraints.get("excluded_attraction_types", []) or []
+        free_attractions_only = bool(constraints.get("free_attractions_only", False))
+
         attr_df = env.attractions.select(target_city, "name", lambda x: True)
-        # Filter to attractions open during daytime visit windows (09:00-17:00)
-        good_attrs = []
+
+        prioritized_required = []
+        optional_pool = []
+        seen_attr = set()
         for i in range(len(attr_df)):
             a = attr_df.iloc[i]
+            name = str(a["name"])
+            attr_type = str(a.get("type", ""))
+
+            if excluded_attractions and any(self._match_constraint_text(name, ex) for ex in excluded_attractions):
+                continue
+            if excluded_attraction_types and any(self._match_constraint_text(attr_type, ex) for ex in excluded_attraction_types):
+                continue
+            if free_attractions_only:
+                try:
+                    if float(a["price"]) > 0:
+                        continue
+                except Exception:
+                    continue
+
+            required_by_name = required_attractions and any(
+                self._match_constraint_text(name, req)
+                for req in required_attractions
+            )
+            required_by_type = required_attraction_types and any(
+                self._match_constraint_text(attr_type, req_t)
+                for req_t in required_attraction_types
+            )
+
+            name_key = self._norm_text(name)
+            if required_by_name or required_by_type:
+                if name_key not in seen_attr:
+                    prioritized_required.append(a)
+                    seen_attr.add(name_key)
+            else:
+                if name_key not in seen_attr:
+                    optional_pool.append(a)
+                    seen_attr.add(name_key)
+
+        candidate_attrs = prioritized_required + optional_pool
+
+        # Filter to attractions open during daytime visit windows (09:00-17:00)
+        good_attrs = []
+        for a in candidate_attrs:
             opentime = str(a["opentime"])
             endtime = str(a["endtime"])
             ot_min = time_to_minutes(opentime)
@@ -127,15 +309,50 @@ class TPCAgent(BaseAgent):
                 break
         # Fallback: just take the first ones
         if len(good_attrs) < days * 2:
-            good_attrs = [attr_df.iloc[i] for i in range(min(len(attr_df), days * 4))]
+            base_pool = candidate_attrs if len(candidate_attrs) > 0 else [attr_df.iloc[i] for i in range(len(attr_df))]
+            good_attrs = list(base_pool[: min(len(base_pool), days * 4)])
 
         # --- Get restaurants open during meal times ---
+        required_restaurants = constraints.get("required_restaurants", []) or []
+        excluded_restaurants = constraints.get("excluded_restaurants", []) or []
+        cuisine_preference = constraints.get("cuisine_preference", None)
+        excluded_cuisine_types = constraints.get("excluded_cuisine_types", []) or []
+
         rest_df = env.restaurants.select(target_city, "name", lambda x: True)
         lunch_restaurants = []
         dinner_restaurants = []
-        used_rest_names = set()
+        required_rest_pool = []
+        optional_rest_pool = []
+        seen_rest = set()
         for i in range(len(rest_df)):
             r = rest_df.iloc[i]
+            name = str(r["name"])
+            cuisine = str(r.get("cuisine", ""))
+
+            if excluded_restaurants and any(self._match_constraint_text(name, ex) for ex in excluded_restaurants):
+                continue
+            if excluded_cuisine_types and any(self._match_constraint_text(cuisine, ex) for ex in excluded_cuisine_types):
+                continue
+
+            is_required = required_restaurants and any(
+                self._match_constraint_text(name, req)
+                for req in required_restaurants
+            )
+            cuisine_match = cuisine_preference and self._match_constraint_text(cuisine, cuisine_preference)
+
+            key = self._norm_text(name)
+            if key in seen_rest:
+                continue
+            seen_rest.add(key)
+            if is_required or cuisine_match:
+                required_rest_pool.append(r)
+            else:
+                optional_rest_pool.append(r)
+
+        candidate_restaurants = required_rest_pool + optional_rest_pool
+
+        used_rest_names = set()
+        for r in candidate_restaurants:
             name = str(r["name"])
             opentime = str(r["opentime"])
             endtime = str(r["endtime"])
@@ -187,7 +404,7 @@ class TPCAgent(BaseAgent):
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
-                        lunch_start = max(travel_end, "11:00")
+                        lunch_start = max(travel_end or current_time, "11:00")
                     else:
                         transports = []
                     lunch_end = add_minutes(lunch_start, 60)
@@ -227,7 +444,7 @@ class TPCAgent(BaseAgent):
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
-                        dinner_start = max(travel_end, "17:00")
+                        dinner_start = max(travel_end or current_time, "17:00")
                     else:
                         transports = []
                         dinner_start = max(current_time, "17:00")
@@ -260,7 +477,7 @@ class TPCAgent(BaseAgent):
                         hotel_to_station_end = "08:30"
                     # If we can't make it to the original return transport, find a later one
                     if time_to_minutes(hotel_to_station_end) > time_to_minutes(return_transport["BeginTime"]):
-                        later = self._get_intercity(env, target_city, start_city, hotel_to_station_end)
+                        later = self._get_intercity(env, target_city, start_city, hotel_to_station_end, return_pref)
                         if later is not None:
                             return_transport = later
                             departure_pos = later["From"]
@@ -280,6 +497,7 @@ class TPCAgent(BaseAgent):
                 # Morning attraction if time before return
                 if attr_idx < len(good_attrs) and return_transport is not None:
                     departure_time = return_transport["BeginTime"]
+                    departure_pos = return_transport["From"]
                     # Need time: transport to attr + 90min + transport to departure point
                     if time_to_minutes(departure_time) >= time_to_minutes(current_time) + 150:
                         est_start = add_minutes(current_time, 20)
@@ -317,7 +535,7 @@ class TPCAgent(BaseAgent):
                             transports, travel_end = self._get_transport(
                                 env, target_city, current_pos, rest_name, current_time, people)
                             if transports is not None:
-                                lunch_start = max(travel_end, "11:00")
+                                lunch_start = max(travel_end or current_time, "11:00")
                             else:
                                 transports = []
                                 lunch_start = max(current_time, "11:00")
@@ -344,7 +562,7 @@ class TPCAgent(BaseAgent):
                         travel_end = current_time
                     # If transport to station arrives after departure, find later transport
                     if time_to_minutes(travel_end) > time_to_minutes(return_transport["BeginTime"]):
-                        later = self._get_intercity(env, target_city, start_city, travel_end)
+                        later = self._get_intercity(env, target_city, start_city, travel_end, return_pref)
                         if later is not None:
                             return_transport = later
                             if later["From"] != departure_pos:
@@ -392,7 +610,7 @@ class TPCAgent(BaseAgent):
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
-                        lunch_start = max(travel_end, "11:00")
+                        lunch_start = max(travel_end or current_time, "11:00")
                     else:
                         transports = []
                         lunch_start = max(current_time, "11:00")
@@ -432,7 +650,7 @@ class TPCAgent(BaseAgent):
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
-                        dinner_start = max(travel_end, "17:00")
+                        dinner_start = max(travel_end or current_time, "17:00")
                     else:
                         transports = []
                         dinner_start = max(current_time, "17:00")
@@ -463,9 +681,16 @@ class TPCAgent(BaseAgent):
             "itinerary": itinerary,
         }
 
-    def _get_intercity(self, env, from_city, to_city, earliest):
+    def _get_intercity(self, env, from_city, to_city, earliest, preferred_mode=None):
         """Get first available flight, falling back to train."""
-        for transport_type in ["airplane", "train"]:
+        preferred = self._norm_text(preferred_mode)
+        transport_order = ["airplane", "train"]
+        if preferred in ["airplane", "flight", "plane"]:
+            transport_order = ["airplane", "train"]
+        elif preferred in ["train", "rail"]:
+            transport_order = ["train", "airplane"]
+
+        for transport_type in transport_order:
             try:
                 df = env.intercitytransport.select(from_city, to_city, transport_type, earliest)
                 if df is not None and len(df) > 0:
@@ -489,33 +714,50 @@ class TPCAgent(BaseAgent):
         """Get taxi transport between two positions. Returns (transports_list, arrival_time) or (None, None)."""
         if from_pos == to_pos:
             return [], start_time
+        excluded = set(
+            self._norm_text(m)
+            for m in (self._transport_constraints.get("excluded_inner_transport", []) or [])
+        )
+        conditional = self._transport_constraints.get("conditional_transport", None)
+        mode_order = ["taxi", "metro", "walk"]
+
+        if isinstance(conditional, dict):
+            preferred = self._norm_text(conditional.get("mode", ""))
+            if preferred in ["taxi", "metro", "walk"]:
+                mode_order = [preferred] + [m for m in mode_order if m != preferred]
+
+        mode_order = [m for m in mode_order if self._norm_text(m) not in excluded]
+        if len(mode_order) == 0:
+            mode_order = ["taxi"]
+
         try:
-            result = env.transportation.goto(city, from_pos, to_pos, start_time, "taxi")
-            if isinstance(result, list) and len(result) > 0:
-                transports = []
-                for seg in result:
-                    t = {
-                        "start": seg["start"],
-                        "end": seg["end"],
-                        "mode": seg["mode"],
-                        "start_time": seg["start_time"],
-                        "end_time": seg["end_time"],
-                        "distance": seg["distance"],
-                    }
-                    if seg["mode"] == "taxi":
-                        t["price"] = seg["cost"]
-                        t["cost"] = seg["cost"] * 1  # 1 car
-                        t["cars"] = 1
-                    elif seg["mode"] == "metro":
-                        t["price"] = seg["cost"]
-                        t["cost"] = seg["cost"] * people
-                        t["tickets"] = people
-                    else:  # walk
-                        t["price"] = 0
-                        t["cost"] = 0
-                    transports.append(t)
-                arrival_time = transports[-1]["end_time"]
-                return transports, arrival_time
+            for mode in mode_order:
+                result = env.transportation.goto(city, from_pos, to_pos, start_time, mode)
+                if isinstance(result, list) and len(result) > 0:
+                    transports = []
+                    for seg in result:
+                        t = {
+                            "start": seg["start"],
+                            "end": seg["end"],
+                            "mode": seg["mode"],
+                            "start_time": seg["start_time"],
+                            "end_time": seg["end_time"],
+                            "distance": seg["distance"],
+                        }
+                        if seg["mode"] == "taxi":
+                            t["price"] = seg["cost"]
+                            t["cost"] = seg["cost"] * 1  # 1 car
+                            t["cars"] = 1
+                        elif seg["mode"] == "metro":
+                            t["price"] = seg["cost"]
+                            t["cost"] = seg["cost"] * people
+                            t["tickets"] = people
+                        else:  # walk
+                            t["price"] = 0
+                            t["cost"] = 0
+                        transports.append(t)
+                    arrival_time = transports[-1]["end_time"]
+                    return transports, arrival_time
         except Exception:
             pass
         return None, None
