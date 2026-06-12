@@ -168,3 +168,125 @@ python eval_tpc.py --splits tpc_phase1 --method TPCAgent_TPCLLM_en
 - ~380 accommodations
 - 720 flights total (all city pairs)
 - 90 train route files
+
+## Phase 2 Status (2026-06-12)
+
+Full evaluation after integrating parsed NL constraints:
+
+- Overall: 73.39
+- FPR: 58.00
+- C-LPR: 84.81
+- EPR-micro: 99.96
+- EPR-macro: 99.10
+- DAV: 29.26
+- ATT: 81.65
+- DDR: 69.07
+
+Interpretation:
+
+- Environment validity is already near ceiling (EPR).
+- The main remaining score gap is hard-logic satisfaction (FPR/C-LPR), not output schema or commonsense structure.
+
+## Failure Analysis Snapshot
+
+Constraint-category pass rates (from hard logic diagnostics):
+
+- Budget constraints: 53.4% (largest gap)
+- Restaurant requirements: 69.2%
+- Attraction requirements: 74.6%
+- Intercity mode: 87.7%
+- Hotel requirements: 88.3%
+
+High-failure parsed keys (support >= 20):
+
+- `timing_constraints`: 67.1% fail ratio
+- `hotel_nearby`: 64.1% fail ratio
+- `required_attraction_types`: 58.8% fail ratio
+- `budgets`: 50.8% fail ratio
+- `required_attractions`: 47.7% fail ratio
+
+## Continuation Plan (Next Session)
+
+### Priority 1 — Budget-Aware Construction (highest ROI)
+
+Goal: lift budget constraint pass rate from ~53% to >=75%.
+
+Tasks:
+
+1. Add per-plan budget tracker during itinerary build:
+    - `sightseeing`
+    - `dining`
+    - `accommodation`
+    - `intercity`
+    - `innercity`
+    - `total`
+2. Before appending any activity, compute projected bucket totals.
+3. If over budget, apply deterministic fallback sequence:
+    - attractions: free/cheaper alternative
+    - restaurants: cheaper candidate
+    - hotels: cheaper valid candidate
+    - intercity: train vs airplane fallback (if allowed)
+    - inner-city: walk/metro fallback (if allowed)
+4. Keep all values from env APIs; never estimate prices.
+
+### Priority 2 — Hard Commitment for Required Entities
+
+Goal: improve required-attraction/restaurant/hotel satisfaction.
+
+Tasks:
+
+1. Build explicit "must-satisfy" sets from parsed constraints:
+    - required attractions (name)
+    - required attraction types
+    - required restaurants
+    - required hotels
+2. Reserve schedule slots for these before filling optional POIs.
+3. Track completion flags and prevent plan finalization until all required items are either satisfied or proven infeasible.
+4. For infeasible cases, use best-effort nearest/partial text matching fallback and continue.
+
+### Priority 3 — Timing and Proximity Handlers
+
+Goal: reduce failures on `timing_constraints` and `hotel_nearby`.
+
+Tasks:
+
+1. Implement per-constraint timing guards (`depart_no_earlier`, etc.) in activity placement.
+2. For `hotel_nearby`, select hotel from `accommodations_nearby(reference, distance_km)` first, then apply room/budget filters.
+3. Re-check feasible departure windows on final day after all insertions.
+
+### Priority 4 — Disjunctive Branch Selection (`groups`)
+
+Goal: increase FPR by choosing easier OR branch.
+
+Tasks:
+
+1. For disjunctive queries, generate one candidate plan per group (or top-2 groups by cheap heuristic).
+2. Score each candidate with hard-logic evaluator.
+3. Return the best candidate (max passed constraints, then lower total cost).
+
+### Priority 5 — Lightweight Repair Loop
+
+Goal: catch residual misses without heavy search.
+
+Tasks:
+
+1. After initial build, run hard-logic checks once.
+2. If fail, run up to 2 targeted repair passes (budget fix, missing required POI fix, timing fix).
+3. Keep a strict time guard to remain safely within the 300s timeout.
+
+## Suggested Milestones
+
+1. **M1:** Budget-aware planner + re-eval
+2. **M2:** Required-entity hard commitment + re-eval
+3. **M3:** Timing/proximity + disjunctive branching + re-eval
+4. **M4:** Repair loop + final full eval
+
+## Expected Impact
+
+If priorities 1-3 are implemented correctly, a realistic next target is:
+
+- FPR: 58 -> 65-72
+- C-LPR: 84.8 -> 88-92
+- Overall: 73.4 -> high 70s / low 80s
+
+Preference metrics can be tuned later; they are lower leverage than constraint satisfaction.
