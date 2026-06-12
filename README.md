@@ -1,3 +1,11 @@
+**Notes:**
+
+- I downloaded and added the environment datasets in English and Chinese from Google Drive and put them into the enviornment folder
+- I downloaded and put the competition queries into the correct data/en/ folder
+- I added the competition eval split to `chinatravel/evaluation/default_splits/tpc_phase1.txt`
+- I removed all these files from gitignore, so that I can easily add and commit them
+
+
 <center>
   <h1>ChinaTravel: A Real-World Benchmark for Language Agents in Chinese Travel Planning
 </h1>
