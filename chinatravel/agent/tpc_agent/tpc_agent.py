@@ -432,6 +432,8 @@ class TPCAgent(BaseAgent):
         self._active_timing_constraints = timing_constraints
         budget_limits = self._extract_budget_limits(constraints)
         budget_tracker = self._new_budget_tracker()
+        self._budget_limits = budget_limits
+        self._budget_tracker = budget_tracker
         self._transport_constraints = {
             "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
             "conditional_transport": constraints.get("conditional_transport", None),
@@ -612,8 +614,12 @@ class TPCAgent(BaseAgent):
             candidate_attrs = prioritized_required + sorted_optional
 
         # Filter to attractions open during daytime visit windows (09:00-17:00)
+        # Required attractions always bypass the opentime filter.
+        required_set = set(self._norm_text(str(a["name"])) for a in prioritized_required)
         good_attrs = []
         for a in candidate_attrs:
+            name_key = self._norm_text(str(a["name"]))
+            is_required = name_key in required_set
             opentime = str(a["opentime"])
             endtime = str(a["endtime"])
             ot_min = time_to_minutes(opentime)
@@ -623,9 +629,10 @@ class TPCAgent(BaseAgent):
                 et_min += 24 * 60
             # Must be open by 09:30 and stay open until at least 12:00
             # so we can fit a 90-min visit in the morning or afternoon
-            if ot_min <= 570 and et_min >= 720:  # 09:30=570, 12:00=720
+            passes_filter = ot_min <= 570 and et_min >= 720  # 09:30=570, 12:00=720
+            if is_required or passes_filter:
                 good_attrs.append(a)
-            if len(good_attrs) >= days * 4:
+            if len(good_attrs) >= days * 4 + len(required_set):
                 break
         # Fallback: just take the first ones
         if len(good_attrs) < days * 2:
@@ -699,6 +706,9 @@ class TPCAgent(BaseAgent):
         lunch_idx = 0
         dinner_idx = 0
         current_pos = None  # Track current position for transport
+        # Required attractions that haven't been scheduled yet — tried first at each slot
+        self._required_attrs_remaining = list(prioritized_required)
+        self._scheduled_attr_names = set()
 
         for day_num in range(1, days + 1):
             activities = []
@@ -1243,11 +1253,22 @@ class TPCAgent(BaseAgent):
 
     def _pick_attraction(self, good_attrs, attr_idx, start_time, end_time):
         """Pick the next attraction that is open during [start_time, end_time].
+        Required attractions (in self._required_attrs_remaining) are tried first.
         Returns (attr, new_attr_idx) or (None, attr_idx) if none found."""
+        scheduled = getattr(self, '_scheduled_attr_names', set())
+        # First: try any still-pending required attraction
+        remaining = getattr(self, '_required_attrs_remaining', [])
+        for i, attr in enumerate(remaining):
+            if is_open_during(attr, start_time, end_time):
+                remaining.pop(i)
+                scheduled.add(self._norm_text(str(attr["name"])))
+                return attr, attr_idx  # don't advance attr_idx (optional pool unchanged)
+        # Fallback: normal forward scan through optional pool, skip already scheduled
         idx = attr_idx
         while idx < len(good_attrs):
             attr = good_attrs[idx]
-            if is_open_during(attr, start_time, end_time):
+            if self._norm_text(str(attr["name"])) not in scheduled and is_open_during(attr, start_time, end_time):
+                scheduled.add(self._norm_text(str(attr["name"])))
                 return attr, idx + 1
             idx += 1
         return None, attr_idx
@@ -1267,10 +1288,31 @@ class TPCAgent(BaseAgent):
         conditional = self._transport_constraints.get("conditional_transport", None)
         mode_order = ["taxi", "metro", "walk"]
 
+        # If inner_transport budget is constrained, prefer cheaper modes (metro > walk > taxi)
+        inner_budget_limit = getattr(self, "_budget_limits", {}).get("inner_transport", -1)
+        inner_budget_spent = getattr(self, "_budget_tracker", {}).get("inner_transport", 0.0)
+        if inner_budget_limit >= 0:
+            # Always prefer metro over taxi when there's an inner transport budget
+            mode_order = ["metro", "walk", "taxi"]
+
         if isinstance(conditional, dict):
-            preferred = self._norm_text(conditional.get("mode", ""))
+            preferred = self._norm_text(conditional.get("mode", "taxi"))
+            threshold_km = conditional.get("threshold_km", None)
             if preferred in ["taxi", "metro", "walk"]:
-                mode_order = [preferred] + [m for m in mode_order if m != preferred]
+                if threshold_km is not None:
+                    # Probe with taxi to get actual route distance, then decide
+                    try:
+                        probe = env.transportation.goto(city, from_pos, to_pos, start_time, "taxi")
+                        if isinstance(probe, list) and len(probe) > 0:
+                            total_dist_km = sum(seg.get("distance", 0) for seg in probe) / 1000.0
+                            if total_dist_km > threshold_km:
+                                mode_order = [preferred] + [m for m in mode_order if m != preferred]
+                            # else: distance is below threshold — leave default order
+                    except Exception:
+                        pass  # probe failed, leave default order
+                else:
+                    # No threshold: unconditionally prefer the mode
+                    mode_order = [preferred] + [m for m in mode_order if m != preferred]
 
         mode_order = [m for m in mode_order if self._norm_text(m) not in excluded]
         if len(mode_order) == 0:
