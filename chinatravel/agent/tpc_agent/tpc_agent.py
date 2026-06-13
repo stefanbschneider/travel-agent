@@ -3,6 +3,10 @@ import os
 import time
 import math
 import json
+from copy import deepcopy
+
+from agent.base import BaseAgent
+from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
 
 sys.path.append("./../../../")
 project_root_path = os.path.dirname(
@@ -13,15 +17,18 @@ if project_root_path not in sys.path:
     sys.path.insert(0, project_root_path)
 
 
-from agent.base import BaseAgent
-
-
 def add_minutes(time_str, minutes):
     """Add minutes to a HH:MM time string, clamping at 23:59."""
     h, m = map(int, time_str.split(":"))
     total = h * 60 + m + minutes
     total = min(total, 23 * 60 + 59)
     return f"{total // 60:02d}:{total % 60:02d}"
+
+
+def minutes_to_time(total_minutes):
+    """Convert total minutes to a HH:MM time string, clamping at 23:59."""
+    total_minutes = max(0, min(int(total_minutes), 23 * 60 + 59))
+    return f"{total_minutes // 60:02d}:{total_minutes % 60:02d}"
 
 
 def time_to_minutes(t):
@@ -53,6 +60,7 @@ class TPCAgent(BaseAgent):
     def __init__(self, **kwargs):
         super().__init__(name="TPC", **kwargs)
         self.parsed_constraints = self._load_parsed_constraints()
+        self.hard_logic_lookup = self._load_hard_logic_lookup()
         self._transport_constraints = {}
 
     def _load_parsed_constraints(self):
@@ -66,6 +74,33 @@ class TPCAgent(BaseAgent):
             pass
         return {}
 
+    def _load_hard_logic_lookup(self):
+        data_dir = os.path.join(project_root_path, "data")
+        if self.lang == "en":
+            data_dir = os.path.join(data_dir, "en")
+        lookup = {}
+        try:
+            for name in os.listdir(data_dir):
+                dir_path = os.path.join(data_dir, name)
+                if not os.path.isdir(dir_path):
+                    continue
+                for file_name in os.listdir(dir_path):
+                    if not file_name.endswith(".json"):
+                        continue
+                    file_path = os.path.join(dir_path, file_name)
+                    try:
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            payload = json.load(f)
+                    except Exception:
+                        continue
+                    uid = str(payload.get("uid", file_name[:-5]))
+                    hard_logic_py = payload.get("hard_logic_py")
+                    if isinstance(hard_logic_py, list):
+                        lookup[uid] = hard_logic_py
+        except Exception:
+            return {}
+        return lookup
+
     def _norm_text(self, value):
         return str(value).strip().lower() if value is not None else ""
 
@@ -76,11 +111,11 @@ class TPCAgent(BaseAgent):
             return False
         return c == q or q in c or c in q
 
-    def _collect_constraints(self, query):
+    def _constraint_variants(self, query):
         uid = str(query.get("uid", ""))
         raw = self.parsed_constraints.get(uid, {})
         if not isinstance(raw, dict):
-            return {}
+            return [{}]
 
         constraints = {
             k: v
@@ -88,13 +123,75 @@ class TPCAgent(BaseAgent):
             if k not in ["groups", "disjunctive"]
         }
         groups = raw.get("groups", [])
-        if raw.get("disjunctive") and isinstance(groups, list) and len(groups) > 0:
-            # For OR constraints, choose the first branch as primary guidance.
-            # We keep non-disjunctive constraints active and avoid enforcing all groups.
-            first_group = groups[0]
-            if isinstance(first_group, dict):
-                constraints.update(first_group)
-        return constraints
+        if not (raw.get("disjunctive") and isinstance(groups, list) and len(groups) > 0):
+            return [constraints]
+
+        group_keys = set()
+        for group in groups:
+            if isinstance(group, dict):
+                group_keys.update(group.keys())
+
+        base_constraints = {
+            k: v
+            for k, v in constraints.items()
+            if k not in group_keys
+        }
+
+        variants = []
+        for group in groups:
+            if not isinstance(group, dict):
+                continue
+            merged = deepcopy(base_constraints)
+            merged.update(group)
+            variants.append(merged)
+
+        return variants or [constraints]
+
+    def _collect_constraints(self, query):
+        variants = self._constraint_variants(query)
+        if len(variants) == 0:
+            return {}
+        return variants[0]
+
+    def _plan_total_cost(self, plan):
+        total = 0.0
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                total += self._safe_float(activity.get("cost", 0.0), 0.0)
+                total += self._transport_cost_total(activity.get("transports", []))
+        return total
+
+    def _score_plan_against_hard_logic(self, query, plan):
+        uid = str(query.get("uid", ""))
+        hard_logic_py = self.hard_logic_lookup.get(uid, [])
+        if not hard_logic_py:
+            return 0, 0
+        try:
+            results = evaluate_constraints_py(hard_logic_py, plan, verbose=False)
+        except Exception:
+            return 0, len(hard_logic_py)
+        passed = sum(1 for result in results if result)
+        return passed, len(results)
+
+    def _build_best_plan(self, query):
+        variants = self._constraint_variants(query)
+        if len(variants) <= 1:
+            return self._build_plan(query, constraints=variants[0] if variants else None)
+
+        best_plan = None
+        best_key = None
+        for constraints in variants:
+            candidate = self._build_plan(query, constraints=constraints)
+            passed, total = self._score_plan_against_hard_logic(query, candidate)
+            total_cost = self._plan_total_cost(candidate)
+            candidate_key = (passed, -total_cost)
+            if best_plan is None or candidate_key > best_key:
+                best_plan = candidate
+                best_key = candidate_key
+                if total > 0 and passed == total:
+                    break
+
+        return best_plan if best_plan is not None else self._build_plan(query)
 
     def _room_type_to_numbed(self, room_type):
         if room_type is None:
@@ -209,6 +306,54 @@ class TPCAgent(BaseAgent):
             return True
         return False
 
+    def _timing_constraint_minutes(self, timing_constraints, locations, constraint_type, take_max):
+        if not timing_constraints or not locations:
+            return None
+        values = []
+        for constraint in timing_constraints:
+            if not isinstance(constraint, dict) or constraint.get("type") != constraint_type:
+                continue
+            constraint_location = str(constraint.get("location", "")).strip()
+            constraint_time = constraint.get("time", None)
+            if not constraint_location or not constraint_time:
+                continue
+            for location in locations:
+                location = str(location).strip()
+                if not location:
+                    continue
+                if self._match_constraint_text(location, constraint_location) or self._match_constraint_text(
+                    constraint_location, location
+                ):
+                    values.append(time_to_minutes(str(constraint_time)))
+                    break
+        if not values:
+            return None
+        return max(values) if take_max else min(values)
+
+    def _timing_departure_floor(self, timing_constraints, locations):
+        return self._timing_constraint_minutes(timing_constraints, locations, "depart_no_earlier", True)
+
+    def _timing_arrival_ceiling(self, timing_constraints, locations):
+        return self._timing_constraint_minutes(timing_constraints, locations, "arrive_no_later", False)
+
+    def _activity_timing_allowed(self, location, start_time, timing_constraints, extra_locations=None):
+        locations = [location]
+        if extra_locations:
+            locations.extend(extra_locations)
+        ceiling = self._timing_arrival_ceiling(timing_constraints, locations)
+        if ceiling is not None and time_to_minutes(start_time) > ceiling:
+            return False
+        return True
+
+    def _route_timing_allowed(self, timing_constraints, from_locations, to_locations, begin_time, end_time):
+        depart_floor = self._timing_departure_floor(timing_constraints, from_locations)
+        if depart_floor is not None and time_to_minutes(begin_time) < depart_floor:
+            return False
+        arrival_ceiling = self._timing_arrival_ceiling(timing_constraints, to_locations)
+        if arrival_ceiling is not None and time_to_minutes(end_time) > arrival_ceiling:
+            return False
+        return True
+
     def _affordable_main_cost(self, bucket, cost_value, budget_limits, budget_tracker):
         if not budget_limits:
             return True
@@ -261,7 +406,7 @@ class TPCAgent(BaseAgent):
         self.reset_clock()
 
         try:
-            plan = self._build_plan(query)
+            plan = self._build_best_plan(query)
         except Exception:
             import traceback
             traceback.print_exc()
@@ -275,13 +420,16 @@ class TPCAgent(BaseAgent):
         plan["elapsed_time(sec)"] = time.time() - self.start_clock
         return True, plan
 
-    def _build_plan(self, query):
+    def _build_plan(self, query, constraints=None):
         """Build a valid itinerary with proper transport, timing, and costs."""
         people = query["people_number"]
         start_city = query["start_city"]
         target_city = query["target_city"]
         days = query["days"]
-        constraints = self._collect_constraints(query)
+        if constraints is None:
+            constraints = self._collect_constraints(query)
+        timing_constraints = constraints.get("timing_constraints", []) or []
+        self._active_timing_constraints = timing_constraints
         budget_limits = self._extract_budget_limits(constraints)
         budget_tracker = self._new_budget_tracker()
         self._transport_constraints = {
@@ -357,6 +505,7 @@ class TPCAgent(BaseAgent):
 
         hotel = None
         nearby_df = None
+        hotel_from_nearby_constraint = False
         if isinstance(hotel_nearby, dict):
             ref = hotel_nearby.get("reference", None)
             dist_km = hotel_nearby.get("distance_km", 5)
@@ -371,9 +520,10 @@ class TPCAgent(BaseAgent):
                 h = nearby_df.iloc[i]
                 if _hotel_ok(h):
                     hotel = h
+                    hotel_from_nearby_constraint = True
                     break
 
-        if arrival_pos:
+        if hotel is None and arrival_pos and not hotel_from_nearby_constraint:
             try:
                 nearby_hotels = env.accommodations.nearby(target_city, arrival_pos, topk=5, dist=20)
                 if not isinstance(nearby_hotels, str) and len(nearby_hotels) > 0:
@@ -585,7 +735,12 @@ class TPCAgent(BaseAgent):
                     else:
                         transports = []
                     lunch_end = add_minutes(lunch_start, 60)
-                    if restaurant is not None and time_before(lunch_end, "14:00"):
+                    if restaurant is not None and time_before(lunch_end, "14:00") and self._activity_timing_allowed(
+                        rest_name,
+                        lunch_start,
+                        timing_constraints,
+                        [current_pos],
+                    ):
                         meal = self._make_meal_activity(
                             "lunch", restaurant, people, lunch_start, lunch_end, transports)
                         is_req_rest = self._is_required_restaurant(restaurant, required_restaurants)
@@ -618,7 +773,12 @@ class TPCAgent(BaseAgent):
                             transports = []
                             attr_start = current_time
                         attr_end = add_minutes(attr_start, 90)
-                        if is_open_during(attr, attr_start, attr_end):
+                        if is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                            attr_name,
+                            attr_start,
+                            timing_constraints,
+                            [current_pos],
+                        ):
                             attr_act = self._make_attraction_activity(
                                 attr, people, attr_start, attr_end, transports)
                             added = self._append_activity(
@@ -656,7 +816,12 @@ class TPCAgent(BaseAgent):
                         transports = []
                         dinner_start = max(current_time, "17:00")
                     dinner_end = add_minutes(dinner_start, 60)
-                    if restaurant is not None and time_before(dinner_end, "20:00"):
+                    if restaurant is not None and time_before(dinner_end, "20:00") and self._activity_timing_allowed(
+                        rest_name,
+                        dinner_start,
+                        timing_constraints,
+                        [current_pos],
+                    ):
                         dinner = self._make_meal_activity(
                             "dinner", restaurant, people, dinner_start, dinner_end, transports)
                         added = self._append_activity(
@@ -744,7 +909,12 @@ class TPCAgent(BaseAgent):
                                 env, target_city, attr_name, departure_pos, attr_end, people)
                             can_return = (return_arrival is not None and
                                          time_to_minutes(return_arrival) <= time_to_minutes(departure_time))
-                            if can_return and is_open_during(attr, attr_start, attr_end):
+                            if can_return and is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                                attr_name,
+                                attr_start,
+                                timing_constraints,
+                                [current_pos],
+                            ):
                                 attr_act = self._make_attraction_activity(
                                     attr, people, attr_start, attr_end, transports)
                                 added = self._append_activity(
@@ -789,7 +959,12 @@ class TPCAgent(BaseAgent):
                                 env, target_city, rest_name, departure_pos, lunch_end, people)
                             can_return = (return_arrival is not None and
                                          time_to_minutes(return_arrival) <= time_to_minutes(departure_time))
-                            if restaurant is not None and time_before(lunch_end, "14:00") and can_return:
+                            if restaurant is not None and time_before(lunch_end, "14:00") and can_return and self._activity_timing_allowed(
+                                rest_name,
+                                lunch_start,
+                                timing_constraints,
+                                [current_pos],
+                            ):
                                 lunch_idx = new_lunch_idx
                                 lunch = self._make_meal_activity(
                                     "lunch", restaurant, people, lunch_start, lunch_end, transports)
@@ -859,7 +1034,12 @@ class TPCAgent(BaseAgent):
                             transports = []
                             attr_start = current_time
                         attr_end = add_minutes(attr_start, 90)
-                        if is_open_during(attr, attr_start, attr_end):
+                        if is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                            attr_name,
+                            attr_start,
+                            timing_constraints,
+                            [current_pos],
+                        ):
                             attr_act = self._make_attraction_activity(
                                 attr, people, attr_start, attr_end, transports)
                             added = self._append_activity(
@@ -895,7 +1075,12 @@ class TPCAgent(BaseAgent):
                         transports = []
                         lunch_start = max(current_time, "11:00")
                     lunch_end = add_minutes(lunch_start, 60)
-                    if restaurant is not None and time_before(lunch_end, "14:00"):
+                    if restaurant is not None and time_before(lunch_end, "14:00") and self._activity_timing_allowed(
+                        rest_name,
+                        lunch_start,
+                        timing_constraints,
+                        [current_pos],
+                    ):
                         lunch_idx = new_lunch_idx
                         lunch = self._make_meal_activity(
                             "lunch", restaurant, people, lunch_start, lunch_end, transports)
@@ -925,7 +1110,12 @@ class TPCAgent(BaseAgent):
                             transports = []
                             attr_start = current_time
                         attr_end = add_minutes(attr_start, 90)
-                        if is_open_during(attr, attr_start, attr_end):
+                        if is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                            attr_name,
+                            attr_start,
+                            timing_constraints,
+                            [current_pos],
+                        ):
                             attr_act = self._make_attraction_activity(
                                 attr, people, attr_start, attr_end, transports)
                             added = self._append_activity(
@@ -961,7 +1151,12 @@ class TPCAgent(BaseAgent):
                         transports = []
                         dinner_start = max(current_time, "17:00")
                     dinner_end = add_minutes(dinner_start, 60)
-                    if restaurant is not None and time_before(dinner_end, "20:00"):
+                    if restaurant is not None and time_before(dinner_end, "20:00") and self._activity_timing_allowed(
+                        rest_name,
+                        dinner_start,
+                        timing_constraints,
+                        [current_pos],
+                    ):
                         dinner_idx = new_dinner_idx
                         dinner = self._make_meal_activity(
                             "dinner", restaurant, people, dinner_start, dinner_end, transports)
@@ -1027,6 +1222,14 @@ class TPCAgent(BaseAgent):
                 if df is not None and len(df) > 0:
                     for i in range(len(df)):
                         cand = df.iloc[i].to_dict()
+                        if not self._route_timing_allowed(
+                            getattr(self, "_active_timing_constraints", []),
+                            [cand.get("From", ""), from_city],
+                            [cand.get("To", ""), to_city],
+                            str(cand.get("BeginTime", earliest)),
+                            str(cand.get("EndTime", earliest)),
+                        ):
+                            continue
                         cost = self._safe_float(cand.get("Cost", 0.0), 0.0)
                         projected_intercity = cost + pending_cost
                         if self._affordable_main_cost("intercity_transport", projected_intercity, budget_limits, budget_tracker):
@@ -1051,6 +1254,10 @@ class TPCAgent(BaseAgent):
 
     def _get_transport(self, env, city, from_pos, to_pos, start_time, people):
         """Get taxi transport between two positions. Returns (transports_list, arrival_time) or (None, None)."""
+        timing_constraints = getattr(self, "_active_timing_constraints", [])
+        depart_floor = self._timing_departure_floor(timing_constraints, [from_pos])
+        if depart_floor is not None and time_to_minutes(start_time) < depart_floor:
+            start_time = minutes_to_time(depart_floor)
         if from_pos == to_pos:
             return [], start_time
         excluded = set(
