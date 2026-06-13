@@ -113,6 +113,150 @@ class TPCAgent(BaseAgent):
             return 2
         return None
 
+    def _safe_float(self, value, default=0.0):
+        try:
+            return float(value)
+        except Exception:
+            return default
+
+    def _extract_budget_limits(self, constraints):
+        budgets = constraints.get("budgets", {}) or {}
+        if not isinstance(budgets, dict):
+            budgets = {}
+        limits = {
+            "sightseeing": -1.0,
+            "dining": -1.0,
+            "accommodation": -1.0,
+            "intercity_transport": -1.0,
+            "inner_transport": -1.0,
+            "total": -1.0,
+        }
+        for k in limits.keys():
+            if k in budgets:
+                raw_val = budgets.get(k)
+                if raw_val is None:
+                    continue
+                try:
+                    v = float(raw_val)
+                except Exception:
+                    continue
+                if v >= 0:
+                    limits[k] = v
+        return limits
+
+    def _new_budget_tracker(self):
+        return {
+            "sightseeing": 0.0,
+            "dining": 0.0,
+            "accommodation": 0.0,
+            "intercity_transport": 0.0,
+            "inner_transport": 0.0,
+            "total": 0.0,
+        }
+
+    def _transport_cost_total(self, transports):
+        total = 0.0
+        for t in transports or []:
+            total += self._safe_float(t.get("cost", 0.0), 0.0)
+        return total
+
+    def _activity_bucket_costs(self, activity):
+        bucket_costs = {
+            "sightseeing": 0.0,
+            "dining": 0.0,
+            "accommodation": 0.0,
+            "intercity_transport": 0.0,
+            "inner_transport": self._transport_cost_total(activity.get("transports", [])),
+            "total": 0.0,
+        }
+        atype = activity.get("type", "")
+        main_cost = self._safe_float(activity.get("cost", 0.0), 0.0)
+
+        if atype == "attraction":
+            bucket_costs["sightseeing"] += main_cost
+        elif atype in ["breakfast", "lunch", "dinner"]:
+            bucket_costs["dining"] += main_cost
+        elif atype == "accommodation":
+            bucket_costs["accommodation"] += main_cost
+        elif atype in ["airplane", "train"]:
+            bucket_costs["intercity_transport"] += main_cost
+
+        for k in ["sightseeing", "dining", "accommodation", "intercity_transport", "inner_transport"]:
+            bucket_costs["total"] += bucket_costs[k]
+        return bucket_costs
+
+    def _can_add_activity_under_budget(self, activity, budget_limits, budget_tracker):
+        if not budget_limits:
+            return True
+        inc = self._activity_bucket_costs(activity)
+        for k, limit in budget_limits.items():
+            if limit < 0:
+                continue
+            projected = self._safe_float(budget_tracker.get(k, 0.0), 0.0) + self._safe_float(inc.get(k, 0.0), 0.0)
+            if projected > limit + 1e-6:
+                return False
+        return True
+
+    def _register_activity_cost(self, activity, budget_tracker):
+        inc = self._activity_bucket_costs(activity)
+        for k in budget_tracker.keys():
+            budget_tracker[k] = self._safe_float(budget_tracker.get(k, 0.0), 0.0) + self._safe_float(inc.get(k, 0.0), 0.0)
+
+    def _append_activity(self, activities, activity, budget_limits, budget_tracker, force=False):
+        if force or self._can_add_activity_under_budget(activity, budget_limits, budget_tracker):
+            activities.append(activity)
+            self._register_activity_cost(activity, budget_tracker)
+            return True
+        return False
+
+    def _affordable_main_cost(self, bucket, cost_value, budget_limits, budget_tracker):
+        if not budget_limits:
+            return True
+        c = self._safe_float(cost_value, 0.0)
+        bucket_limit = budget_limits.get(bucket)
+        if bucket_limit is not None and bucket_limit >= 0 and self._safe_float(budget_tracker.get(bucket, 0.0), 0.0) + c > bucket_limit + 1e-6:
+            return False
+        total_limit = budget_limits.get("total")
+        if total_limit is not None and total_limit >= 0 and self._safe_float(budget_tracker.get("total", 0.0), 0.0) + c > total_limit + 1e-6:
+            return False
+        return True
+
+    def _pick_restaurant(self, restaurants, start_idx, people, budget_limits, budget_tracker):
+        idx = start_idx
+        fallback = None
+        while idx < len(restaurants):
+            r = restaurants[idx]
+            full_cost = self._safe_float(r.get("price", 0.0), 0.0) * people
+            if self._affordable_main_cost("dining", full_cost, budget_limits, budget_tracker):
+                return r, idx + 1
+            if fallback is None:
+                fallback = (r, idx + 1)
+            idx += 1
+        return fallback if fallback is not None else (None, start_idx)
+
+    def _is_required_attraction(self, attr, required_attractions, required_attraction_types):
+        if attr is None:
+            return False
+        name = str(attr.get("name", ""))
+        attr_type = str(attr.get("type", ""))
+        by_name = bool(required_attractions) and any(
+            self._match_constraint_text(name, req)
+            for req in required_attractions
+        )
+        by_type = bool(required_attraction_types) and any(
+            self._match_constraint_text(attr_type, req_t)
+            for req_t in required_attraction_types
+        )
+        return by_name or by_type
+
+    def _is_required_restaurant(self, restaurant, required_restaurants):
+        if restaurant is None:
+            return False
+        if not required_restaurants:
+            return False
+        name = str(restaurant.get("name", ""))
+        return any(self._match_constraint_text(name, req) for req in required_restaurants)
+
     def run(self, query, prob_idx=None, oralce_translation=False):
         self.reset_clock()
 
@@ -138,6 +282,8 @@ class TPCAgent(BaseAgent):
         target_city = query["target_city"]
         days = query["days"]
         constraints = self._collect_constraints(query)
+        budget_limits = self._extract_budget_limits(constraints)
+        budget_tracker = self._new_budget_tracker()
         self._transport_constraints = {
             "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
             "conditional_transport": constraints.get("conditional_transport", None),
@@ -163,13 +309,13 @@ class TPCAgent(BaseAgent):
             outbound_pref = intercity_mode
             return_pref = intercity_mode
 
-        outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref)
-        return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref)
+        outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref, budget_limits, budget_tracker)
+        return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound)
         # If no return at 17:00, try earlier
         if return_transport is None:
-            return_transport = self._get_intercity(env, target_city, start_city, "14:00", return_pref)
+            return_transport = self._get_intercity(env, target_city, start_city, "14:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound)
         if return_transport is None:
-            return_transport = self._get_intercity(env, target_city, start_city, "00:00", return_pref)
+            return_transport = self._get_intercity(env, target_city, start_city, "00:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound)
 
         # --- Get one accommodation near the arrival/departure point ---
         arrival_pos = outbound["To"] if outbound else None
@@ -200,6 +346,13 @@ class TPCAgent(BaseAgent):
             if hotel_amenity:
                 if not self._match_constraint_text(h.get("featurehoteltype", ""), hotel_amenity):
                     return False
+            try:
+                rooms_local = math.ceil(people / int(h.get("numbed", 1)))
+            except Exception:
+                rooms_local = people
+            h_cost = self._safe_float(h.get("price", 0.0), 0.0) * rooms_local * max(days - 1, 0)
+            if not self._affordable_main_cost("accommodation", h_cost, budget_limits, budget_tracker):
+                return False
             return True
 
         hotel = None
@@ -238,7 +391,16 @@ class TPCAgent(BaseAgent):
                     hotel = h
                     break
         if hotel is None:
-            hotel = accom_df.iloc[0]
+            # Fall back to cheapest option even when strict filters are infeasible.
+            best = None
+            best_price = None
+            for i in range(len(accom_df)):
+                h = accom_df.iloc[i]
+                p = self._safe_float(h.get("price", 0.0), 0.0)
+                if best is None or best_price is None or p < best_price:
+                    best = h
+                    best_price = p
+            hotel = best if best is not None else accom_df.iloc[0]
         hotel_name = str(hotel["name"])
         rooms_needed = math.ceil(people / int(hotel["numbed"]))
 
@@ -290,6 +452,14 @@ class TPCAgent(BaseAgent):
                     seen_attr.add(name_key)
 
         candidate_attrs = prioritized_required + optional_pool
+
+        # Sort optional attractions by price to improve budget feasibility while keeping required first.
+        if len(prioritized_required) < len(candidate_attrs):
+            sorted_optional = sorted(
+                optional_pool,
+                key=lambda x: self._safe_float(x.get("price", 0.0), 0.0),
+            )
+            candidate_attrs = prioritized_required + sorted_optional
 
         # Filter to attractions open during daytime visit windows (09:00-17:00)
         good_attrs = []
@@ -387,7 +557,7 @@ class TPCAgent(BaseAgent):
                 # === DAY 1: Arrive + activities + hotel ===
                 if outbound is not None:
                     act = self._make_intercity_activity(outbound, people)
-                    activities.append(act)
+                    self._append_activity(activities, act, budget_limits, budget_tracker, force=True)
                     current_time = outbound["EndTime"]
                     current_pos = outbound["To"]
                 else:
@@ -396,11 +566,18 @@ class TPCAgent(BaseAgent):
 
                 # Lunch (if time allows, start between 11:00-13:00)
                 if time_before(current_time, "13:00") and lunch_idx < len(lunch_restaurants):
-                    restaurant = lunch_restaurants[lunch_idx]
-                    lunch_idx += 1
+                    restaurant, new_lunch_idx = self._pick_restaurant(
+                        lunch_restaurants,
+                        lunch_idx,
+                        people,
+                        budget_limits,
+                        budget_tracker,
+                    )
+                    if restaurant is not None:
+                        lunch_idx = new_lunch_idx
                     lunch_start = max(current_time, "11:00")
                     # Add transport to restaurant
-                    rest_name = str(restaurant["name"])
+                    rest_name = str(restaurant["name"]) if restaurant is not None else current_pos
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
@@ -408,9 +585,20 @@ class TPCAgent(BaseAgent):
                     else:
                         transports = []
                     lunch_end = add_minutes(lunch_start, 60)
-                    if time_before(lunch_end, "14:00"):
-                        activities.append(self._make_meal_activity(
-                            "lunch", restaurant, people, lunch_start, lunch_end, transports))
+                    if restaurant is not None and time_before(lunch_end, "14:00"):
+                        meal = self._make_meal_activity(
+                            "lunch", restaurant, people, lunch_start, lunch_end, transports)
+                        is_req_rest = self._is_required_restaurant(restaurant, required_restaurants)
+                        added = self._append_activity(
+                            activities,
+                            meal,
+                            budget_limits,
+                            budget_tracker,
+                            force=is_req_rest,
+                        )
+                        if not added:
+                            # Keep itinerary valid even when strict budget is infeasible.
+                            self._append_activity(activities, meal, budget_limits, budget_tracker, force=True)
                         current_time = lunch_end
                         current_pos = rest_name
 
@@ -431,16 +619,35 @@ class TPCAgent(BaseAgent):
                             attr_start = current_time
                         attr_end = add_minutes(attr_start, 90)
                         if is_open_during(attr, attr_start, attr_end):
-                            activities.append(self._make_attraction_activity(
-                                attr, people, attr_start, attr_end, transports))
-                            current_time = attr_end
-                            current_pos = attr_name
+                            attr_act = self._make_attraction_activity(
+                                attr, people, attr_start, attr_end, transports)
+                            added = self._append_activity(
+                                activities,
+                                attr_act,
+                                budget_limits,
+                                budget_tracker,
+                                force=self._is_required_attraction(
+                                    attr,
+                                    required_attractions,
+                                    required_attraction_types,
+                                ),
+                            )
+                            if added:
+                                current_time = attr_end
+                                current_pos = attr_name
 
                 # Dinner (start between 17:00-19:00)
                 if time_before(current_time, "19:00") and dinner_idx < len(dinner_restaurants):
-                    restaurant = dinner_restaurants[dinner_idx]
-                    dinner_idx += 1
-                    rest_name = str(restaurant["name"])
+                    restaurant, new_dinner_idx = self._pick_restaurant(
+                        dinner_restaurants,
+                        dinner_idx,
+                        people,
+                        budget_limits,
+                        budget_tracker,
+                    )
+                    if restaurant is not None:
+                        dinner_idx = new_dinner_idx
+                    rest_name = str(restaurant["name"]) if restaurant is not None else current_pos
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
@@ -449,11 +656,19 @@ class TPCAgent(BaseAgent):
                         transports = []
                         dinner_start = max(current_time, "17:00")
                     dinner_end = add_minutes(dinner_start, 60)
-                    if time_before(dinner_end, "20:00"):
-                        activities.append(self._make_meal_activity(
-                            "dinner", restaurant, people, dinner_start, dinner_end, transports))
-                        current_time = dinner_end
-                        current_pos = rest_name
+                    if restaurant is not None and time_before(dinner_end, "20:00"):
+                        dinner = self._make_meal_activity(
+                            "dinner", restaurant, people, dinner_start, dinner_end, transports)
+                        added = self._append_activity(
+                            activities,
+                            dinner,
+                            budget_limits,
+                            budget_tracker,
+                            force=self._is_required_restaurant(restaurant, required_restaurants),
+                        )
+                        if added:
+                            current_time = dinner_end
+                            current_pos = rest_name
 
                 # Accommodation
                 transports, travel_end = self._get_transport(
@@ -461,8 +676,9 @@ class TPCAgent(BaseAgent):
                 if transports is None or current_pos == hotel_name:
                     transports = []
                     travel_end = current_time
-                activities.append(self._make_accommodation_activity(
-                    hotel, rooms_needed, travel_end, transports))
+                stay = self._make_accommodation_activity(
+                    hotel, rooms_needed, travel_end, transports)
+                self._append_activity(activities, stay, budget_limits, budget_tracker, force=True)
                 current_pos = hotel_name
 
             elif day_num == days:
@@ -477,7 +693,16 @@ class TPCAgent(BaseAgent):
                         hotel_to_station_end = "08:30"
                     # If we can't make it to the original return transport, find a later one
                     if time_to_minutes(hotel_to_station_end) > time_to_minutes(return_transport["BeginTime"]):
-                        later = self._get_intercity(env, target_city, start_city, hotel_to_station_end, return_pref)
+                        later = self._get_intercity(
+                            env,
+                            target_city,
+                            start_city,
+                            hotel_to_station_end,
+                            return_pref,
+                            budget_limits,
+                            budget_tracker,
+                            pending_intercity=outbound,
+                        )
                         if later is not None:
                             return_transport = later
                             departure_pos = later["From"]
@@ -489,8 +714,9 @@ class TPCAgent(BaseAgent):
                                     hotel_to_station_end = "08:30"
 
                 # Breakfast at hotel (free)
-                activities.append(self._make_hotel_breakfast(
-                    hotel_name, "07:30", "08:30"))
+                breakfast = self._make_hotel_breakfast(
+                    hotel_name, "07:30", "08:30")
+                self._append_activity(activities, breakfast, budget_limits, budget_tracker)
                 current_time = "08:30"
                 current_pos = hotel_name
 
@@ -519,10 +745,22 @@ class TPCAgent(BaseAgent):
                             can_return = (return_arrival is not None and
                                          time_to_minutes(return_arrival) <= time_to_minutes(departure_time))
                             if can_return and is_open_during(attr, attr_start, attr_end):
-                                activities.append(self._make_attraction_activity(
-                                    attr, people, attr_start, attr_end, transports))
-                                current_time = attr_end
-                                current_pos = attr_name
+                                attr_act = self._make_attraction_activity(
+                                    attr, people, attr_start, attr_end, transports)
+                                added = self._append_activity(
+                                    activities,
+                                    attr_act,
+                                    budget_limits,
+                                    budget_tracker,
+                                    force=self._is_required_attraction(
+                                        attr,
+                                        required_attractions,
+                                        required_attraction_types,
+                                    ),
+                                )
+                                if added:
+                                    current_time = attr_end
+                                    current_pos = attr_name
 
                 # Lunch before departure if time allows
                 if return_transport is not None and lunch_idx < len(lunch_restaurants):
@@ -530,8 +768,14 @@ class TPCAgent(BaseAgent):
                     departure_pos = return_transport["From"]
                     if time_to_minutes(departure_time) >= time_to_minutes("11:00") + 90:
                         if time_before(current_time, "13:00"):
-                            restaurant = lunch_restaurants[lunch_idx]
-                            rest_name = str(restaurant["name"])
+                            restaurant, new_lunch_idx = self._pick_restaurant(
+                                lunch_restaurants,
+                                lunch_idx,
+                                people,
+                                budget_limits,
+                                budget_tracker,
+                            )
+                            rest_name = str(restaurant["name"]) if restaurant is not None else current_pos
                             transports, travel_end = self._get_transport(
                                 env, target_city, current_pos, rest_name, current_time, people)
                             if transports is not None:
@@ -545,12 +789,20 @@ class TPCAgent(BaseAgent):
                                 env, target_city, rest_name, departure_pos, lunch_end, people)
                             can_return = (return_arrival is not None and
                                          time_to_minutes(return_arrival) <= time_to_minutes(departure_time))
-                            if time_before(lunch_end, "14:00") and can_return:
-                                lunch_idx += 1
-                                activities.append(self._make_meal_activity(
-                                    "lunch", restaurant, people, lunch_start, lunch_end, transports))
-                                current_time = lunch_end
-                                current_pos = rest_name
+                            if restaurant is not None and time_before(lunch_end, "14:00") and can_return:
+                                lunch_idx = new_lunch_idx
+                                lunch = self._make_meal_activity(
+                                    "lunch", restaurant, people, lunch_start, lunch_end, transports)
+                                added = self._append_activity(
+                                    activities,
+                                    lunch,
+                                    budget_limits,
+                                    budget_tracker,
+                                    force=self._is_required_restaurant(restaurant, required_restaurants),
+                                )
+                                if added:
+                                    current_time = lunch_end
+                                    current_pos = rest_name
 
                 # Return intercity transport
                 if return_transport is not None:
@@ -562,7 +814,16 @@ class TPCAgent(BaseAgent):
                         travel_end = current_time
                     # If transport to station arrives after departure, find later transport
                     if time_to_minutes(travel_end) > time_to_minutes(return_transport["BeginTime"]):
-                        later = self._get_intercity(env, target_city, start_city, travel_end, return_pref)
+                        later = self._get_intercity(
+                            env,
+                            target_city,
+                            start_city,
+                            travel_end,
+                            return_pref,
+                            budget_limits,
+                            budget_tracker,
+                            pending_intercity=outbound,
+                        )
                         if later is not None:
                             return_transport = later
                             if later["From"] != departure_pos:
@@ -572,13 +833,14 @@ class TPCAgent(BaseAgent):
                                 if transports is None or current_pos == departure_pos:
                                     transports = []
                     act = self._make_intercity_activity(return_transport, people, transports)
-                    activities.append(act)
+                    self._append_activity(activities, act, budget_limits, budget_tracker, force=True)
 
             else:
                 # === MIDDLE DAYS: breakfast + attractions + meals + hotel ===
                 # Breakfast at hotel (free)
-                activities.append(self._make_hotel_breakfast(
-                    hotel_name, "07:30", "08:30"))
+                breakfast = self._make_hotel_breakfast(
+                    hotel_name, "07:30", "08:30")
+                self._append_activity(activities, breakfast, budget_limits, budget_tracker)
                 current_time = "08:30"
                 current_pos = hotel_name
 
@@ -598,15 +860,33 @@ class TPCAgent(BaseAgent):
                             attr_start = current_time
                         attr_end = add_minutes(attr_start, 90)
                         if is_open_during(attr, attr_start, attr_end):
-                            activities.append(self._make_attraction_activity(
-                                attr, people, attr_start, attr_end, transports))
-                            current_time = attr_end
-                            current_pos = attr_name
+                            attr_act = self._make_attraction_activity(
+                                attr, people, attr_start, attr_end, transports)
+                            added = self._append_activity(
+                                activities,
+                                attr_act,
+                                budget_limits,
+                                budget_tracker,
+                                force=self._is_required_attraction(
+                                    attr,
+                                    required_attractions,
+                                    required_attraction_types,
+                                ),
+                            )
+                            if added:
+                                current_time = attr_end
+                                current_pos = attr_name
 
                 # Lunch
                 if lunch_idx < len(lunch_restaurants) and time_before(current_time, "13:00"):
-                    restaurant = lunch_restaurants[lunch_idx]
-                    rest_name = str(restaurant["name"])
+                    restaurant, new_lunch_idx = self._pick_restaurant(
+                        lunch_restaurants,
+                        lunch_idx,
+                        people,
+                        budget_limits,
+                        budget_tracker,
+                    )
+                    rest_name = str(restaurant["name"]) if restaurant is not None else current_pos
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
@@ -615,12 +895,20 @@ class TPCAgent(BaseAgent):
                         transports = []
                         lunch_start = max(current_time, "11:00")
                     lunch_end = add_minutes(lunch_start, 60)
-                    if time_before(lunch_end, "14:00"):
-                        lunch_idx += 1
-                        activities.append(self._make_meal_activity(
-                            "lunch", restaurant, people, lunch_start, lunch_end, transports))
-                        current_time = lunch_end
-                        current_pos = rest_name
+                    if restaurant is not None and time_before(lunch_end, "14:00"):
+                        lunch_idx = new_lunch_idx
+                        lunch = self._make_meal_activity(
+                            "lunch", restaurant, people, lunch_start, lunch_end, transports)
+                        added = self._append_activity(
+                            activities,
+                            lunch,
+                            budget_limits,
+                            budget_tracker,
+                            force=self._is_required_restaurant(restaurant, required_restaurants),
+                        )
+                        if added:
+                            current_time = lunch_end
+                            current_pos = rest_name
 
                 # Afternoon attraction
                 if attr_idx < len(good_attrs) and time_before(current_time, "16:00"):
@@ -638,15 +926,33 @@ class TPCAgent(BaseAgent):
                             attr_start = current_time
                         attr_end = add_minutes(attr_start, 90)
                         if is_open_during(attr, attr_start, attr_end):
-                            activities.append(self._make_attraction_activity(
-                                attr, people, attr_start, attr_end, transports))
-                            current_time = attr_end
-                            current_pos = attr_name
+                            attr_act = self._make_attraction_activity(
+                                attr, people, attr_start, attr_end, transports)
+                            added = self._append_activity(
+                                activities,
+                                attr_act,
+                                budget_limits,
+                                budget_tracker,
+                                force=self._is_required_attraction(
+                                    attr,
+                                    required_attractions,
+                                    required_attraction_types,
+                                ),
+                            )
+                            if added:
+                                current_time = attr_end
+                                current_pos = attr_name
 
                 # Dinner
                 if dinner_idx < len(dinner_restaurants) and time_before(current_time, "19:00"):
-                    restaurant = dinner_restaurants[dinner_idx]
-                    rest_name = str(restaurant["name"])
+                    restaurant, new_dinner_idx = self._pick_restaurant(
+                        dinner_restaurants,
+                        dinner_idx,
+                        people,
+                        budget_limits,
+                        budget_tracker,
+                    )
+                    rest_name = str(restaurant["name"]) if restaurant is not None else current_pos
                     transports, travel_end = self._get_transport(
                         env, target_city, current_pos, rest_name, current_time, people)
                     if transports is not None:
@@ -655,12 +961,20 @@ class TPCAgent(BaseAgent):
                         transports = []
                         dinner_start = max(current_time, "17:00")
                     dinner_end = add_minutes(dinner_start, 60)
-                    if time_before(dinner_end, "20:00"):
-                        dinner_idx += 1
-                        activities.append(self._make_meal_activity(
-                            "dinner", restaurant, people, dinner_start, dinner_end, transports))
-                        current_time = dinner_end
-                        current_pos = rest_name
+                    if restaurant is not None and time_before(dinner_end, "20:00"):
+                        dinner_idx = new_dinner_idx
+                        dinner = self._make_meal_activity(
+                            "dinner", restaurant, people, dinner_start, dinner_end, transports)
+                        added = self._append_activity(
+                            activities,
+                            dinner,
+                            budget_limits,
+                            budget_tracker,
+                            force=self._is_required_restaurant(restaurant, required_restaurants),
+                        )
+                        if added:
+                            current_time = dinner_end
+                            current_pos = rest_name
 
                 # Accommodation
                 transports, travel_end = self._get_transport(
@@ -668,8 +982,9 @@ class TPCAgent(BaseAgent):
                 if transports is None or current_pos == hotel_name:
                     transports = []
                     travel_end = current_time
-                activities.append(self._make_accommodation_activity(
-                    hotel, rooms_needed, travel_end, transports))
+                stay = self._make_accommodation_activity(
+                    hotel, rooms_needed, travel_end, transports)
+                self._append_activity(activities, stay, budget_limits, budget_tracker, force=True)
                 current_pos = hotel_name
 
             itinerary.append({"day": day_num, "activities": activities})
@@ -681,7 +996,17 @@ class TPCAgent(BaseAgent):
             "itinerary": itinerary,
         }
 
-    def _get_intercity(self, env, from_city, to_city, earliest, preferred_mode=None):
+    def _get_intercity(
+        self,
+        env,
+        from_city,
+        to_city,
+        earliest,
+        preferred_mode=None,
+        budget_limits=None,
+        budget_tracker=None,
+        pending_intercity=None,
+    ):
         """Get first available flight, falling back to train."""
         preferred = self._norm_text(preferred_mode)
         transport_order = ["airplane", "train"]
@@ -690,14 +1015,28 @@ class TPCAgent(BaseAgent):
         elif preferred in ["train", "rail"]:
             transport_order = ["train", "airplane"]
 
+        pending_cost = 0.0
+        if pending_intercity is not None:
+            pending_cost = self._safe_float(pending_intercity.get("Cost", 0.0), 0.0)
+
+        best = None
+        best_cost = None
         for transport_type in transport_order:
             try:
                 df = env.intercitytransport.select(from_city, to_city, transport_type, earliest)
                 if df is not None and len(df) > 0:
-                    return df.iloc[0].to_dict()
+                    for i in range(len(df)):
+                        cand = df.iloc[i].to_dict()
+                        cost = self._safe_float(cand.get("Cost", 0.0), 0.0)
+                        projected_intercity = cost + pending_cost
+                        if self._affordable_main_cost("intercity_transport", projected_intercity, budget_limits, budget_tracker):
+                            return cand
+                        if best is None or best_cost is None or cost < best_cost:
+                            best = cand
+                            best_cost = cost
             except Exception:
                 pass
-        return None
+        return best
 
     def _pick_attraction(self, good_attrs, attr_idx, start_time, end_time):
         """Pick the next attraction that is open during [start_time, end_time].
