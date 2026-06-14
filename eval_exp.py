@@ -1,7 +1,6 @@
 
 
 import argparse
-import shutil
 
 import numpy as np
 
@@ -20,13 +19,6 @@ from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
 from chinatravel.evaluation.commonsense_constraint import evaluate_commonsense_constraints
 from chinatravel.evaluation.hard_constraint import evaluate_hard_constraints, evaluate_hard_constraints_v2
 from chinatravel.evaluation.preference import evaluate_preference, evaluate_preference_v2
-
-
-def clamp_01(value):
-    try:
-        return max(0.0, min(1.0, float(value)))
-    except Exception:
-        return 0.0
 
 
 METHOD_LIST = [
@@ -194,94 +186,18 @@ if __name__ == "__main__":
 
 
         print("All pass ratio: ", 1. * len(all_pass_id) / len(query_index) * 100)
-
-        # Compute per-query preference score for full-quality ranking in results/best.
-        preference_result_agg = evaluate_preference_v2(
-            query_index,
-            query_data,
-            result_data[method],
-            list(set(commonsense_pass_id) & set(logi_pass_id)),
-            lang=args.lang,
-        )
-        preference_score_map = {}
-        for row in preference_result_agg.to_dict(orient="records"):
-            preference_score_map[row["data_id"]] = clamp_01(row.get("concept", 0.0))
-
         if args.preference:
             print("Preference:")
-            result_agg = preference_result_agg
+            result_agg = evaluate_preference_v2(
+                query_index,
+                query_data,
+                result_data[method],
+                list(set(commonsense_pass_id) & set(logi_pass_id)),
+                lang=args.lang,
+            )
 
             res_file = "eval_res/splits_{}/{}/preference.csv".format(
                 args.splits, method
             )
             result_agg.to_csv(res_file, index=False)
             print("save to {}".format(res_file))
-
-        # ------------------------------------------------------------------ #
-        # Auto-update results/constraints_solved and results/best             #
-        # ------------------------------------------------------------------ #
-        constraints_solved_dir = os.path.join(project_root_path, "results", "constraints_solved")
-        best_dir = os.path.join(project_root_path, "results", "best")
-        os.makedirs(constraints_solved_dir, exist_ok=True)
-        os.makedirs(best_dir, exist_ok=True)
-
-        # Per-query weighted quality score (matching eval weighting style):
-        # 0.1 schema + 0.1 commonsense + 0.25 hard-logic + 0.4 all-hard-pass + 0.15 preference
-        schema_pass_set = set(schema_pass_id)
-        commonsense_pass_set = set(commonsense_pass_id)
-        logi_pass_set = set(logi_pass_id)
-        all_pass_set = set(all_pass_id)
-
-        updated_constraints = 0
-        updated_best = 0
-
-        for query_id in query_index:
-            src_file = os.path.join(project_root_path, "results", method, "{}.json".format(query_id))
-            if not os.path.exists(src_file):
-                continue
-
-            schema_score = 100.0 if query_id in schema_pass_set else 0.0
-            commonsense_score = 100.0 if query_id in commonsense_pass_set else 0.0
-            logic_score = 100.0 if query_id in logi_pass_set else 0.0
-            all_pass_score = 100.0 if query_id in all_pass_set else 0.0
-            preference_score = 100.0 * preference_score_map.get(query_id, 0.0)
-
-            current_score = (
-                0.1 * schema_score
-                + 0.1 * commonsense_score
-                + 0.25 * logic_score
-                + 0.4 * all_pass_score
-                + 0.15 * preference_score
-            )
-
-            # -- constraints_solved: save if all hard constraints pass -------
-            if query_id in all_pass_set:
-                dest = os.path.join(constraints_solved_dir, "{}.json".format(query_id))
-                shutil.copy2(src_file, dest)
-                updated_constraints += 1
-
-            # -- best: save if no previous result or current score is higher -
-            best_file = os.path.join(best_dir, "{}.json".format(query_id))
-            previous_score = -1
-            if os.path.exists(best_file):
-                try:
-                    with open(best_file) as f:
-                        stored = json.load(f)
-                    previous_score = float(stored.get("_eval_score", 0))
-                except Exception:
-                    previous_score = -1
-
-            if current_score > previous_score:
-                # Annotate result with its score before storing
-                try:
-                    with open(src_file) as f:
-                        result_copy = json.load(f)
-                    result_copy["_eval_score"] = current_score
-                    with open(best_file, "w") as f:
-                        json.dump(result_copy, f, ensure_ascii=False, indent=2)
-                except Exception:
-                    shutil.copy2(src_file, best_file)
-                updated_best += 1
-
-        print("constraints_solved: {} results saved/updated in {}".format(updated_constraints, constraints_solved_dir))
-        print("best: {} results updated in {}".format(updated_best, best_dir))
