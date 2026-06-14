@@ -3,6 +3,7 @@ import os
 import time
 import math
 import json
+import re
 from copy import deepcopy
 
 from agent.base import BaseAgent
@@ -150,8 +151,60 @@ class TPCAgent(BaseAgent):
     def _collect_constraints(self, query):
         variants = self._constraint_variants(query)
         if len(variants) == 0:
-            return {}
-        return variants[0]
+            return self._augment_constraints_from_hard_logic(query, {})
+        return self._augment_constraints_from_hard_logic(query, variants[0])
+
+    def _augment_constraints_from_hard_logic(self, query, constraints):
+        """Backfill frequently-missed structured constraints from hard_logic_py text."""
+        merged = deepcopy(constraints) if isinstance(constraints, dict) else {}
+        hard_logic_py = self.hard_logic_lookup.get(str(query.get("uid", "")), [])
+        if not isinstance(hard_logic_py, list) or len(hard_logic_py) == 0:
+            return merged
+
+        budgets = merged.get("budgets")
+        if not isinstance(budgets, dict):
+            budgets = {}
+
+        for expr in hard_logic_py:
+            if not isinstance(expr, str):
+                continue
+
+            # Infer inner-city transport budget cap.
+            m_inner = re.search(r"inner_city_transportation_cost\s*<=\s*(\d+(?:\.\d+)?)", expr)
+            if m_inner:
+                limit = float(m_inner.group(1))
+                if "inner_transport" not in budgets or float(budgets.get("inner_transport", -1)) < 0:
+                    budgets["inner_transport"] = limit
+                else:
+                    budgets["inner_transport"] = min(float(budgets["inner_transport"]), limit)
+
+            # Infer explicit non-train requirement for both outbound/return.
+            if "allactivities(plan)[0]['type'] != \"train\"" in expr and "allactivities(plan)[-1]['type'] != \"train\"" in expr:
+                merged["intercity_mode"] = "airplane"
+
+            # Infer required room type.
+            m_room = re.search(r"room_type\(activity\)!=(\d)", expr)
+            if m_room and "room_type" not in merged:
+                merged["room_type"] = int(m_room.group(1))
+
+            # Infer required attraction type set inclusion.
+            m_attr_type = re.search(r"attraction_type_set\).*\{\"([^\"]+)\"\}<=attraction_type_set", expr, re.DOTALL)
+            if m_attr_type:
+                req_types = merged.get("required_attraction_types")
+                if not isinstance(req_types, list):
+                    req_types = []
+                t = m_attr_type.group(1)
+                if not any(self._match_constraint_text(existing, t) for existing in req_types):
+                    req_types.append(t)
+                merged["required_attraction_types"] = req_types
+
+            # Infer required hotel amenity/type in featurehoteltype checks.
+            m_hotel_type = re.search(r"accommodation_type_set\).*\{\"([^\"]+)\"\}&accommodation_type_set", expr, re.DOTALL)
+            if m_hotel_type and "hotel_amenity" not in merged and "hotel_type" not in merged:
+                merged["hotel_amenity"] = m_hotel_type.group(1)
+
+        merged["budgets"] = budgets
+        return merged
 
     def _plan_total_cost(self, plan):
         total = 0.0
@@ -176,16 +229,20 @@ class TPCAgent(BaseAgent):
     def _build_best_plan(self, query):
         variants = self._constraint_variants(query)
         if len(variants) <= 1:
-            return self._build_plan(query, constraints=variants[0] if variants else None)
+            base_constraints = variants[0] if variants else None
+            if base_constraints is not None:
+                base_constraints = self._augment_constraints_from_hard_logic(query, base_constraints)
+            return self._build_plan(query, constraints=base_constraints)
 
         best_plan = None
         best_key = None
         for constraints in variants:
+            constraints = self._augment_constraints_from_hard_logic(query, constraints)
             candidate = self._build_plan(query, constraints=constraints)
             passed, total = self._score_plan_against_hard_logic(query, candidate)
             total_cost = self._plan_total_cost(candidate)
             candidate_key = (passed, -total_cost)
-            if best_plan is None or candidate_key > best_key:
+            if best_plan is None or best_key is None or candidate_key > best_key:
                 best_plan = candidate
                 best_key = candidate_key
                 if total > 0 and passed == total:
@@ -1286,11 +1343,10 @@ class TPCAgent(BaseAgent):
             for m in (self._transport_constraints.get("excluded_inner_transport", []) or [])
         )
         conditional = self._transport_constraints.get("conditional_transport", None)
-        mode_order = ["taxi", "metro", "walk"]
+        mode_order = ["metro", "walk", "taxi"]
 
         # If inner_transport budget is constrained, prefer cheaper modes (metro > walk > taxi)
         inner_budget_limit = getattr(self, "_budget_limits", {}).get("inner_transport", -1)
-        inner_budget_spent = getattr(self, "_budget_tracker", {}).get("inner_transport", 0.0)
         if inner_budget_limit >= 0:
             # Always prefer metro over taxi when there's an inner transport budget
             mode_order = ["metro", "walk", "taxi"]
@@ -1333,9 +1389,10 @@ class TPCAgent(BaseAgent):
                             "distance": seg["distance"],
                         }
                         if seg["mode"] == "taxi":
+                            cars = max(1, int(math.ceil(float(people) / 4.0)))
                             t["price"] = seg["cost"]
-                            t["cost"] = seg["cost"] * 1  # 1 car
-                            t["cars"] = 1
+                            t["cost"] = seg["cost"] * cars
+                            t["cars"] = cars
                         elif seg["mode"] == "metro":
                             t["price"] = seg["cost"]
                             t["cost"] = seg["cost"] * people

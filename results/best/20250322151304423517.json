@@ -21,51 +21,49 @@
         {
           "type": "attraction",
           "position": "Dameisha Seaside Park",
-          "start_time": "15:48",
-          "end_time": "17:18",
+          "start_time": "16:26",
+          "end_time": "17:56",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen Bao'an International Airport",
-              "end": "Dameisha Seaside Park",
-              "mode": "taxi",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
               "start_time": "14:32",
-              "end_time": "15:48",
-              "distance": 50.96,
-              "price": 224.04,
-              "cost": 224.04,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-          "start_time": "18:02",
-          "end_time": "19:02",
-          "price": 500.0,
-          "cost": 1500.0,
-          "tickets": 3,
-          "transports": [
+              "end_time": "14:37",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Dameisha Seaside Park",
-              "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "17:18",
-              "end_time": "18:02",
-              "distance": 29.76,
-              "price": 128.62,
-              "cost": 128.62,
-              "cars": 1
+              "start": "Airport East-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "14:37",
+              "end_time": "16:17",
+              "distance": 50.22,
+              "price": 9,
+              "cost": 27,
+              "tickets": 3
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Dameisha Seaside Park",
+              "mode": "walk",
+              "start_time": "16:17",
+              "end_time": "16:26",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "19:37",
+          "start_time": "19:52",
           "end_time": "24:00",
           "price": 379.0,
           "cost": 1137.0,
@@ -74,15 +72,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+              "start": "Dameisha Seaside Park",
+              "end": "Dameisha-Metro Station",
+              "mode": "walk",
+              "start_time": "17:56",
+              "end_time": "18:05",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Xingwei-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "19:42",
+              "distance": 48.96,
+              "price": 9,
+              "cost": 27,
+              "tickets": 3
+            },
+            {
+              "start": "Xingwei-Metro Station",
               "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
-              "start_time": "19:02",
-              "end_time": "19:37",
-              "distance": 23.98,
-              "price": 102.63,
-              "cost": 102.63,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "19:42",
+              "end_time": "19:52",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -104,44 +122,84 @@
         {
           "type": "attraction",
           "position": "China Merchants Shekou Cruise Home Port Tour",
-          "start_time": "09:00",
-          "end_time": "10:30",
+          "start_time": "09:29",
+          "end_time": "10:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "China Merchants Shekou Cruise Home Port Tour",
-              "mode": "taxi",
+              "end": "Xingwei-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:00",
-              "distance": 20.57,
-              "price": 87.24,
-              "cost": 87.24,
-              "cars": 1
+              "end_time": "08:40",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "08:40",
+              "end_time": "09:20",
+              "distance": 20.07,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "China Merchants Shekou Cruise Home Port Tour",
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:29",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Yuhua Seafood (Fuyong Branch)",
-          "start_time": "11:05",
-          "end_time": "12:05",
+          "start_time": "11:56",
+          "end_time": "12:56",
           "price": 170.0,
           "cost": 510.0,
           "tickets": 3,
           "transports": [
             {
               "start": "China Merchants Shekou Cruise Home Port Tour",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "10:59",
+              "end_time": "11:08",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Huaide-Metro Station",
+              "mode": "metro",
+              "start_time": "11:08",
+              "end_time": "11:54",
+              "distance": 23.13,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Huaide-Metro Station",
               "end": "Yuhua Seafood (Fuyong Branch)",
-              "mode": "taxi",
-              "start_time": "10:30",
-              "end_time": "11:05",
-              "distance": 23.85,
-              "price": 102.04,
-              "cost": 102.04,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:54",
+              "end_time": "11:56",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -157,14 +215,34 @@
           "transports": [
             {
               "start": "Yuhua Seafood (Fuyong Branch)",
+              "end": "Huaide-Metro Station",
+              "mode": "walk",
+              "start_time": "12:56",
+              "end_time": "12:58",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huaide-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "12:58",
+              "end_time": "13:02",
+              "distance": 2.21,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "taxi",
-              "start_time": "12:05",
-              "end_time": "12:09",
-              "distance": 2.8,
-              "price": 14.51,
-              "cost": 14.51,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:02",
+              "end_time": "13:07",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL179"
@@ -172,6 +250,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03569793701171875,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 0.3392820358276367,
+  "_eval_score": 90.23095238095237
 }
