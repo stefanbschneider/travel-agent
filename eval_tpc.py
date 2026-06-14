@@ -173,6 +173,36 @@ def write_file(file, content):
         f.write(content)
 
 
+def remove_query_ids_from_split_file(split_file_path, query_ids):
+    """Remove query IDs from a split file and return the count removed."""
+    if not query_ids or not os.path.exists(split_file_path):
+        return 0
+
+    query_id_set = {str(query_id).strip() for query_id in query_ids}
+    if not query_id_set:
+        return 0
+
+    with open(split_file_path, "r", encoding="utf-8") as f:
+        lines = [line.strip() for line in f.readlines()]
+
+    removed_count = 0
+    kept_lines = []
+    for line in lines:
+        if line and line in query_id_set:
+            removed_count += 1
+            continue
+        kept_lines.append(line)
+
+    if removed_count > 0:
+        with open(split_file_path, "w", encoding="utf-8") as f:
+            if kept_lines:
+                f.write("\n".join(kept_lines) + "\n")
+            else:
+                f.write("")
+
+    return removed_count
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -285,6 +315,13 @@ if __name__ == "__main__":
 
         constraints_solved_dir = os.path.join(project_root_path, "results", "constraints_solved")
         best_dir = os.path.join(project_root_path, "results", "best")
+        unsolved_split_file = os.path.join(
+            project_root_path,
+            "chinatravel",
+            "evaluation",
+            "default_splits",
+            "tpc_phase1_constraints_unsolved.txt",
+        )
         os.makedirs(constraints_solved_dir, exist_ok=True)
         os.makedirs(best_dir, exist_ok=True)
 
@@ -299,6 +336,7 @@ if __name__ == "__main__":
 
         updated_constraints = 0
         updated_best = 0
+        solved_query_ids = set()
 
         for query_id in query_index:
             src_file = os.path.join(project_root_path, "results", args.method, "{}.json".format(query_id))
@@ -328,6 +366,7 @@ if __name__ == "__main__":
                 dest = os.path.join(constraints_solved_dir, "{}.json".format(query_id))
                 shutil.copy2(src_file, dest)
                 updated_constraints += 1
+                solved_query_ids.add(query_id)
 
             # -- best: save if no previous result or current score is higher -
             best_file = os.path.join(best_dir, "{}.json".format(query_id))
@@ -351,6 +390,9 @@ if __name__ == "__main__":
                     shutil.copy2(src_file, best_file)
                 updated_best += 1
 
+        removed_unsolved = remove_query_ids_from_split_file(unsolved_split_file, solved_query_ids)
         print("constraints_solved: {} results saved/updated in {}".format(
             updated_constraints, constraints_solved_dir))
+        print("constraints_unsolved: {} query IDs removed from {}".format(
+            removed_unsolved, unsolved_split_file))
         print("best: {} results updated in {}".format(updated_best, best_dir))
