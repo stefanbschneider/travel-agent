@@ -1,11 +1,13 @@
 # Agent Design: Structured Planner with Constraint Validation
 
-## Competition: TPC@IJCAI 2026 (Travel Planning Challenge)
+## Competition Overview: TPC@IJCAI 2026
 
-- Generate multi-day trip itineraries from natural language queries
-- 1000 queries in `tpc_phase1` split (English data in `data/TPC_IJCAI_2026_phase1_EN/`)
-- Timeout: 300s per query
-- 10 cities: Beijing, Shanghai, Nanjing, Suzhou, Hangzhou, Shenzhen, Chengdu, Wuhan, Guangzhou, Chongqing
+Two competition phases:
+
+- **Competition Phase 1 (public leaderboard, deadline 1 Aug 2026):** Submit prediction files for the released 1000-query set (`tpc_phase1`). Any method allowed. Only the latest submission per team is scored. Goal: finish top 5 to advance.
+- **Competition Phase 2 (final test, 1–7 Aug 2026):** Top 5 teams submit a self-contained harness. Organizers run it on Qwen3.6-27B (SGLang, 2× A800 80G). Final rankings determine 1st–3rd place.
+
+Data: English queries in `data/TPC_IJCAI_2026_phase1_EN/`, 10 cities (Beijing, Shanghai, Nanjing, Suzhou, Hangzhou, Shenzhen, Chengdu, Wuhan, Guangzhou, Chongqing), 300s timeout per query.
 
 ## Scoring Formula
 
@@ -21,265 +23,133 @@ $$\text{Score} = 0.40 \cdot \text{FPR} + 0.25 \cdot \text{C-LPR} + 0.10 \cdot \t
 | ATT | 5% | Average Transport Time (normalized to [0,1] over 15–120 min) |
 | DDR | 5% | Daily Dining Recommendations (restaurants/day, normalized to [0,1] over 0–3) |
 
-## Why Not Pure LLM (ReAct)?
+Hard constraints (FPR + C-LPR + EPR) account for **85%** of the total score.
 
-The scoring is dominated by **FPR (40%) + C-LPR (25%) + EPR (20%) = 85% from constraint satisfaction**. LLMs are bad at exact arithmetic, time arithmetic, and producing valid IDs. The NeSy approach (symbolic search + backtracking) gets the best results for a reason. An LLM-only ReAct agent will waste tokens and still produce invalid times, costs, and transport IDs.
+## Current Agent (TPCAgent)
 
-## Architecture: Rule-Based Planner + LLM for NL Understanding
+`chinatravel/agent/tpc_agent/tpc_agent.py` — `TPCAgent.run()`  
+`chinatravel/agent/tpc_agent/tpc_llm.py` — `TPCLLM` (LLM wrapper)
+
+### Architecture
 
 ```
 ┌─────────────────────────────────────────────┐
-│  1. QUERY PARSER (LLM)                      │
+│  1. QUERY PARSER (LLM, once)                │
 │  NL → structured constraints                │
-│  - required attractions, cuisines, hotels   │
-│  - budget cap, transport preferences        │
-│  - special timing requests                  │
+│  required attractions/restaurants/hotels,   │
+│  budget cap, transport mode, timing         │
 └──────────────────┬──────────────────────────┘
                    ▼
 ┌─────────────────────────────────────────────┐
 │  2. DATA GATHERER (deterministic)           │
 │  Query WorldEnv once, cache everything:     │
-│  - intercity flights/trains (out + return)  │
-│  - all attractions + opening hours          │
-│  - all restaurants + opening hours          │
-│  - all accommodations + prices              │
+│  intercity transport, attractions,          │
+│  restaurants, hotels + all prices/hours     │
 └──────────────────┬──────────────────────────┘
                    ▼
 ┌─────────────────────────────────────────────┐
 │  3. ITINERARY BUILDER (deterministic)       │
-│  Day-by-day schedule construction:          │
-│  Day 1: intercity arrival → activities      │
-│  Day 2..N-1: breakfast → attractions →      │
-│              lunch → attractions → dinner → │
-│              hotel                           │
-│  Day N: activities → intercity departure    │
-│                                             │
-│  Each step:                                 │
-│  - Pick next POI (prioritize required ones) │
-│  - Call goto() for transport segments       │
-│  - Compute exact times, costs, tickets      │
-│  - Validate timing feasibility              │
+│  Fixed daily template:                      │
+│  Day 1: arrival → activities                │
+│  Mid days: breakfast → attr → lunch →       │
+│            attr → dinner → hotel            │
+│  Last day: activities → departure           │
+│  Required POIs inserted first; goto() for   │
+│  all transport; budget tracked per bucket   │
 └──────────────────┬──────────────────────────┘
                    ▼
 ┌─────────────────────────────────────────────┐
-│  4. CONSTRAINT CHECKER (symbolic)           │
-│  Run commonsense + hard_logic_py checks     │
-│  If fail → backtrack/adjust                 │
+│  4. BRANCH SELECTOR (symbolic)              │
+│  For OR/group queries: generate one         │
+│  candidate per branch, score with           │
+│  hard_logic_py, keep best plan              │
 └─────────────────────────────────────────────┘
 ```
 
-## Key Design Decisions
+### Key Principles
 
-### 1. LLM role is minimal and front-loaded
+- **LLM only for NL parsing.** All prices, times, transport IDs, and POI names come from `WorldEnv` verbatim. Never let the LLM generate them.
+- **goto() for every transport segment.** Exact duration, distance, and cost; never estimated.
+- **Fixed time budgets.** ~90 min per attraction, ~60 min per meal.
+- **Graceful degradation.** Always output a structurally valid plan; EPR points are worth 20% even when hard logic fails.
 
-Use the LLM only once at the start to extract structured constraints from `nature_language` (required attractions, budget limits, transport preferences, cuisine preferences). Everything else is deterministic — this avoids hallucinated IDs, wrong prices, and timing errors.
-
-### 2. Greedy day-by-day construction, not search
-
-The NeSy agent does breadth-first search with backtracking, which is powerful but complex. A simpler approach: greedily fill each day following a fixed template (intercity → breakfast → attraction → lunch → attraction → dinner → hotel), inserting required POIs first, then filling with nearby ones. This reliably produces valid plans.
-
-### 3. Every value comes from the environment
-
-Never let the LLM generate a price, time, transport ID, or POI name. Always query `WorldEnv` and use the returned values verbatim. This is the single most important principle for passing EPR constraints.
-
-### 4. Transport is computed, not guessed
-
-Always call `goto()` to get exact walk/metro/taxi segments between locations. Use the returned distance, duration, and cost directly.
-
-### 5. Fixed time budgets
-
-Use the same defaults the NeSy agent uses: ~90 min per attraction, ~60 min per meal. This simplifies scheduling enormously.
-
-### 6. Graceful degradation
-
-Even if hard constraints can't all be met, a structurally valid plan still earns EPR points (20%). Always output *something* valid.
-
-## Why This Beats Alternatives
-
-| Approach | Problem |
-|----------|---------|
-| Pure ReAct | LLM hallucinates IDs, miscalculates costs, times out on tool loops |
-| Full NeSy search | Complex to implement, heavy backtracking machinery |
-| LLM-Modulo | Needs oracle translation (hidden at test), multiple LLM rounds |
-| **Structured planner** | Simple, fast, reliable on the 85% that matters |
-
-## Implementation Phases
-
-### Phase 1 — Baseline that always produces valid plans
-
-Hard-code the day template, pick random valid POIs, compute all times/costs from env. Target: high EPR (environment pass rate).
-
-### Phase 2 — Add NL constraint parsing
-
-Use LLM to extract required attractions/constraints from `nature_language`. Insert required POIs into the plan. Target: high C-LPR + FPR.
-
-### Phase 3 — Optimize preferences
-
-Maximize daily attractions (DAV), minimize transport time (ATT), add 3 meals/day (DDR). Use `attractions_nearby()` to cluster POIs geographically.
-
-### Phase 4 — Constraint validation + retry
-
-Run `func_commonsense_constraints` and `evaluate_constraints_py` on the output. If failures, adjust and retry (still within 300s budget).
-
-## Entry Points
-
-- `chinatravel/agent/tpc_agent/tpc_agent.py` — `TPCAgent.run()` method (to implement)
-- `chinatravel/agent/tpc_agent/tpc_llm.py` — `TPCLLM` class (LLM wrapper to implement)
-
-## Run & Evaluate
-
-```bash
-python run_tpc.py --splits tpc_phase1 --agent TPCAgent --llm TPCLLM --timeout 300 --lang en
-python eval_tpc.py --splits tpc_phase1 --method TPCAgent_TPCLLM_en
-```
-
-## Key Environment APIs (WorldEnv)
+### Key Environment APIs
 
 | Category | Key APIs |
 |----------|----------|
 | Attractions | `attractions_select`, `attractions_nearby`, `attractions_id_is_open`, `attractions_types` |
 | Restaurants | `restaurants_select`, `restaurants_nearby`, `restaurants_id_is_open`, `restaurants_cuisine` |
 | Hotels | `accommodations_select`, `accommodations_nearby` |
-| Inner-city transport | `goto(city, start, end, time, transport_type)` → route segments with cost/time |
-| Intercity transport | `intercity_transport_select(start_city, end_city, type, earliest_time)` → trains/flights |
+| Inner-city transport | `goto(city, start, end, time, transport_type)` → segments with cost/time |
+| Intercity transport | `intercity_transport_select(start_city, end_city, type, earliest_time)` |
 
-## Constraints to Satisfy
+### Run & Evaluate
 
-### Environment (commonsense) constraints
-- Intercity transport on first/last day with valid IDs
-- Chronological timing (all activities ordered, no overlaps)
-- Valid POIs (attractions/restaurants must exist in city DB)
-- Correct costs (match environment prices × tickets/rooms)
-- Transport segments between different locations
-- Restaurant timing (breakfast ≤9:00, lunch 11:00–14:00, dinner ≥17:00)
-- Accommodation required if >1 day trip
+```bash
+.venv/bin/python run_tpc.py --splits tpc_phase1 --agent TPCAgent --llm TPCLLM --lang en
+.venv/bin/python eval_tpc.py --splits tpc_phase1 --method TPCAgent_TPCLLM_en
+```
 
-### Hard logic constraints (from query)
-- Visit specific attractions
-- Budget limits
-- Transport mode restrictions
-- Hotel requirements
-- People count / ticket count correctness
+## Current Score (2026-06-13)
 
-## Data Sizes (per city, approximate)
+Overall **79.28** — leaderboard position ~9, top 5 threshold estimated ~89+.
 
-- ~330 attractions
-- ~470 restaurants
-- ~380 accommodations
-- 720 flights total (all city pairs)
-- 90 train route files
+| Metric | Score |
+|--------|-------|
+| Overall | 79.28 |
+| FPR | 69.60 |
+| C-LPR | 89.18 |
+| EPR-micro | 99.96 |
+| EPR-macro | 99.20 |
+| DAV | 29.17 |
+| ATT | 86.99 |
+| DDR | 66.93 |
 
-## Current Status (2026-06-13)
+EPR is effectively saturated. The remaining gap to the top 5 is almost entirely in FPR and C-LPR — hard-logic failures.
 
-Full evaluation after budget-aware planning, required-entity handling, timing/proximity guards, and branch-aware disjunctive selection:
+Key improvements already in place: budget-aware cost tracking, required-entity enforcement, timing/proximity guards, disjunctive branch selection for OR-style queries.
 
-- Overall: 79.28075254974772
-- FPR: 69.60
-- C-LPR: 89.18161434977578
-- EPR-micro: 99.956
-- EPR-macro: 99.20
-- DAV: 29.170258620689737
-- ATT: 86.98583684505353
-- DDR: 66.92688378033218
+Negative lesson: a cuisine-normalization attempt regressed the full score and was reverted. Keep changes behavior-scoped and validate with full eval before retaining.
 
-Interpretation:
+## Competition Phase 1 Strategy: Per-Query Optimization
 
-- Environment validity is effectively saturated; the planner is already near ceiling on EPR.
-- The best recent gain came from hard-logic improvements, not schema or commonsense fixes.
-- The current score is in the expected "high 70s / low 80s" band from the earlier forecast.
+The gap to the top 5 is too large for incremental agent tuning alone. For Competition Phase 1, treat the leaderboard as a per-query optimization problem over the released 1000 queries:
 
-## What Improved
+1. Solve or near-solve each query individually.
+2. Track the best result per query in `results/best/`.
+3. Persist any fully constraint-solved result in `results/constraints_solved/`.
+4. Assemble the submission from the best known answer per query.
 
-Implemented milestones that materially moved the score:
+Any solver or repair logic developed here should stay modular so it can be reused in the Competition Phase 2 harness.
 
-- Budget-aware activity acceptance with per-bucket cost tracking.
-- Stronger commitment to required attractions, restaurants, hotels, and room constraints.
-- Timing guards and hotel-nearby-first selection during construction.
-- Disjunctive branch selection: for `groups` / OR-style queries, generate one candidate per branch, score them with local `hard_logic_py`, and keep the best plan.
+## Remaining Weak Areas
 
-Measured impact of the latest successful step:
+Based on current diagnostics:
 
-- Before branch-aware disjunctive selection: overall `78.77`, FPR `68.9`, C-LPR `88.99`.
-- After branch-aware disjunctive selection: overall `79.28`, FPR `69.6`, C-LPR `89.18`.
+- `timing_constraints` — depart/arrive window violations
+- `hotel_nearby` — hotel not close enough to requested area
+- `required_attraction_types` — missing semantic attraction categories
+- Budget edge cases — overflow or under-spend near the limit
+- Conditional transport — "take taxi if distance > X km" not yet enforced
 
-Negative result worth keeping in mind:
+## Next Steps (ordered by expected impact)
 
-- A follow-up restaurant cuisine-normalization attempt looked promising on single cases but regressed the full score and was reverted.
-- Lesson: keep optimization work behavior-scoped and validate with full eval before retaining it.
+### 1. Conditional inner-city transport enforcement
 
-## Current Failure Picture
+Satisfy queries like "take taxi only if distance exceeds X km". In `_get_transport`, check route distance against `conditional_transport.threshold_km` and apply the mode conditionally. Preserve fallback when the mode is infeasible.
 
-Dominant remaining gap:
+### 2. Lightweight repair loop
 
-- Hard-logic satisfaction still dominates the residual score gap.
+After the initial build, score with `evaluate_constraints_py`. If failing, run up to 2 targeted repair passes: budget overflow, missing required POI/type, final-day timing miss, hotel-nearby miss. Guard total wall time to stay inside 300s.
 
-Most likely remaining weak areas, based on prior diagnostics plus current planner behavior:
+### 3. Required-type completion
 
-- `timing_constraints`
-- `hotel_nearby`
-- `required_attraction_types`
-- residual budget edge cases
-- conditional inner-city transport rules
+Reserve slots for unmet required attraction types before optional attractions. Track satisfaction state during build; do not finalize the plan until all required types are either satisfied or infeasible.
 
-## Next Steps
+### 4. Targeted timing repair
 
-### Priority 1 — Enforce Conditional Inner-City Transport Rules
+Detect which activity violates a `depart_no_earlier` / `arrive_no_later` clause. Shift, swap, or drop only that activity, then re-check final-day departure feasibility.
 
-Goal: satisfy queries like "if distance exceeds X km, take taxi" instead of only preferring the mode globally.
+### 5. Competition Phase 2 harness packaging
 
-Tasks:
-
-1. In `_get_transport`, evaluate route distance against `conditional_transport.threshold_km`.
-2. Apply the requested mode only when the threshold condition is met.
-3. Preserve fallback behavior when the requested mode is infeasible.
-4. Re-evaluate on the full split to confirm this helps hard logic without hurting EPR.
-
-### Priority 2 — Lightweight Repair Loop
-
-Goal: convert near-miss plans into passing plans without introducing heavy search.
-
-Tasks:
-
-1. After initial plan build, score with `evaluate_constraints_py`.
-2. If failing, run up to 2 targeted repair passes.
-3. First repair types: budget overflow, missing required POI/type, final-day timing miss, hotel-nearby miss.
-4. Keep a strict wall-clock guard to stay comfortably inside the 300s timeout.
-
-### Priority 3 — Better Required-Type Satisfaction
-
-Goal: improve `required_attraction_types` and similar semantic requirement passes.
-
-Tasks:
-
-1. Reserve explicit slots for unmet required attraction types before optional attractions.
-2. Track satisfaction state during build rather than relying only on candidate ordering.
-3. Delay plan finalization until all required types are either satisfied or infeasible.
-
-### Priority 4 — Targeted Timing Repair
-
-Goal: reduce failures on location-specific `depart_no_earlier` / `arrive_no_later` constraints.
-
-Tasks:
-
-1. Detect which activity violates the timing clause.
-2. Shift, swap, or drop only the conflicting local activity.
-3. Re-check final-day departure feasibility after any timing repair.
-
-## Suggested Milestones
-
-1. **M1:** Conditional transport enforcement + full re-eval
-2. **M2:** Lightweight repair loop for budgets / missing POIs / timing + full re-eval
-3. **M3:** Required-type completion logic + full re-eval
-4. **M4:** Final timing / proximity cleanup + final full eval
-
-## Expected Impact
-
-The current branch-aware planner has already reached `79.28` overall.
-
-Realistic next target if priorities 1-3 land cleanly:
-
-- FPR: `69.6 -> 71-74`
-- C-LPR: `89.18 -> 90-92`
-- Overall: `79.28 -> 80+`
-
-Preference metrics remain lower leverage than hard-logic gains, so they should stay secondary until the current constraint failures are squeezed further.
+Package the constraint parser, planner, scorer, and repair operators into a reproducible self-contained harness that runs on Qwen3.6-27B via SGLang (no hardcoded answers, no memorized solutions).
