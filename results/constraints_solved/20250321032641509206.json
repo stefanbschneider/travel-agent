@@ -1,0 +1,132 @@
+{
+    "people_number": 3,
+    "start_city": "Chengdu",
+    "target_city": "Suzhou",
+    "itinerary": [
+        {
+            "day": 1,
+            "activities": [
+                {
+                    "type": "train",
+                    "start_time": "07:10",
+                    "end_time": "21:35",
+                    "start": "Chengdu East Railway Station",
+                    "end": "Suzhou Station",
+                    "price": 945.53,
+                    "cost": 2836.59,
+                    "tickets": 3,
+                    "transports": [],
+                    "TrainID": "D638"
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+                    "start_time": "21:35",
+                    "end_time": "24:00",
+                    "price": 325.0,
+                    "cost": 975.0,
+                    "rooms": 3,
+                    "room_type": 1,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Suzhou Station",
+                            "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
+                            "mode": "taxi",
+                            "start_time": "21:35",
+                            "end_time": "21:35",
+                            "distance": 0.43,
+                            "price": 11.0,
+                            "cost": 11.0,
+                            "cars": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 2,
+            "activities": [
+                {
+                    "type": "breakfast",
+                    "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+                    "start_time": "07:30",
+                    "end_time": "08:30",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 0,
+                    "transports": []
+                },
+                {
+                    "type": "attraction",
+                    "position": "Maple Bridge Scenic Area",
+                    "start_time": "08:36",
+                    "end_time": "10:06",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
+                            "end": "Maple Bridge Scenic Area",
+                            "mode": "taxi",
+                            "start_time": "08:30",
+                            "end_time": "08:36",
+                            "distance": 4.03,
+                            "price": 18.81,
+                            "cost": 18.81,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 168.0,
+                    "cost": 504.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Maple Bridge Scenic Area",
+                            "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+                            "mode": "taxi",
+                            "start_time": "10:06",
+                            "end_time": "10:21",
+                            "distance": 10.39,
+                            "price": 41.43,
+                            "cost": 41.43,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "21:43",
+                    "end_time": "08:44",
+                    "start": "Suzhou Station",
+                    "end": "Chengdu West Railway Station",
+                    "price": 630.35,
+                    "cost": 1891.0500000000002,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+                            "end": "Suzhou Station",
+                            "mode": "taxi",
+                            "start_time": "12:00",
+                            "end_time": "12:10",
+                            "distance": 6.89,
+                            "price": 28.82,
+                            "cost": 28.82,
+                            "cars": 1
+                        }
+                    ],
+                    "TrainID": "K282"
+                }
+            ]
+        }
+    ],
+    "elapsed_time(sec)": 0.026873111724853516
+}

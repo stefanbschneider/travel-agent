@@ -1,0 +1,155 @@
+{
+  "people_number": 2,
+  "start_city": "Wuhan",
+  "target_city": "Chengdu",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:35",
+          "end_time": "17:06",
+          "start": "Wuhan Station",
+          "end": "Chengdu East Railway Station",
+          "price": 587.87,
+          "cost": 1175.74,
+          "tickets": 2,
+          "transports": [],
+          "TrainID": "D367"
+        },
+        {
+          "type": "dinner",
+          "position": "Mawangzi (Taikoo Li Branch)",
+          "start_time": "17:14",
+          "end_time": "18:14",
+          "price": 140.0,
+          "cost": 280.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu East Railway Station",
+              "end": "Mawangzi (Taikoo Li Branch)",
+              "mode": "taxi",
+              "start_time": "17:06",
+              "end_time": "17:14",
+              "distance": 5.9,
+              "price": 25.34,
+              "cost": 25.34,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "The Longemont Chengdu",
+          "start_time": "18:23",
+          "end_time": "24:00",
+          "price": 588.0,
+          "cost": 1176.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Mawangzi (Taikoo Li Branch)",
+              "end": "The Longemont Chengdu",
+              "mode": "taxi",
+              "start_time": "18:14",
+              "end_time": "18:23",
+              "distance": 6.3,
+              "price": 26.74,
+              "cost": 26.74,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "The Longemont Chengdu",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Lane",
+          "start_time": "08:42",
+          "end_time": "10:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "The Longemont Chengdu",
+              "end": "Manjushri Lane",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:42",
+              "distance": 8.27,
+              "price": 33.65,
+              "cost": 33.65,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Crane's Call Tea House (People's Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 45.0,
+          "cost": 90.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Lane",
+              "end": "Crane's Call Tea House (People's Park Branch)",
+              "mode": "taxi",
+              "start_time": "10:12",
+              "end_time": "10:16",
+              "distance": 3.18,
+              "price": 15.83,
+              "cost": 15.83,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:18",
+          "end_time": "21:31",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 447.72,
+          "cost": 895.44,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:22",
+              "distance": 14.93,
+              "price": 61.87,
+              "cost": 61.87,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL467"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.030765056610107422,
+  "_eval_score": 20.0
+}

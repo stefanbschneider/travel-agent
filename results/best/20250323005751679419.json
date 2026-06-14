@@ -1,0 +1,192 @@
+{
+  "people_number": 4,
+  "start_city": "Suzhou",
+  "target_city": "Wuhan",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "08:51",
+          "end_time": "13:26",
+          "start": "Suzhou North Station",
+          "end": "Wuhan Station",
+          "price": 392.42,
+          "cost": 1569.68,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "G586"
+        },
+        {
+          "type": "attraction",
+          "position": "Qingchuan Pavilion",
+          "start_time": "14:12",
+          "end_time": "15:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wuhan Station",
+              "end": "Wuhan Station East Square-Metro Station",
+              "mode": "walk",
+              "start_time": "13:26",
+              "end_time": "13:28",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wuhan Station East Square-Metro Station",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "metro",
+              "start_time": "13:28",
+              "end_time": "13:54",
+              "distance": 13.04,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Qingchuan Pavilion",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "14:12",
+              "distance": 1.55,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Five Percent Villa Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 298.0,
+          "cost": 1192.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qingchuan Pavilion",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "walk",
+              "start_time": "15:42",
+              "end_time": "16:00",
+              "distance": 1.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Jianghan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:06",
+              "distance": 3.08,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Jianghan Road-Metro Station",
+              "end": "Five Percent Villa Restaurant",
+              "mode": "walk",
+              "start_time": "16:06",
+              "end_time": "16:15",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Wuhan Ihow International Hotel",
+          "start_time": "18:36",
+          "end_time": "24:00",
+          "price": 179.0,
+          "cost": 716.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Five Percent Villa Restaurant",
+              "end": "Jianghan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jianghan Road-Metro Station",
+              "end": "Wuhan Station East Square-Metro Station",
+              "mode": "metro",
+              "start_time": "18:09",
+              "end_time": "18:35",
+              "distance": 13.25,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Wuhan Station East Square-Metro Station",
+              "end": "Wuhan Ihow International Hotel",
+              "mode": "walk",
+              "start_time": "18:35",
+              "end_time": "18:36",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Wuhan Ihow International Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "15:09",
+          "end_time": "19:22",
+          "start": "Wuhan Station",
+          "end": "Suzhou North Station",
+          "price": 392.42,
+          "cost": 1569.68,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wuhan Ihow International Hotel",
+              "end": "Wuhan Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.338120523651555,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "G1774"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.25934505462646484,
+  "_eval_score": 91.58928571428571
+}

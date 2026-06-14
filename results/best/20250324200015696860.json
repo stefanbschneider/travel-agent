@@ -1,0 +1,177 @@
+{
+  "people_number": 4,
+  "start_city": "Hangzhou",
+  "target_city": "Suzhou",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:26",
+          "end_time": "09:09",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "G1866"
+        },
+        {
+          "type": "lunch",
+          "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 168.0,
+          "cost": 672.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Suzhou North Station",
+              "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+              "mode": "taxi",
+              "start_time": "09:09",
+              "end_time": "09:26",
+              "distance": 11.83,
+              "price": 47.92,
+              "cost": 47.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Maple Bridge Scenic Area",
+          "start_time": "12:15",
+          "end_time": "13:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+              "end": "Maple Bridge Scenic Area",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:15",
+              "distance": 10.39,
+              "price": 41.43,
+              "cost": 41.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shangri-La Hotel Suzhou · Shang Palace",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 231.0,
+          "cost": 924.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Maple Bridge Scenic Area",
+              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "mode": "taxi",
+              "start_time": "13:45",
+              "end_time": "13:49",
+              "distance": 2.92,
+              "price": 14.94,
+              "cost": 14.94,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Jinke Grand Hotel",
+          "start_time": "18:24",
+          "end_time": "24:00",
+          "price": 526.0,
+          "cost": 1052.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Jinke Grand Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:24",
+              "distance": 16.17,
+              "price": 67.46,
+              "cost": 67.46,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Jinke Grand Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Shantang Street",
+          "start_time": "08:46",
+          "end_time": "10:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jinke Grand Hotel",
+              "end": "Shantang Street",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:46",
+              "distance": 11.09,
+              "price": 44.59,
+              "cost": 44.59,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:24",
+          "end_time": "19:08",
+          "start": "Suzhou Station",
+          "end": "Hangzhou East Railway Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shantang Street",
+              "end": "Suzhou Station",
+              "mode": "taxi",
+              "start_time": "10:16",
+              "end_time": "10:17",
+              "distance": 0.74,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ],
+          "TrainID": "G7374"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.029318809509277344,
+  "_eval_score": 93.75
+}

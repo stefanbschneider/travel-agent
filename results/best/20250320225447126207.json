@@ -1,0 +1,101 @@
+{
+  "people_number": 3,
+  "start_city": "Wuhan",
+  "target_city": "Chongqing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "07:31",
+          "end_time": "08:27",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 358.71,
+          "cost": 1076.1299999999999,
+          "tickets": 3,
+          "transports": [],
+          "FlightID": "FL608"
+        },
+        {
+          "type": "lunch",
+          "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 96.0,
+          "cost": 288.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "mode": "taxi",
+              "start_time": "08:27",
+              "end_time": "08:55",
+              "distance": 19.05,
+              "price": 80.42,
+              "cost": 80.42,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+          "start_time": "12:27",
+          "end_time": "24:00",
+          "price": 74.0,
+          "cost": 222.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "end": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:27",
+              "distance": 18.35,
+              "price": 77.26,
+              "cost": 77.26,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "19:58",
+          "end_time": "20:54",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 341.23,
+          "cost": 1023.69,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+              "end": "Chongqing Jiangbei International Airport",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:33",
+              "distance": 2.1,
+              "price": 12.04,
+              "cost": 12.04,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL388"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03263711929321289,
+  "_eval_score": 20.0
+}

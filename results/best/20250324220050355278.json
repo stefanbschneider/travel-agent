@@ -1,0 +1,199 @@
+{
+  "people_number": 4,
+  "start_city": "Hangzhou",
+  "target_city": "Beijing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "07:45",
+          "end_time": "09:09",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 611.21,
+          "cost": 2444.84,
+          "tickets": 4,
+          "transports": [],
+          "FlightID": "FL500"
+        },
+        {
+          "type": "lunch",
+          "position": "Tidu (Beijing Fang Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 337.0,
+          "cost": 1348.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Tidu (Beijing Fang Branch)",
+              "mode": "taxi",
+              "start_time": "09:09",
+              "end_time": "10:14",
+              "distance": 43.82,
+              "price": 191.88,
+              "cost": 191.88,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Palace Museum",
+          "start_time": "12:04",
+          "end_time": "13:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Tidu (Beijing Fang Branch)",
+              "end": "The Palace Museum",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 3.03,
+              "price": 15.32,
+              "cost": 15.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jumbo Seafood (Beijing SKP Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 401.0,
+          "cost": 1604.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "The Palace Museum",
+              "end": "Jumbo Seafood (Beijing SKP Branch)",
+              "mode": "taxi",
+              "start_time": "13:34",
+              "end_time": "13:43",
+              "distance": 6.61,
+              "price": 27.83,
+              "cost": 27.83,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "CitiGO Hotel, Sanlitun, Beijing",
+          "start_time": "18:05",
+          "end_time": "24:00",
+          "price": 559.0,
+          "cost": 2236.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jumbo Seafood (Beijing SKP Branch)",
+              "end": "CitiGO Hotel, Sanlitun, Beijing",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 3.83,
+              "price": 18.11,
+              "cost": 18.11,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "CitiGO Hotel, Sanlitun, Beijing",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Old Summer Palace",
+          "start_time": "08:52",
+          "end_time": "10:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "CitiGO Hotel, Sanlitun, Beijing",
+              "end": "Old Summer Palace",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 14.89,
+              "price": 61.72,
+              "cost": 61.72,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Beijing Puxuan Hotel · Left Bank",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 733.0,
+          "cost": 2932.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Old Summer Palace",
+              "end": "Beijing Puxuan Hotel · Left Bank",
+              "mode": "taxi",
+              "start_time": "10:22",
+              "end_time": "10:42",
+              "distance": 13.37,
+              "price": 54.89,
+              "cost": 54.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:18",
+          "end_time": "18:42",
+          "start": "Beijing Daxing International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 516.02,
+          "cost": 2064.08,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Puxuan Hotel · Left Bank",
+              "end": "Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "13:10",
+              "distance": 46.69,
+              "price": 204.78,
+              "cost": 204.78,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL139"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.036572933197021484,
+  "_eval_score": 93.97108843537416
+}

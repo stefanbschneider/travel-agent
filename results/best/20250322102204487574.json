@@ -1,0 +1,304 @@
+{
+  "people_number": 3,
+  "start_city": "Suzhou",
+  "target_city": "Beijing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:24",
+          "end_time": "11:40",
+          "start": "Suzhou North Station",
+          "end": "Beijing South Railway Station",
+          "price": 668.44,
+          "cost": 2005.3200000000002,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "G4"
+        },
+        {
+          "type": "lunch",
+          "position": "Tidu (Beijing Fang Branch)",
+          "start_time": "11:45",
+          "end_time": "12:45",
+          "price": 337.0,
+          "cost": 1011.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Beijing South Railway Station",
+              "end": "Tidu (Beijing Fang Branch)",
+              "mode": "taxi",
+              "start_time": "11:40",
+              "end_time": "11:45",
+              "distance": 3.87,
+              "price": 18.26,
+              "cost": 18.26,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Palace Museum",
+          "start_time": "12:49",
+          "end_time": "14:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Tidu (Beijing Fang Branch)",
+              "end": "The Palace Museum",
+              "mode": "taxi",
+              "start_time": "12:45",
+              "end_time": "12:49",
+              "distance": 3.03,
+              "price": 15.32,
+              "cost": 15.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jumbo Seafood (Beijing SKP Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 401.0,
+          "cost": 1203.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "The Palace Museum",
+              "end": "Jumbo Seafood (Beijing SKP Branch)",
+              "mode": "taxi",
+              "start_time": "14:19",
+              "end_time": "14:28",
+              "distance": 6.61,
+              "price": 27.83,
+              "cost": 27.83,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Shanxi Hotel",
+          "start_time": "18:15",
+          "end_time": "24:00",
+          "price": 681.0,
+          "cost": 1362.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jumbo Seafood (Beijing SKP Branch)",
+              "end": "Shanxi Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:15",
+              "distance": 10.1,
+              "price": 40.15,
+              "cost": 40.15,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Shanxi Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Badaling Great Wall",
+          "start_time": "10:05",
+          "end_time": "11:35",
+          "price": 40.0,
+          "cost": 120.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanxi Hotel",
+              "end": "Badaling Great Wall",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "10:05",
+              "distance": 63.86,
+              "price": 282.06,
+              "cost": 282.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "National Museum of China",
+          "start_time": "13:04",
+          "end_time": "14:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Badaling Great Wall",
+              "end": "National Museum of China",
+              "mode": "taxi",
+              "start_time": "11:35",
+              "end_time": "13:04",
+              "distance": 59.84,
+              "price": 263.97,
+              "cost": 263.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1100.0,
+          "cost": 3300.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "National Museum of China",
+              "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
+              "mode": "taxi",
+              "start_time": "14:34",
+              "end_time": "14:41",
+              "distance": 4.89,
+              "price": 21.8,
+              "cost": 21.8,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Shanxi Hotel",
+          "start_time": "18:15",
+          "end_time": "24:00",
+          "price": 681.0,
+          "cost": 1362.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
+              "end": "Shanxi Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:15",
+              "distance": 10.52,
+              "price": 42.04,
+              "cost": 42.04,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Shanxi Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Prince Gong's Mansion",
+          "start_time": "08:44",
+          "end_time": "10:14",
+          "price": 40.0,
+          "cost": 120.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanxi Hotel",
+              "end": "Prince Gong's Mansion",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:44",
+              "distance": 9.56,
+              "price": 38.15,
+              "cost": 38.15,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Beijing Puxuan Hotel · Left Bank",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 733.0,
+          "cost": 2199.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Prince Gong's Mansion",
+              "end": "Beijing Puxuan Hotel · Left Bank",
+              "mode": "taxi",
+              "start_time": "10:14",
+              "end_time": "10:17",
+              "distance": 2.64,
+              "price": 13.95,
+              "cost": 13.95,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "18:04",
+          "end_time": "22:32",
+          "start": "Beijing South Railway Station",
+          "end": "Suzhou North Station",
+          "price": 668.44,
+          "cost": 2005.3200000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Beijing Puxuan Hotel · Left Bank",
+              "end": "Beijing South Railway Station",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:10",
+              "distance": 7.06,
+              "price": 29.41,
+              "cost": 29.41,
+              "cars": 1
+            }
+          ],
+          "TrainID": "G25"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03300309181213379,
+  "_eval_score": 94.56277056277057
+}

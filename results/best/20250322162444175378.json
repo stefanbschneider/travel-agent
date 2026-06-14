@@ -1,0 +1,111 @@
+{
+  "people_number": 3,
+  "start_city": "Chongqing",
+  "target_city": "Suzhou",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:09",
+          "end_time": "18:39",
+          "start": "Chongqing North Railway Station",
+          "end": "Suzhou Station",
+          "price": 814.87,
+          "cost": 2444.61,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "D2214"
+        },
+        {
+          "type": "dinner",
+          "position": "Shangri-La Hotel Suzhou · Shang Palace",
+          "start_time": "18:48",
+          "end_time": "19:48",
+          "price": 231.0,
+          "cost": 693.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "mode": "taxi",
+              "start_time": "18:39",
+              "end_time": "18:48",
+              "distance": 6.44,
+              "price": 27.25,
+              "cost": 27.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Suzhou Humble View Sijitang (Humble Administrator's Garden)",
+          "start_time": "19:59",
+          "end_time": "24:00",
+          "price": 378.0,
+          "cost": 1134.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Suzhou Humble View Sijitang (Humble Administrator's Garden)",
+              "mode": "taxi",
+              "start_time": "19:48",
+              "end_time": "19:59",
+              "distance": 7.39,
+              "price": 30.57,
+              "cost": 30.57,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Suzhou Humble View Sijitang (Humble Administrator's Garden)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "20:05",
+          "start": "Suzhou Station",
+          "end": "Chongqing North Railway Station",
+          "price": 814.87,
+          "cost": 2444.61,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Humble View Sijitang (Humble Administrator's Garden)",
+              "end": "Suzhou Station",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:32",
+              "distance": 1.58,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ],
+          "TrainID": "D956"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.029285907745361328,
+  "_eval_score": 91.66666666666666
+}

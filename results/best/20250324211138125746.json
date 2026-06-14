@@ -1,0 +1,89 @@
+{
+  "people_number": 2,
+  "start_city": "Suzhou",
+  "target_city": "Chongqing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:11",
+          "end_time": "18:30",
+          "start": "Suzhou New District Station",
+          "end": "Chongqing North Railway Station",
+          "price": 814.87,
+          "cost": 1629.74,
+          "tickets": 2,
+          "transports": [],
+          "TrainID": "D637"
+        },
+        {
+          "type": "accommodation",
+          "position": "Chongqing North Railway Station Atour Hotel",
+          "start_time": "18:30",
+          "end_time": "24:00",
+          "price": 332.0,
+          "cost": 332.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Chongqing North Railway Station",
+              "end": "Chongqing North Railway Station Atour Hotel",
+              "mode": "taxi",
+              "start_time": "18:30",
+              "end_time": "18:30",
+              "distance": 0.56,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Chongqing North Railway Station Atour Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "08:38",
+          "end_time": "20:43",
+          "start": "Chongqing North Railway Station",
+          "end": "Suzhou Station",
+          "price": 814.87,
+          "cost": 1629.74,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chongqing North Railway Station Atour Hotel",
+              "end": "Chongqing North Railway Station",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:30",
+              "distance": 0.56,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ],
+          "TrainID": "D3058"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03380084037780762,
+  "_eval_score": 90.83333333333334
+}
