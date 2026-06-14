@@ -22,6 +22,13 @@ from chinatravel.evaluation.hard_constraint import evaluate_hard_constraints, ev
 from chinatravel.evaluation.preference import evaluate_preference, evaluate_preference_v2
 
 
+def clamp_01(value):
+    try:
+        return max(0.0, min(1.0, float(value)))
+    except Exception:
+        return 0.0
+
+
 METHOD_LIST = [
     "example" "act_Deepseek_zeroshot",
     "act_GPT4o_zeroshot",
@@ -183,14 +190,20 @@ if __name__ == "__main__":
 
         print("All pass ratio: ", 1. * len(all_pass_id) / len(query_index) * 100)
 
+        # Compute per-query preference score for full-quality ranking in results/best.
+        preference_result_agg = evaluate_preference_v2(
+            query_index,
+            query_data,
+            result_data[method],
+            list(set(commonsense_pass_id) & set(logi_pass_id)),
+        )
+        preference_score_map = {}
+        for row in preference_result_agg.to_dict(orient="records"):
+            preference_score_map[row["data_id"]] = clamp_01(row.get("concept", 0.0))
+
         if args.preference:
             print("Preference:")
-            result_agg = evaluate_preference_v2(
-                query_index,
-                query_data,
-                result_data[method],
-                list(set(commonsense_pass_id) & set(logi_pass_id)),
-            )
+            result_agg = preference_result_agg
 
             res_file = "eval_res/splits_{}/{}/preference.csv".format(
                 args.splits, method
@@ -206,7 +219,8 @@ if __name__ == "__main__":
         os.makedirs(constraints_solved_dir, exist_ok=True)
         os.makedirs(best_dir, exist_ok=True)
 
-        # Per-query constraint score (0–3): schema + commonsense + hard logic
+        # Per-query weighted quality score (matching eval weighting style):
+        # 0.1 schema + 0.1 commonsense + 0.25 hard-logic + 0.4 all-hard-pass + 0.15 preference
         schema_pass_set = set(schema_pass_id)
         commonsense_pass_set = set(commonsense_pass_id)
         logi_pass_set = set(logi_pass_id)
@@ -220,10 +234,18 @@ if __name__ == "__main__":
             if not os.path.exists(src_file):
                 continue
 
+            schema_score = 100.0 if query_id in schema_pass_set else 0.0
+            commonsense_score = 100.0 if query_id in commonsense_pass_set else 0.0
+            logic_score = 100.0 if query_id in logi_pass_set else 0.0
+            all_pass_score = 100.0 if query_id in all_pass_set else 0.0
+            preference_score = 100.0 * preference_score_map.get(query_id, 0.0)
+
             current_score = (
-                int(query_id in schema_pass_set)
-                + int(query_id in commonsense_pass_set)
-                + int(query_id in logi_pass_set)
+                0.1 * schema_score
+                + 0.1 * commonsense_score
+                + 0.25 * logic_score
+                + 0.4 * all_pass_score
+                + 0.15 * preference_score
             )
 
             # -- constraints_solved: save if all hard constraints pass -------
@@ -239,7 +261,7 @@ if __name__ == "__main__":
                 try:
                     with open(best_file) as f:
                         stored = json.load(f)
-                    previous_score = stored.get("_eval_score", 0)
+                    previous_score = float(stored.get("_eval_score", 0))
                 except Exception:
                     previous_score = -1
 
@@ -257,4 +279,3 @@ if __name__ == "__main__":
 
         print("constraints_solved: {} results saved/updated in {}".format(updated_constraints, constraints_solved_dir))
         print("best: {} results updated in {}".format(updated_best, best_dir))
-
