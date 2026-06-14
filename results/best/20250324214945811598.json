@@ -29,36 +29,76 @@
           "transports": [
             {
               "start": "Beijing Daxing International Airport",
-              "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
               "start_time": "09:00",
-              "end_time": "10:05",
-              "distance": 43.82,
-              "price": 191.88,
-              "cost": 191.88,
-              "cars": 1
+              "end_time": "09:11",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Qianmen-Metro Station",
+              "mode": "metro",
+              "start_time": "09:11",
+              "end_time": "10:37",
+              "distance": 43.2,
+              "price": 8,
+              "cost": 40,
+              "tickets": 5
+            },
+            {
+              "start": "Qianmen-Metro Station",
+              "end": "Tidu (Beijing Fang Branch)",
+              "mode": "walk",
+              "start_time": "10:37",
+              "end_time": "10:41",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "The Palace Museum",
-          "start_time": "12:04",
-          "end_time": "13:34",
+          "start_time": "12:16",
+          "end_time": "13:46",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Tidu (Beijing Fang Branch)",
-              "end": "The Palace Museum",
-              "mode": "taxi",
+              "end": "Qianmen-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
               "end_time": "12:04",
-              "distance": 3.03,
-              "price": 15.32,
-              "cost": 15.32,
-              "cars": 1
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qianmen-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "12:04",
+              "end_time": "12:09",
+              "distance": 2.83,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "The Palace Museum",
+              "mode": "walk",
+              "start_time": "12:09",
+              "end_time": "12:16",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -73,21 +113,41 @@
           "transports": [
             {
               "start": "The Palace Museum",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "walk",
+              "start_time": "13:46",
+              "end_time": "13:53",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Dawanglu-Metro Station",
+              "mode": "metro",
+              "start_time": "13:53",
+              "end_time": "14:04",
+              "distance": 5.81,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Dawanglu-Metro Station",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
-              "mode": "taxi",
-              "start_time": "13:34",
-              "end_time": "13:43",
-              "distance": 6.61,
-              "price": 27.83,
-              "cost": 27.83,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:04",
+              "end_time": "14:08",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Atour S Hotel Beijing Daxing International Airport",
-          "start_time": "19:04",
+          "start_time": "19:51",
           "end_time": "24:00",
           "price": 561.0,
           "cost": 1683.0,
@@ -97,14 +157,34 @@
           "transports": [
             {
               "start": "Jumbo Seafood (Beijing SKP Branch)",
-              "end": "Atour S Hotel Beijing Daxing International Airport",
-              "mode": "taxi",
+              "end": "Dawanglu-Metro Station",
+              "mode": "walk",
               "start_time": "18:00",
-              "end_time": "19:04",
-              "distance": 43.09,
-              "price": 188.6,
-              "cost": 188.6,
-              "cars": 1
+              "end_time": "18:04",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dawanglu-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "19:32",
+              "distance": 44.36,
+              "price": 8,
+              "cost": 40,
+              "tickets": 5
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Atour S Hotel Beijing Daxing International Airport",
+              "mode": "walk",
+              "start_time": "19:32",
+              "end_time": "19:51",
+              "distance": 1.66,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -126,44 +206,42 @@
         {
           "type": "attraction",
           "position": "Old Summer Palace",
-          "start_time": "09:52",
-          "end_time": "11:22",
+          "start_time": "11:00",
+          "end_time": "12:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Atour S Hotel Beijing Daxing International Airport",
-              "end": "Old Summer Palace",
-              "mode": "taxi",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:52",
-              "distance": 55.14,
-              "price": 242.84,
-              "cost": 242.84,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Beijing Puxuan Hotel · Left Bank",
-          "start_time": "11:42",
-          "end_time": "12:42",
-          "price": 733.0,
-          "cost": 3665.0,
-          "tickets": 5,
-          "transports": [
+              "end_time": "08:49",
+              "distance": 1.66,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Old Summer Palace",
-              "end": "Beijing Puxuan Hotel · Left Bank",
-              "mode": "taxi",
-              "start_time": "11:22",
-              "end_time": "11:42",
-              "distance": 13.37,
-              "price": 54.89,
-              "cost": 54.89,
-              "cars": 1
+              "start": "Daxing Airport-Metro Station",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "metro",
+              "start_time": "08:49",
+              "end_time": "10:38",
+              "distance": 54.98,
+              "price": 9,
+              "cost": 45,
+              "tickets": 5
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Old Summer Palace",
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "11:00",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -178,15 +256,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing Puxuan Hotel · Left Bank",
+              "start": "Old Summer Palace",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "walk",
+              "start_time": "12:30",
+              "end_time": "12:52",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Terminal 2-Metro Station",
+              "mode": "metro",
+              "start_time": "12:52",
+              "end_time": "13:43",
+              "distance": 25.69,
+              "price": 6,
+              "cost": 30,
+              "tickets": 5
+            },
+            {
+              "start": "Terminal 2-Metro Station",
               "end": "Beijing Capital International Airport",
-              "mode": "taxi",
-              "start_time": "12:42",
-              "end_time": "13:17",
-              "distance": 23.96,
-              "price": 102.52,
-              "cost": 102.52,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:43",
+              "end_time": "13:53",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL160"
@@ -194,6 +292,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03410196304321289,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 0.4459803104400635,
+  "_eval_score": 90.63095238095238
 }
