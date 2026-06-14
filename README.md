@@ -15,6 +15,8 @@ Evaluate the agent on the competition split:
 python eval_tpc.py --splits tpc_phase1 --method TPCAgent_TPCLLM --lang en
 ```
 
+Use `--index` to evaluate an individual result for a single query. Use `--update_best` to automatically update the best results and results with solved constraints.
+
 **Notes:**
 
 Fixed setup:

@@ -1,0 +1,101 @@
+{
+  "people_number": 2,
+  "start_city": "Chengdu",
+  "target_city": "Beijing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "09:33",
+          "end_time": "11:27",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 780.29,
+          "cost": 1560.58,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL418"
+        },
+        {
+          "type": "lunch",
+          "position": "Tidu (Beijing Fang Branch)",
+          "start_time": "12:32",
+          "end_time": "13:32",
+          "price": 337.0,
+          "cost": 674.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Tidu (Beijing Fang Branch)",
+              "mode": "taxi",
+              "start_time": "11:27",
+              "end_time": "12:32",
+              "distance": 43.82,
+              "price": 191.88,
+              "cost": 191.88,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Mumian Beijing Daxing International Airport",
+          "start_time": "14:35",
+          "end_time": "24:00",
+          "price": 729.0,
+          "cost": 1458.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Tidu (Beijing Fang Branch)",
+              "end": "Mumian Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "13:32",
+              "end_time": "14:35",
+              "distance": 42.35,
+              "price": 185.26,
+              "cost": 185.26,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "18:29",
+          "end_time": "20:23",
+          "start": "Beijing Daxing International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 766.7,
+          "cost": 1533.4,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Mumian Beijing Daxing International Airport",
+              "end": "Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:32",
+              "distance": 1.5,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL121"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.033143043518066406,
+  "_eval_score": 20.0
+}

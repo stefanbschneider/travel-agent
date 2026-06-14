@@ -1,0 +1,167 @@
+{
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "09:00",
+          "end_time": "10:31",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 613.96,
+          "cost": 613.96,
+          "tickets": 1,
+          "transports": [],
+          "FlightID": "FL169"
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:23",
+          "end_time": "12:23",
+          "price": 600.0,
+          "cost": 600.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "10:31",
+              "end_time": "11:23",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Qibao Ancient Town",
+          "start_time": "12:40",
+          "end_time": "14:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Qibao Ancient Town",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:40",
+              "distance": 11.77,
+              "price": 47.65,
+              "cost": 47.65,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1026.0,
+          "cost": 1026.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Qibao Ancient Town",
+              "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+              "mode": "taxi",
+              "start_time": "14:10",
+              "end_time": "14:33",
+              "distance": 15.87,
+              "price": 66.13,
+              "cost": 66.13,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Da Zhong Airport Hotel",
+          "start_time": "18:45",
+          "end_time": "24:00",
+          "price": 540.0,
+          "cost": 540.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+              "end": "Da Zhong Airport Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:45",
+              "distance": 30.6,
+              "price": 132.4,
+              "cost": 132.4,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "attraction",
+          "position": "Qibao Old Street",
+          "start_time": "09:33",
+          "end_time": "11:03",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Da Zhong Airport Hotel",
+              "end": "Qibao Old Street",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:33",
+              "distance": 42.46,
+              "price": 185.78,
+              "cost": 185.78,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Qibao Old Street",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "11:03",
+              "end_time": "12:07",
+              "distance": 43.16,
+              "price": 188.92,
+              "cost": 188.92,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL018"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03491973876953125,
+  "_eval_score": 20.0
+}

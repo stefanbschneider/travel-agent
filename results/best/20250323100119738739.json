@@ -1,0 +1,199 @@
+{
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "09:00",
+          "end_time": "10:31",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 613.96,
+          "cost": 613.96,
+          "tickets": 1,
+          "transports": [],
+          "FlightID": "FL169"
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:23",
+          "end_time": "12:23",
+          "price": 600.0,
+          "cost": 600.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "10:31",
+              "end_time": "11:23",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Disney Resort",
+          "start_time": "12:55",
+          "end_time": "14:25",
+          "price": 399.0,
+          "cost": 399.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Shanghai Disney Resort",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:55",
+              "distance": 21.64,
+              "price": 92.07,
+              "cost": 92.07,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1280.0,
+          "cost": 1280.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Disney Resort",
+              "end": "Fu He Hui",
+              "mode": "taxi",
+              "start_time": "14:25",
+              "end_time": "15:01",
+              "distance": 24.38,
+              "price": 104.39,
+              "cost": 104.39,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Regent Shanghai on the Bund",
+          "start_time": "18:09",
+          "end_time": "24:00",
+          "price": 2598.0,
+          "cost": 2598.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Regent Shanghai on the Bund",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 6.54,
+              "price": 27.58,
+              "cost": 27.58,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Regent Shanghai on the Bund",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Zoo",
+          "start_time": "08:49",
+          "end_time": "10:19",
+          "price": 40.0,
+          "cost": 40.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Regent Shanghai on the Bund",
+              "end": "Shanghai Zoo",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:49",
+              "distance": 12.69,
+              "price": 51.78,
+              "cost": 51.78,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Renhe Hall (Zhaojiabang Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 203.0,
+          "cost": 203.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Zoo",
+              "end": "Renhe Hall (Zhaojiabang Road Branch)",
+              "mode": "taxi",
+              "start_time": "10:19",
+              "end_time": "10:31",
+              "distance": 8.45,
+              "price": 34.29,
+              "cost": 34.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:51",
+              "distance": 34.5,
+              "price": 149.96,
+              "cost": 149.96,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL018"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03603100776672363,
+  "_eval_score": 20.0
+}

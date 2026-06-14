@@ -1,0 +1,172 @@
+{
+  "people_number": 1,
+  "start_city": "Nanjing",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "08:03",
+          "end_time": "08:23",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 295.89,
+          "cost": 295.89,
+          "tickets": 1,
+          "transports": [],
+          "FlightID": "FL650"
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 600.0,
+          "cost": 600.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "08:23",
+              "end_time": "09:15",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "12:06",
+          "end_time": "13:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:06",
+              "distance": 4.23,
+              "price": 19.5,
+              "cost": 19.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1280.0,
+          "cost": 1280.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Fu He Hui",
+              "mode": "taxi",
+              "start_time": "13:36",
+              "end_time": "13:46",
+              "distance": 7.0,
+              "price": 29.18,
+              "cost": 29.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Da Zhong Airport Hotel",
+          "start_time": "18:55",
+          "end_time": "24:00",
+          "price": 540.0,
+          "cost": 540.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Da Zhong Airport Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:55",
+              "distance": 36.68,
+              "price": 159.76,
+              "cost": 159.76,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Da Zhong Airport Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "accommodation",
+          "position": "Da Zhong Airport Hotel",
+          "start_time": "08:30",
+          "end_time": "24:00",
+          "price": 540.0,
+          "cost": 540.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": []
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "23:00",
+          "end_time": "03:17",
+          "start": "Shanghai Station",
+          "end": "Nanjing Station",
+          "price": NaN,
+          "cost": NaN,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Da Zhong Airport Hotel",
+              "end": "Shanghai Station",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:22",
+              "distance": 35.17,
+              "price": 152.97,
+              "cost": 152.97,
+              "cars": 1
+            }
+          ],
+          "TrainID": "Y46"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.04146409034729004,
+  "_eval_score": 0.0
+}

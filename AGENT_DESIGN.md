@@ -122,6 +122,8 @@ The gap to the top 5 is too large for incremental agent tuning alone. For Compet
 
 Any solver or repair logic developed here should stay modular so it can be reused in the Competition Phase 2 harness.
 
+See extra eval args `--index` and `--update_best` to check and update best and solved results.
+
 ## Remaining Weak Areas
 
 Based on current diagnostics:

@@ -1,0 +1,162 @@
+{
+  "people_number": 2,
+  "start_city": "Shanghai",
+  "target_city": "Nanjing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "07:58",
+          "end_time": "08:18",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 277.83,
+          "cost": 555.66,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL071"
+        },
+        {
+          "type": "lunch",
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 74.0,
+          "cost": 148.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "mode": "taxi",
+              "start_time": "08:18",
+              "end_time": "09:07",
+              "distance": 32.94,
+              "price": 142.93,
+              "cost": 142.93,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple",
+          "start_time": "12:01",
+          "end_time": "13:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "end": "Confucius Temple",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 0.71,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Nanjing Jinling Hotel - Plum Garden",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 423.0,
+          "cost": 846.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple",
+              "end": "Nanjing Jinling Hotel - Plum Garden",
+              "mode": "taxi",
+              "start_time": "13:31",
+              "end_time": "13:34",
+              "distance": 2.1,
+              "price": 12.04,
+              "cost": 12.04,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Hanyuan Hotel",
+          "start_time": "18:08",
+          "end_time": "24:00",
+          "price": 413.0,
+          "cost": 413.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Nanjing Jinling Hotel - Plum Garden",
+              "end": "Hanyuan Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:08",
+              "distance": 5.47,
+              "price": 23.83,
+              "cost": 23.83,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "accommodation",
+          "position": "Hanyuan Hotel",
+          "start_time": "08:30",
+          "end_time": "24:00",
+          "price": 413.0,
+          "cost": 413.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": []
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "18:22",
+          "end_time": "18:42",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 221.47,
+          "cost": 442.94,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hanyuan Hotel",
+              "end": "Nanjing Lukou International Airport",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:19",
+              "distance": 33.2,
+              "price": 144.1,
+              "cost": 144.1,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL645"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03188490867614746,
+  "_eval_score": 91.19444444444444
+}

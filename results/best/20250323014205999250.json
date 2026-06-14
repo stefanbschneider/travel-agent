@@ -1,0 +1,155 @@
+{
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:06",
+          "end_time": "18:42",
+          "start": "Shenzhen North Railway Station",
+          "end": "Shanghai Hongqiao Station",
+          "price": 727.96,
+          "cost": 727.96,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "D3126"
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "18:58",
+          "end_time": "19:58",
+          "price": 1280.0,
+          "cost": 1280.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao Station",
+              "end": "Fu He Hui",
+              "mode": "taxi",
+              "start_time": "18:42",
+              "end_time": "18:58",
+              "distance": 10.79,
+              "price": 43.25,
+              "cost": 43.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Cordis Shanghai Hongqiao",
+          "start_time": "20:14",
+          "end_time": "24:00",
+          "price": 799.0,
+          "cost": 799.0,
+          "rooms": 1,
+          "room_type": 1,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Cordis Shanghai Hongqiao",
+              "mode": "taxi",
+              "start_time": "19:58",
+              "end_time": "20:14",
+              "distance": 11.13,
+              "price": 44.77,
+              "cost": 44.77,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Cordis Shanghai Hongqiao",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "08:57",
+          "end_time": "10:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Cordis Shanghai Hongqiao",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:57",
+              "distance": 18.06,
+              "price": 75.97,
+              "cost": 75.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 600.0,
+          "cost": 600.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "10:27",
+              "end_time": "10:33",
+              "distance": 4.23,
+              "price": 19.5,
+              "cost": 19.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "19:55",
+          "end_time": "06:21",
+          "start": "Shanghai Hongqiao Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 727.96,
+          "cost": 727.96,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Shanghai Hongqiao Station",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:20",
+              "distance": 13.78,
+              "price": 56.71,
+              "cost": 56.71,
+              "cars": 1
+            }
+          ],
+          "TrainID": "D941"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.041512250900268555,
+  "_eval_score": 20.0
+}

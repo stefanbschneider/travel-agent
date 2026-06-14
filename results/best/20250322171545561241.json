@@ -1,0 +1,111 @@
+{
+  "people_number": 3,
+  "start_city": "Chongqing",
+  "target_city": "Suzhou",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:09",
+          "end_time": "18:39",
+          "start": "Chongqing North Railway Station",
+          "end": "Suzhou Station",
+          "price": 814.87,
+          "cost": 2444.61,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "D2214"
+        },
+        {
+          "type": "dinner",
+          "position": "Suzhou InterContinental Hotel · Riva Mediterranean Grill",
+          "start_time": "18:53",
+          "end_time": "19:53",
+          "price": 958.0,
+          "cost": 2874.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Suzhou InterContinental Hotel · Riva Mediterranean Grill",
+              "mode": "taxi",
+              "start_time": "18:39",
+              "end_time": "18:53",
+              "distance": 9.5,
+              "price": 37.97,
+              "cost": 37.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Crowne Plaza Suzhou",
+          "start_time": "19:56",
+          "end_time": "24:00",
+          "price": 957.0,
+          "cost": 1914.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou InterContinental Hotel · Riva Mediterranean Grill",
+              "end": "Crowne Plaza Suzhou",
+              "mode": "taxi",
+              "start_time": "19:53",
+              "end_time": "19:56",
+              "distance": 2.63,
+              "price": 13.9,
+              "cost": 13.9,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Crowne Plaza Suzhou",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "20:05",
+          "start": "Suzhou Station",
+          "end": "Chongqing North Railway Station",
+          "price": 814.87,
+          "cost": 2444.61,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Crowne Plaza Suzhou",
+              "end": "Suzhou Station",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:40",
+              "distance": 6.88,
+              "price": 28.77,
+              "cost": 28.77,
+              "cars": 1
+            }
+          ],
+          "TrainID": "D956"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.029983043670654297,
+  "_eval_score": 91.66666666666666
+}

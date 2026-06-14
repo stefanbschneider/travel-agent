@@ -1,0 +1,155 @@
+{
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "09:00",
+          "end_time": "10:31",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 613.96,
+          "cost": 613.96,
+          "tickets": 1,
+          "transports": [],
+          "FlightID": "FL169"
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:23",
+          "end_time": "12:23",
+          "price": 600.0,
+          "cost": 600.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "10:31",
+              "end_time": "11:23",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "12:29",
+          "end_time": "13:59",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:29",
+              "distance": 4.23,
+              "price": 19.5,
+              "cost": 19.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 290.0,
+          "cost": 290.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+              "mode": "taxi",
+              "start_time": "13:59",
+              "end_time": "14:01",
+              "distance": 1.87,
+              "price": 11.25,
+              "cost": 11.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Da Zhong Airport Hotel",
+          "start_time": "18:48",
+          "end_time": "24:00",
+          "price": 540.0,
+          "cost": 540.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+              "end": "Da Zhong Airport Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:48",
+              "distance": 32.43,
+              "price": 140.64,
+              "cost": 140.64,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Da Zhong Airport Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Da Zhong Airport Hotel",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:31",
+              "distance": 1.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL018"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03193211555480957,
+  "_eval_score": 20.0
+}
