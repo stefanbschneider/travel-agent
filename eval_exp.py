@@ -1,6 +1,7 @@
 
 
 import argparse
+import shutil
 
 import numpy as np
 
@@ -196,3 +197,64 @@ if __name__ == "__main__":
             )
             result_agg.to_csv(res_file, index=False)
             print("save to {}".format(res_file))
+
+        # ------------------------------------------------------------------ #
+        # Auto-update results/constraints_solved and results/best             #
+        # ------------------------------------------------------------------ #
+        constraints_solved_dir = os.path.join(project_root_path, "results", "constraints_solved")
+        best_dir = os.path.join(project_root_path, "results", "best")
+        os.makedirs(constraints_solved_dir, exist_ok=True)
+        os.makedirs(best_dir, exist_ok=True)
+
+        # Per-query constraint score (0–3): schema + commonsense + hard logic
+        schema_pass_set = set(schema_pass_id)
+        commonsense_pass_set = set(commonsense_pass_id)
+        logi_pass_set = set(logi_pass_id)
+        all_pass_set = set(all_pass_id)
+
+        updated_constraints = 0
+        updated_best = 0
+
+        for query_id in query_index:
+            src_file = os.path.join(project_root_path, "results", method, "{}.json".format(query_id))
+            if not os.path.exists(src_file):
+                continue
+
+            current_score = (
+                int(query_id in schema_pass_set)
+                + int(query_id in commonsense_pass_set)
+                + int(query_id in logi_pass_set)
+            )
+
+            # -- constraints_solved: save if all hard constraints pass -------
+            if query_id in all_pass_set:
+                dest = os.path.join(constraints_solved_dir, "{}.json".format(query_id))
+                shutil.copy2(src_file, dest)
+                updated_constraints += 1
+
+            # -- best: save if no previous result or current score is higher -
+            best_file = os.path.join(best_dir, "{}.json".format(query_id))
+            previous_score = -1
+            if os.path.exists(best_file):
+                try:
+                    with open(best_file) as f:
+                        stored = json.load(f)
+                    previous_score = stored.get("_eval_score", 0)
+                except Exception:
+                    previous_score = -1
+
+            if current_score > previous_score:
+                # Annotate result with its score before storing
+                try:
+                    with open(src_file) as f:
+                        result_copy = json.load(f)
+                    result_copy["_eval_score"] = current_score
+                    with open(best_file, "w") as f:
+                        json.dump(result_copy, f, ensure_ascii=False, indent=2)
+                except Exception:
+                    shutil.copy2(src_file, best_file)
+                updated_best += 1
+
+        print("constraints_solved: {} results saved/updated in {}".format(updated_constraints, constraints_solved_dir))
+        print("best: {} results updated in {}".format(updated_best, best_dir))
+
