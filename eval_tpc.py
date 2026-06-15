@@ -232,14 +232,14 @@ def _resolve_method_dir(method, lang):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--splits", "-s", type=str, default="example")
+    parser.add_argument("--splits", "-s", type=str, default="tpc_phase1")
     parser.add_argument(
-        "--method", "-m", type=str, default="travel_agent"
+        "--method", "-m", type=str, default="TPCAgent_TPCLLM_en"
     )  # , choices=METHOD_LIST)
     parser.add_argument("--index", "-id", type=str, default=None,
                         help="Evaluate only this single query ID")
     parser.add_argument("--preference", "-p", action="store_true", default=False)
-    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh")
+    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en")
     parser.add_argument("--update_best", action="store_true", default=False,
                         help="Auto-update results/best and results/constraints_solved")
     args = parser.parse_args()
