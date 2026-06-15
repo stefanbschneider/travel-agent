@@ -35,6 +35,8 @@ def main():
     ap.add_argument("--rounds", type=int, default=10)
     ap.add_argument("--restarts", type=int, default=800)
     ap.add_argument("--budget", type=float, default=240)
+    ap.add_argument("--workers", type=int, default=os.cpu_count() or 1,
+                    help="parallel solver processes per round (default: all cores)")
     args = ap.parse_args()
 
     for r in range(args.rounds):
@@ -43,7 +45,8 @@ def main():
             break
         before = _solved_count()
         solve = [sys.executable, os.path.join("scripts", "solve.py"), "--split", UNSOLVED,
-                 "--restarts", str(args.restarts), "--budget", str(args.budget), "--seed-salt", str(r)]
+                 "--restarts", str(args.restarts), "--budget", str(args.budget),
+                 "--seed-salt", str(r), "--workers", str(args.workers)]
         rc = subprocess.call(solve, cwd=ROOT)
         if rc != 0:
             print("[iterate] solve failed (rc={}) in round {}".format(rc, r), file=sys.stderr)
