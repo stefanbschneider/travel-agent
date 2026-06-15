@@ -203,6 +203,32 @@ def remove_query_ids_from_split_file(split_file_path, query_ids):
     return removed_count
 
 
+def _resolve_method_dir(method, lang):
+    """Pick the results directory name for a method under a locale.
+
+    For English runs, many methods use an `_en` suffix. However, shared
+    aggregate directories like `best` and `constraints_solved` typically do not.
+    Prefer an existing directory if available.
+    """
+    if lang != "en" or method.endswith("_en"):
+        return method
+
+    method_dir = os.path.join("results", method)
+    method_en = "{}_en".format(method)
+    method_en_dir = os.path.join("results", method_en)
+
+    if os.path.exists(method_dir):
+        return method
+    if os.path.exists(method_en_dir):
+        return method_en
+
+    # Keep unsuffixed names for common aggregate folders even if not created yet.
+    if method in {"best", "constraints_solved"}:
+        return method
+
+    return method_en
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -217,13 +243,35 @@ if __name__ == "__main__":
     parser.add_argument("--update_best", action="store_true", default=False,
                         help="Auto-update results/best and results/constraints_solved")
     args = parser.parse_args()
-    if args.lang == "en" and not args.method.endswith("_en"):
-        args.method += "_en"
 
     # print(args.splits)
 
 
     query_index, query_data = load_query(args)
+
+    missing_query_ids = [query_id for query_id in query_index if query_id not in query_data]
+
+    # If default zh loading misses IDs but English data exists, auto-fallback.
+    if missing_query_ids and args.lang != "en":
+        args_for_en = argparse.Namespace(**vars(args))
+        args_for_en.lang = "en"
+        en_query_index, en_query_data = load_query(args_for_en)
+        en_missing = [query_id for query_id in query_index if query_id not in en_query_data]
+        if not en_missing:
+            args.lang = "en"
+            query_index, query_data = en_query_index, en_query_data
+            missing_query_ids = []
+
+    if missing_query_ids:
+        sample_missing = ", ".join(missing_query_ids[:5])
+        raise RuntimeError(
+            "Failed to load all query files for split '{}'. Missing {} IDs (examples: {}). "
+            "Check dataset files under chinatravel/data and use --lang en if your data is English.".format(
+                args.splits, len(missing_query_ids), sample_missing
+            )
+        )
+
+    args.method = _resolve_method_dir(args.method, args.lang)
 
     # Optionally restrict to a single query
     if args.index is not None:

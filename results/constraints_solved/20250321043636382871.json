@@ -21,29 +21,49 @@
                 {
                     "type": "dinner",
                     "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-                    "start_time": "17:12",
-                    "end_time": "18:12",
+                    "start_time": "17:24",
+                    "end_time": "18:24",
                     "price": 500.0,
                     "cost": 1000.0,
                     "tickets": 2,
                     "transports": [
                         {
                             "start": "Shenzhen North Railway Station",
-                            "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-                            "mode": "taxi",
+                            "end": "Shenzhen North Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "17:00",
-                            "end_time": "17:12",
-                            "distance": 8.11,
-                            "price": 33.1,
-                            "cost": 33.1,
-                            "cars": 1
+                            "end_time": "17:01",
+                            "distance": 0.15,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shenzhen North Railway Station-Metro Station",
+                            "end": "Chegongmiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:01",
+                            "end_time": "17:17",
+                            "distance": 8.24,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Chegongmiao-Metro Station",
+                            "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+                            "mode": "walk",
+                            "start_time": "17:17",
+                            "end_time": "17:24",
+                            "distance": 0.67,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Pullman Shenzhen North",
-                    "start_time": "18:24",
+                    "start_time": "18:49",
                     "end_time": "24:00",
                     "price": 986.0,
                     "cost": 986.0,
@@ -53,14 +73,34 @@
                     "transports": [
                         {
                             "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+                            "end": "Chegongmiao-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:24",
+                            "end_time": "18:31",
+                            "distance": 0.67,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chegongmiao-Metro Station",
+                            "end": "Shenzhen North Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:31",
+                            "end_time": "18:47",
+                            "distance": 8.24,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Shenzhen North Railway Station-Metro Station",
                             "end": "Pullman Shenzhen North",
-                            "mode": "taxi",
-                            "start_time": "18:12",
-                            "end_time": "18:24",
-                            "distance": 8.4,
-                            "price": 34.12,
-                            "cost": 34.12,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "18:47",
+                            "end_time": "18:49",
+                            "distance": 0.21,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -82,95 +122,175 @@
                 {
                     "type": "attraction",
                     "position": "Dameisha Seaside Park",
-                    "start_time": "09:13",
-                    "end_time": "10:43",
+                    "start_time": "09:38",
+                    "end_time": "11:08",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
                             "start": "Pullman Shenzhen North",
-                            "end": "Dameisha Seaside Park",
-                            "mode": "taxi",
+                            "end": "Shenzhen North Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "09:13",
-                            "distance": 29.16,
-                            "price": 125.93,
-                            "cost": 125.93,
-                            "cars": 1
+                            "end_time": "08:32",
+                            "distance": 0.21,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shenzhen North Railway Station-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:32",
+                            "end_time": "09:29",
+                            "distance": 28.59,
+                            "price": 7,
+                            "cost": 14,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Dameisha Seaside Park",
+                            "mode": "walk",
+                            "start_time": "09:29",
+                            "end_time": "09:38",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
                     "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
-                    "start_time": "11:20",
-                    "end_time": "12:20",
+                    "start_time": "12:12",
+                    "end_time": "13:12",
                     "price": 835.0,
                     "cost": 1670.0,
                     "tickets": 2,
                     "transports": [
                         {
                             "start": "Dameisha Seaside Park",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:08",
+                            "end_time": "11:17",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Donggualing-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:17",
+                            "end_time": "12:06",
+                            "distance": 24.98,
+                            "price": 6,
+                            "cost": 12,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Donggualing-Metro Station",
                             "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
-                            "mode": "taxi",
-                            "start_time": "10:43",
-                            "end_time": "11:20",
-                            "distance": 25.3,
-                            "price": 108.55,
-                            "cost": 108.55,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "12:06",
+                            "end_time": "12:12",
+                            "distance": 0.55,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "China Merchants Shekou Cruise Home Port Tour",
-                    "start_time": "12:47",
-                    "end_time": "14:17",
+                    "start_time": "14:03",
+                    "end_time": "15:33",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
                             "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
+                            "end": "Donggualing-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:12",
+                            "end_time": "13:18",
+                            "distance": 0.55,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Donggualing-Metro Station",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:18",
+                            "end_time": "13:54",
+                            "distance": 18.47,
+                            "price": 5,
+                            "cost": 10,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
                             "end": "China Merchants Shekou Cruise Home Port Tour",
-                            "mode": "taxi",
-                            "start_time": "12:20",
-                            "end_time": "12:47",
-                            "distance": 18.12,
-                            "price": 76.23,
-                            "cost": 76.23,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "13:54",
+                            "end_time": "14:03",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "dinner",
                     "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
+                    "start_time": "17:18",
+                    "end_time": "18:18",
                     "price": 519.0,
                     "cost": 1038.0,
                     "tickets": 2,
                     "transports": [
                         {
                             "start": "China Merchants Shekou Cruise Home Port Tour",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:33",
+                            "end_time": "15:42",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:42",
+                            "end_time": "17:07",
+                            "distance": 42.71,
+                            "price": 8,
+                            "cost": 16,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
                             "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                            "mode": "taxi",
-                            "start_time": "14:17",
-                            "end_time": "15:21",
-                            "distance": 42.94,
-                            "price": 187.94,
-                            "cost": 187.94,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "17:07",
+                            "end_time": "17:18",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Pullman Shenzhen North",
-                    "start_time": "18:44",
+                    "start_time": "19:28",
                     "end_time": "24:00",
                     "price": 986.0,
                     "cost": 986.0,
@@ -180,14 +300,34 @@
                     "transports": [
                         {
                             "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:18",
+                            "end_time": "18:29",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Shenzhen North Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:29",
+                            "end_time": "19:26",
+                            "distance": 28.59,
+                            "price": 7,
+                            "cost": 14,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Shenzhen North Railway Station-Metro Station",
                             "end": "Pullman Shenzhen North",
-                            "mode": "taxi",
-                            "start_time": "18:00",
-                            "end_time": "18:44",
-                            "distance": 29.34,
-                            "price": 126.72,
-                            "cost": 126.72,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "19:26",
+                            "end_time": "19:28",
+                            "distance": 0.21,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -219,13 +359,12 @@
                         {
                             "start": "Pullman Shenzhen North",
                             "end": "Shenzhen North Railway Station",
-                            "mode": "taxi",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:30",
-                            "distance": 0.34,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "08:34",
+                            "distance": 0.33883445032453174,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "TrainID": "D2282"
@@ -233,5 +372,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.037130117416381836
+    "elapsed_time(sec)": 0.36998486518859863
 }

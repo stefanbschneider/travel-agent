@@ -29,36 +29,76 @@
                     "transports": [
                         {
                             "start": "Shanghai Station",
-                            "end": "Yong Fu (Huangpu Branch)",
-                            "mode": "taxi",
+                            "end": "Shanghai Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "07:30",
-                            "end_time": "07:34",
-                            "distance": 3.21,
-                            "price": 15.94,
-                            "cost": 15.94,
-                            "cars": 1
+                            "end_time": "07:32",
+                            "distance": 0.21,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shanghai Railway Station-Metro Station",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "07:32",
+                            "end_time": "07:38",
+                            "distance": 3.34,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
+                            "end": "Yong Fu (Huangpu Branch)",
+                            "mode": "walk",
+                            "start_time": "07:38",
+                            "end_time": "07:41",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "The Bund",
-                    "start_time": "12:06",
-                    "end_time": "13:36",
+                    "start_time": "12:19",
+                    "end_time": "13:49",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Yong Fu (Huangpu Branch)",
-                            "end": "The Bund",
-                            "mode": "taxi",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:06",
-                            "distance": 4.23,
-                            "price": 19.5,
-                            "cost": 19.5,
-                            "cars": 1
+                            "end_time": "12:03",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "12:11",
+                            "distance": 4.13,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "The Bund",
+                            "mode": "walk",
+                            "start_time": "12:11",
+                            "end_time": "12:19",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -73,21 +113,41 @@
                     "transports": [
                         {
                             "start": "The Bund",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:49",
+                            "end_time": "13:57",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "Jiangsu Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:57",
+                            "end_time": "14:11",
+                            "distance": 7.09,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Jiangsu Road-Metro Station",
                             "end": "Fu He Hui",
-                            "mode": "taxi",
-                            "start_time": "13:36",
-                            "end_time": "13:46",
-                            "distance": 7.0,
-                            "price": 29.18,
-                            "cost": 29.18,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "14:11",
+                            "end_time": "14:13",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-                    "start_time": "18:39",
+                    "start_time": "18:57",
                     "end_time": "24:00",
                     "price": 303.0,
                     "cost": 303.0,
@@ -97,14 +157,34 @@
                     "transports": [
                         {
                             "start": "Fu He Hui",
-                            "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-                            "mode": "taxi",
+                            "end": "Jiangsu Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:39",
-                            "distance": 26.13,
-                            "price": 112.28,
-                            "cost": 112.28,
-                            "cars": 1
+                            "end_time": "18:02",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiangsu Road-Metro Station",
+                            "end": "Chuansha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:02",
+                            "end_time": "18:53",
+                            "distance": 25.77,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Chuansha-Metro Station",
+                            "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+                            "mode": "walk",
+                            "start_time": "18:53",
+                            "end_time": "18:57",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -126,95 +206,175 @@
                 {
                     "type": "attraction",
                     "position": "Huangpu River",
-                    "start_time": "09:00",
-                    "end_time": "10:30",
+                    "start_time": "09:22",
+                    "end_time": "10:52",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-                            "end": "Huangpu River",
-                            "mode": "taxi",
+                            "end": "Chuansha-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "09:00",
-                            "distance": 20.3,
-                            "price": 86.03,
-                            "cost": 86.03,
-                            "cars": 1
+                            "end_time": "08:34",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chuansha-Metro Station",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:34",
+                            "end_time": "09:14",
+                            "distance": 20.32,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Huangpu River",
+                            "mode": "walk",
+                            "start_time": "09:14",
+                            "end_time": "09:22",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
                     "position": "Renhe Hall (Zhaojiabang Road Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
+                    "start_time": "11:15",
+                    "end_time": "12:15",
                     "price": 203.0,
                     "cost": 203.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Huangpu River",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:52",
+                            "end_time": "11:00",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Jiashan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:00",
+                            "end_time": "11:12",
+                            "distance": 6.35,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Jiashan Road-Metro Station",
                             "end": "Renhe Hall (Zhaojiabang Road Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:30",
-                            "end_time": "10:39",
-                            "distance": 6.14,
-                            "price": 26.2,
-                            "cost": 26.2,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "11:12",
+                            "end_time": "11:15",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "Shanghai Planetarium",
-                    "start_time": "13:22",
-                    "end_time": "14:52",
+                    "start_time": "14:23",
+                    "end_time": "15:53",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Renhe Hall (Zhaojiabang Road Branch)",
+                            "end": "Jiashan Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:15",
+                            "end_time": "12:18",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiashan Road-Metro Station",
+                            "end": "Dripping Water Lake-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:18",
+                            "end_time": "14:08",
+                            "distance": 55.47,
+                            "price": 9,
+                            "cost": 9,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Dripping Water Lake-Metro Station",
                             "end": "Shanghai Planetarium",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "13:22",
-                            "distance": 55.1,
-                            "price": 242.63,
-                            "cost": 242.63,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "14:08",
+                            "end_time": "14:23",
+                            "distance": 1.28,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "dinner",
                     "position": "Kurogi",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
+                    "start_time": "18:06",
+                    "end_time": "19:06",
                     "price": 3312.0,
                     "cost": 3312.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Shanghai Planetarium",
+                            "end": "Dripping Water Lake-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:53",
+                            "end_time": "16:08",
+                            "distance": 1.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dripping Water Lake-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:08",
+                            "end_time": "18:01",
+                            "distance": 56.69,
+                            "price": 9,
+                            "cost": 9,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
                             "end": "Kurogi",
-                            "mode": "taxi",
-                            "start_time": "14:52",
-                            "end_time": "16:15",
-                            "distance": 55.81,
-                            "price": 245.84,
-                            "cost": 245.84,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "18:01",
+                            "end_time": "18:06",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-                    "start_time": "18:32",
+                    "start_time": "19:58",
                     "end_time": "24:00",
                     "price": 303.0,
                     "cost": 303.0,
@@ -224,14 +384,34 @@
                     "transports": [
                         {
                             "start": "Kurogi",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:06",
+                            "end_time": "19:11",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Chuansha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:11",
+                            "end_time": "19:54",
+                            "distance": 21.52,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Chuansha-Metro Station",
                             "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-                            "mode": "taxi",
-                            "start_time": "18:00",
-                            "end_time": "18:32",
-                            "distance": 21.44,
-                            "price": 91.2,
-                            "cost": 91.2,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "19:54",
+                            "end_time": "19:58",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -253,44 +433,84 @@
                 {
                     "type": "attraction",
                     "position": "Nanjing Road Pedestrian Street",
-                    "start_time": "09:01",
-                    "end_time": "10:31",
+                    "start_time": "09:26",
+                    "end_time": "10:56",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-                            "end": "Nanjing Road Pedestrian Street",
-                            "mode": "taxi",
+                            "end": "Chuansha-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "09:01",
-                            "distance": 21.07,
-                            "price": 89.51,
-                            "cost": 89.51,
-                            "cars": 1
+                            "end_time": "08:34",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chuansha-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:34",
+                            "end_time": "09:17",
+                            "distance": 21.52,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Nanjing Road Pedestrian Street",
+                            "mode": "walk",
+                            "start_time": "09:17",
+                            "end_time": "09:26",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
                     "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
+                    "start_time": "11:18",
+                    "end_time": "12:18",
                     "price": 498.0,
                     "cost": 498.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Nanjing Road Pedestrian Street",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:56",
+                            "end_time": "11:05",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Pudong South Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:05",
+                            "end_time": "11:10",
+                            "distance": 2.93,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Pudong South Road-Metro Station",
                             "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:31",
-                            "end_time": "10:34",
-                            "distance": 2.22,
-                            "price": 12.47,
-                            "cost": 12.47,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "11:10",
+                            "end_time": "11:18",
+                            "distance": 0.69,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -306,14 +526,34 @@
                     "transports": [
                         {
                             "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+                            "end": "Pudong South Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:18",
+                            "end_time": "12:26",
+                            "distance": 0.69,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Pudong South Road-Metro Station",
+                            "end": "Hongqiao Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:26",
+                            "end_time": "13:04",
+                            "distance": 19.08,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Hongqiao Railway Station-Metro Station",
                             "end": "Shanghai Hongqiao Station",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:28",
-                            "distance": 19.3,
-                            "price": 81.53,
-                            "cost": 81.53,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "13:04",
+                            "end_time": "13:05",
+                            "distance": 0.12,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "TrainID": "G24"
@@ -321,5 +561,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.0443727970123291
+    "elapsed_time(sec)": 0.8092222213745117
 }

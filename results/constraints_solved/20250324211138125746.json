@@ -21,7 +21,7 @@
                 {
                     "type": "accommodation",
                     "position": "Chongqing North Railway Station Atour Hotel",
-                    "start_time": "18:30",
+                    "start_time": "18:39",
                     "end_time": "24:00",
                     "price": 332.0,
                     "cost": 332.0,
@@ -31,14 +31,34 @@
                     "transports": [
                         {
                             "start": "Chongqing North Railway Station",
-                            "end": "Chongqing North Railway Station Atour Hotel",
-                            "mode": "taxi",
+                            "end": "Chongqing North Station South Square-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:30",
-                            "end_time": "18:30",
-                            "distance": 0.56,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "18:33",
+                            "distance": 0.27,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chongqing North Station South Square-Metro Station",
+                            "end": "Shiziping-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:33",
+                            "end_time": "18:34",
+                            "distance": 0.6,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Shiziping-Metro Station",
+                            "end": "Chongqing North Railway Station Atour Hotel",
+                            "mode": "walk",
+                            "start_time": "18:34",
+                            "end_time": "18:39",
+                            "distance": 0.48,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -59,30 +79,50 @@
                 },
                 {
                     "type": "train",
-                    "start_time": "08:38",
-                    "end_time": "20:43",
+                    "start_time": "09:26",
+                    "end_time": "19:31",
                     "start": "Chongqing North Railway Station",
-                    "end": "Suzhou Station",
-                    "price": 814.87,
-                    "cost": 1629.74,
+                    "end": "Suzhou North Station",
+                    "price": 882.77,
+                    "cost": 1765.54,
                     "tickets": 2,
                     "transports": [
                         {
                             "start": "Chongqing North Railway Station Atour Hotel",
-                            "end": "Chongqing North Railway Station",
-                            "mode": "taxi",
+                            "end": "Shiziping-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:30",
-                            "distance": 0.56,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "08:35",
+                            "distance": 0.48,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shiziping-Metro Station",
+                            "end": "Chongqing North Station South Square-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:35",
+                            "end_time": "08:36",
+                            "distance": 0.6,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Chongqing North Station South Square-Metro Station",
+                            "end": "Chongqing North Railway Station",
+                            "mode": "walk",
+                            "start_time": "08:36",
+                            "end_time": "08:39",
+                            "distance": 0.27,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
-                    "TrainID": "D3058"
+                    "TrainID": "G1475"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 0.03380084037780762
+    "elapsed_time(sec)": 0.13700604438781738
 }

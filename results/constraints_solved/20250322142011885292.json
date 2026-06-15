@@ -21,51 +21,49 @@
                 {
                     "type": "attraction",
                     "position": "Dameisha Seaside Park",
-                    "start_time": "15:48",
-                    "end_time": "17:18",
+                    "start_time": "16:26",
+                    "end_time": "17:56",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Shenzhen Bao'an International Airport",
-                            "end": "Dameisha Seaside Park",
-                            "mode": "taxi",
+                            "end": "Airport East-Metro Station",
+                            "mode": "walk",
                             "start_time": "14:32",
-                            "end_time": "15:48",
-                            "distance": 50.96,
-                            "price": 224.04,
-                            "cost": 224.04,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "dinner",
-                    "position": "Dianpin Collection (Xinyang Branch)",
-                    "start_time": "18:39",
-                    "end_time": "19:39",
-                    "price": 35.0,
-                    "cost": 35.0,
-                    "tickets": 1,
-                    "transports": [
+                            "end_time": "14:37",
+                            "distance": 0.45,
+                            "price": 0,
+                            "cost": 0
+                        },
                         {
-                            "start": "Dameisha Seaside Park",
-                            "end": "Dianpin Collection (Xinyang Branch)",
-                            "mode": "taxi",
-                            "start_time": "17:18",
-                            "end_time": "18:39",
-                            "distance": 54.03,
-                            "price": 237.82,
-                            "cost": 237.82,
-                            "cars": 1
+                            "start": "Airport East-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:37",
+                            "end_time": "16:17",
+                            "distance": 50.22,
+                            "price": 9,
+                            "cost": 9,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Dameisha Seaside Park",
+                            "mode": "walk",
+                            "start_time": "16:17",
+                            "end_time": "16:26",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                    "start_time": "19:55",
+                    "start_time": "19:52",
                     "end_time": "24:00",
                     "price": 379.0,
                     "cost": 379.0,
@@ -74,15 +72,35 @@
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Dianpin Collection (Xinyang Branch)",
+                            "start": "Dameisha Seaside Park",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:56",
+                            "end_time": "18:05",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Xingwei-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:05",
+                            "end_time": "19:42",
+                            "distance": 48.96,
+                            "price": 9,
+                            "cost": 9,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Xingwei-Metro Station",
                             "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                            "mode": "taxi",
-                            "start_time": "19:39",
-                            "end_time": "19:55",
-                            "distance": 11.16,
-                            "price": 44.9,
-                            "cost": 44.9,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "19:42",
+                            "end_time": "19:52",
+                            "distance": 0.9,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -104,66 +122,126 @@
                 {
                     "type": "attraction",
                     "position": "China Merchants Shekou Cruise Home Port Tour",
-                    "start_time": "09:00",
-                    "end_time": "10:30",
+                    "start_time": "09:29",
+                    "end_time": "10:59",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                            "end": "China Merchants Shekou Cruise Home Port Tour",
-                            "mode": "taxi",
+                            "end": "Xingwei-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "09:00",
-                            "distance": 20.57,
-                            "price": 87.24,
-                            "cost": 87.24,
-                            "cars": 1
+                            "end_time": "08:40",
+                            "distance": 0.9,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xingwei-Metro Station",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:40",
+                            "end_time": "09:20",
+                            "distance": 20.07,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "China Merchants Shekou Cruise Home Port Tour",
+                            "mode": "walk",
+                            "start_time": "09:20",
+                            "end_time": "09:29",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
                     "position": "Yude Longji Hakka Restaurant (Longhua Branch)",
-                    "start_time": "11:04",
-                    "end_time": "12:04",
+                    "start_time": "12:13",
+                    "end_time": "13:13",
                     "price": 158.0,
                     "cost": 158.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "China Merchants Shekou Cruise Home Port Tour",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:59",
+                            "end_time": "11:08",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Longhua-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:08",
+                            "end_time": "11:52",
+                            "distance": 22.44,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Longhua-Metro Station",
                             "end": "Yude Longji Hakka Restaurant (Longhua Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:30",
-                            "end_time": "11:04",
-                            "distance": 22.75,
-                            "price": 97.06,
-                            "cost": 97.06,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "11:52",
+                            "end_time": "12:13",
+                            "distance": 1.78,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-                    "start_time": "12:38",
-                    "end_time": "14:08",
+                    "start_time": "14:27",
+                    "end_time": "15:57",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Yude Longji Hakka Restaurant (Longhua Branch)",
+                            "end": "Longhua-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:13",
+                            "end_time": "13:34",
+                            "distance": 1.78,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Longhua-Metro Station",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:34",
+                            "end_time": "14:18",
+                            "distance": 22.44,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
                             "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-                            "mode": "taxi",
-                            "start_time": "12:04",
-                            "end_time": "12:38",
-                            "distance": 22.75,
-                            "price": 97.06,
-                            "cost": 97.06,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "14:18",
+                            "end_time": "14:27",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -178,21 +256,41 @@
                     "transports": [
                         {
                             "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:57",
+                            "end_time": "16:06",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Huangbeiling-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:06",
+                            "end_time": "16:54",
+                            "distance": 24.3,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Huangbeiling-Metro Station",
                             "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-                            "mode": "taxi",
-                            "start_time": "14:08",
-                            "end_time": "14:43",
-                            "distance": 23.73,
-                            "price": 101.49,
-                            "cost": 101.49,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "16:54",
+                            "end_time": "16:56",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                    "start_time": "18:50",
+                    "start_time": "19:17",
                     "end_time": "24:00",
                     "price": 379.0,
                     "cost": 379.0,
@@ -202,14 +300,34 @@
                     "transports": [
                         {
                             "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-                            "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                            "mode": "taxi",
+                            "end": "Huangbeiling-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:50",
-                            "distance": 33.42,
-                            "price": 145.11,
-                            "cost": 145.11,
-                            "cars": 1
+                            "end_time": "18:02",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Huangbeiling-Metro Station",
+                            "end": "Xingwei-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:02",
+                            "end_time": "19:07",
+                            "distance": 32.84,
+                            "price": 7,
+                            "cost": 7,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Xingwei-Metro Station",
+                            "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+                            "mode": "walk",
+                            "start_time": "19:07",
+                            "end_time": "19:17",
+                            "distance": 0.9,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -231,44 +349,84 @@
                 {
                     "type": "attraction",
                     "position": "Shenzhen Bay Park",
-                    "start_time": "08:59",
-                    "end_time": "10:29",
+                    "start_time": "09:18",
+                    "end_time": "10:48",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                            "end": "Shenzhen Bay Park",
-                            "mode": "taxi",
+                            "end": "Xingwei-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:59",
-                            "distance": 19.36,
-                            "price": 81.83,
-                            "cost": 81.83,
-                            "cars": 1
+                            "end_time": "08:40",
+                            "distance": 0.9,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xingwei-Metro Station",
+                            "end": "Hongshu Bay-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:40",
+                            "end_time": "09:17",
+                            "distance": 18.97,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Hongshu Bay-Metro Station",
+                            "end": "Shenzhen Bay Park",
+                            "mode": "walk",
+                            "start_time": "09:17",
+                            "end_time": "09:18",
+                            "distance": 0.11,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
                     "position": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
+                    "start_time": "11:03",
+                    "end_time": "12:03",
                     "price": 27.0,
                     "cost": 27.0,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Shenzhen Bay Park",
+                            "end": "Hongshu Bay-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:48",
+                            "end_time": "10:49",
+                            "distance": 0.11,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongshu Bay-Metro Station",
+                            "end": "Dongjiaotou-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:49",
+                            "end_time": "11:00",
+                            "distance": 5.76,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Dongjiaotou-Metro Station",
                             "end": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:29",
-                            "end_time": "10:37",
-                            "distance": 5.88,
-                            "price": 25.27,
-                            "cost": 25.27,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "11:00",
+                            "end_time": "11:03",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -284,14 +442,34 @@
                     "transports": [
                         {
                             "start": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
+                            "end": "Dongjiaotou-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:03",
+                            "end_time": "12:06",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dongjiaotou-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:06",
+                            "end_time": "12:48",
+                            "distance": 21.0,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Airport East-Metro Station",
                             "end": "Shenzhen Bao'an International Airport",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:30",
-                            "distance": 20.5,
-                            "price": 86.97,
-                            "cost": 86.97,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "12:48",
+                            "end_time": "12:53",
+                            "distance": 0.45,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "FlightID": "FL179"
@@ -299,5 +477,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.035623788833618164
+    "elapsed_time(sec)": 0.5052139759063721
 }

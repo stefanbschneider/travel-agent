@@ -19,31 +19,9 @@
                     "TrainID": "D3126"
                 },
                 {
-                    "type": "dinner",
-                    "position": "Fu He Hui",
-                    "start_time": "18:58",
-                    "end_time": "19:58",
-                    "price": 1280.0,
-                    "cost": 5120.0,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "Shanghai Hongqiao Station",
-                            "end": "Fu He Hui",
-                            "mode": "taxi",
-                            "start_time": "18:42",
-                            "end_time": "18:58",
-                            "distance": 10.79,
-                            "price": 43.25,
-                            "cost": 43.25,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
                     "type": "accommodation",
                     "position": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
-                    "start_time": "20:09",
+                    "start_time": "19:30",
                     "end_time": "24:00",
                     "price": 417.0,
                     "cost": 1668.0,
@@ -52,15 +30,35 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Fu He Hui",
+                            "start": "Shanghai Hongqiao Station",
+                            "end": "Hongqiao Railway Station-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:42",
+                            "end_time": "18:43",
+                            "distance": 0.12,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongqiao Railway Station-Metro Station",
+                            "end": "Tangqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:43",
+                            "end_time": "19:21",
+                            "distance": 19.12,
+                            "price": 5,
+                            "cost": 20,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tangqiao-Metro Station",
                             "end": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
-                            "mode": "taxi",
-                            "start_time": "19:58",
-                            "end_time": "20:09",
-                            "distance": 7.94,
-                            "price": 32.47,
-                            "cost": 32.47,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "19:21",
+                            "end_time": "19:30",
+                            "distance": 0.76,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -82,22 +80,42 @@
                 {
                     "type": "attraction",
                     "position": "The Bund",
-                    "start_time": "08:36",
-                    "end_time": "10:06",
+                    "start_time": "08:54",
+                    "end_time": "10:24",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
-                            "end": "The Bund",
-                            "mode": "taxi",
+                            "end": "Tangqiao-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:36",
-                            "distance": 4.33,
-                            "price": 19.86,
-                            "cost": 19.86,
-                            "cars": 1
+                            "end_time": "08:39",
+                            "distance": 0.76,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tangqiao-Metro Station",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:39",
+                            "end_time": "08:46",
+                            "distance": 3.53,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "The Bund",
+                            "mode": "walk",
+                            "start_time": "08:46",
+                            "end_time": "08:54",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -112,36 +130,76 @@
                     "transports": [
                         {
                             "start": "The Bund",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:24",
+                            "end_time": "10:32",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:32",
+                            "end_time": "10:40",
+                            "distance": 4.13,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
                             "end": "Yong Fu (Huangpu Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:06",
-                            "end_time": "10:12",
-                            "distance": 4.23,
-                            "price": 19.5,
-                            "cost": 19.5,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:40",
+                            "end_time": "10:43",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "Huangpu River",
-                    "start_time": "12:06",
-                    "end_time": "13:36",
+                    "start_time": "12:20",
+                    "end_time": "13:50",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Yong Fu (Huangpu Branch)",
-                            "end": "Huangpu River",
-                            "mode": "taxi",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:06",
-                            "distance": 4.46,
-                            "price": 20.3,
-                            "cost": 20.3,
-                            "cars": 1
+                            "end_time": "12:03",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "12:12",
+                            "distance": 4.64,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Huangpu River",
+                            "mode": "walk",
+                            "start_time": "12:12",
+                            "end_time": "12:20",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -156,21 +214,41 @@
                     "transports": [
                         {
                             "start": "Huangpu River",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:50",
+                            "end_time": "13:58",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:58",
+                            "end_time": "14:01",
+                            "distance": 1.66,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
                             "end": "Kurogi",
-                            "mode": "taxi",
-                            "start_time": "13:36",
-                            "end_time": "13:37",
-                            "distance": 1.18,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "14:01",
+                            "end_time": "14:06",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
-                    "start_time": "18:07",
+                    "start_time": "18:24",
                     "end_time": "24:00",
                     "price": 417.0,
                     "cost": 1668.0,
@@ -180,14 +258,34 @@
                     "transports": [
                         {
                             "start": "Kurogi",
-                            "end": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
-                            "mode": "taxi",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:07",
-                            "distance": 4.88,
-                            "price": 21.77,
-                            "cost": 21.77,
-                            "cars": 1
+                            "end_time": "18:05",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Tangqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:05",
+                            "end_time": "18:15",
+                            "distance": 5.12,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tangqiao-Metro Station",
+                            "end": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
+                            "mode": "walk",
+                            "start_time": "18:15",
+                            "end_time": "18:24",
+                            "distance": 0.76,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -209,22 +307,42 @@
                 {
                     "type": "attraction",
                     "position": "Nanjing Road Pedestrian Street",
-                    "start_time": "08:36",
-                    "end_time": "10:06",
+                    "start_time": "08:58",
+                    "end_time": "10:28",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Jianguo Hidden Hotel (Shanghai Lujiazui, Expo Center)",
-                            "end": "Nanjing Road Pedestrian Street",
-                            "mode": "taxi",
+                            "end": "Tangqiao-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:36",
-                            "distance": 4.55,
-                            "price": 20.61,
-                            "cost": 20.61,
-                            "cars": 1
+                            "end_time": "08:39",
+                            "distance": 0.76,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tangqiao-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:39",
+                            "end_time": "08:49",
+                            "distance": 5.12,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Nanjing Road Pedestrian Street",
+                            "mode": "walk",
+                            "start_time": "08:49",
+                            "end_time": "08:58",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -239,14 +357,34 @@
                     "transports": [
                         {
                             "start": "Nanjing Road Pedestrian Street",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:28",
+                            "end_time": "10:37",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Jiashan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:37",
+                            "end_time": "10:46",
+                            "distance": 4.99,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Jiashan Road-Metro Station",
                             "end": "Renhe Hall (Zhaojiabang Road Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:06",
-                            "end_time": "10:14",
-                            "distance": 5.55,
-                            "price": 24.13,
-                            "cost": 24.13,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:46",
+                            "end_time": "10:49",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -262,14 +400,34 @@
                     "transports": [
                         {
                             "start": "Renhe Hall (Zhaojiabang Road Branch)",
-                            "end": "Shanghai Pudong International Airport",
-                            "mode": "taxi",
+                            "end": "Jiashan Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:51",
-                            "distance": 34.5,
-                            "price": 149.96,
-                            "cost": 149.96,
-                            "cars": 1
+                            "end_time": "12:03",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiashan Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "13:09",
+                            "distance": 33.38,
+                            "price": 7,
+                            "cost": 28,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Pudong International Airport-Metro Station",
+                            "end": "Shanghai Pudong International Airport",
+                            "mode": "walk",
+                            "start_time": "13:09",
+                            "end_time": "13:24",
+                            "distance": 1.27,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "FlightID": "FL018"
@@ -277,5 +435,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.03430509567260742
+    "elapsed_time(sec)": 0.674537181854248
 }
