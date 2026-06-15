@@ -1,0 +1,198 @@
+{
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "09:00",
+          "end_time": "10:31",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 613.96,
+          "cost": 613.96,
+          "tickets": 1,
+          "transports": [],
+          "FlightID": "FL169"
+        },
+        {
+          "type": "lunch",
+          "position": "Cong's Restaurant (Liuhe Building Branch)",
+          "start_time": "11:21",
+          "end_time": "12:21",
+          "price": 268.0,
+          "cost": 268.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Cong's Restaurant (Liuhe Building Branch)",
+              "mode": "taxi",
+              "start_time": "10:31",
+              "end_time": "11:21",
+              "distance": 33.97,
+              "price": 147.56,
+              "cost": 147.56,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "12:24",
+          "end_time": "13:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Cong's Restaurant (Liuhe Building Branch)",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "12:21",
+              "end_time": "12:24",
+              "distance": 2.26,
+              "price": 12.61,
+              "cost": 12.61,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1280.0,
+          "cost": 1280.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Fu He Hui",
+              "mode": "taxi",
+              "start_time": "13:54",
+              "end_time": "14:04",
+              "distance": 7.0,
+              "price": 29.18,
+              "cost": 29.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Citadines Apart Hotel (Shanghai Yan'an West Road)",
+          "start_time": "18:01",
+          "end_time": "24:00",
+          "price": 493.0,
+          "cost": 493.0,
+          "rooms": 1,
+          "room_type": 1,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Citadines Apart Hotel (Shanghai Yan'an West Road)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:01",
+              "distance": 0.75,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Citadines Apart Hotel (Shanghai Yan'an West Road)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "08:41",
+          "end_time": "10:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Citadines Apart Hotel (Shanghai Yan'an West Road)",
+              "end": "Huangpu River",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:41",
+              "distance": 7.44,
+              "price": 30.74,
+              "cost": 30.74,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Bella Vita Italian Restaurant (Haifang Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 213.0,
+          "cost": 213.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huangpu River",
+              "end": "Bella Vita Italian Restaurant (Haifang Road Branch)",
+              "mode": "taxi",
+              "start_time": "10:11",
+              "end_time": "10:19",
+              "distance": 5.4,
+              "price": 23.6,
+              "cost": 23.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Bella Vita Italian Restaurant (Haifang Road Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:55",
+              "distance": 36.77,
+              "price": 160.17,
+              "cost": 160.17,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL018"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.032742977142333984
+}

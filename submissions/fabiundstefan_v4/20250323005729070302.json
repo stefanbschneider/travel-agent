@@ -1,0 +1,198 @@
+{
+  "people_number": 4,
+  "start_city": "Nanjing",
+  "target_city": "Wuhan",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:25",
+          "end_time": "10:18",
+          "start": "Nanjing South Railway Station",
+          "end": "Wuhan Station",
+          "price": 296.86,
+          "cost": 1187.44,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "G637"
+        },
+        {
+          "type": "lunch",
+          "position": "Green Grain Restaurant (East Lake Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 306.0,
+          "cost": 1224.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wuhan Station",
+              "end": "Green Grain Restaurant (East Lake Branch)",
+              "mode": "taxi",
+              "start_time": "10:18",
+              "end_time": "10:25",
+              "distance": 4.84,
+              "price": 21.64,
+              "cost": 21.64,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Qingchuan Pavilion",
+          "start_time": "12:13",
+          "end_time": "13:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Green Grain Restaurant (East Lake Branch)",
+              "end": "Qingchuan Pavilion",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:13",
+              "distance": 9.27,
+              "price": 37.14,
+              "cost": 37.14,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Five Percent Villa Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 298.0,
+          "cost": 1192.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qingchuan Pavilion",
+              "end": "Five Percent Villa Restaurant",
+              "mode": "taxi",
+              "start_time": "13:43",
+              "end_time": "13:46",
+              "distance": 2.39,
+              "price": 13.08,
+              "cost": 13.08,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Wuhan Ihow International Hotel",
+          "start_time": "18:18",
+          "end_time": "24:00",
+          "price": 179.0,
+          "cost": 716.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Five Percent Villa Restaurant",
+              "end": "Wuhan Ihow International Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:18",
+              "distance": 12.47,
+              "price": 50.81,
+              "cost": 50.81,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Wuhan Ihow International Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Riverside Park",
+          "start_time": "08:45",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wuhan Ihow International Hotel",
+              "end": "Hankou Riverside Park",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:45",
+              "distance": 10.01,
+              "price": 39.76,
+              "cost": 39.76,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 297.0,
+          "cost": 1188.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hankou Riverside Park",
+              "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "mode": "taxi",
+              "start_time": "10:15",
+              "end_time": "10:19",
+              "distance": 3.01,
+              "price": 15.23,
+              "cost": 15.23,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:29",
+          "end_time": "19:03",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 464.7,
+          "cost": 1858.8,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:34",
+              "distance": 22.98,
+              "price": 98.1,
+              "cost": 98.1,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL634"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.029919862747192383
+}

@@ -1,0 +1,176 @@
+{
+  "people_number": 4,
+  "start_city": "Guangzhou",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "08:00",
+          "end_time": "14:48",
+          "start": "Guangzhou South Railway Station",
+          "end": "Shanghai Hongqiao Station",
+          "price": 787.73,
+          "cost": 3150.92,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "G818"
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "15:14",
+          "end_time": "16:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao Station",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "14:48",
+              "end_time": "15:14",
+              "distance": 17.74,
+              "price": 74.51,
+              "cost": 74.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1280.0,
+          "cost": 5120.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Fu He Hui",
+              "mode": "taxi",
+              "start_time": "16:44",
+              "end_time": "16:54",
+              "distance": 7.0,
+              "price": 29.18,
+              "cost": 29.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Cordis Shanghai Hongqiao",
+          "start_time": "18:16",
+          "end_time": "24:00",
+          "price": 799.0,
+          "cost": 3196.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Cordis Shanghai Hongqiao",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:16",
+              "distance": 11.13,
+              "price": 44.77,
+              "cost": 44.77,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Cordis Shanghai Hongqiao",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "08:57",
+          "end_time": "10:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Cordis Shanghai Hongqiao",
+              "end": "Huangpu River",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:57",
+              "distance": 18.3,
+              "price": 77.06,
+              "cost": 77.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 600.0,
+          "cost": 2400.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Huangpu River",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "10:27",
+              "end_time": "10:33",
+              "distance": 4.46,
+              "price": 20.3,
+              "cost": 20.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:27",
+          "end_time": "09:57",
+          "start": "Shanghai Station",
+          "end": "Guangzhou Station",
+          "price": 605.95,
+          "cost": 2423.8,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Shanghai Station",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 3.21,
+              "price": 15.94,
+              "cost": 15.94,
+              "cars": 1
+            }
+          ],
+          "TrainID": "Z99"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.0314021110534668
+}

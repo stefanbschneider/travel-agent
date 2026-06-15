@@ -1,0 +1,408 @@
+{
+  "people_number": 4,
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:07",
+          "end_time": "10:57",
+          "start": "Suzhou Station",
+          "end": "Hangzhou Railway Station",
+          "price": 60.5,
+          "cost": 242.0,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "Z281"
+        },
+        {
+          "type": "lunch",
+          "position": "Green Tea Restaurant (Longjing Road Branch)",
+          "start_time": "11:05",
+          "end_time": "12:05",
+          "price": 104.0,
+          "cost": 416.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "Green Tea Restaurant (Longjing Road Branch)",
+              "mode": "taxi",
+              "start_time": "10:57",
+              "end_time": "11:05",
+              "distance": 5.8,
+              "price": 24.99,
+              "cost": 24.99,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Holiday Inn Express Hangzhou West Lake East",
+          "start_time": "12:13",
+          "end_time": "24:00",
+          "price": 450.0,
+          "cost": 1800.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Green Tea Restaurant (Longjing Road Branch)",
+              "end": "Holiday Inn Express Hangzhou West Lake East",
+              "mode": "taxi",
+              "start_time": "12:05",
+              "end_time": "12:13",
+              "distance": 5.77,
+              "price": 24.91,
+              "cost": 24.91,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Holiday Inn Express Hangzhou West Lake East",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Qiantang River",
+          "start_time": "08:48",
+          "end_time": "10:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Holiday Inn Express Hangzhou West Lake East",
+              "end": "Qiantang River",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:48",
+              "distance": 12.53,
+              "price": 51.1,
+              "cost": 51.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 177.0,
+          "cost": 708.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qiantang River",
+              "end": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+              "mode": "taxi",
+              "start_time": "10:18",
+              "end_time": "10:37",
+              "distance": 12.81,
+              "price": 52.32,
+              "cost": 52.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Qinghefang Street",
+          "start_time": "12:05",
+          "end_time": "13:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+              "end": "Qinghefang Street",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:05",
+              "distance": 3.41,
+              "price": 16.65,
+              "cost": 16.65,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhejiang Provincial Museum (Zhijiang Branch)",
+          "start_time": "13:51",
+          "end_time": "15:21",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qinghefang Street",
+              "end": "Zhejiang Provincial Museum (Zhijiang Branch)",
+              "mode": "taxi",
+              "start_time": "13:35",
+              "end_time": "13:51",
+              "distance": 10.84,
+              "price": 43.49,
+              "cost": 43.49,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Longjing Village",
+          "start_time": "15:30",
+          "end_time": "17:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Zhejiang Provincial Museum (Zhijiang Branch)",
+              "end": "Longjing Village",
+              "mode": "taxi",
+              "start_time": "15:21",
+              "end_time": "15:30",
+              "distance": 6.44,
+              "price": 27.24,
+              "cost": 27.24,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Holiday Inn Express Hangzhou West Lake East",
+          "start_time": "17:10",
+          "end_time": "24:00",
+          "price": 450.0,
+          "cost": 1800.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Longjing Village",
+              "end": "Holiday Inn Express Hangzhou West Lake East",
+              "mode": "taxi",
+              "start_time": "17:00",
+              "end_time": "17:10",
+              "distance": 7.11,
+              "price": 29.57,
+              "cost": 29.57,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Holiday Inn Express Hangzhou West Lake East",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Lingering Snow on the Broken Bridge",
+          "start_time": "08:34",
+          "end_time": "10:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Holiday Inn Express Hangzhou West Lake East",
+              "end": "Lingering Snow on the Broken Bridge",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 3.11,
+              "price": 15.6,
+              "cost": 15.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhejiang Museum of Natural History (Hangzhou Branch)",
+          "start_time": "10:07",
+          "end_time": "11:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lingering Snow on the Broken Bridge",
+              "end": "Zhejiang Museum of Natural History (Hangzhou Branch)",
+              "mode": "taxi",
+              "start_time": "10:04",
+              "end_time": "10:07",
+              "distance": 2.37,
+              "price": 13.01,
+              "cost": 13.01,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "West Lake Cultural Plaza",
+          "start_time": "11:37",
+          "end_time": "13:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Zhejiang Museum of Natural History (Hangzhou Branch)",
+              "end": "West Lake Cultural Plaza",
+              "mode": "taxi",
+              "start_time": "11:37",
+              "end_time": "11:37",
+              "distance": 0.17,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nine Creeks Meandering Through Misty Trees",
+          "start_time": "13:21",
+          "end_time": "14:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Lake Cultural Plaza",
+              "end": "Nine Creeks Meandering Through Misty Trees",
+              "mode": "taxi",
+              "start_time": "13:07",
+              "end_time": "13:21",
+              "distance": 9.42,
+              "price": 37.67,
+              "cost": 37.67,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Holiday Inn Express Hangzhou West Lake East",
+          "start_time": "15:01",
+          "end_time": "24:00",
+          "price": 450.0,
+          "cost": 1800.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Nine Creeks Meandering Through Misty Trees",
+              "end": "Holiday Inn Express Hangzhou West Lake East",
+              "mode": "taxi",
+              "start_time": "14:51",
+              "end_time": "15:01",
+              "distance": 7.23,
+              "price": 30.0,
+              "cost": 30.0,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Holiday Inn Express Hangzhou West Lake East",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Nine Creeks and Eighteen Gullies",
+          "start_time": "08:40",
+          "end_time": "10:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Holiday Inn Express Hangzhou West Lake East",
+              "end": "Nine Creeks and Eighteen Gullies",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:40",
+              "distance": 7.24,
+              "price": 30.03,
+              "cost": 30.03,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:27",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Nine Creeks and Eighteen Gullies",
+              "end": "Hangzhou East Railway Station",
+              "mode": "taxi",
+              "start_time": "10:10",
+              "end_time": "10:30",
+              "distance": 13.47,
+              "price": 55.32,
+              "cost": 55.32,
+              "cars": 1
+            }
+          ],
+          "TrainID": "G7192"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 11.463451147079468
+}

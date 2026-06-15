@@ -1,0 +1,128 @@
+{
+  "people_number": 2,
+  "start_city": "Chengdu",
+  "target_city": "Hangzhou",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "07:49",
+          "end_time": "09:44",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 777.25,
+          "cost": 1554.5,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL456"
+        },
+        {
+          "type": "attraction",
+          "position": "Leifeng Pagoda",
+          "start_time": "15:04",
+          "end_time": "16:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Leifeng Pagoda",
+              "mode": "walk",
+              "start_time": "09:44",
+              "end_time": "15:04",
+              "distance": 26.669887680829813,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+          "start_time": "17:09",
+          "end_time": "18:09",
+          "price": 873.0,
+          "cost": 1746.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Leifeng Pagoda",
+              "end": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "17:09",
+              "distance": 2.981203902853807,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Manju·Hangzhou Xiaoshan International Airport Store",
+          "start_time": "23:54",
+          "end_time": "24:00",
+          "price": 257.0,
+          "cost": 257.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "end": "Manju·Hangzhou Xiaoshan International Airport Store",
+              "mode": "walk",
+              "start_time": "18:09",
+              "end_time": "23:54",
+              "distance": 28.805398381128867,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Manju·Hangzhou Xiaoshan International Airport Store",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:24",
+          "end_time": "20:19",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Chengdu Tianfu International Airport",
+          "price": 788.36,
+          "cost": 1576.72,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manju·Hangzhou Xiaoshan International Airport Store",
+              "end": "Hangzhou Xiaoshan International Airport",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:39",
+              "distance": 0.7955756244283299,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "FlightID": "FL535"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 1.53159499168396
+}

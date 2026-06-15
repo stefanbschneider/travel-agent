@@ -330,12 +330,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Kurogi",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 3312.0,
-          "cost": 13248.0,
+          "type": "attraction",
+          "position": "Shanghai Museum",
+          "start_time": "14:40",
+          "end_time": "16:10",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -350,11 +350,53 @@
             },
             {
               "start": "International Passenger Transport Center-Metro Station",
-              "end": "Tiantong Road-Metro Station",
+              "end": "East Nanjing Road-Metro Station",
               "mode": "metro",
               "start_time": "14:32",
               "end_time": "14:35",
-              "distance": 1.66,
+              "distance": 1.86,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Shanghai Museum",
+              "mode": "walk",
+              "start_time": "14:35",
+              "end_time": "14:40",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Kurogi",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 3312.0,
+          "cost": 13248.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Museum",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:10",
+              "end_time": "16:15",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:15",
+              "end_time": "16:16",
+              "distance": 0.67,
               "price": 2,
               "cost": 8,
               "tickets": 4
@@ -363,8 +405,8 @@
               "start": "Tiantong Road-Metro Station",
               "end": "Kurogi",
               "mode": "walk",
-              "start_time": "14:35",
-              "end_time": "14:40",
+              "start_time": "16:16",
+              "end_time": "16:21",
               "distance": 0.49,
               "price": 0,
               "cost": 0
@@ -561,6 +603,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 2.8549017906188965,
-  "_eval_score": 93.94047619047619
+  "elapsed_time(sec)": 8.404029130935669,
+  "_eval_score": 94.49603174603175
 }

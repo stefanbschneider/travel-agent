@@ -1,0 +1,149 @@
+{
+  "people_number": 3,
+  "start_city": "Chongqing",
+  "target_city": "Suzhou",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:09",
+          "end_time": "18:39",
+          "start": "Chongqing North Railway Station",
+          "end": "Suzhou Station",
+          "price": 814.87,
+          "cost": 2444.61,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "D2214"
+        },
+        {
+          "type": "dinner",
+          "position": "Miss Fu in Chengdu (Guanqian Street Branch)",
+          "start_time": "18:48",
+          "end_time": "19:48",
+          "price": 78.0,
+          "cost": 234.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "18:39",
+              "end_time": "18:40",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Lindun Road-Metro Station",
+              "mode": "metro",
+              "start_time": "18:40",
+              "end_time": "18:46",
+              "distance": 3.03,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Lindun Road-Metro Station",
+              "end": "Miss Fu in Chengdu (Guanqian Street Branch)",
+              "mode": "walk",
+              "start_time": "18:46",
+              "end_time": "18:48",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+          "start_time": "19:59",
+          "end_time": "24:00",
+          "price": 325.0,
+          "cost": 975.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Miss Fu in Chengdu (Guanqian Street Branch)",
+              "end": "Lindun Road-Metro Station",
+              "mode": "walk",
+              "start_time": "19:48",
+              "end_time": "19:50",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lindun Road-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "19:50",
+              "end_time": "19:56",
+              "distance": 3.03,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
+              "mode": "walk",
+              "start_time": "19:56",
+              "end_time": "19:59",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "20:05",
+          "start": "Suzhou Station",
+          "end": "Chongqing North Railway Station",
+          "price": 814.87,
+          "cost": 2444.61,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
+              "end": "Suzhou Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.4279068467741364,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "D956"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.1098031997680664
+}

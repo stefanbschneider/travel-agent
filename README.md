@@ -5,17 +5,40 @@
 
 **Important commands:**
 
-Run the agent on the competition queries to create itineraries at `results/TPCAgent_TPCLLM_en`:
+`TPCAgent` runs a per-query oracle-guided search. Drive it with the resumable scripts in
+`scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
+disk, so every step is kill/resume-safe.
+
+Heavy resumable search over the still-unsolved queries (stops when a round adds nothing):
 ```
-python run_tpc.py --splits tpc_phase1 --agent TPCAgent --llm TPCLLM --lang en
+python scripts/iterate.py --rounds 10 --restarts 800 --budget 240
 ```
 
-Evaluate the agent on the competition split:
+Light pass + constraint-safe packing across all 1000 (lifts DAV/DDR; the monotonic merge keeps
+the heavy gains):
 ```
-python eval_tpc.py --splits tpc_phase1 --method TPCAgent_TPCLLM --lang en
+python scripts/solve.py --split tpc_phase1 --restarts 40 --budget 30
+python scripts/merge.py --split tpc_phase1
 ```
 
-Use `--index` to evaluate an individual result for a single query. Use `--update_best` to automatically update the best results and results with solved constraints.
+Print the headline metrics for `results/best`, then build the submission zip:
+```
+python scripts/score.py
+python scripts/assemble_submission.py --version v4
+```
+
+Low-level equivalents (the scripts add the required flags for you). The oracle path MUST pass
+`--oracle_translation`, otherwise `run_tpc.py` strips `hard_logic_py` from the query dict and the
+search runs blind:
+```
+python run_tpc.py --splits tpc_phase1 --agent TPCAgent --llm TPCLLM --lang en --oracle_translation
+python eval_tpc.py --splits tpc_phase1 --method best --lang en
+```
+
+Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`, `TPC_SEED_SALT`,
+`TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
+checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
+`scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
 
 **Notes:**
 
