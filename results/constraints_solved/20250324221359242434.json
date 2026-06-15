@@ -19,46 +19,44 @@
                     "FlightID": "FL505"
                 },
                 {
-                    "type": "lunch",
-                    "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
-                    "start_time": "12:49",
-                    "end_time": "13:49",
-                    "price": 835.0,
-                    "cost": 2505.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Shenzhen Bao'an International Airport",
-                            "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
-                            "mode": "taxi",
-                            "start_time": "12:08",
-                            "end_time": "12:49",
-                            "distance": 27.53,
-                            "price": 118.59,
-                            "cost": 118.59,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
                     "type": "attraction",
                     "position": "Dameisha Seaside Park",
-                    "start_time": "14:26",
-                    "end_time": "15:56",
+                    "start_time": "14:02",
+                    "end_time": "15:32",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
+                            "start": "Shenzhen Bao'an International Airport",
+                            "end": "Airport East-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:08",
+                            "end_time": "12:13",
+                            "distance": 0.45,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Airport East-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:13",
+                            "end_time": "13:53",
+                            "distance": 50.22,
+                            "price": 9,
+                            "cost": 27,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
                             "end": "Dameisha Seaside Park",
-                            "mode": "taxi",
-                            "start_time": "13:49",
-                            "end_time": "14:26",
-                            "distance": 25.3,
-                            "price": 108.55,
-                            "cost": 108.55,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "13:53",
+                            "end_time": "14:02",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -73,21 +71,41 @@
                     "transports": [
                         {
                             "start": "Dameisha Seaside Park",
-                            "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-                            "mode": "taxi",
-                            "start_time": "15:56",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:32",
+                            "end_time": "15:41",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Chegongmiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:41",
                             "end_time": "16:40",
-                            "distance": 29.76,
-                            "price": 128.62,
-                            "cost": 128.62,
-                            "cars": 1
+                            "distance": 29.7,
+                            "price": 7,
+                            "cost": 21,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Chegongmiao-Metro Station",
+                            "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+                            "mode": "walk",
+                            "start_time": "16:40",
+                            "end_time": "16:47",
+                            "distance": 0.67,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Shenzhen Sea World Grand Orchid White Dew Hotel",
-                    "start_time": "18:19",
+                    "start_time": "18:32",
                     "end_time": "24:00",
                     "price": 373.0,
                     "cost": 1119.0,
@@ -97,14 +115,34 @@
                     "transports": [
                         {
                             "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-                            "end": "Shenzhen Sea World Grand Orchid White Dew Hotel",
-                            "mode": "taxi",
+                            "end": "Chegongmiao-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:19",
-                            "distance": 12.77,
-                            "price": 52.19,
-                            "cost": 52.19,
-                            "cars": 1
+                            "end_time": "18:07",
+                            "distance": 0.67,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chegongmiao-Metro Station",
+                            "end": "Shui Wan-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:07",
+                            "end_time": "18:31",
+                            "distance": 12.14,
+                            "price": 4,
+                            "cost": 12,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shui Wan-Metro Station",
+                            "end": "Shenzhen Sea World Grand Orchid White Dew Hotel",
+                            "mode": "walk",
+                            "start_time": "18:31",
+                            "end_time": "18:32",
+                            "distance": 0.09,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -126,22 +164,42 @@
                 {
                     "type": "attraction",
                     "position": "China Merchants Shekou Cruise Home Port Tour",
-                    "start_time": "08:32",
-                    "end_time": "10:02",
+                    "start_time": "08:43",
+                    "end_time": "10:13",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Shenzhen Sea World Grand Orchid White Dew Hotel",
-                            "end": "China Merchants Shekou Cruise Home Port Tour",
-                            "mode": "taxi",
+                            "end": "Shui Wan-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:32",
-                            "distance": 1.59,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "08:31",
+                            "distance": 0.09,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shui Wan-Metro Station",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:31",
+                            "end_time": "08:34",
+                            "distance": 1.51,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "China Merchants Shekou Cruise Home Port Tour",
+                            "mode": "walk",
+                            "start_time": "08:34",
+                            "end_time": "08:43",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -156,36 +214,76 @@
                     "transports": [
                         {
                             "start": "China Merchants Shekou Cruise Home Port Tour",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:13",
+                            "end_time": "10:22",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Convention and Exhibition Center-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:22",
+                            "end_time": "10:55",
+                            "distance": 16.61,
+                            "price": 5,
+                            "cost": 15,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Convention and Exhibition Center-Metro Station",
                             "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-                            "mode": "taxi",
-                            "start_time": "10:02",
-                            "end_time": "10:25",
-                            "distance": 15.94,
-                            "price": 66.42,
-                            "cost": 66.42,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:55",
+                            "end_time": "10:57",
+                            "distance": 0.19,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-                    "start_time": "12:23",
-                    "end_time": "13:53",
+                    "start_time": "12:44",
+                    "end_time": "14:14",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-                            "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-                            "mode": "taxi",
+                            "end": "Convention and Exhibition Center-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:23",
-                            "distance": 15.94,
-                            "price": 66.42,
-                            "cost": 66.42,
-                            "cars": 1
+                            "end_time": "12:02",
+                            "distance": 0.19,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Convention and Exhibition Center-Metro Station",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:02",
+                            "end_time": "12:35",
+                            "distance": 16.61,
+                            "price": 5,
+                            "cost": 15,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+                            "mode": "walk",
+                            "start_time": "12:35",
+                            "end_time": "12:44",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -200,21 +298,41 @@
                     "transports": [
                         {
                             "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:14",
+                            "end_time": "14:23",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:23",
+                            "end_time": "15:48",
+                            "distance": 42.71,
+                            "price": 8,
+                            "cost": 24,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
                             "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                            "mode": "taxi",
-                            "start_time": "13:53",
-                            "end_time": "14:57",
-                            "distance": 42.94,
-                            "price": 187.94,
-                            "cost": 187.94,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "15:48",
+                            "end_time": "15:59",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Shenzhen Sea World Grand Orchid White Dew Hotel",
-                    "start_time": "19:03",
+                    "start_time": "19:35",
                     "end_time": "24:00",
                     "price": 373.0,
                     "cost": 1119.0,
@@ -224,14 +342,34 @@
                     "transports": [
                         {
                             "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                            "end": "Shenzhen Sea World Grand Orchid White Dew Hotel",
-                            "mode": "taxi",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "19:03",
-                            "distance": 42.54,
-                            "price": 186.14,
-                            "cost": 186.14,
-                            "cars": 1
+                            "end_time": "18:11",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Shui Wan-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:11",
+                            "end_time": "19:34",
+                            "distance": 41.61,
+                            "price": 8,
+                            "cost": 24,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shui Wan-Metro Station",
+                            "end": "Shenzhen Sea World Grand Orchid White Dew Hotel",
+                            "mode": "walk",
+                            "start_time": "19:34",
+                            "end_time": "19:35",
+                            "distance": 0.09,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -253,22 +391,42 @@
                 {
                     "type": "attraction",
                     "position": "Shenzhen Bay Park",
-                    "start_time": "08:39",
-                    "end_time": "10:09",
+                    "start_time": "08:44",
+                    "end_time": "10:14",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Shenzhen Sea World Grand Orchid White Dew Hotel",
-                            "end": "Shenzhen Bay Park",
-                            "mode": "taxi",
+                            "end": "Shui Wan-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:39",
-                            "distance": 6.52,
-                            "price": 27.5,
-                            "cost": 27.5,
-                            "cars": 1
+                            "end_time": "08:31",
+                            "distance": 0.09,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shui Wan-Metro Station",
+                            "end": "Hongshu Bay-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:31",
+                            "end_time": "08:43",
+                            "distance": 6.46,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Hongshu Bay-Metro Station",
+                            "end": "Shenzhen Bay Park",
+                            "mode": "walk",
+                            "start_time": "08:43",
+                            "end_time": "08:44",
+                            "distance": 0.11,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -283,14 +441,34 @@
                     "transports": [
                         {
                             "start": "Shenzhen Bay Park",
+                            "end": "Hongshu Bay-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:14",
+                            "end_time": "10:15",
+                            "distance": 0.11,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongshu Bay-Metro Station",
+                            "end": "Ludan Village-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:15",
+                            "end_time": "10:43",
+                            "distance": 14.47,
+                            "price": 5,
+                            "cost": 15,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Ludan Village-Metro Station",
                             "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-                            "mode": "taxi",
-                            "start_time": "10:09",
-                            "end_time": "10:30",
-                            "distance": 14.66,
-                            "price": 60.65,
-                            "cost": 60.65,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:43",
+                            "end_time": "10:46",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -306,14 +484,34 @@
                     "transports": [
                         {
                             "start": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-                            "end": "Shenzhen Bao'an International Airport",
-                            "mode": "taxi",
+                            "end": "Ludan Village-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:48",
-                            "distance": 32.12,
-                            "price": 139.22,
-                            "cost": 139.22,
-                            "cars": 1
+                            "end_time": "12:03",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Ludan Village-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "13:06",
+                            "distance": 31.89,
+                            "price": 7,
+                            "cost": 21,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Airport East-Metro Station",
+                            "end": "Shenzhen Bao'an International Airport",
+                            "mode": "walk",
+                            "start_time": "13:06",
+                            "end_time": "13:11",
+                            "distance": 0.45,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "FlightID": "FL217"
@@ -321,5 +519,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.03923177719116211
+    "elapsed_time(sec)": 0.5302588939666748
 }

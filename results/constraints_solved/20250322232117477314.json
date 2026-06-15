@@ -7,82 +7,184 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "train",
-                    "start_time": "07:50",
-                    "end_time": "16:27",
-                    "start": "Shenzhen North Railway Station",
-                    "end": "Beijing West Railway Station",
-                    "price": 1263.04,
-                    "cost": 1263.04,
+                    "type": "airplane",
+                    "start_time": "08:37",
+                    "end_time": "11:02",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Beijing Capital International Airport",
+                    "price": 962.59,
+                    "cost": 962.59,
                     "tickets": 1,
                     "transports": [],
-                    "TrainID": "G82"
+                    "FlightID": "FL173"
+                },
+                {
+                    "type": "lunch",
+                    "position": "Tidu (Beijing Fang Branch)",
+                    "start_time": "12:07",
+                    "end_time": "13:07",
+                    "price": 337.0,
+                    "cost": 337.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Beijing Capital International Airport",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:02",
+                            "end_time": "11:12",
+                            "distance": 0.88,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "Qianmen-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:12",
+                            "end_time": "12:03",
+                            "distance": 25.93,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Qianmen-Metro Station",
+                            "end": "Tidu (Beijing Fang Branch)",
+                            "mode": "walk",
+                            "start_time": "12:03",
+                            "end_time": "12:07",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
                 },
                 {
                     "type": "attraction",
-                    "position": "Old Summer Palace",
-                    "start_time": "16:47",
-                    "end_time": "18:17",
+                    "position": "The Palace Museum",
+                    "start_time": "13:23",
+                    "end_time": "14:53",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Beijing West Railway Station",
-                            "end": "Old Summer Palace",
-                            "mode": "taxi",
-                            "start_time": "16:27",
-                            "end_time": "16:47",
-                            "distance": 13.51,
-                            "price": 55.48,
-                            "cost": 55.48,
-                            "cars": 1
+                            "start": "Tidu (Beijing Fang Branch)",
+                            "end": "Qianmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:07",
+                            "end_time": "13:11",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qianmen-Metro Station",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:11",
+                            "end_time": "13:16",
+                            "distance": 2.83,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "The Palace Museum",
+                            "mode": "walk",
+                            "start_time": "13:16",
+                            "end_time": "13:23",
+                            "distance": 0.63,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "dinner",
                     "position": "Jumbo Seafood (Beijing SKP Branch)",
-                    "start_time": "18:44",
-                    "end_time": "19:44",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
                     "price": 401.0,
                     "cost": 401.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Old Summer Palace",
+                            "start": "The Palace Museum",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:53",
+                            "end_time": "15:00",
+                            "distance": 0.63,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "Dawanglu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:00",
+                            "end_time": "15:11",
+                            "distance": 5.81,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Dawanglu-Metro Station",
                             "end": "Jumbo Seafood (Beijing SKP Branch)",
-                            "mode": "taxi",
-                            "start_time": "18:17",
-                            "end_time": "18:44",
-                            "distance": 18.6,
-                            "price": 78.42,
-                            "cost": 78.42,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "15:11",
+                            "end_time": "15:15",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
-                    "position": "Grand Kingtown Hotel Beijing",
-                    "start_time": "20:03",
+                    "position": "VOYAGE INTERNATIONAL HOTEL",
+                    "start_time": "19:09",
                     "end_time": "24:00",
-                    "price": 563.0,
-                    "cost": 563.0,
+                    "price": 397.0,
+                    "cost": 397.0,
                     "rooms": 1,
                     "room_type": 1,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Jumbo Seafood (Beijing SKP Branch)",
-                            "end": "Grand Kingtown Hotel Beijing",
-                            "mode": "taxi",
-                            "start_time": "19:44",
-                            "end_time": "20:03",
-                            "distance": 13.31,
-                            "price": 54.6,
-                            "cost": 54.6,
-                            "cars": 1
+                            "end": "Dawanglu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "18:04",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dawanglu-Metro Station",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:04",
+                            "end_time": "18:46",
+                            "distance": 21.46,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "VOYAGE INTERNATIONAL HOTEL",
+                            "mode": "walk",
+                            "start_time": "18:46",
+                            "end_time": "19:09",
+                            "distance": 1.98,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -93,7 +195,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "Grand Kingtown Hotel Beijing",
+                    "position": "VOYAGE INTERNATIONAL HOTEL",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -103,67 +205,127 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Olympic Park",
-                    "start_time": "08:50",
-                    "end_time": "10:20",
+                    "position": "Old Summer Palace",
+                    "start_time": "10:06",
+                    "end_time": "11:36",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Grand Kingtown Hotel Beijing",
-                            "end": "Olympic Park",
-                            "mode": "taxi",
+                            "start": "VOYAGE INTERNATIONAL HOTEL",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:50",
-                            "distance": 13.42,
-                            "price": 55.08,
-                            "cost": 55.08,
-                            "cars": 1
+                            "end_time": "08:53",
+                            "distance": 1.98,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "Old Summer Palace-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:53",
+                            "end_time": "09:44",
+                            "distance": 25.69,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Old Summer Palace-Metro Station",
+                            "end": "Old Summer Palace",
+                            "mode": "walk",
+                            "start_time": "09:44",
+                            "end_time": "10:06",
+                            "distance": 1.84,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
-                    "position": "Tidu (Beijing Fang Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
-                    "price": 337.0,
-                    "cost": 337.0,
+                    "position": "Beijing Puxuan Hotel · Left Bank",
+                    "start_time": "12:22",
+                    "end_time": "13:22",
+                    "price": 733.0,
+                    "cost": 733.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Olympic Park",
-                            "end": "Tidu (Beijing Fang Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:20",
-                            "end_time": "10:36",
-                            "distance": 11.3,
-                            "price": 45.54,
-                            "cost": 45.54,
-                            "cars": 1
+                            "start": "Old Summer Palace",
+                            "end": "Old Summer Palace-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:36",
+                            "end_time": "11:58",
+                            "distance": 1.84,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Old Summer Palace-Metro Station",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:58",
+                            "end_time": "12:22",
+                            "distance": 12.04,
+                            "price": 4,
+                            "cost": 4,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "Beijing Puxuan Hotel · Left Bank",
+                            "mode": "walk",
+                            "start_time": "12:22",
+                            "end_time": "12:22",
+                            "distance": 0.05,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
-                    "position": "Tiananmen Square",
-                    "start_time": "12:02",
-                    "end_time": "13:32",
+                    "position": "China Science and Technology Museum",
+                    "start_time": "13:53",
+                    "end_time": "15:23",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Tidu (Beijing Fang Branch)",
-                            "end": "Tiananmen Square",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:02",
-                            "distance": 1.6,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "start": "Beijing Puxuan Hotel · Left Bank",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:22",
+                            "end_time": "13:22",
+                            "distance": 0.05,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "South Gate of Forest Park-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:22",
+                            "end_time": "13:41",
+                            "distance": 9.72,
+                            "price": 4,
+                            "cost": 4,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "South Gate of Forest Park-Metro Station",
+                            "end": "China Science and Technology Museum",
+                            "mode": "walk",
+                            "start_time": "13:41",
+                            "end_time": "13:53",
+                            "distance": 1.08,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -177,39 +339,79 @@
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Tiananmen Square",
+                            "start": "China Science and Technology Museum",
+                            "end": "South Gate of Forest Park-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:23",
+                            "end_time": "15:35",
+                            "distance": 1.08,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "South Gate of Forest Park-Metro Station",
+                            "end": "Tuanjiehu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:35",
+                            "end_time": "15:55",
+                            "distance": 10.34,
+                            "price": 4,
+                            "cost": 4,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Tuanjiehu-Metro Station",
                             "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
-                            "mode": "taxi",
-                            "start_time": "13:32",
-                            "end_time": "13:39",
-                            "distance": 5.25,
-                            "price": 23.09,
-                            "cost": 23.09,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "15:55",
+                            "end_time": "15:59",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
-                    "position": "Grand Kingtown Hotel Beijing",
-                    "start_time": "18:18",
+                    "position": "VOYAGE INTERNATIONAL HOTEL",
+                    "start_time": "19:06",
                     "end_time": "24:00",
-                    "price": 563.0,
-                    "cost": 563.0,
+                    "price": 397.0,
+                    "cost": 397.0,
                     "rooms": 1,
                     "room_type": 1,
                     "tickets": 1,
                     "transports": [
                         {
                             "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
-                            "end": "Grand Kingtown Hotel Beijing",
-                            "mode": "taxi",
+                            "end": "Tuanjiehu-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:18",
-                            "distance": 12.24,
-                            "price": 49.79,
-                            "cost": 49.79,
-                            "cars": 1
+                            "end_time": "18:04",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tuanjiehu-Metro Station",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:04",
+                            "end_time": "18:43",
+                            "distance": 19.66,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "VOYAGE INTERNATIONAL HOTEL",
+                            "mode": "walk",
+                            "start_time": "18:43",
+                            "end_time": "19:06",
+                            "distance": 1.98,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -220,7 +422,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "Grand Kingtown Hotel Beijing",
+                    "position": "VOYAGE INTERNATIONAL HOTEL",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -230,74 +432,134 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Shichahai",
-                    "start_time": "08:42",
-                    "end_time": "10:12",
+                    "position": "Olympic Park",
+                    "start_time": "09:39",
+                    "end_time": "11:09",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Grand Kingtown Hotel Beijing",
-                            "end": "Shichahai",
-                            "mode": "taxi",
+                            "start": "VOYAGE INTERNATIONAL HOTEL",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:42",
-                            "distance": 8.39,
-                            "price": 34.06,
-                            "cost": 34.06,
-                            "cars": 1
+                            "end_time": "08:53",
+                            "distance": 1.98,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "Olympic Park-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:53",
+                            "end_time": "09:31",
+                            "distance": 19.18,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Olympic Park-Metro Station",
+                            "end": "Olympic Park",
+                            "mode": "walk",
+                            "start_time": "09:31",
+                            "end_time": "09:39",
+                            "distance": 0.72,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
-                    "position": "Beijing Puxuan Hotel · Left Bank",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
-                    "price": 733.0,
-                    "cost": 733.0,
+                    "position": "South Gate Hot Pot (Temple of Heaven Branch)",
+                    "start_time": "11:58",
+                    "end_time": "12:58",
+                    "price": 101.0,
+                    "cost": 101.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shichahai",
-                            "end": "Beijing Puxuan Hotel · Left Bank",
-                            "mode": "taxi",
-                            "start_time": "10:12",
-                            "end_time": "10:16",
-                            "distance": 3.17,
-                            "price": 15.8,
-                            "cost": 15.8,
-                            "cars": 1
+                            "start": "Olympic Park",
+                            "end": "Olympic Park-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:09",
+                            "end_time": "11:17",
+                            "distance": 0.72,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Olympic Park-Metro Station",
+                            "end": "Jingtai-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:17",
+                            "end_time": "11:47",
+                            "distance": 15.3,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Jingtai-Metro Station",
+                            "end": "South Gate Hot Pot (Temple of Heaven Branch)",
+                            "mode": "walk",
+                            "start_time": "11:47",
+                            "end_time": "11:58",
+                            "distance": 0.97,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "19:43",
-                    "end_time": "07:15",
-                    "start": "Beijing West Railway Station",
-                    "end": "Shenzhen North Railway Station",
-                    "price": 1165.89,
-                    "cost": 1165.89,
+                    "type": "airplane",
+                    "start_time": "18:19",
+                    "end_time": "20:44",
+                    "start": "Beijing Capital International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 929.69,
+                    "cost": 929.69,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Beijing Puxuan Hotel · Left Bank",
-                            "end": "Beijing West Railway Station",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:12",
-                            "distance": 8.19,
-                            "price": 33.36,
-                            "cost": 33.36,
-                            "cars": 1
+                            "start": "South Gate Hot Pot (Temple of Heaven Branch)",
+                            "end": "Jingtai-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:58",
+                            "end_time": "13:09",
+                            "distance": 0.97,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jingtai-Metro Station",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:09",
+                            "end_time": "14:05",
+                            "distance": 28.39,
+                            "price": 7,
+                            "cost": 7,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "Beijing Capital International Airport",
+                            "mode": "walk",
+                            "start_time": "14:05",
+                            "end_time": "14:15",
+                            "distance": 0.88,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
-                    "TrainID": "D901"
+                    "FlightID": "FL100"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 0.0314640998840332
+    "elapsed_time(sec)": 0.646904706954956
 }

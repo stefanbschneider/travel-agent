@@ -19,31 +19,9 @@
                     "TrainID": "D3126"
                 },
                 {
-                    "type": "dinner",
-                    "position": "Fu He Hui",
-                    "start_time": "18:58",
-                    "end_time": "19:58",
-                    "price": 1280.0,
-                    "cost": 5120.0,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "Shanghai Hongqiao Station",
-                            "end": "Fu He Hui",
-                            "mode": "taxi",
-                            "start_time": "18:42",
-                            "end_time": "18:58",
-                            "distance": 10.79,
-                            "price": 43.25,
-                            "cost": 43.25,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
                     "type": "accommodation",
                     "position": "Crystal Orange Hotel • North the Bund",
-                    "start_time": "20:10",
+                    "start_time": "19:25",
                     "end_time": "24:00",
                     "price": 646.0,
                     "cost": 2584.0,
@@ -52,15 +30,35 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Fu He Hui",
+                            "start": "Shanghai Hongqiao Station",
+                            "end": "Hongqiao Railway Station-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:42",
+                            "end_time": "18:43",
+                            "distance": 0.12,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongqiao Railway Station-Metro Station",
+                            "end": "Tilanqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:43",
+                            "end_time": "19:21",
+                            "distance": 19.08,
+                            "price": 5,
+                            "cost": 20,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tilanqiao-Metro Station",
                             "end": "Crystal Orange Hotel • North the Bund",
-                            "mode": "taxi",
-                            "start_time": "19:58",
-                            "end_time": "20:10",
-                            "distance": 8.55,
-                            "price": 34.63,
-                            "cost": 34.63,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "19:21",
+                            "end_time": "19:25",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -82,22 +80,42 @@
                 {
                     "type": "attraction",
                     "position": "The Bund",
-                    "start_time": "08:32",
-                    "end_time": "10:02",
+                    "start_time": "08:45",
+                    "end_time": "10:15",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Crystal Orange Hotel • North the Bund",
-                            "end": "The Bund",
-                            "mode": "taxi",
+                            "end": "Tilanqiao-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:32",
-                            "distance": 1.6,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "08:34",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tilanqiao-Metro Station",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:34",
+                            "end_time": "08:37",
+                            "distance": 1.75,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "The Bund",
+                            "mode": "walk",
+                            "start_time": "08:37",
+                            "end_time": "08:45",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -112,36 +130,76 @@
                     "transports": [
                         {
                             "start": "The Bund",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:15",
+                            "end_time": "10:23",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:23",
+                            "end_time": "10:31",
+                            "distance": 4.13,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
                             "end": "Yong Fu (Huangpu Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:02",
-                            "end_time": "10:08",
-                            "distance": 4.23,
-                            "price": 19.5,
-                            "cost": 19.5,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:31",
+                            "end_time": "10:34",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "Huangpu River",
-                    "start_time": "12:06",
-                    "end_time": "13:36",
+                    "start_time": "12:20",
+                    "end_time": "13:50",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Yong Fu (Huangpu Branch)",
-                            "end": "Huangpu River",
-                            "mode": "taxi",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:06",
-                            "distance": 4.46,
-                            "price": 20.3,
-                            "cost": 20.3,
-                            "cars": 1
+                            "end_time": "12:03",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "12:12",
+                            "distance": 4.64,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Huangpu River",
+                            "mode": "walk",
+                            "start_time": "12:12",
+                            "end_time": "12:20",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -156,21 +214,41 @@
                     "transports": [
                         {
                             "start": "Huangpu River",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:50",
+                            "end_time": "13:58",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:58",
+                            "end_time": "14:01",
+                            "distance": 1.66,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
                             "end": "Kurogi",
-                            "mode": "taxi",
-                            "start_time": "13:36",
-                            "end_time": "13:37",
-                            "distance": 1.18,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "14:01",
+                            "end_time": "14:06",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Crystal Orange Hotel • North the Bund",
-                    "start_time": "18:03",
+                    "start_time": "18:14",
                     "end_time": "24:00",
                     "price": 646.0,
                     "cost": 2584.0,
@@ -180,14 +258,34 @@
                     "transports": [
                         {
                             "start": "Kurogi",
-                            "end": "Crystal Orange Hotel • North the Bund",
-                            "mode": "taxi",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:03",
-                            "distance": 2.36,
-                            "price": 12.95,
-                            "cost": 12.95,
-                            "cars": 1
+                            "end_time": "18:05",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Tilanqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:05",
+                            "end_time": "18:10",
+                            "distance": 2.57,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tilanqiao-Metro Station",
+                            "end": "Crystal Orange Hotel • North the Bund",
+                            "mode": "walk",
+                            "start_time": "18:10",
+                            "end_time": "18:14",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -209,22 +307,42 @@
                 {
                     "type": "attraction",
                     "position": "Nanjing Road Pedestrian Street",
-                    "start_time": "08:33",
-                    "end_time": "10:03",
+                    "start_time": "08:48",
+                    "end_time": "10:18",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Crystal Orange Hotel • North the Bund",
-                            "end": "Nanjing Road Pedestrian Street",
-                            "mode": "taxi",
+                            "end": "Tilanqiao-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:33",
-                            "distance": 2.13,
-                            "price": 12.17,
-                            "cost": 12.17,
-                            "cars": 1
+                            "end_time": "08:34",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tilanqiao-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:34",
+                            "end_time": "08:39",
+                            "distance": 2.57,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Nanjing Road Pedestrian Street",
+                            "mode": "walk",
+                            "start_time": "08:39",
+                            "end_time": "08:48",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -239,14 +357,34 @@
                     "transports": [
                         {
                             "start": "Nanjing Road Pedestrian Street",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:18",
+                            "end_time": "10:27",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Jiashan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:27",
+                            "end_time": "10:36",
+                            "distance": 4.99,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Jiashan Road-Metro Station",
                             "end": "Renhe Hall (Zhaojiabang Road Branch)",
-                            "mode": "taxi",
-                            "start_time": "10:03",
-                            "end_time": "10:11",
-                            "distance": 5.55,
-                            "price": 24.13,
-                            "cost": 24.13,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:36",
+                            "end_time": "10:39",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -262,14 +400,34 @@
                     "transports": [
                         {
                             "start": "Renhe Hall (Zhaojiabang Road Branch)",
-                            "end": "Shanghai Pudong International Airport",
-                            "mode": "taxi",
+                            "end": "Jiashan Road-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:51",
-                            "distance": 34.5,
-                            "price": 149.96,
-                            "cost": 149.96,
-                            "cars": 1
+                            "end_time": "12:03",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiashan Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "13:09",
+                            "distance": 33.38,
+                            "price": 7,
+                            "cost": 28,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Pudong International Airport-Metro Station",
+                            "end": "Shanghai Pudong International Airport",
+                            "mode": "walk",
+                            "start_time": "13:09",
+                            "end_time": "13:24",
+                            "distance": 1.27,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "FlightID": "FL018"
@@ -277,5 +435,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.03502225875854492
+    "elapsed_time(sec)": 0.6780030727386475
 }

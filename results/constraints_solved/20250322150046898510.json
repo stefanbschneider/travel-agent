@@ -21,29 +21,49 @@
                 {
                     "type": "dinner",
                     "position": "Shangri-La Hotel Suzhou · Shang Palace",
-                    "start_time": "18:48",
-                    "end_time": "19:48",
+                    "start_time": "18:53",
+                    "end_time": "19:53",
                     "price": 231.0,
                     "cost": 693.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Suzhou Station",
-                            "end": "Shangri-La Hotel Suzhou · Shang Palace",
-                            "mode": "taxi",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:39",
-                            "end_time": "18:48",
-                            "distance": 6.44,
-                            "price": 27.25,
-                            "cost": 27.25,
-                            "cars": 1
+                            "end_time": "18:40",
+                            "distance": 0.13,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Suzhou Railway Station-Metro Station",
+                            "end": "Lion Mountain Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:40",
+                            "end_time": "18:52",
+                            "distance": 6.41,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Lion Mountain Road-Metro Station",
+                            "end": "Shangri-La Hotel Suzhou · Shang Palace",
+                            "mode": "walk",
+                            "start_time": "18:52",
+                            "end_time": "18:53",
+                            "distance": 0.1,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                    "start_time": "19:58",
+                    "start_time": "20:09",
                     "end_time": "24:00",
                     "price": 325.0,
                     "cost": 975.0,
@@ -53,14 +73,34 @@
                     "transports": [
                         {
                             "start": "Shangri-La Hotel Suzhou · Shang Palace",
+                            "end": "Lion Mountain Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:53",
+                            "end_time": "19:54",
+                            "distance": 0.1,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Lion Mountain Road-Metro Station",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:54",
+                            "end_time": "20:06",
+                            "distance": 6.41,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Suzhou Railway Station-Metro Station",
                             "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                            "mode": "taxi",
-                            "start_time": "19:48",
-                            "end_time": "19:58",
-                            "distance": 6.69,
-                            "price": 28.13,
-                            "cost": 28.13,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "20:06",
+                            "end_time": "20:09",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -92,13 +132,12 @@
                         {
                             "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
                             "end": "Suzhou Station",
-                            "mode": "taxi",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:30",
-                            "distance": 0.43,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "08:35",
+                            "distance": 0.4279068467741364,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "TrainID": "D956"
@@ -106,5 +145,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.02973198890686035
+    "elapsed_time(sec)": 0.11148691177368164
 }

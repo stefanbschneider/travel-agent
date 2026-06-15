@@ -21,29 +21,49 @@
                 {
                     "type": "dinner",
                     "position": "Shangri-La Hotel Suzhou · Shang Palace",
-                    "start_time": "18:48",
-                    "end_time": "19:48",
+                    "start_time": "18:53",
+                    "end_time": "19:53",
                     "price": 231.0,
                     "cost": 693.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Suzhou Station",
-                            "end": "Shangri-La Hotel Suzhou · Shang Palace",
-                            "mode": "taxi",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:39",
-                            "end_time": "18:48",
-                            "distance": 6.44,
-                            "price": 27.25,
-                            "cost": 27.25,
-                            "cars": 1
+                            "end_time": "18:40",
+                            "distance": 0.13,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Suzhou Railway Station-Metro Station",
+                            "end": "Lion Mountain Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:40",
+                            "end_time": "18:52",
+                            "distance": 6.41,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Lion Mountain Road-Metro Station",
+                            "end": "Shangri-La Hotel Suzhou · Shang Palace",
+                            "mode": "walk",
+                            "start_time": "18:52",
+                            "end_time": "18:53",
+                            "distance": 0.1,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                    "start_time": "19:58",
+                    "start_time": "20:09",
                     "end_time": "24:00",
                     "price": 325.0,
                     "cost": 975.0,
@@ -53,14 +73,34 @@
                     "transports": [
                         {
                             "start": "Shangri-La Hotel Suzhou · Shang Palace",
+                            "end": "Lion Mountain Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:53",
+                            "end_time": "19:54",
+                            "distance": 0.1,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Lion Mountain Road-Metro Station",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:54",
+                            "end_time": "20:06",
+                            "distance": 6.41,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Suzhou Railway Station-Metro Station",
                             "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                            "mode": "taxi",
-                            "start_time": "19:48",
-                            "end_time": "19:58",
-                            "distance": 6.69,
-                            "price": 28.13,
-                            "cost": 28.13,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "20:06",
+                            "end_time": "20:09",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -82,66 +122,126 @@
                 {
                     "type": "attraction",
                     "position": "Maple Bridge Scenic Area",
-                    "start_time": "08:36",
-                    "end_time": "10:06",
+                    "start_time": "09:01",
+                    "end_time": "10:31",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                            "end": "Maple Bridge Scenic Area",
-                            "mode": "taxi",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:36",
-                            "distance": 4.03,
-                            "price": 18.81,
-                            "cost": 18.81,
-                            "cars": 1
+                            "end_time": "08:33",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Suzhou Railway Station-Metro Station",
+                            "end": "West Ring Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:33",
+                            "end_time": "08:42",
+                            "distance": 4.54,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "West Ring Road-Metro Station",
+                            "end": "Maple Bridge Scenic Area",
+                            "mode": "walk",
+                            "start_time": "08:42",
+                            "end_time": "09:01",
+                            "distance": 1.61,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "lunch",
                     "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
+                    "start_time": "11:15",
+                    "end_time": "12:15",
                     "price": 168.0,
                     "cost": 504.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Maple Bridge Scenic Area",
+                            "end": "West Ring Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:31",
+                            "end_time": "10:50",
+                            "distance": 1.61,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "West Ring Road-Metro Station",
+                            "end": "Oriental Gate-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:50",
+                            "end_time": "11:09",
+                            "distance": 9.83,
+                            "price": 4,
+                            "cost": 12,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Oriental Gate-Metro Station",
                             "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-                            "mode": "taxi",
-                            "start_time": "10:06",
-                            "end_time": "10:21",
-                            "distance": 10.39,
-                            "price": 41.43,
-                            "cost": 41.43,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "11:09",
+                            "end_time": "11:15",
+                            "distance": 0.54,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "Suzhou Museum",
-                    "start_time": "12:07",
-                    "end_time": "13:37",
+                    "start_time": "12:40",
+                    "end_time": "14:10",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+                            "end": "Oriental Gate-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:15",
+                            "end_time": "12:21",
+                            "distance": 0.54,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Oriental Gate-Metro Station",
+                            "end": "Meixiang-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:21",
+                            "end_time": "12:31",
+                            "distance": 5.03,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Meixiang-Metro Station",
                             "end": "Suzhou Museum",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:07",
-                            "distance": 4.68,
-                            "price": 21.08,
-                            "cost": 21.08,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "12:31",
+                            "end_time": "12:40",
+                            "distance": 0.79,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -156,21 +256,41 @@
                     "transports": [
                         {
                             "start": "Suzhou Museum",
+                            "end": "Meixiang-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:10",
+                            "end_time": "14:19",
+                            "distance": 0.79,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Meixiang-Metro Station",
+                            "end": "Oriental Gate-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:19",
+                            "end_time": "14:29",
+                            "distance": 5.03,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Oriental Gate-Metro Station",
                             "end": "Suyan Chinese Restaurant at W Suzhou",
-                            "mode": "taxi",
-                            "start_time": "13:37",
-                            "end_time": "13:43",
-                            "distance": 4.62,
-                            "price": 20.88,
-                            "cost": 20.88,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "14:29",
+                            "end_time": "14:33",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                    "start_time": "18:10",
+                    "start_time": "18:20",
                     "end_time": "24:00",
                     "price": 325.0,
                     "cost": 975.0,
@@ -180,14 +300,34 @@
                     "transports": [
                         {
                             "start": "Suyan Chinese Restaurant at W Suzhou",
-                            "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                            "mode": "taxi",
+                            "end": "Oriental Gate-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:10",
-                            "distance": 6.93,
-                            "price": 28.96,
-                            "cost": 28.96,
-                            "cars": 1
+                            "end_time": "18:04",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Oriental Gate-Metro Station",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:04",
+                            "end_time": "18:17",
+                            "distance": 6.7,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Suzhou Railway Station-Metro Station",
+                            "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
+                            "mode": "walk",
+                            "start_time": "18:17",
+                            "end_time": "18:20",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -219,13 +359,12 @@
                         {
                             "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
                             "end": "Suzhou Station",
-                            "mode": "taxi",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:30",
-                            "distance": 0.43,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "end_time": "08:35",
+                            "distance": 0.4279068467741364,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "TrainID": "D956"
@@ -233,5 +372,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.12161874771118164
+    "elapsed_time(sec)": 0.20432519912719727
 }

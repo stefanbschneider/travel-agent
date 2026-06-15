@@ -21,44 +21,84 @@
                 {
                     "type": "lunch",
                     "position": "Tidu (Beijing Fang Branch)",
-                    "start_time": "11:41",
-                    "end_time": "12:41",
+                    "start_time": "11:48",
+                    "end_time": "12:48",
                     "price": 337.0,
                     "cost": 1348.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Beijing South Railway Station",
-                            "end": "Tidu (Beijing Fang Branch)",
-                            "mode": "taxi",
+                            "end": "Beijing South Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "11:36",
-                            "end_time": "11:41",
-                            "distance": 3.87,
-                            "price": 18.26,
-                            "cost": 18.26,
-                            "cars": 1
+                            "end_time": "11:36",
+                            "distance": 0.02,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Beijing South Railway Station-Metro Station",
+                            "end": "Qianmen-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:36",
+                            "end_time": "11:44",
+                            "distance": 4.23,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Qianmen-Metro Station",
+                            "end": "Tidu (Beijing Fang Branch)",
+                            "mode": "walk",
+                            "start_time": "11:44",
+                            "end_time": "11:48",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "attraction",
                     "position": "798 Art District",
-                    "start_time": "13:01",
-                    "end_time": "14:31",
+                    "start_time": "13:36",
+                    "end_time": "15:06",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Tidu (Beijing Fang Branch)",
+                            "end": "Qianmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:48",
+                            "end_time": "12:52",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qianmen-Metro Station",
+                            "end": "Wangjing South-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:52",
+                            "end_time": "13:15",
+                            "distance": 11.81,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
                             "end": "798 Art District",
-                            "mode": "taxi",
-                            "start_time": "12:41",
-                            "end_time": "13:01",
-                            "distance": 13.79,
-                            "price": 56.75,
-                            "cost": 56.75,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "13:15",
+                            "end_time": "13:36",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -73,21 +113,41 @@
                     "transports": [
                         {
                             "start": "798 Art District",
+                            "end": "Wangjing South-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:06",
+                            "end_time": "15:27",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
+                            "end": "Dawanglu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:27",
+                            "end_time": "15:43",
+                            "distance": 8.5,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dawanglu-Metro Station",
                             "end": "Jumbo Seafood (Beijing SKP Branch)",
-                            "mode": "taxi",
-                            "start_time": "14:31",
-                            "end_time": "14:44",
-                            "distance": 9.16,
-                            "price": 36.74,
-                            "cost": 36.74,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "15:43",
+                            "end_time": "15:47",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
                     "position": "Shanxi Hotel",
-                    "start_time": "18:15",
+                    "start_time": "18:33",
                     "end_time": "24:00",
                     "price": 681.0,
                     "cost": 1362.0,
@@ -97,14 +157,34 @@
                     "transports": [
                         {
                             "start": "Jumbo Seafood (Beijing SKP Branch)",
-                            "end": "Shanxi Hotel",
-                            "mode": "taxi",
+                            "end": "Dawanglu-Metro Station",
+                            "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:15",
-                            "distance": 10.1,
-                            "price": 40.15,
-                            "cost": 40.15,
-                            "cars": 1
+                            "end_time": "18:04",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dawanglu-Metro Station",
+                            "end": "Beijing South Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:04",
+                            "end_time": "18:23",
+                            "distance": 9.57,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Beijing South Railway Station-Metro Station",
+                            "end": "Shanxi Hotel",
+                            "mode": "walk",
+                            "start_time": "18:23",
+                            "end_time": "18:33",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 }
@@ -126,22 +206,42 @@
                 {
                     "type": "attraction",
                     "position": "The Palace Museum",
-                    "start_time": "08:41",
-                    "end_time": "10:11",
+                    "start_time": "09:01",
+                    "end_time": "10:31",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Shanxi Hotel",
-                            "end": "The Palace Museum",
-                            "mode": "taxi",
+                            "end": "Beijing South Railway Station-Metro Station",
+                            "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:41",
-                            "distance": 7.59,
-                            "price": 31.27,
-                            "cost": 31.27,
-                            "cars": 1
+                            "end_time": "08:40",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Beijing South Railway Station-Metro Station",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:40",
+                            "end_time": "08:54",
+                            "distance": 7.06,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "The Palace Museum",
+                            "mode": "walk",
+                            "start_time": "08:54",
+                            "end_time": "09:01",
+                            "distance": 0.63,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -157,13 +257,12 @@
                         {
                             "start": "The Palace Museum",
                             "end": "Beijing Puxuan Hotel · Left Bank",
-                            "mode": "taxi",
-                            "start_time": "10:11",
-                            "end_time": "10:11",
-                            "distance": 0.58,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
+                            "mode": "walk",
+                            "start_time": "10:31",
+                            "end_time": "10:37",
+                            "distance": 0.5788988165204361,
+                            "price": 0,
+                            "cost": 0
                         }
                     ]
                 },
@@ -179,14 +278,34 @@
                     "transports": [
                         {
                             "start": "Beijing Puxuan Hotel · Left Bank",
-                            "end": "Beijing Capital International Airport",
-                            "mode": "taxi",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "walk",
                             "start_time": "12:00",
-                            "end_time": "12:35",
-                            "distance": 23.96,
-                            "price": 102.52,
-                            "cost": 102.52,
-                            "cars": 1
+                            "end_time": "12:00",
+                            "distance": 0.05,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:00",
+                            "end_time": "12:46",
+                            "distance": 23.24,
+                            "price": 6,
+                            "cost": 24,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
+                            "end": "Beijing Capital International Airport",
+                            "mode": "walk",
+                            "start_time": "12:46",
+                            "end_time": "12:56",
+                            "distance": 0.88,
+                            "price": 0,
+                            "cost": 0
                         }
                     ],
                     "FlightID": "FL087"
@@ -194,5 +313,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.03367781639099121
+    "elapsed_time(sec)": 0.439849853515625
 }
