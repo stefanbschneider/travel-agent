@@ -4,6 +4,7 @@ import time
 import math
 import json
 import re
+from difflib import SequenceMatcher
 from copy import deepcopy
 
 from agent.base import BaseAgent
@@ -181,6 +182,8 @@ class TPCAgent(BaseAgent):
             # Infer explicit non-train requirement for both outbound/return.
             if "allactivities(plan)[0]['type'] != \"train\"" in expr and "allactivities(plan)[-1]['type'] != \"train\"" in expr:
                 merged["intercity_mode"] = "airplane"
+            if "allactivities(plan)[0]['type'] == \"train\"" in expr and "allactivities(plan)[-1]['type'] == \"train\"" in expr:
+                merged["intercity_mode"] = "train"
 
             # Infer required room type.
             m_room = re.search(r"room_type\(activity\)!=(\d)", expr)
@@ -188,23 +191,82 @@ class TPCAgent(BaseAgent):
                 merged["room_type"] = int(m_room.group(1))
 
             # Infer required attraction type set inclusion.
-            m_attr_type = re.search(r"attraction_type_set\).*\{\"([^\"]+)\"\}<=attraction_type_set", expr, re.DOTALL)
-            if m_attr_type:
+            if "attraction_type_set" in expr and "{" in expr and "}" in expr:
                 req_types = merged.get("required_attraction_types")
                 if not isinstance(req_types, list):
                     req_types = []
-                t = m_attr_type.group(1)
-                if not any(self._match_constraint_text(existing, t) for existing in req_types):
-                    req_types.append(t)
+                set_match = re.search(r"\{([^}]*)\}", expr, re.DOTALL)
+                literals = re.findall(r"['\"]([^'\"]+)['\"]", set_match.group(1) if set_match else "")
+                for t in literals:
+                    if not any(self._match_constraint_text(existing, t) for existing in req_types):
+                        req_types.append(t)
                 merged["required_attraction_types"] = req_types
 
             # Infer required hotel amenity/type in featurehoteltype checks.
-            m_hotel_type = re.search(r"accommodation_type_set\).*\{\"([^\"]+)\"\}&accommodation_type_set", expr, re.DOTALL)
-            if m_hotel_type and "hotel_amenity" not in merged and "hotel_type" not in merged:
-                merged["hotel_amenity"] = m_hotel_type.group(1)
+            if "accommodation_type_set" in expr and "{" in expr and "}" in expr:
+                set_match = re.search(r"\{([^}]*)\}", expr, re.DOTALL)
+                literals = re.findall(r"['\"]([^'\"]+)['\"]", set_match.group(1) if set_match else "")
+                if "&accommodation_type_set" in expr:
+                    req_any = merged.get("required_hotel_any_types", [])
+                    if not isinstance(req_any, list):
+                        req_any = []
+                    for t in literals:
+                        if not any(self._match_constraint_text(existing, t) for existing in req_any):
+                            req_any.append(t)
+                    merged["required_hotel_any_types"] = req_any
+                elif "<=accommodation_type_set" in expr:
+                    req_all = merged.get("required_hotel_all_types", [])
+                    if not isinstance(req_all, list):
+                        req_all = []
+                    for t in literals:
+                        if not any(self._match_constraint_text(existing, t) for existing in req_all):
+                            req_all.append(t)
+                    merged["required_hotel_all_types"] = req_all
+                if literals and "hotel_amenity" not in merged and "hotel_type" not in merged:
+                    merged["hotel_amenity"] = literals[0]
+
+            # Infer taxi car-count constraints to avoid invalid taxi usage.
+            m_taxi_cars = re.search(
+                r"innercity_transport_type\(activity_transports\(activity\)\)\s*==\s*['\"]taxi['\"].*?taxi_cars\(activity_transports\(activity\)\)\s*!=\s*(\d+)",
+                expr,
+                re.DOTALL,
+            )
+            if m_taxi_cars:
+                merged["taxi_cars_equals"] = int(m_taxi_cars.group(1))
 
         merged["budgets"] = budgets
         return merged
+
+    def _resolve_required_names(self, raw_required, candidate_names):
+        if not isinstance(raw_required, list) or len(raw_required) == 0:
+            return []
+        candidates = [str(n) for n in candidate_names if str(n).strip()]
+        if not candidates:
+            return []
+        resolved = []
+        for req in raw_required:
+            req_text = str(req).strip()
+            if not req_text:
+                continue
+            direct = [
+                c for c in candidates
+                if self._match_constraint_text(c, req_text) or self._match_constraint_text(req_text, c)
+            ]
+            if direct:
+                chosen = direct[0]
+            else:
+                req_norm = self._norm_text(req_text)
+                scored = sorted(
+                    (
+                        (SequenceMatcher(None, req_norm, self._norm_text(c)).ratio(), c)
+                        for c in candidates
+                    ),
+                    reverse=True,
+                )
+                chosen = scored[0][1] if scored and scored[0][0] >= 0.72 else None
+            if chosen and not any(self._match_constraint_text(chosen, existing) for existing in resolved):
+                resolved.append(chosen)
+        return resolved
 
     def _plan_total_cost(self, plan):
         total = 0.0
@@ -494,6 +556,7 @@ class TPCAgent(BaseAgent):
         self._transport_constraints = {
             "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
             "conditional_transport": constraints.get("conditional_transport", None),
+            "taxi_cars_equals": constraints.get("taxi_cars_equals", None),
         }
 
         env = self.env
@@ -531,12 +594,16 @@ class TPCAgent(BaseAgent):
         room_numbed = self._room_type_to_numbed(constraints.get("room_type", None))
         hotel_type = constraints.get("hotel_type", None)
         hotel_amenity = constraints.get("hotel_amenity", None)
+        required_hotel_all_types = constraints.get("required_hotel_all_types", []) or []
+        required_hotel_any_types = constraints.get("required_hotel_any_types", []) or []
         hotel_nearby = constraints.get("hotel_nearby", None)
 
         accom_df = env.accommodations.select(target_city, "name", lambda x: True)
+        required_hotels = self._resolve_required_names(required_hotels, [str(accom_df.iloc[i]["name"]) for i in range(len(accom_df))])
 
         def _hotel_ok(h):
             name = str(h["name"])
+            feature_type = str(h.get("featurehoteltype", ""))
             if required_hotels and not any(self._match_constraint_text(name, n) for n in required_hotels):
                 return False
             if excluded_hotels and any(self._match_constraint_text(name, n) for n in excluded_hotels):
@@ -548,11 +615,15 @@ class TPCAgent(BaseAgent):
                 except Exception:
                     return False
             if hotel_type:
-                if not self._match_constraint_text(h.get("featurehoteltype", ""), hotel_type):
+                if not self._match_constraint_text(feature_type, hotel_type):
                     return False
             if hotel_amenity:
-                if not self._match_constraint_text(h.get("featurehoteltype", ""), hotel_amenity):
+                if not self._match_constraint_text(feature_type, hotel_amenity):
                     return False
+            if required_hotel_all_types and any(not self._match_constraint_text(feature_type, t) for t in required_hotel_all_types):
+                return False
+            if required_hotel_any_types and not any(self._match_constraint_text(feature_type, t) for t in required_hotel_any_types):
+                return False
             try:
                 rooms_local = math.ceil(people / int(h.get("numbed", 1)))
             except Exception:
@@ -603,12 +674,27 @@ class TPCAgent(BaseAgent):
             # Fall back to cheapest option even when strict filters are infeasible.
             best = None
             best_price = None
+            best_affordable = False
             for i in range(len(accom_df)):
                 h = accom_df.iloc[i]
                 p = self._safe_float(h.get("price", 0.0), 0.0)
-                if best is None or best_price is None or p < best_price:
+                try:
+                    rooms_local = math.ceil(people / int(h.get("numbed", 1)))
+                except Exception:
+                    rooms_local = people
+                h_cost = p * rooms_local * max(days - 1, 0)
+                affordable = self._affordable_main_cost("accommodation", h_cost, budget_limits, budget_tracker)
+                should_take = False
+                if best is None or best_price is None:
+                    should_take = True
+                elif affordable and not best_affordable:
+                    should_take = True
+                elif affordable == best_affordable and p < best_price:
+                    should_take = True
+                if should_take:
                     best = h
                     best_price = p
+                    best_affordable = affordable
             hotel = best if best is not None else accom_df.iloc[0]
         hotel_name = str(hotel["name"])
         rooms_needed = math.ceil(people / int(hotel["numbed"]))
@@ -621,6 +707,7 @@ class TPCAgent(BaseAgent):
         free_attractions_only = bool(constraints.get("free_attractions_only", False))
 
         attr_df = env.attractions.select(target_city, "name", lambda x: True)
+        required_attractions = self._resolve_required_names(required_attractions, [str(attr_df.iloc[i]["name"]) for i in range(len(attr_df))])
 
         prioritized_required = []
         optional_pool = []
@@ -703,6 +790,7 @@ class TPCAgent(BaseAgent):
         excluded_cuisine_types = constraints.get("excluded_cuisine_types", []) or []
 
         rest_df = env.restaurants.select(target_city, "name", lambda x: True)
+        required_restaurants = self._resolve_required_names(required_restaurants, [str(rest_df.iloc[i]["name"]) for i in range(len(rest_df))])
         lunch_restaurants = []
         dinner_restaurants = []
         required_rest_pool = []
@@ -1348,8 +1436,16 @@ class TPCAgent(BaseAgent):
         # If inner_transport budget is constrained, prefer cheaper modes (metro > walk > taxi)
         inner_budget_limit = getattr(self, "_budget_limits", {}).get("inner_transport", -1)
         if inner_budget_limit >= 0:
-            # Always prefer metro over taxi when there's an inner transport budget
-            mode_order = ["metro", "walk", "taxi"]
+            mode_order = ["walk", "metro", "taxi"] if inner_budget_limit <= 50 else ["metro", "walk", "taxi"]
+        taxi_cars_equals = self._transport_constraints.get("taxi_cars_equals", None)
+        if taxi_cars_equals is not None:
+            try:
+                required_cars = int(taxi_cars_equals)
+                projected_cars = max(1, int(math.ceil(float(people) / 4.0)))
+                if projected_cars != required_cars:
+                    mode_order = [m for m in mode_order if m != "taxi"]
+            except Exception:
+                pass
 
         if isinstance(conditional, dict):
             preferred = self._norm_text(conditional.get("mode", "taxi"))

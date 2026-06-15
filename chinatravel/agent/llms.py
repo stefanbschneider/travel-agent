@@ -1,13 +1,33 @@
 from abc import ABC, abstractmethod
-from openai import OpenAI
-from json_repair import repair_json
-from transformers import AutoTokenizer
-from transformers import AutoConfig
+
+try:
+    from openai import OpenAI
+except Exception:  # pragma: no cover
+    OpenAI = None
+
+try:
+    from json_repair import repair_json
+except Exception:  # pragma: no cover
+    repair_json = None
+
+try:
+    from transformers import AutoTokenizer
+    from transformers import AutoConfig
+except Exception:  # pragma: no cover
+    AutoTokenizer = None
+    AutoConfig = None
 
 # from modelscope import AutoModelForCausalLM, AutoTokenizer
-import tiktoken
+try:
+    import tiktoken
+except Exception:  # pragma: no cover
+    tiktoken = None
 
-from vllm import LLM, SamplingParams
+try:
+    from vllm import LLM, SamplingParams
+except Exception:  # pragma: no cover
+    LLM = None
+    SamplingParams = None
 import re
 import sys
 import os
@@ -67,9 +87,16 @@ class AbstractLLM(ABC):
         pass
 
 
+def _require_dependency(dep, name):
+    if dep is None:
+        raise ImportError(f"{name} is required for this LLM backend but is not installed.")
+
+
 class Deepseek(AbstractLLM):
     def __init__(self):
         super().__init__()
+        _require_dependency(OpenAI, "openai")
+        _require_dependency(AutoTokenizer, "transformers")
         self.llm = OpenAI(
             base_url="https://api.deepseek.com",
         )
@@ -112,7 +139,7 @@ class Deepseek(AbstractLLM):
             kwargs["response_format"] = {"type": "json_object"}
         try:
             res_str = self._send_request(messages, kwargs)
-            if json_mode:
+            if json_mode and repair_json is not None:
                 res_str = repair_json(res_str, ensure_ascii=False)
         except Exception as e:
             print(e)
@@ -123,6 +150,7 @@ class Deepseek(AbstractLLM):
 class GLM4Plus(AbstractLLM):
     def __init__(self):
         super().__init__()
+        _require_dependency(OpenAI, "openai")
         self.llm = OpenAI(
             base_url="https://open.bigmodel.cn/api/paas/v4",
         )
@@ -148,7 +176,7 @@ class GLM4Plus(AbstractLLM):
             kwargs["stop"] = ["<STOP>"]
         try:
             res_str = self._send_request(messages, kwargs)
-            if json_mode:
+            if json_mode and repair_json is not None:
                 res_str = repair_json(res_str, ensure_ascii=False)
         except Exception as e:
             res_str = '{"error": "Request failed, please try again."}'
@@ -158,6 +186,8 @@ class GLM4Plus(AbstractLLM):
 class GPT4o(AbstractLLM):
     def __init__(self):
         super().__init__()
+        _require_dependency(OpenAI, "openai")
+        _require_dependency(tiktoken, "tiktoken")
         self.llm = OpenAI()
         self.name = "GPT4o"
         self.tokenizer = tiktoken.encoding_for_model("gpt-4o")
@@ -199,7 +229,7 @@ class GPT4o(AbstractLLM):
             kwargs["response_format"] = {"type": "json_object"}
         try:
             res_str = self._send_request(messages, kwargs)
-            if json_mode:
+            if json_mode and repair_json is not None:
                 res_str = repair_json(res_str, ensure_ascii=False)
         except Exception as e:
             print(e)
@@ -210,6 +240,10 @@ class GPT4o(AbstractLLM):
 class Qwen(AbstractLLM):
     def __init__(self, model_name, max_model_len=None):
         super().__init__()
+        _require_dependency(AutoTokenizer, "transformers")
+        _require_dependency(AutoConfig, "transformers")
+        _require_dependency(LLM, "vllm")
+        _require_dependency(SamplingParams, "vllm")
         self.path = os.path.join(
             project_root_path, "chinatravel", "local_llm", model_name
         )
@@ -315,7 +349,8 @@ class Qwen(AbstractLLM):
             self.output_token_count += len(output_token_ids)
         try:
             if json_mode:
-                res_str = repair_json(res_str, ensure_ascii=False)
+                if repair_json is not None:
+                    res_str = repair_json(res_str, ensure_ascii=False)
             elif one_line:
                 res_str = res_str.split("\n")[0]
         except Exception as e:
@@ -329,6 +364,10 @@ class Qwen(AbstractLLM):
 class Mistral(AbstractLLM):
     def __init__(self, max_model_len=None):
         super().__init__()
+        _require_dependency(AutoTokenizer, "transformers")
+        _require_dependency(AutoConfig, "transformers")
+        _require_dependency(LLM, "vllm")
+        _require_dependency(SamplingParams, "vllm")
         self.path = os.path.join(
             project_root_path, "chinatravel", "local_llm", "Mistral-7B-Instruct-v0.3",
         )
@@ -387,7 +426,7 @@ class Mistral(AbstractLLM):
         output_token_ids = outputs[0].outputs[0].token_ids
         self.output_token_count += len(output_token_ids)
         
-        if json_mode:
+        if json_mode and repair_json is not None:
             res_str = repair_json(res_str, ensure_ascii=False)
         elif one_line:
             res_str = res_str.split("\n")[0]
@@ -400,6 +439,9 @@ class Mistral(AbstractLLM):
 class Llama(AbstractLLM):
     def __init__(self, model_name):
         super().__init__()
+        _require_dependency(AutoTokenizer, "transformers")
+        _require_dependency(LLM, "vllm")
+        _require_dependency(SamplingParams, "vllm")
 
 
         Llama_supported = ["Llama3-3B", "Llama3-8B"]
@@ -444,7 +486,8 @@ class Llama(AbstractLLM):
             self.output_token_count += len(output_token_ids)
 
             if json_mode:
-                res_str = repair_json(res_str, ensure_ascii=False)
+                if repair_json is not None:
+                    res_str = repair_json(res_str, ensure_ascii=False)
             elif one_line:
                 res_str = res_str.split("\n")[0]
         except Exception as e:
