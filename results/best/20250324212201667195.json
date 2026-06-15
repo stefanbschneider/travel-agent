@@ -120,20 +120,94 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "20:05",
-          "start": "Suzhou Station",
-          "end": "Chongqing North Railway Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "type": "attraction",
+          "position": "Maple Bridge Scenic Area",
+          "start_time": "09:01",
+          "end_time": "10:31",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
-          "transports": [],
-          "TrainID": "D956"
+          "transports": [
+            {
+              "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:33",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "West Ring Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:33",
+              "end_time": "08:42",
+              "distance": 4.54,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "West Ring Road-Metro Station",
+              "end": "Maple Bridge Scenic Area",
+              "mode": "walk",
+              "start_time": "08:42",
+              "end_time": "09:01",
+              "distance": 1.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:40",
+          "end_time": "14:08",
+          "start": "Suzhou Station",
+          "end": "Chongqing West Railway Station",
+          "price": 679.06,
+          "cost": 2037.1799999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Maple Bridge Scenic Area",
+              "end": "West Ring Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:31",
+              "end_time": "10:50",
+              "distance": 1.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Ring Road-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "10:50",
+              "end_time": "10:59",
+              "distance": 4.54,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Suzhou Station",
+              "mode": "walk",
+              "start_time": "10:59",
+              "end_time": "11:00",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "T237"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.23098015785217285,
-  "_eval_score": 25.0
+  "elapsed_time(sec)": 0.7301247119903564,
+  "_eval_score": 91.9345238095238
 }

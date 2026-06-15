@@ -21,73 +21,91 @@
         {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:23",
-          "end_time": "12:23",
+          "start_time": "11:55",
+          "end_time": "12:55",
           "price": 600.0,
           "cost": 600.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Shanghai Pudong International Airport",
-              "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
               "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
-              "cars": 1
+              "end_time": "10:46",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:46",
+              "end_time": "11:52",
+              "distance": 33.42,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "walk",
+              "start_time": "11:52",
+              "end_time": "11:55",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "The Bund",
-          "start_time": "12:29",
-          "end_time": "13:59",
+          "start_time": "13:14",
+          "end_time": "14:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Yong Fu (Huangpu Branch)",
-              "end": "The Bund",
-              "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:29",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Fu He Hui",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 1280.0,
-          "cost": 1280.0,
-          "tickets": 1,
-          "transports": [
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:55",
+              "end_time": "12:58",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "The Bund",
-              "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "13:59",
-              "end_time": "14:09",
-              "distance": 7.0,
-              "price": 29.18,
-              "cost": 29.18,
-              "cars": 1
+              "start": "Middle Huaihai Road-Metro Station",
+              "end": "Lujiazui-Metro Station",
+              "mode": "metro",
+              "start_time": "12:58",
+              "end_time": "13:06",
+              "distance": 4.13,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "The Bund",
+              "mode": "walk",
+              "start_time": "13:06",
+              "end_time": "13:14",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Atour S Hotel  Expo Center Lujiazui Shanghai",
-          "start_time": "18:11",
+          "start_time": "15:13",
           "end_time": "24:00",
           "price": 737.0,
           "cost": 737.0,
@@ -96,15 +114,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Fu He Hui",
+              "start": "The Bund",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "14:52",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Linyi New Village-Metro Station",
+              "mode": "metro",
+              "start_time": "14:52",
+              "end_time": "15:02",
+              "distance": 5.18,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Linyi New Village-Metro Station",
               "end": "Atour S Hotel  Expo Center Lujiazui Shanghai",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:11",
-              "distance": 7.81,
-              "price": 32.05,
-              "cost": 32.05,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:02",
+              "end_time": "15:13",
+              "distance": 0.95,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -113,6 +151,58 @@
     {
       "day": 2,
       "activities": [
+        {
+          "type": "breakfast",
+          "position": "Atour S Hotel  Expo Center Lujiazui Shanghai",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "09:02",
+          "end_time": "10:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Atour S Hotel  Expo Center Lujiazui Shanghai",
+              "end": "Linyi New Village-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:41",
+              "distance": 0.95,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Linyi New Village-Metro Station",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "metro",
+              "start_time": "08:41",
+              "end_time": "08:54",
+              "distance": 6.56,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Huangpu River",
+              "mode": "walk",
+              "start_time": "08:54",
+              "end_time": "09:02",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
         {
           "type": "airplane",
           "start_time": "18:32",
@@ -124,15 +214,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Atour S Hotel  Expo Center Lujiazui Shanghai",
+              "start": "Huangpu River",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:32",
+              "end_time": "10:40",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "10:40",
+              "end_time": "11:42",
+              "distance": 31.3,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:14",
-              "distance": 29.79,
-              "price": 128.74,
-              "cost": 128.74,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:42",
+              "end_time": "11:57",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL018"
@@ -140,6 +250,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03193807601928711,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 1.9824702739715576,
+  "_eval_score": 91.25952380952381
 }
