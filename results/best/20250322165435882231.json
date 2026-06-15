@@ -7,104 +7,184 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "09:39",
-          "end_time": "10:46",
-          "start": "Wuhan Tianhe International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 478.27,
-          "cost": 1434.81,
+          "type": "train",
+          "start_time": "07:25",
+          "end_time": "12:14",
+          "start": "Wuhan Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 582.03,
+          "cost": 1746.09,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL586"
+          "TrainID": "G1001"
         },
         {
           "type": "lunch",
           "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
-          "start_time": "11:27",
-          "end_time": "12:27",
+          "start_time": "12:34",
+          "end_time": "13:34",
           "price": 835.0,
           "cost": 2505.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Shenzhen North Railway Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "12:14",
+              "end_time": "12:15",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Donggualing-Metro Station",
+              "mode": "metro",
+              "start_time": "12:15",
+              "end_time": "12:28",
+              "distance": 6.74,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Donggualing-Metro Station",
               "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "mode": "taxi",
-              "start_time": "10:46",
-              "end_time": "11:27",
-              "distance": 27.53,
-              "price": 118.59,
-              "cost": 118.59,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:28",
+              "end_time": "12:34",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Dameisha Seaside Park",
-          "start_time": "13:04",
-          "end_time": "14:34",
+          "start_time": "14:38",
+          "end_time": "16:08",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
+              "end": "Donggualing-Metro Station",
+              "mode": "walk",
+              "start_time": "13:34",
+              "end_time": "13:40",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "13:40",
+              "end_time": "14:29",
+              "distance": 24.98,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Dameisha-Metro Station",
               "end": "Dameisha Seaside Park",
-              "mode": "taxi",
-              "start_time": "12:27",
-              "end_time": "13:04",
-              "distance": 25.3,
-              "price": 108.55,
-              "cost": 108.55,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:29",
+              "end_time": "14:38",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:23",
+          "end_time": "18:23",
           "price": 500.0,
           "cost": 1500.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Dameisha Seaside Park",
+              "end": "Dameisha-Metro Station",
+              "mode": "walk",
+              "start_time": "16:08",
+              "end_time": "16:17",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Chegongmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:17",
+              "end_time": "17:16",
+              "distance": 29.7,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Chegongmiao-Metro Station",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "14:34",
-              "end_time": "15:18",
-              "distance": 29.76,
-              "price": 128.62,
-              "cost": 128.62,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:16",
+              "end_time": "17:23",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "18:35",
+          "position": "Pullman Shenzhen North",
+          "start_time": "18:48",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 1137.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 986.0,
+          "cost": 1972.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
               "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:35",
-              "distance": 23.98,
-              "price": 102.63,
-              "cost": 102.63,
-              "cars": 1
+              "end": "Chegongmiao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:23",
+              "end_time": "18:30",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chegongmiao-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:30",
+              "end_time": "18:46",
+              "distance": 8.24,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Pullman Shenzhen North",
+              "mode": "walk",
+              "start_time": "18:46",
+              "end_time": "18:48",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -115,7 +195,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "Pullman Shenzhen North",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -126,66 +206,126 @@
         {
           "type": "attraction",
           "position": "China Merchants Shekou Cruise Home Port Tour",
-          "start_time": "09:00",
-          "end_time": "10:30",
+          "start_time": "09:19",
+          "end_time": "10:49",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "China Merchants Shekou Cruise Home Port Tour",
-              "mode": "taxi",
+              "start": "Pullman Shenzhen North",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:00",
-              "distance": 20.57,
-              "price": 87.24,
-              "cost": 87.24,
-              "cars": 1
+              "end_time": "08:32",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "08:32",
+              "end_time": "09:10",
+              "distance": 19.16,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "China Merchants Shekou Cruise Home Port Tour",
+              "mode": "walk",
+              "start_time": "09:10",
+              "end_time": "09:19",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "11:33",
+          "end_time": "12:33",
           "price": 590.0,
           "cost": 1770.0,
           "tickets": 3,
           "transports": [
             {
               "start": "China Merchants Shekou Cruise Home Port Tour",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "10:49",
+              "end_time": "10:58",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "10:58",
+              "end_time": "11:31",
+              "distance": 16.61,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
               "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "10:30",
-              "end_time": "10:53",
-              "distance": 15.94,
-              "price": 66.42,
-              "cost": 66.42,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:31",
+              "end_time": "11:33",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-          "start_time": "12:23",
-          "end_time": "13:53",
+          "start_time": "13:17",
+          "end_time": "14:47",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "walk",
+              "start_time": "12:33",
+              "end_time": "12:35",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "12:35",
+              "end_time": "13:08",
+              "distance": 16.61,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Shekou Port-Metro Station",
               "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:23",
-              "distance": 15.94,
-              "price": 66.42,
-              "cost": 66.42,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:08",
+              "end_time": "13:17",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -200,38 +340,78 @@
           "transports": [
             {
               "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "14:47",
+              "end_time": "14:56",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "14:56",
+              "end_time": "15:29",
+              "distance": 16.61,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
               "end": "Jia Yuan Restaurant",
-              "mode": "taxi",
-              "start_time": "13:53",
-              "end_time": "14:16",
-              "distance": 15.75,
-              "price": 65.58,
-              "cost": 65.58,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:32",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "18:39",
+          "position": "Pullman Shenzhen North",
+          "start_time": "18:22",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 1137.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 986.0,
+          "cost": 1972.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
               "start": "Jia Yuan Restaurant",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "walk",
               "start_time": "18:00",
-              "end_time": "18:39",
-              "distance": 26.39,
-              "price": 113.44,
-              "cost": 113.44,
-              "cars": 1
+              "end_time": "18:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "18:20",
+              "distance": 8.96,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Pullman Shenzhen North",
+              "mode": "walk",
+              "start_time": "18:20",
+              "end_time": "18:22",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -242,7 +422,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "Pullman Shenzhen North",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -253,22 +433,42 @@
         {
           "type": "attraction",
           "position": "Shenzhen Bay Park",
-          "start_time": "08:59",
-          "end_time": "10:29",
+          "start_time": "08:55",
+          "end_time": "10:25",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "Shenzhen Bay Park",
-              "mode": "taxi",
+              "start": "Pullman Shenzhen North",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:59",
-              "distance": 19.36,
-              "price": 81.83,
-              "cost": 81.83,
-              "cars": 1
+              "end_time": "08:32",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Hongshu Bay-Metro Station",
+              "mode": "metro",
+              "start_time": "08:32",
+              "end_time": "08:54",
+              "distance": 11.39,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Hongshu Bay-Metro Station",
+              "end": "Shenzhen Bay Park",
+              "mode": "walk",
+              "start_time": "08:54",
+              "end_time": "08:55",
+              "distance": 0.11,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -283,14 +483,34 @@
           "transports": [
             {
               "start": "Shenzhen Bay Park",
+              "end": "Hongshu Bay-Metro Station",
+              "mode": "walk",
+              "start_time": "10:25",
+              "end_time": "10:26",
+              "distance": 0.11,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongshu Bay-Metro Station",
+              "end": "Ludan Village-Metro Station",
+              "mode": "metro",
+              "start_time": "10:26",
+              "end_time": "10:54",
+              "distance": 14.47,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Ludan Village-Metro Station",
               "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-              "mode": "taxi",
-              "start_time": "10:29",
-              "end_time": "10:50",
-              "distance": 14.66,
-              "price": 60.65,
-              "cost": 60.65,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:54",
+              "end_time": "10:57",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -306,14 +526,34 @@
           "transports": [
             {
               "start": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-              "end": "Shenzhen North Railway Station",
-              "mode": "taxi",
+              "end": "Ludan Village-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:17",
-              "distance": 11.66,
-              "price": 47.15,
-              "cost": 47.15,
-              "cars": 1
+              "end_time": "12:03",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ludan Village-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:26",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Shenzhen North Railway Station",
+              "mode": "walk",
+              "start_time": "12:26",
+              "end_time": "12:27",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G1016"
@@ -321,6 +561,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03629803657531738,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 1.3519902229309082,
+  "_eval_score": 94.39682539682539
 }
