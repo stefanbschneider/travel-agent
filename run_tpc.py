@@ -36,14 +36,14 @@ if __name__ == "__main__":
         "--agent",
         "-a",
         type=str,
-        default=None,
+        default="TPCAgent",
         choices=["TPCAgent", "UrbanTrip"],
     )
     parser.add_argument(
         "--llm",
         "-l",
         type=str,
-        default=None
+        default="TPCLLM"
     )
     parser.add_argument(
         "--timeout",
