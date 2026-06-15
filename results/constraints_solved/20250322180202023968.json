@@ -309,14 +309,12 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Pullman Nanjing Lukou Airport",
-                    "start_time": "16:47",
-                    "end_time": "24:00",
-                    "price": 786.0,
-                    "cost": 1572.0,
-                    "rooms": 2,
-                    "room_type": 1,
+                    "type": "dinner",
+                    "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 334.0,
+                    "cost": 668.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -331,11 +329,55 @@
                         },
                         {
                             "start": "Wangjiawan-Metro Station",
-                            "end": "Lukou Airport-Metro Station",
+                            "end": "Xinmofan Road-Metro Station",
                             "mode": "metro",
                             "start_time": "15:27",
-                            "end_time": "16:46",
-                            "distance": 39.51,
+                            "end_time": "15:37",
+                            "distance": 5.15,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Xinmofan Road-Metro Station",
+                            "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+                            "mode": "walk",
+                            "start_time": "15:37",
+                            "end_time": "15:39",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Pullman Nanjing Lukou Airport",
+                    "start_time": "19:22",
+                    "end_time": "24:00",
+                    "price": 786.0,
+                    "cost": 1572.0,
+                    "rooms": 2,
+                    "room_type": 1,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+                            "end": "Xinmofan Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "18:02",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xinmofan Road-Metro Station",
+                            "end": "Lukou Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:02",
+                            "end_time": "19:21",
+                            "distance": 39.69,
                             "price": 8,
                             "cost": 16,
                             "tickets": 2
@@ -344,8 +386,8 @@
                             "start": "Lukou Airport-Metro Station",
                             "end": "Pullman Nanjing Lukou Airport",
                             "mode": "walk",
-                            "start_time": "16:46",
-                            "end_time": "16:47",
+                            "start_time": "19:21",
+                            "end_time": "19:22",
                             "distance": 0.09,
                             "price": 0,
                             "cost": 0
@@ -357,6 +399,16 @@
         {
             "day": 3,
             "activities": [
+                {
+                    "type": "breakfast",
+                    "position": "Pullman Nanjing Lukou Airport",
+                    "start_time": "07:30",
+                    "end_time": "08:30",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 0,
+                    "transports": []
+                },
                 {
                     "type": "airplane",
                     "start_time": "18:22",
@@ -383,5 +435,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.33163905143737793
+    "elapsed_time(sec)": 2.888535976409912
 }

@@ -1,0 +1,607 @@
+{
+  "people_number": 2,
+  "start_city": "Shenzhen",
+  "target_city": "Chengdu",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "08:04",
+          "end_time": "09:44",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 618.5,
+          "cost": 1237.0,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL209"
+        },
+        {
+          "type": "lunch",
+          "position": "Crane's Call Tea House (People's Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 45.0,
+          "cost": 90.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "09:44",
+              "end_time": "09:59",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "09:59",
+              "end_time": "10:26",
+              "distance": 13.8,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Crane's Call Tea House (People's Park Branch)",
+              "mode": "walk",
+              "start_time": "10:26",
+              "end_time": "10:29",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Museum",
+          "start_time": "12:11",
+          "end_time": "13:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "People's Park-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:05",
+              "distance": 1.16,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Museum",
+              "mode": "walk",
+              "start_time": "12:05",
+              "end_time": "12:11",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mawangzi (Taikoo Li Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 140.0,
+          "cost": 280.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Museum",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "13:41",
+              "end_time": "13:47",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:47",
+              "end_time": "13:51",
+              "distance": 2.01,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
+              "end": "Mawangzi (Taikoo Li Branch)",
+              "mode": "walk",
+              "start_time": "13:51",
+              "end_time": "13:56",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "18:46",
+          "end_time": "24:00",
+          "price": 427.0,
+          "cost": 427.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mawangzi (Taikoo Li Branch)",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "18:35",
+              "distance": 15.01,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "mode": "walk",
+              "start_time": "18:35",
+              "end_time": "18:46",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Lane",
+          "start_time": "09:21",
+          "end_time": "10:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:41",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "08:41",
+              "end_time": "09:15",
+              "distance": 17.41,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Manjushri Lane",
+              "mode": "walk",
+              "start_time": "09:15",
+              "end_time": "09:21",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "start_time": "11:05",
+          "end_time": "12:05",
+          "price": 250.0,
+          "cost": 500.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Lane",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:57",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:57",
+              "end_time": "11:03",
+              "distance": 3.23,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "mode": "walk",
+              "start_time": "11:03",
+              "end_time": "11:05",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Temple",
+          "start_time": "12:18",
+          "end_time": "13:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "12:05",
+              "end_time": "12:07",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "12:07",
+              "end_time": "12:13",
+              "distance": 3.23,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Manjushri Temple",
+              "mode": "walk",
+              "start_time": "12:13",
+              "end_time": "12:18",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Kuanzhai Alley",
+          "start_time": "14:05",
+          "end_time": "15:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Temple",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "13:48",
+              "end_time": "13:53",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "13:53",
+              "end_time": "13:57",
+              "distance": 2.44,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Kuanzhai Alley",
+              "mode": "walk",
+              "start_time": "13:57",
+              "end_time": "14:05",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 233.0,
+          "cost": 466.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Kuanzhai Alley",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:43",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Taisheng South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:43",
+              "end_time": "15:45",
+              "distance": 1.07,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Taisheng South Road-Metro Station",
+              "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+              "mode": "walk",
+              "start_time": "15:45",
+              "end_time": "15:50",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "18:47",
+          "end_time": "24:00",
+          "price": 427.0,
+          "cost": 427.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+              "end": "Taisheng South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Taisheng South Road-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "18:36",
+              "distance": 15.58,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "mode": "walk",
+              "start_time": "18:36",
+              "end_time": "18:47",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Jinli Ancient Street",
+          "start_time": "09:17",
+          "end_time": "10:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:41",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "08:41",
+              "end_time": "09:08",
+              "distance": 13.8,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Jinli Ancient Street",
+              "mode": "walk",
+              "start_time": "09:08",
+              "end_time": "09:17",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Grill Master Spicy Grilled Fish (IFS Branch)",
+          "start_time": "11:01",
+          "end_time": "12:01",
+          "price": 100.0,
+          "cost": 200.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jinli Ancient Street",
+              "end": "People's Park-Metro Station",
+              "mode": "walk",
+              "start_time": "10:47",
+              "end_time": "10:56",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:56",
+              "end_time": "11:00",
+              "distance": 2.32,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
+              "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
+              "mode": "walk",
+              "start_time": "11:00",
+              "end_time": "11:01",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:52",
+          "end_time": "23:32",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 713.63,
+          "cost": 1427.26,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Grill Master Spicy Grilled Fish (IFS Branch)",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:01",
+              "end_time": "12:02",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
+              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "13:45",
+              "distance": 51.61,
+              "price": 9,
+              "cost": 18,
+              "tickets": 2
+            },
+            {
+              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "end": "Chengdu Tianfu International Airport",
+              "mode": "walk",
+              "start_time": "13:45",
+              "end_time": "14:29",
+              "distance": 3.72,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "FlightID": "FL426"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 5.382122993469238
+}

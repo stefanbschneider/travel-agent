@@ -309,12 +309,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 334.0,
-                    "cost": 668.0,
+                    "type": "attraction",
+                    "position": "Nanjing Museum",
+                    "start_time": "15:12",
+                    "end_time": "16:42",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -329,11 +329,53 @@
                         },
                         {
                             "start": "Wangjiawan-Metro Station",
-                            "end": "Xinmofan Road-Metro Station",
+                            "end": "Clover Garden-Metro Station",
                             "mode": "metro",
                             "start_time": "14:54",
-                            "end_time": "15:04",
-                            "distance": 5.15,
+                            "end_time": "15:03",
+                            "distance": 5.0,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Clover Garden-Metro Station",
+                            "end": "Nanjing Museum",
+                            "mode": "walk",
+                            "start_time": "15:03",
+                            "end_time": "15:12",
+                            "distance": 0.81,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+                    "start_time": "17:06",
+                    "end_time": "18:06",
+                    "price": 334.0,
+                    "cost": 668.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Nanjing Museum",
+                            "end": "Clover Garden-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:42",
+                            "end_time": "16:51",
+                            "distance": 0.81,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Clover Garden-Metro Station",
+                            "end": "Xinmofan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:51",
+                            "end_time": "17:04",
+                            "distance": 6.56,
                             "price": 3,
                             "cost": 6,
                             "tickets": 2
@@ -342,8 +384,8 @@
                             "start": "Xinmofan Road-Metro Station",
                             "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
                             "mode": "walk",
-                            "start_time": "15:04",
-                            "end_time": "15:06",
+                            "start_time": "17:04",
+                            "end_time": "17:06",
                             "distance": 0.2,
                             "price": 0,
                             "cost": 0
@@ -353,7 +395,7 @@
                 {
                     "type": "accommodation",
                     "position": "UrCove by HYATT Nanjing South Railway Station",
-                    "start_time": "18:36",
+                    "start_time": "18:42",
                     "end_time": "24:00",
                     "price": 379.0,
                     "cost": 379.0,
@@ -365,8 +407,8 @@
                             "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
                             "end": "Xinmofan Road-Metro Station",
                             "mode": "walk",
-                            "start_time": "18:00",
-                            "end_time": "18:02",
+                            "start_time": "18:06",
+                            "end_time": "18:08",
                             "distance": 0.2,
                             "price": 0,
                             "cost": 0
@@ -375,8 +417,8 @@
                             "start": "Xinmofan Road-Metro Station",
                             "end": "Hongyun Avenue-Metro Station",
                             "mode": "metro",
-                            "start_time": "18:02",
-                            "end_time": "18:28",
+                            "start_time": "18:08",
+                            "end_time": "18:34",
                             "distance": 13.48,
                             "price": 4,
                             "cost": 8,
@@ -386,8 +428,8 @@
                             "start": "Hongyun Avenue-Metro Station",
                             "end": "UrCove by HYATT Nanjing South Railway Station",
                             "mode": "walk",
-                            "start_time": "18:28",
-                            "end_time": "18:36",
+                            "start_time": "18:34",
+                            "end_time": "18:42",
                             "distance": 0.71,
                             "price": 0,
                             "cost": 0
@@ -540,5 +582,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.33707189559936523
+    "elapsed_time(sec)": 3.363194704055786
 }

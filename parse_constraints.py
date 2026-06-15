@@ -1,16 +1,9 @@
 """
-Parse nature_language from all TPC queries into structured constraints.
-
-Outputs: chinatravel/data/en/parsed_constraints.json
+Parse a TPC query's nature_language (and hard_logic_py, when present) into structured
+constraints consumed by TPCAgent. Pure regex; runs live per query at agent runtime.
 """
 
-import json
-import os
 import re
-
-
-DATA_DIR = "chinatravel/data/en/TPC_IJCAI_2026_phase1_EN/"
-OUTPUT_PATH = "chinatravel/data/en/parsed_constraints.json"
 
 
 def parse_budget(text):
@@ -154,6 +147,15 @@ def parse_inner_transport_restrictions(text):
     return excluded if excluded else None
 
 
+# Attraction TYPE phrases (lowercased) the NL parser must not mistake for specific names.
+_ATTRACTION_TYPE_PHRASES = {
+    "park", "museum/memorial hall", "cultural landscape", "natural scenery",
+    "red tourism sites", "red tourism", "commercial district",
+    "amusement park/sports entertainment", "amusement park", "sports entertainment",
+    "university campus", "historical site", "art museum", "cultural tourism area", "other",
+}
+
+
 def parse_required_attractions(text):
     """Extract specific attraction names that must be visited."""
     names = []
@@ -168,7 +170,14 @@ def parse_required_attractions(text):
     for pat in patterns:
         m = re.search(pat, text, re.I)
         if m:
+            # Respect negation: "do not want/wish to visit ..." is not a requirement.
+            prefix = text[max(0, m.start() - 14):m.start()]
+            if re.search(r"\b(?:not|no|don't|never|avoid)\b", prefix, re.I):
+                continue
             chunk = m.group(1).strip()
+            # Skip attraction TYPE phrases (those belong to parse_required_attraction_types).
+            if chunk.lower().strip() in _ATTRACTION_TYPE_PHRASES:
+                continue
             # Skip if this is an attraction TYPE (common words)
             type_words = {"a park", "park", "free attractions", "only free attractions",
                          "cultural landscape", "museum", "natural scenery", "red tourism",
@@ -996,52 +1005,12 @@ def parse_query(query):
     return result
 
 
-def main():
-    all_constraints = {}
-    files = sorted(os.listdir(DATA_DIR))
+def parse_query_no_oracle(query):
+    """Parse constraints from nature_language only (Phase-2: hard_logic_py unavailable).
 
-    for fname in files:
-        filepath = os.path.join(DATA_DIR, fname)
-        with open(filepath) as f:
-            query = json.load(f)
-
-        uid = query["uid"]
-        parsed = parse_query(query)
-        all_constraints[uid] = parsed
-
-    # Write output
-    with open(OUTPUT_PATH, "w") as f:
-        json.dump(all_constraints, f, indent=2, ensure_ascii=False)
-
-    # Print stats
-    total = len(all_constraints)
-    disjunctive_count = sum(1 for v in all_constraints.values() if v.get("disjunctive"))
-    has_constraints = sum(1 for v in all_constraints.values()
-                         if len(v) > 1 or (v.get("disjunctive") and v.get("groups")))
-    empty = sum(1 for v in all_constraints.values()
-                if not v.get("disjunctive") and len(v) <= 1)
-
-    print(f"Total queries: {total}")
-    print(f"Disjunctive: {disjunctive_count}")
-    print(f"With constraints: {has_constraints}")
-    print(f"Empty (no constraints parsed): {empty}")
-
-    # Show constraint type distribution
-    from collections import Counter
-    constraint_types = Counter()
-    for v in all_constraints.values():
-        if v.get("disjunctive"):
-            for g in v.get("groups", []):
-                for k in g:
-                    constraint_types[k] += 1
-        else:
-            for k in v:
-                if k != "disjunctive":
-                    constraint_types[k] += 1
-    print("\nConstraint type distribution:")
-    for k, count in constraint_types.most_common():
-        print(f"  {k}: {count}")
-
-
-if __name__ == "__main__":
-    main()
+    Returns a single (non-disjunctive) variant; the parsed verifier and per-query search
+    explore satisfying plans without the oracle's disjunctive decomposition.
+    """
+    result = parse_single_constraint_text(query["nature_language"])
+    result["disjunctive"] = False
+    return result

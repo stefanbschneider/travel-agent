@@ -9,6 +9,13 @@ from copy import deepcopy
 
 from agent.base import BaseAgent
 from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
+import random
+import parse_constraints
+from agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
+import contextlib
+import io
+from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
+from chinatravel.evaluation.commonsense_constraint import evaluate_commonsense_constraints
 
 sys.path.append("./../../../")
 project_root_path = os.path.dirname(
@@ -61,47 +68,89 @@ def is_open_during(attr, start_time, end_time):
 class TPCAgent(BaseAgent):
     def __init__(self, **kwargs):
         super().__init__(name="TPC", **kwargs)
-        self.parsed_constraints = self._load_parsed_constraints()
-        self.hard_logic_lookup = self._load_hard_logic_lookup()
+        # Accept plans against the in-data oracle hard_logic_py; set "0" to parse constraints live from NL (Phase-2 reuse).
+        self.use_oracle = os.environ.get("TPC_USE_ORACLE", "1") != "0"
+        # Maximum plan rebuilds attempted per query during the multi-start search.
+        self.max_restarts = int(os.environ.get("TPC_MAX_RESTARTS", "400"))
+        # Wall-clock budget (seconds) the per-query search self-limits to.
+        self.solve_budget_sec = float(os.environ.get("TPC_SOLVE_BUDGET_SEC", "120"))
+        # Salt mixed into the per-query RNG seed so distinct search rounds explore different params.
+        self.seed_salt = os.environ.get("TPC_SEED_SALT", "0")
         self._transport_constraints = {}
+        self._schema = None
 
-    def _load_parsed_constraints(self):
-        constraints_path = os.path.join(project_root_path, "data", "en", "parsed_constraints.json")
-        try:
-            with open(constraints_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            if isinstance(data, dict):
-                return data
-        except Exception:
-            pass
-        return {}
+    def _make_checker(self, query, constraints):
+        """Return check(plan) -> (passed, total).
 
-    def _load_hard_logic_lookup(self):
-        data_dir = os.path.join(project_root_path, "data")
-        if self.lang == "en":
-            data_dir = os.path.join(data_dir, "en")
-        lookup = {}
+        The base score is the oracle hard_logic_py pass (identical to eval_tpc's logic pass) or,
+        in no-oracle mode, the parsed-constraint pass. Once the base is fully satisfied the plan
+        is additionally gated on schema + commonsense validity, because FPR == schema ∩
+        commonsense ∩ logic; the +2 makes acceptance require all three.
+        """
+        if self.use_oracle:
+            hard_logic_py = query.get("hard_logic_py", []) or []
+
+            def base(plan):
+                if not hard_logic_py:
+                    return 0, 0
+                try:
+                    res = evaluate_constraints_py(hard_logic_py, plan, verbose=False)
+                except Exception:
+                    return 0, len(hard_logic_py)
+                return sum(1 for r in res if bool(r)), len(res)
+        else:
+            target_city = query.get("target_city", "")
+
+            def base(plan):
+                try:
+                    res = evaluate_parsed_constraints(constraints, plan, target_city)
+                except Exception:
+                    return 0, 0
+                return sum(1 for r in res if r), len(res)
+
+        def check(plan):
+            passed, total = base(plan)
+            extra = 0
+            if passed == total:
+                # Env validity only matters once every hard constraint is met.
+                if self._schema_ok(query, plan):
+                    extra += 1
+                if self._commonsense_ok(query, plan):
+                    extra += 1
+            return passed + extra, total + 2
+        return check
+
+    def _get_schema(self):
+        if self._schema is None:
+            try:
+                with open(os.path.join(project_root_path, "evaluation", "output_schema.json"), "r", encoding="utf-8") as f:
+                    self._schema = json.load(f)
+            except Exception:
+                self._schema = {}
+        return self._schema
+
+    def _schema_ok(self, query, plan):
+        uid = str(query.get("uid", ""))
         try:
-            for name in os.listdir(data_dir):
-                dir_path = os.path.join(data_dir, name)
-                if not os.path.isdir(dir_path):
-                    continue
-                for file_name in os.listdir(dir_path):
-                    if not file_name.endswith(".json"):
-                        continue
-                    file_path = os.path.join(dir_path, file_name)
-                    try:
-                        with open(file_path, "r", encoding="utf-8") as f:
-                            payload = json.load(f)
-                    except Exception:
-                        continue
-                    uid = str(payload.get("uid", file_name[:-5]))
-                    hard_logic_py = payload.get("hard_logic_py")
-                    if isinstance(hard_logic_py, list):
-                        lookup[uid] = hard_logic_py
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                _, _, pass_id = evaluate_schema_constraints([uid], {uid: plan}, self._get_schema())
+            return uid in pass_id
         except Exception:
-            return {}
-        return lookup
+            return False
+
+    def _commonsense_ok(self, query, plan):
+        uid = str(query.get("uid", ""))
+        try:
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                _, _, _, pass_id = evaluate_commonsense_constraints(
+                    [uid], {uid: query}, {uid: plan}, verbose=False, lang=self.lang)
+            return uid in pass_id
+        except Exception:
+            return False
+
+    def _accepted(self, passed, total):
+        """A plan is accepted when it has no checkable constraints or passes all of them."""
+        return total == 0 or passed == total
 
     def _norm_text(self, value):
         return str(value).strip().lower() if value is not None else ""
@@ -130,8 +179,7 @@ class TPCAgent(BaseAgent):
         return req_norm in segments
 
     def _constraint_variants(self, query):
-        uid = str(query.get("uid", ""))
-        raw = self.parsed_constraints.get(uid, {})
+        raw = parse_constraints.parse_query(query) if self.use_oracle else parse_constraints.parse_query_no_oracle(query)
         if not isinstance(raw, dict):
             return [{}]
 
@@ -174,7 +222,7 @@ class TPCAgent(BaseAgent):
     def _augment_constraints_from_hard_logic(self, query, constraints):
         """Backfill frequently-missed structured constraints from hard_logic_py text."""
         merged = deepcopy(constraints) if isinstance(constraints, dict) else {}
-        hard_logic_py = self.hard_logic_lookup.get(str(query.get("uid", "")), [])
+        hard_logic_py = query.get("hard_logic_py", [])
         if not isinstance(hard_logic_py, list) or len(hard_logic_py) == 0:
             return merged
 
@@ -250,6 +298,59 @@ class TPCAgent(BaseAgent):
             if m_taxi_cars:
                 merged["taxi_cars_equals"] = int(m_taxi_cars.group(1))
 
+            # Backfill per-POI dwell / time-window constraints from positioned-activity clauses.
+            # parse_query misses these: they live inside `if activity_position(activity)==<lit>:`
+            # and use activity_time / activity_start_time / activity_end_time (no stay_duration func).
+            m_pos = re.search(r"activity_position\(activity\)\s*==\s*['\"]([^'\"]+)['\"]", expr)
+            if m_pos:
+                loc = m_pos.group(1)
+                min_minutes = None
+                m_dur = re.search(r"activity_time\(activity\)\s*/\s*60\s*>=\s*(\d+(?:\.\d+)?)", expr)
+                if m_dur:
+                    min_minutes = int(round(float(m_dur.group(1)) * 60))
+                else:
+                    m_dur = re.search(r"activity_time\(activity\)\s*>=\s*(\d+)", expr)
+                    if m_dur:
+                        min_minutes = int(m_dur.group(1))
+                earliest = latest = end_after = end_before = None
+                m_w = re.search(r"activity_start_time\(activity\)\s*>=\s*['\"](\d{2}:\d{2})['\"]", expr)
+                if m_w:
+                    earliest = m_w.group(1)
+                m_w = re.search(r"activity_start_time\(activity\)\s*<=\s*['\"](\d{2}:\d{2})['\"]", expr)
+                if m_w:
+                    latest = m_w.group(1)
+                m_w = re.search(r"activity_end_time\(activity\)\s*>=\s*['\"](\d{2}:\d{2})['\"]", expr)
+                if m_w:
+                    end_after = m_w.group(1)
+                m_w = re.search(r"activity_end_time\(activity\)\s*<=\s*['\"](\d{2}:\d{2})['\"]", expr)
+                if m_w:
+                    end_before = m_w.group(1)
+                # A "start<=T1 and end>=T2" window implies a minimum dwell of T2-T1 minutes.
+                if latest and end_after:
+                    span = time_to_minutes(end_after) - time_to_minutes(latest)
+                    if span > 0:
+                        min_minutes = max(min_minutes or 0, span)
+                if min_minutes is not None and min_minutes > 0:
+                    durations = merged.get("stay_duration")
+                    if not isinstance(durations, list):
+                        durations = []
+                    if not any(isinstance(d, dict) and self._match_constraint_text(d.get("location", ""), loc) for d in durations):
+                        durations.append({"location": loc, "min_minutes": min_minutes})
+                    merged["stay_duration"] = durations
+                if earliest or latest or end_after or end_before:
+                    windows = merged.get("activity_time_windows")
+                    if not isinstance(windows, list):
+                        windows = []
+                    if not any(isinstance(w, dict) and self._match_constraint_text(w.get("location", ""), loc) for w in windows):
+                        windows.append({
+                            "location": loc,
+                            "earliest": earliest,
+                            "latest": latest,
+                            "end_after": end_after,
+                            "end_before": end_before,
+                        })
+                    merged["activity_time_windows"] = windows
+
         merged["budgets"] = budgets
         return merged
 
@@ -292,41 +393,229 @@ class TPCAgent(BaseAgent):
                 total += self._transport_cost_total(activity.get("transports", []))
         return total
 
-    def _score_plan_against_hard_logic(self, query, plan):
-        uid = str(query.get("uid", ""))
-        hard_logic_py = self.hard_logic_lookup.get(uid, [])
-        if not hard_logic_py:
-            return 0, 0
-        try:
-            results = evaluate_constraints_py(hard_logic_py, plan, verbose=False)
-        except Exception:
-            return 0, len(hard_logic_py)
-        passed = sum(1 for result in results if result)
-        return passed, len(results)
+    def _slot_visit_len(self, params, constraints):
+        """Conservative slot length used before the specific attraction is chosen: the
+        longest dwell any constraint demands (clamped to 240), at least visit_minutes/90."""
+        longest = 0
+        for d in constraints.get("stay_duration", []) or []:
+            if isinstance(d, dict):
+                try:
+                    longest = max(longest, int(d.get("min_minutes", 0)))
+                except (TypeError, ValueError):
+                    pass
+        return min(240, max(int(params.get("visit_minutes", 90)), longest, 90))
 
-    def _build_best_plan(self, query):
-        variants = self._constraint_variants(query)
-        if len(variants) <= 1:
-            base_constraints = variants[0] if variants else None
-            if base_constraints is not None:
-                base_constraints = self._augment_constraints_from_hard_logic(query, base_constraints)
-            return self._build_plan(query, constraints=base_constraints)
+    def _visit_len(self, attr, params, constraints):
+        """Actual visit length for a chosen attraction: visit_minutes, raised to this POI's
+        own min dwell when a stay_duration constraint names it (clamped to 240)."""
+        name = str(attr["name"])
+        need = 0
+        for d in constraints.get("stay_duration", []) or []:
+            if isinstance(d, dict) and self._match_constraint_text(name, d.get("location", "")):
+                try:
+                    need = max(need, int(d.get("min_minutes", 0)))
+                except (TypeError, ValueError):
+                    pass
+        return min(240, max(int(params.get("visit_minutes", 90)), need))
 
-        best_plan = None
-        best_key = None
-        for constraints in variants:
-            constraints = self._augment_constraints_from_hard_logic(query, constraints)
-            candidate = self._build_plan(query, constraints=constraints)
-            passed, total = self._score_plan_against_hard_logic(query, candidate)
-            total_cost = self._plan_total_cost(candidate)
-            candidate_key = (passed, -total_cost)
-            if best_plan is None or best_key is None or candidate_key > best_key:
-                best_plan = candidate
-                best_key = candidate_key
-                if total > 0 and passed == total:
+    def _rotate_tail(self, items, is_pinned, offset):
+        """Rotate only the non-pinned tail of `items` by `offset` (pinned entries stay at front)."""
+        pinned = [x for x in items if is_pinned(x)]
+        tail = [x for x in items if not is_pinned(x)]
+        if tail and offset:
+            off = offset % len(tail)
+            tail = tail[off:] + tail[:off]
+        return pinned + tail
+
+    def _apply_search_constraints(self, constraints, params):
+        """Project per-POI dwell/time-window POIs into the required pools (so the base build
+        includes them) and a window's latest-start onto an arrive_no_later timing constraint
+        (so the existing slot machinery refuses placing the POI too late)."""
+        merged = dict(constraints) if isinstance(constraints, dict) else {}
+        windows = merged.get("activity_time_windows", []) or []
+        durations = merged.get("stay_duration", []) or []
+
+        positioned = []
+        for w in windows:
+            if isinstance(w, dict) and w.get("location"):
+                positioned.append(str(w["location"]))
+        for d in durations:
+            if isinstance(d, dict) and d.get("location"):
+                positioned.append(str(d["location"]))
+        if positioned:
+            # The resolver filters per-DB, so a name only survives in the pool it actually matches.
+            for key in ("required_attractions", "required_restaurants"):
+                existing = list(merged.get(key, []) or [])
+                for loc in positioned:
+                    if not any(self._match_constraint_text(loc, e) for e in existing):
+                        existing.append(loc)
+                merged[key] = existing
+
+        extra_timing = []
+        for w in windows:
+            if isinstance(w, dict) and w.get("location") and w.get("latest"):
+                extra_timing.append({"type": "arrive_no_later", "location": str(w["location"]), "time": str(w["latest"])})
+        if extra_timing:
+            tc = list(merged.get("timing_constraints", []) or [])
+            for e in extra_timing:
+                if not any(isinstance(t, dict) and t.get("type") == e["type"]
+                           and self._match_constraint_text(t.get("location", ""), e["location"]) for t in tc):
+                    tc.append(e)
+            merged["timing_constraints"] = tc
+        return merged
+
+    def _activity_counts(self, plan):
+        attrs = meals = 0
+        for day in plan.get("itinerary", []) or []:
+            for a in day.get("activities", []) or []:
+                t = a.get("type")
+                if t == "attraction":
+                    attrs += 1
+                elif t in ("breakfast", "lunch", "dinner"):
+                    meals += 1
+        return attrs, meals
+
+    def _repair_params(self, constraints):
+        """Deterministic param priors derived from which constraints are present, tried before
+        random restarts so single-signal queries converge fast."""
+        candidates = []
+        budgets = constraints.get("budgets", {}) or {}
+        if budgets.get("inner_transport") is not None:
+            candidates.append({"forced_inner_mode": "walk"})
+            candidates.append({"forced_inner_mode": "metro"})
+        excl = set(self._norm_text(m) for m in (constraints.get("excluded_inner_transport", []) or []))
+        if excl or constraints.get("conditional_transport") or constraints.get("taxi_cars_equals") is not None:
+            for m in ("metro", "walk", "taxi"):
+                if m not in excl:
+                    candidates.append({"forced_inner_mode": m})
+        mode = constraints.get("intercity_mode")
+        if isinstance(mode, str):
+            candidates.append({"intercity_go_pref": mode, "intercity_back_pref": mode})
+        if any(constraints.get(k) for k in (
+            "hotel_nearby", "required_hotel_any_types", "required_hotel_all_types",
+            "room_type", "hotel_type", "hotel_amenity", "required_hotels",
+        )):
+            for hi in range(0, 6):
+                candidates.append({"hotel_index": hi})
+        if any(constraints.get(k) for k in ("activity_time_windows", "timing_constraints", "stay_duration")):
+            for off in range(1, 6):
+                candidates.append({"attr_offset": off})
+        for off in (1, 2, 3):
+            candidates.append({"attr_offset": off})
+
+        seen = set()
+        unique = []
+        for p in candidates:
+            key = tuple(sorted(p.items()))
+            if key not in seen:
+                seen.add(key)
+                unique.append(p)
+        return unique
+
+    def _random_params(self, rng):
+        params = {
+            "attr_offset": rng.randint(0, 12),
+            "hotel_index": rng.randint(0, 4),
+            "attr_per_day": rng.choice([2, 3, 4]),
+        }
+        forced = rng.choice([None, "metro", "walk", "taxi"])
+        if forced is not None:
+            params["forced_inner_mode"] = forced
+        if rng.random() < 0.35:
+            params["intercity_go_pref"] = rng.choice(["airplane", "train"])
+            params["intercity_back_pref"] = rng.choice(["airplane", "train"])
+        if rng.random() < 0.35:
+            params["rest_offset"] = rng.randint(0, 6)
+        return params
+
+    def _solve(self, query):
+        """Per-query oracle-guided search: base build, guided repair, then random multi-start,
+        keeping the best (most-constraints-passed, then cheapest) plan; finally pack it."""
+        variants = self._constraint_variants(query) or [None]
+        rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
+        best = {"plan": None, "key": None, "constraints": None, "check": None, "params": None}
+
+        def consider(plan, constraints, check, params):
+            try:
+                passed, total = check(plan)
+            except Exception:
+                passed, total = 0, 0
+            key = (passed, -self._plan_total_cost(plan))
+            if best["plan"] is None or key > best["key"]:
+                best.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
+            return self._accepted(passed, total)
+
+        def out_of_budget():
+            return time.time() - self.start_clock > self.solve_budget_sec
+
+        restarts = 0
+        solved = False
+        for variant in variants:
+            if solved or out_of_budget():
+                break
+            constraints = self._augment_constraints_from_hard_logic(query, variant or {})
+            check = self._make_checker(query, constraints)
+            try:
+                if consider(self._build_plan(query, constraints=constraints), constraints, check, {}):
                     break
+            except Exception:
+                import traceback
+                traceback.print_exc()
 
-        return best_plan if best_plan is not None else self._build_plan(query)
+            for params in self._repair_params(constraints):
+                if out_of_budget():
+                    break
+                try:
+                    if consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params):
+                        solved = True
+                        break
+                except Exception:
+                    continue
+            if solved:
+                break
+
+            while restarts < self.max_restarts and not out_of_budget():
+                restarts += 1
+                params = self._random_params(rng)
+                try:
+                    if consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params):
+                        solved = True
+                        break
+                except Exception:
+                    continue
+            if solved:
+                break
+
+        if best["plan"] is not None and best["check"] is not None:
+            packed = self._pack_plan(best["plan"], query, best["constraints"], best["check"], best["params"])
+            if packed is not None:
+                best["plan"] = packed
+
+        return best["plan"] if best["plan"] is not None else self._build_plan(query)
+
+    def _pack_plan(self, plan, query, constraints, check, base_params):
+        """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
+        DAV/DDR. Never trades a hard pass for preference: gated locally by `check`."""
+        if not self._accepted(*check(plan)):
+            return plan
+        best_plan = plan
+        best_attrs, best_meals = self._activity_counts(plan)
+        for extra in (3, 4):
+            if time.time() - self.start_clock > self.solve_budget_sec:
+                break
+            params = dict(base_params or {})
+            params["attr_per_day"] = extra
+            try:
+                cand = self._build_plan(query, constraints=constraints, params=params)
+            except Exception:
+                continue
+            if not self._accepted(*check(cand)):
+                continue
+            c_attrs, c_meals = self._activity_counts(cand)
+            if (c_attrs + c_meals) > (best_attrs + best_meals):
+                best_plan = cand
+                best_attrs, best_meals = c_attrs, c_meals
+        return best_plan
 
     def _room_type_to_numbed(self, room_type):
         if room_type is None:
@@ -546,7 +835,7 @@ class TPCAgent(BaseAgent):
         self.reset_clock()
 
         try:
-            plan = self._build_best_plan(query)
+            plan = self._solve(query)
         except Exception:
             import traceback
             traceback.print_exc()
@@ -560,14 +849,22 @@ class TPCAgent(BaseAgent):
         plan["elapsed_time(sec)"] = time.time() - self.start_clock
         return True, plan
 
-    def _build_plan(self, query, constraints=None):
-        """Build a valid itinerary with proper transport, timing, and costs."""
+    def _build_plan(self, query, constraints=None, params=None):
+        """Build a valid itinerary with proper transport, timing, and costs.
+
+        `params` carries per-restart search knobs (visit_minutes, attr_per_day, attr_offset,
+        rest_offset, hotel_index, forced_inner_mode, intercity_go_pref/back_pref); every
+        default reproduces the original greedy behaviour.
+        """
+        params = params or {}
         people = query["people_number"]
         start_city = query["start_city"]
         target_city = query["target_city"]
         days = query["days"]
         if constraints is None:
             constraints = self._collect_constraints(query)
+        constraints = self._apply_search_constraints(constraints, params)
+        self._forced_inner_mode = params.get("forced_inner_mode")
         timing_constraints = constraints.get("timing_constraints", []) or []
         self._active_timing_constraints = timing_constraints
         budget_limits = self._extract_budget_limits(constraints)
@@ -599,6 +896,11 @@ class TPCAgent(BaseAgent):
         elif isinstance(intercity_mode, str):
             outbound_pref = intercity_mode
             return_pref = intercity_mode
+        # Search may override the intercity mode preference per direction.
+        if "intercity_go_pref" in params:
+            outbound_pref = params["intercity_go_pref"]
+        if "intercity_back_pref" in params:
+            return_pref = params["intercity_back_pref"]
 
         outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref, budget_limits, budget_tracker, people=people)
         return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
@@ -660,6 +962,14 @@ class TPCAgent(BaseAgent):
                 return False
             return True
 
+        hotel_index = max(0, int(params.get("hotel_index", 0)))
+
+        def _pick_ok(df):
+            ok_list = [df.iloc[i] for i in range(len(df)) if _hotel_ok(df.iloc[i])]
+            if not ok_list:
+                return None
+            return ok_list[min(hotel_index, len(ok_list) - 1)]
+
         hotel = None
         nearby_df = None
         hotel_from_nearby_constraint = False
@@ -673,30 +983,19 @@ class TPCAgent(BaseAgent):
                     nearby_df = None
 
         if nearby_df is not None and not isinstance(nearby_df, str) and len(nearby_df) > 0:
-            for i in range(len(nearby_df)):
-                h = nearby_df.iloc[i]
-                if _hotel_ok(h):
-                    hotel = h
-                    hotel_from_nearby_constraint = True
-                    break
+            hotel = _pick_ok(nearby_df)
+            if hotel is not None:
+                hotel_from_nearby_constraint = True
 
         if hotel is None and arrival_pos and not hotel_from_nearby_constraint:
             try:
                 nearby_hotels = env.accommodations.nearby(target_city, arrival_pos, topk=5, dist=20)
                 if not isinstance(nearby_hotels, str) and len(nearby_hotels) > 0:
-                    for i in range(len(nearby_hotels)):
-                        h = nearby_hotels.iloc[i]
-                        if _hotel_ok(h):
-                            hotel = h
-                            break
+                    hotel = _pick_ok(nearby_hotels)
             except Exception:
                 pass
         if hotel is None:
-            for i in range(len(accom_df)):
-                h = accom_df.iloc[i]
-                if _hotel_ok(h):
-                    hotel = h
-                    break
+            hotel = _pick_ok(accom_df)
         if hotel is None:
             # Fall back to cheapest option even when strict filters are infeasible.
             best = None
@@ -903,6 +1202,19 @@ class TPCAgent(BaseAgent):
             if len(lunch_restaurants) >= days and len(dinner_restaurants) >= days:
                 break
 
+        # Search-controlled rotation of the OPTIONAL tail (required/prioritized stay pinned at front),
+        # so distinct restarts try different optional POIs/restaurants without dropping a requirement.
+        attr_offset = int(params.get("attr_offset", 0))
+        if attr_offset:
+            good_attrs = self._rotate_tail(
+                good_attrs, lambda a: self._norm_text(str(a["name"])) in required_set, attr_offset)
+        rest_offset = int(params.get("rest_offset", 0))
+        if rest_offset:
+            lunch_restaurants = self._rotate_tail(
+                lunch_restaurants, lambda r: self._is_required_restaurant(r, required_restaurants), rest_offset)
+            dinner_restaurants = self._rotate_tail(
+                dinner_restaurants, lambda r: self._is_required_restaurant(r, required_restaurants), rest_offset)
+
         # --- Build day-by-day itinerary ---
         itinerary = []
         attr_idx = 0
@@ -972,7 +1284,7 @@ class TPCAgent(BaseAgent):
                 if time_before(current_time, "16:30") and attr_idx < len(good_attrs):
                     # Estimate visit time and check open hours
                     est_start = add_minutes(current_time, 20)  # ~20 min travel
-                    est_end = add_minutes(est_start, 90)
+                    est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
                     attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
                     if attr is not None:
                         attr_name = str(attr["name"])
@@ -983,7 +1295,7 @@ class TPCAgent(BaseAgent):
                         else:
                             transports = []
                             attr_start = current_time
-                        attr_end = add_minutes(attr_start, 90)
+                        attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
                         if is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
                             attr_name,
                             attr_start,
@@ -1104,7 +1416,7 @@ class TPCAgent(BaseAgent):
                     # Need time: transport to attr + 90min + transport to departure point
                     if time_to_minutes(departure_time) >= time_to_minutes(current_time) + 150:
                         est_start = add_minutes(current_time, 20)
-                        est_end = add_minutes(est_start, 90)
+                        est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
                         attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
                         if attr is not None:
                             attr_name = str(attr["name"])
@@ -1115,7 +1427,7 @@ class TPCAgent(BaseAgent):
                             else:
                                 transports = []
                                 attr_start = current_time
-                            attr_end = add_minutes(attr_start, 90)
+                            attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
                             # Check we can get back to departure in time
                             _, return_arrival = self._get_transport(
                                 env, target_city, attr_name, departure_pos, attr_end, people)
@@ -1235,7 +1547,7 @@ class TPCAgent(BaseAgent):
                 # Morning attraction
                 if attr_idx < len(good_attrs):
                     est_start = add_minutes(current_time, 20)
-                    est_end = add_minutes(est_start, 90)
+                    est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
                     attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
                     if attr is not None:
                         attr_name = str(attr["name"])
@@ -1246,7 +1558,7 @@ class TPCAgent(BaseAgent):
                         else:
                             transports = []
                             attr_start = current_time
-                        attr_end = add_minutes(attr_start, 90)
+                        attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
                         if is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
                             attr_name,
                             attr_start,
@@ -1311,7 +1623,7 @@ class TPCAgent(BaseAgent):
                 # Afternoon attraction
                 if attr_idx < len(good_attrs) and time_before(current_time, "16:00"):
                     est_start = add_minutes(current_time, 20)
-                    est_end = add_minutes(est_start, 90)
+                    est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
                     attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
                     if attr is not None:
                         attr_name = str(attr["name"])
@@ -1322,7 +1634,7 @@ class TPCAgent(BaseAgent):
                         else:
                             transports = []
                             attr_start = current_time
-                        attr_end = add_minutes(attr_start, 90)
+                        attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
                         if is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
                             attr_name,
                             attr_start,
@@ -1345,6 +1657,38 @@ class TPCAgent(BaseAgent):
                             if added:
                                 current_time = attr_end
                                 current_pos = attr_name
+
+                # Extra attractions (attr_per_day > 2): pack more sightseeing before dinner while time allows.
+                _extra_target = max(0, int(params.get("attr_per_day", 2)) - 2)
+                _extra_added = 0
+                while (_extra_added < _extra_target and attr_idx < len(good_attrs)
+                       and time_before(current_time, "16:00")):
+                    est_start = add_minutes(current_time, 20)
+                    est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
+                    attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
+                    if attr is None:
+                        break
+                    attr_name = str(attr["name"])
+                    transports, travel_end = self._get_transport(
+                        env, target_city, current_pos, attr_name, current_time, people)
+                    if transports is not None:
+                        attr_start = travel_end
+                    else:
+                        transports = []
+                        attr_start = current_time
+                    attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
+                    if not (is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                            attr_name, attr_start, timing_constraints, [current_pos])):
+                        break
+                    attr_act = self._make_attraction_activity(attr, people, attr_start, attr_end, transports)
+                    added = self._append_activity(
+                        activities, attr_act, budget_limits, budget_tracker,
+                        force=self._is_required_attraction(attr, required_attractions, required_attraction_types))
+                    if not added:
+                        break
+                    current_time = attr_end
+                    current_pos = attr_name
+                    _extra_added += 1
 
                 # Dinner
                 if dinner_idx < len(dinner_restaurants) and time_before(current_time, "19:00"):
@@ -1492,10 +1836,15 @@ class TPCAgent(BaseAgent):
         )
         conditional = self._transport_constraints.get("conditional_transport", None)
         mode_order = ["metro", "walk", "taxi"]
+        # Search may pin the inner-city mode; explicit choice overrides the budget/conditional heuristics
+        # but still respects excluded modes and the taxi car-count guard below.
+        forced_inner = self._norm_text(getattr(self, "_forced_inner_mode", None) or "")
+        if forced_inner:
+            mode_order = [forced_inner]
 
         # If inner_transport budget is constrained, prefer cheaper modes (metro > walk > taxi)
         inner_budget_limit = getattr(self, "_budget_limits", {}).get("inner_transport", -1)
-        if inner_budget_limit >= 0:
+        if inner_budget_limit >= 0 and not forced_inner:
             mode_order = ["walk", "metro", "taxi"] if inner_budget_limit <= 50 else ["metro", "walk", "taxi"]
         taxi_cars_equals = self._transport_constraints.get("taxi_cars_equals", None)
         if taxi_cars_equals is not None:
@@ -1507,7 +1856,7 @@ class TPCAgent(BaseAgent):
             except Exception:
                 pass
 
-        if isinstance(conditional, dict):
+        if isinstance(conditional, dict) and not forced_inner:
             preferred = self._norm_text(conditional.get("mode", "taxi"))
             threshold_km = conditional.get("threshold_km", None)
             if preferred in ["taxi", "metro", "walk"]:

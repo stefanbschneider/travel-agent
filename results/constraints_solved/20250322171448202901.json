@@ -389,16 +389,132 @@
                     "transports": []
                 },
                 {
+                    "type": "attraction",
+                    "position": "Shenzhen Bay Park",
+                    "start_time": "09:18",
+                    "end_time": "10:48",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+                            "end": "Xingwei-Metro Station",
+                            "mode": "walk",
+                            "start_time": "08:30",
+                            "end_time": "08:40",
+                            "distance": 0.9,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xingwei-Metro Station",
+                            "end": "Hongshu Bay-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:40",
+                            "end_time": "09:17",
+                            "distance": 18.97,
+                            "price": 5,
+                            "cost": 15,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Hongshu Bay-Metro Station",
+                            "end": "Shenzhen Bay Park",
+                            "mode": "walk",
+                            "start_time": "09:17",
+                            "end_time": "09:18",
+                            "distance": 0.11,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
+                    "start_time": "12:09",
+                    "end_time": "13:09",
+                    "price": 300.0,
+                    "cost": 900.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Shenzhen Bay Park",
+                            "end": "Hongshu Bay-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:48",
+                            "end_time": "10:49",
+                            "distance": 0.11,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongshu Bay-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:49",
+                            "end_time": "12:00",
+                            "distance": 35.73,
+                            "price": 7,
+                            "cost": 21,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
+                            "mode": "walk",
+                            "start_time": "12:00",
+                            "end_time": "12:09",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
                     "type": "accommodation",
                     "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                    "start_time": "08:30",
+                    "start_time": "15:05",
                     "end_time": "24:00",
                     "price": 379.0,
                     "cost": 1137.0,
                     "rooms": 3,
                     "room_type": 1,
                     "tickets": 3,
-                    "transports": []
+                    "transports": [
+                        {
+                            "start": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:09",
+                            "end_time": "13:18",
+                            "distance": 0.77,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dameisha-Metro Station",
+                            "end": "Xingwei-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:18",
+                            "end_time": "14:55",
+                            "distance": 48.96,
+                            "price": 9,
+                            "cost": 27,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Xingwei-Metro Station",
+                            "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+                            "mode": "walk",
+                            "start_time": "14:55",
+                            "end_time": "15:05",
+                            "distance": 0.9,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
                 }
             ]
         },
@@ -462,5 +578,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.6731598377227783
+    "elapsed_time(sec)": 6.129354000091553
 }

@@ -1,0 +1,325 @@
+{
+  "people_number": 3,
+  "start_city": "Beijing",
+  "target_city": "Shanghai",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "07:02",
+          "end_time": "08:21",
+          "start": "Beijing Capital International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 550.5,
+          "cost": 1651.5,
+          "tickets": 3,
+          "transports": [],
+          "FlightID": "FL084"
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 600.0,
+          "cost": 1800.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "08:21",
+              "end_time": "09:13",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "12:06",
+          "end_time": "13:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:06",
+              "distance": 4.23,
+              "price": 19.5,
+              "cost": 19.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1280.0,
+          "cost": 3840.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Fu He Hui",
+              "mode": "taxi",
+              "start_time": "13:36",
+              "end_time": "13:46",
+              "distance": 7.0,
+              "price": 29.18,
+              "cost": 29.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "start_time": "18:49",
+          "end_time": "24:00",
+          "price": 339.0,
+          "cost": 1017.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:49",
+              "distance": 32.88,
+              "price": 142.67,
+              "cost": 142.67,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "09:11",
+          "end_time": "10:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "end": "Huangpu River",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:11",
+              "distance": 27.5,
+              "price": 118.44,
+              "cost": 118.44,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Renhe Hall (Zhaojiabang Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 203.0,
+          "cost": 609.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Huangpu River",
+              "end": "Renhe Hall (Zhaojiabang Road Branch)",
+              "mode": "taxi",
+              "start_time": "10:41",
+              "end_time": "10:50",
+              "distance": 6.14,
+              "price": 26.2,
+              "cost": 26.2,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Planetarium",
+          "start_time": "13:22",
+          "end_time": "14:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Shanghai Planetarium",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "13:22",
+              "distance": 55.1,
+              "price": 242.63,
+              "cost": 242.63,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1026.0,
+          "cost": 3078.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Planetarium",
+              "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+              "mode": "taxi",
+              "start_time": "14:52",
+              "end_time": "16:13",
+              "distance": 54.17,
+              "price": 238.48,
+              "cost": 238.48,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "start_time": "18:40",
+          "end_time": "24:00",
+          "price": 339.0,
+          "cost": 1017.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+              "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:40",
+              "distance": 27.02,
+              "price": 116.29,
+              "cost": 116.29,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "09:12",
+          "end_time": "10:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "end": "Nanjing Road Pedestrian Street",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:12",
+              "distance": 28.24,
+              "price": 121.77,
+              "cost": 121.77,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 498.0,
+          "cost": 1494.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "mode": "taxi",
+              "start_time": "10:42",
+              "end_time": "10:45",
+              "distance": 2.22,
+              "price": 12.47,
+              "cost": 12.47,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "19:32",
+          "end_time": "20:51",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Beijing Capital International Airport",
+          "price": 521.78,
+          "cost": 1565.34,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:46",
+              "distance": 30.72,
+              "price": 132.93,
+              "cost": 132.93,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL003"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03446602821350098
+}

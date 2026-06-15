@@ -19,51 +19,9 @@
           "FlightID": "FL071"
         },
         {
-          "type": "attraction",
-          "position": "Confucius Temple",
-          "start_time": "15:00",
-          "end_time": "16:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Nanjing Lukou International Airport",
-              "end": "Confucius Temple",
-              "mode": "walk",
-              "start_time": "08:18",
-              "end_time": "15:00",
-              "distance": 33.53864847266579,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Nanjing Jinling Hotel - Plum Garden",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 423.0,
-          "cost": 846.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Confucius Temple",
-              "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "walk",
-              "start_time": "16:30",
-              "end_time": "16:55",
-              "distance": 2.096683102608647,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "accommodation",
           "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "25:07",
+          "start_time": "08:18",
           "end_time": "24:00",
           "price": 786.0,
           "cost": 1572.0,
@@ -72,14 +30,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Jinling Hotel - Plum Garden",
+              "start": "Nanjing Lukou International Airport",
               "end": "Pullman Nanjing Lukou Airport",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "25:07",
-              "distance": 35.58846891980162,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:18",
+              "end_time": "08:18",
+              "distance": 0.22,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         }
@@ -99,69 +58,16 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "15:12",
-          "end_time": "16:42",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Pullman Nanjing Lukou Airport",
-              "end": "Confucius Temple and Qinhuai River Scenic Area",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "15:12",
-              "distance": 33.53573425458011,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-          "start_time": "17:52",
-          "end_time": "18:52",
-          "price": 334.0,
-          "cost": 668.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Confucius Temple and Qinhuai River Scenic Area",
-              "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "mode": "walk",
-              "start_time": "16:42",
-              "end_time": "17:52",
-              "distance": 5.901919223852048,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "accommodation",
           "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "26:45",
+          "start_time": "08:30",
           "end_time": "24:00",
           "price": 786.0,
           "cost": 1572.0,
           "rooms": 2,
           "room_type": 1,
           "tickets": 2,
-          "transports": [
-            {
-              "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "end": "Pullman Nanjing Lukou Airport",
-              "mode": "walk",
-              "start_time": "18:52",
-              "end_time": "26:45",
-              "distance": 39.43742231089587,
-              "price": 0,
-              "cost": 0
-            }
-          ]
+          "transports": []
         }
       ]
     },
@@ -191,12 +97,13 @@
             {
               "start": "Pullman Nanjing Lukou Airport",
               "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 0.2211325598958286,
-              "price": 0,
-              "cost": 0
+              "end_time": "08:30",
+              "distance": 0.22,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ],
           "FlightID": "FL645"
@@ -204,6 +111,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.18281936645507812,
-  "_eval_score": 25.0
+  "elapsed_time(sec)": 1.1879291534423828,
+  "_eval_score": 91.11111111111111
 }

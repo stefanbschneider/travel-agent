@@ -1,0 +1,198 @@
+{
+  "people_number": 2,
+  "start_city": "Wuhan",
+  "target_city": "Chengdu",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "11:16",
+          "end_time": "12:29",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 532.42,
+          "cost": 1064.84,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL618"
+        },
+        {
+          "type": "lunch",
+          "position": "Crane's Call Tea House (People's Park Branch)",
+          "start_time": "12:51",
+          "end_time": "13:51",
+          "price": 45.0,
+          "cost": 90.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Crane's Call Tea House (People's Park Branch)",
+              "mode": "taxi",
+              "start_time": "12:29",
+              "end_time": "12:51",
+              "distance": 14.93,
+              "price": 61.87,
+              "cost": 61.87,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Museum",
+          "start_time": "13:52",
+          "end_time": "15:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "Chengdu Museum",
+              "mode": "taxi",
+              "start_time": "13:51",
+              "end_time": "13:52",
+              "distance": 1.33,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mawangzi (Taikoo Li Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 140.0,
+          "cost": 280.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Museum",
+              "end": "Mawangzi (Taikoo Li Branch)",
+              "mode": "taxi",
+              "start_time": "15:22",
+              "end_time": "15:24",
+              "distance": 1.88,
+              "price": 11.27,
+              "cost": 11.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "18:21",
+          "end_time": "24:00",
+          "price": 427.0,
+          "cost": 427.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mawangzi (Taikoo Li Branch)",
+              "end": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:21",
+              "distance": 14.53,
+              "price": 60.09,
+              "cost": 60.09,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Lane",
+          "start_time": "08:54",
+          "end_time": "10:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "end": "Manjushri Lane",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:54",
+              "distance": 16.38,
+              "price": 68.43,
+              "cost": 68.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 250.0,
+          "cost": 500.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Lane",
+              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "mode": "taxi",
+              "start_time": "10:24",
+              "end_time": "10:28",
+              "distance": 2.94,
+              "price": 15.0,
+              "cost": 15.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:18",
+          "end_time": "21:31",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 447.72,
+          "cost": 895.44,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:22",
+              "distance": 15.23,
+              "price": 63.25,
+              "cost": 63.25,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL467"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.03039407730102539
+}
