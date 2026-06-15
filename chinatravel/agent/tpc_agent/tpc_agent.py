@@ -113,6 +113,22 @@ class TPCAgent(BaseAgent):
             return False
         return c == q or q in c or c in q
 
+    def _match_type(self, attr_type, req_type):
+        """Match attraction type using segment-based exact matching.
+
+        Splits attr_type by '/' and checks if req_type exactly matches any segment
+        (case-insensitive). Avoids false positives from substring matching, e.g.,
+        'park' should not match 'Amusement Park/Sports Entertainment'.
+        """
+        if not attr_type or not req_type:
+            return False
+        req_norm = self._norm_text(req_type)
+        attr_norm = self._norm_text(attr_type)
+        if req_norm == attr_norm:
+            return True
+        segments = [s.strip() for s in attr_norm.split("/")]
+        return req_norm in segments
+
     def _constraint_variants(self, query):
         uid = str(query.get("uid", ""))
         raw = self.parsed_constraints.get(uid, {})
@@ -425,6 +441,11 @@ class TPCAgent(BaseAgent):
             return True
         return False
 
+    def _append_preregistered_activity(self, activities, activity):
+        """Append an activity whose cost was already pre-registered in the budget_tracker."""
+        activities.append(activity)
+        return True
+
     def _timing_constraint_minutes(self, timing_constraints, locations, constraint_type, take_max):
         if not timing_constraints or not locations:
             return None
@@ -508,7 +529,7 @@ class TPCAgent(BaseAgent):
             for req in required_attractions
         )
         by_type = bool(required_attraction_types) and any(
-            self._match_constraint_text(attr_type, req_t)
+            self._match_type(attr_type, req_t)
             for req_t in required_attraction_types
         )
         return by_name or by_type
@@ -579,13 +600,19 @@ class TPCAgent(BaseAgent):
             outbound_pref = intercity_mode
             return_pref = intercity_mode
 
-        outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref, budget_limits, budget_tracker)
-        return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound)
+        outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref, budget_limits, budget_tracker, people=people)
+        return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
         # If no return at 17:00, try earlier
         if return_transport is None:
-            return_transport = self._get_intercity(env, target_city, start_city, "14:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound)
+            return_transport = self._get_intercity(env, target_city, start_city, "14:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
         if return_transport is None:
-            return_transport = self._get_intercity(env, target_city, start_city, "00:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound)
+            return_transport = self._get_intercity(env, target_city, start_city, "00:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
+
+        # Pre-register intercity costs so hotel/meal selections see the correct remaining budget
+        _out_cost = self._safe_float(outbound.get("Cost", 0.0), 0.0) * people if outbound else 0.0
+        _ret_cost = self._safe_float(return_transport.get("Cost", 0.0), 0.0) * people if return_transport else 0.0
+        budget_tracker["intercity_transport"] = budget_tracker.get("intercity_transport", 0.0) + _out_cost + _ret_cost
+        budget_tracker["total"] = budget_tracker.get("total", 0.0) + _out_cost + _ret_cost
 
         # --- Get one accommodation near the arrival/departure point ---
         arrival_pos = outbound["To"] if outbound else None
@@ -699,6 +726,13 @@ class TPCAgent(BaseAgent):
         hotel_name = str(hotel["name"])
         rooms_needed = math.ceil(people / int(hotel["numbed"]))
 
+        # Pre-register hotel accommodation costs so that subsequent meal/attraction budget checks
+        # see the correct remaining budget (hotel is force-appended later without re-registering)
+        _hotel_price = self._safe_float(hotel.get("price", 0.0), 0.0)
+        _hotel_total = _hotel_price * rooms_needed * max(days - 1, 0)
+        budget_tracker["accommodation"] = budget_tracker.get("accommodation", 0.0) + _hotel_total
+        budget_tracker["total"] = budget_tracker.get("total", 0.0) + _hotel_total
+
         # --- Get attractions that are open during reasonable visit hours ---
         required_attractions = constraints.get("required_attractions", []) or []
         required_attraction_types = constraints.get("required_attraction_types", []) or []
@@ -708,6 +742,21 @@ class TPCAgent(BaseAgent):
 
         attr_df = env.attractions.select(target_city, "name", lambda x: True)
         required_attractions = self._resolve_required_names(required_attractions, [str(attr_df.iloc[i]["name"]) for i in range(len(attr_df))])
+
+        # Augment required_attractions with named locations from timing constraints that exist in the attraction DB
+        _attr_names_list = [str(attr_df.iloc[i]["name"]) for i in range(len(attr_df))]
+        _timing_locs_for_restaurants = []  # locations not found in attractions, will check restaurants later
+        for _tc in timing_constraints:
+            _loc = str(_tc.get("location", "")).strip()
+            if not _loc or _loc in {start_city, target_city}:
+                continue
+            _matches = [n for n in _attr_names_list if self._match_constraint_text(n, _loc) or self._match_constraint_text(_loc, n)]
+            if _matches:
+                _canon = _matches[0]
+                if not any(self._match_constraint_text(_canon, ex) for ex in required_attractions):
+                    required_attractions.append(_canon)
+            else:
+                _timing_locs_for_restaurants.append(_loc)
 
         prioritized_required = []
         optional_pool = []
@@ -733,7 +782,7 @@ class TPCAgent(BaseAgent):
                 for req in required_attractions
             )
             required_by_type = required_attraction_types and any(
-                self._match_constraint_text(attr_type, req_t)
+                self._match_type(attr_type, req_t)
                 for req_t in required_attraction_types
             )
 
@@ -791,6 +840,15 @@ class TPCAgent(BaseAgent):
 
         rest_df = env.restaurants.select(target_city, "name", lambda x: True)
         required_restaurants = self._resolve_required_names(required_restaurants, [str(rest_df.iloc[i]["name"]) for i in range(len(rest_df))])
+
+        # Augment required_restaurants with timing constraint locations found in the restaurant DB
+        _rest_names_list = [str(rest_df.iloc[i]["name"]) for i in range(len(rest_df))]
+        for _loc in _timing_locs_for_restaurants:
+            _matches = [n for n in _rest_names_list if self._match_constraint_text(n, _loc) or self._match_constraint_text(_loc, n)]
+            if _matches:
+                _canon = _matches[0]
+                if not any(self._match_constraint_text(_canon, ex) for ex in required_restaurants):
+                    required_restaurants.append(_canon)
         lunch_restaurants = []
         dinner_restaurants = []
         required_rest_pool = []
@@ -862,7 +920,7 @@ class TPCAgent(BaseAgent):
                 # === DAY 1: Arrive + activities + hotel ===
                 if outbound is not None:
                     act = self._make_intercity_activity(outbound, people)
-                    self._append_activity(activities, act, budget_limits, budget_tracker, force=True)
+                    self._append_preregistered_activity(activities, act)
                     current_time = outbound["EndTime"]
                     current_pos = outbound["To"]
                 else:
@@ -906,11 +964,9 @@ class TPCAgent(BaseAgent):
                             budget_tracker,
                             force=is_req_rest,
                         )
-                        if not added:
-                            # Keep itinerary valid even when strict budget is infeasible.
-                            self._append_activity(activities, meal, budget_limits, budget_tracker, force=True)
-                        current_time = lunch_end
-                        current_pos = rest_name
+                        if added:
+                            current_time = lunch_end
+                            current_pos = rest_name
 
                 # Afternoon attraction
                 if time_before(current_time, "16:30") and attr_idx < len(good_attrs):
@@ -998,7 +1054,7 @@ class TPCAgent(BaseAgent):
                     travel_end = current_time
                 stay = self._make_accommodation_activity(
                     hotel, rooms_needed, travel_end, transports)
-                self._append_activity(activities, stay, budget_limits, budget_tracker, force=True)
+                self._append_preregistered_activity(activities, stay)
                 current_pos = hotel_name
 
             elif day_num == days:
@@ -1022,6 +1078,7 @@ class TPCAgent(BaseAgent):
                             budget_limits,
                             budget_tracker,
                             pending_intercity=outbound,
+                            people=people,
                         )
                         if later is not None:
                             return_transport = later
@@ -1153,6 +1210,7 @@ class TPCAgent(BaseAgent):
                             budget_limits,
                             budget_tracker,
                             pending_intercity=outbound,
+                            people=people,
                         )
                         if later is not None:
                             return_transport = later
@@ -1163,7 +1221,7 @@ class TPCAgent(BaseAgent):
                                 if transports is None or current_pos == departure_pos:
                                     transports = []
                     act = self._make_intercity_activity(return_transport, people, transports)
-                    self._append_activity(activities, act, budget_limits, budget_tracker, force=True)
+                    self._append_preregistered_activity(activities, act)
 
             else:
                 # === MIDDLE DAYS: breakfast + attractions + meals + hotel ===
@@ -1334,7 +1392,7 @@ class TPCAgent(BaseAgent):
                     travel_end = current_time
                 stay = self._make_accommodation_activity(
                     hotel, rooms_needed, travel_end, transports)
-                self._append_activity(activities, stay, budget_limits, budget_tracker, force=True)
+                self._append_preregistered_activity(activities, stay)
                 current_pos = hotel_name
 
             itinerary.append({"day": day_num, "activities": activities})
@@ -1356,8 +1414,9 @@ class TPCAgent(BaseAgent):
         budget_limits=None,
         budget_tracker=None,
         pending_intercity=None,
+        people=1,
     ):
-        """Get first available flight, falling back to train."""
+        """Get first affordable intercity transport, falling back to cheapest available."""
         preferred = self._norm_text(preferred_mode)
         transport_order = ["airplane", "train"]
         if preferred in ["airplane", "flight", "plane"]:
@@ -1386,8 +1445,9 @@ class TPCAgent(BaseAgent):
                         ):
                             continue
                         cost = self._safe_float(cand.get("Cost", 0.0), 0.0)
-                        projected_intercity = cost + pending_cost
-                        if self._affordable_main_cost("intercity_transport", projected_intercity, budget_limits, budget_tracker):
+                        # Multiply by people so the budget check accounts for total cost
+                        projected_intercity_total = (cost + pending_cost) * people
+                        if self._affordable_main_cost("intercity_transport", projected_intercity_total, budget_limits, budget_tracker):
                             return cand
                         if best is None or best_cost is None or cost < best_cost:
                             best = cand

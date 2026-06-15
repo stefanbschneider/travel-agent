@@ -19,31 +19,51 @@
           "FlightID": "FL500"
         },
         {
-          "type": "lunch",
-          "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 337.0,
-          "cost": 1348.0,
+          "type": "attraction",
+          "position": "The Palace Museum",
+          "start_time": "10:58",
+          "end_time": "12:28",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Beijing Daxing International Airport",
-              "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
               "start_time": "09:09",
-              "end_time": "10:14",
-              "distance": 43.82,
-              "price": 191.88,
-              "cost": 191.88,
-              "cars": 1
+              "end_time": "09:20",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "09:20",
+              "end_time": "10:51",
+              "distance": 45.78,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "The Palace Museum",
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:58",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Mumian Beijing Daxing International Airport",
-          "start_time": "13:03",
+          "start_time": "14:12",
           "end_time": "24:00",
           "price": 729.0,
           "cost": 2916.0,
@@ -52,15 +72,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Tidu (Beijing Fang Branch)",
+              "start": "The Palace Museum",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "walk",
+              "start_time": "12:28",
+              "end_time": "12:35",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "12:35",
+              "end_time": "14:06",
+              "distance": 45.78,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
               "end": "Mumian Beijing Daxing International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "13:03",
-              "distance": 42.35,
-              "price": 185.26,
-              "cost": 185.26,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:06",
+              "end_time": "14:12",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -69,6 +109,58 @@
     {
       "day": 2,
       "activities": [
+        {
+          "type": "breakfast",
+          "position": "Mumian Beijing Daxing International Airport",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Old Summer Palace",
+          "start_time": "10:47",
+          "end_time": "12:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mumian Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:36",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "metro",
+              "start_time": "08:36",
+              "end_time": "10:25",
+              "distance": 54.98,
+              "price": 9,
+              "cost": 36,
+              "tickets": 4
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Old Summer Palace",
+              "mode": "walk",
+              "start_time": "10:25",
+              "end_time": "10:47",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
         {
           "type": "airplane",
           "start_time": "17:18",
@@ -80,15 +172,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Mumian Beijing Daxing International Airport",
+              "start": "Old Summer Palace",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "walk",
+              "start_time": "12:17",
+              "end_time": "12:39",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "12:39",
+              "end_time": "14:28",
+              "distance": 54.98,
+              "price": 9,
+              "cost": 36,
+              "tickets": 4
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
               "end": "Beijing Daxing International Airport",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 1.5,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:28",
+              "end_time": "14:39",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL139"
@@ -96,6 +208,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03299713134765625,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 1.68068528175354,
+  "_eval_score": 87.08333333333334
 }
