@@ -9,16 +9,24 @@
 `scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
 disk, so every step is kill/resume-safe.
 
-Heavy resumable search over the still-unsolved queries (stops when a round adds nothing):
+Heavy resumable search over the still-unsolved queries (stops when a round adds nothing).
+`--workers` defaults to all cores and runs that many `run_tpc.py` processes over disjoint
+query shards:
 ```
-python scripts/iterate.py --rounds 10 --restarts 800 --budget 240
+python scripts/iterate.py --rounds 10 --restarts 800 --budget 240 --workers 8
 ```
 
 Light pass + constraint-safe packing across all 1000 (lifts DAV/DDR; the monotonic merge keeps
 the heavy gains):
 ```
-python scripts/solve.py --split tpc_phase1 --restarts 40 --budget 30
+python scripts/solve.py --split tpc_phase1 --restarts 40 --budget 30 --workers 8
 python scripts/merge.py --split tpc_phase1
+```
+
+Or run the whole recommended pipeline (search -> pack -> score -> zip) at full parallelism with
+one command (see the `Makefile` for tunable variables):
+```
+make
 ```
 
 Print the headline metrics for `results/best`, then build the submission zip:
