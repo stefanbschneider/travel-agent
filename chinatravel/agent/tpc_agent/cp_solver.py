@@ -263,7 +263,7 @@ def _constrain_required_pois(model, attr_eq, rest_eq, attractions, restaurants, 
             model.Add(sum(matches) >= 1)
     for req_type in constraints.get("required_attraction_types", []) or []:
         matches = [attr_eq[(slot, idx + 1)] for slot in range(len(attr_vars))
-                   for idx, attr in enumerate(attractions) if agent._match_type(attr.get("type", ""), req_type)]
+                   for idx, attr in enumerate(attractions) if _eq_norm(attr.get("type", ""), req_type)]
         if matches:
             model.Add(sum(matches) >= 1)
     for req in constraints.get("required_restaurants", []) or []:
@@ -273,7 +273,7 @@ def _constrain_required_pois(model, attr_eq, rest_eq, attractions, restaurants, 
             model.Add(sum(matches) >= 1)
     for cuisine in _as_list(constraints.get("cuisine_preference")):
         matches = [rest_eq[(slot, idx + 1)] for slot in range(len(rest_vars))
-                   for idx, rest in enumerate(restaurants) if agent._match_constraint_text(rest.get("cuisine", ""), cuisine)]
+                   for idx, rest in enumerate(restaurants) if _eq_norm(rest.get("cuisine", ""), cuisine)]
         if matches:
             model.Add(sum(matches) >= 1)
 
@@ -585,6 +585,11 @@ def _meal_slots(days: int) -> list[dict]:
         slots.append({"meal_type": "lunch"})
         slots.append({"meal_type": "dinner"})
     return slots
+
+
+def _eq_norm(a: Any, b: Any) -> bool:
+    """Exact normalized equality matching the oracle's set-membership semantics."""
+    return str(a).strip().casefold() == str(b).strip().casefold()
 
 
 def _budget_cents(value: Any) -> int:
