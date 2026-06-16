@@ -29,11 +29,14 @@ one command (see the `Makefile` for tunable variables):
 make
 ```
 
-Print the headline metrics for `results/best`, then build the submission zip:
+Print the headline metrics for `results/best`, build the submission zip, then upload it to the
+competition portal (Seafile at box.nju.edu.cn):
 ```
 python scripts/score.py
-python scripts/assemble_submission.py
+python scripts/assemble_submission.py   # build submissions/fabiundstefan_v<N>.zip
+python scripts/submit.py                # upload the newest built zip to the portal
 ```
+Or with make: `make submission` then `make upload` (preview the target first with `make upload-check`).
 
 > After uploading `submissions/fabiundstefan_v<N>.zip`, freeze that version with a git tag so it is
 > never mutated again, then share it: `git tag v<N> && git push origin --tags`. Rebuild a previously
