@@ -361,9 +361,9 @@ def _as_list(value: Any) -> list:
 
 
 def _eq_norm(a: Any, b: Any) -> bool:
-    """Exact normalized equality, matching the oracle's set-membership semantics
-    on the raw type/cuisine/feature column value (which may itself contain '/')."""
-    return str(a).strip().casefold() == str(b).strip().casefold()
+    """Exact case-sensitive equality (strip only), mirroring the oracle's
+    case-sensitive set membership on raw type/cuisine/feature column values."""
+    return str(a).strip() == str(b).strip()
 
 
 def _time_or_none(value: Any) -> int | None:
