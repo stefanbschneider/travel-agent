@@ -374,9 +374,12 @@ def _time_or_none(value: Any) -> int | None:
 
 def _float(value: Any, default: float) -> float:
     try:
-        return float(value)
+        result = float(value)
     except Exception:
         return default
+    if result != result or result in (float("inf"), float("-inf")):
+        return default
+    return result
 
 
 def _cents(value: Any) -> int:
