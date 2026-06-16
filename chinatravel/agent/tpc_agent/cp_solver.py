@@ -1,4 +1,13 @@
-"""CP-SAT candidate solver for TPC itinerary construction."""
+"""CP-SAT candidate solver for TPC itinerary construction.
+
+CP-SAT selects the *set* of POIs (attractions, restaurants), the hotel, and the
+intercity legs subject to hard selection/budget constraints.  It deliberately
+does NOT pin wall-clock times: travel time between chosen POIs is only known at
+reconstruction.  ``_reconstruct_plan`` then distributes the selected set across
+days and schedules each activity as early as travel/open-hours/windows allow,
+mirroring the greedy builder's meal and breakfast conventions so the emitted
+plan is accepted by the same oracle ``check``.
+"""
 
 from __future__ import annotations
 
@@ -7,9 +16,14 @@ import os
 import time
 from typing import Any
 
-from agent.tpc_agent.cp_candidates import build_candidate_context
-from agent.tpc_agent.transport_cache import build_transition_cache
-from agent.tpc_agent.tpc_agent import add_minutes, minutes_to_time, time_to_minutes
+from agent.tpc_agent.tpc_agent import minutes_to_time, time_to_minutes
+
+
+DAY_OPEN = 9 * 60
+DAY_CLOSE = 22 * 60
+LUNCH_OPEN, LUNCH_LATEST_START, LUNCH_CLOSE = 11 * 60, 13 * 60, 14 * 60
+DINNER_OPEN, DINNER_LATEST_START, DINNER_CLOSE = 17 * 60, 19 * 60, 20 * 60
+STATION_BUFFER = 45
 
 
 def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_sec: float) -> dict | None:
@@ -32,10 +46,8 @@ def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_s
         attr_cap, rest_cap, hotel_cap = 60, 40, 60
 
     caps = {"attractions": max(1, attr_cap), "restaurants": max(1, rest_cap), "hotels": max(1, hotel_cap)}
-    ctx = build_candidate_context(agent, query, constraints, caps)
-    if not (ctx["hotels"] and ctx["outbound_intercity"] and ctx["return_intercity"]):
-        return None
-    if not ctx["restaurants"]:
+    ctx = build_candidate_context_relaxed(agent, query, constraints, caps)
+    if not (ctx["hotels"] and ctx["outbound_intercity"] and ctx["return_intercity"] and ctx["restaurants"]):
         return None
 
     start = time.time()
@@ -51,6 +63,32 @@ def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_s
     return None
 
 
+def build_candidate_context_relaxed(agent, query: dict, constraints: dict, caps: dict) -> dict:
+    """Candidate context with a fallback that drops optional pool filters when a
+    filtered pool comes back empty (so over-strict nearby/type/mode filters do
+    not make the whole solve infeasible)."""
+    from agent.tpc_agent.cp_candidates import build_candidate_context
+
+    ctx = build_candidate_context(agent, query, constraints, caps)
+    if not ctx["hotels"]:
+        relaxed = dict(constraints)
+        relaxed.pop("hotel_nearby", None)
+        relaxed.pop("poi_distance_hotel", None)
+        relaxed.pop("required_hotel_any_types", None)
+        ctx_h = build_candidate_context(agent, query, relaxed, caps)
+        if ctx_h["hotels"]:
+            ctx["hotels"] = ctx_h["hotels"]
+    if not (ctx["outbound_intercity"] and ctx["return_intercity"]) and isinstance(constraints.get("intercity_mode"), dict):
+        relaxed = dict(constraints)
+        relaxed.pop("intercity_mode", None)
+        ctx_i = build_candidate_context(agent, query, relaxed, caps)
+        if not ctx["outbound_intercity"]:
+            ctx["outbound_intercity"] = ctx_i["outbound_intercity"]
+        if not ctx["return_intercity"]:
+            ctx["return_intercity"] = ctx_i["return_intercity"]
+    return ctx
+
+
 def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_slots_per_day: int, time_limit_sec: float) -> dict | None:
     attractions = ctx["attractions"]
     restaurants = ctx["restaurants"]
@@ -62,58 +100,42 @@ def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_
     if not attractions or not restaurants or not hotels or not outbound or not returning:
         return None
 
-    visit_minutes = _visit_minutes(constraints)
-    attr_slots = _attribute_slots(days, attr_slots_per_day, visit_minutes)
+    visit_minutes = _base_visit_minutes(constraints)
+    attr_slot_count = max(1, attr_slots_per_day * days)
     meal_slots = _meal_slots(days)
-    if not attr_slots:
-        return None
 
     model = cp_model.CpModel()
     hotel_idx = model.NewIntVar(0, len(hotels) - 1, "hotel_idx")
     outbound_idx = model.NewIntVar(0, len(outbound) - 1, "outbound_idx")
     return_idx = model.NewIntVar(0, len(returning) - 1, "return_idx")
 
-    attr_vars = [model.NewIntVar(0, len(attractions), f"attr_{i}") for i in range(len(attr_slots))]
-    rest_vars = [model.NewIntVar(1, len(restaurants), f"rest_{i}") for i in range(len(meal_slots))]
+    attr_vars = [model.NewIntVar(0, len(attractions), f"attr_{i}") for i in range(attr_slot_count)]
+    rest_vars = [model.NewIntVar(0, len(restaurants), f"rest_{i}") for i in range(len(meal_slots))]
     attr_eq = _equality_bools(model, attr_vars, len(attractions), "attr_eq")
     rest_eq = _equality_bools(model, rest_vars, len(restaurants), "rest_eq")
-    selected_attr_bools = []
-    for i, var in enumerate(attr_vars):
-        selected = model.NewBoolVar(f"attr_selected_{i}")
-        model.Add(var != 0).OnlyEnforceIf(selected)
-        model.Add(var == 0).OnlyEnforceIf(selected.Not())
-        selected_attr_bools.append(selected)
+    attr_selected = _selection_bools(model, attr_vars, "attr_sel")
+    rest_selected = _selection_bools(model, rest_vars, "rest_sel")
 
-    _constrain_intercity_timing(model, outbound_idx, return_idx, outbound, returning, attr_slots, meal_slots)
+    out_units, ret_units = _constrain_intercity(model, outbound_idx, return_idx, outbound, returning)
     _constrain_required_hotel(model, hotel_idx, hotels)
-    _constrain_slot_domains(model, attr_vars, rest_vars, attr_eq, rest_eq, attractions, restaurants, attr_slots, meal_slots, constraints, agent)
+    _constrain_attr_eligibility(model, attr_vars, attractions, constraints, agent, visit_minutes)
+    _constrain_meal_eligibility(model, rest_vars, restaurants, meal_slots)
     _constrain_required_pois(model, attr_eq, rest_eq, attractions, restaurants, attr_vars, rest_vars, constraints, agent)
     _constrain_no_duplicates(model, attr_eq, rest_eq, attr_vars, rest_vars, len(attractions), len(restaurants))
 
-    total_cost, selected_restaurant_count = _constrain_budgets(
-        cp_model,
-        model,
-        constraints,
-        people,
-        hotel_idx,
-        outbound_idx,
-        return_idx,
-        attr_vars,
-        rest_vars,
-        hotels,
-        outbound,
-        returning,
-        attractions,
-        restaurants,
+    total_cost = _constrain_budgets(
+        model, constraints, people, hotel_idx, outbound_idx, return_idx,
+        attr_vars, rest_vars, hotels, outbound, returning, attractions, restaurants,
     )
     total_cost_yuan = model.NewIntVar(0, 10**7, "total_cost_yuan")
     model.AddDivisionEquality(total_cost_yuan, total_cost, 100)
-    model.Maximize(1000 * sum(selected_attr_bools) + 100 * selected_restaurant_count - total_cost_yuan)
+    model.Maximize(
+        1000 * sum(attr_selected) + 100 * sum(rest_selected) - total_cost_yuan + ret_units - out_units
+    )
 
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = max(1.0, float(time_limit_sec))
-    cp_workers = int(os.environ.get("TPC_CP_SEARCH_WORKERS", "1"))
-    solver.parameters.num_search_workers = max(1, cp_workers)
+    solver.parameters.num_search_workers = max(1, int(os.environ.get("TPC_CP_SEARCH_WORKERS", "1")))
     status = solver.Solve(model)
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return None
@@ -122,10 +144,11 @@ def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_
         "hotel": hotels[solver.Value(hotel_idx)],
         "outbound": outbound[solver.Value(outbound_idx)],
         "return": returning[solver.Value(return_idx)],
-        "attrs": [solver.Value(v) - 1 for v in attr_vars],
-        "rests": [solver.Value(v) - 1 for v in rest_vars],
-        "attr_slots": attr_slots,
-        "meal_slots": meal_slots,
+        "attrs": [attractions[solver.Value(v) - 1] for v in attr_vars if solver.Value(v) > 0],
+        "lunch": [restaurants[solver.Value(rest_vars[i]) - 1] for i, s in enumerate(meal_slots)
+                  if s["meal_type"] == "lunch" and solver.Value(rest_vars[i]) > 0],
+        "dinner": [restaurants[solver.Value(rest_vars[i]) - 1] for i, s in enumerate(meal_slots)
+                   if s["meal_type"] == "dinner" and solver.Value(rest_vars[i]) > 0],
         "visit_minutes": visit_minutes,
     }
     plan = _reconstruct_plan(agent, query, constraints, ctx, assignment)
@@ -138,6 +161,10 @@ def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_
     return plan if passed == total else None
 
 
+# ---------------------------------------------------------------------------
+# CP-SAT model helpers
+# ---------------------------------------------------------------------------
+
 def _equality_bools(model, vars_: list, candidate_count: int, prefix: str) -> dict[tuple[int, int], Any]:
     out = {}
     for slot_idx, var in enumerate(vars_):
@@ -149,77 +176,76 @@ def _equality_bools(model, vars_: list, candidate_count: int, prefix: str) -> di
     return out
 
 
-def _constrain_intercity_timing(model, outbound_idx, return_idx, outbound: list[dict], returning: list[dict], attr_slots: list[dict], meal_slots: list[dict]) -> None:
-    first_start = min([s["start_min"] for s in attr_slots + meal_slots if s["day"] == 1], default=14 * 60)
-    final_day = max([s["day"] for s in attr_slots + meal_slots], default=1)
-    final_end = max([s["end_min"] for s in attr_slots + meal_slots if s["day"] == final_day], default=13 * 60)
-    out_end = model.NewIntVar(0, 24 * 60, "outbound_end")
-    ret_begin = model.NewIntVar(0, 24 * 60, "return_begin")
-    model.AddElement(outbound_idx, [int(x["end_min"]) for x in outbound], out_end)
-    model.AddElement(return_idx, [int(x["begin_min"]) for x in returning], ret_begin)
-    model.Add(out_end <= first_start)
-    model.Add(ret_begin >= final_end)
+def _selection_bools(model, vars_: list, prefix: str) -> list:
+    bools = []
+    for i, var in enumerate(vars_):
+        b = model.NewBoolVar(f"{prefix}_{i}")
+        model.Add(var != 0).OnlyEnforceIf(b)
+        model.Add(var == 0).OnlyEnforceIf(b.Not())
+        bools.append(b)
+    return bools
+
+
+def _constrain_intercity(model, outbound_idx, return_idx, outbound: list[dict], returning: list[dict]):
+    """Return daytime-preference unit vars (30-min granularity) for the objective.
+
+    No hard time bound: reconstruction validates real feasibility; the objective
+    just prefers early arrival / late departure when otherwise tied."""
+    out_units = model.NewIntVar(0, 48, "out_units")
+    ret_units = model.NewIntVar(0, 48, "ret_units")
+    model.AddElement(outbound_idx, [min(48, int(x["end_min"]) // 30) for x in outbound], out_units)
+    model.AddElement(return_idx, [min(48, int(x["begin_min"]) // 30) for x in returning], ret_units)
+    return out_units, ret_units
 
 
 def _constrain_required_hotel(model, hotel_idx, hotels: list[dict]) -> None:
     required = [i for i, hotel in enumerate(hotels) if hotel.get("required")]
-    if not required:
+    if required:
+        model.AddAllowedAssignments([hotel_idx], [[i] for i in required])
+
+
+def _constrain_attr_eligibility(model, attr_vars, attractions, constraints, agent, visit_minutes) -> None:
+    """Forbid an attraction in any slot only when it can never be scheduled in a
+    day window (closed too short, or a named time window is unsatisfiable)."""
+    blocked = []
+    for cand_index, attr in enumerate(attractions, start=1):
+        if attr.get("required") or attr.get("type_match"):
+            continue
+        if not _attr_day_feasible(agent, attr, constraints, visit_minutes):
+            blocked.append(cand_index)
+    if not blocked:
         return
-    model.AddAllowedAssignments([hotel_idx], [[i] for i in required])
+    for var in attr_vars:
+        for cand_index in blocked:
+            model.Add(var != cand_index)
 
 
-def _constrain_slot_domains(model, attr_vars, rest_vars, attr_eq, rest_eq, attractions, restaurants, attr_slots, meal_slots, constraints, agent) -> None:
-    for slot_index, slot in enumerate(attr_slots):
-        for cand_index, attr in enumerate(attractions, start=1):
-            if not _attraction_allowed_in_slot(agent, attr, slot, constraints):
-                model.Add(attr_vars[slot_index] != cand_index)
+def _constrain_meal_eligibility(model, rest_vars, restaurants, meal_slots) -> None:
     for slot_index, slot in enumerate(meal_slots):
         for cand_index, rest in enumerate(restaurants, start=1):
-            if not _restaurant_allowed_in_slot(rest, slot):
+            if not _restaurant_meal_feasible(rest, slot["meal_type"]):
                 model.Add(rest_vars[slot_index] != cand_index)
 
 
 def _constrain_required_pois(model, attr_eq, rest_eq, attractions, restaurants, attr_vars, rest_vars, constraints, agent) -> None:
-    required_attractions = constraints.get("required_attractions", []) or []
-    for req in required_attractions:
-        matches = [
-            attr_eq[(slot, idx + 1)]
-            for slot in range(len(attr_vars))
-            for idx, attr in enumerate(attractions)
-            if agent._match_constraint_text(attr.get("name", ""), req)
-        ]
+    for req in constraints.get("required_attractions", []) or []:
+        matches = [attr_eq[(slot, idx + 1)] for slot in range(len(attr_vars))
+                   for idx, attr in enumerate(attractions) if agent._match_constraint_text(attr.get("name", ""), req)]
         if matches:
             model.Add(sum(matches) >= 1)
-
     for req_type in constraints.get("required_attraction_types", []) or []:
-        matches = [
-            attr_eq[(slot, idx + 1)]
-            for slot in range(len(attr_vars))
-            for idx, attr in enumerate(attractions)
-            if agent._match_type(attr.get("type", ""), req_type)
-        ]
+        matches = [attr_eq[(slot, idx + 1)] for slot in range(len(attr_vars))
+                   for idx, attr in enumerate(attractions) if agent._match_type(attr.get("type", ""), req_type)]
         if matches:
             model.Add(sum(matches) >= 1)
-
-    required_restaurants = constraints.get("required_restaurants", []) or []
-    for req in required_restaurants:
-        matches = [
-            rest_eq[(slot, idx + 1)]
-            for slot in range(len(rest_vars))
-            for idx, rest in enumerate(restaurants)
-            if agent._match_constraint_text(rest.get("name", ""), req)
-        ]
+    for req in constraints.get("required_restaurants", []) or []:
+        matches = [rest_eq[(slot, idx + 1)] for slot in range(len(rest_vars))
+                   for idx, rest in enumerate(restaurants) if agent._match_constraint_text(rest.get("name", ""), req)]
         if matches:
             model.Add(sum(matches) >= 1)
-
-    cuisine_preferences = _as_list(constraints.get("cuisine_preference"))
-    for cuisine in cuisine_preferences:
-        matches = [
-            rest_eq[(slot, idx + 1)]
-            for slot in range(len(rest_vars))
-            for idx, rest in enumerate(restaurants)
-            if agent._match_constraint_text(rest.get("cuisine", ""), cuisine)
-        ]
+    for cuisine in _as_list(constraints.get("cuisine_preference")):
+        matches = [rest_eq[(slot, idx + 1)] for slot in range(len(rest_vars))
+                   for idx, rest in enumerate(restaurants) if agent._match_constraint_text(rest.get("cuisine", ""), cuisine)]
         if matches:
             model.Add(sum(matches) >= 1)
 
@@ -235,7 +261,7 @@ def _constrain_no_duplicates(model, attr_eq, rest_eq, attr_vars, rest_vars, attr
                 model.AddBoolOr([rest_eq[(i, value)].Not(), rest_eq[(j, value)].Not()])
 
 
-def _constrain_budgets(cp_model, model, constraints, people: int, hotel_idx, outbound_idx, return_idx, attr_vars, rest_vars, hotels, outbound, returning, attractions, restaurants):
+def _constrain_budgets(model, constraints, people, hotel_idx, outbound_idx, return_idx, attr_vars, rest_vars, hotels, outbound, returning, attractions, restaurants):
     max_cost = 10**9
     hotel_cost = model.NewIntVar(0, max_cost, "hotel_cost")
     out_cost = model.NewIntVar(0, max_cost, "out_cost")
@@ -257,24 +283,19 @@ def _constrain_budgets(cp_model, model, constraints, people: int, hotel_idx, out
 
     sightseeing = sum(attr_cost_vars)
     dining = sum(rest_cost_vars)
-    accommodation = hotel_cost
     intercity = out_cost + ret_cost
-    total = sightseeing + dining + accommodation + intercity
+    total = sightseeing + dining + hotel_cost + intercity
     budgets = constraints.get("budgets") if isinstance(constraints.get("budgets"), dict) else {}
-    for key, expr in (
-        ("sightseeing", sightseeing),
-        ("dining", dining),
-        ("accommodation", accommodation),
-        ("intercity_transport", intercity),
-        ("total", total),
-    ):
+    for key, expr in (("sightseeing", sightseeing), ("dining", dining), ("accommodation", hotel_cost),
+                      ("intercity_transport", intercity), ("total", total)):
         if key in budgets:
             model.Add(expr <= _budget_cents(budgets[key]))
-    # Inner transport is checked during reconstruction with the real checker; it
-    # depends on selected transition modes and exact departure times.
-    selected_restaurant_count = len(rest_vars)
-    return total, selected_restaurant_count
+    return total
 
+
+# ---------------------------------------------------------------------------
+# Reconstruction: travel-aware flexible scheduler
+# ---------------------------------------------------------------------------
 
 def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignment: dict) -> dict | None:
     people = ctx["people"]
@@ -284,95 +305,65 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
     hotel_name = str(hotel["name"])
     outbound = assignment["outbound"]
     returning = assignment["return"]
-    attr_by_slot = assignment["attrs"]
-    rest_by_slot = assignment["rests"]
-    attr_slots = assignment["attr_slots"]
-    meal_slots = assignment["meal_slots"]
-    attractions = ctx["attractions"]
-    restaurants = ctx["restaurants"]
+    base_visit = assignment["visit_minutes"]
 
-    selected_points = [city, hotel_name]
-    selected_points.extend(attractions[i]["name"] for i in attr_by_slot if i >= 0)
-    selected_points.extend(restaurants[i]["name"] for i in rest_by_slot if i >= 0)
-    build_transition_cache(agent, city, selected_points, people, ("walk",))
+    selected_attrs = _ordered_attractions(agent, assignment["attrs"], constraints)
+    lunch_pool = _ordered_restaurants(agent, assignment["lunch"], constraints)
+    dinner_pool = _ordered_restaurants(agent, assignment["dinner"], constraints)
 
-    old_transport_constraints = getattr(agent, "_transport_constraints", {})
-    old_budget_limits = getattr(agent, "_budget_limits", {})
-    old_timing = getattr(agent, "_active_timing_constraints", [])
-    old_forced = getattr(agent, "_forced_inner_mode", None)
+    saved = {
+        "tc": getattr(agent, "_transport_constraints", {}),
+        "bl": getattr(agent, "_budget_limits", {}),
+        "tm": getattr(agent, "_active_timing_constraints", []),
+        "fm": getattr(agent, "_forced_inner_mode", None),
+    }
     agent._transport_constraints = constraints
     agent._budget_limits = agent._extract_budget_limits(constraints)
     agent._active_timing_constraints = constraints.get("timing_constraints", []) or []
     agent._forced_inner_mode = None
     try:
         itinerary = []
-        attr_cursor = 0
-        meal_cursor = 0
-        current_pos = None
-        current_time = "00:00"
+        attr_queue = list(selected_attrs)
         for day in range(1, days + 1):
+            is_last = day == days
             activities = []
             if day == 1:
                 out_act = agent._make_intercity_activity(outbound, people)
                 activities.append(out_act)
-                current_pos = out_act["end"]
-                current_time = out_act["end_time"]
+                pos = out_act["end"]
+                clock = time_to_minutes(out_act["end_time"])
             else:
-                current_pos = hotel_name
-                current_time = "08:00"
-                activities.append(agent._make_hotel_breakfast(hotel_name, "08:00", "09:00"))
-                current_time = "09:00"
+                activities.append(agent._make_hotel_breakfast(hotel_name, "07:30", "08:30"))
+                pos = hotel_name
+                clock = 8 * 60 + 30
 
-            day_events = []
-            while meal_cursor < len(meal_slots) and meal_slots[meal_cursor]["day"] == day:
-                idx = rest_by_slot[meal_cursor]
-                if idx >= 0:
-                    slot = meal_slots[meal_cursor]
-                    day_events.append((slot["start_min"], "meal", slot, restaurants[idx]))
-                meal_cursor += 1
-            while attr_cursor < len(attr_slots) and attr_slots[attr_cursor]["day"] == day:
-                idx = attr_by_slot[attr_cursor]
-                if idx >= 0:
-                    slot = attr_slots[attr_cursor]
-                    day_events.append((slot["start_min"], "attraction", slot, attractions[idx]))
-                attr_cursor += 1
-            day_events.sort(key=lambda x: x[0])
+            day_close = int(returning["begin_min"]) - STATION_BUFFER if is_last else DAY_CLOSE
+            pos, clock = _fill_day(
+                agent, city, people, constraints, base_visit, attr_queue, lunch_pool, dinner_pool,
+                activities, pos, clock, day_close,
+            )
 
-            for _start, kind, slot, item in day_events:
-                start_time = minutes_to_time(slot["start_min"])
-                end_time = minutes_to_time(slot["end_min"])
-                if time_to_minutes(current_time) > slot["start_min"]:
-                    return None
-                transports, arrival = agent._get_transport(agent.env, city, current_pos, item["name"], current_time, people)
-                if transports is None or arrival is None or time_to_minutes(arrival) > slot["start_min"]:
-                    return None
-                if kind == "meal":
-                    activities.append(agent._make_meal_activity(slot["meal_type"], item, people, start_time, end_time, transports))
-                else:
-                    activities.append(agent._make_attraction_activity(item, people, start_time, end_time, transports))
-                current_pos = item["name"]
-                current_time = end_time
-
-            if day < days:
-                check_in_floor = max(time_to_minutes(current_time), 20 * 60)
-                if check_in_floor >= 24 * 60:
-                    return None
-                check_in = minutes_to_time(check_in_floor)
-                transports, arrival = agent._get_transport(agent.env, city, current_pos, hotel_name, current_time, people)
-                if transports is None or arrival is None or time_to_minutes(arrival) > time_to_minutes(check_in):
-                    return None
-                activities.append(agent._make_accommodation_activity(hotel, int(hotel["rooms"]), check_in, transports))
-                current_pos = hotel_name
-                current_time = "24:00"
-            else:
-                if time_to_minutes(current_time) > int(returning["begin_min"]):
-                    return None
-                transports, arrival = agent._get_transport(agent.env, city, current_pos, returning["From"], current_time, people)
+            if is_last:
+                transports, arrival = agent._get_transport(agent.env, city, pos, returning["From"], minutes_to_time(min(clock, 23 * 60 + 59)), people)
                 if transports is None or arrival is None or time_to_minutes(arrival) > int(returning["begin_min"]):
                     return None
                 activities.append(agent._make_intercity_activity(returning, people, transports))
+            else:
+                if clock >= 24 * 60:
+                    return None
+                transports, arrival = agent._get_transport(agent.env, city, pos, hotel_name, minutes_to_time(min(clock, 23 * 60 + 59)), people)
+                if transports is None or arrival is None:
+                    return None
+                check_in = max(time_to_minutes(arrival), clock)
+                if check_in >= 24 * 60:
+                    return None
+                activities.append(agent._make_accommodation_activity(hotel, int(hotel["rooms"]), minutes_to_time(check_in), transports))
+                pos = hotel_name
 
             itinerary.append({"day": day, "activities": activities})
+
+        if any(a.get("required") or a.get("type_match") for a in attr_queue):
+            return None
         return {
             "people_number": people,
             "start_city": query.get("start_city", ""),
@@ -380,85 +371,192 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
             "itinerary": itinerary,
         }
     finally:
-        agent._transport_constraints = old_transport_constraints
-        agent._budget_limits = old_budget_limits
-        agent._active_timing_constraints = old_timing
-        agent._forced_inner_mode = old_forced
+        agent._transport_constraints = saved["tc"]
+        agent._budget_limits = saved["bl"]
+        agent._active_timing_constraints = saved["tm"]
+        agent._forced_inner_mode = saved["fm"]
 
 
-def _attribute_slots(days: int, attr_slots_per_day: int, visit_minutes: int) -> list[dict]:
-    slots = []
-    for day in range(1, days + 1):
-        starts = [14 * 60, 16 * 60, 19 * 60 + 30] if day == 1 else [9 * 60 + 30, 14 * 60, 16 * 60, 19 * 60 + 30]
-        if day == days:
-            starts = [9 * 60 + 30, 13 * 60 + 30, 15 * 60]
-        for start in starts[:attr_slots_per_day]:
-            end = start + visit_minutes
-            if end <= 22 * 60:
-                slots.append({"day": day, "start_min": start, "end_min": end})
-    return slots
+def _fill_day(agent, city, people, constraints, base_visit, attr_queue, lunch_pool, dinner_pool, activities, pos, clock, day_close):
+    """Greedily place attractions (earliest feasible) interleaving lunch/dinner by
+    clock window. Optional attractions that do not fit are dropped; required ones
+    are left in the queue for a later day (and ultimately fail the build)."""
+    lunch_done = False
+    dinner_done = False
+    guard = 0
+    while guard < 64:
+        guard += 1
+        if not lunch_done and lunch_pool and clock >= LUNCH_OPEN and clock < LUNCH_LATEST_START:
+            placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock,
+                                 LUNCH_OPEN, LUNCH_CLOSE, day_close)
+            lunch_done = True
+            if placed:
+                pos, clock = placed
+                continue
+        if not dinner_done and dinner_pool and clock >= DINNER_OPEN and clock < DINNER_LATEST_START:
+            placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock,
+                                 DINNER_OPEN, DINNER_CLOSE, day_close)
+            dinner_done = True
+            if placed:
+                pos, clock = placed
+                continue
+        if not attr_queue:
+            break
+        attr = attr_queue[0]
+        outcome = _place_attraction(agent, city, people, constraints, base_visit, attr, activities, pos, clock, day_close)
+        if outcome == "placed":
+            placed_attr = activities[-1]
+            pos = placed_attr["position"]
+            clock = time_to_minutes(placed_attr["end_time"])
+            attr_queue.pop(0)
+        elif outcome == "drop":
+            attr_queue.pop(0)
+        else:  # "carry": cannot fit remaining day
+            break
+
+    # Place any meal still due before its window closes (e.g. late morning arrival).
+    if not lunch_done and lunch_pool and clock < LUNCH_LATEST_START:
+        placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock, LUNCH_OPEN, LUNCH_CLOSE, day_close)
+        if placed:
+            pos, clock = placed
+    if not dinner_done and dinner_pool and clock < DINNER_LATEST_START:
+        placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock, DINNER_OPEN, DINNER_CLOSE, day_close)
+        if placed:
+            pos, clock = placed
+    return pos, clock
+
+
+def _place_attraction(agent, city, people, constraints, base_visit, attr, activities, pos, clock, day_close):
+    name = str(attr["name"])
+    transports, arrival = agent._get_transport(agent.env, city, pos, name, minutes_to_time(min(clock, 23 * 60 + 59)), people)
+    if transports is None or arrival is None:
+        return "drop" if not (attr.get("required") or attr.get("type_match")) else "carry"
+    window = _attr_window(agent, attr, constraints)
+    visit = _visit_len_for(agent, attr, constraints, base_visit)
+    start = max(time_to_minutes(arrival), DAY_OPEN)
+    if attr.get("open_min") is not None:
+        start = max(start, int(attr["open_min"]))
+    if window["earliest"] is not None:
+        start = max(start, window["earliest"])
+    end = start + visit
+    if window["end_after"] is not None:
+        end = max(end, window["end_after"])
+    cap = day_close
+    if attr.get("close_min") is not None and int(attr["close_min"]) > int(attr.get("open_min") or 0):
+        cap = min(cap, int(attr["close_min"]))
+    if window["end_before"] is not None:
+        cap = min(cap, window["end_before"])
+    required = bool(attr.get("required") or attr.get("type_match"))
+    if window["latest"] is not None and start > window["latest"]:
+        return "carry" if required else "drop"
+    if end > cap:
+        return "carry" if required else "drop"
+    activities.append(agent._make_attraction_activity(attr, people, minutes_to_time(start), minutes_to_time(end), transports))
+    return "placed"
+
+
+def _place_meal(agent, city, people, meal_type, pool, activities, pos, clock, window_open, window_close, day_close):
+    for i, rest in enumerate(pool):
+        name = str(rest["name"])
+        transports, arrival = agent._get_transport(agent.env, city, pos, name, minutes_to_time(min(clock, 23 * 60 + 59)), people)
+        if transports is None or arrival is None:
+            continue
+        start = max(time_to_minutes(arrival), window_open)
+        end = start + 60
+        if end > window_close or end > day_close:
+            continue
+        activities.append(agent._make_meal_activity(meal_type, rest, people, minutes_to_time(start), minutes_to_time(end), transports))
+        pool.pop(i)
+        return name, end
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Ordering / feasibility helpers
+# ---------------------------------------------------------------------------
+
+def _ordered_attractions(agent, attrs: list[dict], constraints: dict) -> list[dict]:
+    def key(a):
+        window = _attr_window(agent, a, constraints)
+        windowed = 0 if any(v is not None for v in window.values()) else 1
+        priority = 0 if (a.get("required") or a.get("type_match")) else 1
+        anchor = window["earliest"] if window["earliest"] is not None else (a.get("open_min") if a.get("open_min") is not None else 9999)
+        return (windowed, priority, anchor)
+    return sorted(attrs, key=key)
+
+
+def _ordered_restaurants(agent, rests: list[dict], constraints: dict) -> list[dict]:
+    return sorted(rests, key=lambda r: 0 if r.get("required") or r.get("cuisine_match") else 1)
+
+
+def _attr_window(agent, attr: dict, constraints: dict) -> dict:
+    result = {"earliest": None, "latest": None, "end_after": None, "end_before": None}
+    for window in constraints.get("activity_time_windows", []) or []:
+        if not isinstance(window, dict) or not agent._match_constraint_text(attr.get("name", ""), window.get("location", "")):
+            continue
+        for key in result:
+            value = window.get(key)
+            if value:
+                result[key] = time_to_minutes(str(value))
+    return result
+
+
+def _attr_day_feasible(agent, attr: dict, constraints: dict, visit_minutes: int) -> bool:
+    visit = _visit_len_for(agent, attr, constraints, visit_minutes)
+    open_min = attr.get("open_min")
+    close_min = attr.get("close_min")
+    window = _attr_window(agent, attr, constraints)
+    earliest = max(DAY_OPEN, open_min if open_min is not None else DAY_OPEN, window["earliest"] or 0)
+    latest_close = DAY_CLOSE
+    if close_min is not None and int(close_min) > int(open_min or 0):
+        latest_close = min(latest_close, int(close_min))
+    if window["end_before"] is not None:
+        latest_close = min(latest_close, window["end_before"])
+    if window["latest"] is not None and earliest > window["latest"]:
+        return False
+    return earliest + visit <= latest_close
+
+
+def _restaurant_meal_feasible(rest: dict, meal_type: str) -> bool:
+    open_min = rest.get("open_min")
+    close_min = rest.get("close_min")
+    if open_min is None or close_min is None:
+        return False
+    if meal_type == "lunch":
+        return _open_covers(open_min, close_min, LUNCH_OPEN, LUNCH_CLOSE)
+    return _open_covers(open_min, close_min, DINNER_OPEN, DINNER_CLOSE)
+
+
+def _open_covers(open_min: int, close_min: int, win_open: int, win_close: int) -> bool:
+    open_min = int(open_min)
+    close_min = int(close_min)
+    if close_min <= open_min:
+        close_min += 24 * 60
+    return open_min <= win_open and close_min >= win_close
+
+
+def _visit_len_for(agent, attr: dict, constraints: dict, base: int) -> int:
+    need = base
+    name = str(attr.get("name", ""))
+    for d in constraints.get("stay_duration", []) or []:
+        if isinstance(d, dict) and agent._match_constraint_text(name, d.get("location", "")):
+            try:
+                need = max(need, int(d.get("min_minutes", 0)))
+            except (TypeError, ValueError):
+                pass
+    return min(240, max(90, need))
+
+
+def _base_visit_minutes(constraints: dict) -> int:
+    return 90
 
 
 def _meal_slots(days: int) -> list[dict]:
     slots = []
-    for day in range(1, days + 1):
-        slots.append({"day": day, "meal_type": "lunch", "start_min": 12 * 60, "end_min": 13 * 60})
-        if day < days:
-            slots.append({"day": day, "meal_type": "dinner", "start_min": 18 * 60, "end_min": 19 * 60})
+    for _ in range(days):
+        slots.append({"meal_type": "lunch"})
+        slots.append({"meal_type": "dinner"})
     return slots
-
-
-def _visit_minutes(constraints: dict) -> int:
-    longest = 90
-    for item in constraints.get("stay_duration", []) or []:
-        if isinstance(item, dict):
-            try:
-                longest = max(longest, int(item.get("min_minutes", 0)))
-            except Exception:
-                pass
-    return min(240, max(90, longest))
-
-
-def _attraction_allowed_in_slot(agent, attr: dict, slot: dict, constraints: dict) -> bool:
-    if not _open_for(attr, slot["start_min"], slot["end_min"]):
-        return False
-    for window in constraints.get("activity_time_windows", []) or []:
-        if not isinstance(window, dict) or not agent._match_constraint_text(attr.get("name", ""), window.get("location", "")):
-            continue
-        if window.get("earliest") and slot["start_min"] < time_to_minutes(str(window["earliest"])):
-            return False
-        if window.get("latest") and slot["start_min"] > time_to_minutes(str(window["latest"])):
-            return False
-        if window.get("end_after") and slot["end_min"] < time_to_minutes(str(window["end_after"])):
-            return False
-        if window.get("end_before") and slot["end_min"] > time_to_minutes(str(window["end_before"])):
-            return False
-    for duration in constraints.get("stay_duration", []) or []:
-        if not isinstance(duration, dict) or not agent._match_constraint_text(attr.get("name", ""), duration.get("location", "")):
-            continue
-        try:
-            if (slot["end_min"] - slot["start_min"]) < int(duration.get("min_minutes", 0)):
-                return False
-        except Exception:
-            pass
-    return True
-
-
-def _restaurant_allowed_in_slot(rest: dict, slot: dict) -> bool:
-    return _open_for(rest, slot["start_min"], slot["end_min"])
-
-
-def _open_for(item: dict, start_min: int, end_min: int) -> bool:
-    open_min = item.get("open_min")
-    close_min = item.get("close_min")
-    if open_min is None or close_min is None:
-        return False
-    if close_min <= open_min:
-        close_min += 24 * 60
-        if start_min < open_min:
-            start_min += 24 * 60
-            end_min += 24 * 60
-    return int(open_min) <= start_min and end_min <= int(close_min)
 
 
 def _budget_cents(value: Any) -> int:
@@ -473,8 +571,6 @@ def _as_list(value: Any) -> list:
         return []
     if isinstance(value, list):
         return value
-    if isinstance(value, tuple):
-        return list(value)
-    if isinstance(value, set):
+    if isinstance(value, (tuple, set)):
         return list(value)
     return [value]
