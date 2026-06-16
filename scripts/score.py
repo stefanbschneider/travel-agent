@@ -25,8 +25,9 @@ def main():
     for line in proc.stdout.splitlines():
         line = line.strip()
         if line.startswith("{") and "overall" in line:
+            cleaned = re.sub(r"np\.float\d*\(([^()]+)\)", r"\1", line)
             try:
-                scores = ast.literal_eval(line)
+                scores = ast.literal_eval(cleaned)
             except (ValueError, SyntaxError):
                 pass
     if not isinstance(scores, dict):
