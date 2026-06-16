@@ -12,6 +12,7 @@ from chinatravel.symbol_verification.hard_constraint import evaluate_constraints
 import random
 import parse_constraints
 from agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
+from agent.tpc_agent.solver_constraints import solver_constraint_variants
 import contextlib
 import io
 from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
@@ -182,177 +183,14 @@ class TPCAgent(BaseAgent):
         raw = parse_constraints.parse_query(query) if self.use_oracle else parse_constraints.parse_query_no_oracle(query)
         if not isinstance(raw, dict):
             return [{}]
-
-        constraints = {
-            k: v
-            for k, v in raw.items()
-            if k not in ["groups", "disjunctive"]
-        }
-        groups = raw.get("groups", [])
-        if not (raw.get("disjunctive") and isinstance(groups, list) and len(groups) > 0):
-            return [constraints]
-
-        group_keys = set()
-        for group in groups:
-            if isinstance(group, dict):
-                group_keys.update(group.keys())
-
-        base_constraints = {
-            k: v
-            for k, v in constraints.items()
-            if k not in group_keys
-        }
-
-        variants = []
-        for group in groups:
-            if not isinstance(group, dict):
-                continue
-            merged = deepcopy(base_constraints)
-            merged.update(group)
-            variants.append(merged)
-
-        return variants or [constraints]
+        return solver_constraint_variants(query, raw, use_oracle=self.use_oracle)
 
     def _collect_constraints(self, query):
         variants = self._constraint_variants(query)
         if len(variants) == 0:
-            return self._augment_constraints_from_hard_logic(query, {})
-        return self._augment_constraints_from_hard_logic(query, variants[0])
+            return {}
+        return variants[0]
 
-    def _augment_constraints_from_hard_logic(self, query, constraints):
-        """Backfill frequently-missed structured constraints from hard_logic_py text."""
-        merged = deepcopy(constraints) if isinstance(constraints, dict) else {}
-        hard_logic_py = query.get("hard_logic_py", [])
-        if not isinstance(hard_logic_py, list) or len(hard_logic_py) == 0:
-            return merged
-
-        budgets = merged.get("budgets")
-        if not isinstance(budgets, dict):
-            budgets = {}
-
-        for expr in hard_logic_py:
-            if not isinstance(expr, str):
-                continue
-
-            # Infer inner-city transport budget cap.
-            m_inner = re.search(r"inner_city_transportation_cost\s*<=\s*(\d+(?:\.\d+)?)", expr)
-            if m_inner:
-                limit = float(m_inner.group(1))
-                if "inner_transport" not in budgets or float(budgets.get("inner_transport", -1)) < 0:
-                    budgets["inner_transport"] = limit
-                else:
-                    budgets["inner_transport"] = min(float(budgets["inner_transport"]), limit)
-
-            # Infer explicit non-train requirement for both outbound/return.
-            if "allactivities(plan)[0]['type'] != \"train\"" in expr and "allactivities(plan)[-1]['type'] != \"train\"" in expr:
-                merged["intercity_mode"] = "airplane"
-            if "allactivities(plan)[0]['type'] == \"train\"" in expr and "allactivities(plan)[-1]['type'] == \"train\"" in expr:
-                merged["intercity_mode"] = "train"
-
-            # Infer required room type.
-            m_room = re.search(r"room_type\(activity\)!=(\d)", expr)
-            if m_room and "room_type" not in merged:
-                merged["room_type"] = int(m_room.group(1))
-
-            # Infer required attraction type set inclusion.
-            if "attraction_type_set" in expr and "{" in expr and "}" in expr:
-                req_types = merged.get("required_attraction_types")
-                if not isinstance(req_types, list):
-                    req_types = []
-                set_match = re.search(r"\{([^}]*)\}", expr, re.DOTALL)
-                literals = re.findall(r"['\"]([^'\"]+)['\"]", set_match.group(1) if set_match else "")
-                for t in literals:
-                    if not any(self._match_constraint_text(existing, t) for existing in req_types):
-                        req_types.append(t)
-                merged["required_attraction_types"] = req_types
-
-            # Infer required hotel amenity/type in featurehoteltype checks.
-            if "accommodation_type_set" in expr and "{" in expr and "}" in expr:
-                set_match = re.search(r"\{([^}]*)\}", expr, re.DOTALL)
-                literals = re.findall(r"['\"]([^'\"]+)['\"]", set_match.group(1) if set_match else "")
-                if "&accommodation_type_set" in expr:
-                    req_any = merged.get("required_hotel_any_types", [])
-                    if not isinstance(req_any, list):
-                        req_any = []
-                    for t in literals:
-                        if not any(self._match_constraint_text(existing, t) for existing in req_any):
-                            req_any.append(t)
-                    merged["required_hotel_any_types"] = req_any
-                elif "<=accommodation_type_set" in expr:
-                    req_all = merged.get("required_hotel_all_types", [])
-                    if not isinstance(req_all, list):
-                        req_all = []
-                    for t in literals:
-                        if not any(self._match_constraint_text(existing, t) for existing in req_all):
-                            req_all.append(t)
-                    merged["required_hotel_all_types"] = req_all
-                if literals and "hotel_amenity" not in merged and "hotel_type" not in merged:
-                    merged["hotel_amenity"] = literals[0]
-
-            # Infer taxi car-count constraints to avoid invalid taxi usage.
-            m_taxi_cars = re.search(
-                r"innercity_transport_type\(activity_transports\(activity\)\)\s*==\s*['\"]taxi['\"].*?taxi_cars\(activity_transports\(activity\)\)\s*!=\s*(\d+)",
-                expr,
-                re.DOTALL,
-            )
-            if m_taxi_cars:
-                merged["taxi_cars_equals"] = int(m_taxi_cars.group(1))
-
-            # Backfill per-POI dwell / time-window constraints from positioned-activity clauses.
-            # parse_query misses these: they live inside `if activity_position(activity)==<lit>:`
-            # and use activity_time / activity_start_time / activity_end_time (no stay_duration func).
-            m_pos = re.search(r"activity_position\(activity\)\s*==\s*['\"]([^'\"]+)['\"]", expr)
-            if m_pos:
-                loc = m_pos.group(1)
-                min_minutes = None
-                m_dur = re.search(r"activity_time\(activity\)\s*/\s*60\s*>=\s*(\d+(?:\.\d+)?)", expr)
-                if m_dur:
-                    min_minutes = int(round(float(m_dur.group(1)) * 60))
-                else:
-                    m_dur = re.search(r"activity_time\(activity\)\s*>=\s*(\d+)", expr)
-                    if m_dur:
-                        min_minutes = int(m_dur.group(1))
-                earliest = latest = end_after = end_before = None
-                m_w = re.search(r"activity_start_time\(activity\)\s*>=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    earliest = m_w.group(1)
-                m_w = re.search(r"activity_start_time\(activity\)\s*<=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    latest = m_w.group(1)
-                m_w = re.search(r"activity_end_time\(activity\)\s*>=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    end_after = m_w.group(1)
-                m_w = re.search(r"activity_end_time\(activity\)\s*<=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    end_before = m_w.group(1)
-                # A "start<=T1 and end>=T2" window implies a minimum dwell of T2-T1 minutes.
-                if latest and end_after:
-                    span = time_to_minutes(end_after) - time_to_minutes(latest)
-                    if span > 0:
-                        min_minutes = max(min_minutes or 0, span)
-                if min_minutes is not None and min_minutes > 0:
-                    durations = merged.get("stay_duration")
-                    if not isinstance(durations, list):
-                        durations = []
-                    if not any(isinstance(d, dict) and self._match_constraint_text(d.get("location", ""), loc) for d in durations):
-                        durations.append({"location": loc, "min_minutes": min_minutes})
-                    merged["stay_duration"] = durations
-                if earliest or latest or end_after or end_before:
-                    windows = merged.get("activity_time_windows")
-                    if not isinstance(windows, list):
-                        windows = []
-                    if not any(isinstance(w, dict) and self._match_constraint_text(w.get("location", ""), loc) for w in windows):
-                        windows.append({
-                            "location": loc,
-                            "earliest": earliest,
-                            "latest": latest,
-                            "end_after": end_after,
-                            "end_before": end_before,
-                        })
-                    merged["activity_time_windows"] = windows
-
-        merged["budgets"] = budgets
-        return merged
 
     def _resolve_required_names(self, raw_required, candidate_names):
         if not isinstance(raw_required, list) or len(raw_required) == 0:
@@ -553,7 +391,7 @@ class TPCAgent(BaseAgent):
         for variant in variants:
             if solved or out_of_budget():
                 break
-            constraints = self._augment_constraints_from_hard_logic(query, variant or {})
+            constraints = deepcopy(variant or {})
             check = self._make_checker(query, constraints)
             try:
                 if consider(self._build_plan(query, constraints=constraints), constraints, check, {}):
@@ -561,6 +399,22 @@ class TPCAgent(BaseAgent):
             except Exception:
                 import traceback
                 traceback.print_exc()
+
+            if os.environ.get("TPC_USE_CP_SOLVER", "1") != "0" and not out_of_budget():
+                try:
+                    from agent.tpc_agent.cp_solver import solve_with_cp_sat
+
+                    elapsed = time.time() - self.start_clock
+                    remaining = max(1.0, self.solve_budget_sec - elapsed)
+                    default_limit = min(30.0, remaining / 2.0)
+                    cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
+                    cp_limit = max(1.0, min(cp_limit, remaining))
+                    cp_plan = solve_with_cp_sat(self, query, constraints, check, cp_limit)
+                    if cp_plan is not None and consider(cp_plan, constraints, check, {"solver": "cp_sat"}):
+                        solved = True
+                        break
+                except Exception:
+                    pass
 
             for params in self._repair_params(constraints):
                 if out_of_budget():
