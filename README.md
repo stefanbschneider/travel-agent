@@ -51,6 +51,10 @@ Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`
 `TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
 checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
 `scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
+`scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
+against budget/time constraints) to show where more attractions can be packed safely.
+`eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the leaderboard formula,
+which doubles EPR-micro) and `overall_official` (the documented 10% EPR-micro + 10% EPR-macro).
 
 **Notes:**
 

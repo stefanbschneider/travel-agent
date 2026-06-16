@@ -61,14 +61,12 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Saifert Hotel (Chongqing North Railway Station)",
-                    "start_time": "20:03",
-                    "end_time": "24:00",
-                    "price": 105.0,
-                    "cost": 315.0,
-                    "rooms": 3,
-                    "room_type": 1,
+                    "type": "attraction",
+                    "position": "Hongya Cave",
+                    "start_time": "19:59",
+                    "end_time": "21:29",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -83,21 +81,65 @@
                         },
                         {
                             "start": "Jiangbeicheng-Metro Station",
-                            "end": "Shiziping-Metro Station",
+                            "end": "Chaotianmen-Metro Station",
                             "mode": "metro",
                             "start_time": "19:53",
-                            "end_time": "20:00",
-                            "distance": 3.59,
+                            "end_time": "19:56",
+                            "distance": 1.82,
                             "price": 2,
                             "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Chaotianmen-Metro Station",
+                            "end": "Hongya Cave",
+                            "mode": "walk",
+                            "start_time": "19:56",
+                            "end_time": "19:59",
+                            "distance": 0.32,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Saifert Hotel (Chongqing North Railway Station)",
+                    "start_time": "21:45",
+                    "end_time": "24:00",
+                    "price": 105.0,
+                    "cost": 315.0,
+                    "rooms": 3,
+                    "room_type": 1,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Hongya Cave",
+                            "end": "Chaotianmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "21:29",
+                            "end_time": "21:32",
+                            "distance": 0.32,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chaotianmen-Metro Station",
+                            "end": "Shiziping-Metro Station",
+                            "mode": "metro",
+                            "start_time": "21:32",
+                            "end_time": "21:42",
+                            "distance": 5.36,
+                            "price": 3,
+                            "cost": 9,
                             "tickets": 3
                         },
                         {
                             "start": "Shiziping-Metro Station",
                             "end": "Saifert Hotel (Chongqing North Railway Station)",
                             "mode": "walk",
-                            "start_time": "20:00",
-                            "end_time": "20:03",
+                            "start_time": "21:42",
+                            "end_time": "21:45",
                             "distance": 0.29,
                             "price": 0,
                             "cost": 0
@@ -166,5 +208,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.2820219993591309
+    "elapsed_time(sec)": 1.0609910488128662
 }

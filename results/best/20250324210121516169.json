@@ -61,14 +61,12 @@
           ]
         },
         {
-          "type": "accommodation",
-          "position": "Mumian Beijing Daxing International Airport",
-          "start_time": "14:12",
-          "end_time": "24:00",
-          "price": 729.0,
-          "cost": 2916.0,
-          "rooms": 4,
-          "room_type": 1,
+          "type": "attraction",
+          "position": "National Museum of China",
+          "start_time": "12:43",
+          "end_time": "14:13",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -83,21 +81,107 @@
             },
             {
               "start": "National Art Museum of China-Metro Station",
-              "end": "Daxing Airport-Metro Station",
+              "end": "Wangfujing-Metro Station",
               "mode": "metro",
               "start_time": "12:35",
-              "end_time": "14:06",
-              "distance": 45.78,
-              "price": 8,
-              "cost": 32,
+              "end_time": "12:38",
+              "distance": 1.74,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Wangfujing-Metro Station",
+              "end": "National Museum of China",
+              "mode": "walk",
+              "start_time": "12:38",
+              "end_time": "12:43",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Old Summer Palace",
+          "start_time": "15:06",
+          "end_time": "16:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "National Museum of China",
+              "end": "Wangfujing-Metro Station",
+              "mode": "walk",
+              "start_time": "14:13",
+              "end_time": "14:18",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangfujing-Metro Station",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "metro",
+              "start_time": "14:18",
+              "end_time": "14:44",
+              "distance": 13.36,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Old Summer Palace",
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "15:06",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Mumian Beijing Daxing International Airport",
+          "start_time": "18:53",
+          "end_time": "24:00",
+          "price": 729.0,
+          "cost": 2916.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Old Summer Palace",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "walk",
+              "start_time": "16:36",
+              "end_time": "16:58",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:58",
+              "end_time": "18:47",
+              "distance": 54.98,
+              "price": 9,
+              "cost": 36,
               "tickets": 4
             },
             {
               "start": "Daxing Airport-Metro Station",
               "end": "Mumian Beijing Daxing International Airport",
               "mode": "walk",
-              "start_time": "14:06",
-              "end_time": "14:12",
+              "start_time": "18:47",
+              "end_time": "18:53",
               "distance": 0.58,
               "price": 0,
               "cost": 0
@@ -121,9 +205,9 @@
         },
         {
           "type": "attraction",
-          "position": "Old Summer Palace",
-          "start_time": "10:47",
-          "end_time": "12:17",
+          "position": "Olympic Park",
+          "start_time": "10:33",
+          "end_time": "12:03",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -140,22 +224,64 @@
             },
             {
               "start": "Daxing Airport-Metro Station",
-              "end": "Old Summer Palace-Metro Station",
+              "end": "Olympic Park-Metro Station",
               "mode": "metro",
               "start_time": "08:36",
               "end_time": "10:25",
-              "distance": 54.98,
+              "distance": 54.54,
               "price": 9,
               "cost": 36,
               "tickets": 4
             },
             {
-              "start": "Old Summer Palace-Metro Station",
-              "end": "Old Summer Palace",
+              "start": "Olympic Park-Metro Station",
+              "end": "Olympic Park",
               "mode": "walk",
               "start_time": "10:25",
-              "end_time": "10:47",
-              "distance": 1.84,
+              "end_time": "10:33",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Tiananmen Square",
+          "start_time": "12:36",
+          "end_time": "14:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Olympic Park",
+              "end": "Olympic Park-Metro Station",
+              "mode": "walk",
+              "start_time": "12:03",
+              "end_time": "12:11",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Olympic Park-Metro Station",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "metro",
+              "start_time": "12:11",
+              "end_time": "12:32",
+              "distance": 10.52,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Tiananmen Square",
+              "mode": "walk",
+              "start_time": "12:32",
+              "end_time": "12:36",
+              "distance": 0.36,
               "price": 0,
               "cost": 0
             }
@@ -172,32 +298,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Old Summer Palace",
-              "end": "Old Summer Palace-Metro Station",
+              "start": "Tiananmen Square",
+              "end": "Tiananmen East-Metro Station",
               "mode": "walk",
-              "start_time": "12:17",
-              "end_time": "12:39",
-              "distance": 1.84,
+              "start_time": "14:06",
+              "end_time": "14:10",
+              "distance": 0.36,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Old Summer Palace-Metro Station",
+              "start": "Tiananmen East-Metro Station",
               "end": "Daxing Airport-Metro Station",
               "mode": "metro",
-              "start_time": "12:39",
-              "end_time": "14:28",
-              "distance": 54.98,
-              "price": 9,
-              "cost": 36,
+              "start_time": "14:10",
+              "end_time": "15:38",
+              "distance": 44.03,
+              "price": 8,
+              "cost": 32,
               "tickets": 4
             },
             {
               "start": "Daxing Airport-Metro Station",
               "end": "Beijing Daxing International Airport",
               "mode": "walk",
-              "start_time": "14:28",
-              "end_time": "14:39",
+              "start_time": "15:38",
+              "end_time": "15:49",
               "distance": 0.93,
               "price": 0,
               "cost": 0
@@ -208,6 +334,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 1.68068528175354,
-  "_eval_score": 87.08333333333334
+  "elapsed_time(sec)": 2.4651782512664795,
+  "_eval_score": 90.77465986394557
 }

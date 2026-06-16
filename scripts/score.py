@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ORDER = [("Overall", "overall"), ("FPR", "FPR"), ("C-LPR", "C-LPR"),
+ORDER = [("Overall", "overall"), ("Overall (official)", "overall_official"), ("FPR", "FPR"), ("C-LPR", "C-LPR"),
          ("MicEPR", "MicEPR"), ("MacEPR", "MacEPR"),
          ("DAV", "DAV"), ("ATT", "ATT"), ("DDR", "DDR")]
 

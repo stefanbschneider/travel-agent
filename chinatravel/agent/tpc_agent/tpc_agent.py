@@ -1227,6 +1227,11 @@ class TPCAgent(BaseAgent):
 
         for day_num in range(1, days + 1):
             activities = []
+            # Per-day extra-attraction budget shared across the morning/afternoon/evening fills.
+            # max(0, attr_per_day-2) is 0 at the base attr_per_day=2, so the accepted-plan search
+            # is byte-identical to pre-refactor; enrichment only engages for attr_per_day>=3.
+            extra_budget = max(0, int(params.get("attr_per_day", 2)) - 2)
+            extra_used = 0
 
             if day_num == 1:
                 # === DAY 1: Arrive + activities + hotel ===
@@ -1319,6 +1324,14 @@ class TPCAgent(BaseAgent):
                                 current_time = attr_end
                                 current_pos = attr_name
 
+                # Afternoon fill before dinner.
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "16:30", latest_end="18:00")
+                extra_used += _added
+
                 # Dinner (start between 17:00-19:00)
                 if time_before(current_time, "19:00") and dinner_idx < len(dinner_restaurants):
                     restaurant, new_dinner_idx = self._pick_restaurant(
@@ -1357,6 +1370,14 @@ class TPCAgent(BaseAgent):
                         if added:
                             current_time = dinner_end
                             current_pos = rest_name
+
+                # Evening fill after dinner (only late-open attractions qualify).
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "21:00")
+                extra_used += _added
 
                 # Accommodation
                 transports, travel_end = self._get_transport(
@@ -1455,6 +1476,20 @@ class TPCAgent(BaseAgent):
                                 if added:
                                     current_time = attr_end
                                     current_pos = attr_name
+
+                # Morning fill before departure (return-guarded so we never miss the train/flight).
+                if return_transport is not None:
+                    _dep_t = return_transport["BeginTime"]
+                    _dep_p = return_transport["From"]
+                    def _return_ok(name, end, _p=_dep_p, _t=_dep_t):
+                        _, _arr = self._get_transport(env, target_city, name, _p, end, people)
+                        return _arr is not None and time_to_minutes(_arr) <= time_to_minutes(_t)
+                    attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                        activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                        people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                        required_attractions, required_attraction_types,
+                        extra_budget - extra_used, "13:00", return_guard=_return_ok)
+                    extra_used += _added
 
                 # Lunch before departure if time allows
                 if return_transport is not None and lunch_idx < len(lunch_restaurants):
@@ -1582,6 +1617,14 @@ class TPCAgent(BaseAgent):
                                 current_time = attr_end
                                 current_pos = attr_name
 
+                # Morning fill before lunch.
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "11:30", latest_end="13:00")
+                extra_used += _added
+
                 # Lunch
                 if lunch_idx < len(lunch_restaurants) and time_before(current_time, "13:00"):
                     restaurant, new_lunch_idx = self._pick_restaurant(
@@ -1658,37 +1701,13 @@ class TPCAgent(BaseAgent):
                                 current_time = attr_end
                                 current_pos = attr_name
 
-                # Extra attractions (attr_per_day > 2): pack more sightseeing before dinner while time allows.
-                _extra_target = max(0, int(params.get("attr_per_day", 2)) - 2)
-                _extra_added = 0
-                while (_extra_added < _extra_target and attr_idx < len(good_attrs)
-                       and time_before(current_time, "16:00")):
-                    est_start = add_minutes(current_time, 20)
-                    est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
-                    attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
-                    if attr is None:
-                        break
-                    attr_name = str(attr["name"])
-                    transports, travel_end = self._get_transport(
-                        env, target_city, current_pos, attr_name, current_time, people)
-                    if transports is not None:
-                        attr_start = travel_end
-                    else:
-                        transports = []
-                        attr_start = current_time
-                    attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
-                    if not (is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
-                            attr_name, attr_start, timing_constraints, [current_pos])):
-                        break
-                    attr_act = self._make_attraction_activity(attr, people, attr_start, attr_end, transports)
-                    added = self._append_activity(
-                        activities, attr_act, budget_limits, budget_tracker,
-                        force=self._is_required_attraction(attr, required_attractions, required_attraction_types))
-                    if not added:
-                        break
-                    current_time = attr_end
-                    current_pos = attr_name
-                    _extra_added += 1
+                # Afternoon fill before dinner.
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "16:30", latest_end="18:00")
+                extra_used += _added
 
                 # Dinner
                 if dinner_idx < len(dinner_restaurants) and time_before(current_time, "19:00"):
@@ -1727,6 +1746,14 @@ class TPCAgent(BaseAgent):
                         if added:
                             current_time = dinner_end
                             current_pos = rest_name
+
+                # Evening fill after dinner (only late-open attractions qualify).
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "21:00")
+                extra_used += _added
 
                 # Accommodation
                 transports, travel_end = self._get_transport(
@@ -1821,6 +1848,50 @@ class TPCAgent(BaseAgent):
                 return attr, idx + 1
             idx += 1
         return None, attr_idx
+
+    def _fill_extra_attractions(self, activities, env, target_city, good_attrs, attr_idx,
+                                current_pos, current_time, people, params, constraints,
+                                budget_limits, budget_tracker, timing_constraints,
+                                required_attractions, required_attraction_types,
+                                target_count, until_time, return_guard=None, latest_end=None):
+        """Greedily append open attractions until `target_count` are added or `current_time`
+        reaches `until_time` (or the pool/feasibility runs out). Fills idle daytime slots to lift
+        DAV. Each add already respects opening hours, per-activity timing and budget; FPR cannot
+        regress because _solve keeps only accepted plans and the eval merge adopts a plan only when
+        its full weighted score beats the stored best. Returns (attr_idx, current_time, current_pos, added)."""
+        added = 0
+        while (added < target_count and attr_idx < len(good_attrs)
+               and time_before(current_time, until_time)):
+            est_start = add_minutes(current_time, 20)
+            est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
+            attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
+            if attr is None:
+                break
+            attr_name = str(attr["name"])
+            transports, travel_end = self._get_transport(
+                env, target_city, current_pos, attr_name, current_time, people)
+            if transports is not None:
+                attr_start = travel_end
+            else:
+                transports = []
+                attr_start = current_time
+            attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
+            if latest_end is not None and not time_before(attr_end, latest_end):
+                break
+            if not (is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                    attr_name, attr_start, timing_constraints, [current_pos])):
+                break
+            if return_guard is not None and not return_guard(attr_name, attr_end):
+                break
+            attr_act = self._make_attraction_activity(attr, people, attr_start, attr_end, transports)
+            if not self._append_activity(
+                    activities, attr_act, budget_limits, budget_tracker,
+                    force=self._is_required_attraction(attr, required_attractions, required_attraction_types)):
+                break
+            current_time = attr_end
+            current_pos = attr_name
+            added += 1
+        return attr_idx, current_time, current_pos, added
 
     def _get_transport(self, env, city, from_pos, to_pos, start_time, people):
         """Get taxi transport between two positions. Returns (transports_list, arrival_time) or (None, None)."""

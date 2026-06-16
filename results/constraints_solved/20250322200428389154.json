@@ -61,15 +61,13 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Great Wall Hotel",
-                    "start_time": "20:14",
-                    "end_time": "24:00",
-                    "price": 339.0,
-                    "cost": 339.0,
-                    "rooms": 1,
-                    "room_type": 2,
-                    "tickets": 1,
+                    "type": "attraction",
+                    "position": "Hongya Cave",
+                    "start_time": "19:59",
+                    "end_time": "21:29",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
                     "transports": [
                         {
                             "start": "Chongqing Regent Hotel · Robbins Steakhouse",
@@ -83,11 +81,55 @@
                         },
                         {
                             "start": "Jiangbeicheng-Metro Station",
-                            "end": "Yuanjiagang-Metro Station",
+                            "end": "Chaotianmen-Metro Station",
                             "mode": "metro",
                             "start_time": "19:53",
-                            "end_time": "20:08",
-                            "distance": 7.69,
+                            "end_time": "19:56",
+                            "distance": 1.82,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Chaotianmen-Metro Station",
+                            "end": "Hongya Cave",
+                            "mode": "walk",
+                            "start_time": "19:56",
+                            "end_time": "19:59",
+                            "distance": 0.32,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Great Wall Hotel",
+                    "start_time": "21:54",
+                    "end_time": "24:00",
+                    "price": 339.0,
+                    "cost": 339.0,
+                    "rooms": 1,
+                    "room_type": 2,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Hongya Cave",
+                            "end": "Chaotianmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "21:29",
+                            "end_time": "21:32",
+                            "distance": 0.32,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Chaotianmen-Metro Station",
+                            "end": "Yuanjiagang-Metro Station",
+                            "mode": "metro",
+                            "start_time": "21:32",
+                            "end_time": "21:48",
+                            "distance": 8.26,
                             "price": 3,
                             "cost": 6,
                             "tickets": 2
@@ -96,8 +138,8 @@
                             "start": "Yuanjiagang-Metro Station",
                             "end": "Great Wall Hotel",
                             "mode": "walk",
-                            "start_time": "20:08",
-                            "end_time": "20:14",
+                            "start_time": "21:48",
+                            "end_time": "21:54",
                             "distance": 0.53,
                             "price": 0,
                             "cost": 0
@@ -166,5 +208,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.3063440322875977
+    "elapsed_time(sec)": 1.0705029964447021
 }
