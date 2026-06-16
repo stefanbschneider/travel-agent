@@ -103,12 +103,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Five Percent Villa Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 298.0,
-                    "cost": 298.0,
+                    "type": "attraction",
+                    "position": "Hubei Provincial Museum",
+                    "start_time": "14:56",
+                    "end_time": "16:26",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -123,21 +123,63 @@
                         },
                         {
                             "start": "Tanhualin Wushengmen-Metro Station",
-                            "end": "Jianghan Road-Metro Station",
+                            "end": "Hubei Provincial Museum Hubei Daily-Metro Station",
                             "mode": "metro",
                             "start_time": "14:37",
-                            "end_time": "14:43",
-                            "distance": 3.08,
-                            "price": 2,
-                            "cost": 2,
+                            "end_time": "14:48",
+                            "distance": 5.88,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                            "end": "Hubei Provincial Museum",
+                            "mode": "walk",
+                            "start_time": "14:48",
+                            "end_time": "14:56",
+                            "distance": 0.71,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Five Percent Villa Restaurant",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 298.0,
+                    "cost": 298.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Hubei Provincial Museum",
+                            "end": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:26",
+                            "end_time": "16:34",
+                            "distance": 0.71,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                            "end": "Jianghan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:34",
+                            "end_time": "16:48",
+                            "distance": 7.19,
+                            "price": 3,
+                            "cost": 3,
                             "tickets": 1
                         },
                         {
                             "start": "Jianghan Road-Metro Station",
                             "end": "Five Percent Villa Restaurant",
                             "mode": "walk",
-                            "start_time": "14:43",
-                            "end_time": "14:52",
+                            "start_time": "16:48",
+                            "end_time": "16:57",
                             "distance": 0.76,
                             "price": 0,
                             "cost": 0
@@ -145,14 +187,12 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
-                    "start_time": "18:55",
-                    "end_time": "24:00",
-                    "price": 442.0,
-                    "cost": 442.0,
-                    "rooms": 1,
-                    "room_type": 2,
+                    "type": "attraction",
+                    "position": "East Lake",
+                    "start_time": "19:30",
+                    "end_time": "21:00",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -167,21 +207,65 @@
                         },
                         {
                             "start": "Jianghan Road-Metro Station",
-                            "end": "Tianhe Airport-Metro Station",
+                            "end": "Wudong-Metro Station",
                             "mode": "metro",
                             "start_time": "18:09",
-                            "end_time": "18:53",
-                            "distance": 22.39,
-                            "price": 6,
-                            "cost": 6,
+                            "end_time": "18:40",
+                            "distance": 15.81,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Wudong-Metro Station",
+                            "end": "East Lake",
+                            "mode": "walk",
+                            "start_time": "18:40",
+                            "end_time": "19:30",
+                            "distance": 4.23,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                    "start_time": "22:54",
+                    "end_time": "24:00",
+                    "price": 442.0,
+                    "cost": 442.0,
+                    "rooms": 1,
+                    "room_type": 2,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "East Lake",
+                            "end": "Wudong-Metro Station",
+                            "mode": "walk",
+                            "start_time": "21:00",
+                            "end_time": "21:50",
+                            "distance": 4.23,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wudong-Metro Station",
+                            "end": "Tianhe Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "21:50",
+                            "end_time": "22:52",
+                            "distance": 31.39,
+                            "price": 7,
+                            "cost": 7,
                             "tickets": 1
                         },
                         {
                             "start": "Tianhe Airport-Metro Station",
                             "end": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
                             "mode": "walk",
-                            "start_time": "18:53",
-                            "end_time": "18:55",
+                            "start_time": "22:52",
+                            "end_time": "22:54",
                             "distance": 0.2,
                             "price": 0,
                             "cost": 0
@@ -192,233 +276,6 @@
         },
         {
             "day": 2,
-            "activities": [
-                {
-                    "type": "breakfast",
-                    "position": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
-                    "start_time": "07:30",
-                    "end_time": "08:30",
-                    "price": 0,
-                    "cost": 0,
-                    "tickets": 0,
-                    "transports": []
-                },
-                {
-                    "type": "attraction",
-                    "position": "Hankou Riverside Park",
-                    "start_time": "09:22",
-                    "end_time": "10:52",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
-                            "end": "Tianhe Airport-Metro Station",
-                            "mode": "walk",
-                            "start_time": "08:30",
-                            "end_time": "08:32",
-                            "distance": 0.2,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Tianhe Airport-Metro Station",
-                            "end": "Toudao Street-Metro Station",
-                            "mode": "metro",
-                            "start_time": "08:32",
-                            "end_time": "09:10",
-                            "distance": 19.34,
-                            "price": 5,
-                            "cost": 5,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Toudao Street-Metro Station",
-                            "end": "Hankou Riverside Park",
-                            "mode": "walk",
-                            "start_time": "09:10",
-                            "end_time": "09:22",
-                            "distance": 1.04,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "lunch",
-                    "position": "Green Grain Restaurant (East Lake Branch)",
-                    "start_time": "11:33",
-                    "end_time": "12:33",
-                    "price": 306.0,
-                    "cost": 306.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Hankou Riverside Park",
-                            "end": "Toudao Street-Metro Station",
-                            "mode": "walk",
-                            "start_time": "10:52",
-                            "end_time": "11:04",
-                            "distance": 1.04,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Toudao Street-Metro Station",
-                            "end": "Tieji Road-Metro Station",
-                            "mode": "metro",
-                            "start_time": "11:04",
-                            "end_time": "11:16",
-                            "distance": 6.48,
-                            "price": 3,
-                            "cost": 3,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Tieji Road-Metro Station",
-                            "end": "Green Grain Restaurant (East Lake Branch)",
-                            "mode": "walk",
-                            "start_time": "11:16",
-                            "end_time": "11:33",
-                            "distance": 1.47,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "East Lake",
-                    "start_time": "13:56",
-                    "end_time": "15:26",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Green Grain Restaurant (East Lake Branch)",
-                            "end": "Tieji Road-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:33",
-                            "end_time": "12:50",
-                            "distance": 1.47,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Tieji Road-Metro Station",
-                            "end": "Wudong-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:50",
-                            "end_time": "13:06",
-                            "distance": 8.49,
-                            "price": 3,
-                            "cost": 3,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Wudong-Metro Station",
-                            "end": "East Lake",
-                            "mode": "walk",
-                            "start_time": "13:06",
-                            "end_time": "13:56",
-                            "distance": 4.23,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "dinner",
-                    "position": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 218.0,
-                    "cost": 218.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "East Lake",
-                            "end": "Wudong-Metro Station",
-                            "mode": "walk",
-                            "start_time": "15:26",
-                            "end_time": "16:16",
-                            "distance": 4.23,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Wudong-Metro Station",
-                            "end": "Huashan New Town-Metro Station",
-                            "mode": "metro",
-                            "start_time": "16:16",
-                            "end_time": "16:26",
-                            "distance": 5.23,
-                            "price": 3,
-                            "cost": 3,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Huashan New Town-Metro Station",
-                            "end": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
-                            "mode": "walk",
-                            "start_time": "16:26",
-                            "end_time": "16:42",
-                            "distance": 1.36,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "accommodation",
-                    "position": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
-                    "start_time": "19:31",
-                    "end_time": "24:00",
-                    "price": 442.0,
-                    "cost": 442.0,
-                    "rooms": 1,
-                    "room_type": 2,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
-                            "end": "Huashan New Town-Metro Station",
-                            "mode": "walk",
-                            "start_time": "18:00",
-                            "end_time": "18:16",
-                            "distance": 1.36,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Huashan New Town-Metro Station",
-                            "end": "Tianhe Airport-Metro Station",
-                            "mode": "metro",
-                            "start_time": "18:16",
-                            "end_time": "19:29",
-                            "distance": 36.51,
-                            "price": 7,
-                            "cost": 7,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Tianhe Airport-Metro Station",
-                            "end": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
-                            "mode": "walk",
-                            "start_time": "19:29",
-                            "end_time": "19:31",
-                            "distance": 0.2,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "day": 3,
             "activities": [
                 {
                     "type": "breakfast",
@@ -474,11 +331,11 @@
                 },
                 {
                     "type": "lunch",
-                    "position": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
-                    "start_time": "11:58",
-                    "end_time": "12:58",
-                    "price": 297.0,
-                    "cost": 297.0,
+                    "position": "Green Grain Restaurant (East Lake Branch)",
+                    "start_time": "12:07",
+                    "end_time": "13:07",
+                    "price": 306.0,
+                    "cost": 306.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -493,21 +350,290 @@
                         },
                         {
                             "start": "Zhongnan Hospital-Metro Station",
-                            "end": "Sanjiao Road-Metro Station",
+                            "end": "Tieji Road-Metro Station",
                             "mode": "metro",
                             "start_time": "11:44",
-                            "end_time": "11:52",
-                            "distance": 4.09,
+                            "end_time": "11:50",
+                            "distance": 3.21,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Tieji Road-Metro Station",
+                            "end": "Green Grain Restaurant (East Lake Branch)",
+                            "mode": "walk",
+                            "start_time": "11:50",
+                            "end_time": "12:07",
+                            "distance": 1.47,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Wuhan Yangtze River Bridge",
+                    "start_time": "13:48",
+                    "end_time": "15:18",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Green Grain Restaurant (East Lake Branch)",
+                            "end": "Tieji Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:07",
+                            "end_time": "13:24",
+                            "distance": 1.47,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tieji Road-Metro Station",
+                            "end": "Tanhualin Wushengmen-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:24",
+                            "end_time": "13:37",
+                            "distance": 6.93,
                             "price": 3,
                             "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Tanhualin Wushengmen-Metro Station",
+                            "end": "Wuhan Yangtze River Bridge",
+                            "mode": "walk",
+                            "start_time": "13:37",
+                            "end_time": "13:48",
+                            "distance": 1.0,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Jianghan Road Pedestrian Street",
+                    "start_time": "15:41",
+                    "end_time": "17:11",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Wuhan Yangtze River Bridge",
+                            "end": "Tanhualin Wushengmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:18",
+                            "end_time": "15:29",
+                            "distance": 1.0,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tanhualin Wushengmen-Metro Station",
+                            "end": "Dazhi Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:29",
+                            "end_time": "15:37",
+                            "distance": 4.37,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Dazhi Road-Metro Station",
+                            "end": "Jianghan Road Pedestrian Street",
+                            "mode": "walk",
+                            "start_time": "15:37",
+                            "end_time": "15:41",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+                    "start_time": "18:11",
+                    "end_time": "19:11",
+                    "price": 218.0,
+                    "cost": 218.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Jianghan Road Pedestrian Street",
+                            "end": "Dazhi Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:11",
+                            "end_time": "17:15",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dazhi Road-Metro Station",
+                            "end": "Huashan New Town-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:15",
+                            "end_time": "17:55",
+                            "distance": 20.5,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Huashan New Town-Metro Station",
+                            "end": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+                            "mode": "walk",
+                            "start_time": "17:55",
+                            "end_time": "18:11",
+                            "distance": 1.36,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Tanhualin",
+                    "start_time": "20:07",
+                    "end_time": "21:37",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+                            "end": "Huashan New Town-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:11",
+                            "end_time": "19:27",
+                            "distance": 1.36,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Huashan New Town-Metro Station",
+                            "end": "Pangxiejia-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:27",
+                            "end_time": "20:02",
+                            "distance": 17.91,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Pangxiejia-Metro Station",
+                            "end": "Tanhualin",
+                            "mode": "walk",
+                            "start_time": "20:02",
+                            "end_time": "20:07",
+                            "distance": 0.5,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                    "start_time": "22:35",
+                    "end_time": "24:00",
+                    "price": 442.0,
+                    "cost": 442.0,
+                    "rooms": 1,
+                    "room_type": 2,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Tanhualin",
+                            "end": "Pangxiejia-Metro Station",
+                            "mode": "walk",
+                            "start_time": "21:37",
+                            "end_time": "21:42",
+                            "distance": 0.5,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Pangxiejia-Metro Station",
+                            "end": "Tianhe Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "21:42",
+                            "end_time": "22:33",
+                            "distance": 25.96,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Tianhe Airport-Metro Station",
+                            "end": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                            "mode": "walk",
+                            "start_time": "22:33",
+                            "end_time": "22:35",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 3,
+            "activities": [
+                {
+                    "type": "breakfast",
+                    "position": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                    "start_time": "07:30",
+                    "end_time": "08:30",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 0,
+                    "transports": []
+                },
+                {
+                    "type": "lunch",
+                    "position": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 297.0,
+                    "cost": 297.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                            "end": "Tianhe Airport-Metro Station",
+                            "mode": "walk",
+                            "start_time": "08:30",
+                            "end_time": "08:32",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tianhe Airport-Metro Station",
+                            "end": "Sanjiao Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:32",
+                            "end_time": "09:18",
+                            "distance": 23.43,
+                            "price": 6,
+                            "cost": 6,
                             "tickets": 1
                         },
                         {
                             "start": "Sanjiao Road-Metro Station",
                             "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
                             "mode": "walk",
-                            "start_time": "11:52",
-                            "end_time": "11:58",
+                            "start_time": "09:18",
+                            "end_time": "09:24",
                             "distance": 0.58,
                             "price": 0,
                             "cost": 0
@@ -528,8 +654,8 @@
                             "start": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
                             "end": "Sanjiao Road-Metro Station",
                             "mode": "walk",
-                            "start_time": "12:58",
-                            "end_time": "13:04",
+                            "start_time": "12:00",
+                            "end_time": "12:06",
                             "distance": 0.58,
                             "price": 0,
                             "cost": 0
@@ -538,8 +664,8 @@
                             "start": "Sanjiao Road-Metro Station",
                             "end": "Tianhe Airport-Metro Station",
                             "mode": "metro",
-                            "start_time": "13:04",
-                            "end_time": "13:50",
+                            "start_time": "12:06",
+                            "end_time": "12:52",
                             "distance": 23.43,
                             "price": 6,
                             "cost": 6,
@@ -549,8 +675,8 @@
                             "start": "Tianhe Airport-Metro Station",
                             "end": "Wuhan Tianhe International Airport",
                             "mode": "walk",
-                            "start_time": "13:50",
-                            "end_time": "13:56",
+                            "start_time": "12:52",
+                            "end_time": "12:58",
                             "distance": 0.55,
                             "price": 0,
                             "cost": 0
@@ -561,5 +687,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.741325855255127
+    "elapsed_time(sec)": 3.1892831325531006
 }

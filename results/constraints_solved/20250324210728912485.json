@@ -19,15 +19,13 @@
                     "TrainID": "D2214"
                 },
                 {
-                    "type": "accommodation",
-                    "position": "New City Grand Rezen Hotel",
-                    "start_time": "18:56",
-                    "end_time": "24:00",
-                    "price": 612.0,
-                    "cost": 1224.0,
-                    "rooms": 2,
-                    "room_type": 2,
-                    "tickets": 2,
+                    "type": "attraction",
+                    "position": "Shantang Street",
+                    "start_time": "18:51",
+                    "end_time": "20:21",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
                     "transports": [
                         {
                             "start": "Suzhou Station",
@@ -41,11 +39,97 @@
                         },
                         {
                             "start": "Suzhou Railway Station-Metro Station",
-                            "end": "Shajinqiao-Metro Station",
+                            "end": "Shantang Street-Metro Station",
                             "mode": "metro",
                             "start_time": "18:40",
+                            "end_time": "18:42",
+                            "distance": 1.48,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Shantang Street",
+                            "mode": "walk",
+                            "start_time": "18:42",
                             "end_time": "18:51",
-                            "distance": 5.96,
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Pingjiang Road Historic District",
+                    "start_time": "20:50",
+                    "end_time": "22:20",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Shantang Street",
+                            "end": "Shantang Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "20:21",
+                            "end_time": "20:30",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Xiangmen-Metro Station",
+                            "mode": "metro",
+                            "start_time": "20:30",
+                            "end_time": "20:37",
+                            "distance": 3.68,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Xiangmen-Metro Station",
+                            "end": "Pingjiang Road Historic District",
+                            "mode": "walk",
+                            "start_time": "20:37",
+                            "end_time": "20:50",
+                            "distance": 1.14,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "New City Grand Rezen Hotel",
+                    "start_time": "22:51",
+                    "end_time": "24:00",
+                    "price": 612.0,
+                    "cost": 1224.0,
+                    "rooms": 2,
+                    "room_type": 2,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Pingjiang Road Historic District",
+                            "end": "Xiangmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "22:20",
+                            "end_time": "22:33",
+                            "distance": 1.14,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xiangmen-Metro Station",
+                            "end": "Shajinqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "22:33",
+                            "end_time": "22:46",
+                            "distance": 6.95,
                             "price": 3,
                             "cost": 9,
                             "tickets": 3
@@ -54,8 +138,8 @@
                             "start": "Shajinqiao-Metro Station",
                             "end": "New City Grand Rezen Hotel",
                             "mode": "walk",
-                            "start_time": "18:51",
-                            "end_time": "18:56",
+                            "start_time": "22:46",
+                            "end_time": "22:51",
                             "distance": 0.45,
                             "price": 0,
                             "cost": 0
@@ -124,5 +208,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.7974917888641357
+    "elapsed_time(sec)": 0.8226227760314941
 }

@@ -21,44 +21,126 @@
         {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:23",
-          "end_time": "12:23",
+          "start_time": "11:55",
+          "end_time": "12:55",
           "price": 600.0,
           "cost": 600.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Shanghai Pudong International Airport",
-              "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
               "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
-              "cars": 1
+              "end_time": "10:46",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:46",
+              "end_time": "11:52",
+              "distance": 33.42,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "walk",
+              "start_time": "11:52",
+              "end_time": "11:55",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "The Bund",
-          "start_time": "12:29",
-          "end_time": "13:59",
+          "start_time": "13:14",
+          "end_time": "14:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Yong Fu (Huangpu Branch)",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:55",
+              "end_time": "12:58",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
+              "end": "Lujiazui-Metro Station",
+              "mode": "metro",
+              "start_time": "12:58",
+              "end_time": "13:06",
+              "distance": 4.13,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Lujiazui-Metro Station",
               "end": "The Bund",
-              "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:29",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:06",
+              "end_time": "13:14",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "15:02",
+          "end_time": "16:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "14:52",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "metro",
+              "start_time": "14:52",
+              "end_time": "14:54",
+              "distance": 1.37,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Huangpu River",
+              "mode": "walk",
+              "start_time": "14:54",
+              "end_time": "15:02",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -72,22 +154,84 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "The Bund",
+              "start": "Huangpu River",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "16:32",
+              "end_time": "16:40",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:40",
+              "end_time": "16:54",
+              "distance": 7.23,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "13:59",
-              "end_time": "14:09",
-              "distance": 7.0,
-              "price": 29.18,
-              "cost": 29.18,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:54",
+              "end_time": "16:56",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "18:22",
+          "end_time": "19:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:13",
+              "distance": 5.57,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Tiantong Road-Metro Station",
+              "end": "Nanjing Road Pedestrian Street",
+              "mode": "walk",
+              "start_time": "18:13",
+              "end_time": "18:22",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-          "start_time": "18:39",
+          "start_time": "20:48",
           "end_time": "24:00",
           "price": 303.0,
           "cost": 303.0,
@@ -96,15 +240,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Fu He Hui",
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "19:52",
+              "end_time": "20:01",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiantong Road-Metro Station",
+              "end": "Chuansha-Metro Station",
+              "mode": "metro",
+              "start_time": "20:01",
+              "end_time": "20:44",
+              "distance": 21.52,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Chuansha-Metro Station",
               "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:39",
-              "distance": 26.13,
-              "price": 112.28,
-              "cost": 112.28,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:44",
+              "end_time": "20:48",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -125,45 +289,106 @@
         },
         {
           "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "09:00",
-          "end_time": "10:30",
+          "position": "Lujiazui",
+          "start_time": "09:14",
+          "end_time": "10:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "end": "Huangpu River",
-              "mode": "taxi",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:00",
-              "distance": 20.3,
-              "price": 86.03,
-              "cost": 86.03,
-              "cars": 1
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:11",
+              "distance": 18.61,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Lujiazui",
+              "mode": "walk",
+              "start_time": "09:11",
+              "end_time": "09:14",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 203.0,
-          "cost": 203.0,
+          "type": "attraction",
+          "position": "Shanghai Natural History Museum",
+          "start_time": "10:57",
+          "end_time": "12:27",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Huangpu River",
-              "end": "Renhe Hall (Zhaojiabang Road Branch)",
-              "mode": "taxi",
-              "start_time": "10:30",
-              "end_time": "10:39",
-              "distance": 6.14,
-              "price": 26.2,
-              "cost": 26.2,
-              "cars": 1
+              "start": "Lujiazui",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:44",
+              "end_time": "10:47",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:47",
+              "end_time": "10:54",
+              "distance": 3.92,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Shanghai Natural History Museum",
+              "mode": "walk",
+              "start_time": "10:54",
+              "end_time": "10:57",
+              "distance": 0.26,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "12:28",
+          "end_time": "13:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Natural History Museum",
+              "end": "Jing'an Sculpture Park",
+              "mode": "walk",
+              "start_time": "12:27",
+              "end_time": "12:28",
+              "distance": 0.12858341250570846,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -178,15 +403,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "Jing'an Sculpture Park",
+              "end": "Qufu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "13:58",
+              "end_time": "14:00",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "14:00",
+              "end_time": "15:06",
+              "distance": 33.41,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:51",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:06",
+              "end_time": "15:21",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL018"
@@ -194,6 +439,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.04298973083496094,
-  "_eval_score": 93.95748299319729
+  "elapsed_time(sec)": 3.7609381675720215,
+  "_eval_score": 95.23095238095237
 }

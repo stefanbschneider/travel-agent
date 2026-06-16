@@ -61,14 +61,12 @@
           ]
         },
         {
-          "type": "accommodation",
-          "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
-          "start_time": "19:59",
-          "end_time": "24:00",
-          "price": 325.0,
-          "cost": 975.0,
-          "rooms": 3,
-          "room_type": 1,
+          "type": "attraction",
+          "position": "Shantang Street",
+          "start_time": "20:04",
+          "end_time": "21:34",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -83,11 +81,55 @@
             },
             {
               "start": "Lindun Road-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
+              "end": "Shantang Street-Metro Station",
               "mode": "metro",
               "start_time": "19:50",
-              "end_time": "19:56",
-              "distance": 3.03,
+              "end_time": "19:55",
+              "distance": 2.93,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Shantang Street",
+              "mode": "walk",
+              "start_time": "19:55",
+              "end_time": "20:04",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+          "start_time": "21:48",
+          "end_time": "24:00",
+          "price": 325.0,
+          "cost": 975.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shantang Street",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "21:34",
+              "end_time": "21:43",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "21:43",
+              "end_time": "21:45",
+              "distance": 1.48,
               "price": 2,
               "cost": 6,
               "tickets": 3
@@ -96,8 +138,8 @@
               "start": "Suzhou Railway Station-Metro Station",
               "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
               "mode": "walk",
-              "start_time": "19:56",
-              "end_time": "19:59",
+              "start_time": "21:45",
+              "end_time": "21:48",
               "distance": 0.3,
               "price": 0,
               "cost": 0
@@ -145,6 +187,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.1098031997680664,
-  "_eval_score": 91.66666666666666
+  "elapsed_time(sec)": 0.7570240497589111,
+  "_eval_score": 92.29166666666666
 }

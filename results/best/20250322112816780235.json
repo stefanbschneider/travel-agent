@@ -21,44 +21,84 @@
         {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:23",
-          "end_time": "12:23",
+          "start_time": "11:55",
+          "end_time": "12:55",
           "price": 600.0,
           "cost": 1800.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shanghai Pudong International Airport",
-              "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
               "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
-              "cars": 1
+              "end_time": "10:46",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:46",
+              "end_time": "11:52",
+              "distance": 33.42,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "walk",
+              "start_time": "11:52",
+              "end_time": "11:55",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Shanghai Disney Resort",
-          "start_time": "12:55",
-          "end_time": "14:25",
+          "start_time": "13:50",
+          "end_time": "15:20",
           "price": 399.0,
           "cost": 1197.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Yong Fu (Huangpu Branch)",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:55",
+              "end_time": "12:58",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
+              "end": "Disney-Metro Station",
+              "mode": "metro",
+              "start_time": "12:58",
+              "end_time": "13:40",
+              "distance": 21.28,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Disney-Metro Station",
               "end": "Shanghai Disney Resort",
-              "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:55",
-              "distance": 21.64,
-              "price": 92.07,
-              "cost": 92.07,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:40",
+              "end_time": "13:50",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -73,21 +113,83 @@
           "transports": [
             {
               "start": "Shanghai Disney Resort",
+              "end": "Disney-Metro Station",
+              "mode": "walk",
+              "start_time": "15:20",
+              "end_time": "15:30",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Disney-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:30",
+              "end_time": "16:18",
+              "distance": 24.26,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "14:25",
-              "end_time": "15:01",
-              "distance": 24.38,
-              "price": 104.39,
-              "cost": 104.39,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:18",
+              "end_time": "16:20",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Wild Animal Park",
+          "start_time": "19:41",
+          "end_time": "21:11",
+          "price": 165.0,
+          "cost": 495.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
+              "end": "Wildlife Park-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "19:05",
+              "distance": 31.81,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Wildlife Park-Metro Station",
+              "end": "Shanghai Wild Animal Park",
+              "mode": "walk",
+              "start_time": "19:05",
+              "end_time": "19:41",
+              "distance": 3.01,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Da Zhong Airport Hotel",
-          "start_time": "18:55",
+          "start_time": "22:18",
           "end_time": "24:00",
           "price": 540.0,
           "cost": 1080.0,
@@ -96,15 +198,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Fu He Hui",
+              "start": "Shanghai Wild Animal Park",
+              "end": "Wildlife Park-Metro Station",
+              "mode": "walk",
+              "start_time": "21:11",
+              "end_time": "21:47",
+              "distance": 3.01,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wildlife Park-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "21:47",
+              "end_time": "22:17",
+              "distance": 15.08,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Da Zhong Airport Hotel",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:55",
-              "distance": 36.68,
-              "price": 159.76,
-              "cost": 159.76,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "22:17",
+              "end_time": "22:18",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -126,95 +248,259 @@
         {
           "type": "attraction",
           "position": "Shanghai Zoo",
-          "start_time": "09:32",
-          "end_time": "11:02",
+          "start_time": "10:05",
+          "end_time": "11:35",
           "price": 40.0,
           "cost": 120.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Da Zhong Airport Hotel",
-              "end": "Shanghai Zoo",
-              "mode": "taxi",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:32",
-              "distance": 41.98,
-              "price": 183.62,
-              "cost": 183.62,
-              "cars": 1
+              "end_time": "08:31",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Shanghai Zoo-Metro Station",
+              "mode": "metro",
+              "start_time": "08:31",
+              "end_time": "09:54",
+              "distance": 41.93,
+              "price": 8,
+              "cost": 24,
+              "tickets": 3
+            },
+            {
+              "start": "Shanghai Zoo-Metro Station",
+              "end": "Shanghai Zoo",
+              "mode": "walk",
+              "start_time": "09:54",
+              "end_time": "10:05",
+              "distance": 0.94,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "11:14",
-          "end_time": "12:14",
+          "start_time": "12:06",
+          "end_time": "13:06",
           "price": 203.0,
           "cost": 609.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shanghai Zoo",
+              "end": "Shanghai Zoo-Metro Station",
+              "mode": "walk",
+              "start_time": "11:35",
+              "end_time": "11:46",
+              "distance": 0.94,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shanghai Zoo-Metro Station",
+              "end": "Jiashan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "11:46",
+              "end_time": "12:03",
+              "distance": 8.93,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Jiashan Road-Metro Station",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
-              "mode": "taxi",
-              "start_time": "11:02",
-              "end_time": "11:14",
-              "distance": 8.45,
-              "price": 34.29,
-              "cost": 34.29,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:03",
+              "end_time": "12:06",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shanghai Haichang Ocean Park",
-          "start_time": "13:33",
-          "end_time": "15:03",
-          "price": 149.0,
-          "cost": 447.0,
+          "position": "Huangpu River Cruise (Shiliupu Wharf)",
+          "start_time": "13:26",
+          "end_time": "14:56",
+          "price": 108.0,
+          "cost": 324.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Haichang Ocean Park",
-              "mode": "taxi",
-              "start_time": "12:14",
-              "end_time": "13:33",
-              "distance": 53.26,
-              "price": 234.36,
-              "cost": 234.36,
-              "cars": 1
+              "end": "Jiashan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "13:06",
+              "end_time": "13:09",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiashan Road-Metro Station",
+              "end": "Lujiazui-Metro Station",
+              "mode": "metro",
+              "start_time": "13:09",
+              "end_time": "13:20",
+              "distance": 5.57,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Huangpu River Cruise (Shiliupu Wharf)",
+              "mode": "walk",
+              "start_time": "13:20",
+              "end_time": "13:26",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Ocean Aquarium",
+          "start_time": "15:14",
+          "end_time": "16:44",
+          "price": 155.0,
+          "cost": 465.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Huangpu River Cruise (Shiliupu Wharf)",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "14:56",
+              "end_time": "15:02",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Tilanqiao-Metro Station",
+              "mode": "metro",
+              "start_time": "15:02",
+              "end_time": "15:05",
+              "distance": 1.75,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Tilanqiao-Metro Station",
+              "end": "Shanghai Ocean Aquarium",
+              "mode": "walk",
+              "start_time": "15:05",
+              "end_time": "15:14",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Kurogi",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:03",
+          "end_time": "18:03",
           "price": 3312.0,
           "cost": 9936.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Haichang Ocean Park",
+              "start": "Shanghai Ocean Aquarium",
+              "end": "Tilanqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "16:44",
+              "end_time": "16:53",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tilanqiao-Metro Station",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:53",
+              "end_time": "16:58",
+              "distance": 2.57,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Tiantong Road-Metro Station",
               "end": "Kurogi",
-              "mode": "taxi",
-              "start_time": "15:03",
-              "end_time": "16:24",
-              "distance": 54.08,
-              "price": 238.05,
-              "cost": 238.05,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:58",
+              "end_time": "17:03",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Disney Town",
+          "start_time": "18:56",
+          "end_time": "20:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Kurogi",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:03",
+              "end_time": "18:08",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiantong Road-Metro Station",
+              "end": "Disney-Metro Station",
+              "mode": "metro",
+              "start_time": "18:08",
+              "end_time": "18:50",
+              "distance": 21.03,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Disney-Metro Station",
+              "end": "Disney Town",
+              "mode": "walk",
+              "start_time": "18:50",
+              "end_time": "18:56",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Da Zhong Airport Hotel",
-          "start_time": "18:48",
+          "start_time": "20:59",
           "end_time": "24:00",
           "price": 540.0,
           "cost": 1080.0,
@@ -223,15 +509,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Kurogi",
+              "start": "Disney Town",
+              "end": "Disney-Metro Station",
+              "mode": "walk",
+              "start_time": "20:26",
+              "end_time": "20:32",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Disney-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "20:32",
+              "end_time": "20:58",
+              "distance": 13.17,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Da Zhong Airport Hotel",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:48",
-              "distance": 32.17,
-              "price": 139.45,
-              "cost": 139.45,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:58",
+              "end_time": "20:59",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -252,45 +558,85 @@
         },
         {
           "type": "attraction",
-          "position": "Jing'an Sculpture Park",
-          "start_time": "09:20",
-          "end_time": "10:50",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "Shanghai Film Park",
+          "start_time": "11:02",
+          "end_time": "12:32",
+          "price": 69.0,
+          "cost": 207.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Da Zhong Airport Hotel",
-              "end": "Jing'an Sculpture Park",
-              "mode": "taxi",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:20",
-              "distance": 33.55,
-              "price": 145.65,
-              "cost": 145.65,
-              "cars": 1
+              "end_time": "08:31",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Minhang Development Zone-Metro Station",
+              "mode": "metro",
+              "start_time": "08:31",
+              "end_time": "10:00",
+              "distance": 44.81,
+              "price": 8,
+              "cost": 24,
+              "tickets": 3
+            },
+            {
+              "start": "Minhang Development Zone-Metro Station",
+              "end": "Shanghai Film Park",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "11:02",
+              "distance": 5.18,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 498.0,
-          "cost": 1494.0,
+          "type": "attraction",
+          "position": "Shanghai Eternal Love",
+          "start_time": "14:31",
+          "end_time": "16:01",
+          "price": 298.0,
+          "cost": 894.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Jing'an Sculpture Park",
-              "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "mode": "taxi",
-              "start_time": "10:50",
-              "end_time": "10:56",
-              "distance": 4.16,
-              "price": 19.27,
-              "cost": 19.27,
-              "cars": 1
+              "start": "Shanghai Film Park",
+              "end": "Minhang Development Zone-Metro Station",
+              "mode": "walk",
+              "start_time": "12:32",
+              "end_time": "13:34",
+              "distance": 5.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Minhang Development Zone-Metro Station",
+              "end": "China Art Museum-Metro Station",
+              "mode": "metro",
+              "start_time": "13:34",
+              "end_time": "14:21",
+              "distance": 23.64,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "China Art Museum-Metro Station",
+              "end": "Shanghai Eternal Love",
+              "mode": "walk",
+              "start_time": "14:21",
+              "end_time": "14:31",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -305,15 +651,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "start": "Shanghai Eternal Love",
+              "end": "China Art Museum-Metro Station",
+              "mode": "walk",
+              "start_time": "16:01",
+              "end_time": "16:11",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "China Art Museum-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:11",
+              "end_time": "17:10",
+              "distance": 29.98,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:46",
-              "distance": 30.72,
-              "price": 132.93,
-              "cost": 132.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:10",
+              "end_time": "17:25",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL018"
@@ -321,6 +687,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03362298011779785,
-  "_eval_score": 94.0515873015873
+  "elapsed_time(sec)": 5.467473983764648,
+  "_eval_score": 94.23492063492064
 }

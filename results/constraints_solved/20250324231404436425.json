@@ -19,9 +19,31 @@
                     "TrainID": "D637"
                 },
                 {
+                    "type": "attraction",
+                    "position": "Manjushri Lane",
+                    "start_time": "20:51",
+                    "end_time": "22:21",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Chengdu East Railway Station",
+                            "end": "Manjushri Lane",
+                            "mode": "taxi",
+                            "start_time": "20:40",
+                            "end_time": "20:51",
+                            "distance": 7.96,
+                            "price": 32.58,
+                            "cost": 32.58,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
                     "type": "accommodation",
                     "position": "The Longemont Chengdu",
-                    "start_time": "20:40",
+                    "start_time": "22:33",
                     "end_time": "24:00",
                     "price": 588.0,
                     "cost": 1764.0,
@@ -30,14 +52,14 @@
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Chengdu East Railway Station",
+                            "start": "Manjushri Lane",
                             "end": "The Longemont Chengdu",
                             "mode": "taxi",
-                            "start_time": "20:40",
-                            "end_time": "20:40",
-                            "distance": 0.46,
-                            "price": 11.0,
-                            "cost": 11.0,
+                            "start_time": "22:21",
+                            "end_time": "22:33",
+                            "distance": 8.27,
+                            "price": 33.65,
+                            "cost": 33.65,
                             "cars": 1
                         }
                     ]
@@ -59,22 +81,22 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Manjushri Lane",
-                    "start_time": "08:42",
-                    "end_time": "10:12",
+                    "position": "Panda Valley",
+                    "start_time": "10:06",
+                    "end_time": "11:36",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "The Longemont Chengdu",
-                            "end": "Manjushri Lane",
+                            "end": "Panda Valley",
                             "mode": "taxi",
                             "start_time": "08:30",
-                            "end_time": "08:42",
-                            "distance": 8.27,
-                            "price": 33.65,
-                            "cost": 33.65,
+                            "end_time": "10:06",
+                            "distance": 64.47,
+                            "price": 284.8,
+                            "cost": 284.8,
                             "cars": 1
                         }
                     ]
@@ -82,40 +104,18 @@
                 {
                     "type": "lunch",
                     "position": "Crane's Call Tea House (People's Park Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
+                    "start_time": "13:00",
+                    "end_time": "14:00",
                     "price": 45.0,
                     "cost": 135.0,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Manjushri Lane",
+                            "start": "Panda Valley",
                             "end": "Crane's Call Tea House (People's Park Branch)",
                             "mode": "taxi",
-                            "start_time": "10:12",
-                            "end_time": "10:16",
-                            "distance": 3.18,
-                            "price": 15.83,
-                            "cost": 15.83,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Panda Valley",
-                    "start_time": "13:24",
-                    "end_time": "14:54",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Crane's Call Tea House (People's Park Branch)",
-                            "end": "Panda Valley",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "13:24",
+                            "start_time": "11:36",
+                            "end_time": "13:00",
                             "distance": 56.06,
                             "price": 246.96,
                             "cost": 246.96,
@@ -124,23 +124,89 @@
                     ]
                 },
                 {
+                    "type": "attraction",
+                    "position": "Manjushri Temple",
+                    "start_time": "14:05",
+                    "end_time": "15:35",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Crane's Call Tea House (People's Park Branch)",
+                            "end": "Manjushri Temple",
+                            "mode": "taxi",
+                            "start_time": "14:00",
+                            "end_time": "14:05",
+                            "distance": 3.34,
+                            "price": 16.39,
+                            "cost": 16.39,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Kuanzhai Alley",
+                    "start_time": "15:38",
+                    "end_time": "17:08",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Manjushri Temple",
+                            "end": "Kuanzhai Alley",
+                            "mode": "taxi",
+                            "start_time": "15:35",
+                            "end_time": "15:38",
+                            "distance": 2.23,
+                            "price": 12.52,
+                            "cost": 12.52,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
                     "type": "dinner",
                     "position": "Mawangzi (Taikoo Li Branch)",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
+                    "start_time": "17:12",
+                    "end_time": "18:12",
                     "price": 140.0,
                     "cost": 420.0,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Panda Valley",
+                            "start": "Kuanzhai Alley",
                             "end": "Mawangzi (Taikoo Li Branch)",
                             "mode": "taxi",
-                            "start_time": "14:54",
-                            "end_time": "16:21",
-                            "distance": 58.35,
-                            "price": 257.29,
-                            "cost": 257.29,
+                            "start_time": "17:08",
+                            "end_time": "17:12",
+                            "distance": 3.1,
+                            "price": 15.55,
+                            "cost": 15.55,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Jinli Ancient Street",
+                    "start_time": "18:15",
+                    "end_time": "19:45",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Mawangzi (Taikoo Li Branch)",
+                            "end": "Jinli Ancient Street",
+                            "mode": "taxi",
+                            "start_time": "18:12",
+                            "end_time": "18:15",
+                            "distance": 2.66,
+                            "price": 13.99,
+                            "cost": 13.99,
                             "cars": 1
                         }
                     ]
@@ -148,7 +214,7 @@
                 {
                     "type": "accommodation",
                     "position": "The Longemont Chengdu",
-                    "start_time": "18:09",
+                    "start_time": "19:58",
                     "end_time": "24:00",
                     "price": 588.0,
                     "cost": 1764.0,
@@ -157,14 +223,14 @@
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Mawangzi (Taikoo Li Branch)",
+                            "start": "Jinli Ancient Street",
                             "end": "The Longemont Chengdu",
                             "mode": "taxi",
-                            "start_time": "18:00",
-                            "end_time": "18:09",
-                            "distance": 6.3,
-                            "price": 26.74,
-                            "cost": 26.74,
+                            "start_time": "19:45",
+                            "end_time": "19:58",
+                            "distance": 8.83,
+                            "price": 35.6,
+                            "cost": 35.6,
                             "cars": 1
                         }
                     ]
@@ -186,44 +252,66 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Manjushri Temple",
-                    "start_time": "08:42",
-                    "end_time": "10:12",
+                    "position": "Chunxi Road",
+                    "start_time": "08:40",
+                    "end_time": "10:10",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
                             "start": "The Longemont Chengdu",
-                            "end": "Manjushri Temple",
+                            "end": "Chunxi Road",
                             "mode": "taxi",
                             "start_time": "08:30",
-                            "end_time": "08:42",
-                            "distance": 8.51,
-                            "price": 34.48,
-                            "cost": 34.48,
+                            "end_time": "08:40",
+                            "distance": 6.83,
+                            "price": 28.62,
+                            "cost": 28.62,
                             "cars": 1
                         }
                     ]
                 },
                 {
-                    "type": "lunch",
-                    "position": "Grill Master Spicy Grilled Fish (IFS Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
-                    "price": 100.0,
-                    "cost": 300.0,
+                    "type": "attraction",
+                    "position": "Jinmen Immersive Republic of China Scenic Area",
+                    "start_time": "10:31",
+                    "end_time": "12:01",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Manjushri Temple",
-                            "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
+                            "start": "Chunxi Road",
+                            "end": "Jinmen Immersive Republic of China Scenic Area",
                             "mode": "taxi",
-                            "start_time": "10:12",
-                            "end_time": "10:16",
-                            "distance": 2.98,
-                            "price": 15.13,
-                            "cost": 15.13,
+                            "start_time": "10:10",
+                            "end_time": "10:31",
+                            "distance": 14.5,
+                            "price": 59.94,
+                            "cost": 59.94,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "East Suburb Memory",
+                    "start_time": "12:19",
+                    "end_time": "13:49",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Jinmen Immersive Republic of China Scenic Area",
+                            "end": "East Suburb Memory",
+                            "mode": "taxi",
+                            "start_time": "12:01",
+                            "end_time": "12:19",
+                            "distance": 12.32,
+                            "price": 50.14,
+                            "cost": 50.14,
                             "cars": 1
                         }
                     ]
@@ -239,14 +327,14 @@
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Grill Master Spicy Grilled Fish (IFS Branch)",
+                            "start": "East Suburb Memory",
                             "end": "Chengdu West Railway Station",
                             "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:15",
-                            "distance": 10.46,
-                            "price": 41.79,
-                            "cost": 41.79,
+                            "start_time": "13:49",
+                            "end_time": "14:11",
+                            "distance": 14.74,
+                            "price": 61.04,
+                            "cost": 61.04,
                             "cars": 1
                         }
                     ],
@@ -255,5 +343,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.104236125946045
+    "elapsed_time(sec)": 1.2312817573547363
 }

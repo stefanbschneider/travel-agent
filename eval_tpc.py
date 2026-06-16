@@ -347,9 +347,14 @@ if __name__ == "__main__":
         scores['ATT']=pre_res[1]*100
         scores['DDR']=pre_res[2]*100
 
-        final_score=0.1*micro_comm+0.1*macro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
-        print('Overall Score: ',final_score)
+        # Buggy leaderboard weighting kept verbatim (the official scorer doubles EPR-micro instead of adding EPR-macro).
+        final_score=0.1*micro_comm+0.1*micro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
+        # Official documented weights: 10% EPR-micro + 10% EPR-macro.
+        final_score_official=0.1*micro_comm+0.1*macro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
+        print('Overall Score (leaderboard 2x-micro): ', final_score)
+        print('Overall Score (official micro+macro): ', final_score_official)
         scores['overall'] = final_score
+        scores['overall_official'] = final_score_official
         print(scores)
 
         score_file = os.path.join('your_tpc_scores.json')

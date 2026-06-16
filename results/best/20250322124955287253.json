@@ -29,65 +29,188 @@
           "transports": [
             {
               "start": "Nanjing Lukou International Airport",
-              "end": "Sichuan Restaurant (Taiping South Road Branch)",
-              "mode": "taxi",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:18",
-              "end_time": "09:09",
-              "distance": 34.63,
-              "price": 150.52,
-              "cost": 150.52,
-              "cars": 1
+              "end_time": "08:21",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Changfu Street-Metro Station",
+              "mode": "metro",
+              "start_time": "08:21",
+              "end_time": "09:29",
+              "distance": 34.48,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Sichuan Restaurant (Taiping South Road Branch)",
+              "mode": "walk",
+              "start_time": "09:29",
+              "end_time": "09:33",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Confucius Temple",
-          "start_time": "12:01",
-          "end_time": "13:31",
+          "start_time": "12:12",
+          "end_time": "13:42",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Sichuan Restaurant (Taiping South Road Branch)",
-              "end": "Confucius Temple",
-              "mode": "taxi",
+              "end": "Changfu Street-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 1.09,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "end_time": "12:04",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "12:04",
+              "end_time": "12:06",
+              "distance": 1.04,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Confucius Temple",
+              "mode": "walk",
+              "start_time": "12:06",
+              "end_time": "12:12",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
+          "start_time": "13:43",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
+              "mode": "walk",
+              "start_time": "13:42",
+              "end_time": "13:43",
+              "distance": 0.10372376922251704,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhongshan Scenic Area",
+          "start_time": "16:07",
+          "end_time": "17:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:19",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "metro",
+              "start_time": "15:19",
+              "end_time": "15:35",
+              "distance": 8.1,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Zhongshan Scenic Area",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "16:07",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Nanjing Jinling Hotel - Plum Garden",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "18:24",
+          "end_time": "19:24",
           "price": 423.0,
           "cost": 846.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple",
+              "start": "Zhongshan Scenic Area",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "walk",
+              "start_time": "17:37",
+              "end_time": "18:09",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "18:09",
+              "end_time": "18:23",
+              "distance": 7.0,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "taxi",
-              "start_time": "13:31",
-              "end_time": "13:34",
-              "distance": 2.1,
-              "price": 12.04,
-              "cost": 12.04,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:23",
+              "end_time": "18:24",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "18:53",
+          "start_time": "20:37",
           "end_time": "24:00",
           "price": 786.0,
           "cost": 1572.0,
@@ -97,14 +220,34 @@
           "transports": [
             {
               "start": "Nanjing Jinling Hotel - Plum Garden",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "walk",
+              "start_time": "19:24",
+              "end_time": "19:25",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "19:25",
+              "end_time": "20:36",
+              "distance": 35.57,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
               "end": "Pullman Nanjing Lukou Airport",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:53",
-              "distance": 35.59,
-              "price": 154.85,
-              "cost": 154.85,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:36",
+              "end_time": "20:37",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -125,96 +268,218 @@
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "09:20",
-          "end_time": "10:50",
+          "position": "Nanjing Presidential Palace",
+          "start_time": "09:52",
+          "end_time": "11:22",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Pullman Nanjing Lukou Airport",
-              "end": "Confucius Temple and Qinhuai River Scenic Area",
-              "mode": "taxi",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:20",
-              "distance": 33.54,
-              "price": 145.61,
-              "cost": 145.61,
-              "cars": 1
+              "end_time": "08:31",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Floating Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "08:31",
+              "end_time": "09:43",
+              "distance": 36.06,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Floating Bridge-Metro Station",
+              "end": "Nanjing Presidential Palace",
+              "mode": "walk",
+              "start_time": "09:43",
+              "end_time": "09:52",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Uncle Liu's Fragrant Frog Restaurant",
-          "start_time": "11:03",
-          "end_time": "12:03",
+          "start_time": "11:58",
+          "end_time": "12:58",
           "price": 75.0,
           "cost": 150.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "start": "Nanjing Presidential Palace",
+              "end": "Floating Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "11:22",
+              "end_time": "11:31",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Floating Bridge-Metro Station",
+              "end": "Cuiping Mountain-Metro Station",
+              "mode": "metro",
+              "start_time": "11:31",
+              "end_time": "11:54",
+              "distance": 11.82,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Cuiping Mountain-Metro Station",
               "end": "Uncle Liu's Fragrant Frog Restaurant",
-              "mode": "taxi",
-              "start_time": "10:50",
-              "end_time": "11:03",
-              "distance": 9.16,
-              "price": 36.77,
-              "cost": 36.77,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:54",
+              "end_time": "11:58",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Zhongshan Scenic Area",
-          "start_time": "12:26",
-          "end_time": "13:56",
+          "position": "Sun Yat-sen Mausoleum Scenic Area",
+          "start_time": "13:57",
+          "end_time": "15:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Uncle Liu's Fragrant Frog Restaurant",
-              "end": "Zhongshan Scenic Area",
-              "mode": "taxi",
-              "start_time": "12:03",
-              "end_time": "12:26",
-              "distance": 15.45,
-              "price": 64.21,
-              "cost": 64.21,
-              "cars": 1
+              "end": "Cuiping Mountain-Metro Station",
+              "mode": "walk",
+              "start_time": "12:58",
+              "end_time": "13:02",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Cuiping Mountain-Metro Station",
+              "end": "Zhongling Street-Metro Station",
+              "mode": "metro",
+              "start_time": "13:02",
+              "end_time": "13:28",
+              "distance": 13.38,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Zhongling Street-Metro Station",
+              "end": "Sun Yat-sen Mausoleum Scenic Area",
+              "mode": "walk",
+              "start_time": "13:28",
+              "end_time": "13:57",
+              "distance": 2.47,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Xuanwu Lake Scenic Area",
+          "start_time": "16:17",
+          "end_time": "17:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Sun Yat-sen Mausoleum Scenic Area",
+              "end": "Zhongling Street-Metro Station",
+              "mode": "walk",
+              "start_time": "15:27",
+              "end_time": "15:56",
+              "distance": 2.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhongling Street-Metro Station",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "15:56",
+              "end_time": "16:09",
+              "distance": 6.94,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Xuanwu Lake Scenic Area",
+              "mode": "walk",
+              "start_time": "16:09",
+              "end_time": "16:17",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "18:02",
+          "end_time": "19:02",
           "price": 334.0,
           "cost": 668.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhongshan Scenic Area",
+              "start": "Xuanwu Lake Scenic Area",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "17:47",
+              "end_time": "17:55",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:55",
+              "end_time": "18:00",
+              "distance": 2.55,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "mode": "taxi",
-              "start_time": "13:56",
-              "end_time": "14:06",
-              "distance": 7.29,
-              "price": 30.23,
-              "cost": 30.23,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "18:59",
+          "start_time": "20:24",
           "end_time": "24:00",
           "price": 786.0,
           "cost": 1572.0,
@@ -224,14 +489,34 @@
           "transports": [
             {
               "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "19:02",
+              "end_time": "19:04",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "19:04",
+              "end_time": "20:23",
+              "distance": 39.69,
+              "price": 8,
+              "cost": 16,
+              "tickets": 2
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
               "end": "Pullman Nanjing Lukou Airport",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:59",
-              "distance": 39.44,
-              "price": 172.17,
-              "cost": 172.17,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:23",
+              "end_time": "20:24",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -252,45 +537,85 @@
         },
         {
           "type": "attraction",
-          "position": "Nanjing Presidential Palace",
-          "start_time": "09:24",
-          "end_time": "10:54",
+          "position": "Rooster Crowing Temple",
+          "start_time": "09:57",
+          "end_time": "11:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Pullman Nanjing Lukou Airport",
-              "end": "Nanjing Presidential Palace",
-              "mode": "taxi",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:24",
-              "distance": 36.03,
-              "price": 156.85,
-              "cost": 156.85,
-              "cars": 1
+              "end_time": "08:31",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:31",
+              "end_time": "09:44",
+              "distance": 36.96,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Rooster Crowing Temple",
+              "mode": "walk",
+              "start_time": "09:44",
+              "end_time": "09:57",
+              "distance": 1.17,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Yuhu Grilled Fish (Suning Plaza Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "11:50",
+          "end_time": "12:50",
           "price": 72.0,
           "cost": 144.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Presidential Palace",
+              "start": "Rooster Crowing Temple",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "11:27",
+              "end_time": "11:40",
+              "distance": 1.17,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "11:40",
+              "end_time": "11:44",
+              "distance": 2.16,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
               "end": "Yuhu Grilled Fish (Suning Plaza Branch)",
-              "mode": "taxi",
-              "start_time": "10:54",
-              "end_time": "10:57",
-              "distance": 2.21,
-              "price": 12.43,
-              "cost": 12.43,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:44",
+              "end_time": "11:50",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -306,14 +631,34 @@
           "transports": [
             {
               "start": "Yuhu Grilled Fish (Suning Plaza Branch)",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "walk",
+              "start_time": "12:50",
+              "end_time": "12:56",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "12:56",
+              "end_time": "14:07",
+              "distance": 35.57,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:52",
-              "distance": 34.81,
-              "price": 151.35,
-              "cost": 151.35,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:07",
+              "end_time": "14:10",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL645"
@@ -321,6 +666,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.032002925872802734,
-  "_eval_score": 94.79365079365078
+  "elapsed_time(sec)": 5.724604845046997,
+  "_eval_score": 95.0563492063492
 }

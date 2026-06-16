@@ -103,12 +103,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 1026.0,
-                    "cost": 1026.0,
+                    "type": "attraction",
+                    "position": "Shanghai Museum",
+                    "start_time": "15:01",
+                    "end_time": "16:31",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -123,11 +123,53 @@
                         },
                         {
                             "start": "International Passenger Transport Center-Metro Station",
-                            "end": "Lujiazui-Metro Station",
+                            "end": "East Nanjing Road-Metro Station",
                             "mode": "metro",
                             "start_time": "14:53",
-                            "end_time": "14:55",
-                            "distance": 1.37,
+                            "end_time": "14:56",
+                            "distance": 1.86,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "East Nanjing Road-Metro Station",
+                            "end": "Shanghai Museum",
+                            "mode": "walk",
+                            "start_time": "14:56",
+                            "end_time": "15:01",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 1026.0,
+                    "cost": 1026.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Shanghai Museum",
+                            "end": "East Nanjing Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:31",
+                            "end_time": "16:36",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "East Nanjing Road-Metro Station",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:36",
+                            "end_time": "16:39",
+                            "distance": 1.67,
                             "price": 2,
                             "cost": 2,
                             "tickets": 1
@@ -136,8 +178,8 @@
                             "start": "Lujiazui-Metro Station",
                             "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
                             "mode": "walk",
-                            "start_time": "14:55",
-                            "end_time": "14:57",
+                            "start_time": "16:39",
+                            "end_time": "16:41",
                             "distance": 0.22,
                             "price": 0,
                             "cost": 0
@@ -246,13 +288,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:32",
-                    "end_time": "20:03",
-                    "start": "Shanghai Pudong International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 582.65,
-                    "cost": 582.65,
+                    "type": "attraction",
+                    "position": "Lujiazui",
+                    "start_time": "11:31",
+                    "end_time": "13:01",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -267,11 +308,54 @@
                         },
                         {
                             "start": "Tiantong Road-Metro Station",
-                            "end": "Pudong International Airport-Metro Station",
+                            "end": "Pudong South Road-Metro Station",
                             "mode": "metro",
                             "start_time": "11:23",
-                            "end_time": "12:27",
-                            "distance": 32.48,
+                            "end_time": "11:28",
+                            "distance": 2.93,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Pudong South Road-Metro Station",
+                            "end": "Lujiazui",
+                            "mode": "walk",
+                            "start_time": "11:28",
+                            "end_time": "11:31",
+                            "distance": 0.27,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:32",
+                    "end_time": "20:03",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 582.65,
+                    "cost": 582.65,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Lujiazui",
+                            "end": "Pudong South Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:01",
+                            "end_time": "13:04",
+                            "distance": 0.27,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Pudong South Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:04",
+                            "end_time": "14:03",
+                            "distance": 29.58,
                             "price": 7,
                             "cost": 7,
                             "tickets": 1
@@ -280,8 +364,8 @@
                             "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "12:27",
-                            "end_time": "12:42",
+                            "start_time": "14:03",
+                            "end_time": "14:18",
                             "distance": 1.27,
                             "price": 0,
                             "cost": 0
@@ -292,5 +376,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 6.866648197174072
+    "elapsed_time(sec)": 5.15006422996521
 }

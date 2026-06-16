@@ -61,14 +61,12 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
-                    "start_time": "20:09",
-                    "end_time": "24:00",
-                    "price": 325.0,
-                    "cost": 975.0,
-                    "rooms": 3,
-                    "room_type": 1,
+                    "type": "attraction",
+                    "position": "Shantang Street",
+                    "start_time": "20:13",
+                    "end_time": "21:43",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -83,21 +81,65 @@
                         },
                         {
                             "start": "Lion Mountain Road-Metro Station",
-                            "end": "Suzhou Railway Station-Metro Station",
+                            "end": "Shantang Street-Metro Station",
                             "mode": "metro",
                             "start_time": "19:54",
-                            "end_time": "20:06",
-                            "distance": 6.41,
+                            "end_time": "20:04",
+                            "distance": 5.0,
                             "price": 3,
                             "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Shantang Street",
+                            "mode": "walk",
+                            "start_time": "20:04",
+                            "end_time": "20:13",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+                    "start_time": "21:57",
+                    "end_time": "24:00",
+                    "price": 325.0,
+                    "cost": 975.0,
+                    "rooms": 3,
+                    "room_type": 1,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Shantang Street",
+                            "end": "Shantang Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "21:43",
+                            "end_time": "21:52",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "21:52",
+                            "end_time": "21:54",
+                            "distance": 1.48,
+                            "price": 2,
+                            "cost": 6,
                             "tickets": 3
                         },
                         {
                             "start": "Suzhou Railway Station-Metro Station",
                             "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
                             "mode": "walk",
-                            "start_time": "20:06",
-                            "end_time": "20:09",
+                            "start_time": "21:54",
+                            "end_time": "21:57",
                             "distance": 0.3,
                             "price": 0,
                             "cost": 0
@@ -145,5 +187,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.8936929702758789
+    "elapsed_time(sec)": 0.7586989402770996
 }
