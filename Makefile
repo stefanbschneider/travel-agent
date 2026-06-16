@@ -8,8 +8,6 @@ HEAVY_BUDGET ?= 240
 LIGHT_RESTARTS ?= 40
 LIGHT_BUDGET ?= 30
 
-VERSION ?= v4
-
 .PHONY: all heavy light merge score submission clean-light help
 
 # Default: the full recommended workflow.
@@ -43,7 +41,7 @@ score:
 
 # Build the submission zip from results/best.
 submission:
-	$(PYTHON) scripts/assemble_submission.py --version $(VERSION)
+	$(PYTHON) scripts/assemble_submission.py $(if $(VERSION),--version $(VERSION))
 
 # Remove partial light-pass outputs (safe; never touches results/best or submissions).
 clean-light:
@@ -56,7 +54,7 @@ help:
 	  'make light          - light packing pass across all 1000 + merge' \
 	  'make merge          - monotonic merge only' \
 	  'make score          - evaluate results/best' \
-	  'make submission     - build submissions/fabiundstefan_$(VERSION).zip' \
+	  'make submission     - build the next submission zip (version from git tags; override with VERSION=vN)' \
 	  'make clean-light    - remove partial oracletranslation solve outputs' \
 	  '' \
 	  'Tunables:' \
@@ -66,4 +64,4 @@ help:
 	  '  HEAVY_BUDGET=<sec>     default: $(HEAVY_BUDGET)' \
 	  '  LIGHT_RESTARTS=<n>     default: $(LIGHT_RESTARTS)' \
 	  '  LIGHT_BUDGET=<sec>     default: $(LIGHT_BUDGET)' \
-	  '  VERSION=<vN>           default: $(VERSION)'
+	  '  VERSION=<vN>           default: next version after the highest v<N> git tag'
