@@ -37,6 +37,7 @@ _BRANCH_LOCAL_KEYS = {
     "taxi_cars_equals",
     "excluded_inner_transport",
     "timing_constraints",
+    "position_presence",
 }
 
 _LIST_KEYS = {
@@ -55,6 +56,7 @@ _LIST_KEYS = {
     "stay_duration",
     "poi_distance_hotel",
     "excluded_inner_transport",
+    "position_presence",
 }
 
 _BUDGET_FIELDS = (
@@ -142,6 +144,7 @@ def _parse_logic_snippet(logic: str, include_inner_transport: bool) -> dict:
     _parse_hotel_distance(logic, result)
     _parse_activity_windows(logic, result)
     _parse_taxi_cars(logic, result)
+    _parse_position_names(logic, result)
     if include_inner_transport:
         _parse_excluded_inner_transport(logic, result)
     return result
@@ -343,6 +346,15 @@ def _parse_taxi_cars(logic: str, result: dict[str, Any]) -> None:
     match = re.search(r"taxi_cars\(activity_transports\(activity\)\)\s*(?:==|!=)\s*(\d+)", logic)
     if match:
         result["taxi_cars_equals"] = int(match.group(1))
+
+
+def _parse_position_names(logic: str, result: dict[str, Any]) -> None:
+    """Any POI referenced positively by activity_position(...)=='NAME' must be in
+    the plan for the clause to pass, so record it as required presence (covers
+    ordering and other position clauses, not just time windows)."""
+    names = re.findall(r"activity_position\(\s*activity\s*\)\s*==\s*['\"]([^'\"]+)['\"]", logic)
+    if names:
+        result.setdefault("position_presence", []).extend(names)
 
 
 def _parse_excluded_inner_transport(logic: str, result: dict[str, Any]) -> None:
