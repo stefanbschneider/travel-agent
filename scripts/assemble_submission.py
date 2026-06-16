@@ -8,18 +8,53 @@ fabiundstefan_<version>/ (matching the v3 layout). The .gitkeep marker is skippe
 import argparse
 import json
 import os
+import re
+import subprocess
 import sys
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def latest_submission_version():
+    """Return the highest N among existing ``v<N>`` git tags, or 0 when none exist.
+
+    Submission versions are tracked entirely by git tags named ``v1``, ``v2``, and so on,
+    so the next submission is one greater than the highest existing tag.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "tag", "--list", "v[0-9]*"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    numbers = [int(tag[1:]) for tag in result.stdout.split() if re.fullmatch(r"v\d+", tag)]
+    return max(numbers) if numbers else 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--version", required=True, help="e.g. v4 -> submissions/fabiundstefan_v4[.zip]")
+    ap.add_argument(
+        "--version",
+        default=None,
+        help="submission version like v5; defaults to the next version after the highest v<N> git tag",
+    )
     args = ap.parse_args()
 
-    name = "fabiundstefan_{}".format(args.version)
+    version = args.version
+    if version is None:
+        latest = latest_submission_version()
+        if latest is None:
+            ap.error("could not read git tags to derive the version; pass --version explicitly")
+        version = "v{}".format(latest + 1)
+    elif not re.fullmatch(r"v\d+", version):
+        ap.error("version must look like v<number>, for example v5")
+
+    name = "fabiundstefan_{}".format(version)
     best_dir = os.path.join(ROOT, "results", "best")
     out_dir = os.path.join(ROOT, "submissions", name)
     os.makedirs(out_dir, exist_ok=True)
@@ -41,7 +76,7 @@ def main():
             if fname.endswith(".json"):
                 zf.write(os.path.join(out_dir, fname), arcname=os.path.join(name, fname))
 
-    print("assembled {} plans -> {} and {}".format(count, out_dir, zip_path))
+    print("assembled {} plans as {} -> {} and {}".format(count, version, out_dir, zip_path))
     return 0
 
 

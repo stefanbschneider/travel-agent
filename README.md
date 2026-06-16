@@ -32,8 +32,12 @@ make
 Print the headline metrics for `results/best`, then build the submission zip:
 ```
 python scripts/score.py
-python scripts/assemble_submission.py --version v4
+python scripts/assemble_submission.py
 ```
+
+> After uploading `submissions/fabiundstefan_v<N>.zip`, freeze that version with a git tag so it is
+> never mutated again, then share it: `git tag v<N> && git push origin --tags`. Rebuild a previously
+> submitted version with `python scripts/assemble_submission.py --version v<N>`.
 
 Low-level equivalents (the scripts add the required flags for you). The oracle path MUST pass
 `--oracle_translation`, otherwise `run_tpc.py` strips `hard_logic_py` from the query dict and the

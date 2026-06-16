@@ -10,6 +10,10 @@ results/*
 !results/best/**
 !results/constraints_solved/
 !results/constraints_solved/**
+
+# Submission zips are reproducible from results/best via scripts/assemble_submission.py;
+# the version is tracked by git tags (v1, v2, ...), not committed artifacts.
+submissions/
 eval_res/
 debug.sh
 eval_1000.sh
