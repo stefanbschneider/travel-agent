@@ -94,7 +94,7 @@ def _attraction_candidates(agent, env, city: str, constraints: dict, cap: int) -
             continue
         if excluded_names and any(agent._match_constraint_text(name, ex) for ex in excluded_names):
             continue
-        if excluded_types and any(agent._match_type(attr_type, ex) or agent._match_constraint_text(attr_type, ex) for ex in excluded_types):
+        if excluded_types and any(_eq_norm(attr_type, ex) for ex in excluded_types):
             continue
         if free_only and _float(item.get("price"), 0.0) > 0.0:
             continue
@@ -103,7 +103,7 @@ def _attraction_candidates(agent, env, city: str, constraints: dict, cap: int) -
             continue
         seen.add(key)
         required = bool(required_names and any(agent._match_constraint_text(name, req) for req in required_names))
-        type_match = bool(required_types and any(agent._match_type(attr_type, req) for req in required_types))
+        type_match = bool(required_types and any(_eq_norm(attr_type, req) for req in required_types))
         normalized = _normalize_attraction(item, required=required, type_match=type_match)
         if required or type_match:
             required_rows.append(normalized)
@@ -137,14 +137,14 @@ def _restaurant_candidates(agent, env, city: str, constraints: dict, cap: int) -
             continue
         if excluded_names and any(agent._match_constraint_text(name, ex) for ex in excluded_names):
             continue
-        if excluded_cuisines and any(agent._match_constraint_text(cuisine, ex) for ex in excluded_cuisines):
+        if excluded_cuisines and any(_eq_norm(cuisine, ex) for ex in excluded_cuisines):
             continue
         key = agent._norm_text(name)
         if key in seen:
             continue
         seen.add(key)
         required = bool(required_names and any(agent._match_constraint_text(name, req) for req in required_names))
-        cuisine_match = bool(cuisine_preferences and any(agent._match_constraint_text(cuisine, pref) for pref in cuisine_preferences))
+        cuisine_match = bool(cuisine_preferences and any(_eq_norm(cuisine, pref) for pref in cuisine_preferences))
         normalized = _normalize_restaurant(item, required=required, cuisine_match=cuisine_match)
         if required or cuisine_match:
             required_rows.append(normalized)
@@ -184,9 +184,9 @@ def _hotel_candidates(agent, env, city: str, people: int, days: int, constraints
             continue
         if room_numbed is not None and int(_float(item.get("numbed"), -1)) != int(room_numbed):
             continue
-        if all_types and any(not agent._match_constraint_text(feature, req) for req in all_types):
+        if all_types and any(not _eq_norm(feature, req) for req in all_types):
             continue
-        if any_types and not any(agent._match_constraint_text(feature, req) for req in any_types):
+        if any_types and not any(_eq_norm(feature, req) for req in any_types):
             continue
         if nearby_names is not None and name not in nearby_names:
             continue
@@ -358,6 +358,12 @@ def _as_list(value: Any) -> list:
     if isinstance(value, set):
         return list(value)
     return [value]
+
+
+def _eq_norm(a: Any, b: Any) -> bool:
+    """Exact normalized equality, matching the oracle's set-membership semantics
+    on the raw type/cuisine/feature column value (which may itself contain '/')."""
+    return str(a).strip().casefold() == str(b).strip().casefold()
 
 
 def _time_or_none(value: Any) -> int | None:
