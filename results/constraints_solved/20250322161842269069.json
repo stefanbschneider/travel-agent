@@ -1,0 +1,107 @@
+{
+    "people_number": 1,
+    "start_city": "Shenzhen",
+    "target_city": "Shanghai",
+    "itinerary": [
+        {
+            "day": 1,
+            "activities": [
+                {
+                    "type": "airplane",
+                    "start_time": "09:00",
+                    "end_time": "10:31",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Shanghai Pudong International Airport",
+                    "price": 613.96,
+                    "cost": 613.96,
+                    "tickets": 1,
+                    "transports": [],
+                    "FlightID": "FL169"
+                },
+                {
+                    "type": "dinner",
+                    "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 1026.0,
+                    "cost": 1026.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Shanghai Pudong International Airport",
+                            "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+                            "mode": "walk",
+                            "start_time": "10:31",
+                            "end_time": "16:49",
+                            "distance": 31.53476953963263,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+                    "start_time": "23:24",
+                    "end_time": "24:00",
+                    "price": 339.0,
+                    "cost": 339.0,
+                    "rooms": 1,
+                    "room_type": 1,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+                            "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "23:24",
+                            "distance": 27.020461859254002,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 2,
+            "activities": [
+                {
+                    "type": "breakfast",
+                    "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+                    "start_time": "07:30",
+                    "end_time": "08:30",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 0,
+                    "transports": []
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:32",
+                    "end_time": "20:03",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 582.65,
+                    "cost": 582.65,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+                            "end": "Shanghai Pudong International Airport",
+                            "mode": "walk",
+                            "start_time": "08:30",
+                            "end_time": "09:26",
+                            "distance": 4.737665407912373,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ],
+                    "FlightID": "FL018"
+                }
+            ]
+        }
+    ],
+    "elapsed_time(sec)": 2.784970998764038
+}

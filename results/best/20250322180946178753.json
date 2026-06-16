@@ -330,12 +330,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Kurogi",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 3312.0,
-          "cost": 13248.0,
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "14:47",
+          "end_time": "16:17",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -350,11 +350,53 @@
             },
             {
               "start": "Pudong South Road-Metro Station",
-              "end": "Tiantong Road-Metro Station",
+              "end": "Lujiazui-Metro Station",
               "mode": "metro",
               "start_time": "14:38",
-              "end_time": "14:43",
-              "distance": 2.93,
+              "end_time": "14:39",
+              "distance": 0.98,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "The Bund",
+              "mode": "walk",
+              "start_time": "14:39",
+              "end_time": "14:47",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Kurogi",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 3312.0,
+          "cost": 13248.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "16:17",
+              "end_time": "16:25",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:25",
+              "end_time": "16:28",
+              "distance": 1.98,
               "price": 2,
               "cost": 8,
               "tickets": 4
@@ -363,8 +405,8 @@
               "start": "Tiantong Road-Metro Station",
               "end": "Kurogi",
               "mode": "walk",
-              "start_time": "14:43",
-              "end_time": "14:48",
+              "start_time": "16:28",
+              "end_time": "16:33",
               "distance": 0.49,
               "price": 0,
               "cost": 0
@@ -432,9 +474,9 @@
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "09:39",
-          "end_time": "11:09",
+          "position": "Huangpu River",
+          "start_time": "09:41",
+          "end_time": "11:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -451,22 +493,22 @@
             },
             {
               "start": "Pudong International Airport-Metro Station",
-              "end": "Lujiazui-Metro Station",
+              "end": "International Passenger Transport Center-Metro Station",
               "mode": "metro",
               "start_time": "08:31",
-              "end_time": "09:31",
-              "distance": 30.5,
+              "end_time": "09:33",
+              "distance": 31.3,
               "price": 7,
               "cost": 28,
               "tickets": 4
             },
             {
-              "start": "Lujiazui-Metro Station",
-              "end": "The Bund",
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Huangpu River",
               "mode": "walk",
-              "start_time": "09:31",
-              "end_time": "09:39",
-              "distance": 0.74,
+              "start_time": "09:33",
+              "end_time": "09:41",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             }
@@ -475,29 +517,29 @@
         {
           "type": "lunch",
           "position": "Lotus Restaurant · Hubei Cuisine (Zhongshan Park Branch)",
-          "start_time": "11:38",
-          "end_time": "12:38",
+          "start_time": "11:40",
+          "end_time": "12:40",
           "price": 122.0,
           "cost": 488.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "The Bund",
-              "end": "Lujiazui-Metro Station",
+              "start": "Huangpu River",
+              "end": "International Passenger Transport Center-Metro Station",
               "mode": "walk",
-              "start_time": "11:09",
-              "end_time": "11:17",
-              "distance": 0.74,
+              "start_time": "11:11",
+              "end_time": "11:19",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Lujiazui-Metro Station",
+              "start": "International Passenger Transport Center-Metro Station",
               "end": "Jiangsu Road-Metro Station",
               "mode": "metro",
-              "start_time": "11:17",
-              "end_time": "11:31",
-              "distance": 7.09,
+              "start_time": "11:19",
+              "end_time": "11:33",
+              "distance": 7.23,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -506,8 +548,8 @@
               "start": "Jiangsu Road-Metro Station",
               "end": "Lotus Restaurant · Hubei Cuisine (Zhongshan Park Branch)",
               "mode": "walk",
-              "start_time": "11:31",
-              "end_time": "11:38",
+              "start_time": "11:33",
+              "end_time": "11:40",
               "distance": 0.64,
               "price": 0,
               "cost": 0
@@ -528,8 +570,8 @@
               "start": "Lotus Restaurant · Hubei Cuisine (Zhongshan Park Branch)",
               "end": "Jiangsu Road-Metro Station",
               "mode": "walk",
-              "start_time": "12:38",
-              "end_time": "12:45",
+              "start_time": "12:40",
+              "end_time": "12:47",
               "distance": 0.64,
               "price": 0,
               "cost": 0
@@ -538,8 +580,8 @@
               "start": "Jiangsu Road-Metro Station",
               "end": "Pudong International Airport-Metro Station",
               "mode": "metro",
-              "start_time": "12:45",
-              "end_time": "13:58",
+              "start_time": "12:47",
+              "end_time": "14:00",
               "distance": 36.56,
               "price": 7,
               "cost": 28,
@@ -549,8 +591,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "13:58",
-              "end_time": "14:13",
+              "start_time": "14:00",
+              "end_time": "14:15",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -561,6 +603,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 2.9426205158233643,
-  "_eval_score": 93.9047619047619
+  "elapsed_time(sec)": 8.536433219909668,
+  "_eval_score": 94.4410866910867
 }

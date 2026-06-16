@@ -330,12 +330,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 334.0,
-                    "cost": 1002.0,
+                    "type": "attraction",
+                    "position": "China Imperial Examination Museum (Jiangnan Examination Hall)",
+                    "start_time": "14:40",
+                    "end_time": "16:10",
+                    "price": 45.0,
+                    "cost": 135.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -350,21 +350,63 @@
                         },
                         {
                             "start": "Jiuhua Mountain-Metro Station",
-                            "end": "Xinmofan Road-Metro Station",
+                            "end": "Confucius Temple-Metro Station",
                             "mode": "metro",
                             "start_time": "14:25",
-                            "end_time": "14:31",
-                            "distance": 3.27,
+                            "end_time": "14:32",
+                            "distance": 3.95,
                             "price": 2,
                             "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Confucius Temple-Metro Station",
+                            "end": "China Imperial Examination Museum (Jiangnan Examination Hall)",
+                            "mode": "walk",
+                            "start_time": "14:32",
+                            "end_time": "14:40",
+                            "distance": 0.69,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 334.0,
+                    "cost": 1002.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "China Imperial Examination Museum (Jiangnan Examination Hall)",
+                            "end": "Confucius Temple-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:10",
+                            "end_time": "16:18",
+                            "distance": 0.69,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Confucius Temple-Metro Station",
+                            "end": "Xinmofan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:18",
+                            "end_time": "16:30",
+                            "distance": 6.22,
+                            "price": 3,
+                            "cost": 9,
                             "tickets": 3
                         },
                         {
                             "start": "Xinmofan Road-Metro Station",
                             "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
                             "mode": "walk",
-                            "start_time": "14:31",
-                            "end_time": "14:33",
+                            "start_time": "16:30",
+                            "end_time": "16:32",
                             "distance": 0.2,
                             "price": 0,
                             "cost": 0
@@ -561,5 +603,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.3650650978088379
+    "elapsed_time(sec)": 3.748695135116577
 }
