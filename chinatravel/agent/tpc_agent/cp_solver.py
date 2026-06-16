@@ -46,6 +46,7 @@ def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_s
         attr_cap, rest_cap, hotel_cap = 60, 40, 60
 
     caps = {"attractions": max(1, attr_cap), "restaurants": max(1, rest_cap), "hotels": max(1, hotel_cap)}
+    constraints = _augment_required_presence(constraints)
     ctx = build_candidate_context_relaxed(agent, query, constraints, caps)
     if not (ctx["hotels"] and ctx["outbound_intercity"] and ctx["return_intercity"] and ctx["restaurants"]):
         return None
@@ -61,6 +62,33 @@ def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_s
         if plan is not None:
             return plan
     return None
+
+
+def _augment_required_presence(constraints: dict) -> dict:
+    """A positioned time-window / stay-duration clause can only pass if that POI
+    is actually in the plan, so treat its location as required presence.  The
+    name is added to both required pools; it only binds the pool it truly matches
+    (the other pool finds no candidate and silently ignores it)."""
+    locations = []
+    for window in constraints.get("activity_time_windows", []) or []:
+        if isinstance(window, dict) and window.get("location"):
+            locations.append(str(window["location"]))
+    for stay in constraints.get("stay_duration", []) or []:
+        if isinstance(stay, dict) and stay.get("location"):
+            locations.append(str(stay["location"]))
+    if not locations:
+        return constraints
+    out = dict(constraints)
+    req_attr = list(out.get("required_attractions", []) or [])
+    req_rest = list(out.get("required_restaurants", []) or [])
+    for loc in locations:
+        if loc not in req_attr:
+            req_attr.append(loc)
+        if loc not in req_rest:
+            req_rest.append(loc)
+    out["required_attractions"] = req_attr
+    out["required_restaurants"] = req_rest
+    return out
 
 
 def build_candidate_context_relaxed(agent, query: dict, constraints: dict, caps: dict) -> dict:
