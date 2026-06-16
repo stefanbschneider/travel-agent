@@ -76,6 +76,9 @@ def _augment_required_presence(constraints: dict) -> dict:
     for stay in constraints.get("stay_duration", []) or []:
         if isinstance(stay, dict) and stay.get("location"):
             locations.append(str(stay["location"]))
+    for name in constraints.get("position_presence", []) or []:
+        if name:
+            locations.append(str(name))
     if not locations:
         return constraints
     out = dict(constraints)
