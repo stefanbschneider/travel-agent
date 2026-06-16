@@ -698,8 +698,10 @@ def _meal_slots(days: int) -> list[dict]:
 
 
 def _eq_norm(a: Any, b: Any) -> bool:
-    """Exact normalized equality matching the oracle's set-membership semantics."""
-    return str(a).strip().casefold() == str(b).strip().casefold()
+    """Exact case-sensitive equality (strip only): the oracle compares raw column
+    values with case-sensitive set membership, so casefolding would let CP pick a
+    candidate the oracle rejects."""
+    return str(a).strip() == str(b).strip()
 
 
 def _budget_cents(value: Any) -> int:
