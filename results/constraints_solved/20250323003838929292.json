@@ -246,12 +246,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Suyan Chinese Restaurant at W Suzhou",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 450.0,
-                    "cost": 1350.0,
+                    "type": "attraction",
+                    "position": "Shantang Street",
+                    "start_time": "14:34",
+                    "end_time": "16:04",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -266,11 +266,53 @@
                         },
                         {
                             "start": "Meixiang-Metro Station",
-                            "end": "Oriental Gate-Metro Station",
+                            "end": "Shantang Street-Metro Station",
                             "mode": "metro",
                             "start_time": "14:19",
-                            "end_time": "14:29",
-                            "distance": 5.03,
+                            "end_time": "14:25",
+                            "distance": 3.25,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Shantang Street",
+                            "mode": "walk",
+                            "start_time": "14:25",
+                            "end_time": "14:34",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Suyan Chinese Restaurant at W Suzhou",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 450.0,
+                    "cost": 1350.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Shantang Street",
+                            "end": "Shantang Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:04",
+                            "end_time": "16:13",
+                            "distance": 0.82,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Oriental Gate-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:13",
+                            "end_time": "16:27",
+                            "distance": 7.33,
                             "price": 3,
                             "cost": 9,
                             "tickets": 3
@@ -279,8 +321,8 @@
                             "start": "Oriental Gate-Metro Station",
                             "end": "Suyan Chinese Restaurant at W Suzhou",
                             "mode": "walk",
-                            "start_time": "14:29",
-                            "end_time": "14:33",
+                            "start_time": "16:27",
+                            "end_time": "16:31",
                             "distance": 0.34,
                             "price": 0,
                             "cost": 0
@@ -372,5 +414,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.20432519912719727
+    "elapsed_time(sec)": 2.0941367149353027
 }
