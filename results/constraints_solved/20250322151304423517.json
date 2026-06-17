@@ -7,100 +7,170 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "airplane",
-                    "start_time": "12:07",
-                    "end_time": "14:32",
-                    "start": "Beijing Capital International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 949.32,
-                    "cost": 2847.96,
+                    "type": "train",
+                    "start_time": "23:54",
+                    "end_time": "04:40",
+                    "start": "Beijing Fengtai Station",
+                    "end": "Shenzhen East Station",
+                    "price": 777.26,
+                    "cost": 2331.7799999999997,
                     "tickets": 3,
                     "transports": [],
-                    "FlightID": "FL096"
+                    "TrainID": "K105"
                 },
                 {
                     "type": "attraction",
-                    "position": "Dameisha Seaside Park",
-                    "start_time": "16:26",
-                    "end_time": "17:56",
+                    "position": "Baishilong Music Theme Park",
+                    "start_time": "09:00",
+                    "end_time": "10:30",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Shenzhen Bao'an International Airport",
-                            "end": "Airport East-Metro Station",
-                            "mode": "walk",
-                            "start_time": "14:32",
-                            "end_time": "14:37",
-                            "distance": 0.45,
-                            "price": 0,
-                            "cost": 0
-                        },
+                            "start": "Shenzhen East Station",
+                            "end": "Baishilong Music Theme Park",
+                            "mode": "taxi",
+                            "start_time": "04:40",
+                            "end_time": "04:51",
+                            "distance": 7.74,
+                            "price": 31.78,
+                            "cost": 31.78,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Baguang Beach",
+                    "start_time": "11:41",
+                    "end_time": "13:11",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
                         {
-                            "start": "Airport East-Metro Station",
-                            "end": "Dameisha-Metro Station",
-                            "mode": "metro",
-                            "start_time": "14:37",
-                            "end_time": "16:17",
-                            "distance": 50.22,
-                            "price": 9,
-                            "cost": 27,
-                            "tickets": 3
-                        },
+                            "start": "Baishilong Music Theme Park",
+                            "end": "Baguang Beach",
+                            "mode": "taxi",
+                            "start_time": "10:30",
+                            "end_time": "11:41",
+                            "distance": 47.9,
+                            "price": 210.24,
+                            "cost": 210.24,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Fairy Lake Botanical Garden",
+                    "start_time": "14:02",
+                    "end_time": "15:32",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
                         {
-                            "start": "Dameisha-Metro Station",
-                            "end": "Dameisha Seaside Park",
-                            "mode": "walk",
-                            "start_time": "16:17",
-                            "end_time": "16:26",
-                            "distance": 0.77,
-                            "price": 0,
-                            "cost": 0
+                            "start": "Baguang Beach",
+                            "end": "Fairy Lake Botanical Garden",
+                            "mode": "taxi",
+                            "start_time": "13:11",
+                            "end_time": "14:02",
+                            "distance": 34.38,
+                            "price": 149.42,
+                            "cost": 149.42,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Balcony Mountain Forest Park",
+                    "start_time": "16:06",
+                    "end_time": "17:36",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Fairy Lake Botanical Garden",
+                            "end": "Balcony Mountain Forest Park",
+                            "mode": "taxi",
+                            "start_time": "15:32",
+                            "end_time": "16:06",
+                            "distance": 23.1,
+                            "price": 98.65,
+                            "cost": 98.65,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Yuhua Seafood (Fuyong Branch)",
+                    "start_time": "17:59",
+                    "end_time": "18:59",
+                    "price": 170.0,
+                    "cost": 510.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Balcony Mountain Forest Park",
+                            "end": "Yuhua Seafood (Fuyong Branch)",
+                            "mode": "taxi",
+                            "start_time": "17:36",
+                            "end_time": "17:59",
+                            "distance": 15.67,
+                            "price": 65.22,
+                            "cost": 65.22,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+                    "start_time": "19:42",
+                    "end_time": "21:12",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Yuhua Seafood (Fuyong Branch)",
+                            "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+                            "mode": "taxi",
+                            "start_time": "18:59",
+                            "end_time": "19:42",
+                            "distance": 29.18,
+                            "price": 125.99,
+                            "cost": 125.99,
+                            "cars": 1
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
-                    "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                    "start_time": "19:52",
+                    "position": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+                    "start_time": "21:34",
                     "end_time": "24:00",
-                    "price": 379.0,
-                    "cost": 1137.0,
-                    "rooms": 3,
-                    "room_type": 1,
-                    "tickets": 3,
+                    "price": 273.0,
+                    "cost": 546.0,
+                    "rooms": 2,
+                    "room_type": 2,
+                    "tickets": 2,
                     "transports": [
                         {
-                            "start": "Dameisha Seaside Park",
-                            "end": "Dameisha-Metro Station",
-                            "mode": "walk",
-                            "start_time": "17:56",
-                            "end_time": "18:05",
-                            "distance": 0.77,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Dameisha-Metro Station",
-                            "end": "Xingwei-Metro Station",
-                            "mode": "metro",
-                            "start_time": "18:05",
-                            "end_time": "19:42",
-                            "distance": 48.96,
-                            "price": 9,
-                            "cost": 27,
-                            "tickets": 3
-                        },
-                        {
-                            "start": "Xingwei-Metro Station",
-                            "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                            "mode": "walk",
-                            "start_time": "19:42",
-                            "end_time": "19:52",
-                            "distance": 0.9,
-                            "price": 0,
-                            "cost": 0
+                            "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+                            "end": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+                            "mode": "taxi",
+                            "start_time": "21:12",
+                            "end_time": "21:34",
+                            "distance": 15.01,
+                            "price": 62.23,
+                            "cost": 62.23,
+                            "cars": 1
                         }
                     ]
                 }
@@ -111,7 +181,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+                    "position": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -120,219 +190,31 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "China Merchants Shekou Cruise Home Port Tour",
-                    "start_time": "09:29",
-                    "end_time": "10:59",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "train",
+                    "start_time": "11:08",
+                    "end_time": "16:36",
+                    "start": "Shenzhen East Station",
+                    "end": "Beijing West Railway Station",
+                    "price": 777.26,
+                    "cost": 2331.7799999999997,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-                            "end": "Xingwei-Metro Station",
-                            "mode": "walk",
+                            "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+                            "end": "Shenzhen East Station",
+                            "mode": "taxi",
                             "start_time": "08:30",
-                            "end_time": "08:40",
-                            "distance": 0.9,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Xingwei-Metro Station",
-                            "end": "Shekou Port-Metro Station",
-                            "mode": "metro",
-                            "start_time": "08:40",
-                            "end_time": "09:20",
-                            "distance": 20.07,
-                            "price": 5,
-                            "cost": 15,
-                            "tickets": 3
-                        },
-                        {
-                            "start": "Shekou Port-Metro Station",
-                            "end": "China Merchants Shekou Cruise Home Port Tour",
-                            "mode": "walk",
-                            "start_time": "09:20",
-                            "end_time": "09:29",
-                            "distance": 0.82,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "lunch",
-                    "position": "Yuhua Seafood (Fuyong Branch)",
-                    "start_time": "11:56",
-                    "end_time": "12:56",
-                    "price": 170.0,
-                    "cost": 510.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "China Merchants Shekou Cruise Home Port Tour",
-                            "end": "Shekou Port-Metro Station",
-                            "mode": "walk",
-                            "start_time": "10:59",
-                            "end_time": "11:08",
-                            "distance": 0.82,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Shekou Port-Metro Station",
-                            "end": "Huaide-Metro Station",
-                            "mode": "metro",
-                            "start_time": "11:08",
-                            "end_time": "11:54",
-                            "distance": 23.13,
-                            "price": 6,
-                            "cost": 18,
-                            "tickets": 3
-                        },
-                        {
-                            "start": "Huaide-Metro Station",
-                            "end": "Yuhua Seafood (Fuyong Branch)",
-                            "mode": "walk",
-                            "start_time": "11:54",
-                            "end_time": "11:56",
-                            "distance": 0.23,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Bao'an Xibay Mangrove Park",
-                    "start_time": "13:24",
-                    "end_time": "14:54",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Yuhua Seafood (Fuyong Branch)",
-                            "end": "Huaide-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:56",
-                            "end_time": "12:58",
-                            "distance": 0.23,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Huaide-Metro Station",
-                            "end": "Gushu-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:58",
-                            "end_time": "13:13",
-                            "distance": 7.78,
-                            "price": 3,
-                            "cost": 9,
-                            "tickets": 3
-                        },
-                        {
-                            "start": "Gushu-Metro Station",
-                            "end": "Bao'an Xibay Mangrove Park",
-                            "mode": "walk",
-                            "start_time": "13:13",
-                            "end_time": "13:24",
-                            "distance": 0.93,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Bihai Bay Park",
-                    "start_time": "15:31",
-                    "end_time": "17:01",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Bao'an Xibay Mangrove Park",
-                            "end": "Gushu-Metro Station",
-                            "mode": "walk",
-                            "start_time": "14:54",
-                            "end_time": "15:05",
-                            "distance": 0.93,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Gushu-Metro Station",
-                            "end": "Bihaiwan-Metro Station",
-                            "mode": "metro",
-                            "start_time": "15:05",
-                            "end_time": "15:11",
-                            "distance": 3.06,
-                            "price": 2,
-                            "cost": 6,
-                            "tickets": 3
-                        },
-                        {
-                            "start": "Bihaiwan-Metro Station",
-                            "end": "Bihai Bay Park",
-                            "mode": "walk",
-                            "start_time": "15:11",
-                            "end_time": "15:31",
-                            "distance": 1.71,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 3025.02,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Bihai Bay Park",
-                            "end": "Bihaiwan-Metro Station",
-                            "mode": "walk",
-                            "start_time": "17:01",
-                            "end_time": "17:21",
-                            "distance": 1.71,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Bihaiwan-Metro Station",
-                            "end": "Airport East-Metro Station",
-                            "mode": "metro",
-                            "start_time": "17:21",
-                            "end_time": "17:38",
-                            "distance": 8.68,
-                            "price": 3,
-                            "cost": 9,
-                            "tickets": 3
-                        },
-                        {
-                            "start": "Airport East-Metro Station",
-                            "end": "Shenzhen Bao'an International Airport",
-                            "mode": "walk",
-                            "start_time": "17:38",
-                            "end_time": "17:43",
-                            "distance": 0.45,
-                            "price": 0,
-                            "cost": 0
+                            "end_time": "08:51",
+                            "distance": 14.12,
+                            "price": 58.26,
+                            "cost": 58.26,
+                            "cars": 1
                         }
                     ],
-                    "FlightID": "FL179"
+                    "TrainID": "K106"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 12.642163038253784
+    "elapsed_time(sec)": 3.022380828857422
 }

@@ -7,100 +7,192 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "type": "train",
+          "start_time": "23:54",
+          "end_time": "04:40",
+          "start": "Beijing Fengtai Station",
+          "end": "Shenzhen East Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
+          "TrainID": "K105"
         },
         {
           "type": "attraction",
-          "position": "Dameisha Seaside Park",
-          "start_time": "16:26",
-          "end_time": "17:56",
+          "position": "Bay Area Cruise",
+          "start_time": "09:00",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Airport East-Metro Station",
-              "mode": "walk",
-              "start_time": "14:32",
-              "end_time": "14:37",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Shenzhen East Station",
+              "end": "Bay Area Cruise",
+              "mode": "taxi",
+              "start_time": "04:40",
+              "end_time": "05:17",
+              "distance": 24.8,
+              "price": 106.31,
+              "cost": 106.31,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "10:58",
+          "end_time": "12:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Airport East-Metro Station",
-              "end": "Dameisha-Metro Station",
-              "mode": "metro",
-              "start_time": "14:37",
-              "end_time": "16:17",
-              "distance": 50.22,
-              "price": 9,
-              "cost": 9,
-              "tickets": 1
-            },
+              "start": "Bay Area Cruise",
+              "end": "Baishilong Music Theme Park",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:58",
+              "distance": 19.12,
+              "price": 80.74,
+              "cost": 80.74,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "12:41",
+          "end_time": "13:41",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Dameisha-Metro Station",
-              "end": "Dameisha Seaside Park",
-              "mode": "walk",
-              "start_time": "16:17",
-              "end_time": "16:26",
-              "distance": 0.77,
-              "price": 0,
-              "cost": 0
+              "start": "Baishilong Music Theme Park",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "12:28",
+              "end_time": "12:41",
+              "distance": 9.02,
+              "price": 36.28,
+              "cost": 36.28,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baguang Beach",
+          "start_time": "14:46",
+          "end_time": "16:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "Baguang Beach",
+              "mode": "taxi",
+              "start_time": "13:41",
+              "end_time": "14:46",
+              "distance": 43.7,
+              "price": 191.37,
+              "cost": 191.37,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "17:17",
+          "end_time": "18:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Baguang Beach",
+              "end": "East Gate Old Street",
+              "mode": "taxi",
+              "start_time": "16:16",
+              "end_time": "17:17",
+              "distance": 41.13,
+              "price": 179.77,
+              "cost": 179.77,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "18:57",
+          "end_time": "19:57",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "18:47",
+              "end_time": "18:57",
+              "distance": 7.06,
+              "price": 29.4,
+              "cost": 29.4,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Balcony Mountain Forest Park",
+          "start_time": "20:17",
+          "end_time": "21:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Balcony Mountain Forest Park",
+              "mode": "taxi",
+              "start_time": "19:57",
+              "end_time": "20:17",
+              "distance": 13.46,
+              "price": 55.27,
+              "cost": 55.27,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "19:52",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "22:07",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
+          "price": 231.0,
+          "cost": 231.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dameisha Seaside Park",
-              "end": "Dameisha-Metro Station",
-              "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "18:05",
-              "distance": 0.77,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dameisha-Metro Station",
-              "end": "Xingwei-Metro Station",
-              "mode": "metro",
-              "start_time": "18:05",
-              "end_time": "19:42",
-              "distance": 48.96,
-              "price": 9,
-              "cost": 9,
-              "tickets": 1
-            },
-            {
-              "start": "Xingwei-Metro Station",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "walk",
-              "start_time": "19:42",
-              "end_time": "19:52",
-              "distance": 0.9,
-              "price": 0,
-              "cost": 0
+              "start": "Balcony Mountain Forest Park",
+              "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "mode": "taxi",
+              "start_time": "21:47",
+              "end_time": "22:07",
+              "distance": 13.85,
+              "price": 57.01,
+              "cost": 57.01,
+              "cars": 1
             }
           ]
         }
@@ -111,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -120,42 +212,64 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-          "start_time": "09:29",
-          "end_time": "10:59",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "Xingwei-Metro Station",
-              "mode": "walk",
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:40",
-              "distance": 0.9,
+              "end_time": "08:46",
+              "distance": 11.16,
+              "price": 44.93,
+              "cost": 44.93,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "12:13",
+          "end_time": "13:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.24,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Xingwei-Metro Station",
-              "end": "Shekou Port-Metro Station",
+              "start": "Meicun-Metro Station",
+              "end": "Donggualing-Metro Station",
               "mode": "metro",
-              "start_time": "08:40",
-              "end_time": "09:20",
-              "distance": 20.07,
-              "price": 5,
-              "cost": 5,
+              "start_time": "12:02",
+              "end_time": "12:05",
+              "distance": 1.79,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Shekou Port-Metro Station",
-              "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "start": "Donggualing-Metro Station",
+              "end": "Guan Shanyue Art Museum",
               "mode": "walk",
-              "start_time": "09:20",
-              "end_time": "09:29",
-              "distance": 0.82,
+              "start_time": "12:05",
+              "end_time": "12:13",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             }
@@ -163,83 +277,41 @@
         },
         {
           "type": "attraction",
-          "position": "Shenzhen Bay Park",
-          "start_time": "11:24",
-          "end_time": "12:54",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "13:57",
+          "end_time": "15:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "end": "Shekou Port-Metro Station",
+              "start": "Guan Shanyue Art Museum",
+              "end": "Donggualing-Metro Station",
               "mode": "walk",
-              "start_time": "10:59",
-              "end_time": "11:08",
-              "distance": 0.82,
+              "start_time": "13:43",
+              "end_time": "13:51",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shekou Port-Metro Station",
-              "end": "Hongshu Bay-Metro Station",
+              "start": "Donggualing-Metro Station",
+              "end": "Lianhua Village-Metro Station",
               "mode": "metro",
-              "start_time": "11:08",
-              "end_time": "11:23",
-              "distance": 7.89,
-              "price": 3,
-              "cost": 3,
+              "start_time": "13:51",
+              "end_time": "13:53",
+              "distance": 1.31,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Hongshu Bay-Metro Station",
-              "end": "Shenzhen Bay Park",
+              "start": "Lianhua Village-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
               "mode": "walk",
-              "start_time": "11:23",
-              "end_time": "11:24",
-              "distance": 0.11,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Baishilong Music Theme Park",
-          "start_time": "13:20",
-          "end_time": "14:50",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Bay Park",
-              "end": "Hongshu Bay-Metro Station",
-              "mode": "walk",
-              "start_time": "12:54",
-              "end_time": "12:55",
-              "distance": 0.11,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongshu Bay-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "12:55",
-              "end_time": "13:17",
-              "distance": 11.38,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "13:17",
-              "end_time": "13:20",
-              "distance": 0.28,
+              "start_time": "13:53",
+              "end_time": "13:57",
+              "distance": 0.37,
               "price": 0,
               "cost": 0
             }
@@ -247,83 +319,41 @@
         },
         {
           "type": "dinner",
-          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 400.0,
-          "cost": 400.0,
+          "price": 26.0,
+          "cost": 26.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
               "mode": "walk",
-              "start_time": "14:50",
-              "end_time": "14:53",
-              "distance": 0.28,
+              "start_time": "15:27",
+              "end_time": "15:31",
+              "distance": 0.37,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Baishilong-Metro Station",
-              "end": "Window of the World-Metro Station",
+              "start": "Lianhua Village-Metro Station",
+              "end": "Taoyuan-Metro Station",
               "mode": "metro",
-              "start_time": "14:53",
-              "end_time": "15:13",
-              "distance": 10.02,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Window of the World-Metro Station",
-              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "mode": "walk",
-              "start_time": "15:13",
-              "end_time": "15:15",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "East Gate Old Street",
-          "start_time": "18:33",
-          "end_time": "20:03",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "end": "Window of the World-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Window of the World-Metro Station",
-              "end": "Shaibu-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:32",
-              "distance": 15.33,
+              "start_time": "15:31",
+              "end_time": "16:00",
+              "distance": 14.84,
               "price": 5,
               "cost": 5,
               "tickets": 1
             },
             {
-              "start": "Shaibu-Metro Station",
-              "end": "East Gate Old Street",
+              "start": "Taoyuan-Metro Station",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
               "mode": "walk",
-              "start_time": "18:32",
-              "end_time": "18:33",
-              "distance": 0.14,
+              "start_time": "16:00",
+              "end_time": "16:05",
+              "distance": 0.44,
               "price": 0,
               "cost": 0
             }
@@ -331,45 +361,25 @@
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "21:16",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "18:34",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
+          "price": 231.0,
+          "cost": 231.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "East Gate Old Street",
-              "end": "Shaibu-Metro Station",
-              "mode": "walk",
-              "start_time": "20:03",
-              "end_time": "20:04",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "Xingwei-Metro Station",
-              "mode": "metro",
-              "start_time": "20:04",
-              "end_time": "21:06",
-              "distance": 31.39,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Xingwei-Metro Station",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "walk",
-              "start_time": "21:06",
-              "end_time": "21:16",
-              "distance": 0.9,
-              "price": 0,
-              "cost": 0
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:34",
+              "distance": 23.32,
+              "price": 99.62,
+              "cost": 99.62,
+              "cars": 1
             }
           ]
         }
@@ -380,7 +390,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -389,220 +399,32 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "09:20",
-          "end_time": "10:50",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "Xingwei-Metro Station",
-              "mode": "walk",
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Shenzhen East Station",
+              "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:40",
-              "distance": 0.9,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xingwei-Metro Station",
-              "end": "Qiaocheng North-Metro Station",
-              "mode": "metro",
-              "start_time": "08:40",
-              "end_time": "09:18",
-              "distance": 19.31,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Shenzhen OCT Tourism Resort",
-              "mode": "walk",
-              "start_time": "09:18",
-              "end_time": "09:20",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen OCT Harbour",
-          "start_time": "10:58",
-          "end_time": "12:28",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen OCT Tourism Resort",
-              "end": "Qiaocheng North-Metro Station",
-              "mode": "walk",
-              "start_time": "10:50",
-              "end_time": "10:52",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Qiaocheng East-Metro Station",
-              "mode": "metro",
-              "start_time": "10:52",
-              "end_time": "10:54",
-              "distance": 1.5,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Qiaocheng East-Metro Station",
-              "end": "Shenzhen OCT Harbour",
-              "mode": "walk",
-              "start_time": "10:54",
-              "end_time": "10:58",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Old Zhou's Shunde Double-Skin Milk",
-          "start_time": "12:47",
-          "end_time": "13:47",
-          "price": 20.0,
-          "cost": 20.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen OCT Harbour",
-              "end": "Qiaocheng East-Metro Station",
-              "mode": "walk",
-              "start_time": "12:28",
-              "end_time": "12:32",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qiaocheng East-Metro Station",
-              "end": "Meicun-Metro Station",
-              "mode": "metro",
-              "start_time": "12:32",
-              "end_time": "12:45",
-              "distance": 6.99,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Meicun-Metro Station",
-              "end": "Old Zhou's Shunde Double-Skin Milk",
-              "mode": "walk",
-              "start_time": "12:45",
-              "end_time": "12:47",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Guan Shanyue Art Museum",
-          "start_time": "14:00",
-          "end_time": "15:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Meicun-Metro Station",
-              "mode": "walk",
-              "start_time": "13:47",
-              "end_time": "13:49",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Meicun-Metro Station",
-              "end": "Donggualing-Metro Station",
-              "mode": "metro",
-              "start_time": "13:49",
-              "end_time": "13:52",
-              "distance": 1.79,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Donggualing-Metro Station",
-              "end": "Guan Shanyue Art Museum",
-              "mode": "walk",
-              "start_time": "13:52",
-              "end_time": "14:00",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Guan Shanyue Art Museum",
-              "end": "Donggualing-Metro Station",
-              "mode": "walk",
-              "start_time": "15:30",
-              "end_time": "15:38",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Donggualing-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "15:38",
-              "end_time": "16:31",
-              "distance": 26.95,
-              "price": 6,
-              "cost": 6,
-              "tickets": 1
-            },
-            {
-              "start": "Airport East-Metro Station",
-              "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "16:31",
-              "end_time": "16:36",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "end_time": "08:39",
+              "distance": 6.21,
+              "price": 26.45,
+              "cost": 26.45,
+              "cars": 1
             }
           ],
-          "FlightID": "FL179"
+          "TrainID": "K106"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 20.172112941741943,
-  "_eval_score": 93.97313797313797
+  "elapsed_time(sec)": 3.9060540199279785,
+  "_eval_score": 95.67857142857143
 }
