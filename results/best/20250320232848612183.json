@@ -847,13 +847,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "22:32",
-          "end_time": "22:44",
-          "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 209.65,
-          "cost": 1048.25,
+          "type": "attraction",
+          "position": "704 Project (Lin Biao's Hangzhou Villa)",
+          "start_time": "13:57",
+          "end_time": "15:27",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -868,21 +867,106 @@
             },
             {
               "start": "Huanglong Sports Center-Metro Station",
-              "end": "Xiaoshan International Airport-Metro Station",
+              "end": "Yellow Dragon Cave-Metro Station",
               "mode": "metro",
               "start_time": "13:19",
-              "end_time": "14:17",
-              "distance": 29.41,
-              "price": 7,
-              "cost": 35,
+              "end_time": "13:21",
+              "distance": 1.06,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "704 Project (Lin Biao's Hangzhou Villa)",
+              "mode": "walk",
+              "start_time": "13:21",
+              "end_time": "13:57",
+              "distance": 3.0,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 50.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "704 Project (Lin Biao's Hangzhou Villa)",
+              "end": "Yellow Dragon Cave-Metro Station",
+              "mode": "walk",
+              "start_time": "15:27",
+              "end_time": "16:03",
+              "distance": 3.0,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:03",
+              "end_time": "16:12",
+              "distance": 4.7,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:12",
+              "end_time": "16:22",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:32",
+          "end_time": "22:44",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 209.65,
+          "cost": 1048.25,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:59",
+              "distance": 24.54,
+              "price": 6,
+              "cost": 30,
               "tickets": 5
             },
             {
               "start": "Xiaoshan International Airport-Metro Station",
               "end": "Hangzhou Xiaoshan International Airport",
               "mode": "walk",
-              "start_time": "14:17",
-              "end_time": "14:18",
+              "start_time": "18:59",
+              "end_time": "19:00",
               "distance": 0.12,
               "price": 0,
               "cost": 0
@@ -894,5 +978,5 @@
     }
   ],
   "elapsed_time(sec)": 5.894904851913452,
-  "_eval_score": 95.26459750566893
+  "_eval_score": 96.02846790890268
 }

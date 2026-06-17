@@ -559,13 +559,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "18:12",
-          "start": "Nanjing Station",
-          "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 368.70000000000005,
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "13:18",
+          "end_time": "14:48",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -580,21 +579,85 @@
             },
             {
               "start": "Wuding Gate-Metro Station",
-              "end": "Nanjing Station-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
               "mode": "metro",
               "start_time": "12:56",
-              "end_time": "13:12",
-              "distance": 8.38,
+              "end_time": "13:05",
+              "distance": 4.84,
               "price": 3,
               "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "13:05",
+              "end_time": "13:18",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beiqiu Museum of Contemporary Art",
+          "start_time": "14:54",
+          "end_time": "16:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Beiqiu Museum of Contemporary Art",
+              "mode": "walk",
+              "start_time": "14:48",
+              "end_time": "14:54",
+              "distance": 0.5759656668092257,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "18:12",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 122.9,
+          "cost": 368.70000000000005,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Beiqiu Museum of Contemporary Art",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:24",
+              "end_time": "16:35",
+              "distance": 0.99,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:35",
+              "end_time": "16:42",
+              "distance": 3.56,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
               "mode": "walk",
-              "start_time": "13:12",
-              "end_time": "13:14",
+              "start_time": "16:42",
+              "end_time": "16:44",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -606,5 +669,5 @@
     }
   ],
   "elapsed_time(sec)": 5.643492937088013,
-  "_eval_score": 95.6984126984127
+  "_eval_score": 96.61805555555556
 }

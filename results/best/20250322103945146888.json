@@ -599,13 +599,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:24",
-          "end_time": "19:08",
-          "start": "Suzhou Station",
-          "end": "Hangzhou East Railway Station",
-          "price": 78.65,
-          "cost": 235.95000000000002,
+          "type": "attraction",
+          "position": "A Hidden Wonderland",
+          "start_time": "12:45",
+          "end_time": "14:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -620,21 +619,106 @@
             },
             {
               "start": "Times Square-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
+              "end": "Fuyuan Road-Metro Station",
               "mode": "metro",
               "start_time": "12:09",
-              "end_time": "12:28",
-              "distance": 9.82,
+              "end_time": "12:33",
+              "distance": 12.3,
               "price": 4,
               "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "A Hidden Wonderland",
+              "mode": "walk",
+              "start_time": "12:33",
+              "end_time": "12:45",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Kunqu Opera Museum",
+          "start_time": "15:29",
+          "end_time": "16:59",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "A Hidden Wonderland",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:45",
+              "end_time": "14:57",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "East Ring Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:57",
+              "end_time": "15:17",
+              "distance": 10.39,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "East Ring Road-Metro Station",
+              "end": "China Kunqu Opera Museum",
+              "mode": "walk",
+              "start_time": "15:17",
+              "end_time": "15:29",
+              "distance": 1.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:24",
+          "end_time": "19:08",
+          "start": "Suzhou Station",
+          "end": "Hangzhou East Railway Station",
+          "price": 78.65,
+          "cost": 235.95000000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Kunqu Opera Museum",
+              "end": "East Ring Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:59",
+              "end_time": "17:11",
+              "distance": 1.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Ring Road-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "17:11",
+              "end_time": "17:19",
+              "distance": 4.28,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Suzhou Railway Station-Metro Station",
               "end": "Suzhou Station",
               "mode": "walk",
-              "start_time": "12:28",
-              "end_time": "12:29",
+              "start_time": "17:19",
+              "end_time": "17:20",
               "distance": 0.13,
               "price": 0,
               "cost": 0
@@ -646,5 +730,5 @@
     }
   ],
   "elapsed_time(sec)": 5.98963475227356,
-  "_eval_score": 95.60997732426304
+  "_eval_score": 96.38888888888889
 }

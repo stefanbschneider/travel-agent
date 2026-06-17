@@ -536,12 +536,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 519.0,
-          "cost": 1557.0,
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "12:45",
+          "end_time": "14:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -556,11 +556,53 @@
             },
             {
               "start": "Ludan Village-Metro Station",
-              "end": "Dameisha-Metro Station",
+              "end": "Baishilong-Metro Station",
               "mode": "metro",
               "start_time": "12:23",
-              "end_time": "13:05",
-              "distance": 21.48,
+              "end_time": "12:42",
+              "distance": 9.97,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "12:42",
+              "end_time": "12:45",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 519.0,
+          "cost": 1557.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
+              "mode": "walk",
+              "start_time": "14:45",
+              "end_time": "14:48",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "14:48",
+              "end_time": "15:42",
+              "distance": 27.3,
               "price": 6,
               "cost": 18,
               "tickets": 3
@@ -569,8 +611,8 @@
               "start": "Dameisha-Metro Station",
               "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
               "mode": "walk",
-              "start_time": "13:05",
-              "end_time": "13:16",
+              "start_time": "15:42",
+              "end_time": "15:53",
               "distance": 0.93,
               "price": 0,
               "cost": 0
@@ -721,13 +763,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "19:08",
-          "end_time": "20:39",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 624.58,
-          "cost": 1873.7400000000002,
+          "type": "attraction",
+          "position": "Balcony Mountain Forest Park",
+          "start_time": "13:32",
+          "end_time": "15:32",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -742,11 +783,96 @@
             },
             {
               "start": "Shopping Park-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Yangtaishan East-Metro Station",
               "mode": "metro",
               "start_time": "12:32",
-              "end_time": "13:25",
-              "distance": 26.9,
+              "end_time": "13:04",
+              "distance": 16.13,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Balcony Mountain Forest Park",
+              "mode": "walk",
+              "start_time": "13:04",
+              "end_time": "13:32",
+              "distance": 2.41,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 60.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Balcony Mountain Forest Park",
+              "end": "Yangtaishan East-Metro Station",
+              "mode": "walk",
+              "start_time": "15:32",
+              "end_time": "16:00",
+              "distance": 2.41,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:25",
+              "distance": 12.67,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "16:25",
+              "end_time": "16:27",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "19:08",
+          "end_time": "20:39",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 624.58,
+          "cost": 1873.7400000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:52",
+              "distance": 25.18,
               "price": 6,
               "cost": 18,
               "tickets": 3
@@ -755,8 +881,8 @@
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "13:25",
-              "end_time": "13:30",
+              "start_time": "18:52",
+              "end_time": "18:57",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -768,5 +894,5 @@
     }
   ],
   "elapsed_time(sec)": 12.200347900390625,
-  "_eval_score": 94.06074929971989
+  "_eval_score": 95.13154761904761
 }

@@ -599,13 +599,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:22",
-                    "end_time": "18:42",
-                    "start": "Nanjing Lukou International Airport",
-                    "end": "Shanghai Hongqiao International Airport",
-                    "price": 221.47,
-                    "cost": 442.94,
+                    "type": "attraction",
+                    "position": "Ancient Peach Leaf Ferry",
+                    "start_time": "14:37",
+                    "end_time": "16:07",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -620,11 +619,54 @@
                         },
                         {
                             "start": "Yuhua Gate-Metro Station",
-                            "end": "Lukou Airport-Metro Station",
+                            "end": "Changfu Street-Metro Station",
                             "mode": "metro",
                             "start_time": "14:20",
-                            "end_time": "15:22",
-                            "distance": 31.28,
+                            "end_time": "14:26",
+                            "distance": 3.28,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Changfu Street-Metro Station",
+                            "end": "Ancient Peach Leaf Ferry",
+                            "mode": "walk",
+                            "start_time": "14:26",
+                            "end_time": "14:37",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:22",
+                    "end_time": "18:42",
+                    "start": "Nanjing Lukou International Airport",
+                    "end": "Shanghai Hongqiao International Airport",
+                    "price": 221.47,
+                    "cost": 442.94,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Ancient Peach Leaf Ferry",
+                            "end": "Changfu Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:07",
+                            "end_time": "16:18",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Changfu Street-Metro Station",
+                            "end": "Lukou Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:18",
+                            "end_time": "17:26",
+                            "distance": 34.48,
                             "price": 7,
                             "cost": 14,
                             "tickets": 2
@@ -633,8 +675,8 @@
                             "start": "Lukou Airport-Metro Station",
                             "end": "Nanjing Lukou International Airport",
                             "mode": "walk",
-                            "start_time": "15:22",
-                            "end_time": "15:25",
+                            "start_time": "17:26",
+                            "end_time": "17:29",
                             "distance": 0.27,
                             "price": 0,
                             "cost": 0
@@ -645,5 +687,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.5771851539611816
+    "elapsed_time(sec)": 14.52866506576538
 }

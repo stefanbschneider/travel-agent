@@ -7,53 +7,221 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "train",
-                    "start_time": "07:06",
-                    "end_time": "18:42",
-                    "start": "Shenzhen North Railway Station",
-                    "end": "Shanghai Hongqiao Station",
-                    "price": 727.96,
-                    "cost": 727.96,
+                    "type": "airplane",
+                    "start_time": "23:37",
+                    "end_time": "01:08",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Shanghai Pudong International Airport",
+                    "price": 572.8,
+                    "cost": 572.8,
                     "tickets": 1,
                     "transports": [],
-                    "TrainID": "D3126"
+                    "FlightID": "FL166"
                 },
                 {
                     "type": "attraction",
-                    "position": "Jing'an Sculpture Park",
-                    "start_time": "19:15",
-                    "end_time": "20:45",
+                    "position": "Expo Culture Park",
+                    "start_time": "09:00",
+                    "end_time": "10:30",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shanghai Hongqiao Station",
-                            "end": "Hongqiao Railway Station-Metro Station",
+                            "start": "Shanghai Pudong International Airport",
+                            "end": "Pudong International Airport-Metro Station",
                             "mode": "walk",
-                            "start_time": "18:42",
-                            "end_time": "18:43",
-                            "distance": 0.12,
+                            "start_time": "01:08",
+                            "end_time": "01:23",
+                            "distance": 1.27,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Hongqiao Railway Station-Metro Station",
-                            "end": "Qufu Road-Metro Station",
+                            "start": "Pudong International Airport-Metro Station",
+                            "end": "Expo Avenue-Metro Station",
                             "mode": "metro",
-                            "start_time": "18:43",
-                            "end_time": "19:13",
-                            "distance": 15.49,
+                            "start_time": "01:23",
+                            "end_time": "02:24",
+                            "distance": 30.83,
+                            "price": 7,
+                            "cost": 7,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Expo Avenue-Metro Station",
+                            "end": "Expo Culture Park",
+                            "mode": "walk",
+                            "start_time": "02:24",
+                            "end_time": "02:30",
+                            "distance": 0.5,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Columbia Circle",
+                    "start_time": "10:57",
+                    "end_time": "12:27",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Expo Culture Park",
+                            "end": "Expo Avenue-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:30",
+                            "end_time": "10:36",
+                            "distance": 0.5,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Expo Avenue-Metro Station",
+                            "end": "Jiangsu Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:36",
+                            "end_time": "10:49",
+                            "distance": 6.6,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Jiangsu Road-Metro Station",
+                            "end": "Columbia Circle",
+                            "mode": "walk",
+                            "start_time": "10:49",
+                            "end_time": "10:57",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                    "start_time": "12:47",
+                    "end_time": "13:47",
+                    "price": 28.0,
+                    "cost": 28.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Columbia Circle",
+                            "end": "Jiangsu Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:27",
+                            "end_time": "12:35",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiangsu Road-Metro Station",
+                            "end": "West Nanjing Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:35",
+                            "end_time": "12:40",
+                            "distance": 2.98,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "West Nanjing Road-Metro Station",
+                            "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                            "mode": "walk",
+                            "start_time": "12:40",
+                            "end_time": "12:47",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Shanghai Heartbreak Museum",
+                    "start_time": "14:07",
+                    "end_time": "15:37",
+                    "price": 29.9,
+                    "cost": 29.9,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                            "end": "West Nanjing Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:47",
+                            "end_time": "13:54",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "West Nanjing Road-Metro Station",
+                            "end": "East Nanjing Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:54",
+                            "end_time": "13:59",
+                            "distance": 2.52,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "East Nanjing Road-Metro Station",
+                            "end": "Shanghai Heartbreak Museum",
+                            "mode": "walk",
+                            "start_time": "13:59",
+                            "end_time": "14:07",
+                            "distance": 0.72,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Gucun Park",
+                    "start_time": "16:18",
+                    "end_time": "17:48",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Shanghai Heartbreak Museum",
+                            "end": "East Nanjing Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:37",
+                            "end_time": "15:45",
+                            "distance": 0.72,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "East Nanjing Road-Metro Station",
+                            "end": "Gucun Park-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:45",
+                            "end_time": "16:16",
+                            "distance": 15.89,
                             "price": 5,
                             "cost": 5,
                             "tickets": 1
                         },
                         {
-                            "start": "Qufu Road-Metro Station",
-                            "end": "Jing'an Sculpture Park",
+                            "start": "Gucun Park-Metro Station",
+                            "end": "Gucun Park",
                             "mode": "walk",
-                            "start_time": "19:13",
-                            "end_time": "19:15",
+                            "start_time": "16:16",
+                            "end_time": "16:18",
                             "distance": 0.18,
                             "price": 0,
                             "cost": 0
@@ -61,44 +229,86 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "HSIAFEI MANSION",
-                    "start_time": "21:24",
-                    "end_time": "24:00",
-                    "price": 590.0,
-                    "cost": 590.0,
-                    "rooms": 1,
-                    "room_type": 2,
+                    "type": "dinner",
+                    "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+                    "start_time": "18:33",
+                    "end_time": "19:33",
+                    "price": 16.0,
+                    "cost": 16.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Jing'an Sculpture Park",
-                            "end": "Qufu Road-Metro Station",
+                            "start": "Gucun Park",
+                            "end": "Gucun Park-Metro Station",
                             "mode": "walk",
-                            "start_time": "20:45",
-                            "end_time": "20:47",
+                            "start_time": "17:48",
+                            "end_time": "17:50",
                             "distance": 0.18,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Qufu Road-Metro Station",
-                            "end": "Hongqiao Railway Station-Metro Station",
+                            "start": "Gucun Park-Metro Station",
+                            "end": "Middle Yanji Road-Metro Station",
                             "mode": "metro",
-                            "start_time": "20:47",
-                            "end_time": "21:17",
-                            "distance": 15.49,
+                            "start_time": "17:50",
+                            "end_time": "18:23",
+                            "distance": 16.62,
                             "price": 5,
                             "cost": 5,
                             "tickets": 1
                         },
                         {
-                            "start": "Hongqiao Railway Station-Metro Station",
-                            "end": "HSIAFEI MANSION",
+                            "start": "Middle Yanji Road-Metro Station",
+                            "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
                             "mode": "walk",
-                            "start_time": "21:17",
-                            "end_time": "21:24",
-                            "distance": 0.61,
+                            "start_time": "18:23",
+                            "end_time": "18:33",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+                    "start_time": "20:25",
+                    "end_time": "24:00",
+                    "price": 303.0,
+                    "cost": 303.0,
+                    "rooms": 1,
+                    "room_type": 2,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+                            "end": "Middle Yanji Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:33",
+                            "end_time": "19:43",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Middle Yanji Road-Metro Station",
+                            "end": "Chuansha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:43",
+                            "end_time": "20:21",
+                            "distance": 19.22,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Chuansha-Metro Station",
+                            "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+                            "mode": "walk",
+                            "start_time": "20:21",
+                            "end_time": "20:25",
+                            "distance": 0.36,
                             "price": 0,
                             "cost": 0
                         }
@@ -111,7 +321,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "HSIAFEI MANSION",
+                    "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -120,42 +330,42 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "Shanghai Lavender Park",
-                    "start_time": "10:02",
-                    "end_time": "11:32",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "lunch",
+                    "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 18.0,
+                    "cost": 18.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "HSIAFEI MANSION",
-                            "end": "Hongqiao Railway Station-Metro Station",
+                            "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+                            "end": "Chuansha-Metro Station",
                             "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "08:37",
-                            "distance": 0.61,
+                            "end_time": "08:34",
+                            "distance": 0.36,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Hongqiao Railway Station-Metro Station",
-                            "end": "Disney-Metro Station",
+                            "start": "Chuansha-Metro Station",
+                            "end": "Qibao-Metro Station",
                             "mode": "metro",
-                            "start_time": "08:37",
-                            "end_time": "09:44",
-                            "distance": 33.78,
+                            "start_time": "08:34",
+                            "end_time": "09:40",
+                            "distance": 33.45,
                             "price": 7,
                             "cost": 7,
                             "tickets": 1
                         },
                         {
-                            "start": "Disney-Metro Station",
-                            "end": "Shanghai Lavender Park",
+                            "start": "Qibao-Metro Station",
+                            "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
                             "mode": "walk",
-                            "start_time": "09:44",
-                            "end_time": "10:02",
-                            "distance": 1.51,
+                            "start_time": "09:40",
+                            "end_time": "09:48",
+                            "distance": 0.72,
                             "price": 0,
                             "cost": 0
                         }
@@ -163,92 +373,92 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "People's Square",
-                    "start_time": "12:36",
-                    "end_time": "14:06",
+                    "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+                    "start_time": "12:38",
+                    "end_time": "14:08",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shanghai Lavender Park",
-                            "end": "Disney-Metro Station",
+                            "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+                            "end": "Qibao-Metro Station",
                             "mode": "walk",
-                            "start_time": "11:32",
-                            "end_time": "11:50",
-                            "distance": 1.51,
+                            "start_time": "12:00",
+                            "end_time": "12:08",
+                            "distance": 0.72,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Disney-Metro Station",
-                            "end": "East Nanjing Road-Metro Station",
+                            "start": "Qibao-Metro Station",
+                            "end": "Xinzhuang-Metro Station",
                             "mode": "metro",
-                            "start_time": "11:50",
-                            "end_time": "12:31",
-                            "distance": 20.51,
-                            "price": 5,
-                            "cost": 5,
+                            "start_time": "12:08",
+                            "end_time": "12:19",
+                            "distance": 5.99,
+                            "price": 3,
+                            "cost": 3,
                             "tickets": 1
                         },
                         {
-                            "start": "East Nanjing Road-Metro Station",
-                            "end": "People's Square",
+                            "start": "Xinzhuang-Metro Station",
+                            "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
                             "mode": "walk",
-                            "start_time": "12:31",
-                            "end_time": "12:36",
-                            "distance": 0.45,
+                            "start_time": "12:19",
+                            "end_time": "12:38",
+                            "distance": 1.6,
                             "price": 0,
                             "cost": 0
                         }
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "19:55",
-                    "end_time": "06:21",
-                    "start": "Shanghai Hongqiao Station",
-                    "end": "Shenzhen North Railway Station",
-                    "price": 727.96,
-                    "cost": 727.96,
+                    "type": "airplane",
+                    "start_time": "16:36",
+                    "end_time": "18:07",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 576.24,
+                    "cost": 576.24,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "People's Square",
-                            "end": "East Nanjing Road-Metro Station",
+                            "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+                            "end": "Xinzhuang-Metro Station",
                             "mode": "walk",
-                            "start_time": "14:06",
-                            "end_time": "14:11",
-                            "distance": 0.45,
+                            "start_time": "14:08",
+                            "end_time": "14:27",
+                            "distance": 1.6,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "East Nanjing Road-Metro Station",
-                            "end": "Hongqiao Railway Station-Metro Station",
+                            "start": "Xinzhuang-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
                             "mode": "metro",
-                            "start_time": "14:11",
-                            "end_time": "14:44",
-                            "distance": 16.53,
-                            "price": 5,
-                            "cost": 5,
+                            "start_time": "14:27",
+                            "end_time": "15:47",
+                            "distance": 40.32,
+                            "price": 8,
+                            "cost": 8,
                             "tickets": 1
                         },
                         {
-                            "start": "Hongqiao Railway Station-Metro Station",
-                            "end": "Shanghai Hongqiao Station",
+                            "start": "Pudong International Airport-Metro Station",
+                            "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "14:44",
-                            "end_time": "14:45",
-                            "distance": 0.12,
+                            "start_time": "15:47",
+                            "end_time": "16:02",
+                            "distance": 1.27,
                             "price": 0,
                             "cost": 0
                         }
                     ],
-                    "TrainID": "D941"
+                    "FlightID": "FL016"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 7.245221853256226
+    "elapsed_time(sec)": 21.511200189590454
 }

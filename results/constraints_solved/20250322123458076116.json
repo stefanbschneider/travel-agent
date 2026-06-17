@@ -578,13 +578,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:22",
-                    "end_time": "18:42",
-                    "start": "Nanjing Lukou International Airport",
-                    "end": "Shanghai Hongqiao International Airport",
-                    "price": 221.47,
-                    "cost": 442.94,
+                    "type": "attraction",
+                    "position": "Birch Villa Village",
+                    "start_time": "14:27",
+                    "end_time": "15:57",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -599,11 +598,54 @@
                         },
                         {
                             "start": "Xianlin Lake-Metro Station",
-                            "end": "Lukou Airport-Metro Station",
+                            "end": "Xigang Huashu-Metro Station",
                             "mode": "metro",
                             "start_time": "13:35",
-                            "end_time": "15:05",
-                            "distance": 45.24,
+                            "end_time": "13:40",
+                            "distance": 2.97,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Xigang Huashu-Metro Station",
+                            "end": "Birch Villa Village",
+                            "mode": "walk",
+                            "start_time": "13:40",
+                            "end_time": "14:27",
+                            "distance": 3.96,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:22",
+                    "end_time": "18:42",
+                    "start": "Nanjing Lukou International Airport",
+                    "end": "Shanghai Hongqiao International Airport",
+                    "price": 221.47,
+                    "cost": 442.94,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Birch Villa Village",
+                            "end": "Xigang Huashu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:57",
+                            "end_time": "16:44",
+                            "distance": 3.96,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xigang Huashu-Metro Station",
+                            "end": "Lukou Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:44",
+                            "end_time": "18:09",
+                            "distance": 42.5,
                             "price": 8,
                             "cost": 16,
                             "tickets": 2
@@ -612,8 +654,8 @@
                             "start": "Lukou Airport-Metro Station",
                             "end": "Nanjing Lukou International Airport",
                             "mode": "walk",
-                            "start_time": "15:05",
-                            "end_time": "15:08",
+                            "start_time": "18:09",
+                            "end_time": "18:12",
                             "distance": 0.27,
                             "price": 0,
                             "cost": 0
@@ -624,5 +666,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 2.3291170597076416
+    "elapsed_time(sec)": 13.621935844421387
 }

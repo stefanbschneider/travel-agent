@@ -309,13 +309,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:00",
-                    "end_time": "18:03",
-                    "start": "Wuhan Tianhe International Airport",
-                    "end": "Guangzhou Baiyun International Airport",
-                    "price": 457.03,
-                    "cost": 457.03,
+                    "type": "attraction",
+                    "position": "5D Starry Sky Illusion Art Museum",
+                    "start_time": "14:34",
+                    "end_time": "16:04",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -330,11 +329,54 @@
                         },
                         {
                             "start": "Pear Garden-Metro Station",
-                            "end": "Tianhe Airport-Metro Station",
+                            "end": "Dazhi Road-Metro Station",
                             "mode": "metro",
                             "start_time": "14:14",
-                            "end_time": "15:06",
-                            "distance": 26.22,
+                            "end_time": "14:28",
+                            "distance": 7.46,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Dazhi Road-Metro Station",
+                            "end": "5D Starry Sky Illusion Art Museum",
+                            "mode": "walk",
+                            "start_time": "14:28",
+                            "end_time": "14:34",
+                            "distance": 0.54,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:00",
+                    "end_time": "18:03",
+                    "start": "Wuhan Tianhe International Airport",
+                    "end": "Guangzhou Baiyun International Airport",
+                    "price": 457.03,
+                    "cost": 457.03,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "5D Starry Sky Illusion Art Museum",
+                            "end": "Dazhi Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:04",
+                            "end_time": "16:10",
+                            "distance": 0.54,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dazhi Road-Metro Station",
+                            "end": "Tianhe Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:10",
+                            "end_time": "16:52",
+                            "distance": 21.12,
                             "price": 6,
                             "cost": 6,
                             "tickets": 1
@@ -343,8 +385,8 @@
                             "start": "Tianhe Airport-Metro Station",
                             "end": "Wuhan Tianhe International Airport",
                             "mode": "walk",
-                            "start_time": "15:06",
-                            "end_time": "15:12",
+                            "start_time": "16:52",
+                            "end_time": "16:58",
                             "distance": 0.55,
                             "price": 0,
                             "cost": 0
@@ -355,5 +397,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.7845969200134277
+    "elapsed_time(sec)": 7.5952980518341064
 }

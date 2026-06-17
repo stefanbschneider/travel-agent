@@ -557,13 +557,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 1008.34,
+                    "type": "attraction",
+                    "position": "Suspended Glass Art Museum",
+                    "start_time": "14:00",
+                    "end_time": "15:30",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -578,11 +577,54 @@
                         },
                         {
                             "start": "Huangbeiling-Metro Station",
-                            "end": "Airport East-Metro Station",
+                            "end": "Shaibu-Metro Station",
                             "mode": "metro",
                             "start_time": "13:54",
-                            "end_time": "15:02",
-                            "distance": 34.14,
+                            "end_time": "13:56",
+                            "distance": 1.45,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Shaibu-Metro Station",
+                            "end": "Suspended Glass Art Museum",
+                            "mode": "walk",
+                            "start_time": "13:56",
+                            "end_time": "14:00",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:56",
+                    "end_time": "20:21",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Beijing Daxing International Airport",
+                    "price": 1008.34,
+                    "cost": 1008.34,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Suspended Glass Art Museum",
+                            "end": "Shaibu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:30",
+                            "end_time": "15:34",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shaibu-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:34",
+                            "end_time": "16:39",
+                            "distance": 32.69,
                             "price": 7,
                             "cost": 7,
                             "tickets": 1
@@ -591,8 +633,8 @@
                             "start": "Airport East-Metro Station",
                             "end": "Shenzhen Bao'an International Airport",
                             "mode": "walk",
-                            "start_time": "15:02",
-                            "end_time": "15:07",
+                            "start_time": "16:39",
+                            "end_time": "16:44",
                             "distance": 0.45,
                             "price": 0,
                             "cost": 0
@@ -603,5 +645,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.588671922683716
+    "elapsed_time(sec)": 20.027796983718872
 }

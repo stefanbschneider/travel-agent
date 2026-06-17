@@ -683,13 +683,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:32",
-                    "end_time": "20:03",
-                    "start": "Shanghai Pudong International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 582.65,
-                    "cost": 2330.6,
+                    "type": "attraction",
+                    "position": "Century Avenue Cherry Orchard",
+                    "start_time": "15:48",
+                    "end_time": "17:18",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -704,21 +703,64 @@
                         },
                         {
                             "start": "Zhenbei Road-Metro Station",
-                            "end": "Pudong International Airport-Metro Station",
+                            "end": "Pudong Avenue-Metro Station",
                             "mode": "metro",
                             "start_time": "15:21",
-                            "end_time": "16:43",
-                            "distance": 41.37,
-                            "price": 8,
-                            "cost": 32,
+                            "end_time": "15:47",
+                            "distance": 13.12,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Pudong Avenue-Metro Station",
+                            "end": "Century Avenue Cherry Orchard",
+                            "mode": "walk",
+                            "start_time": "15:47",
+                            "end_time": "15:48",
+                            "distance": 0.15,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:32",
+                    "end_time": "20:03",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 582.65,
+                    "cost": 2330.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Century Avenue Cherry Orchard",
+                            "end": "Pudong Avenue-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:18",
+                            "end_time": "17:19",
+                            "distance": 0.15,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Pudong Avenue-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:19",
+                            "end_time": "18:17",
+                            "distance": 29.03,
+                            "price": 7,
+                            "cost": 28,
                             "tickets": 4
                         },
                         {
                             "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "16:43",
-                            "end_time": "16:58",
+                            "start_time": "18:17",
+                            "end_time": "18:32",
                             "distance": 1.27,
                             "price": 0,
                             "cost": 0
@@ -729,5 +771,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.633750915527344
+    "elapsed_time(sec)": 34.75718331336975
 }

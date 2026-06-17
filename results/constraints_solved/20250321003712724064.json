@@ -620,13 +620,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "20:58",
-                    "end_time": "21:40",
-                    "start": "Hangzhou Xiaoshan International Airport",
-                    "end": "Wuhan Tianhe International Airport",
-                    "price": 261.24,
-                    "cost": 783.72,
+                    "type": "attraction",
+                    "position": "704 Project (Lin Biao's Hangzhou Villa)",
+                    "start_time": "14:23",
+                    "end_time": "15:53",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -641,11 +640,96 @@
                         },
                         {
                             "start": "Shuicheng Bridge-Metro Station",
-                            "end": "Xiaoshan International Airport-Metro Station",
+                            "end": "Yellow Dragon Cave-Metro Station",
                             "mode": "metro",
                             "start_time": "13:34",
-                            "end_time": "14:28",
-                            "distance": 27.29,
+                            "end_time": "13:47",
+                            "distance": 6.89,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "mode": "walk",
+                            "start_time": "13:47",
+                            "end_time": "14:23",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Grandma Sun's Scallion Pancake Rolls",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 10.0,
+                    "cost": 30.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "end": "Yellow Dragon Cave-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:53",
+                            "end_time": "16:29",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "Jiangcheng Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:29",
+                            "end_time": "16:38",
+                            "distance": 4.7,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Jiangcheng Road-Metro Station",
+                            "end": "Grandma Sun's Scallion Pancake Rolls",
+                            "mode": "walk",
+                            "start_time": "16:38",
+                            "end_time": "16:48",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "20:58",
+                    "end_time": "21:40",
+                    "start": "Hangzhou Xiaoshan International Airport",
+                    "end": "Wuhan Tianhe International Airport",
+                    "price": 261.24,
+                    "cost": 783.72,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Grandma Sun's Scallion Pancake Rolls",
+                            "end": "Jiangcheng Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "18:10",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiangcheng Road-Metro Station",
+                            "end": "Xiaoshan International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:10",
+                            "end_time": "18:59",
+                            "distance": 24.54,
                             "price": 6,
                             "cost": 18,
                             "tickets": 3
@@ -654,8 +738,8 @@
                             "start": "Xiaoshan International Airport-Metro Station",
                             "end": "Hangzhou Xiaoshan International Airport",
                             "mode": "walk",
-                            "start_time": "14:28",
-                            "end_time": "14:29",
+                            "start_time": "18:59",
+                            "end_time": "19:00",
                             "distance": 0.12,
                             "price": 0,
                             "cost": 0
@@ -666,5 +750,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 4.77325963973999
+    "elapsed_time(sec)": 19.302332878112793
 }

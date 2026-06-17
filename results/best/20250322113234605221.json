@@ -589,6 +589,16 @@
       "day": 3,
       "activities": [
         {
+          "type": "breakfast",
+          "position": "Pullman Nanjing Lukou Airport",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
           "type": "attraction",
           "position": "Rooster Crowing Temple",
           "start_time": "09:57",
@@ -673,6 +683,69 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Laomendong Archway",
+          "start_time": "13:25",
+          "end_time": "14:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Laomendong Historical Block",
+              "end": "Laomendong Archway",
+              "mode": "walk",
+              "start_time": "13:24",
+              "end_time": "13:25",
+              "distance": 0.12043622768014349,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Former Residence of Qin Dashi",
+          "start_time": "15:07",
+          "end_time": "16:37",
+          "price": 4.5,
+          "cost": 9.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Laomendong Archway",
+              "end": "Wuding Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "14:55",
+              "end_time": "15:02",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wuding Gate-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "15:02",
+              "end_time": "15:04",
+              "distance": 1.2,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Former Residence of Qin Dashi",
+              "mode": "walk",
+              "start_time": "15:04",
+              "end_time": "15:07",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "18:22",
           "end_time": "18:42",
@@ -683,22 +756,22 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Laomendong Historical Block",
-              "end": "Wuding Gate-Metro Station",
+              "start": "Former Residence of Qin Dashi",
+              "end": "Confucius Temple-Metro Station",
               "mode": "walk",
-              "start_time": "13:24",
-              "end_time": "13:29",
-              "distance": 0.47,
+              "start_time": "16:37",
+              "end_time": "16:40",
+              "distance": 0.32,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Wuding Gate-Metro Station",
+              "start": "Confucius Temple-Metro Station",
               "end": "Lukou Airport-Metro Station",
               "mode": "metro",
-              "start_time": "13:29",
-              "end_time": "14:33",
-              "distance": 32.31,
+              "start_time": "16:40",
+              "end_time": "17:47",
+              "distance": 33.51,
               "price": 7,
               "cost": 14,
               "tickets": 2
@@ -707,8 +780,8 @@
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "14:33",
-              "end_time": "14:36",
+              "start_time": "17:47",
+              "end_time": "17:50",
               "distance": 0.27,
               "price": 0,
               "cost": 0
@@ -720,5 +793,5 @@
     }
   ],
   "elapsed_time(sec)": 2.3627657890319824,
-  "_eval_score": 95.02182539682539
+  "_eval_score": 96.62037037037038
 }

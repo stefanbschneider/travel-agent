@@ -536,13 +536,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "lunch",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "11:54",
+          "end_time": "12:54",
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
@@ -557,21 +556,106 @@
             },
             {
               "start": "Disney-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
               "start_time": "11:03",
-              "end_time": "11:29",
-              "distance": 13.17,
-              "price": 4,
-              "cost": 16,
+              "end_time": "11:44",
+              "distance": 20.67,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "walk",
+              "start_time": "11:44",
+              "end_time": "11:54",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Modern and Contemporary Press and Publication Museum",
+          "start_time": "13:49",
+          "end_time": "15:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:54",
+              "end_time": "13:04",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Zhanghuabang-Metro Station",
+              "mode": "metro",
+              "start_time": "13:04",
+              "end_time": "13:20",
+              "distance": 8.44,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Zhanghuabang-Metro Station",
+              "end": "China Modern and Contemporary Press and Publication Museum",
+              "mode": "walk",
+              "start_time": "13:20",
+              "end_time": "13:49",
+              "distance": 2.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 2330.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Modern and Contemporary Press and Publication Museum",
+              "end": "Zhanghuabang-Metro Station",
+              "mode": "walk",
+              "start_time": "15:49",
+              "end_time": "16:18",
+              "distance": 2.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhanghuabang-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:18",
+              "end_time": "17:32",
+              "distance": 37.17,
+              "price": 8,
+              "cost": 32,
               "tickets": 4
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "11:29",
-              "end_time": "11:44",
+              "start_time": "17:32",
+              "end_time": "17:47",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -583,5 +667,5 @@
     }
   ],
   "elapsed_time(sec)": 13.266674995422363,
-  "_eval_score": 94.33180708180709
+  "_eval_score": 95.0
 }

@@ -910,12 +910,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Simple Fare · First Dining Room",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 398.0,
-                    "cost": 1194.0,
+                    "type": "attraction",
+                    "position": "Xinhai Revolution Museum",
+                    "start_time": "14:44",
+                    "end_time": "16:14",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -930,21 +930,63 @@
                         },
                         {
                             "start": "Tangjiadun-Metro Station",
-                            "end": "Dazhi Road-Metro Station",
+                            "end": "Xiaodongmen-Metro Station",
                             "mode": "metro",
                             "start_time": "14:19",
-                            "end_time": "14:26",
-                            "distance": 3.59,
-                            "price": 2,
-                            "cost": 6,
+                            "end_time": "14:37",
+                            "distance": 9.24,
+                            "price": 4,
+                            "cost": 12,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Xiaodongmen-Metro Station",
+                            "end": "Xinhai Revolution Museum",
+                            "mode": "walk",
+                            "start_time": "14:37",
+                            "end_time": "14:44",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Simple Fare · First Dining Room",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 398.0,
+                    "cost": 1194.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Xinhai Revolution Museum",
+                            "end": "Xiaodongmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:14",
+                            "end_time": "16:21",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xiaodongmen-Metro Station",
+                            "end": "Dazhi Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:21",
+                            "end_time": "16:32",
+                            "distance": 5.73,
+                            "price": 3,
+                            "cost": 9,
                             "tickets": 3
                         },
                         {
                             "start": "Dazhi Road-Metro Station",
                             "end": "Simple Fare · First Dining Room",
                             "mode": "walk",
-                            "start_time": "14:26",
-                            "end_time": "14:36",
+                            "start_time": "16:32",
+                            "end_time": "16:42",
                             "distance": 0.91,
                             "price": 0,
                             "cost": 0
@@ -1011,6 +1053,90 @@
                     "transports": []
                 },
                 {
+                    "type": "attraction",
+                    "position": "Guiyuan Temple",
+                    "start_time": "09:24",
+                    "end_time": "10:54",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                            "end": "Tianhe Airport-Metro Station",
+                            "mode": "walk",
+                            "start_time": "08:30",
+                            "end_time": "08:32",
+                            "distance": 0.2,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tianhe Airport-Metro Station",
+                            "end": "Zhongjiacun-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:32",
+                            "end_time": "09:21",
+                            "distance": 24.99,
+                            "price": 6,
+                            "cost": 18,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Zhongjiacun-Metro Station",
+                            "end": "Guiyuan Temple",
+                            "mode": "walk",
+                            "start_time": "09:21",
+                            "end_time": "09:24",
+                            "distance": 0.26,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Hubei Art Museum",
+                    "start_time": "11:23",
+                    "end_time": "12:53",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Guiyuan Temple",
+                            "end": "Zhongjiacun-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:54",
+                            "end_time": "10:57",
+                            "distance": 0.26,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Zhongjiacun-Metro Station",
+                            "end": "Pear Garden-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:57",
+                            "end_time": "11:17",
+                            "distance": 10.36,
+                            "price": 4,
+                            "cost": 12,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Pear Garden-Metro Station",
+                            "end": "Hubei Art Museum",
+                            "mode": "walk",
+                            "start_time": "11:17",
+                            "end_time": "11:23",
+                            "distance": 0.53,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
                     "type": "airplane",
                     "start_time": "14:40",
                     "end_time": "15:36",
@@ -1021,12 +1147,33 @@
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Starway Hotel (Wuhan Tianhe Airport T3 Terminal)",
+                            "start": "Hubei Art Museum",
+                            "end": "Pear Garden-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:53",
+                            "end_time": "12:59",
+                            "distance": 0.53,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Pear Garden-Metro Station",
+                            "end": "Tianhe Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:59",
+                            "end_time": "13:51",
+                            "distance": 26.22,
+                            "price": 6,
+                            "cost": 18,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Tianhe Airport-Metro Station",
                             "end": "Wuhan Tianhe International Airport",
                             "mode": "walk",
-                            "start_time": "08:30",
-                            "end_time": "08:34",
-                            "distance": 0.39695381514825195,
+                            "start_time": "13:51",
+                            "end_time": "13:57",
+                            "distance": 0.55,
                             "price": 0,
                             "cost": 0
                         }
@@ -1036,5 +1183,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 4.559291839599609
+    "elapsed_time(sec)": 16.141968965530396
 }

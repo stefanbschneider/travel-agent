@@ -146,6 +146,69 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "13:55",
+          "end_time": "15:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "13:55",
+              "distance": 0.15220809042174926,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 32.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Shaibu-Metro Station",
+              "mode": "walk",
+              "start_time": "15:25",
+              "end_time": "15:27",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "15:27",
+              "end_time": "15:29",
+              "distance": 1.45,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:31",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "20:58",
           "end_time": "18:44",
@@ -156,15 +219,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "East Gate Old Street",
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:14",
+              "distance": 6.42,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
-              "mode": "taxi",
-              "start_time": "13:54",
-              "end_time": "14:02",
-              "distance": 5.49,
-              "price": 23.92,
-              "cost": 23.92,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:14",
+              "end_time": "18:17",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "Z586"
@@ -173,5 +256,5 @@
     }
   ],
   "elapsed_time(sec)": 11.604698896408081,
-  "_eval_score": 92.40674603174602
+  "_eval_score": 94.23214285714286
 }

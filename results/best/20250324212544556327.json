@@ -7,104 +7,226 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "07:45",
-          "end_time": "09:09",
-          "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 611.21,
-          "cost": 2444.84,
+          "type": "train",
+          "start_time": "08:22",
+          "end_time": "08:10",
+          "start": "Hangzhou Railway Station",
+          "end": "Beijing Fengtai Station",
+          "price": 449.4,
+          "cost": 1797.6,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL500"
-        },
-        {
-          "type": "lunch",
-          "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 337.0,
-          "cost": 1348.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Beijing Daxing International Airport",
-              "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
-              "start_time": "09:09",
-              "end_time": "10:14",
-              "distance": 43.82,
-              "price": 191.88,
-              "cost": 191.88,
-              "cars": 1
-            }
-          ]
+          "TrainID": "K1277"
         },
         {
           "type": "attraction",
-          "position": "The Palace Museum",
-          "start_time": "12:04",
-          "end_time": "13:34",
+          "position": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+          "start_time": "09:00",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Tidu (Beijing Fang Branch)",
-              "end": "The Palace Museum",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:04",
-              "distance": 3.03,
-              "price": 15.32,
-              "cost": 15.32,
-              "cars": 1
+              "start": "Beijing Fengtai Station",
+              "end": "Fengtai East Street-Metro Station",
+              "mode": "walk",
+              "start_time": "08:10",
+              "end_time": "08:20",
+              "distance": 0.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fengtai East Street-Metro Station",
+              "end": "Baiduizi-Metro Station",
+              "mode": "metro",
+              "start_time": "08:20",
+              "end_time": "08:36",
+              "distance": 8.1,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Baiduizi-Metro Station",
+              "end": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+              "mode": "walk",
+              "start_time": "08:36",
+              "end_time": "08:44",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Railway Museum East Suburb Hall",
+          "start_time": "11:46",
+          "end_time": "13:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+              "end": "Baiduizi-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baiduizi-Metro Station",
+              "end": "Wangjing East-Metro Station",
+              "mode": "metro",
+              "start_time": "10:38",
+              "end_time": "11:10",
+              "distance": 16.36,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Wangjing East-Metro Station",
+              "end": "China Railway Museum East Suburb Hall",
+              "mode": "walk",
+              "start_time": "11:10",
+              "end_time": "11:46",
+              "distance": 3.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Railway Museum Zhengyangmen Branch",
+          "start_time": "14:48",
+          "end_time": "16:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Railway Museum East Suburb Hall",
+              "end": "Wangjing East-Metro Station",
+              "mode": "walk",
+              "start_time": "13:16",
+              "end_time": "13:52",
+              "distance": 3.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangjing East-Metro Station",
+              "end": "Qingnian Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:52",
+              "end_time": "14:10",
+              "distance": 9.26,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Qingnian Road-Metro Station",
+              "end": "China Railway Museum Zhengyangmen Branch",
+              "mode": "walk",
+              "start_time": "14:10",
+              "end_time": "14:48",
+              "distance": 3.24,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Jumbo Seafood (Beijing SKP Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 401.0,
-          "cost": 1604.0,
+          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+          "start_time": "17:26",
+          "end_time": "18:26",
+          "price": 14.0,
+          "cost": 56.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "The Palace Museum",
-              "end": "Jumbo Seafood (Beijing SKP Branch)",
-              "mode": "taxi",
-              "start_time": "13:34",
-              "end_time": "13:43",
-              "distance": 6.61,
-              "price": 27.83,
-              "cost": 27.83,
-              "cars": 1
+              "start": "China Railway Museum Zhengyangmen Branch",
+              "end": "Qingnian Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:18",
+              "end_time": "16:56",
+              "distance": 3.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qingnian Road-Metro Station",
+              "end": "Niujie-Metro Station",
+              "mode": "metro",
+              "start_time": "16:56",
+              "end_time": "17:23",
+              "distance": 13.68,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "mode": "walk",
+              "start_time": "17:23",
+              "end_time": "17:26",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Beijing CSN Pearl Hotel",
-          "start_time": "19:05",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+          "start_time": "19:39",
           "end_time": "24:00",
-          "price": 451.0,
-          "cost": 902.0,
+          "price": 269.0,
+          "cost": 538.0,
           "rooms": 2,
           "room_type": 2,
           "tickets": 2,
           "transports": [
             {
-              "start": "Jumbo Seafood (Beijing SKP Branch)",
-              "end": "Beijing CSN Pearl Hotel",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "19:05",
-              "distance": 43.61,
-              "price": 190.96,
-              "cost": 190.96,
-              "cars": 1
+              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "end": "Niujie-Metro Station",
+              "mode": "walk",
+              "start_time": "18:26",
+              "end_time": "18:29",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "International Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "18:29",
+              "end_time": "19:20",
+              "distance": 25.87,
+              "price": 6,
+              "cost": 24,
+              "tickets": 4
+            },
+            {
+              "start": "International Exhibition Center-Metro Station",
+              "end": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "mode": "walk",
+              "start_time": "19:20",
+              "end_time": "19:39",
+              "distance": 1.65,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -115,7 +237,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Beijing CSN Pearl Hotel",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -124,76 +246,220 @@
           "transports": []
         },
         {
+          "type": "lunch",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "end": "International Exhibition Center-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:49",
+              "distance": 1.65,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Exhibition Center-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:49",
+              "end_time": "09:27",
+              "distance": 19.19,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "09:27",
+              "end_time": "09:33",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "attraction",
-          "position": "Old Summer Palace",
-          "start_time": "09:53",
-          "end_time": "11:23",
+          "position": "Corner Tower",
+          "start_time": "12:15",
+          "end_time": "13:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing CSN Pearl Hotel",
-              "end": "Old Summer Palace",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:53",
-              "distance": 55.65,
-              "price": 245.11,
-              "cost": 245.11,
-              "cars": 1
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:06",
+              "end_time": "12:08",
+              "distance": 1.11,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Corner Tower",
+              "mode": "walk",
+              "start_time": "12:08",
+              "end_time": "12:15",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Beijing Puxuan Hotel · Left Bank",
-          "start_time": "11:43",
-          "end_time": "12:43",
-          "price": 733.0,
-          "cost": 2932.0,
+          "type": "attraction",
+          "position": "Cining Palace",
+          "start_time": "14:04",
+          "end_time": "15:34",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Old Summer Palace",
-              "end": "Beijing Puxuan Hotel · Left Bank",
-              "mode": "taxi",
-              "start_time": "11:23",
-              "end_time": "11:43",
-              "distance": 13.37,
-              "price": 54.89,
-              "cost": 54.89,
-              "cars": 1
+              "start": "Corner Tower",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "13:45",
+              "end_time": "13:52",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "13:52",
+              "end_time": "13:54",
+              "distance": 1.26,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Cining Palace",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "14:04",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:18",
-          "end_time": "18:42",
-          "start": "Beijing Daxing International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 516.02,
-          "cost": 2064.08,
+          "type": "dinner",
+          "position": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing Puxuan Hotel · Left Bank",
-              "end": "Beijing Daxing International Airport",
-              "mode": "taxi",
-              "start_time": "12:43",
-              "end_time": "13:53",
-              "distance": 46.69,
-              "price": 204.78,
-              "cost": 204.78,
-              "cars": 1
+              "start": "Cining Palace",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "walk",
+              "start_time": "15:34",
+              "end_time": "15:44",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Shichahai-Metro Station",
+              "mode": "metro",
+              "start_time": "15:44",
+              "end_time": "15:47",
+              "distance": 1.98,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+              "mode": "walk",
+              "start_time": "15:47",
+              "end_time": "15:54",
+              "distance": 0.66,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:37",
+          "end_time": "20:38",
+          "start": "Beijing Fengtai Station",
+          "end": "Hangzhou Railway Station",
+          "price": 449.4,
+          "cost": 1797.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+              "end": "Shichahai-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 0.66,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Fengtai East Street-Metro Station",
+              "mode": "metro",
+              "start_time": "18:07",
+              "end_time": "18:32",
+              "distance": 12.67,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Fengtai East Street-Metro Station",
+              "end": "Beijing Fengtai Station",
+              "mode": "walk",
+              "start_time": "18:32",
+              "end_time": "18:42",
+              "distance": 0.84,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "FlightID": "FL139"
+          "TrainID": "K1278"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.07024693489074707,
-  "_eval_score": 93.14795918367346
+  "elapsed_time(sec)": 7.985742807388306,
+  "_eval_score": 94.78214285714286
 }

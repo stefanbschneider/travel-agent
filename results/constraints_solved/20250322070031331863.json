@@ -414,13 +414,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:00",
-                    "end_time": "20:14",
-                    "start": "Beijing South Railway Station",
-                    "end": "Nanjing South Railway Station",
-                    "price": 583.83,
-                    "cost": 2919.15,
+                    "type": "attraction",
+                    "position": "798 Art District",
+                    "start_time": "14:38",
+                    "end_time": "16:08",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 5,
                     "transports": [
                         {
@@ -435,21 +434,64 @@
                         },
                         {
                             "start": "Gulou Street-Metro Station",
-                            "end": "Beijing South Railway Station-Metro Station",
+                            "end": "Wangjing South-Metro Station",
                             "mode": "metro",
                             "start_time": "14:00",
-                            "end_time": "14:18",
-                            "distance": 9.41,
-                            "price": 4,
-                            "cost": 20,
+                            "end_time": "14:17",
+                            "distance": 8.51,
+                            "price": 3,
+                            "cost": 15,
+                            "tickets": 5
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
+                            "end": "798 Art District",
+                            "mode": "walk",
+                            "start_time": "14:17",
+                            "end_time": "14:38",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:00",
+                    "end_time": "20:14",
+                    "start": "Beijing South Railway Station",
+                    "end": "Nanjing South Railway Station",
+                    "price": 583.83,
+                    "cost": 2919.15,
+                    "tickets": 5,
+                    "transports": [
+                        {
+                            "start": "798 Art District",
+                            "end": "Wangjing South-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:08",
+                            "end_time": "16:29",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
+                            "end": "Beijing South Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:29",
+                            "end_time": "17:00",
+                            "distance": 15.93,
+                            "price": 5,
+                            "cost": 25,
                             "tickets": 5
                         },
                         {
                             "start": "Beijing South Railway Station-Metro Station",
                             "end": "Beijing South Railway Station",
                             "mode": "walk",
-                            "start_time": "14:18",
-                            "end_time": "14:18",
+                            "start_time": "17:00",
+                            "end_time": "17:00",
                             "distance": 0.02,
                             "price": 0,
                             "cost": 0
@@ -460,5 +502,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.0329959392547607
+    "elapsed_time(sec)": 15.892477035522461
 }

@@ -234,6 +234,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "13:45",
+          "end_time": "15:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Museum",
+              "end": "Clover Garden-Metro Station",
+              "mode": "walk",
+              "start_time": "13:16",
+              "end_time": "13:25",
+              "distance": 0.81,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "13:25",
+              "end_time": "13:32",
+              "distance": 3.99,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "13:32",
+              "end_time": "13:45",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "17:00",
           "end_time": "18:12",
@@ -244,15 +286,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing Museum",
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "15:15",
+              "end_time": "15:28",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:28",
+              "end_time": "15:35",
+              "distance": 3.56,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
-              "mode": "taxi",
-              "start_time": "13:16",
-              "end_time": "13:24",
-              "distance": 5.53,
-              "price": 24.04,
-              "cost": 24.04,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:37",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G7021"
@@ -261,5 +323,5 @@
     }
   ],
   "elapsed_time(sec)": 2.343439817428589,
-  "_eval_score": 96.25
+  "_eval_score": 96.82305194805195
 }

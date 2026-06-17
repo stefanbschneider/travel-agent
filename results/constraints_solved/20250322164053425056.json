@@ -847,13 +847,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "attraction",
+                    "position": "704 Project (Lin Biao's Hangzhou Villa)",
+                    "start_time": "14:31",
+                    "end_time": "16:01",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -868,21 +867,64 @@
                         },
                         {
                             "start": "Shuicheng Bridge-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Yellow Dragon Cave-Metro Station",
                             "mode": "metro",
                             "start_time": "13:42",
-                            "end_time": "14:05",
-                            "distance": 11.72,
-                            "price": 4,
-                            "cost": 16,
+                            "end_time": "13:55",
+                            "distance": 6.89,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "mode": "walk",
+                            "start_time": "13:55",
+                            "end_time": "14:31",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "end": "Yellow Dragon Cave-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:01",
+                            "end_time": "16:37",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:37",
+                            "end_time": "16:52",
+                            "distance": 7.93,
+                            "price": 3,
+                            "cost": 12,
                             "tickets": 4
                         },
                         {
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "14:05",
-                            "end_time": "14:10",
+                            "start_time": "16:52",
+                            "end_time": "16:57",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -893,5 +935,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.6220622062683105
+    "elapsed_time(sec)": 30.30962109565735
 }

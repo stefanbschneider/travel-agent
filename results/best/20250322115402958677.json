@@ -63,6 +63,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Adventure Island",
+          "start_time": "14:28",
+          "end_time": "15:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Disney Resort",
+              "end": "Adventure Island",
+              "mode": "walk",
+              "start_time": "14:25",
+              "end_time": "14:28",
+              "distance": 0.2728928207304483,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Fu He Hui",
           "start_time": "17:00",
@@ -72,15 +93,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Disney Resort",
+              "start": "Adventure Island",
+              "end": "Disney-Metro Station",
+              "mode": "walk",
+              "start_time": "15:58",
+              "end_time": "16:09",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Disney-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:09",
+              "end_time": "16:57",
+              "distance": 24.26,
+              "price": 6,
+              "cost": 24,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "14:25",
-              "end_time": "15:01",
-              "distance": 24.38,
-              "price": 104.39,
-              "cost": 104.39,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:57",
+              "end_time": "16:59",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -295,6 +336,90 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "12:39",
+          "end_time": "14:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:24",
+              "end_time": "12:32",
+              "distance": 0.69,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Liping Road-Metro Station",
+              "mode": "metro",
+              "start_time": "12:32",
+              "end_time": "12:37",
+              "distance": 2.72,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "12:37",
+              "end_time": "12:39",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Super Time-Space Cube (Shanghai Metaverse Experience Hall)",
+          "start_time": "14:16",
+          "end_time": "16:46",
+          "price": 128.0,
+          "cost": 512.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:09",
+              "end_time": "14:11",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "Tilanqiao-Metro Station",
+              "mode": "metro",
+              "start_time": "14:11",
+              "end_time": "14:13",
+              "distance": 1.0,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Tilanqiao-Metro Station",
+              "end": "Super Time-Space Cube (Shanghai Metaverse Experience Hall)",
+              "mode": "walk",
+              "start_time": "14:13",
+              "end_time": "14:16",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "18:32",
           "end_time": "20:03",
@@ -305,15 +430,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "start": "Super Time-Space Cube (Shanghai Metaverse Experience Hall)",
+              "end": "Tilanqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "16:46",
+              "end_time": "16:49",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tilanqiao-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:49",
+              "end_time": "17:50",
+              "distance": 30.66,
+              "price": 7,
+              "cost": 28,
+              "tickets": 4
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "taxi",
-              "start_time": "12:24",
-              "end_time": "13:10",
-              "distance": 30.72,
-              "price": 132.93,
-              "cost": 132.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:50",
+              "end_time": "18:05",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL018"
@@ -322,5 +467,5 @@
     }
   ],
   "elapsed_time(sec)": 0.034194231033325195,
-  "_eval_score": 94.02380952380952
+  "_eval_score": 95.4595238095238
 }

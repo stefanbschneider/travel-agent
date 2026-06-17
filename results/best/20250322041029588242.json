@@ -414,12 +414,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 24.0,
-          "cost": 24.0,
+          "type": "attraction",
+          "position": "Lotus Hill Park",
+          "start_time": "12:20",
+          "end_time": "13:50",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -434,11 +434,95 @@
             },
             {
               "start": "Shangmeilin-Metro Station",
-              "end": "Meicun-Metro Station",
+              "end": "Donggualing-Metro Station",
               "mode": "metro",
               "start_time": "12:15",
-              "end_time": "12:16",
-              "distance": 0.76,
+              "end_time": "12:17",
+              "distance": 1.39,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Lotus Hill Park",
+              "mode": "walk",
+              "start_time": "12:17",
+              "end_time": "12:20",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Pen Rack Mountain Park",
+          "start_time": "14:01",
+          "end_time": "16:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lotus Hill Park",
+              "end": "Donggualing-Metro Station",
+              "mode": "walk",
+              "start_time": "13:50",
+              "end_time": "13:53",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Silver Lake-Metro Station",
+              "mode": "metro",
+              "start_time": "13:53",
+              "end_time": "13:57",
+              "distance": 2.45,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Silver Lake-Metro Station",
+              "end": "Pen Rack Mountain Park",
+              "mode": "walk",
+              "start_time": "13:57",
+              "end_time": "14:01",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Pen Rack Mountain Park",
+              "end": "Silver Lake-Metro Station",
+              "mode": "walk",
+              "start_time": "16:31",
+              "end_time": "16:35",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Silver Lake-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "16:35",
+              "end_time": "16:42",
+              "distance": 3.85,
               "price": 2,
               "cost": 2,
               "tickets": 1
@@ -447,8 +531,8 @@
               "start": "Meicun-Metro Station",
               "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
               "mode": "walk",
-              "start_time": "12:16",
-              "end_time": "12:22",
+              "start_time": "16:42",
+              "end_time": "16:48",
               "distance": 0.53,
               "price": 0,
               "cost": 0
@@ -562,5 +646,5 @@
     }
   ],
   "elapsed_time(sec)": 7.350685119628906,
-  "_eval_score": 93.98809523809524
+  "_eval_score": 95.01927437641723
 }

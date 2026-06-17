@@ -204,12 +204,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "New Field",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 1028.0,
-                    "cost": 1028.0,
+                    "type": "attraction",
+                    "position": "Baishilong Music Theme Park",
+                    "start_time": "13:20",
+                    "end_time": "14:50",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -224,21 +224,63 @@
                         },
                         {
                             "start": "Hongshu Bay-Metro Station",
-                            "end": "Convention and Exhibition Center-Metro Station",
+                            "end": "Baishilong-Metro Station",
                             "mode": "metro",
                             "start_time": "12:55",
-                            "end_time": "13:14",
-                            "distance": 9.59,
+                            "end_time": "13:17",
+                            "distance": 11.38,
                             "price": 4,
                             "cost": 4,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Baishilong Music Theme Park",
+                            "mode": "walk",
+                            "start_time": "13:17",
+                            "end_time": "13:20",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "New Field",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 1028.0,
+                    "cost": 1028.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Baishilong Music Theme Park",
+                            "end": "Baishilong-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:50",
+                            "end_time": "14:53",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Convention and Exhibition Center-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:53",
+                            "end_time": "15:08",
+                            "distance": 7.64,
+                            "price": 3,
+                            "cost": 3,
                             "tickets": 1
                         },
                         {
                             "start": "Convention and Exhibition Center-Metro Station",
                             "end": "New Field",
                             "mode": "walk",
-                            "start_time": "13:14",
-                            "end_time": "13:15",
+                            "start_time": "15:08",
+                            "end_time": "15:09",
                             "distance": 0.16,
                             "price": 0,
                             "cost": 0
@@ -473,13 +515,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 1008.34,
+                    "type": "attraction",
+                    "position": "East River Guerrilla Force Command Post Memorial Hall",
+                    "start_time": "14:07",
+                    "end_time": "15:37",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -494,11 +535,54 @@
                         },
                         {
                             "start": "Guomao-Metro Station",
-                            "end": "Airport East-Metro Station",
+                            "end": "Shaibu-Metro Station",
                             "mode": "metro",
                             "start_time": "14:03",
-                            "end_time": "15:08",
-                            "distance": 32.7,
+                            "end_time": "14:05",
+                            "distance": 1.13,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Shaibu-Metro Station",
+                            "end": "East River Guerrilla Force Command Post Memorial Hall",
+                            "mode": "walk",
+                            "start_time": "14:05",
+                            "end_time": "14:07",
+                            "distance": 0.24,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:56",
+                    "end_time": "20:21",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Beijing Daxing International Airport",
+                    "price": 1008.34,
+                    "cost": 1008.34,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "East River Guerrilla Force Command Post Memorial Hall",
+                            "end": "Shaibu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:37",
+                            "end_time": "15:39",
+                            "distance": 0.24,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shaibu-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:39",
+                            "end_time": "16:44",
+                            "distance": 32.69,
                             "price": 7,
                             "cost": 7,
                             "tickets": 1
@@ -507,8 +591,8 @@
                             "start": "Airport East-Metro Station",
                             "end": "Shenzhen Bao'an International Airport",
                             "mode": "walk",
-                            "start_time": "15:08",
-                            "end_time": "15:13",
+                            "start_time": "16:44",
+                            "end_time": "16:49",
                             "distance": 0.45,
                             "price": 0,
                             "cost": 0
@@ -519,5 +603,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.4181580543518066
+    "elapsed_time(sec)": 20.604406118392944
 }

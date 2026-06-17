@@ -157,7 +157,8 @@ def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_
 
     total_cost = _constrain_budgets(
         model, constraints, people, hotel_idx, outbound_idx, return_idx,
-        attr_vars, rest_vars, hotels, outbound, returning, attractions, restaurants,
+        attr_vars, rest_vars, attr_selected, rest_selected,
+        hotels, outbound, returning, attractions, restaurants,
     )
     total_cost_yuan = model.NewIntVar(0, 10**7, "total_cost_yuan")
     model.AddDivisionEquality(total_cost_yuan, total_cost, 100)
@@ -311,7 +312,7 @@ def _constrain_no_duplicates(model, attr_eq, rest_eq, attr_vars, rest_vars, attr
                 model.AddBoolOr([rest_eq[(i, value)].Not(), rest_eq[(j, value)].Not()])
 
 
-def _constrain_budgets(model, constraints, people, hotel_idx, outbound_idx, return_idx, attr_vars, rest_vars, hotels, outbound, returning, attractions, restaurants):
+def _constrain_budgets(model, constraints, people, hotel_idx, outbound_idx, return_idx, attr_vars, rest_vars, attr_selected, rest_selected, hotels, outbound, returning, attractions, restaurants):
     max_cost = 10**9
     hotel_cost = model.NewIntVar(0, max_cost, "hotel_cost")
     out_cost = model.NewIntVar(0, max_cost, "out_cost")
@@ -334,13 +335,20 @@ def _constrain_budgets(model, constraints, people, hotel_idx, outbound_idx, retu
     sightseeing = sum(attr_cost_vars)
     dining = sum(rest_cost_vars)
     intercity = out_cost + ret_cost
+    selected_inner_legs = sum(attr_selected) + sum(rest_selected)
+    inner_reserve = int(people) * 300 * selected_inner_legs
     total = sightseeing + dining + hotel_cost + intercity
+    total_with_inner_reserve = total + inner_reserve
     budgets = constraints.get("budgets") if isinstance(constraints.get("budgets"), dict) else {}
     for key, expr in (("sightseeing", sightseeing), ("dining", dining), ("accommodation", hotel_cost),
-                      ("intercity_transport", intercity), ("total", total)):
+                      ("intercity_transport", intercity)):
         if key in budgets:
             model.Add(expr <= _budget_cents(budgets[key]))
-    return total
+    if "inner_transport" in budgets:
+        model.Add(inner_reserve <= _budget_cents(budgets["inner_transport"]))
+    if "total" in budgets:
+        model.Add(total_with_inner_reserve <= _budget_cents(budgets["total"]))
+    return total_with_inner_reserve if ("total" in budgets or "inner_transport" in budgets) else total
 
 
 # ---------------------------------------------------------------------------
@@ -370,7 +378,7 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
     agent._transport_constraints = constraints
     agent._budget_limits = agent._extract_budget_limits(constraints)
     agent._active_timing_constraints = constraints.get("timing_constraints", []) or []
-    agent._forced_inner_mode = None
+    agent._forced_inner_mode = "taxi" if constraints.get("taxi_cars_equals") is not None else None
     try:
         first_plan = None
         for order in orderings:

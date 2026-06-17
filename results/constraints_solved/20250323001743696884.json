@@ -393,13 +393,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:30",
-                    "end_time": "20:34",
-                    "start": "Shanghai Pudong International Airport",
-                    "end": "Chengdu Tianfu International Airport",
-                    "price": 792.16,
-                    "cost": 2376.48,
+                    "type": "attraction",
+                    "position": "Huaihai Road",
+                    "start_time": "14:01",
+                    "end_time": "15:31",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -414,11 +413,54 @@
                         },
                         {
                             "start": "Qufu Road-Metro Station",
-                            "end": "Pudong International Airport-Metro Station",
+                            "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
                             "mode": "metro",
                             "start_time": "13:54",
-                            "end_time": "15:00",
-                            "distance": 33.41,
+                            "end_time": "13:58",
+                            "distance": 2.05,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "end": "Huaihai Road",
+                            "mode": "walk",
+                            "start_time": "13:58",
+                            "end_time": "14:01",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:30",
+                    "end_time": "20:34",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Chengdu Tianfu International Airport",
+                    "price": 792.16,
+                    "cost": 2376.48,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Huaihai Road",
+                            "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:31",
+                            "end_time": "15:34",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:34",
+                            "end_time": "16:39",
+                            "distance": 32.73,
                             "price": 7,
                             "cost": 21,
                             "tickets": 3
@@ -427,8 +469,8 @@
                             "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "15:00",
-                            "end_time": "15:15",
+                            "start_time": "16:39",
+                            "end_time": "16:54",
                             "distance": 1.27,
                             "price": 0,
                             "cost": 0
@@ -439,5 +481,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.7791848182678223
+    "elapsed_time(sec)": 24.613341093063354
 }

@@ -683,13 +683,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:18",
-          "end_time": "18:42",
-          "start": "Beijing Daxing International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 516.02,
-          "cost": 2064.08,
+          "type": "attraction",
+          "position": "Bao Guo Temple",
+          "start_time": "13:35",
+          "end_time": "15:35",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -704,11 +703,54 @@
             },
             {
               "start": "Nanluoguxiang-Metro Station",
-              "end": "Daxing Airport-Metro Station",
+              "end": "Changchun Street-Metro Station",
               "mode": "metro",
               "start_time": "13:21",
-              "end_time": "14:54",
-              "distance": 46.92,
+              "end_time": "13:31",
+              "distance": 5.18,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Bao Guo Temple",
+              "mode": "walk",
+              "start_time": "13:31",
+              "end_time": "13:35",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:18",
+          "end_time": "18:42",
+          "start": "Beijing Daxing International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 516.02,
+          "cost": 2064.08,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Bao Guo Temple",
+              "end": "Changchun Street-Metro Station",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:39",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:39",
+              "end_time": "17:05",
+              "distance": 43.33,
               "price": 8,
               "cost": 32,
               "tickets": 4
@@ -717,8 +759,8 @@
               "start": "Daxing Airport-Metro Station",
               "end": "Beijing Daxing International Airport",
               "mode": "walk",
-              "start_time": "14:54",
-              "end_time": "15:05",
+              "start_time": "17:05",
+              "end_time": "17:16",
               "distance": 0.93,
               "price": 0,
               "cost": 0
@@ -730,5 +772,5 @@
     }
   ],
   "elapsed_time(sec)": 4.525076150894165,
-  "_eval_score": 95.1875
+  "_eval_score": 95.72689075630252
 }

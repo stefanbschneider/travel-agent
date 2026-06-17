@@ -7,43 +7,85 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "train",
-                    "start_time": "07:06",
-                    "end_time": "18:42",
-                    "start": "Shenzhen North Railway Station",
-                    "end": "Shanghai Hongqiao Station",
-                    "price": 727.96,
-                    "cost": 727.96,
+                    "type": "airplane",
+                    "start_time": "23:37",
+                    "end_time": "01:08",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Shanghai Pudong International Airport",
+                    "price": 572.8,
+                    "cost": 572.8,
                     "tickets": 1,
                     "transports": [],
-                    "TrainID": "D3126"
+                    "FlightID": "FL166"
                 },
                 {
                     "type": "attraction",
-                    "position": "Qibao Old Street",
-                    "start_time": "19:04",
-                    "end_time": "20:34",
+                    "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+                    "start_time": "09:00",
+                    "end_time": "10:30",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shanghai Hongqiao Station",
-                            "end": "Hongqiao Railway Station-Metro Station",
+                            "start": "Shanghai Pudong International Airport",
+                            "end": "Pudong International Airport-Metro Station",
                             "mode": "walk",
-                            "start_time": "18:42",
-                            "end_time": "18:43",
-                            "distance": 0.12,
+                            "start_time": "01:08",
+                            "end_time": "01:23",
+                            "distance": 1.27,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Hongqiao Railway Station-Metro Station",
+                            "start": "Pudong International Airport-Metro Station",
+                            "end": "Xinzhuang-Metro Station",
+                            "mode": "metro",
+                            "start_time": "01:23",
+                            "end_time": "02:43",
+                            "distance": 40.32,
+                            "price": 8,
+                            "cost": 8,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Xinzhuang-Metro Station",
+                            "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+                            "mode": "walk",
+                            "start_time": "02:43",
+                            "end_time": "03:02",
+                            "distance": 1.6,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Qibao Old Street",
+                    "start_time": "11:08",
+                    "end_time": "12:38",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+                            "end": "Xinzhuang-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:30",
+                            "end_time": "10:49",
+                            "distance": 1.6,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xinzhuang-Metro Station",
                             "end": "Xingzhong Road-Metro Station",
                             "mode": "metro",
-                            "start_time": "18:43",
-                            "end_time": "18:55",
-                            "distance": 6.21,
+                            "start_time": "10:49",
+                            "end_time": "10:59",
+                            "distance": 5.44,
                             "price": 3,
                             "cost": 3,
                             "tickets": 1
@@ -52,8 +94,8 @@
                             "start": "Xingzhong Road-Metro Station",
                             "end": "Qibao Old Street",
                             "mode": "walk",
-                            "start_time": "18:55",
-                            "end_time": "19:04",
+                            "start_time": "10:59",
+                            "end_time": "11:08",
                             "distance": 0.76,
                             "price": 0,
                             "cost": 0
@@ -62,9 +104,9 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-                    "start_time": "21:12",
-                    "end_time": "22:42",
+                    "position": "Shanghai Botanical Garden",
+                    "start_time": "13:11",
+                    "end_time": "14:41",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
@@ -73,30 +115,114 @@
                             "start": "Qibao Old Street",
                             "end": "Xingzhong Road-Metro Station",
                             "mode": "walk",
-                            "start_time": "20:34",
-                            "end_time": "20:43",
+                            "start_time": "12:38",
+                            "end_time": "12:47",
                             "distance": 0.76,
                             "price": 0,
                             "cost": 0
                         },
                         {
                             "start": "Xingzhong Road-Metro Station",
-                            "end": "Xinzhuang-Metro Station",
+                            "end": "Shilong Road-Metro Station",
                             "mode": "metro",
-                            "start_time": "20:43",
-                            "end_time": "20:53",
-                            "distance": 5.44,
+                            "start_time": "12:47",
+                            "end_time": "13:01",
+                            "distance": 7.08,
                             "price": 3,
                             "cost": 3,
                             "tickets": 1
                         },
                         {
-                            "start": "Xinzhuang-Metro Station",
-                            "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+                            "start": "Shilong Road-Metro Station",
+                            "end": "Shanghai Botanical Garden",
                             "mode": "walk",
-                            "start_time": "20:53",
-                            "end_time": "21:12",
-                            "distance": 1.6,
+                            "start_time": "13:01",
+                            "end_time": "13:11",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Foreigner Street 101",
+                    "start_time": "15:07",
+                    "end_time": "16:37",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Shanghai Botanical Garden",
+                            "end": "Shilong Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:41",
+                            "end_time": "14:51",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shilong Road-Metro Station",
+                            "end": "Shuicheng Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:51",
+                            "end_time": "15:04",
+                            "distance": 6.69,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Shuicheng Road-Metro Station",
+                            "end": "Foreigner Street 101",
+                            "mode": "walk",
+                            "start_time": "15:04",
+                            "end_time": "15:07",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 18.0,
+                    "cost": 18.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Foreigner Street 101",
+                            "end": "Shuicheng Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:37",
+                            "end_time": "16:40",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shuicheng Road-Metro Station",
+                            "end": "Qibao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:40",
+                            "end_time": "16:52",
+                            "distance": 6.39,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Qibao-Metro Station",
+                            "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+                            "mode": "walk",
+                            "start_time": "16:52",
+                            "end_time": "17:00",
+                            "distance": 0.72,
                             "price": 0,
                             "cost": 0
                         }
@@ -105,7 +231,7 @@
                 {
                     "type": "accommodation",
                     "position": "Fenyang Garden Boutique Hotel",
-                    "start_time": "23:31",
+                    "start_time": "18:36",
                     "end_time": "24:00",
                     "price": 749.0,
                     "cost": 749.0,
@@ -114,22 +240,22 @@
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-                            "end": "Xinzhuang-Metro Station",
+                            "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+                            "end": "Qibao-Metro Station",
                             "mode": "walk",
-                            "start_time": "22:42",
-                            "end_time": "23:01",
-                            "distance": 1.6,
+                            "start_time": "18:00",
+                            "end_time": "18:08",
+                            "distance": 0.72,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Xinzhuang-Metro Station",
+                            "start": "Qibao-Metro Station",
                             "end": "South Shaanxi Road-Metro Station",
                             "mode": "metro",
-                            "start_time": "23:01",
-                            "end_time": "23:27",
-                            "distance": 13.49,
+                            "start_time": "18:08",
+                            "end_time": "18:32",
+                            "distance": 12.37,
                             "price": 4,
                             "cost": 4,
                             "tickets": 1
@@ -138,8 +264,8 @@
                             "start": "South Shaanxi Road-Metro Station",
                             "end": "Fenyang Garden Boutique Hotel",
                             "mode": "walk",
-                            "start_time": "23:27",
-                            "end_time": "23:31",
+                            "start_time": "18:32",
+                            "end_time": "18:36",
                             "distance": 0.36,
                             "price": 0,
                             "cost": 0
@@ -162,12 +288,12 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "Shanghai Botanical Garden",
-                    "start_time": "08:57",
-                    "end_time": "10:27",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "lunch",
+                    "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 28.0,
+                    "cost": 28.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -182,106 +308,64 @@
                         },
                         {
                             "start": "South Shaanxi Road-Metro Station",
-                            "end": "Shilong Road-Metro Station",
+                            "end": "West Nanjing Road-Metro Station",
                             "mode": "metro",
                             "start_time": "08:34",
-                            "end_time": "08:47",
-                            "distance": 6.51,
-                            "price": 3,
-                            "cost": 3,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Shilong Road-Metro Station",
-                            "end": "Shanghai Botanical Garden",
-                            "mode": "walk",
-                            "start_time": "08:47",
-                            "end_time": "08:57",
-                            "distance": 0.87,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Shanghai Museum",
-                    "start_time": "11:01",
-                    "end_time": "12:31",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Shanghai Botanical Garden",
-                            "end": "Shilong Road-Metro Station",
-                            "mode": "walk",
-                            "start_time": "10:27",
-                            "end_time": "10:37",
-                            "distance": 0.87,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Shilong Road-Metro Station",
-                            "end": "East Nanjing Road-Metro Station",
-                            "mode": "metro",
-                            "start_time": "10:37",
-                            "end_time": "10:56",
-                            "distance": 9.72,
-                            "price": 4,
-                            "cost": 4,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "East Nanjing Road-Metro Station",
-                            "end": "Shanghai Museum",
-                            "mode": "walk",
-                            "start_time": "10:56",
-                            "end_time": "11:01",
-                            "distance": 0.49,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Nanjing Road Pedestrian Street",
-                    "start_time": "12:46",
-                    "end_time": "14:16",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Shanghai Museum",
-                            "end": "East Nanjing Road-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:31",
-                            "end_time": "12:36",
-                            "distance": 0.49,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "East Nanjing Road-Metro Station",
-                            "end": "Tiantong Road-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:36",
-                            "end_time": "12:37",
-                            "distance": 0.67,
+                            "end_time": "08:37",
+                            "distance": 1.63,
                             "price": 2,
                             "cost": 2,
                             "tickets": 1
                         },
                         {
-                            "start": "Tiantong Road-Metro Station",
-                            "end": "Nanjing Road Pedestrian Street",
+                            "start": "West Nanjing Road-Metro Station",
+                            "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
                             "mode": "walk",
-                            "start_time": "12:37",
-                            "end_time": "12:46",
-                            "distance": 0.8,
+                            "start_time": "08:37",
+                            "end_time": "08:44",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Jululu Road",
+                    "start_time": "12:00",
+                    "end_time": "13:30",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                            "end": "Jululu Road",
+                            "mode": "walk",
+                            "start_time": "12:00",
+                            "end_time": "12:00",
+                            "distance": 0.020900053972197186,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Jing'an Park",
+                    "start_time": "13:35",
+                    "end_time": "15:05",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Jululu Road",
+                            "end": "Jing'an Park",
+                            "mode": "walk",
+                            "start_time": "13:30",
+                            "end_time": "13:35",
+                            "distance": 0.4434750434069161,
                             "price": 0,
                             "cost": 0
                         }
@@ -289,31 +373,31 @@
                 },
                 {
                     "type": "airplane",
-                    "start_time": "18:32",
-                    "end_time": "20:03",
+                    "start_time": "16:36",
+                    "end_time": "18:07",
                     "start": "Shanghai Pudong International Airport",
                     "end": "Shenzhen Bao'an International Airport",
-                    "price": 582.65,
-                    "cost": 582.65,
+                    "price": 576.24,
+                    "cost": 576.24,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Nanjing Road Pedestrian Street",
-                            "end": "Tiantong Road-Metro Station",
+                            "start": "Jing'an Park",
+                            "end": "West Nanjing Road-Metro Station",
                             "mode": "walk",
-                            "start_time": "14:16",
-                            "end_time": "14:25",
-                            "distance": 0.8,
+                            "start_time": "15:05",
+                            "end_time": "15:13",
+                            "distance": 0.67,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Tiantong Road-Metro Station",
+                            "start": "West Nanjing Road-Metro Station",
                             "end": "Pudong International Airport-Metro Station",
                             "mode": "metro",
-                            "start_time": "14:25",
-                            "end_time": "15:29",
-                            "distance": 32.48,
+                            "start_time": "15:13",
+                            "end_time": "16:21",
+                            "distance": 34.08,
                             "price": 7,
                             "cost": 7,
                             "tickets": 1
@@ -322,17 +406,17 @@
                             "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "15:29",
-                            "end_time": "15:44",
+                            "start_time": "16:21",
+                            "end_time": "16:36",
                             "distance": 1.27,
                             "price": 0,
                             "cost": 0
                         }
                     ],
-                    "FlightID": "FL018"
+                    "FlightID": "FL016"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 12.651311159133911
+    "elapsed_time(sec)": 10.623365879058838
 }

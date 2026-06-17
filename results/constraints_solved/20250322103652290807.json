@@ -372,13 +372,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:00",
-                    "end_time": "18:12",
-                    "start": "Nanjing Station",
-                    "end": "Suzhou Station",
-                    "price": 122.9,
-                    "cost": 368.70000000000005,
+                    "type": "attraction",
+                    "position": "Ageless Village",
+                    "start_time": "14:05",
+                    "end_time": "15:35",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -393,21 +392,64 @@
                         },
                         {
                             "start": "Zhangfuyuan-Metro Station",
-                            "end": "Nanjing Station-Metro Station",
+                            "end": "Longhua Road-Metro Station",
                             "mode": "metro",
                             "start_time": "12:47",
-                            "end_time": "13:00",
-                            "distance": 6.58,
-                            "price": 3,
-                            "cost": 9,
+                            "end_time": "13:16",
+                            "distance": 14.54,
+                            "price": 5,
+                            "cost": 15,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Longhua Road-Metro Station",
+                            "end": "Ageless Village",
+                            "mode": "walk",
+                            "start_time": "13:16",
+                            "end_time": "14:05",
+                            "distance": 4.09,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:00",
+                    "end_time": "18:12",
+                    "start": "Nanjing Station",
+                    "end": "Suzhou Station",
+                    "price": 122.9,
+                    "cost": 368.70000000000005,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Ageless Village",
+                            "end": "Longhua Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:35",
+                            "end_time": "16:24",
+                            "distance": 4.09,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Longhua Road-Metro Station",
+                            "end": "Nanjing Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:24",
+                            "end_time": "16:54",
+                            "distance": 15.47,
+                            "price": 5,
+                            "cost": 15,
                             "tickets": 3
                         },
                         {
                             "start": "Nanjing Station-Metro Station",
                             "end": "Nanjing Station",
                             "mode": "walk",
-                            "start_time": "13:00",
-                            "end_time": "13:02",
+                            "start_time": "16:54",
+                            "end_time": "16:56",
                             "distance": 0.25,
                             "price": 0,
                             "cost": 0
@@ -418,5 +460,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.6173560619354248
+    "elapsed_time(sec)": 7.246564149856567
 }

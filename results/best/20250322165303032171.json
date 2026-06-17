@@ -847,13 +847,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 314.6,
+          "type": "lunch",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "12:59",
+          "end_time": "13:59",
+          "price": 8.0,
+          "cost": 32.0,
           "tickets": 4,
           "transports": [
             {
@@ -868,21 +867,106 @@
             },
             {
               "start": "Zhijiang Cultural Center-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
               "mode": "metro",
               "start_time": "12:32",
-              "end_time": "13:08",
-              "distance": 18.33,
-              "price": 5,
-              "cost": 20,
+              "end_time": "12:56",
+              "distance": 12.01,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "12:56",
+              "end_time": "12:59",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hangzhou Confucius Temple",
+          "start_time": "14:06",
+          "end_time": "16:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "13:59",
+              "end_time": "14:02",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:02",
+              "end_time": "14:04",
+              "distance": 1.03,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Hangzhou Confucius Temple",
+              "mode": "walk",
+              "start_time": "14:04",
+              "end_time": "14:06",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:27",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Confucius Temple",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:06",
+              "end_time": "16:08",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "16:08",
+              "end_time": "16:22",
+              "distance": 7.06,
+              "price": 3,
+              "cost": 12,
               "tickets": 4
             },
             {
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "13:08",
-              "end_time": "13:13",
+              "start_time": "16:22",
+              "end_time": "16:27",
               "distance": 0.48,
               "price": 0,
               "cost": 0
@@ -894,5 +978,5 @@
     }
   ],
   "elapsed_time(sec)": 9.870023012161255,
-  "_eval_score": 95.7297335600907
+  "_eval_score": 96.60067287784679
 }

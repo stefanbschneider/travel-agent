@@ -641,13 +641,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:31",
-          "start": "Suzhou Park Station",
-          "end": "Nanjing South Railway Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "type": "attraction",
+          "position": "Arhat Hall",
+          "start_time": "14:31",
+          "end_time": "16:01",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -662,21 +661,64 @@
             },
             {
               "start": "Times Square-Metro Station",
-              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "end": "Shantang Street-Metro Station",
               "mode": "metro",
               "start_time": "14:01",
-              "end_time": "14:05",
-              "distance": 2.22,
-              "price": 2,
-              "cost": 4,
+              "end_time": "14:22",
+              "distance": 10.59,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Arhat Hall",
+              "mode": "walk",
+              "start_time": "14:22",
+              "end_time": "14:31",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:31",
+          "start": "Suzhou Park Station",
+          "end": "Nanjing South Railway Station",
+          "price": 122.9,
+          "cost": 245.8,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Arhat Hall",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "16:01",
+              "end_time": "16:10",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:10",
+              "end_time": "16:31",
+              "distance": 10.76,
+              "price": 4,
+              "cost": 8,
               "tickets": 2
             },
             {
               "start": "Suzhou Industrial Park Railway Station-Metro Station",
               "end": "Suzhou Park Station",
               "mode": "walk",
-              "start_time": "14:05",
-              "end_time": "14:08",
+              "start_time": "16:31",
+              "end_time": "16:34",
               "distance": 0.32,
               "price": 0,
               "cost": 0
@@ -688,5 +730,5 @@
     }
   ],
   "elapsed_time(sec)": 2.7363638877868652,
-  "_eval_score": 95.94206349206348
+  "_eval_score": 96.29067460317461
 }

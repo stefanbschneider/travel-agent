@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "20:18",
-          "end_time": "21:31",
-          "start": "Chengdu Shuangliu International Airport",
-          "end": "Wuhan Tianhe International Airport",
-          "price": 447.72,
-          "cost": 895.44,
+          "type": "attraction",
+          "position": "Anshun Covered Bridge",
+          "start_time": "14:01",
+          "end_time": "16:01",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -393,21 +392,106 @@
             },
             {
               "start": "Tianfu Square-Metro Station",
-              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Niuwangmiao-Metro Station",
               "mode": "metro",
               "start_time": "13:51",
-              "end_time": "14:19",
-              "distance": 14.27,
-              "price": 5,
-              "cost": 10,
+              "end_time": "13:57",
+              "distance": 3.08,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Niuwangmiao-Metro Station",
+              "end": "Anshun Covered Bridge",
+              "mode": "walk",
+              "start_time": "13:57",
+              "end_time": "14:01",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 10.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Anshun Covered Bridge",
+              "end": "Niuwangmiao-Metro Station",
+              "mode": "walk",
+              "start_time": "16:01",
+              "end_time": "16:05",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niuwangmiao-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "16:05",
+              "end_time": "16:14",
+              "distance": 4.77,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "walk",
+              "start_time": "16:14",
+              "end_time": "16:24",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:18",
+          "end_time": "21:31",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 447.72,
+          "cost": 895.44,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:37",
+              "distance": 13.91,
+              "price": 4,
+              "cost": 8,
               "tickets": 2
             },
             {
               "start": "Shuangliu Airport Terminal 2 East-Metro Station",
               "end": "Chengdu Shuangliu International Airport",
               "mode": "walk",
-              "start_time": "14:19",
-              "end_time": "14:34",
+              "start_time": "18:37",
+              "end_time": "18:52",
               "distance": 1.25,
               "price": 0,
               "cost": 0
@@ -419,5 +503,5 @@
     }
   ],
   "elapsed_time(sec)": 2.4102888107299805,
-  "_eval_score": 94.87896825396825
+  "_eval_score": 96.42099567099567
 }

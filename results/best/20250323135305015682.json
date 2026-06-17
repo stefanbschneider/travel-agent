@@ -83,6 +83,48 @@
         },
         {
           "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "14:07",
+          "end_time": "15:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Water Street",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "13:41",
+              "end_time": "13:54",
+              "distance": 1.11,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Changfu Street-Metro Station",
+              "mode": "metro",
+              "start_time": "13:54",
+              "end_time": "13:56",
+              "distance": 1.04,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "walk",
+              "start_time": "13:56",
+              "end_time": "14:07",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
           "position": "Confucius Temple",
           "start_time": "15:59",
           "end_time": "17:29",
@@ -91,12 +133,33 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Water Street",
+              "start": "Ancient Peach Leaf Ferry",
+              "end": "Changfu Street-Metro Station",
+              "mode": "walk",
+              "start_time": "15:37",
+              "end_time": "15:48",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "15:48",
+              "end_time": "15:50",
+              "distance": 1.04,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
               "end": "Confucius Temple",
               "mode": "walk",
               "start_time": "15:50",
-              "end_time": "15:59",
-              "distance": 0.8132036295028596,
+              "end_time": "15:56",
+              "distance": 0.52,
               "price": 0,
               "cost": 0
             }
@@ -330,13 +393,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "18:12",
-          "start": "Nanjing Station",
-          "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 368.70000000000005,
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "13:43",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -351,21 +413,64 @@
             },
             {
               "start": "Clover Garden-Metro Station",
-              "end": "Nanjing Station-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
               "mode": "metro",
               "start_time": "13:23",
-              "end_time": "13:36",
-              "distance": 6.56,
-              "price": 3,
-              "cost": 9,
+              "end_time": "13:30",
+              "distance": 3.99,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "13:30",
+              "end_time": "13:43",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "18:12",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 122.9,
+          "cost": 368.70000000000005,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:26",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:26",
+              "end_time": "15:33",
+              "distance": 3.56,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
               "mode": "walk",
-              "start_time": "13:36",
-              "end_time": "13:38",
+              "start_time": "15:33",
+              "end_time": "15:35",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -377,5 +482,5 @@
     }
   ],
   "elapsed_time(sec)": 1.6263599395751953,
-  "_eval_score": 95.25462962962962
+  "_eval_score": 96.42911255411255
 }

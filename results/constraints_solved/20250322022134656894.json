@@ -826,13 +826,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:03",
-                    "end_time": "17:27",
-                    "start": "Suzhou North Station",
-                    "end": "Shanghai Hongqiao Station",
-                    "price": 55.23,
-                    "cost": 110.46,
+                    "type": "attraction",
+                    "position": "A Hidden Wonderland",
+                    "start_time": "12:37",
+                    "end_time": "14:07",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -847,11 +846,96 @@
                         },
                         {
                             "start": "Times Square-Metro Station",
-                            "end": "Suzhou North Railway Station-Metro Station",
+                            "end": "Fuyuan Road-Metro Station",
                             "mode": "metro",
                             "start_time": "12:01",
-                            "end_time": "12:26",
-                            "distance": 12.78,
+                            "end_time": "12:25",
+                            "distance": 12.3,
+                            "price": 4,
+                            "cost": 8,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Fuyuan Road-Metro Station",
+                            "end": "A Hidden Wonderland",
+                            "mode": "walk",
+                            "start_time": "12:25",
+                            "end_time": "12:37",
+                            "distance": 1.03,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Loyal Prince's Mansion of the Taiping Heavenly Kingdom",
+                    "start_time": "14:43",
+                    "end_time": "16:13",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "A Hidden Wonderland",
+                            "end": "Fuyuan Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:07",
+                            "end_time": "14:19",
+                            "distance": 1.03,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Fuyuan Road-Metro Station",
+                            "end": "Meixiang-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:19",
+                            "end_time": "14:34",
+                            "distance": 7.57,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Meixiang-Metro Station",
+                            "end": "Loyal Prince's Mansion of the Taiping Heavenly Kingdom",
+                            "mode": "walk",
+                            "start_time": "14:34",
+                            "end_time": "14:43",
+                            "distance": 0.78,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:03",
+                    "end_time": "17:27",
+                    "start": "Suzhou North Station",
+                    "end": "Shanghai Hongqiao Station",
+                    "price": 55.23,
+                    "cost": 110.46,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Loyal Prince's Mansion of the Taiping Heavenly Kingdom",
+                            "end": "Meixiang-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:13",
+                            "end_time": "16:22",
+                            "distance": 0.78,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Meixiang-Metro Station",
+                            "end": "Suzhou North Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:22",
+                            "end_time": "16:41",
+                            "distance": 9.67,
                             "price": 4,
                             "cost": 8,
                             "tickets": 2
@@ -860,8 +944,8 @@
                             "start": "Suzhou North Railway Station-Metro Station",
                             "end": "Suzhou North Station",
                             "mode": "walk",
-                            "start_time": "12:26",
-                            "end_time": "12:27",
+                            "start_time": "16:41",
+                            "end_time": "16:42",
                             "distance": 0.14,
                             "price": 0,
                             "cost": 0
@@ -872,5 +956,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.3243727684020996
+    "elapsed_time(sec)": 17.908381938934326
 }

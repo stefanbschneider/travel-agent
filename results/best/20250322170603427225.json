@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "Fosun Foundation Center",
+          "start_time": "12:49",
+          "end_time": "14:19",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -393,11 +392,96 @@
             },
             {
               "start": "Xiaonanmen-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Lujiazui-Metro Station",
               "mode": "metro",
               "start_time": "12:36",
-              "end_time": "13:36",
-              "distance": 30.18,
+              "end_time": "12:40",
+              "distance": 2.4,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Fosun Foundation Center",
+              "mode": "walk",
+              "start_time": "12:40",
+              "end_time": "12:49",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dongchang Road Ferry",
+          "start_time": "14:33",
+          "end_time": "16:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fosun Foundation Center",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "14:19",
+              "end_time": "14:28",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:28",
+              "end_time": "14:29",
+              "distance": 0.98,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Dongchang Road Ferry",
+              "mode": "walk",
+              "start_time": "14:29",
+              "end_time": "14:33",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dongchang Road Ferry",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:33",
+              "end_time": "16:37",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:37",
+              "end_time": "17:36",
+              "distance": 29.58,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -406,8 +490,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "13:36",
-              "end_time": "13:51",
+              "start_time": "17:36",
+              "end_time": "17:51",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -419,5 +503,5 @@
     }
   ],
   "elapsed_time(sec)": 3.56719708442688,
-  "_eval_score": 94.5952380952381
+  "_eval_score": 96.07034632034632
 }

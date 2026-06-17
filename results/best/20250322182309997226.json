@@ -536,13 +536,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "12:33",
+          "end_time": "14:03",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -557,11 +556,96 @@
             },
             {
               "start": "Grand Theater-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Hongling-Metro Station",
               "mode": "metro",
               "start_time": "12:25",
-              "end_time": "13:28",
-              "distance": 31.55,
+              "end_time": "12:26",
+              "distance": 0.8,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "walk",
+              "start_time": "12:26",
+              "end_time": "12:33",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "14:15",
+          "end_time": "15:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "Hongling-Metro Station",
+              "mode": "walk",
+              "start_time": "14:03",
+              "end_time": "14:10",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Shaibu-Metro Station",
+              "mode": "metro",
+              "start_time": "14:10",
+              "end_time": "14:13",
+              "distance": 1.86,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "14:13",
+              "end_time": "14:15",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:56",
+          "end_time": "20:21",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1008.34,
+          "cost": 1008.34,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Shaibu-Metro Station",
+              "mode": "walk",
+              "start_time": "15:45",
+              "end_time": "15:47",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "15:47",
+              "end_time": "16:52",
+              "distance": 32.69,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -570,8 +654,8 @@
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "13:28",
-              "end_time": "13:33",
+              "start_time": "16:52",
+              "end_time": "16:57",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -583,5 +667,5 @@
     }
   ],
   "elapsed_time(sec)": 3.4967238903045654,
-  "_eval_score": 93.83699633699634
+  "_eval_score": 94.95555555555556
 }

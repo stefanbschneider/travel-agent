@@ -204,12 +204,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 519.0,
-                    "cost": 519.0,
+                    "type": "attraction",
+                    "position": "Baishilong Music Theme Park",
+                    "start_time": "13:20",
+                    "end_time": "14:50",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -224,21 +224,63 @@
                         },
                         {
                             "start": "Hongshu Bay-Metro Station",
-                            "end": "Dameisha-Metro Station",
+                            "end": "Baishilong-Metro Station",
                             "mode": "metro",
                             "start_time": "12:55",
-                            "end_time": "14:06",
-                            "distance": 35.73,
-                            "price": 7,
-                            "cost": 7,
+                            "end_time": "13:17",
+                            "distance": 11.38,
+                            "price": 4,
+                            "cost": 4,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Baishilong Music Theme Park",
+                            "mode": "walk",
+                            "start_time": "13:17",
+                            "end_time": "13:20",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 519.0,
+                    "cost": 519.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Baishilong Music Theme Park",
+                            "end": "Baishilong-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:50",
+                            "end_time": "14:53",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:53",
+                            "end_time": "15:47",
+                            "distance": 27.3,
+                            "price": 6,
+                            "cost": 6,
                             "tickets": 1
                         },
                         {
                             "start": "Dameisha-Metro Station",
                             "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
                             "mode": "walk",
-                            "start_time": "14:06",
-                            "end_time": "14:17",
+                            "start_time": "15:47",
+                            "end_time": "15:58",
                             "distance": 0.93,
                             "price": 0,
                             "cost": 0
@@ -473,13 +515,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 1008.34,
+                    "type": "attraction",
+                    "position": "Dashabe Ecological Corridor",
+                    "start_time": "14:09",
+                    "end_time": "15:39",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -494,11 +535,54 @@
                         },
                         {
                             "start": "Houhai-Metro Station",
-                            "end": "Airport East-Metro Station",
+                            "end": "Baishizhou-Metro Station",
                             "mode": "metro",
                             "start_time": "13:53",
-                            "end_time": "14:30",
-                            "distance": 18.83,
+                            "end_time": "13:59",
+                            "distance": 3.45,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Baishizhou-Metro Station",
+                            "end": "Dashabe Ecological Corridor",
+                            "mode": "walk",
+                            "start_time": "13:59",
+                            "end_time": "14:09",
+                            "distance": 0.91,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:56",
+                    "end_time": "20:21",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Beijing Daxing International Airport",
+                    "price": 1008.34,
+                    "cost": 1008.34,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Dashabe Ecological Corridor",
+                            "end": "Baishizhou-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:39",
+                            "end_time": "15:49",
+                            "distance": 0.91,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Baishizhou-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:49",
+                            "end_time": "16:27",
+                            "distance": 19.03,
                             "price": 5,
                             "cost": 5,
                             "tickets": 1
@@ -507,8 +591,8 @@
                             "start": "Airport East-Metro Station",
                             "end": "Shenzhen Bao'an International Airport",
                             "mode": "walk",
-                            "start_time": "14:30",
-                            "end_time": "14:35",
+                            "start_time": "16:27",
+                            "end_time": "16:32",
                             "distance": 0.45,
                             "price": 0,
                             "cost": 0
@@ -519,5 +603,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.391977071762085
+    "elapsed_time(sec)": 20.668771982192993
 }

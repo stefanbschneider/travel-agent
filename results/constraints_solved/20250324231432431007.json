@@ -641,13 +641,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:19",
-                    "end_time": "20:44",
-                    "start": "Beijing Capital International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 929.69,
-                    "cost": 3718.76,
+                    "type": "attraction",
+                    "position": "798 Art District",
+                    "start_time": "13:01",
+                    "end_time": "14:31",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -662,21 +661,106 @@
                         },
                         {
                             "start": "Jingtai-Metro Station",
-                            "end": "Terminal 2-Metro Station",
+                            "end": "Wangjing South-Metro Station",
                             "mode": "metro",
                             "start_time": "12:11",
-                            "end_time": "13:07",
-                            "distance": 28.39,
-                            "price": 7,
-                            "cost": 28,
+                            "end_time": "12:40",
+                            "distance": 14.58,
+                            "price": 5,
+                            "cost": 20,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
+                            "end": "798 Art District",
+                            "mode": "walk",
+                            "start_time": "12:40",
+                            "end_time": "13:01",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Beijing Drama Carnival",
+                    "start_time": "15:19",
+                    "end_time": "16:49",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "798 Art District",
+                            "end": "Wangjing South-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:31",
+                            "end_time": "14:52",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
+                            "end": "Wangjing East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:52",
+                            "end_time": "14:56",
+                            "distance": 2.11,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Wangjing East-Metro Station",
+                            "end": "Beijing Drama Carnival",
+                            "mode": "walk",
+                            "start_time": "14:56",
+                            "end_time": "15:19",
+                            "distance": 1.93,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:19",
+                    "end_time": "20:44",
+                    "start": "Beijing Capital International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 929.69,
+                    "cost": 3718.76,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Beijing Drama Carnival",
+                            "end": "Wangjing East-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:49",
+                            "end_time": "17:12",
+                            "distance": 1.93,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangjing East-Metro Station",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:12",
+                            "end_time": "17:36",
+                            "distance": 12.36,
+                            "price": 4,
+                            "cost": 16,
                             "tickets": 4
                         },
                         {
                             "start": "Terminal 2-Metro Station",
                             "end": "Beijing Capital International Airport",
                             "mode": "walk",
-                            "start_time": "13:07",
-                            "end_time": "13:17",
+                            "start_time": "17:36",
+                            "end_time": "17:46",
                             "distance": 0.88,
                             "price": 0,
                             "cost": 0
@@ -687,5 +771,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 4.570780992507935
+    "elapsed_time(sec)": 19.004324197769165
 }

@@ -578,12 +578,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 498.0,
-                    "cost": 2490.0,
+                    "type": "attraction",
+                    "position": "Chaotianmen",
+                    "start_time": "15:22",
+                    "end_time": "16:52",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 5,
                     "transports": [
                         {
@@ -598,21 +598,63 @@
                         },
                         {
                             "start": "Shuicheng Bridge-Metro Station",
-                            "end": "Longxiang Bridge-Metro Station",
+                            "end": "City Station-Metro Station",
                             "mode": "metro",
                             "start_time": "15:09",
-                            "end_time": "15:20",
-                            "distance": 5.73,
+                            "end_time": "15:19",
+                            "distance": 5.28,
                             "price": 3,
                             "cost": 15,
+                            "tickets": 5
+                        },
+                        {
+                            "start": "City Station-Metro Station",
+                            "end": "Chaotianmen",
+                            "mode": "walk",
+                            "start_time": "15:19",
+                            "end_time": "15:22",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 498.0,
+                    "cost": 2490.0,
+                    "tickets": 5,
+                    "transports": [
+                        {
+                            "start": "Chaotianmen",
+                            "end": "City Station-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:52",
+                            "end_time": "16:55",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "City Station-Metro Station",
+                            "end": "Longxiang Bridge-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:55",
+                            "end_time": "16:58",
+                            "distance": 1.96,
+                            "price": 2,
+                            "cost": 10,
                             "tickets": 5
                         },
                         {
                             "start": "Longxiang Bridge-Metro Station",
                             "end": "Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant",
                             "mode": "walk",
-                            "start_time": "15:20",
-                            "end_time": "15:22",
+                            "start_time": "16:58",
+                            "end_time": "17:00",
                             "distance": 0.21,
                             "price": 0,
                             "cost": 0
@@ -990,13 +1032,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 393.25,
+                    "type": "attraction",
+                    "position": "704 Project (Lin Biao's Hangzhou Villa)",
+                    "start_time": "14:02",
+                    "end_time": "15:32",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 5,
                     "transports": [
                         {
@@ -1011,11 +1052,54 @@
                         },
                         {
                             "start": "Wushan Square-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Yellow Dragon Cave-Metro Station",
                             "mode": "metro",
                             "start_time": "13:19",
-                            "end_time": "13:34",
-                            "distance": 7.86,
+                            "end_time": "13:26",
+                            "distance": 3.58,
+                            "price": 2,
+                            "cost": 10,
+                            "tickets": 5
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "mode": "walk",
+                            "start_time": "13:26",
+                            "end_time": "14:02",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 393.25,
+                    "tickets": 5,
+                    "transports": [
+                        {
+                            "start": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "end": "Yellow Dragon Cave-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:32",
+                            "end_time": "16:08",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:08",
+                            "end_time": "16:23",
+                            "distance": 7.93,
                             "price": 3,
                             "cost": 15,
                             "tickets": 5
@@ -1024,8 +1108,8 @@
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "13:34",
-                            "end_time": "13:39",
+                            "start_time": "16:23",
+                            "end_time": "16:28",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -1036,5 +1120,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 6.598352909088135
+    "elapsed_time(sec)": 40.77356028556824
 }

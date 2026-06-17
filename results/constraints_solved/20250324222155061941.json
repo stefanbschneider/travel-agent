@@ -204,12 +204,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 519.0,
-                    "cost": 519.0,
+                    "type": "attraction",
+                    "position": "Baishilong Music Theme Park",
+                    "start_time": "13:21",
+                    "end_time": "14:51",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -224,11 +224,53 @@
                         },
                         {
                             "start": "Donggualing-Metro Station",
-                            "end": "Dameisha-Metro Station",
+                            "end": "Baishilong-Metro Station",
                             "mode": "metro",
                             "start_time": "13:08",
-                            "end_time": "13:57",
-                            "distance": 24.98,
+                            "end_time": "13:18",
+                            "distance": 5.23,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Baishilong Music Theme Park",
+                            "mode": "walk",
+                            "start_time": "13:18",
+                            "end_time": "13:21",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 519.0,
+                    "cost": 519.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Baishilong Music Theme Park",
+                            "end": "Baishilong-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:51",
+                            "end_time": "14:54",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Dameisha-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:54",
+                            "end_time": "15:48",
+                            "distance": 27.3,
                             "price": 6,
                             "cost": 6,
                             "tickets": 1
@@ -237,8 +279,8 @@
                             "start": "Dameisha-Metro Station",
                             "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
                             "mode": "walk",
-                            "start_time": "13:57",
-                            "end_time": "14:08",
+                            "start_time": "15:48",
+                            "end_time": "15:59",
                             "distance": 0.93,
                             "price": 0,
                             "cost": 0
@@ -473,13 +515,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 1008.34,
+                    "type": "attraction",
+                    "position": "Balcony Mountain Forest Park",
+                    "start_time": "14:42",
+                    "end_time": "16:12",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -494,21 +535,64 @@
                         },
                         {
                             "start": "Convention and Exhibition Center-Metro Station",
-                            "end": "Airport East-Metro Station",
+                            "end": "Yangtaishan East-Metro Station",
                             "mode": "metro",
                             "start_time": "13:42",
-                            "end_time": "14:36",
-                            "distance": 27.49,
-                            "price": 6,
-                            "cost": 6,
+                            "end_time": "14:14",
+                            "distance": 16.39,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Yangtaishan East-Metro Station",
+                            "end": "Balcony Mountain Forest Park",
+                            "mode": "walk",
+                            "start_time": "14:14",
+                            "end_time": "14:42",
+                            "distance": 2.41,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:56",
+                    "end_time": "20:21",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Beijing Daxing International Airport",
+                    "price": 1008.34,
+                    "cost": 1008.34,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Balcony Mountain Forest Park",
+                            "end": "Yangtaishan East-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:12",
+                            "end_time": "16:40",
+                            "distance": 2.41,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Yangtaishan East-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:40",
+                            "end_time": "17:15",
+                            "distance": 17.54,
+                            "price": 5,
+                            "cost": 5,
                             "tickets": 1
                         },
                         {
                             "start": "Airport East-Metro Station",
                             "end": "Shenzhen Bao'an International Airport",
                             "mode": "walk",
-                            "start_time": "14:36",
-                            "end_time": "14:41",
+                            "start_time": "17:15",
+                            "end_time": "17:20",
                             "distance": 0.45,
                             "price": 0,
                             "cost": 0
@@ -519,5 +603,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.5689198970794678
+    "elapsed_time(sec)": 11.74241328239441
 }

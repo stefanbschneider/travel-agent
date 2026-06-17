@@ -599,13 +599,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "19:32",
-                    "end_time": "20:51",
-                    "start": "Shanghai Pudong International Airport",
-                    "end": "Beijing Capital International Airport",
-                    "price": 521.78,
-                    "cost": 1565.34,
+                    "type": "dinner",
+                    "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 28.0,
+                    "cost": 84.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -620,21 +619,64 @@
                         },
                         {
                             "start": "Dongjing-Metro Station",
-                            "end": "Pudong International Airport-Metro Station",
+                            "end": "West Nanjing Road-Metro Station",
                             "mode": "metro",
                             "start_time": "15:57",
-                            "end_time": "17:47",
-                            "distance": 55.35,
-                            "price": 9,
-                            "cost": 27,
+                            "end_time": "16:51",
+                            "distance": 27.18,
+                            "price": 6,
+                            "cost": 18,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "West Nanjing Road-Metro Station",
+                            "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                            "mode": "walk",
+                            "start_time": "16:51",
+                            "end_time": "16:58",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "19:32",
+                    "end_time": "20:51",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Beijing Capital International Airport",
+                    "price": 521.78,
+                    "cost": 1565.34,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+                            "end": "West Nanjing Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "18:07",
+                            "distance": 0.59,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "West Nanjing Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:07",
+                            "end_time": "19:15",
+                            "distance": 34.08,
+                            "price": 7,
+                            "cost": 21,
                             "tickets": 3
                         },
                         {
                             "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "17:47",
-                            "end_time": "18:02",
+                            "start_time": "19:15",
+                            "end_time": "19:30",
                             "distance": 1.27,
                             "price": 0,
                             "cost": 0
@@ -645,5 +687,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.083967924118042
+    "elapsed_time(sec)": 44.458741903305054
 }

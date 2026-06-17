@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "20:14",
-          "start": "Beijing South Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 583.83,
-          "cost": 1751.4900000000002,
+          "type": "attraction",
+          "position": "Bao Guo Temple",
+          "start_time": "13:41",
+          "end_time": "15:41",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -393,11 +392,54 @@
             },
             {
               "start": "National Art Museum of China-Metro Station",
-              "end": "Beijing South Railway Station-Metro Station",
+              "end": "Changchun Street-Metro Station",
               "mode": "metro",
               "start_time": "13:28",
-              "end_time": "13:42",
-              "distance": 7.06,
+              "end_time": "13:37",
+              "distance": 4.87,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Bao Guo Temple",
+              "mode": "walk",
+              "start_time": "13:37",
+              "end_time": "13:41",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "20:14",
+          "start": "Beijing South Railway Station",
+          "end": "Nanjing South Railway Station",
+          "price": 583.83,
+          "cost": 1751.4900000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bao Guo Temple",
+              "end": "Changchun Street-Metro Station",
+              "mode": "walk",
+              "start_time": "15:41",
+              "end_time": "15:45",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:45",
+              "end_time": "15:53",
+              "distance": 4.05,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -406,8 +448,8 @@
               "start": "Beijing South Railway Station-Metro Station",
               "end": "Beijing South Railway Station",
               "mode": "walk",
-              "start_time": "13:42",
-              "end_time": "13:42",
+              "start_time": "15:53",
+              "end_time": "15:53",
               "distance": 0.02,
               "price": 0,
               "cost": 0
@@ -419,5 +461,5 @@
     }
   ],
   "elapsed_time(sec)": 7.402166128158569,
-  "_eval_score": 93.87566137566138
+  "_eval_score": 94.71547619047618
 }

@@ -393,12 +393,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 210.0,
-          "cost": 630.0,
+          "type": "attraction",
+          "position": "1941 Teahouse and Theater",
+          "start_time": "13:50",
+          "end_time": "15:20",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -413,11 +413,53 @@
             },
             {
               "start": "Chaotianmen-Metro Station",
-              "end": "Linjiangmen-Metro Station",
+              "end": "Xiaoshizi-Metro Station",
               "mode": "metro",
               "start_time": "13:46",
-              "end_time": "13:49",
-              "distance": 1.55,
+              "end_time": "13:47",
+              "distance": 0.79,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Xiaoshizi-Metro Station",
+              "end": "1941 Teahouse and Theater",
+              "mode": "walk",
+              "start_time": "13:47",
+              "end_time": "13:50",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 210.0,
+          "cost": 630.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "1941 Teahouse and Theater",
+              "end": "Xiaoshizi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:20",
+              "end_time": "15:23",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshizi-Metro Station",
+              "end": "Linjiangmen-Metro Station",
+              "mode": "metro",
+              "start_time": "15:23",
+              "end_time": "15:24",
+              "distance": 0.93,
               "price": 2,
               "cost": 6,
               "tickets": 3
@@ -426,8 +468,8 @@
               "start": "Linjiangmen-Metro Station",
               "end": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
               "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "13:51",
+              "start_time": "15:24",
+              "end_time": "15:26",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -889,13 +931,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "23:45",
-          "end_time": "01:23",
-          "start": "Chongqing Jiangbei International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 641.26,
-          "cost": 1923.78,
+          "type": "attraction",
+          "position": "Ancient Architecture Museum of Ba-Shu",
+          "start_time": "13:05",
+          "end_time": "14:35",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -910,11 +951,96 @@
             },
             {
               "start": "Jiaochangkou-Metro Station",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Chenjiaqiao-Metro Station",
               "mode": "metro",
               "start_time": "12:04",
-              "end_time": "12:41",
-              "distance": 18.87,
+              "end_time": "12:53",
+              "distance": 24.56,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Chenjiaqiao-Metro Station",
+              "end": "Ancient Architecture Museum of Ba-Shu",
+              "mode": "walk",
+              "start_time": "12:53",
+              "end_time": "13:05",
+              "distance": 1.05,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 21.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Architecture Museum of Ba-Shu",
+              "end": "Chenjiaqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "14:35",
+              "end_time": "14:47",
+              "distance": 1.05,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chenjiaqiao-Metro Station",
+              "end": "Guanyinqiao-Metro Station",
+              "mode": "metro",
+              "start_time": "14:47",
+              "end_time": "15:27",
+              "distance": 20.12,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Guanyinqiao-Metro Station",
+              "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "mode": "walk",
+              "start_time": "15:27",
+              "end_time": "15:31",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:45",
+          "end_time": "01:23",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 641.26,
+          "cost": 1923.78,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "end": "Guanyinqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Guanyinqiao-Metro Station",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "18:42",
+              "distance": 19.11,
               "price": 5,
               "cost": 15,
               "tickets": 3
@@ -923,8 +1049,8 @@
               "start": "Jiangbei Airport Terminal 3-Metro Station",
               "end": "Chongqing Jiangbei International Airport",
               "mode": "walk",
-              "start_time": "12:41",
-              "end_time": "12:55",
+              "start_time": "18:42",
+              "end_time": "18:56",
               "distance": 1.21,
               "price": 0,
               "cost": 0
@@ -936,5 +1062,5 @@
     }
   ],
   "elapsed_time(sec)": 11.200900077819824,
-  "_eval_score": 96.97420634920636
+  "_eval_score": 97.89285714285714
 }

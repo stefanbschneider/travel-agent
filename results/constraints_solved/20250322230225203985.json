@@ -61,6 +61,27 @@
                     ]
                 },
                 {
+                    "type": "attraction",
+                    "position": "Beijing Exhibition Center",
+                    "start_time": "15:01",
+                    "end_time": "16:31",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Beijing Aquarium",
+                            "end": "Beijing Exhibition Center",
+                            "mode": "walk",
+                            "start_time": "14:55",
+                            "end_time": "15:01",
+                            "distance": 0.5356900809118199,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
                     "type": "dinner",
                     "position": "Jumbo Seafood (Beijing SKP Branch)",
                     "start_time": "17:19",
@@ -70,12 +91,33 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Beijing Aquarium",
+                            "start": "Beijing Exhibition Center",
+                            "end": "Xizhimen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:31",
+                            "end_time": "16:39",
+                            "distance": 0.75,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xizhimen-Metro Station",
+                            "end": "Dawanglu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:39",
+                            "end_time": "17:00",
+                            "distance": 10.89,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dawanglu-Metro Station",
                             "end": "Jumbo Seafood (Beijing SKP Branch)",
                             "mode": "walk",
-                            "start_time": "14:55",
-                            "end_time": "17:19",
-                            "distance": 12.054040276426244,
+                            "start_time": "17:00",
+                            "end_time": "17:04",
+                            "distance": 0.34,
                             "price": 0,
                             "cost": 0
                         }
@@ -264,6 +306,48 @@
                 },
                 {
                     "type": "attraction",
+                    "position": "Bao Guo Temple",
+                    "start_time": "09:00",
+                    "end_time": "11:00",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Orange Crystal Beijing Fengtai Railway Station Headquarters Base Hotel",
+                            "end": "Fengtai South Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "08:30",
+                            "end_time": "08:35",
+                            "distance": 0.48,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Fengtai South Road-Metro Station",
+                            "end": "Changchun Street-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:35",
+                            "end_time": "08:52",
+                            "distance": 8.64,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Changchun Street-Metro Station",
+                            "end": "Bao Guo Temple",
+                            "mode": "walk",
+                            "start_time": "08:52",
+                            "end_time": "08:56",
+                            "distance": 0.37,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
                     "position": "Jingshan Park",
                     "start_time": "11:17",
                     "end_time": "12:47",
@@ -272,12 +356,159 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Orange Crystal Beijing Fengtai Railway Station Headquarters Base Hotel",
+                            "start": "Bao Guo Temple",
+                            "end": "Changchun Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:00",
+                            "end_time": "11:04",
+                            "distance": 0.37,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Changchun Street-Metro Station",
+                            "end": "Nanluoguxiang-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:04",
+                            "end_time": "11:14",
+                            "distance": 5.18,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Nanluoguxiang-Metro Station",
                             "end": "Jingshan Park",
                             "mode": "walk",
-                            "start_time": "08:30",
-                            "end_time": "11:17",
-                            "distance": 13.985680543039578,
+                            "start_time": "11:14",
+                            "end_time": "11:16",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Helude Candied Hawthorn Sticks",
+                    "start_time": "12:52",
+                    "end_time": "13:52",
+                    "price": 7.0,
+                    "cost": 28.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Jingshan Park",
+                            "end": "Nanluoguxiang-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:47",
+                            "end_time": "12:49",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Nanluoguxiang-Metro Station",
+                            "end": "Dongsi-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:49",
+                            "end_time": "12:52",
+                            "distance": 1.55,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dongsi-Metro Station",
+                            "end": "Helude Candied Hawthorn Sticks",
+                            "mode": "walk",
+                            "start_time": "12:52",
+                            "end_time": "12:52",
+                            "distance": 0.04,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Chang'an Avenue",
+                    "start_time": "13:57",
+                    "end_time": "15:27",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Helude Candied Hawthorn Sticks",
+                            "end": "Dongsi-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:52",
+                            "end_time": "13:52",
+                            "distance": 0.04,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dongsi-Metro Station",
+                            "end": "Dengshikou-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:52",
+                            "end_time": "13:53",
+                            "distance": 0.81,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dengshikou-Metro Station",
+                            "end": "Chang'an Avenue",
+                            "mode": "walk",
+                            "start_time": "13:53",
+                            "end_time": "13:57",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Beijing Central Axis Tour by Ding-Ding Tram",
+                    "start_time": "15:38",
+                    "end_time": "17:08",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Chang'an Avenue",
+                            "end": "Dengshikou-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:27",
+                            "end_time": "15:31",
+                            "distance": 0.36,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dengshikou-Metro Station",
+                            "end": "Tiananmen East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:31",
+                            "end_time": "15:34",
+                            "distance": 1.76,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tiananmen East-Metro Station",
+                            "end": "Beijing Central Axis Tour by Ding-Ding Tram",
+                            "mode": "walk",
+                            "start_time": "15:34",
+                            "end_time": "15:38",
+                            "distance": 0.41,
                             "price": 0,
                             "cost": 0
                         }
@@ -294,12 +525,33 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Jingshan Park",
+                            "start": "Beijing Central Axis Tour by Ding-Ding Tram",
+                            "end": "Tiananmen East-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:08",
+                            "end_time": "17:12",
+                            "distance": 0.41,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiananmen East-Metro Station",
+                            "end": "Terminal 2-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:12",
+                            "end_time": "18:02",
+                            "distance": 25.11,
+                            "price": 6,
+                            "cost": 24,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Terminal 2-Metro Station",
                             "end": "Beijing Capital International Airport",
                             "mode": "walk",
-                            "start_time": "12:47",
-                            "end_time": "17:31",
-                            "distance": 23.73420551016943,
+                            "start_time": "18:02",
+                            "end_time": "18:12",
+                            "distance": 0.88,
                             "price": 0,
                             "cost": 0
                         }

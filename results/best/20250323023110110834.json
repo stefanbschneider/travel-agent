@@ -700,13 +700,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 314.6,
+          "type": "attraction",
+          "position": "704 Project (Lin Biao's Hangzhou Villa)",
+          "start_time": "12:57",
+          "end_time": "14:27",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -721,11 +720,75 @@
             },
             {
               "start": "Longxiang Bridge-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Yellow Dragon Cave-Metro Station",
               "mode": "metro",
               "start_time": "12:16",
-              "end_time": "12:29",
-              "distance": 6.63,
+              "end_time": "12:21",
+              "distance": 2.56,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "704 Project (Lin Biao's Hangzhou Villa)",
+              "mode": "walk",
+              "start_time": "12:21",
+              "end_time": "12:57",
+              "distance": 3.0,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Seal Museum",
+          "start_time": "14:56",
+          "end_time": "16:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "704 Project (Lin Biao's Hangzhou Villa)",
+              "end": "China Seal Museum",
+              "mode": "walk",
+              "start_time": "14:27",
+              "end_time": "14:56",
+              "distance": 2.4458172071048794,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:27",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Seal Museum",
+              "end": "Yellow Dragon Cave-Metro Station",
+              "mode": "walk",
+              "start_time": "16:26",
+              "end_time": "16:38",
+              "distance": 1.01,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "16:38",
+              "end_time": "16:53",
+              "distance": 7.93,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -734,8 +797,8 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "12:29",
-              "end_time": "12:34",
+              "start_time": "16:53",
+              "end_time": "16:58",
               "distance": 0.48,
               "price": 0,
               "cost": 0
@@ -747,5 +810,5 @@
     }
   ],
   "elapsed_time(sec)": 4.937745809555054,
-  "_eval_score": 94.63112745098039
+  "_eval_score": 95.23637218045113
 }

@@ -662,13 +662,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "13:20",
+          "end_time": "14:50",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -683,21 +682,64 @@
             },
             {
               "start": "Pudong South Road-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
               "start_time": "13:14",
-              "end_time": "13:52",
-              "distance": 19.08,
-              "price": 5,
-              "cost": 5,
+              "end_time": "13:18",
+              "distance": 2.2,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "walk",
+              "start_time": "13:18",
+              "end_time": "13:20",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "17:21",
+          "start": "Shanghai Hongqiao Station",
+          "end": "Suzhou North Station",
+          "price": 55.23,
+          "cost": 55.23,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Yuanshen Sports Center-Metro Station",
+              "mode": "walk",
+              "start_time": "14:50",
+              "end_time": "14:52",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "14:52",
+              "end_time": "15:34",
+              "distance": 21.0,
+              "price": 6,
+              "cost": 6,
               "tickets": 1
             },
             {
               "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
               "mode": "walk",
-              "start_time": "13:52",
-              "end_time": "13:53",
+              "start_time": "15:34",
+              "end_time": "15:35",
               "distance": 0.12,
               "price": 0,
               "cost": 0
@@ -709,5 +751,5 @@
     }
   ],
   "elapsed_time(sec)": 15.208379983901978,
-  "_eval_score": 96.85912698412699
+  "_eval_score": 97.30555555555556
 }
