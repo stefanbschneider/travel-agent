@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: python:3.12-slim
+
+%help
+    TPC solver (CP-SAT) image, Python 3.12, CPU-only, lightweight deps.
+
+    Build (requires root OR --fakeroot OR a Sylabs --remote token):
+        module load singularity/4.4
+        singularity build tpc-solver-py312.sif slurm/tpc-solver-py312.def
+
+    On clusters with no fakeroot/remote/proot (e.g. this BeeGFS cluster, where
+    we have no subuid/subgid allocation), a %post cannot run as non-root. Use the
+    rootless equivalent slurm/build_image.sh instead (base python:3.12-slim SIF
+    + bind-mounted 3.12 venv with the SAME pinned deps). Keep the two pin lists
+    in sync.
+
+%labels
+    Maintainer fabimi
+    Project china-travel-agent
+    Purpose Lightweight TPC solver (CP-SAT) image for Slurm compute nodes
+    Python 3.12
+    Notes |
+        Matches .python-version (3.12) and the project's 3.12-only convention.
+        Contains ONLY the non-optional deps of the TPCAgent/TPCLLM import chain.
+        Heavy deps (torch/vllm/transformers/flashinfer/modelscope/openai) are
+        optional in chinatravel/agent/llms.py (try/except -> None) and are
+        intentionally OMITTED to keep the image small and CPU-only. Add a CUDA
+        base + --nv for any future real-LLM work.
+        Pinned to the exact versions the repo builds with for reproducibility.
+        Build note: %post needs root/fakeroot; see slurm/build_image.sh for the
+        rootless (base-sif + bind-venv) path used on this cluster.
+
+%post
+    # pip up to date, no cache to shrink layers
+    pip install --no-cache-dir --upgrade pip
+    pip install --no-cache-dir \
+      numpy==2.4.6 \
+      pandas==2.2.3 \
+      geopy==2.4.1 \
+      fuzzywuzzy==0.18.0 \
+      python-Levenshtein==0.27.1 \
+      scikit-learn==1.5.2 \
+      tqdm==4.66.6 \
+      func-timeout==4.3.5 \
+      datasets==3.3.2 \
+      ortools==9.15.6755 \
+      z3-solver==4.14.1.0 \
+      jsonschema==4.23.0 \
+      json-repair==0.30.0 \
+      packaging==24.2
+
+%test
+    # Build-time self-check: every solver import must resolve.
+    python -c "import ortools,z3,numpy,pandas,sklearn,geopy,func_timeout,datasets,json_repair,jsonschema,fuzzywuzzy; print('import-ok')"
+
+%runscript
+    exec python "$@"
