@@ -418,9 +418,16 @@ def _reconstruct_one(agent, query, constraints, ctx, assignment, attr_order, lun
             pos = out_act["end"]
             clock = time_to_minutes(out_act["end_time"])
         else:
-            activities.append(agent._make_hotel_breakfast(hotel_name, "07:30", "08:30"))
-            pos = hotel_name
-            clock = 8 * 60 + 30
+            # Skip hotel breakfast on days that open with an early-anchored
+            # attraction (window latest-start before breakfast ends); start at the
+            # hotel early so the anchor's start-time window can be met.
+            if _early_anchor_pending(agent, attr_queue, constraints):
+                pos = hotel_name
+                clock = 7 * 60
+            else:
+                activities.append(agent._make_hotel_breakfast(hotel_name, "07:30", "08:30"))
+                pos = hotel_name
+                clock = 8 * 60 + 30
 
         day_close = int(returning["begin_min"]) - STATION_BUFFER if is_last else DAY_CLOSE
         pos, clock = _fill_day(
@@ -570,7 +577,10 @@ def _place_attraction(agent, city, people, constraints, base_visit, attr, activi
         return "carry" if attr.get("required") else "drop"
     window = _attr_window(agent, attr, constraints)
     visit = _visit_len_for(agent, attr, constraints, base_visit)
-    start = max(time_to_minutes(arrival), DAY_OPEN)
+    floor = DAY_OPEN
+    if window["latest"] is not None and window["latest"] < DAY_OPEN:
+        floor = 7 * 60  # early-morning anchor: allow start before the usual 09:00 floor
+    start = max(time_to_minutes(arrival), floor)
     if attr.get("open_min") is not None:
         start = max(start, int(attr["open_min"]))
     if window["earliest"] is not None:
@@ -636,6 +646,14 @@ def _attr_window(agent, attr: dict, constraints: dict) -> dict:
             if value:
                 result[key] = time_to_minutes(str(value))
     return result
+
+
+def _early_anchor_pending(agent, attr_queue: list[dict], constraints: dict) -> bool:
+    """True when the next queued attraction must start before breakfast ends."""
+    if not attr_queue:
+        return False
+    window = _attr_window(agent, attr_queue[0], constraints)
+    return window["latest"] is not None and window["latest"] < 9 * 60 + 30
 
 
 def _attr_day_feasible(agent, attr: dict, constraints: dict, visit_minutes: int) -> bool:
