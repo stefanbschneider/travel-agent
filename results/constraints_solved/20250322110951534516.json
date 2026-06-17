@@ -103,12 +103,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Jumbo Seafood (Beijing SKP Branch)",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 401.0,
-                    "cost": 1604.0,
+                    "type": "attraction",
+                    "position": "National Museum of China",
+                    "start_time": "15:03",
+                    "end_time": "16:33",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -123,11 +123,53 @@
                         },
                         {
                             "start": "National Art Museum of China-Metro Station",
-                            "end": "Dawanglu-Metro Station",
+                            "end": "Wangfujing-Metro Station",
                             "mode": "metro",
                             "start_time": "14:55",
-                            "end_time": "15:06",
-                            "distance": 5.81,
+                            "end_time": "14:58",
+                            "distance": 1.74,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Wangfujing-Metro Station",
+                            "end": "National Museum of China",
+                            "mode": "walk",
+                            "start_time": "14:58",
+                            "end_time": "15:03",
+                            "distance": 0.48,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Jumbo Seafood (Beijing SKP Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 401.0,
+                    "cost": 1604.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "National Museum of China",
+                            "end": "Wangfujing-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:33",
+                            "end_time": "16:38",
+                            "distance": 0.48,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangfujing-Metro Station",
+                            "end": "Dawanglu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:38",
+                            "end_time": "16:48",
+                            "distance": 5.49,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
@@ -136,8 +178,8 @@
                             "start": "Dawanglu-Metro Station",
                             "end": "Jumbo Seafood (Beijing SKP Branch)",
                             "mode": "walk",
-                            "start_time": "15:06",
-                            "end_time": "15:10",
+                            "start_time": "16:48",
+                            "end_time": "16:52",
                             "distance": 0.34,
                             "price": 0,
                             "cost": 0
@@ -145,14 +187,12 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Mumian Beijing Daxing International Airport",
-                    "start_time": "19:38",
-                    "end_time": "24:00",
-                    "price": 729.0,
-                    "cost": 2916.0,
-                    "rooms": 4,
-                    "room_type": 1,
+                    "type": "attraction",
+                    "position": "Olympic Park",
+                    "start_time": "18:37",
+                    "end_time": "20:07",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -167,21 +207,65 @@
                         },
                         {
                             "start": "Dawanglu-Metro Station",
-                            "end": "Daxing Airport-Metro Station",
+                            "end": "Olympic Park-Metro Station",
                             "mode": "metro",
                             "start_time": "18:04",
-                            "end_time": "19:32",
-                            "distance": 44.36,
-                            "price": 8,
-                            "cost": 32,
+                            "end_time": "18:29",
+                            "distance": 12.66,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Olympic Park-Metro Station",
+                            "end": "Olympic Park",
+                            "mode": "walk",
+                            "start_time": "18:29",
+                            "end_time": "18:37",
+                            "distance": 0.72,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Mumian Beijing Daxing International Airport",
+                    "start_time": "22:10",
+                    "end_time": "24:00",
+                    "price": 729.0,
+                    "cost": 2916.0,
+                    "rooms": 4,
+                    "room_type": 1,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Olympic Park",
+                            "end": "Olympic Park-Metro Station",
+                            "mode": "walk",
+                            "start_time": "20:07",
+                            "end_time": "20:15",
+                            "distance": 0.72,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Olympic Park-Metro Station",
+                            "end": "Daxing Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "20:15",
+                            "end_time": "22:04",
+                            "distance": 54.54,
+                            "price": 9,
+                            "cost": 36,
                             "tickets": 4
                         },
                         {
                             "start": "Daxing Airport-Metro Station",
                             "end": "Mumian Beijing Daxing International Airport",
                             "mode": "walk",
-                            "start_time": "19:32",
-                            "end_time": "19:38",
+                            "start_time": "22:04",
+                            "end_time": "22:10",
                             "distance": 0.58,
                             "price": 0,
                             "cost": 0
@@ -192,233 +276,6 @@
         },
         {
             "day": 2,
-            "activities": [
-                {
-                    "type": "breakfast",
-                    "position": "Mumian Beijing Daxing International Airport",
-                    "start_time": "07:30",
-                    "end_time": "08:30",
-                    "price": 0,
-                    "cost": 0,
-                    "tickets": 0,
-                    "transports": []
-                },
-                {
-                    "type": "attraction",
-                    "position": "Old Summer Palace",
-                    "start_time": "10:47",
-                    "end_time": "12:17",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "Mumian Beijing Daxing International Airport",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "walk",
-                            "start_time": "08:30",
-                            "end_time": "08:36",
-                            "distance": 0.58,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Old Summer Palace-Metro Station",
-                            "mode": "metro",
-                            "start_time": "08:36",
-                            "end_time": "10:25",
-                            "distance": 54.98,
-                            "price": 9,
-                            "cost": 36,
-                            "tickets": 4
-                        },
-                        {
-                            "start": "Old Summer Palace-Metro Station",
-                            "end": "Old Summer Palace",
-                            "mode": "walk",
-                            "start_time": "10:25",
-                            "end_time": "10:47",
-                            "distance": 1.84,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "China Science and Technology Museum",
-                    "start_time": "13:05",
-                    "end_time": "14:35",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "Old Summer Palace",
-                            "end": "Old Summer Palace-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:17",
-                            "end_time": "12:39",
-                            "distance": 1.84,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Old Summer Palace-Metro Station",
-                            "end": "South Gate of Forest Park-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:39",
-                            "end_time": "12:53",
-                            "distance": 7.13,
-                            "price": 3,
-                            "cost": 12,
-                            "tickets": 4
-                        },
-                        {
-                            "start": "South Gate of Forest Park-Metro Station",
-                            "end": "China Science and Technology Museum",
-                            "mode": "walk",
-                            "start_time": "12:53",
-                            "end_time": "13:05",
-                            "distance": 1.08,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Olympic Park",
-                    "start_time": "14:56",
-                    "end_time": "16:26",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "China Science and Technology Museum",
-                            "end": "South Gate of Forest Park-Metro Station",
-                            "mode": "walk",
-                            "start_time": "14:35",
-                            "end_time": "14:47",
-                            "distance": 1.08,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "South Gate of Forest Park-Metro Station",
-                            "end": "Olympic Park-Metro Station",
-                            "mode": "metro",
-                            "start_time": "14:47",
-                            "end_time": "14:48",
-                            "distance": 0.88,
-                            "price": 2,
-                            "cost": 8,
-                            "tickets": 4
-                        },
-                        {
-                            "start": "Olympic Park-Metro Station",
-                            "end": "Olympic Park",
-                            "mode": "walk",
-                            "start_time": "14:48",
-                            "end_time": "14:56",
-                            "distance": 0.72,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "dinner",
-                    "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 1100.0,
-                    "cost": 4400.0,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "Olympic Park",
-                            "end": "Olympic Park-Metro Station",
-                            "mode": "walk",
-                            "start_time": "16:26",
-                            "end_time": "16:34",
-                            "distance": 0.72,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Olympic Park-Metro Station",
-                            "end": "Tuanjiehu-Metro Station",
-                            "mode": "metro",
-                            "start_time": "16:34",
-                            "end_time": "16:53",
-                            "distance": 9.67,
-                            "price": 4,
-                            "cost": 16,
-                            "tickets": 4
-                        },
-                        {
-                            "start": "Tuanjiehu-Metro Station",
-                            "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
-                            "mode": "walk",
-                            "start_time": "16:53",
-                            "end_time": "16:57",
-                            "distance": 0.34,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "accommodation",
-                    "position": "Mumian Beijing Daxing International Airport",
-                    "start_time": "19:44",
-                    "end_time": "24:00",
-                    "price": 729.0,
-                    "cost": 2916.0,
-                    "rooms": 4,
-                    "room_type": 1,
-                    "tickets": 4,
-                    "transports": [
-                        {
-                            "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
-                            "end": "Tuanjiehu-Metro Station",
-                            "mode": "walk",
-                            "start_time": "18:00",
-                            "end_time": "18:04",
-                            "distance": 0.34,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Tuanjiehu-Metro Station",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "metro",
-                            "start_time": "18:04",
-                            "end_time": "19:38",
-                            "distance": 47.05,
-                            "price": 8,
-                            "cost": 32,
-                            "tickets": 4
-                        },
-                        {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Mumian Beijing Daxing International Airport",
-                            "mode": "walk",
-                            "start_time": "19:38",
-                            "end_time": "19:44",
-                            "distance": 0.58,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "day": 3,
             "activities": [
                 {
                     "type": "breakfast",
@@ -599,12 +456,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Summer Palace at China World Hotel, Beijing",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 454.0,
-                    "cost": 1816.0,
+                    "type": "attraction",
+                    "position": "Beihai Park",
+                    "start_time": "16:25",
+                    "end_time": "17:55",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -619,21 +476,374 @@
                         },
                         {
                             "start": "Yuyuantan East Gate-Metro Station",
-                            "end": "Guomao-Metro Station",
+                            "end": "Shichahai-Metro Station",
                             "mode": "metro",
                             "start_time": "16:10",
-                            "end_time": "16:31",
-                            "distance": 10.9,
+                            "end_time": "16:21",
+                            "distance": 5.88,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Shichahai-Metro Station",
+                            "end": "Beihai Park",
+                            "mode": "walk",
+                            "start_time": "16:21",
+                            "end_time": "16:25",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
+                    "start_time": "18:14",
+                    "end_time": "19:14",
+                    "price": 1100.0,
+                    "cost": 4400.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Beihai Park",
+                            "end": "Shichahai-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:55",
+                            "end_time": "17:59",
+                            "distance": 0.39,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shichahai-Metro Station",
+                            "end": "Tuanjiehu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:59",
+                            "end_time": "18:10",
+                            "distance": 5.62,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tuanjiehu-Metro Station",
+                            "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
+                            "mode": "walk",
+                            "start_time": "18:10",
+                            "end_time": "18:14",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Mumian Beijing Daxing International Airport",
+                    "start_time": "20:58",
+                    "end_time": "24:00",
+                    "price": 729.0,
+                    "cost": 2916.0,
+                    "rooms": 4,
+                    "room_type": 1,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
+                            "end": "Tuanjiehu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:14",
+                            "end_time": "19:18",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tuanjiehu-Metro Station",
+                            "end": "Daxing Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:18",
+                            "end_time": "20:52",
+                            "distance": 47.05,
+                            "price": 8,
+                            "cost": 32,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Daxing Airport-Metro Station",
+                            "end": "Mumian Beijing Daxing International Airport",
+                            "mode": "walk",
+                            "start_time": "20:52",
+                            "end_time": "20:58",
+                            "distance": 0.58,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 3,
+            "activities": [
+                {
+                    "type": "breakfast",
+                    "position": "Mumian Beijing Daxing International Airport",
+                    "start_time": "07:30",
+                    "end_time": "08:30",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 0,
+                    "transports": []
+                },
+                {
+                    "type": "attraction",
+                    "position": "Nanluoguxiang",
+                    "start_time": "10:21",
+                    "end_time": "11:51",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Mumian Beijing Daxing International Airport",
+                            "end": "Daxing Airport-Metro Station",
+                            "mode": "walk",
+                            "start_time": "08:30",
+                            "end_time": "08:36",
+                            "distance": 0.58,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Daxing Airport-Metro Station",
+                            "end": "Andingmen-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:36",
+                            "end_time": "10:13",
+                            "distance": 48.61,
+                            "price": 9,
+                            "cost": 36,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Andingmen-Metro Station",
+                            "end": "Nanluoguxiang",
+                            "mode": "walk",
+                            "start_time": "10:13",
+                            "end_time": "10:21",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "South Gate Hot Pot (Temple of Heaven Branch)",
+                    "start_time": "12:28",
+                    "end_time": "13:28",
+                    "price": 101.0,
+                    "cost": 404.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Nanluoguxiang",
+                            "end": "Andingmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:51",
+                            "end_time": "11:59",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Andingmen-Metro Station",
+                            "end": "Jingtai-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:59",
+                            "end_time": "12:17",
+                            "distance": 9.32,
                             "price": 4,
                             "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Jingtai-Metro Station",
+                            "end": "South Gate Hot Pot (Temple of Heaven Branch)",
+                            "mode": "walk",
+                            "start_time": "12:17",
+                            "end_time": "12:28",
+                            "distance": 0.97,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Chaoyang Park",
+                    "start_time": "14:14",
+                    "end_time": "15:44",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "South Gate Hot Pot (Temple of Heaven Branch)",
+                            "end": "Jingtai-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:28",
+                            "end_time": "13:39",
+                            "distance": 0.97,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jingtai-Metro Station",
+                            "end": "Dongfeng Beiqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:39",
+                            "end_time": "14:03",
+                            "distance": 12.16,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dongfeng Beiqiao-Metro Station",
+                            "end": "Chaoyang Park",
+                            "mode": "walk",
+                            "start_time": "14:03",
+                            "end_time": "14:14",
+                            "distance": 0.97,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Qianmen Street",
+                    "start_time": "16:20",
+                    "end_time": "17:50",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Chaoyang Park",
+                            "end": "Dongfeng Beiqiao-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:44",
+                            "end_time": "15:55",
+                            "distance": 0.97,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dongfeng Beiqiao-Metro Station",
+                            "end": "Qianmen-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:55",
+                            "end_time": "16:14",
+                            "distance": 9.91,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Qianmen-Metro Station",
+                            "end": "Qianmen Street",
+                            "mode": "walk",
+                            "start_time": "16:14",
+                            "end_time": "16:20",
+                            "distance": 0.57,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Summer Palace at China World Hotel, Beijing",
+                    "start_time": "18:10",
+                    "end_time": "19:10",
+                    "price": 454.0,
+                    "cost": 1816.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Qianmen Street",
+                            "end": "Qianmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:50",
+                            "end_time": "17:56",
+                            "distance": 0.57,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qianmen-Metro Station",
+                            "end": "Guomao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:56",
+                            "end_time": "18:07",
+                            "distance": 5.55,
+                            "price": 3,
+                            "cost": 12,
                             "tickets": 4
                         },
                         {
                             "start": "Guomao-Metro Station",
                             "end": "Summer Palace at China World Hotel, Beijing",
                             "mode": "walk",
-                            "start_time": "16:31",
-                            "end_time": "16:34",
+                            "start_time": "18:07",
+                            "end_time": "18:10",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Wangfujing",
+                    "start_time": "19:23",
+                    "end_time": "20:53",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Summer Palace at China World Hotel, Beijing",
+                            "end": "Guomao-Metro Station",
+                            "mode": "walk",
+                            "start_time": "19:10",
+                            "end_time": "19:13",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Guomao-Metro Station",
+                            "end": "Dengshikou-Metro Station",
+                            "mode": "metro",
+                            "start_time": "19:13",
+                            "end_time": "19:20",
+                            "distance": 3.87,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dengshikou-Metro Station",
+                            "end": "Wangfujing",
+                            "mode": "walk",
+                            "start_time": "19:20",
+                            "end_time": "19:23",
                             "distance": 0.3,
                             "price": 0,
                             "cost": 0
@@ -643,7 +853,7 @@
                 {
                     "type": "accommodation",
                     "position": "Mumian Beijing Daxing International Airport",
-                    "start_time": "19:37",
+                    "start_time": "22:32",
                     "end_time": "24:00",
                     "price": 729.0,
                     "cost": 2916.0,
@@ -652,22 +862,22 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Summer Palace at China World Hotel, Beijing",
-                            "end": "Guomao-Metro Station",
+                            "start": "Wangfujing",
+                            "end": "Dengshikou-Metro Station",
                             "mode": "walk",
-                            "start_time": "18:00",
-                            "end_time": "18:03",
+                            "start_time": "20:53",
+                            "end_time": "20:56",
                             "distance": 0.3,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Guomao-Metro Station",
+                            "start": "Dengshikou-Metro Station",
                             "end": "Daxing Airport-Metro Station",
                             "mode": "metro",
-                            "start_time": "18:03",
-                            "end_time": "19:31",
-                            "distance": 44.33,
+                            "start_time": "20:56",
+                            "end_time": "22:26",
+                            "distance": 45.05,
                             "price": 8,
                             "cost": 32,
                             "tickets": 4
@@ -676,8 +886,8 @@
                             "start": "Daxing Airport-Metro Station",
                             "end": "Mumian Beijing Daxing International Airport",
                             "mode": "walk",
-                            "start_time": "19:31",
-                            "end_time": "19:37",
+                            "start_time": "22:26",
+                            "end_time": "22:32",
                             "distance": 0.58,
                             "price": 0,
                             "cost": 0
@@ -700,12 +910,12 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "Beihai Park",
-                    "start_time": "10:14",
-                    "end_time": "11:44",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "lunch",
+                    "position": "Mei·DaDong Sea Cucumber Restaurant (Nancang Store)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 980.0,
+                    "cost": 3920.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -720,64 +930,148 @@
                         },
                         {
                             "start": "Daxing Airport-Metro Station",
-                            "end": "Shichahai-Metro Station",
+                            "end": "Dongsi Shitiao-Metro Station",
                             "mode": "metro",
                             "start_time": "08:36",
-                            "end_time": "10:10",
-                            "distance": 47.35,
+                            "end_time": "10:09",
+                            "distance": 46.93,
                             "price": 8,
                             "cost": 32,
                             "tickets": 4
                         },
                         {
-                            "start": "Shichahai-Metro Station",
-                            "end": "Beihai Park",
+                            "start": "Dongsi Shitiao-Metro Station",
+                            "end": "Mei·DaDong Sea Cucumber Restaurant (Nancang Store)",
                             "mode": "walk",
-                            "start_time": "10:10",
-                            "end_time": "10:14",
-                            "distance": 0.39,
+                            "start_time": "10:09",
+                            "end_time": "10:12",
+                            "distance": 0.31,
                             "price": 0,
                             "cost": 0
                         }
                     ]
                 },
                 {
-                    "type": "lunch",
-                    "position": "South Gate Hot Pot (Temple of Heaven Branch)",
-                    "start_time": "12:15",
-                    "end_time": "13:15",
-                    "price": 101.0,
-                    "cost": 404.0,
+                    "type": "attraction",
+                    "position": "798 Art District",
+                    "start_time": "12:37",
+                    "end_time": "14:07",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Beihai Park",
-                            "end": "Shichahai-Metro Station",
+                            "start": "Mei·DaDong Sea Cucumber Restaurant (Nancang Store)",
+                            "end": "Dongsi Shitiao-Metro Station",
                             "mode": "walk",
-                            "start_time": "11:44",
-                            "end_time": "11:48",
-                            "distance": 0.39,
+                            "start_time": "12:00",
+                            "end_time": "12:03",
+                            "distance": 0.31,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Shichahai-Metro Station",
-                            "end": "Jingtai-Metro Station",
+                            "start": "Dongsi Shitiao-Metro Station",
+                            "end": "Wangjing South-Metro Station",
                             "mode": "metro",
-                            "start_time": "11:48",
-                            "end_time": "12:04",
-                            "distance": 8.13,
+                            "start_time": "12:03",
+                            "end_time": "12:16",
+                            "distance": 6.97,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
                         },
                         {
-                            "start": "Jingtai-Metro Station",
-                            "end": "South Gate Hot Pot (Temple of Heaven Branch)",
+                            "start": "Wangjing South-Metro Station",
+                            "end": "798 Art District",
                             "mode": "walk",
-                            "start_time": "12:04",
-                            "end_time": "12:15",
-                            "distance": 0.97,
+                            "start_time": "12:16",
+                            "end_time": "12:37",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Central Academy of Fine Arts Art Museum",
+                    "start_time": "14:32",
+                    "end_time": "16:02",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "798 Art District",
+                            "end": "Wangjing South-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:07",
+                            "end_time": "14:28",
+                            "distance": 1.79,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangjing South-Metro Station",
+                            "end": "Futong-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:28",
+                            "end_time": "14:30",
+                            "distance": 1.19,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Futong-Metro Station",
+                            "end": "Central Academy of Fine Arts Art Museum",
+                            "mode": "walk",
+                            "start_time": "14:30",
+                            "end_time": "14:32",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Helude Candied Hawthorn Sticks",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 7.0,
+                    "cost": 28.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Central Academy of Fine Arts Art Museum",
+                            "end": "Futong-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:02",
+                            "end_time": "16:04",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Futong-Metro Station",
+                            "end": "Dongsi-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:04",
+                            "end_time": "16:21",
+                            "distance": 8.8,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Dongsi-Metro Station",
+                            "end": "Helude Candied Hawthorn Sticks",
+                            "mode": "walk",
+                            "start_time": "16:21",
+                            "end_time": "16:21",
+                            "distance": 0.04,
                             "price": 0,
                             "cost": 0
                         }
@@ -794,32 +1088,32 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "South Gate Hot Pot (Temple of Heaven Branch)",
-                            "end": "Jingtai-Metro Station",
+                            "start": "Helude Candied Hawthorn Sticks",
+                            "end": "Dongsi-Metro Station",
                             "mode": "walk",
-                            "start_time": "13:15",
-                            "end_time": "13:26",
-                            "distance": 0.97,
+                            "start_time": "18:00",
+                            "end_time": "18:00",
+                            "distance": 0.04,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Jingtai-Metro Station",
+                            "start": "Dongsi-Metro Station",
                             "end": "Terminal 2-Metro Station",
                             "mode": "metro",
-                            "start_time": "13:26",
-                            "end_time": "14:22",
-                            "distance": 28.39,
-                            "price": 7,
-                            "cost": 28,
+                            "start_time": "18:00",
+                            "end_time": "18:45",
+                            "distance": 22.81,
+                            "price": 6,
+                            "cost": 24,
                             "tickets": 4
                         },
                         {
                             "start": "Terminal 2-Metro Station",
                             "end": "Beijing Capital International Airport",
                             "mode": "walk",
-                            "start_time": "14:22",
-                            "end_time": "14:32",
+                            "start_time": "18:45",
+                            "end_time": "18:55",
                             "distance": 0.88,
                             "price": 0,
                             "cost": 0
@@ -830,5 +1124,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 8.61634087562561
+    "elapsed_time(sec)": 19.886149168014526
 }

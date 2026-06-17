@@ -7,100 +7,170 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "airplane",
-                    "start_time": "07:45",
-                    "end_time": "09:09",
-                    "start": "Hangzhou Xiaoshan International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 611.21,
-                    "cost": 2444.84,
+                    "type": "train",
+                    "start_time": "08:22",
+                    "end_time": "08:10",
+                    "start": "Hangzhou Railway Station",
+                    "end": "Beijing Fengtai Station",
+                    "price": 449.4,
+                    "cost": 1797.6,
                     "tickets": 4,
                     "transports": [],
-                    "FlightID": "FL500"
+                    "TrainID": "K1277"
                 },
                 {
                     "type": "attraction",
-                    "position": "The Palace Museum",
-                    "start_time": "10:58",
-                    "end_time": "12:28",
+                    "position": "Bao Guo Temple",
+                    "start_time": "09:00",
+                    "end_time": "10:30",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Beijing Daxing International Airport",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "walk",
-                            "start_time": "09:09",
-                            "end_time": "09:20",
-                            "distance": 0.93,
-                            "price": 0,
-                            "cost": 0
-                        },
+                            "start": "Beijing Fengtai Station",
+                            "end": "Bao Guo Temple",
+                            "mode": "taxi",
+                            "start_time": "08:10",
+                            "end_time": "08:22",
+                            "distance": 8.47,
+                            "price": 34.36,
+                            "cost": 34.36,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "798 Art District",
+                    "start_time": "10:53",
+                    "end_time": "12:23",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
                         {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "National Art Museum of China-Metro Station",
-                            "mode": "metro",
-                            "start_time": "09:20",
-                            "end_time": "10:51",
-                            "distance": 45.78,
-                            "price": 8,
-                            "cost": 32,
-                            "tickets": 4
-                        },
+                            "start": "Bao Guo Temple",
+                            "end": "798 Art District",
+                            "mode": "taxi",
+                            "start_time": "10:30",
+                            "end_time": "10:53",
+                            "distance": 15.57,
+                            "price": 64.78,
+                            "cost": 64.78,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Zengshengkui Snack Shop",
+                    "start_time": "12:38",
+                    "end_time": "13:38",
+                    "price": 16.0,
+                    "cost": 64.0,
+                    "tickets": 4,
+                    "transports": [
                         {
-                            "start": "National Art Museum of China-Metro Station",
-                            "end": "The Palace Museum",
-                            "mode": "walk",
-                            "start_time": "10:51",
-                            "end_time": "10:58",
-                            "distance": 0.63,
-                            "price": 0,
-                            "cost": 0
+                            "start": "798 Art District",
+                            "end": "Zengshengkui Snack Shop",
+                            "mode": "taxi",
+                            "start_time": "12:23",
+                            "end_time": "12:38",
+                            "distance": 10.43,
+                            "price": 41.63,
+                            "cost": 41.63,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+                    "start_time": "13:49",
+                    "end_time": "15:19",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Zengshengkui Snack Shop",
+                            "end": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+                            "mode": "taxi",
+                            "start_time": "13:38",
+                            "end_time": "13:49",
+                            "distance": 7.67,
+                            "price": 31.55,
+                            "cost": 31.55,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Beihai Park",
+                    "start_time": "15:28",
+                    "end_time": "16:58",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+                            "end": "Beihai Park",
+                            "mode": "taxi",
+                            "start_time": "15:19",
+                            "end_time": "15:28",
+                            "distance": 6.48,
+                            "price": 27.39,
+                            "cost": 27.39,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Helude Candied Hawthorn Sticks",
+                    "start_time": "17:01",
+                    "end_time": "18:01",
+                    "price": 7.0,
+                    "cost": 28.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Beihai Park",
+                            "end": "Helude Candied Hawthorn Sticks",
+                            "mode": "taxi",
+                            "start_time": "16:58",
+                            "end_time": "17:01",
+                            "distance": 2.22,
+                            "price": 12.49,
+                            "cost": 12.49,
+                            "cars": 1
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
-                    "position": "Mumian Beijing Daxing International Airport",
-                    "start_time": "14:12",
+                    "position": "Qiuguo S Hotel (Beijing Capital Airport Second Branch)",
+                    "start_time": "18:32",
                     "end_time": "24:00",
-                    "price": 729.0,
-                    "cost": 2916.0,
+                    "price": 319.0,
+                    "cost": 1276.0,
                     "rooms": 4,
                     "room_type": 1,
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "The Palace Museum",
-                            "end": "National Art Museum of China-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:28",
-                            "end_time": "12:35",
-                            "distance": 0.63,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "National Art Museum of China-Metro Station",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:35",
-                            "end_time": "14:06",
-                            "distance": 45.78,
-                            "price": 8,
-                            "cost": 32,
-                            "tickets": 4
-                        },
-                        {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Mumian Beijing Daxing International Airport",
-                            "mode": "walk",
-                            "start_time": "14:06",
-                            "end_time": "14:12",
-                            "distance": 0.58,
-                            "price": 0,
-                            "cost": 0
+                            "start": "Helude Candied Hawthorn Sticks",
+                            "end": "Qiuguo S Hotel (Beijing Capital Airport Second Branch)",
+                            "mode": "taxi",
+                            "start_time": "18:01",
+                            "end_time": "18:32",
+                            "distance": 20.94,
+                            "price": 88.93,
+                            "cost": 88.93,
+                            "cars": 1
                         }
                     ]
                 }
@@ -111,7 +181,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "Mumian Beijing Daxing International Airport",
+                    "position": "Qiuguo S Hotel (Beijing Capital Airport Second Branch)",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -120,93 +190,179 @@
                     "transports": []
                 },
                 {
+                    "type": "lunch",
+                    "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 12.0,
+                    "cost": 48.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Qiuguo S Hotel (Beijing Capital Airport Second Branch)",
+                            "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+                            "mode": "taxi",
+                            "start_time": "08:30",
+                            "end_time": "09:00",
+                            "distance": 20.33,
+                            "price": 86.18,
+                            "cost": 86.18,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
                     "type": "attraction",
-                    "position": "Old Summer Palace",
-                    "start_time": "10:47",
-                    "end_time": "12:17",
+                    "position": "Corner Tower",
+                    "start_time": "12:15",
+                    "end_time": "13:45",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Mumian Beijing Daxing International Airport",
-                            "end": "Daxing Airport-Metro Station",
+                            "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+                            "end": "Zhang Zizhong Road-Metro Station",
                             "mode": "walk",
-                            "start_time": "08:30",
-                            "end_time": "08:36",
-                            "distance": 0.58,
+                            "start_time": "12:00",
+                            "end_time": "12:06",
+                            "distance": 0.57,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Old Summer Palace-Metro Station",
+                            "start": "Zhang Zizhong Road-Metro Station",
+                            "end": "Nanluoguxiang-Metro Station",
                             "mode": "metro",
-                            "start_time": "08:36",
-                            "end_time": "10:25",
-                            "distance": 54.98,
-                            "price": 9,
-                            "cost": 36,
+                            "start_time": "12:06",
+                            "end_time": "12:08",
+                            "distance": 1.11,
+                            "price": 2,
+                            "cost": 8,
                             "tickets": 4
                         },
                         {
-                            "start": "Old Summer Palace-Metro Station",
-                            "end": "Old Summer Palace",
+                            "start": "Nanluoguxiang-Metro Station",
+                            "end": "Corner Tower",
                             "mode": "walk",
-                            "start_time": "10:25",
-                            "end_time": "10:47",
-                            "distance": 1.84,
+                            "start_time": "12:08",
+                            "end_time": "12:15",
+                            "distance": 0.62,
                             "price": 0,
                             "cost": 0
                         }
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:18",
-                    "end_time": "18:42",
-                    "start": "Beijing Daxing International Airport",
-                    "end": "Hangzhou Xiaoshan International Airport",
-                    "price": 516.02,
-                    "cost": 2064.08,
+                    "type": "attraction",
+                    "position": "Cining Palace",
+                    "start_time": "14:04",
+                    "end_time": "15:34",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Old Summer Palace",
-                            "end": "Old Summer Palace-Metro Station",
+                            "start": "Corner Tower",
+                            "end": "Nanluoguxiang-Metro Station",
                             "mode": "walk",
-                            "start_time": "12:17",
-                            "end_time": "12:39",
-                            "distance": 1.84,
+                            "start_time": "13:45",
+                            "end_time": "13:52",
+                            "distance": 0.62,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Old Summer Palace-Metro Station",
-                            "end": "Daxing Airport-Metro Station",
+                            "start": "Nanluoguxiang-Metro Station",
+                            "end": "National Art Museum of China-Metro Station",
                             "mode": "metro",
-                            "start_time": "12:39",
-                            "end_time": "14:28",
-                            "distance": 54.98,
-                            "price": 9,
-                            "cost": 36,
+                            "start_time": "13:52",
+                            "end_time": "13:54",
+                            "distance": 1.26,
+                            "price": 2,
+                            "cost": 8,
                             "tickets": 4
                         },
                         {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Beijing Daxing International Airport",
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "Cining Palace",
                             "mode": "walk",
-                            "start_time": "14:28",
-                            "end_time": "14:39",
-                            "distance": 0.93,
+                            "start_time": "13:54",
+                            "end_time": "14:04",
+                            "distance": 0.87,
                             "price": 0,
                             "cost": 0
                         }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 14.0,
+                    "cost": 56.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Cining Palace",
+                            "end": "National Art Museum of China-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:34",
+                            "end_time": "15:44",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "National Art Museum of China-Metro Station",
+                            "end": "Niujie-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:44",
+                            "end_time": "15:55",
+                            "distance": 5.54,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Niujie-Metro Station",
+                            "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+                            "mode": "walk",
+                            "start_time": "15:55",
+                            "end_time": "15:58",
+                            "distance": 0.32,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "23:37",
+                    "end_time": "20:38",
+                    "start": "Beijing Fengtai Station",
+                    "end": "Hangzhou Railway Station",
+                    "price": 449.4,
+                    "cost": 1797.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+                            "end": "Beijing Fengtai Station",
+                            "mode": "taxi",
+                            "start_time": "18:00",
+                            "end_time": "18:11",
+                            "distance": 7.65,
+                            "price": 31.47,
+                            "cost": 31.47,
+                            "cars": 1
+                        }
                     ],
-                    "FlightID": "FL139"
+                    "TrainID": "K1278"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 2.7436158657073975
+    "elapsed_time(sec)": 4.444324016571045
 }

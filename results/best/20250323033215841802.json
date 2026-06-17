@@ -103,12 +103,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Lotus Eatery: Yunnan Ethnic Cuisine (Dingxi Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 110.0,
-          "cost": 440.0,
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "14:59",
+          "end_time": "16:29",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -123,21 +123,63 @@
             },
             {
               "start": "Lujiazui-Metro Station",
-              "end": "West Yan'an Road-Metro Station",
+              "end": "Liping Road-Metro Station",
               "mode": "metro",
               "start_time": "14:52",
-              "end_time": "15:09",
-              "distance": 8.71,
-              "price": 3,
-              "cost": 12,
+              "end_time": "14:57",
+              "distance": 2.51,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "14:57",
+              "end_time": "14:59",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Lotus Eatery: Yunnan Ethnic Cuisine (Dingxi Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 110.0,
+          "cost": 440.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:29",
+              "end_time": "16:31",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "West Yan'an Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:31",
+              "end_time": "16:50",
+              "distance": 9.79,
+              "price": 4,
+              "cost": 16,
               "tickets": 4
             },
             {
               "start": "West Yan'an Road-Metro Station",
               "end": "Lotus Eatery: Yunnan Ethnic Cuisine (Dingxi Road Branch)",
               "mode": "walk",
-              "start_time": "15:09",
-              "end_time": "15:16",
+              "start_time": "16:50",
+              "end_time": "16:57",
               "distance": 0.66,
               "price": 0,
               "cost": 0
@@ -536,13 +578,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "13:10",
+          "end_time": "14:40",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -557,21 +598,106 @@
             },
             {
               "start": "Pudong South Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
               "start_time": "13:04",
-              "end_time": "14:03",
-              "distance": 29.58,
-              "price": 7,
-              "cost": 28,
+              "end_time": "13:08",
+              "distance": 2.2,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "walk",
+              "start_time": "13:08",
+              "end_time": "13:10",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "14:45",
+          "end_time": "16:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Yuanshen Sports Center-Metro Station",
+              "mode": "walk",
+              "start_time": "14:40",
+              "end_time": "14:42",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:42",
+              "end_time": "14:44",
+              "distance": 1.47,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "14:45",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 2330.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:15",
+              "end_time": "16:16",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:16",
+              "end_time": "17:07",
+              "distance": 25.92,
+              "price": 6,
+              "cost": 24,
               "tickets": 4
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "14:03",
-              "end_time": "14:18",
+              "start_time": "17:07",
+              "end_time": "17:22",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -583,5 +709,5 @@
     }
   ],
   "elapsed_time(sec)": 8.256985664367676,
-  "_eval_score": 93.81471306471306
+  "_eval_score": 95.55853174603175
 }

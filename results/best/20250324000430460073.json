@@ -20,9 +20,9 @@
         },
         {
           "type": "attraction",
-          "position": "Chengdu Museum",
-          "start_time": "13:19",
-          "end_time": "14:49",
+          "position": "Tower of Vitality",
+          "start_time": "13:12",
+          "end_time": "14:42",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -39,21 +39,63 @@
             },
             {
               "start": "Shuangliu Airport Terminal 2 East-Metro Station",
-              "end": "Luomashi-Metro Station",
+              "end": "Heart Island-Metro Station",
               "mode": "metro",
               "start_time": "12:44",
-              "end_time": "13:13",
-              "distance": 14.96,
-              "price": 5,
-              "cost": 10,
+              "end_time": "13:06",
+              "distance": 11.06,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Heart Island-Metro Station",
+              "end": "Tower of Vitality",
+              "mode": "walk",
+              "start_time": "13:06",
+              "end_time": "13:12",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Museum",
+          "start_time": "15:14",
+          "end_time": "16:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Tower of Vitality",
+              "end": "Heart Island-Metro Station",
+              "mode": "walk",
+              "start_time": "14:42",
+              "end_time": "14:48",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Heart Island-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "14:48",
+              "end_time": "15:08",
+              "distance": 10.09,
+              "price": 4,
+              "cost": 8,
               "tickets": 2
             },
             {
               "start": "Luomashi-Metro Station",
               "end": "Chengdu Museum",
               "mode": "walk",
-              "start_time": "13:13",
-              "end_time": "13:19",
+              "start_time": "15:08",
+              "end_time": "15:14",
               "distance": 0.56,
               "price": 0,
               "cost": 0
@@ -73,8 +115,8 @@
               "start": "Chengdu Museum",
               "end": "Luomashi-Metro Station",
               "mode": "walk",
-              "start_time": "14:49",
-              "end_time": "14:55",
+              "start_time": "16:44",
+              "end_time": "16:50",
               "distance": 0.56,
               "price": 0,
               "cost": 0
@@ -83,8 +125,8 @@
               "start": "Luomashi-Metro Station",
               "end": "Chunxi Road-Metro Station",
               "mode": "metro",
-              "start_time": "14:55",
-              "end_time": "14:59",
+              "start_time": "16:50",
+              "end_time": "16:54",
               "distance": 2.01,
               "price": 2,
               "cost": 4,
@@ -94,8 +136,8 @@
               "start": "Chunxi Road-Metro Station",
               "end": "Mawangzi (Taikoo Li Branch)",
               "mode": "walk",
-              "start_time": "14:59",
-              "end_time": "15:04",
+              "start_time": "16:54",
+              "end_time": "16:59",
               "distance": 0.44,
               "price": 0,
               "cost": 0
@@ -103,14 +145,12 @@
           ]
         },
         {
-          "type": "accommodation",
-          "position": "Mercure Chengdu Shuangliu International Airport",
-          "start_time": "18:42",
-          "end_time": "24:00",
-          "price": 314.0,
-          "cost": 628.0,
-          "rooms": 2,
-          "room_type": 1,
+          "type": "attraction",
+          "position": "Manjushri Lane",
+          "start_time": "18:17",
+          "end_time": "19:47",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -125,11 +165,55 @@
             },
             {
               "start": "Chunxi Road-Metro Station",
-              "end": "Dongsheng-Metro Station",
+              "end": "Liangjia Lane-Metro Station",
               "mode": "metro",
               "start_time": "18:05",
-              "end_time": "18:39",
-              "distance": 17.41,
+              "end_time": "18:11",
+              "distance": 3.23,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Manjushri Lane",
+              "mode": "walk",
+              "start_time": "18:11",
+              "end_time": "18:17",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Mercure Chengdu Shuangliu International Airport",
+          "start_time": "20:35",
+          "end_time": "24:00",
+          "price": 314.0,
+          "cost": 628.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Lane",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "19:47",
+              "end_time": "19:53",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Dongsheng-Metro Station",
+              "mode": "metro",
+              "start_time": "19:53",
+              "end_time": "20:32",
+              "distance": 19.53,
               "price": 5,
               "cost": 10,
               "tickets": 2
@@ -138,8 +222,8 @@
               "start": "Dongsheng-Metro Station",
               "end": "Mercure Chengdu Shuangliu International Airport",
               "mode": "walk",
-              "start_time": "18:39",
-              "end_time": "18:42",
+              "start_time": "20:32",
+              "end_time": "20:35",
               "distance": 0.31,
               "price": 0,
               "cost": 0
@@ -163,9 +247,9 @@
         },
         {
           "type": "attraction",
-          "position": "Manjushri Lane",
-          "start_time": "09:18",
-          "end_time": "10:48",
+          "position": "Manjushri Temple",
+          "start_time": "09:17",
+          "end_time": "10:47",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -193,11 +277,53 @@
             },
             {
               "start": "Liangjia Lane-Metro Station",
-              "end": "Manjushri Lane",
+              "end": "Manjushri Temple",
               "mode": "walk",
               "start_time": "09:12",
-              "end_time": "09:18",
-              "distance": 0.51,
+              "end_time": "09:17",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Kuanzhai Alley",
+          "start_time": "11:04",
+          "end_time": "12:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Temple",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "10:47",
+              "end_time": "10:52",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "10:52",
+              "end_time": "10:56",
+              "distance": 2.44,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Kuanzhai Alley",
+              "mode": "walk",
+              "start_time": "10:56",
+              "end_time": "11:04",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             }
@@ -206,29 +332,29 @@
         {
           "type": "lunch",
           "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-          "start_time": "11:02",
-          "end_time": "12:02",
+          "start_time": "12:46",
+          "end_time": "13:46",
           "price": 250.0,
           "cost": 500.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Manjushri Lane",
-              "end": "Liangjia Lane-Metro Station",
+              "start": "Kuanzhai Alley",
+              "end": "Luomashi-Metro Station",
               "mode": "walk",
-              "start_time": "10:48",
-              "end_time": "10:54",
-              "distance": 0.51,
+              "start_time": "12:34",
+              "end_time": "12:42",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Liangjia Lane-Metro Station",
+              "start": "Luomashi-Metro Station",
               "end": "Tianfu Square-Metro Station",
               "mode": "metro",
-              "start_time": "10:54",
-              "end_time": "11:00",
-              "distance": 3.23,
+              "start_time": "12:42",
+              "end_time": "12:44",
+              "distance": 1.0,
               "price": 2,
               "cost": 4,
               "tickets": 2
@@ -237,9 +363,93 @@
               "start": "Tianfu Square-Metro Station",
               "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
               "mode": "walk",
-              "start_time": "11:00",
-              "end_time": "11:02",
+              "start_time": "12:44",
+              "end_time": "12:46",
               "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anshun Covered Bridge",
+          "start_time": "13:58",
+          "end_time": "15:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "13:46",
+              "end_time": "13:48",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Niuwangmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "13:48",
+              "end_time": "13:54",
+              "distance": 3.08,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Niuwangmiao-Metro Station",
+              "end": "Anshun Covered Bridge",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "13:58",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 10.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Anshun Covered Bridge",
+              "end": "Niuwangmiao-Metro Station",
+              "mode": "walk",
+              "start_time": "15:58",
+              "end_time": "16:02",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niuwangmiao-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "16:02",
+              "end_time": "16:11",
+              "distance": 4.77,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "walk",
+              "start_time": "16:11",
+              "end_time": "16:21",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             }
@@ -256,32 +466,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-              "end": "Tianfu Square-Metro Station",
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Kuanzhai Alley-Metro Station",
               "mode": "walk",
-              "start_time": "12:02",
-              "end_time": "12:04",
-              "distance": 0.22,
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Tianfu Square-Metro Station",
+              "start": "Kuanzhai Alley-Metro Station",
               "end": "Shuangliu Airport Terminal 2 East-Metro Station",
               "mode": "metro",
-              "start_time": "12:04",
-              "end_time": "12:32",
-              "distance": 14.27,
-              "price": 5,
-              "cost": 10,
+              "start_time": "18:10",
+              "end_time": "18:37",
+              "distance": 13.91,
+              "price": 4,
+              "cost": 8,
               "tickets": 2
             },
             {
               "start": "Shuangliu Airport Terminal 2 East-Metro Station",
               "end": "Chengdu Shuangliu International Airport",
               "mode": "walk",
-              "start_time": "12:32",
-              "end_time": "12:47",
+              "start_time": "18:37",
+              "end_time": "18:52",
               "distance": 1.25,
               "price": 0,
               "cost": 0
@@ -292,6 +502,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.3647000789642334,
-  "_eval_score": 92.76587301587301
+  "elapsed_time(sec)": 2.4304709434509277,
+  "_eval_score": 96.42099567099567
 }

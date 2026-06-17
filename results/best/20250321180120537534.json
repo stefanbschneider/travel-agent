@@ -20,52 +20,50 @@
         },
         {
           "type": "attraction",
-          "position": "Jujiao Beach",
-          "start_time": "16:27",
-          "end_time": "17:57",
+          "position": "Dameisha Seaside Park",
+          "start_time": "16:26",
+          "end_time": "17:56",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Shenzhen Bao'an International Airport",
-              "end": "Jujiao Beach",
-              "mode": "taxi",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
               "start_time": "14:32",
-              "end_time": "16:27",
-              "distance": 76.81,
-              "price": 340.35,
-              "cost": 340.35,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-          "start_time": "18:35",
-          "end_time": "19:35",
-          "price": 519.0,
-          "cost": 519.0,
-          "tickets": 1,
-          "transports": [
+              "end_time": "14:37",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Jujiao Beach",
-              "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-              "mode": "taxi",
-              "start_time": "17:57",
-              "end_time": "18:35",
-              "distance": 25.7,
-              "price": 110.36,
-              "cost": 110.36,
-              "cars": 1
+              "start": "Airport East-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "14:37",
+              "end_time": "16:17",
+              "distance": 50.22,
+              "price": 9,
+              "cost": 9,
+              "tickets": 1
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Dameisha Seaside Park",
+              "mode": "walk",
+              "start_time": "16:17",
+              "end_time": "16:26",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "20:50",
+          "start_time": "19:52",
           "end_time": "24:00",
           "price": 379.0,
           "cost": 379.0,
@@ -74,15 +72,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+              "start": "Dameisha Seaside Park",
+              "end": "Dameisha-Metro Station",
+              "mode": "walk",
+              "start_time": "17:56",
+              "end_time": "18:05",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Xingwei-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "19:42",
+              "distance": 48.96,
+              "price": 9,
+              "cost": 9,
+              "tickets": 1
+            },
+            {
+              "start": "Xingwei-Metro Station",
               "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
-              "start_time": "19:35",
-              "end_time": "20:50",
-              "distance": 50.46,
-              "price": 221.77,
-              "cost": 221.77,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "19:42",
+              "end_time": "19:52",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -103,74 +121,176 @@
         },
         {
           "type": "attraction",
-          "position": "Dapeng Peninsula",
-          "start_time": "10:20",
-          "end_time": "11:50",
+          "position": "China Merchants Shekou Cruise Home Port Tour",
+          "start_time": "09:29",
+          "end_time": "10:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "Dapeng Peninsula",
-              "mode": "taxi",
+              "end": "Xingwei-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "10:20",
-              "distance": 73.98,
-              "price": 327.63,
-              "cost": 327.63,
-              "cars": 1
+              "end_time": "08:40",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "08:40",
+              "end_time": "09:20",
+              "distance": 20.07,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "China Merchants Shekou Cruise Home Port Tour",
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:29",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
+          "start_time": "11:50",
+          "end_time": "12:50",
+          "price": 835.0,
+          "cost": 835.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "China Merchants Shekou Cruise Home Port Tour",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "10:59",
+              "end_time": "11:08",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Donggualing-Metro Station",
+              "mode": "metro",
+              "start_time": "11:08",
+              "end_time": "11:44",
+              "distance": 18.47,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
+              "mode": "walk",
+              "start_time": "11:44",
+              "end_time": "11:50",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "East Gate Old Street",
-          "start_time": "12:54",
-          "end_time": "14:24",
+          "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+          "start_time": "13:41",
+          "end_time": "15:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dapeng Peninsula",
-              "end": "East Gate Old Street",
-              "mode": "taxi",
-              "start_time": "11:50",
-              "end_time": "12:54",
-              "distance": 42.7,
-              "price": 186.86,
-              "cost": 186.86,
-              "cars": 1
+              "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
+              "end": "Donggualing-Metro Station",
+              "mode": "walk",
+              "start_time": "12:50",
+              "end_time": "12:56",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "12:56",
+              "end_time": "13:32",
+              "distance": 18.47,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "mode": "walk",
+              "start_time": "13:32",
+              "end_time": "13:41",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Butterfly Dream Music Restaurant (Happy Coast Branch)",
+          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 133.0,
-          "cost": 133.0,
+          "price": 519.0,
+          "cost": 519.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "East Gate Old Street",
-              "end": "Butterfly Dream Music Restaurant (Happy Coast Branch)",
-              "mode": "taxi",
-              "start_time": "14:24",
-              "end_time": "14:44",
-              "distance": 13.84,
-              "price": 57.0,
-              "cost": 57.0,
-              "cars": 1
+              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "15:11",
+              "end_time": "15:20",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "15:20",
+              "end_time": "16:45",
+              "distance": 42.71,
+              "price": 8,
+              "cost": 8,
+              "tickets": 1
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:56",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "18:31",
+          "start_time": "19:58",
           "end_time": "24:00",
           "price": 379.0,
           "cost": 379.0,
@@ -179,15 +299,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Butterfly Dream Music Restaurant (Happy Coast Branch)",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
+              "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+              "end": "Dameisha-Metro Station",
+              "mode": "walk",
               "start_time": "18:00",
-              "end_time": "18:31",
-              "distance": 21.18,
-              "price": 89.99,
-              "cost": 89.99,
-              "cars": 1
+              "end_time": "18:11",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Xingwei-Metro Station",
+              "mode": "metro",
+              "start_time": "18:11",
+              "end_time": "19:48",
+              "distance": 48.96,
+              "price": 9,
+              "cost": 9,
+              "tickets": 1
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "mode": "walk",
+              "start_time": "19:48",
+              "end_time": "19:58",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -207,24 +347,128 @@
           "transports": []
         },
         {
+          "type": "lunch",
+          "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 590.0,
+          "cost": 590.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "end": "Xingwei-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:40",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "08:40",
+              "end_time": "09:32",
+              "distance": 26.2,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
+              "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
+              "mode": "walk",
+              "start_time": "09:32",
+              "end_time": "09:34",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "attraction",
-          "position": "Xichong",
-          "start_time": "10:25",
-          "end_time": "11:55",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "12:20",
+          "end_time": "13:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "Xichong",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "10:25",
-              "distance": 76.94,
-              "price": 340.95,
-              "cost": 340.95,
-              "cars": 1
+              "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
+              "end": "Baishilong-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "12:17",
+              "distance": 7.64,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "12:17",
+              "end_time": "12:20",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+          "start_time": "14:13",
+          "end_time": "15:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
+              "mode": "walk",
+              "start_time": "13:50",
+              "end_time": "13:53",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Minzhi-Metro Station",
+              "mode": "metro",
+              "start_time": "13:53",
+              "end_time": "13:56",
+              "distance": 1.78,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Minzhi-Metro Station",
+              "end": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "mode": "walk",
+              "start_time": "13:56",
+              "end_time": "14:13",
+              "distance": 1.45,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -239,15 +483,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Xichong",
+              "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "end": "Minzhi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:43",
+              "end_time": "16:00",
+              "distance": 1.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Minzhi-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:45",
+              "distance": 22.67,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "taxi",
-              "start_time": "11:55",
-              "end_time": "13:51",
-              "distance": 77.67,
-              "price": 344.22,
-              "cost": 344.22,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:50",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL179"
@@ -255,6 +519,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03679013252258301,
-  "_eval_score": 90.98412698412699
+  "elapsed_time(sec)": 25.264919996261597,
+  "_eval_score": 92.16414141414143
 }

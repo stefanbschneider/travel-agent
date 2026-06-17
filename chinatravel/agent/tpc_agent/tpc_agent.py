@@ -12,6 +12,7 @@ from chinatravel.symbol_verification.hard_constraint import evaluate_constraints
 import random
 import parse_constraints
 from agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
+from agent.tpc_agent.solver_constraints import solver_constraint_variants
 import contextlib
 import io
 from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
@@ -182,177 +183,14 @@ class TPCAgent(BaseAgent):
         raw = parse_constraints.parse_query(query) if self.use_oracle else parse_constraints.parse_query_no_oracle(query)
         if not isinstance(raw, dict):
             return [{}]
-
-        constraints = {
-            k: v
-            for k, v in raw.items()
-            if k not in ["groups", "disjunctive"]
-        }
-        groups = raw.get("groups", [])
-        if not (raw.get("disjunctive") and isinstance(groups, list) and len(groups) > 0):
-            return [constraints]
-
-        group_keys = set()
-        for group in groups:
-            if isinstance(group, dict):
-                group_keys.update(group.keys())
-
-        base_constraints = {
-            k: v
-            for k, v in constraints.items()
-            if k not in group_keys
-        }
-
-        variants = []
-        for group in groups:
-            if not isinstance(group, dict):
-                continue
-            merged = deepcopy(base_constraints)
-            merged.update(group)
-            variants.append(merged)
-
-        return variants or [constraints]
+        return solver_constraint_variants(query, raw, use_oracle=self.use_oracle)
 
     def _collect_constraints(self, query):
         variants = self._constraint_variants(query)
         if len(variants) == 0:
-            return self._augment_constraints_from_hard_logic(query, {})
-        return self._augment_constraints_from_hard_logic(query, variants[0])
+            return {}
+        return variants[0]
 
-    def _augment_constraints_from_hard_logic(self, query, constraints):
-        """Backfill frequently-missed structured constraints from hard_logic_py text."""
-        merged = deepcopy(constraints) if isinstance(constraints, dict) else {}
-        hard_logic_py = query.get("hard_logic_py", [])
-        if not isinstance(hard_logic_py, list) or len(hard_logic_py) == 0:
-            return merged
-
-        budgets = merged.get("budgets")
-        if not isinstance(budgets, dict):
-            budgets = {}
-
-        for expr in hard_logic_py:
-            if not isinstance(expr, str):
-                continue
-
-            # Infer inner-city transport budget cap.
-            m_inner = re.search(r"inner_city_transportation_cost\s*<=\s*(\d+(?:\.\d+)?)", expr)
-            if m_inner:
-                limit = float(m_inner.group(1))
-                if "inner_transport" not in budgets or float(budgets.get("inner_transport", -1)) < 0:
-                    budgets["inner_transport"] = limit
-                else:
-                    budgets["inner_transport"] = min(float(budgets["inner_transport"]), limit)
-
-            # Infer explicit non-train requirement for both outbound/return.
-            if "allactivities(plan)[0]['type'] != \"train\"" in expr and "allactivities(plan)[-1]['type'] != \"train\"" in expr:
-                merged["intercity_mode"] = "airplane"
-            if "allactivities(plan)[0]['type'] == \"train\"" in expr and "allactivities(plan)[-1]['type'] == \"train\"" in expr:
-                merged["intercity_mode"] = "train"
-
-            # Infer required room type.
-            m_room = re.search(r"room_type\(activity\)!=(\d)", expr)
-            if m_room and "room_type" not in merged:
-                merged["room_type"] = int(m_room.group(1))
-
-            # Infer required attraction type set inclusion.
-            if "attraction_type_set" in expr and "{" in expr and "}" in expr:
-                req_types = merged.get("required_attraction_types")
-                if not isinstance(req_types, list):
-                    req_types = []
-                set_match = re.search(r"\{([^}]*)\}", expr, re.DOTALL)
-                literals = re.findall(r"['\"]([^'\"]+)['\"]", set_match.group(1) if set_match else "")
-                for t in literals:
-                    if not any(self._match_constraint_text(existing, t) for existing in req_types):
-                        req_types.append(t)
-                merged["required_attraction_types"] = req_types
-
-            # Infer required hotel amenity/type in featurehoteltype checks.
-            if "accommodation_type_set" in expr and "{" in expr and "}" in expr:
-                set_match = re.search(r"\{([^}]*)\}", expr, re.DOTALL)
-                literals = re.findall(r"['\"]([^'\"]+)['\"]", set_match.group(1) if set_match else "")
-                if "&accommodation_type_set" in expr:
-                    req_any = merged.get("required_hotel_any_types", [])
-                    if not isinstance(req_any, list):
-                        req_any = []
-                    for t in literals:
-                        if not any(self._match_constraint_text(existing, t) for existing in req_any):
-                            req_any.append(t)
-                    merged["required_hotel_any_types"] = req_any
-                elif "<=accommodation_type_set" in expr:
-                    req_all = merged.get("required_hotel_all_types", [])
-                    if not isinstance(req_all, list):
-                        req_all = []
-                    for t in literals:
-                        if not any(self._match_constraint_text(existing, t) for existing in req_all):
-                            req_all.append(t)
-                    merged["required_hotel_all_types"] = req_all
-                if literals and "hotel_amenity" not in merged and "hotel_type" not in merged:
-                    merged["hotel_amenity"] = literals[0]
-
-            # Infer taxi car-count constraints to avoid invalid taxi usage.
-            m_taxi_cars = re.search(
-                r"innercity_transport_type\(activity_transports\(activity\)\)\s*==\s*['\"]taxi['\"].*?taxi_cars\(activity_transports\(activity\)\)\s*!=\s*(\d+)",
-                expr,
-                re.DOTALL,
-            )
-            if m_taxi_cars:
-                merged["taxi_cars_equals"] = int(m_taxi_cars.group(1))
-
-            # Backfill per-POI dwell / time-window constraints from positioned-activity clauses.
-            # parse_query misses these: they live inside `if activity_position(activity)==<lit>:`
-            # and use activity_time / activity_start_time / activity_end_time (no stay_duration func).
-            m_pos = re.search(r"activity_position\(activity\)\s*==\s*['\"]([^'\"]+)['\"]", expr)
-            if m_pos:
-                loc = m_pos.group(1)
-                min_minutes = None
-                m_dur = re.search(r"activity_time\(activity\)\s*/\s*60\s*>=\s*(\d+(?:\.\d+)?)", expr)
-                if m_dur:
-                    min_minutes = int(round(float(m_dur.group(1)) * 60))
-                else:
-                    m_dur = re.search(r"activity_time\(activity\)\s*>=\s*(\d+)", expr)
-                    if m_dur:
-                        min_minutes = int(m_dur.group(1))
-                earliest = latest = end_after = end_before = None
-                m_w = re.search(r"activity_start_time\(activity\)\s*>=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    earliest = m_w.group(1)
-                m_w = re.search(r"activity_start_time\(activity\)\s*<=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    latest = m_w.group(1)
-                m_w = re.search(r"activity_end_time\(activity\)\s*>=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    end_after = m_w.group(1)
-                m_w = re.search(r"activity_end_time\(activity\)\s*<=\s*['\"](\d{2}:\d{2})['\"]", expr)
-                if m_w:
-                    end_before = m_w.group(1)
-                # A "start<=T1 and end>=T2" window implies a minimum dwell of T2-T1 minutes.
-                if latest and end_after:
-                    span = time_to_minutes(end_after) - time_to_minutes(latest)
-                    if span > 0:
-                        min_minutes = max(min_minutes or 0, span)
-                if min_minutes is not None and min_minutes > 0:
-                    durations = merged.get("stay_duration")
-                    if not isinstance(durations, list):
-                        durations = []
-                    if not any(isinstance(d, dict) and self._match_constraint_text(d.get("location", ""), loc) for d in durations):
-                        durations.append({"location": loc, "min_minutes": min_minutes})
-                    merged["stay_duration"] = durations
-                if earliest or latest or end_after or end_before:
-                    windows = merged.get("activity_time_windows")
-                    if not isinstance(windows, list):
-                        windows = []
-                    if not any(isinstance(w, dict) and self._match_constraint_text(w.get("location", ""), loc) for w in windows):
-                        windows.append({
-                            "location": loc,
-                            "earliest": earliest,
-                            "latest": latest,
-                            "end_after": end_after,
-                            "end_before": end_before,
-                        })
-                    merged["activity_time_windows"] = windows
-
-        merged["budgets"] = budgets
-        return merged
 
     def _resolve_required_names(self, raw_required, candidate_names):
         if not isinstance(raw_required, list) or len(raw_required) == 0:
@@ -475,6 +313,23 @@ class TPCAgent(BaseAgent):
                     meals += 1
         return attrs, meals
 
+    def _eval_proxy(self, plan):
+        attrs, meals = self._activity_counts(plan)
+        days = max(1, len(plan.get("itinerary", []) or []))
+        dav = min(1.0, attrs / (4.0 * days))
+        ddr = min(1.0, meals / (3.0 * days))
+        transit_total = 0
+        transit_count = 0
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                transports = activity.get("transports", []) or []
+                if transports:
+                    transit_total += self._inner_activity_minutes(activity)
+                    transit_count += 1
+        average_transit = transit_total / transit_count if transit_count > 0 else -1
+        att = max(0.0, min(1.0, (-1.0 / 105.0) * average_transit + 8.0 / 7.0))
+        return 5.0 * dav + 5.0 * att + 5.0 * ddr
+
     def _repair_params(self, constraints):
         """Deterministic param priors derived from which constraints are present, tried before
         random restarts so single-signal queries converge fast."""
@@ -540,7 +395,7 @@ class TPCAgent(BaseAgent):
                 passed, total = check(plan)
             except Exception:
                 passed, total = 0, 0
-            key = (passed, -self._plan_total_cost(plan))
+            key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
             if best["plan"] is None or key > best["key"]:
                 best.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
             return self._accepted(passed, total)
@@ -553,14 +408,31 @@ class TPCAgent(BaseAgent):
         for variant in variants:
             if solved or out_of_budget():
                 break
-            constraints = self._augment_constraints_from_hard_logic(query, variant or {})
+            constraints = deepcopy(variant or {})
             check = self._make_checker(query, constraints)
             try:
                 if consider(self._build_plan(query, constraints=constraints), constraints, check, {}):
-                    break
+                    if os.environ.get("TPC_CP_FORCE") != "1":
+                        break
             except Exception:
                 import traceback
                 traceback.print_exc()
+
+            if os.environ.get("TPC_USE_CP_SOLVER", "1") != "0" and not out_of_budget():
+                try:
+                    from agent.tpc_agent.cp_solver import solve_with_cp_sat
+
+                    elapsed = time.time() - self.start_clock
+                    remaining = max(1.0, self.solve_budget_sec - elapsed)
+                    default_limit = min(30.0, remaining / 2.0)
+                    cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
+                    cp_limit = max(1.0, min(cp_limit, remaining))
+                    cp_plan = solve_with_cp_sat(self, query, constraints, check, cp_limit)
+                    if cp_plan is not None and consider(cp_plan, constraints, check, {"solver": "cp_sat"}):
+                        solved = True
+                        break
+                except Exception:
+                    pass
 
             for params in self._repair_params(constraints):
                 if out_of_budget():
@@ -615,7 +487,293 @@ class TPCAgent(BaseAgent):
             if (c_attrs + c_meals) > (best_attrs + best_meals):
                 best_plan = cand
                 best_attrs, best_meals = c_attrs, c_meals
-        return best_plan
+        return self._densify_plan(best_plan, query, constraints, check)
+
+    def _activity_start_position(self, activity):
+        if activity.get("type") in ("airplane", "train"):
+            return str(activity.get("start", "") or activity.get("From", ""))
+        return str(activity.get("position", "") or activity.get("start", ""))
+
+    def _activity_end_position(self, activity):
+        if activity.get("type") in ("airplane", "train"):
+            return str(activity.get("end", "") or activity.get("To", ""))
+        return str(activity.get("position", "") or activity.get("end", ""))
+
+    def _poi_open_bounds(self, poi):
+        open_min = poi.get("open_min", None)
+        close_min = poi.get("close_min", None)
+        if open_min is None:
+            try:
+                open_min = time_to_minutes(str(poi.get("opentime", "00:00")))
+            except Exception:
+                open_min = 0
+        if close_min is None:
+            close_raw = str(poi.get("endtime", "24:00"))
+            try:
+                close_min = 24 * 60 if close_raw == "24:00" else time_to_minutes(close_raw)
+            except Exception:
+                close_min = 24 * 60
+        if close_min <= open_min:
+            close_min += 24 * 60
+        return int(open_min), int(close_min)
+
+    def _densify_dwell_minutes(self, poi, kind):
+        if kind != "attraction":
+            return 60
+        return 90
+
+    def _inner_activity_minutes(self, activity):
+        total = 0
+        for leg in activity.get("transports", []) or []:
+            try:
+                total += time_to_minutes(str(leg["end_time"])) - time_to_minutes(str(leg["start_time"]))
+            except Exception:
+                continue
+        return total
+
+    def _haversine_km(self, a, b):
+        try:
+            lat1 = math.radians(float(a["lat"]))
+            lon1 = math.radians(float(a["lon"]))
+            lat2 = math.radians(float(b["lat"]))
+            lon2 = math.radians(float(b["lon"]))
+        except Exception:
+            return float("inf")
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        s = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+        return 6371.0 * 2.0 * math.atan2(math.sqrt(s), math.sqrt(max(0.0, 1.0 - s)))
+
+    def _day_gaps(self, activities, win_open, win_close, min_minutes):
+        gaps = []
+        for idx in range(len(activities) - 1):
+            try:
+                prev_end = time_to_minutes(str(activities[idx].get("end_time", "")))
+                next_start = time_to_minutes(str(activities[idx + 1].get("start_time", "")))
+            except Exception:
+                continue
+            gap_start = max(prev_end, win_open)
+            gap_end = min(next_start, win_close)
+            if gap_end - gap_start >= min_minutes:
+                gaps.append((idx, gap_start, gap_end))
+        return gaps
+
+    def _find_hotel_for_day(self, plan, day_idx):
+        itinerary = plan.get("itinerary", []) or []
+        for scan in range(day_idx, -1, -1):
+            activities = itinerary[scan].get("activities", []) or []
+            for activity in reversed(activities):
+                if activity.get("type") == "accommodation" and activity.get("position"):
+                    return str(activity["position"])
+        for scan in range(day_idx + 1, len(itinerary)):
+            activities = itinerary[scan].get("activities", []) or []
+            for activity in activities:
+                if activity.get("type") == "accommodation" and activity.get("position"):
+                    return str(activity["position"])
+        return None
+
+    def _insert_breakfast(self, plan, day_idx, hotel_name, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if not activities:
+            return False
+        if day_idx == 0 and activities[0].get("type") in ("airplane", "train"):
+            return False
+        try:
+            if time_to_minutes(str(activities[0].get("start_time", "00:00"))) < time_to_minutes("08:30"):
+                return False
+        except Exception:
+            return False
+        before = self._activity_counts(plan)
+        activity = self._make_hotel_breakfast(hotel_name, "07:30", "08:30")
+        activities.insert(0, activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        del activities[0]
+        return False
+
+    def _insert_activity(self, plan, day_idx, prev_idx, poi, kind, window, city, people, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if prev_idx < 0 or prev_idx + 1 >= len(activities):
+            return False
+        prev_act = activities[prev_idx]
+        next_act = activities[prev_idx + 1]
+        prev_pos = self._activity_end_position(prev_act)
+        next_pos = self._activity_start_position(next_act)
+        poi_name = str(poi.get("name", ""))
+        if not prev_pos or not next_pos or not poi_name:
+            return False
+        try:
+            prev_end_min = time_to_minutes(str(prev_act.get("end_time", "")))
+            next_start_min = time_to_minutes(str(next_act.get("start_time", "")))
+        except Exception:
+            return False
+        if prev_end_min >= next_start_min:
+            return False
+
+        win_open, win_close = window
+        poi_open, poi_close = self._poi_open_bounds(poi)
+        try:
+            transports_in, arrival = self._get_transport(
+                self.env, city, prev_pos, poi_name, str(prev_act.get("end_time", "")), people)
+        except Exception:
+            return False
+        if transports_in is None or arrival is None:
+            return False
+        try:
+            arrival_min = time_to_minutes(str(arrival))
+        except Exception:
+            return False
+        start_min = max(arrival_min, win_open, poi_open)
+        dwell = self._densify_dwell_minutes(poi, kind)
+        end_min = start_min + dwell
+        if end_min > min(win_close, poi_close):
+            return False
+
+        start_time = minutes_to_time(start_min)
+        end_time = minutes_to_time(end_min)
+        try:
+            transports_out, next_arrival = self._get_transport(
+                self.env, city, poi_name, next_pos, end_time, people)
+        except Exception:
+            return False
+        if transports_out is None or next_arrival is None:
+            return False
+        try:
+            if time_to_minutes(str(next_arrival)) > next_start_min:
+                return False
+        except Exception:
+            return False
+
+        if kind == "attraction":
+            activity = self._make_attraction_activity(poi, people, start_time, end_time, transports_in)
+        else:
+            activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_in)
+
+        before = self._activity_counts(plan)
+        old_next_transports = deepcopy(next_act.get("transports", []))
+        next_act["transports"] = transports_out
+        activities.insert(prev_idx + 1, activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        del activities[prev_idx + 1]
+        next_act["transports"] = old_next_transports
+        return False
+
+    def _densify_plan(self, plan, query, constraints, check):
+        """Insert meals/attractions into proven idle gaps without trading away acceptance.
+
+        Every insertion is gated by the full oracle/schema/commonsense checker and reverted on
+        failure, so budget, exclusion, timing, transport, and query-specific hard constraints stay
+        correct even though this pass only reasons locally about idle windows.
+        """
+        try:
+            if not self._accepted(*check(plan)):
+                return plan
+        except Exception:
+            return plan
+        try:
+            from agent.tpc_agent.cp_candidates import build_candidate_context
+            ctx = build_candidate_context(
+                self, query, constraints or {}, {"attractions": 80, "restaurants": 50, "hotels": 1})
+        except Exception:
+            return plan
+
+        dense = deepcopy(plan)
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        constraints = constraints or {}
+        self._active_timing_constraints = constraints.get("timing_constraints", []) or []
+        self._transport_constraints = {
+            "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
+            "conditional_transport": constraints.get("conditional_transport", None),
+            "taxi_cars_equals": constraints.get("taxi_cars_equals", None),
+        }
+        self._forced_inner_mode = None
+        self._budget_limits = self._extract_budget_limits(constraints)
+
+        restaurants = sorted(ctx.get("restaurants", []) or [], key=lambda r: (r.get("price_cents", 0), r.get("name", "")))
+        attractions = list(ctx.get("attractions", []) or [])
+        coords = {}
+        for row in attractions + restaurants + (ctx.get("hotels", []) or []):
+            name = self._norm_text(row.get("name", ""))
+            if name and "lat" in row and "lon" in row:
+                coords[name] = row
+
+        used_restaurants = set()
+        used_attractions = set()
+        for day in dense.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                name = self._norm_text(activity.get("position", ""))
+                if activity.get("type") in ("breakfast", "lunch", "dinner") and name:
+                    used_restaurants.add(name)
+                elif activity.get("type") == "attraction" and name:
+                    used_attractions.add(name)
+
+        itinerary = dense.get("itinerary", []) or []
+        for day_idx, day in enumerate(itinerary):
+            activities = day.get("activities", []) or []
+            if len(activities) < 2:
+                continue
+            meal_types = {a.get("type") for a in activities if a.get("type") in ("breakfast", "lunch", "dinner")}
+
+            if "breakfast" not in meal_types:
+                hotel = self._find_hotel_for_day(dense, day_idx)
+                if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
+                    meal_types.add("breakfast")
+
+            for meal_type, window in (("lunch", (11 * 60, 14 * 60)), ("dinner", (17 * 60, 20 * 60))):
+                if meal_type in meal_types:
+                    continue
+                inserted = False
+                for restaurant in restaurants:
+                    r_name = self._norm_text(restaurant.get("name", ""))
+                    if not r_name or r_name in used_restaurants:
+                        continue
+                    for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
+                        if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
+                            used_restaurants.add(r_name)
+                            meal_types.add(meal_type)
+                            inserted = True
+                            break
+                    if inserted:
+                        break
+
+            while sum(1 for a in activities if a.get("type") == "attraction") < 4:
+                gaps = self._day_gaps(activities, 9 * 60, 18 * 60, 130)
+                if not gaps:
+                    break
+                inserted = False
+                for prev_idx, _gap_start, _gap_end in gaps:
+                    prev_name = self._norm_text(self._activity_end_position(activities[prev_idx]))
+                    prev_coords = coords.get(prev_name)
+                    ranked = sorted(
+                        attractions,
+                        key=lambda a: (
+                            self._haversine_km(prev_coords, a) if prev_coords is not None else float("inf"),
+                            a.get("price_cents", 0),
+                            a.get("name", ""),
+                        ),
+                    )
+                    for attr in ranked:
+                        a_name = self._norm_text(attr.get("name", ""))
+                        if not a_name or a_name in used_attractions:
+                            continue
+                        if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (9 * 60, 18 * 60), city, people, check):
+                            used_attractions.add(a_name)
+                            inserted = True
+                            break
+                    if inserted:
+                        break
+                if not inserted:
+                    break
+
+        return dense
 
     def _room_type_to_numbed(self, room_type):
         if room_type is None:
@@ -1227,6 +1385,11 @@ class TPCAgent(BaseAgent):
 
         for day_num in range(1, days + 1):
             activities = []
+            # Per-day extra-attraction budget shared across the morning/afternoon/evening fills.
+            # max(0, attr_per_day-2) is 0 at the base attr_per_day=2, so the accepted-plan search
+            # is byte-identical to pre-refactor; enrichment only engages for attr_per_day>=3.
+            extra_budget = max(0, int(params.get("attr_per_day", 2)) - 2)
+            extra_used = 0
 
             if day_num == 1:
                 # === DAY 1: Arrive + activities + hotel ===
@@ -1319,6 +1482,14 @@ class TPCAgent(BaseAgent):
                                 current_time = attr_end
                                 current_pos = attr_name
 
+                # Afternoon fill before dinner.
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "16:30", latest_end="18:00")
+                extra_used += _added
+
                 # Dinner (start between 17:00-19:00)
                 if time_before(current_time, "19:00") and dinner_idx < len(dinner_restaurants):
                     restaurant, new_dinner_idx = self._pick_restaurant(
@@ -1357,6 +1528,14 @@ class TPCAgent(BaseAgent):
                         if added:
                             current_time = dinner_end
                             current_pos = rest_name
+
+                # Evening fill after dinner (only late-open attractions qualify).
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "21:00")
+                extra_used += _added
 
                 # Accommodation
                 transports, travel_end = self._get_transport(
@@ -1455,6 +1634,20 @@ class TPCAgent(BaseAgent):
                                 if added:
                                     current_time = attr_end
                                     current_pos = attr_name
+
+                # Morning fill before departure (return-guarded so we never miss the train/flight).
+                if return_transport is not None:
+                    _dep_t = return_transport["BeginTime"]
+                    _dep_p = return_transport["From"]
+                    def _return_ok(name, end, _p=_dep_p, _t=_dep_t):
+                        _, _arr = self._get_transport(env, target_city, name, _p, end, people)
+                        return _arr is not None and time_to_minutes(_arr) <= time_to_minutes(_t)
+                    attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                        activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                        people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                        required_attractions, required_attraction_types,
+                        extra_budget - extra_used, "13:00", return_guard=_return_ok)
+                    extra_used += _added
 
                 # Lunch before departure if time allows
                 if return_transport is not None and lunch_idx < len(lunch_restaurants):
@@ -1582,6 +1775,14 @@ class TPCAgent(BaseAgent):
                                 current_time = attr_end
                                 current_pos = attr_name
 
+                # Morning fill before lunch.
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "11:30", latest_end="13:00")
+                extra_used += _added
+
                 # Lunch
                 if lunch_idx < len(lunch_restaurants) and time_before(current_time, "13:00"):
                     restaurant, new_lunch_idx = self._pick_restaurant(
@@ -1658,37 +1859,13 @@ class TPCAgent(BaseAgent):
                                 current_time = attr_end
                                 current_pos = attr_name
 
-                # Extra attractions (attr_per_day > 2): pack more sightseeing before dinner while time allows.
-                _extra_target = max(0, int(params.get("attr_per_day", 2)) - 2)
-                _extra_added = 0
-                while (_extra_added < _extra_target and attr_idx < len(good_attrs)
-                       and time_before(current_time, "16:00")):
-                    est_start = add_minutes(current_time, 20)
-                    est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
-                    attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
-                    if attr is None:
-                        break
-                    attr_name = str(attr["name"])
-                    transports, travel_end = self._get_transport(
-                        env, target_city, current_pos, attr_name, current_time, people)
-                    if transports is not None:
-                        attr_start = travel_end
-                    else:
-                        transports = []
-                        attr_start = current_time
-                    attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
-                    if not (is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
-                            attr_name, attr_start, timing_constraints, [current_pos])):
-                        break
-                    attr_act = self._make_attraction_activity(attr, people, attr_start, attr_end, transports)
-                    added = self._append_activity(
-                        activities, attr_act, budget_limits, budget_tracker,
-                        force=self._is_required_attraction(attr, required_attractions, required_attraction_types))
-                    if not added:
-                        break
-                    current_time = attr_end
-                    current_pos = attr_name
-                    _extra_added += 1
+                # Afternoon fill before dinner.
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "16:30", latest_end="18:00")
+                extra_used += _added
 
                 # Dinner
                 if dinner_idx < len(dinner_restaurants) and time_before(current_time, "19:00"):
@@ -1727,6 +1904,14 @@ class TPCAgent(BaseAgent):
                         if added:
                             current_time = dinner_end
                             current_pos = rest_name
+
+                # Evening fill after dinner (only late-open attractions qualify).
+                attr_idx, current_time, current_pos, _added = self._fill_extra_attractions(
+                    activities, env, target_city, good_attrs, attr_idx, current_pos, current_time,
+                    people, params, constraints, budget_limits, budget_tracker, timing_constraints,
+                    required_attractions, required_attraction_types,
+                    extra_budget - extra_used, "21:00")
+                extra_used += _added
 
                 # Accommodation
                 transports, travel_end = self._get_transport(
@@ -1822,6 +2007,50 @@ class TPCAgent(BaseAgent):
             idx += 1
         return None, attr_idx
 
+    def _fill_extra_attractions(self, activities, env, target_city, good_attrs, attr_idx,
+                                current_pos, current_time, people, params, constraints,
+                                budget_limits, budget_tracker, timing_constraints,
+                                required_attractions, required_attraction_types,
+                                target_count, until_time, return_guard=None, latest_end=None):
+        """Greedily append open attractions until `target_count` are added or `current_time`
+        reaches `until_time` (or the pool/feasibility runs out). Fills idle daytime slots to lift
+        DAV. Each add already respects opening hours, per-activity timing and budget; FPR cannot
+        regress because _solve keeps only accepted plans and the eval merge adopts a plan only when
+        its full weighted score beats the stored best. Returns (attr_idx, current_time, current_pos, added)."""
+        added = 0
+        while (added < target_count and attr_idx < len(good_attrs)
+               and time_before(current_time, until_time)):
+            est_start = add_minutes(current_time, 20)
+            est_end = add_minutes(est_start, self._slot_visit_len(params, constraints))
+            attr, attr_idx = self._pick_attraction(good_attrs, attr_idx, est_start, est_end)
+            if attr is None:
+                break
+            attr_name = str(attr["name"])
+            transports, travel_end = self._get_transport(
+                env, target_city, current_pos, attr_name, current_time, people)
+            if transports is not None:
+                attr_start = travel_end
+            else:
+                transports = []
+                attr_start = current_time
+            attr_end = add_minutes(attr_start, self._visit_len(attr, params, constraints))
+            if latest_end is not None and not time_before(attr_end, latest_end):
+                break
+            if not (is_open_during(attr, attr_start, attr_end) and self._activity_timing_allowed(
+                    attr_name, attr_start, timing_constraints, [current_pos])):
+                break
+            if return_guard is not None and not return_guard(attr_name, attr_end):
+                break
+            attr_act = self._make_attraction_activity(attr, people, attr_start, attr_end, transports)
+            if not self._append_activity(
+                    activities, attr_act, budget_limits, budget_tracker,
+                    force=self._is_required_attraction(attr, required_attractions, required_attraction_types)):
+                break
+            current_time = attr_end
+            current_pos = attr_name
+            added += 1
+        return attr_idx, current_time, current_pos, added
+
     def _get_transport(self, env, city, from_pos, to_pos, start_time, people):
         """Get taxi transport between two positions. Returns (transports_list, arrival_time) or (None, None)."""
         timing_constraints = getattr(self, "_active_timing_constraints", [])
@@ -1877,7 +2106,7 @@ class TPCAgent(BaseAgent):
 
         mode_order = [m for m in mode_order if self._norm_text(m) not in excluded]
         if len(mode_order) == 0:
-            mode_order = ["taxi"]
+            return None, None
 
         try:
             for mode in mode_order:

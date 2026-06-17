@@ -7,16 +7,16 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "07:58",
-          "end_time": "08:18",
-          "start": "Shanghai Hongqiao International Airport",
-          "end": "Nanjing Lukou International Airport",
-          "price": 277.83,
-          "cost": 555.66,
+          "type": "train",
+          "start_time": "07:00",
+          "end_time": "08:11",
+          "start": "Shanghai Station",
+          "end": "Nanjing South Railway Station",
+          "price": 175.28,
+          "cost": 350.56,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL071"
+          "TrainID": "G2"
         },
         {
           "type": "lunch",
@@ -28,83 +28,247 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Nanjing South Railway Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:11",
+              "end_time": "08:14",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:14",
+              "end_time": "08:25",
+              "distance": 5.92,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "mode": "taxi",
-              "start_time": "08:18",
-              "end_time": "09:07",
-              "distance": 32.94,
-              "price": 142.93,
-              "cost": 142.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:25",
+              "end_time": "08:29",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Hongshan Forest Zoo",
-          "start_time": "12:13",
-          "end_time": "13:43",
-          "price": 39.0,
-          "cost": 78.0,
+          "position": "Xuanwu Lake Scenic Area",
+          "start_time": "12:24",
+          "end_time": "13:54",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "end": "Hongshan Forest Zoo",
-              "mode": "taxi",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:13",
-              "distance": 8.69,
-              "price": 35.1,
-              "cost": 35.1,
-              "cars": 1
+              "end_time": "12:04",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:04",
+              "end_time": "12:16",
+              "distance": 6.08,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Xuanwu Lake Scenic Area",
+              "mode": "walk",
+              "start_time": "12:16",
+              "end_time": "12:24",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Music Terrace",
+          "start_time": "15:02",
+          "end_time": "16:32",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Xuanwu Lake Scenic Area",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "14:02",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Tangshan-Metro Station",
+              "mode": "metro",
+              "start_time": "14:02",
+              "end_time": "14:51",
+              "distance": 24.53,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Tangshan-Metro Station",
+              "end": "Music Terrace",
+              "mode": "walk",
+              "start_time": "14:51",
+              "end_time": "15:02",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Nanjing Jinling Hotel - Plum Garden",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:37",
+          "end_time": "18:37",
           "price": 423.0,
           "cost": 846.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Hongshan Forest Zoo",
+              "start": "Music Terrace",
+              "end": "Tangshan-Metro Station",
+              "mode": "walk",
+              "start_time": "16:32",
+              "end_time": "16:43",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tangshan-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "16:43",
+              "end_time": "17:36",
+              "distance": 26.82,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "taxi",
-              "start_time": "13:43",
-              "end_time": "13:52",
-              "distance": 6.61,
-              "price": 27.82,
-              "cost": 27.82,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:36",
+              "end_time": "17:37",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+          "start_time": "18:54",
+          "end_time": "20:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Jinling Hotel - Plum Garden",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "walk",
+              "start_time": "18:37",
+              "end_time": "18:38",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "18:38",
+              "end_time": "18:42",
+              "distance": 2.06,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+              "mode": "walk",
+              "start_time": "18:42",
+              "end_time": "18:54",
+              "distance": 1.04,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "voco Nanjing Oriental Pearl",
-          "start_time": "18:02",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+          "start_time": "20:50",
           "end_time": "24:00",
-          "price": 602.0,
-          "cost": 602.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "price": 368.0,
+          "cost": 736.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Jinling Hotel - Plum Garden",
-              "end": "voco Nanjing Oriental Pearl",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 1.38,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "start": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "20:24",
+              "end_time": "20:36",
+              "distance": 1.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "20:36",
+              "end_time": "20:47",
+              "distance": 5.92,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "mode": "walk",
+              "start_time": "20:47",
+              "end_time": "20:50",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -115,7 +279,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "voco Nanjing Oriental Pearl",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -125,113 +289,297 @@
         },
         {
           "type": "attraction",
-          "position": "Xuanwu Lake Scenic Area",
-          "start_time": "08:35",
-          "end_time": "10:05",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "Nanjing Sun Yat-sen Botanical Garden",
+          "start_time": "09:20",
+          "end_time": "10:50",
+          "price": 14.0,
+          "cost": 28.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "voco Nanjing Oriental Pearl",
-              "end": "Xuanwu Lake Scenic Area",
-              "mode": "taxi",
+              "start": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:35",
-              "distance": 3.5,
-              "price": 16.95,
-              "cost": 16.95,
-              "cars": 1
+              "end_time": "08:33",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Jiangwang Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:33",
+              "end_time": "08:57",
+              "distance": 12.25,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Jiangwang Temple-Metro Station",
+              "end": "Nanjing Sun Yat-sen Botanical Garden",
+              "mode": "walk",
+              "start_time": "08:57",
+              "end_time": "09:20",
+              "distance": 1.99,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Li's Halal Restaurant (Dading Lane Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "11:31",
+          "end_time": "12:31",
           "price": 29.0,
           "cost": 58.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Xuanwu Lake Scenic Area",
+              "start": "Nanjing Sun Yat-sen Botanical Garden",
+              "end": "Jiangwang Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "10:50",
+              "end_time": "11:13",
+              "distance": 1.99,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangwang Temple-Metro Station",
+              "end": "Zhangfuyuan-Metro Station",
+              "mode": "metro",
+              "start_time": "11:13",
+              "end_time": "11:26",
+              "distance": 6.82,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Zhangfuyuan-Metro Station",
               "end": "Li's Halal Restaurant (Dading Lane Branch)",
-              "mode": "taxi",
-              "start_time": "10:05",
-              "end_time": "10:14",
-              "distance": 6.04,
-              "price": 25.83,
-              "cost": 25.83,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:26",
+              "end_time": "11:31",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Music Terrace",
-          "start_time": "12:40",
-          "end_time": "14:10",
-          "price": 10.0,
-          "cost": 20.0,
+          "position": "Yu Garden",
+          "start_time": "12:39",
+          "end_time": "14:09",
+          "price": 18.0,
+          "cost": 36.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Music Terrace",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:40",
-              "distance": 27.09,
-              "price": 116.62,
-              "cost": 116.62,
-              "cars": 1
+              "end": "Zhangfuyuan-Metro Station",
+              "mode": "walk",
+              "start_time": "12:31",
+              "end_time": "12:36",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhangfuyuan-Metro Station",
+              "end": "Sanshan Street-Metro Station",
+              "mode": "metro",
+              "start_time": "12:36",
+              "end_time": "12:37",
+              "distance": 0.91,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Sanshan Street-Metro Station",
+              "end": "Yu Garden",
+              "mode": "walk",
+              "start_time": "12:37",
+              "end_time": "12:39",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Egret Islet Park",
+          "start_time": "14:24",
+          "end_time": "15:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Yu Garden",
+              "end": "Sanshan Street-Metro Station",
+              "mode": "walk",
+              "start_time": "14:09",
+              "end_time": "14:11",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanshan Street-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "14:11",
+              "end_time": "14:12",
+              "distance": 0.89,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Egret Islet Park",
+              "mode": "walk",
+              "start_time": "14:12",
+              "end_time": "14:24",
+              "distance": 1.0,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Mochou Lake Park",
+          "start_time": "16:12",
+          "end_time": "17:42",
+          "price": 35.0,
+          "cost": 70.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Egret Islet Park",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "15:54",
+              "end_time": "16:06",
+              "distance": 1.0,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Hanzhongmen-Metro Station",
+              "mode": "metro",
+              "start_time": "16:06",
+              "end_time": "16:12",
+              "distance": 3.07,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Hanzhongmen-Metro Station",
+              "end": "Mochou Lake Park",
+              "mode": "walk",
+              "start_time": "16:12",
+              "end_time": "16:12",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:52",
+          "end_time": "18:52",
           "price": 334.0,
           "cost": 668.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Music Terrace",
+              "start": "Mochou Lake Park",
+              "end": "Hanzhongmen-Metro Station",
+              "mode": "walk",
+              "start_time": "17:42",
+              "end_time": "17:42",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hanzhongmen-Metro Station",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:42",
+              "end_time": "17:50",
+              "distance": 4.41,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "mode": "taxi",
-              "start_time": "14:10",
-              "end_time": "14:50",
-              "distance": 26.74,
-              "price": 115.02,
-              "cost": 115.02,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:50",
+              "end_time": "17:52",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "voco Nanjing Oriental Pearl",
-          "start_time": "18:05",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+          "start_time": "19:21",
           "end_time": "24:00",
-          "price": 602.0,
-          "cost": 602.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "price": 368.0,
+          "cost": 736.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
           "transports": [
             {
               "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "end": "voco Nanjing Oriental Pearl",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:05",
-              "distance": 3.46,
-              "price": 16.82,
-              "cost": 16.82,
-              "cars": 1
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:52",
+              "end_time": "18:54",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:54",
+              "end_time": "19:18",
+              "distance": 12.14,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "mode": "walk",
+              "start_time": "19:18",
+              "end_time": "19:21",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -242,7 +590,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "voco Nanjing Oriental Pearl",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -252,75 +600,177 @@
         },
         {
           "type": "attraction",
-          "position": "Nanjing Underwater World",
-          "start_time": "08:38",
-          "end_time": "10:08",
-          "price": 108.0,
-          "cost": 216.0,
+          "position": "Swallow Rock Park",
+          "start_time": "09:24",
+          "end_time": "10:54",
+          "price": 9.0,
+          "cost": 18.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "voco Nanjing Oriental Pearl",
-              "end": "Nanjing Underwater World",
-              "mode": "taxi",
+              "start": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 5.43,
-              "price": 23.71,
-              "cost": 23.71,
-              "cars": 1
+              "end_time": "08:33",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Badoushan-Metro Station",
+              "mode": "metro",
+              "start_time": "08:33",
+              "end_time": "09:11",
+              "distance": 19.39,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Badoushan-Metro Station",
+              "end": "Swallow Rock Park",
+              "mode": "walk",
+              "start_time": "09:11",
+              "end_time": "09:24",
+              "distance": 1.11,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Republic Red Mansion (Laomendong Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 295.0,
-          "cost": 590.0,
+          "type": "attraction",
+          "position": "Jiangsu Jiangning Tangshan Fangshan National Geopark (Tangshan Area)",
+          "start_time": "12:18",
+          "end_time": "13:48",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Underwater World",
-              "end": "Republic Red Mansion (Laomendong Branch)",
-              "mode": "taxi",
-              "start_time": "10:08",
-              "end_time": "10:19",
-              "distance": 7.89,
-              "price": 32.33,
-              "cost": 32.33,
-              "cars": 1
+              "start": "Swallow Rock Park",
+              "end": "Badoushan-Metro Station",
+              "mode": "walk",
+              "start_time": "10:54",
+              "end_time": "11:07",
+              "distance": 1.11,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Badoushan-Metro Station",
+              "end": "Nanjing Ape Man Cave-Metro Station",
+              "mode": "metro",
+              "start_time": "11:07",
+              "end_time": "11:52",
+              "distance": 22.91,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing Ape Man Cave-Metro Station",
+              "end": "Jiangsu Jiangning Tangshan Fangshan National Geopark (Tangshan Area)",
+              "mode": "walk",
+              "start_time": "11:52",
+              "end_time": "12:18",
+              "distance": 2.24,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "type": "attraction",
+          "position": "Dismounting Arch Ruins Park",
+          "start_time": "15:02",
+          "end_time": "16:32",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Republic Red Mansion (Laomendong Branch)",
-              "end": "Nanjing Lukou International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:48",
-              "distance": 32.17,
-              "price": 139.46,
-              "cost": 139.46,
-              "cars": 1
+              "start": "Jiangsu Jiangning Tangshan Fangshan National Geopark (Tangshan Area)",
+              "end": "Nanjing Ape Man Cave-Metro Station",
+              "mode": "walk",
+              "start_time": "13:48",
+              "end_time": "14:14",
+              "distance": 2.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing Ape Man Cave-Metro Station",
+              "end": "Xiamafang-Metro Station",
+              "mode": "metro",
+              "start_time": "14:14",
+              "end_time": "14:52",
+              "distance": 19.49,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Xiamafang-Metro Station",
+              "end": "Dismounting Arch Ruins Park",
+              "mode": "walk",
+              "start_time": "14:52",
+              "end_time": "15:02",
+              "distance": 0.84,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "18:40",
+          "start": "Nanjing Station",
+          "end": "Shanghai Station",
+          "price": 175.28,
+          "cost": 350.56,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Dismounting Arch Ruins Park",
+              "end": "Xiamafang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:32",
+              "end_time": "16:42",
+              "distance": 0.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiamafang-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:42",
+              "end_time": "16:57",
+              "distance": 7.54,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
+              "end": "Nanjing Station",
+              "mode": "walk",
+              "start_time": "16:57",
+              "end_time": "16:59",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "FlightID": "FL645"
+          "TrainID": "G7021"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03307485580444336,
-  "_eval_score": 95.32142857142857
+  "elapsed_time(sec)": 15.197817087173462,
+  "_eval_score": 96.45518207282913
 }

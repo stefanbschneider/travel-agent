@@ -473,13 +473,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "15:09",
-                    "end_time": "19:22",
-                    "start": "Wuhan Station",
-                    "end": "Suzhou North Station",
-                    "price": 392.42,
-                    "cost": 1177.26,
+                    "type": "attraction",
+                    "position": "5D Starry Sky Illusion Art Museum",
+                    "start_time": "12:38",
+                    "end_time": "14:08",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -494,11 +493,54 @@
                         },
                         {
                             "start": "Sanjiao Road-Metro Station",
-                            "end": "Wuhan Station East Square-Metro Station",
+                            "end": "Dazhi Road-Metro Station",
                             "mode": "metro",
                             "start_time": "12:26",
-                            "end_time": "12:46",
-                            "distance": 10.14,
+                            "end_time": "12:32",
+                            "distance": 3.16,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Dazhi Road-Metro Station",
+                            "end": "5D Starry Sky Illusion Art Museum",
+                            "mode": "walk",
+                            "start_time": "12:32",
+                            "end_time": "12:38",
+                            "distance": 0.54,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "15:09",
+                    "end_time": "19:22",
+                    "start": "Wuhan Station",
+                    "end": "Suzhou North Station",
+                    "price": 392.42,
+                    "cost": 1177.26,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "5D Starry Sky Illusion Art Museum",
+                            "end": "Dazhi Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:08",
+                            "end_time": "14:14",
+                            "distance": 0.54,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Dazhi Road-Metro Station",
+                            "end": "Wuhan Station East Square-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:14",
+                            "end_time": "14:39",
+                            "distance": 12.74,
                             "price": 4,
                             "cost": 12,
                             "tickets": 3
@@ -507,8 +549,8 @@
                             "start": "Wuhan Station East Square-Metro Station",
                             "end": "Wuhan Station",
                             "mode": "walk",
-                            "start_time": "12:46",
-                            "end_time": "12:48",
+                            "start_time": "14:39",
+                            "end_time": "14:41",
                             "distance": 0.19,
                             "price": 0,
                             "cost": 0
@@ -519,5 +561,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.7421491146087646
+    "elapsed_time(sec)": 7.5946900844573975
 }

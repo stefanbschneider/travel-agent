@@ -7,54 +7,264 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "airplane",
-                    "start_time": "12:07",
-                    "end_time": "14:32",
-                    "start": "Beijing Capital International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 949.32,
-                    "cost": 949.32,
+                    "type": "train",
+                    "start_time": "23:54",
+                    "end_time": "04:40",
+                    "start": "Beijing Fengtai Station",
+                    "end": "Shenzhen East Station",
+                    "price": 777.26,
+                    "cost": 777.26,
                     "tickets": 1,
                     "transports": [],
-                    "FlightID": "FL096"
+                    "TrainID": "K105"
                 },
                 {
                     "type": "attraction",
-                    "position": "Dameisha Seaside Park",
-                    "start_time": "16:26",
-                    "end_time": "17:56",
+                    "position": "Bauhinia Lane Hong Kong International Style Street",
+                    "start_time": "09:00",
+                    "end_time": "10:30",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shenzhen Bao'an International Airport",
-                            "end": "Airport East-Metro Station",
+                            "start": "Shenzhen East Station",
+                            "end": "Buji-Metro Station",
                             "mode": "walk",
-                            "start_time": "14:32",
-                            "end_time": "14:37",
-                            "distance": 0.45,
+                            "start_time": "04:40",
+                            "end_time": "04:43",
+                            "distance": 0.28,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Airport East-Metro Station",
-                            "end": "Dameisha-Metro Station",
+                            "start": "Buji-Metro Station",
+                            "end": "Futian Port-Metro Station",
                             "mode": "metro",
-                            "start_time": "14:37",
-                            "end_time": "16:17",
-                            "distance": 50.22,
-                            "price": 9,
-                            "cost": 9,
+                            "start_time": "04:43",
+                            "end_time": "05:04",
+                            "distance": 10.96,
+                            "price": 4,
+                            "cost": 4,
                             "tickets": 1
                         },
                         {
-                            "start": "Dameisha-Metro Station",
-                            "end": "Dameisha Seaside Park",
+                            "start": "Futian Port-Metro Station",
+                            "end": "Bauhinia Lane Hong Kong International Style Street",
                             "mode": "walk",
-                            "start_time": "16:17",
-                            "end_time": "16:26",
-                            "distance": 0.77,
+                            "start_time": "05:04",
+                            "end_time": "05:05",
+                            "distance": 0.14,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Baishilong Music Theme Park",
+                    "start_time": "10:53",
+                    "end_time": "12:23",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Bauhinia Lane Hong Kong International Style Street",
+                            "end": "Futian Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:30",
+                            "end_time": "10:31",
+                            "distance": 0.14,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Futian Port-Metro Station",
+                            "end": "Baishilong-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:31",
+                            "end_time": "10:50",
+                            "distance": 9.71,
+                            "price": 4,
+                            "cost": 4,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Baishilong Music Theme Park",
+                            "mode": "walk",
+                            "start_time": "10:50",
+                            "end_time": "10:53",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Delicious Noodle House (Taoyuan Branch)",
+                    "start_time": "12:59",
+                    "end_time": "13:59",
+                    "price": 26.0,
+                    "cost": 26.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Baishilong Music Theme Park",
+                            "end": "Baishilong-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:23",
+                            "end_time": "12:26",
+                            "distance": 0.28,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Baishilong-Metro Station",
+                            "end": "Taoyuan-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:26",
+                            "end_time": "12:54",
+                            "distance": 14.37,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Taoyuan-Metro Station",
+                            "end": "Delicious Noodle House (Taoyuan Branch)",
+                            "mode": "walk",
+                            "start_time": "12:54",
+                            "end_time": "12:59",
+                            "distance": 0.44,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Bay Area Cruise",
+                    "start_time": "14:26",
+                    "end_time": "15:56",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Delicious Noodle House (Taoyuan Branch)",
+                            "end": "Taoyuan-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:59",
+                            "end_time": "14:04",
+                            "distance": 0.44,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Taoyuan-Metro Station",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:04",
+                            "end_time": "14:16",
+                            "distance": 6.21,
+                            "price": 3,
+                            "cost": 3,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Bay Area Cruise",
+                            "mode": "walk",
+                            "start_time": "14:16",
+                            "end_time": "14:26",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Bao'an Xibay Mangrove Park",
+                    "start_time": "16:47",
+                    "end_time": "18:17",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Bay Area Cruise",
+                            "end": "Shekou Port-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:56",
+                            "end_time": "16:06",
+                            "distance": 0.87,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shekou Port-Metro Station",
+                            "end": "Gushu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:06",
+                            "end_time": "16:36",
+                            "distance": 15.37,
+                            "price": 5,
+                            "cost": 5,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Gushu-Metro Station",
+                            "end": "Bao'an Xibay Mangrove Park",
+                            "mode": "walk",
+                            "start_time": "16:36",
+                            "end_time": "16:47",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+                    "start_time": "19:18",
+                    "end_time": "20:48",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Bao'an Xibay Mangrove Park",
+                            "end": "Gushu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:17",
+                            "end_time": "18:28",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Gushu-Metro Station",
+                            "end": "Lianhua Village-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:28",
+                            "end_time": "19:14",
+                            "distance": 23.47,
+                            "price": 6,
+                            "cost": 6,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Lianhua Village-Metro Station",
+                            "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+                            "mode": "walk",
+                            "start_time": "19:14",
+                            "end_time": "19:18",
+                            "distance": 0.37,
                             "price": 0,
                             "cost": 0
                         }
@@ -63,7 +273,7 @@
                 {
                     "type": "accommodation",
                     "position": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-                    "start_time": "19:50",
+                    "start_time": "21:53",
                     "end_time": "24:00",
                     "price": 570.0,
                     "cost": 570.0,
@@ -72,32 +282,32 @@
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Dameisha Seaside Park",
-                            "end": "Dameisha-Metro Station",
+                            "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+                            "end": "Lianhua Village-Metro Station",
                             "mode": "walk",
-                            "start_time": "17:56",
-                            "end_time": "18:05",
-                            "distance": 0.77,
+                            "start_time": "20:48",
+                            "end_time": "20:52",
+                            "distance": 0.37,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Dameisha-Metro Station",
+                            "start": "Lianhua Village-Metro Station",
                             "end": "Fuyong-Metro Station",
                             "mode": "metro",
-                            "start_time": "18:05",
-                            "end_time": "19:49",
-                            "distance": 52.32,
-                            "price": 9,
-                            "cost": 9,
+                            "start_time": "20:52",
+                            "end_time": "21:52",
+                            "distance": 30.26,
+                            "price": 7,
+                            "cost": 7,
                             "tickets": 1
                         },
                         {
                             "start": "Fuyong-Metro Station",
                             "end": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
                             "mode": "walk",
-                            "start_time": "19:49",
-                            "end_time": "19:50",
+                            "start_time": "21:52",
+                            "end_time": "21:53",
                             "distance": 0.14,
                             "price": 0,
                             "cost": 0
@@ -120,12 +330,12 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "China Merchants Shekou Cruise Home Port Tour",
-                    "start_time": "09:28",
-                    "end_time": "10:58",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "lunch",
+                    "position": "Old Zhou's Shunde Double-Skin Milk",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 20.0,
+                    "cost": 20.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -140,64 +350,22 @@
                         },
                         {
                             "start": "Fuyong-Metro Station",
-                            "end": "Shekou Port-Metro Station",
+                            "end": "Meicun-Metro Station",
                             "mode": "metro",
                             "start_time": "08:31",
-                            "end_time": "09:19",
-                            "distance": 24.39,
+                            "end_time": "09:26",
+                            "distance": 27.87,
                             "price": 6,
                             "cost": 6,
                             "tickets": 1
                         },
                         {
-                            "start": "Shekou Port-Metro Station",
-                            "end": "China Merchants Shekou Cruise Home Port Tour",
+                            "start": "Meicun-Metro Station",
+                            "end": "Old Zhou's Shunde Double-Skin Milk",
                             "mode": "walk",
-                            "start_time": "09:19",
+                            "start_time": "09:26",
                             "end_time": "09:28",
-                            "distance": 0.82,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "lunch",
-                    "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
-                    "start_time": "11:49",
-                    "end_time": "12:49",
-                    "price": 835.0,
-                    "cost": 835.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "China Merchants Shekou Cruise Home Port Tour",
-                            "end": "Shekou Port-Metro Station",
-                            "mode": "walk",
-                            "start_time": "10:58",
-                            "end_time": "11:07",
-                            "distance": 0.82,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Shekou Port-Metro Station",
-                            "end": "Donggualing-Metro Station",
-                            "mode": "metro",
-                            "start_time": "11:07",
-                            "end_time": "11:43",
-                            "distance": 18.47,
-                            "price": 5,
-                            "cost": 5,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Donggualing-Metro Station",
-                            "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
-                            "mode": "walk",
-                            "start_time": "11:43",
-                            "end_time": "11:49",
-                            "distance": 0.55,
+                            "distance": 0.24,
                             "price": 0,
                             "cost": 0
                         }
@@ -205,41 +373,83 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-                    "start_time": "13:40",
-                    "end_time": "15:10",
+                    "position": "Guan Shanyue Art Museum",
+                    "start_time": "12:13",
+                    "end_time": "13:43",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
+                            "start": "Old Zhou's Shunde Double-Skin Milk",
+                            "end": "Meicun-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:00",
+                            "end_time": "12:02",
+                            "distance": 0.24,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Meicun-Metro Station",
+                            "end": "Donggualing-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:02",
+                            "end_time": "12:05",
+                            "distance": 1.79,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Donggualing-Metro Station",
+                            "end": "Guan Shanyue Art Museum",
+                            "mode": "walk",
+                            "start_time": "12:05",
+                            "end_time": "12:13",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Galaxy Development Center Building - Fitness Center",
+                    "start_time": "13:55",
+                    "end_time": "15:25",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Guan Shanyue Art Museum",
                             "end": "Donggualing-Metro Station",
                             "mode": "walk",
-                            "start_time": "12:49",
-                            "end_time": "12:55",
-                            "distance": 0.55,
+                            "start_time": "13:43",
+                            "end_time": "13:51",
+                            "distance": 0.68,
                             "price": 0,
                             "cost": 0
                         },
                         {
                             "start": "Donggualing-Metro Station",
-                            "end": "Shekou Port-Metro Station",
+                            "end": "Gangxia North-Metro Station",
                             "mode": "metro",
-                            "start_time": "12:55",
-                            "end_time": "13:31",
-                            "distance": 18.47,
-                            "price": 5,
-                            "cost": 5,
+                            "start_time": "13:51",
+                            "end_time": "13:55",
+                            "distance": 2.45,
+                            "price": 2,
+                            "cost": 2,
                             "tickets": 1
                         },
                         {
-                            "start": "Shekou Port-Metro Station",
-                            "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+                            "start": "Gangxia North-Metro Station",
+                            "end": "Galaxy Development Center Building - Fitness Center",
                             "mode": "walk",
-                            "start_time": "13:31",
-                            "end_time": "13:40",
-                            "distance": 0.82,
+                            "start_time": "13:55",
+                            "end_time": "13:55",
+                            "distance": 0.08,
                             "price": 0,
                             "cost": 0
                         }
@@ -247,41 +457,41 @@
                 },
                 {
                     "type": "dinner",
-                    "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+                    "position": "YO!Tea (Futian CITIC Plaza Branch)",
                     "start_time": "17:00",
                     "end_time": "18:00",
-                    "price": 519.0,
-                    "cost": 519.0,
+                    "price": 22.0,
+                    "cost": 22.0,
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-                            "end": "Shekou Port-Metro Station",
+                            "start": "Galaxy Development Center Building - Fitness Center",
+                            "end": "Gangxia North-Metro Station",
                             "mode": "walk",
-                            "start_time": "15:10",
-                            "end_time": "15:19",
-                            "distance": 0.82,
+                            "start_time": "15:25",
+                            "end_time": "15:25",
+                            "distance": 0.08,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Shekou Port-Metro Station",
-                            "end": "Dameisha-Metro Station",
+                            "start": "Gangxia North-Metro Station",
+                            "end": "Hongling South-Metro Station",
                             "mode": "metro",
-                            "start_time": "15:19",
-                            "end_time": "16:44",
-                            "distance": 42.71,
-                            "price": 8,
-                            "cost": 8,
+                            "start_time": "15:25",
+                            "end_time": "15:32",
+                            "distance": 3.79,
+                            "price": 2,
+                            "cost": 2,
                             "tickets": 1
                         },
                         {
-                            "start": "Dameisha-Metro Station",
-                            "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+                            "start": "Hongling South-Metro Station",
+                            "end": "YO!Tea (Futian CITIC Plaza Branch)",
                             "mode": "walk",
-                            "start_time": "16:44",
-                            "end_time": "16:55",
-                            "distance": 0.93,
+                            "start_time": "15:32",
+                            "end_time": "15:37",
+                            "distance": 0.49,
                             "price": 0,
                             "cost": 0
                         }
@@ -290,7 +500,7 @@
                 {
                     "type": "accommodation",
                     "position": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-                    "start_time": "19:56",
+                    "start_time": "19:14",
                     "end_time": "24:00",
                     "price": 570.0,
                     "cost": 570.0,
@@ -299,32 +509,32 @@
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-                            "end": "Dameisha-Metro Station",
+                            "start": "YO!Tea (Futian CITIC Plaza Branch)",
+                            "end": "Hongling South-Metro Station",
                             "mode": "walk",
                             "start_time": "18:00",
-                            "end_time": "18:11",
-                            "distance": 0.93,
+                            "end_time": "18:05",
+                            "distance": 0.49,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Dameisha-Metro Station",
+                            "start": "Hongling South-Metro Station",
                             "end": "Fuyong-Metro Station",
                             "mode": "metro",
-                            "start_time": "18:11",
-                            "end_time": "19:55",
-                            "distance": 52.32,
-                            "price": 9,
-                            "cost": 9,
+                            "start_time": "18:05",
+                            "end_time": "19:13",
+                            "distance": 34.09,
+                            "price": 7,
+                            "cost": 7,
                             "tickets": 1
                         },
                         {
                             "start": "Fuyong-Metro Station",
                             "end": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
                             "mode": "walk",
-                            "start_time": "19:55",
-                            "end_time": "19:56",
+                            "start_time": "19:13",
+                            "end_time": "19:14",
                             "distance": 0.14,
                             "price": 0,
                             "cost": 0
@@ -347,12 +557,13 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "Shenzhen Bay Park",
-                    "start_time": "09:18",
-                    "end_time": "10:48",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "train",
+                    "start_time": "11:08",
+                    "end_time": "16:36",
+                    "start": "Shenzhen East Station",
+                    "end": "Beijing West Railway Station",
+                    "price": 777.26,
+                    "cost": 777.26,
                     "tickets": 1,
                     "transports": [
                         {
@@ -367,115 +578,30 @@
                         },
                         {
                             "start": "Fuyong-Metro Station",
-                            "end": "Hongshu Bay-Metro Station",
+                            "end": "Buji-Metro Station",
                             "mode": "metro",
                             "start_time": "08:31",
-                            "end_time": "09:17",
-                            "distance": 23.43,
-                            "price": 6,
-                            "cost": 6,
+                            "end_time": "09:37",
+                            "distance": 33.34,
+                            "price": 7,
+                            "cost": 7,
                             "tickets": 1
                         },
                         {
-                            "start": "Hongshu Bay-Metro Station",
-                            "end": "Shenzhen Bay Park",
+                            "start": "Buji-Metro Station",
+                            "end": "Shenzhen East Station",
                             "mode": "walk",
-                            "start_time": "09:17",
-                            "end_time": "09:18",
-                            "distance": 0.11,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "lunch",
-                    "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-                    "start_time": "11:10",
-                    "end_time": "12:10",
-                    "price": 590.0,
-                    "cost": 590.0,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Shenzhen Bay Park",
-                            "end": "Hongshu Bay-Metro Station",
-                            "mode": "walk",
-                            "start_time": "10:48",
-                            "end_time": "10:49",
-                            "distance": 0.11,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Hongshu Bay-Metro Station",
-                            "end": "Convention and Exhibition Center-Metro Station",
-                            "mode": "metro",
-                            "start_time": "10:49",
-                            "end_time": "11:08",
-                            "distance": 9.59,
-                            "price": 4,
-                            "cost": 4,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Convention and Exhibition Center-Metro Station",
-                            "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-                            "mode": "walk",
-                            "start_time": "11:08",
-                            "end_time": "11:10",
-                            "distance": 0.19,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 1008.34,
-                    "tickets": 1,
-                    "transports": [
-                        {
-                            "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-                            "end": "Convention and Exhibition Center-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:10",
-                            "end_time": "12:12",
-                            "distance": 0.19,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Convention and Exhibition Center-Metro Station",
-                            "end": "Airport East-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:12",
-                            "end_time": "13:06",
-                            "distance": 27.49,
-                            "price": 6,
-                            "cost": 6,
-                            "tickets": 1
-                        },
-                        {
-                            "start": "Airport East-Metro Station",
-                            "end": "Shenzhen Bao'an International Airport",
-                            "mode": "walk",
-                            "start_time": "13:06",
-                            "end_time": "13:11",
-                            "distance": 0.45,
+                            "start_time": "09:37",
+                            "end_time": "09:40",
+                            "distance": 0.28,
                             "price": 0,
                             "cost": 0
                         }
                     ],
-                    "FlightID": "FL179"
+                    "TrainID": "K106"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 4.686077117919922
+    "elapsed_time(sec)": 16.59706211090088
 }

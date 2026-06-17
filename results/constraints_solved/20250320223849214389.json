@@ -7,100 +7,170 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "airplane",
-                    "start_time": "09:33",
-                    "end_time": "11:27",
-                    "start": "Chengdu Shuangliu International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 780.29,
-                    "cost": 1560.58,
+                    "type": "train",
+                    "start_time": "22:12",
+                    "end_time": "05:26",
+                    "start": "Chengdu West Railway Station",
+                    "end": "Beijing West Railway Station",
+                    "price": 609.81,
+                    "cost": 1219.62,
                     "tickets": 2,
                     "transports": [],
-                    "FlightID": "FL418"
+                    "TrainID": "K118"
                 },
                 {
                     "type": "attraction",
-                    "position": "The Palace Museum",
-                    "start_time": "13:16",
-                    "end_time": "14:46",
+                    "position": "Bao Guo Temple",
+                    "start_time": "09:00",
+                    "end_time": "10:30",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Beijing Daxing International Airport",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "walk",
-                            "start_time": "11:27",
-                            "end_time": "11:38",
-                            "distance": 0.93,
-                            "price": 0,
-                            "cost": 0
-                        },
+                            "start": "Beijing West Railway Station",
+                            "end": "Bao Guo Temple",
+                            "mode": "taxi",
+                            "start_time": "05:26",
+                            "end_time": "05:31",
+                            "distance": 3.77,
+                            "price": 17.91,
+                            "cost": 17.91,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "798 Art District",
+                    "start_time": "10:53",
+                    "end_time": "12:23",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
                         {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "National Art Museum of China-Metro Station",
-                            "mode": "metro",
-                            "start_time": "11:38",
-                            "end_time": "13:09",
-                            "distance": 45.78,
-                            "price": 8,
-                            "cost": 16,
-                            "tickets": 2
-                        },
+                            "start": "Bao Guo Temple",
+                            "end": "798 Art District",
+                            "mode": "taxi",
+                            "start_time": "10:30",
+                            "end_time": "10:53",
+                            "distance": 15.57,
+                            "price": 64.78,
+                            "cost": 64.78,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "lunch",
+                    "position": "Helude Candied Hawthorn Sticks",
+                    "start_time": "12:38",
+                    "end_time": "13:38",
+                    "price": 7.0,
+                    "cost": 14.0,
+                    "tickets": 2,
+                    "transports": [
                         {
-                            "start": "National Art Museum of China-Metro Station",
-                            "end": "The Palace Museum",
-                            "mode": "walk",
-                            "start_time": "13:09",
-                            "end_time": "13:16",
-                            "distance": 0.63,
-                            "price": 0,
-                            "cost": 0
+                            "start": "798 Art District",
+                            "end": "Helude Candied Hawthorn Sticks",
+                            "mode": "taxi",
+                            "start_time": "12:23",
+                            "end_time": "12:38",
+                            "distance": 10.25,
+                            "price": 40.81,
+                            "cost": 40.81,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+                    "start_time": "13:50",
+                    "end_time": "15:20",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Helude Candied Hawthorn Sticks",
+                            "end": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+                            "mode": "taxi",
+                            "start_time": "13:38",
+                            "end_time": "13:50",
+                            "distance": 8.21,
+                            "price": 33.44,
+                            "cost": 33.44,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Apiron Creativity Park",
+                    "start_time": "16:14",
+                    "end_time": "17:44",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "China Soong Ching Ling Youth Science and Technology Cultural Exchange Center",
+                            "end": "Apiron Creativity Park",
+                            "mode": "taxi",
+                            "start_time": "15:20",
+                            "end_time": "16:14",
+                            "distance": 36.52,
+                            "price": 159.05,
+                            "cost": 159.05,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+                    "start_time": "18:33",
+                    "end_time": "19:33",
+                    "price": 14.0,
+                    "cost": 28.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Apiron Creativity Park",
+                            "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+                            "mode": "taxi",
+                            "start_time": "17:44",
+                            "end_time": "18:33",
+                            "distance": 32.7,
+                            "price": 141.86,
+                            "cost": 141.86,
+                            "cars": 1
                         }
                     ]
                 },
                 {
                     "type": "accommodation",
-                    "position": "Mumian Beijing Daxing International Airport",
-                    "start_time": "16:30",
+                    "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+                    "start_time": "20:12",
                     "end_time": "24:00",
-                    "price": 729.0,
-                    "cost": 1458.0,
-                    "rooms": 2,
-                    "room_type": 1,
-                    "tickets": 2,
+                    "price": 269.0,
+                    "cost": 269.0,
+                    "rooms": 1,
+                    "room_type": 2,
+                    "tickets": 1,
                     "transports": [
                         {
-                            "start": "The Palace Museum",
-                            "end": "National Art Museum of China-Metro Station",
-                            "mode": "walk",
-                            "start_time": "14:46",
-                            "end_time": "14:53",
-                            "distance": 0.63,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "National Art Museum of China-Metro Station",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "metro",
-                            "start_time": "14:53",
-                            "end_time": "16:24",
-                            "distance": 45.78,
-                            "price": 8,
-                            "cost": 16,
-                            "tickets": 2
-                        },
-                        {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Mumian Beijing Daxing International Airport",
-                            "mode": "walk",
-                            "start_time": "16:24",
-                            "end_time": "16:30",
-                            "distance": 0.58,
-                            "price": 0,
-                            "cost": 0
+                            "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+                            "end": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+                            "mode": "taxi",
+                            "start_time": "19:33",
+                            "end_time": "20:12",
+                            "distance": 26.41,
+                            "price": 113.53,
+                            "cost": 113.53,
+                            "cars": 1
                         }
                     ]
                 }
@@ -111,7 +181,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "Mumian Beijing Daxing International Airport",
+                    "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -120,93 +190,53 @@
                     "transports": []
                 },
                 {
-                    "type": "attraction",
-                    "position": "Old Summer Palace",
-                    "start_time": "10:47",
-                    "end_time": "12:17",
-                    "price": 0.0,
-                    "cost": 0.0,
+                    "type": "lunch",
+                    "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 12.0,
+                    "cost": 24.0,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Mumian Beijing Daxing International Airport",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "walk",
+                            "start": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+                            "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+                            "mode": "taxi",
                             "start_time": "08:30",
-                            "end_time": "08:36",
-                            "distance": 0.58,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Old Summer Palace-Metro Station",
-                            "mode": "metro",
-                            "start_time": "08:36",
-                            "end_time": "10:25",
-                            "distance": 54.98,
-                            "price": 9,
-                            "cost": 18,
-                            "tickets": 2
-                        },
-                        {
-                            "start": "Old Summer Palace-Metro Station",
-                            "end": "Old Summer Palace",
-                            "mode": "walk",
-                            "start_time": "10:25",
-                            "end_time": "10:47",
-                            "distance": 1.84,
-                            "price": 0,
-                            "cost": 0
+                            "end_time": "08:59",
+                            "distance": 19.54,
+                            "price": 82.62,
+                            "cost": 82.62,
+                            "cars": 1
                         }
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:29",
-                    "end_time": "20:23",
-                    "start": "Beijing Daxing International Airport",
-                    "end": "Chengdu Shuangliu International Airport",
-                    "price": 766.7,
-                    "cost": 1533.4,
+                    "type": "train",
+                    "start_time": "13:40",
+                    "end_time": "22:21",
+                    "start": "Beijing West Railway Station",
+                    "end": "Chengdu West Railway Station",
+                    "price": 609.81,
+                    "cost": 1219.62,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Old Summer Palace",
-                            "end": "Old Summer Palace-Metro Station",
-                            "mode": "walk",
-                            "start_time": "12:17",
-                            "end_time": "12:39",
-                            "distance": 1.84,
-                            "price": 0,
-                            "cost": 0
-                        },
-                        {
-                            "start": "Old Summer Palace-Metro Station",
-                            "end": "Daxing Airport-Metro Station",
-                            "mode": "metro",
-                            "start_time": "12:39",
-                            "end_time": "14:28",
-                            "distance": 54.98,
-                            "price": 9,
-                            "cost": 18,
-                            "tickets": 2
-                        },
-                        {
-                            "start": "Daxing Airport-Metro Station",
-                            "end": "Beijing Daxing International Airport",
-                            "mode": "walk",
-                            "start_time": "14:28",
-                            "end_time": "14:39",
-                            "distance": 0.93,
-                            "price": 0,
-                            "cost": 0
+                            "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+                            "end": "Beijing West Railway Station",
+                            "mode": "taxi",
+                            "start_time": "12:00",
+                            "end_time": "12:13",
+                            "distance": 8.99,
+                            "price": 36.16,
+                            "cost": 36.16,
+                            "cars": 1
                         }
                     ],
-                    "FlightID": "FL121"
+                    "TrainID": "K548"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 3.156949996948242
+    "elapsed_time(sec)": 4.681798219680786
 }

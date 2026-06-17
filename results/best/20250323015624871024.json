@@ -21,44 +21,63 @@
         {
           "type": "lunch",
           "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "12:13",
-          "end_time": "13:13",
+          "start_time": "12:20",
+          "end_time": "13:20",
           "price": 337.0,
           "cost": 1685.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Beijing South Railway Station",
-              "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 18.26,
-              "cars": 1
+              "end_time": "12:08",
+              "distance": 0.02,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Beijing South Railway Station-Metro Station",
+              "end": "Qianmen-Metro Station",
+              "mode": "metro",
+              "start_time": "12:08",
+              "end_time": "12:16",
+              "distance": 4.23,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Qianmen-Metro Station",
+              "end": "Tidu (Beijing Fang Branch)",
+              "mode": "walk",
+              "start_time": "12:16",
+              "end_time": "12:20",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "The Palace Museum",
-          "start_time": "13:17",
-          "end_time": "14:47",
+          "position": "Dashilar",
+          "start_time": "13:25",
+          "end_time": "14:55",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Tidu (Beijing Fang Branch)",
-              "end": "The Palace Museum",
-              "mode": "taxi",
-              "start_time": "13:13",
-              "end_time": "13:17",
-              "distance": 3.03,
-              "price": 15.32,
-              "cost": 15.32,
-              "cars": 1
+              "end": "Dashilar",
+              "mode": "walk",
+              "start_time": "13:20",
+              "end_time": "13:25",
+              "distance": 0.4983237531421262,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -72,22 +91,84 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "The Palace Museum",
+              "start": "Dashilar",
+              "end": "Qianmen-Metro Station",
+              "mode": "walk",
+              "start_time": "16:00",
+              "end_time": "16:01",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qianmen-Metro Station",
+              "end": "Dawanglu-Metro Station",
+              "mode": "metro",
+              "start_time": "16:01",
+              "end_time": "16:14",
+              "distance": 6.72,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Dawanglu-Metro Station",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
-              "mode": "taxi",
-              "start_time": "14:47",
-              "end_time": "14:56",
-              "distance": 6.61,
-              "price": 27.83,
-              "cost": 27.83,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:14",
+              "end_time": "16:18",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Olympic Park",
+          "start_time": "18:37",
+          "end_time": "20:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Jumbo Seafood (Beijing SKP Branch)",
+              "end": "Dawanglu-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dawanglu-Metro Station",
+              "end": "Olympic Park-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "18:29",
+              "distance": 12.66,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Olympic Park-Metro Station",
+              "end": "Olympic Park",
+              "mode": "walk",
+              "start_time": "18:29",
+              "end_time": "18:37",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Shanxi Hotel",
-          "start_time": "18:15",
+          "start_time": "20:55",
           "end_time": "24:00",
           "price": 681.0,
           "cost": 2043.0,
@@ -96,15 +177,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Jumbo Seafood (Beijing SKP Branch)",
+              "start": "Olympic Park",
+              "end": "Olympic Park-Metro Station",
+              "mode": "walk",
+              "start_time": "20:07",
+              "end_time": "20:15",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Olympic Park-Metro Station",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "20:15",
+              "end_time": "20:45",
+              "distance": 15.27,
+              "price": 5,
+              "cost": 25,
+              "tickets": 5
+            },
+            {
+              "start": "Beijing South Railway Station-Metro Station",
               "end": "Shanxi Hotel",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:15",
-              "distance": 10.1,
-              "price": 40.15,
-              "cost": 40.15,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:45",
+              "end_time": "20:55",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -125,45 +226,169 @@
         },
         {
           "type": "attraction",
-          "position": "Old Summer Palace",
-          "start_time": "08:58",
-          "end_time": "10:28",
+          "position": "Tiananmen Square",
+          "start_time": "08:54",
+          "end_time": "10:24",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Shanxi Hotel",
-              "end": "Old Summer Palace",
-              "mode": "taxi",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:58",
-              "distance": 18.67,
-              "price": 78.71,
-              "cost": 78.71,
-              "cars": 1
+              "end_time": "08:40",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Beijing South Railway Station-Metro Station",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "metro",
+              "start_time": "08:40",
+              "end_time": "08:50",
+              "distance": 5.11,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Tiananmen Square",
+              "mode": "walk",
+              "start_time": "08:50",
+              "end_time": "08:54",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Yonghe Temple",
+          "start_time": "10:45",
+          "end_time": "12:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "walk",
+              "start_time": "10:24",
+              "end_time": "10:28",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Yonghe Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "10:28",
+              "end_time": "10:37",
+              "distance": 4.81,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Yonghe Temple-Metro Station",
+              "end": "Yonghe Temple",
+              "mode": "walk",
+              "start_time": "10:37",
+              "end_time": "10:45",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Beijing Puxuan Hotel · Left Bank",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "12:28",
+          "end_time": "13:28",
           "price": 733.0,
           "cost": 3665.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Old Summer Palace",
+              "start": "Yonghe Temple",
+              "end": "Yonghe Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "12:15",
+              "end_time": "12:23",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yonghe Temple-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "12:23",
+              "end_time": "12:28",
+              "distance": 2.9,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
               "end": "Beijing Puxuan Hotel · Left Bank",
-              "mode": "taxi",
-              "start_time": "10:28",
-              "end_time": "10:48",
-              "distance": 13.37,
-              "price": 54.89,
-              "cost": 54.89,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:28",
+              "end_time": "12:28",
+              "distance": 0.05,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao Guo Temple",
+          "start_time": "13:41",
+          "end_time": "15:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Puxuan Hotel · Left Bank",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "walk",
+              "start_time": "13:28",
+              "end_time": "13:28",
+              "distance": 0.05,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Changchun Street-Metro Station",
+              "mode": "metro",
+              "start_time": "13:28",
+              "end_time": "13:37",
+              "distance": 4.87,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Bao Guo Temple",
+              "mode": "walk",
+              "start_time": "13:37",
+              "end_time": "13:41",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -178,15 +403,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing Puxuan Hotel · Left Bank",
+              "start": "Bao Guo Temple",
+              "end": "Changchun Street-Metro Station",
+              "mode": "walk",
+              "start_time": "15:41",
+              "end_time": "15:45",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:45",
+              "end_time": "15:53",
+              "distance": 4.05,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Beijing South Railway Station-Metro Station",
               "end": "Beijing South Railway Station",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:10",
-              "distance": 7.06,
-              "price": 29.41,
-              "cost": 29.41,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:53",
+              "end_time": "15:53",
+              "distance": 0.02,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G21"
@@ -194,6 +439,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03502321243286133,
-  "_eval_score": 94.58333333333334
+  "elapsed_time(sec)": 2.8630471229553223,
+  "_eval_score": 96.20595238095238
 }

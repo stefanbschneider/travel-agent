@@ -1,7 +1,31 @@
+## Known upstream evaluation bugs (cannot be fixed locally)
+
+These live in the organizers' benchmark (github.com/LAMDASZ-ML/ChinaTravel) and the
+leaderboard scoring server, not in our agent. We mirror them verbatim for parity and
+document them here.
+
+1. Case-sensitive constraint matching → unsatisfiable queries.
+   chinatravel/symbol_verification/concept_func.py attraction_type/restaurant_type/
+   accommodation_type return the raw type/cuisine/featurehoteltype column value, and
+   hard_logic compares them with case-sensitive set membership ({"X"} & set). When a
+   generated query literal's case differs from the database value (e.g. "Hot pot" vs
+   "hot pot", "Swimming pool" vs "Swimming Pool", "red tourism sites" vs
+   "Red tourism sites"), the clause can never be true, so the query is unsolvable by
+   any agent. ~16 of our remaining unsolved Phase-1 queries are unsolvable for this
+   reason. Confirmed unfixed in upstream main.
+
+2. Overall score double-counts EPR-micro.
+   eval_tpc.py:343 computes 0.1*EPR_micro + 0.1*EPR_micro instead of the documented
+   0.1*EPR_micro + 0.1*EPR_macro, so the leaderboard "overall" weights EPR-micro twice
+   and ignores EPR-macro. We keep this verbatim as `overall` for leaderboard parity and
+   additionally report the corrected `overall_official` (eval_tpc.py:345). The two differ
+   only when EPR-micro != EPR-macro. Confirmed unfixed in upstream main.
+
 **Important links:**
 
 - Competition website: https://chinatravel-competition.github.io/IJCAI2026/
 - ChinaTravel GitHub repo: https://github.com/LAMDA-NeSy/ChinaTravel
+- Local upstream divergence report: `docs/upstream_divergence.md`
 
 **Important commands:**
 
@@ -29,11 +53,14 @@ one command (see the `Makefile` for tunable variables):
 make
 ```
 
-Print the headline metrics for `results/best`, then build the submission zip:
+Print the headline metrics for `results/best`, build the submission zip, then upload it to the
+competition portal (Seafile at box.nju.edu.cn):
 ```
 python scripts/score.py
-python scripts/assemble_submission.py
+python scripts/assemble_submission.py   # build submissions/fabiundstefan_v<N>.zip
+python scripts/submit.py                # upload the newest built zip to the portal
 ```
+Or with make: `make submission` then `make upload` (preview the target first with `make upload-check`).
 
 > After uploading `submissions/fabiundstefan_v<N>.zip`, freeze that version with a git tag so it is
 > never mutated again, then share it: `git tag v<N> && git push origin --tags`. Rebuild a previously
@@ -51,6 +78,10 @@ Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`
 `TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
 checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
 `scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
+`scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
+against budget/time constraints) to show where more attractions can be packed safely.
+`eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the leaderboard formula,
+which doubles EPR-micro) and `overall_official` (the documented 10% EPR-micro + 10% EPR-macro).
 
 **Notes:**
 

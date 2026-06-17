@@ -145,15 +145,13 @@
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
-                    "start_time": "18:44",
-                    "end_time": "24:00",
-                    "price": 427.0,
-                    "cost": 854.0,
-                    "rooms": 2,
-                    "room_type": 2,
-                    "tickets": 2,
+                    "type": "attraction",
+                    "position": "Chengdu Happy Valley",
+                    "start_time": "18:39",
+                    "end_time": "20:09",
+                    "price": 150.0,
+                    "cost": 450.0,
+                    "tickets": 3,
                     "transports": [
                         {
                             "start": "Dade Kaiseki (Chengdu Taikoo Li Store)",
@@ -167,11 +165,55 @@
                         },
                         {
                             "start": "Chunxi Road-Metro Station",
-                            "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+                            "end": "Qinggang-Metro Station",
                             "mode": "metro",
                             "start_time": "18:03",
-                            "end_time": "18:33",
-                            "distance": 15.01,
+                            "end_time": "18:22",
+                            "distance": 9.53,
+                            "price": 4,
+                            "cost": 12,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Qinggang-Metro Station",
+                            "end": "Chengdu Happy Valley",
+                            "mode": "walk",
+                            "start_time": "18:22",
+                            "end_time": "18:39",
+                            "distance": 1.43,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+                    "start_time": "21:14",
+                    "end_time": "24:00",
+                    "price": 427.0,
+                    "cost": 854.0,
+                    "rooms": 2,
+                    "room_type": 2,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Chengdu Happy Valley",
+                            "end": "Qinggang-Metro Station",
+                            "mode": "walk",
+                            "start_time": "20:09",
+                            "end_time": "20:26",
+                            "distance": 1.43,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qinggang-Metro Station",
+                            "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "20:26",
+                            "end_time": "21:03",
+                            "distance": 18.53,
                             "price": 5,
                             "cost": 15,
                             "tickets": 3
@@ -180,8 +222,8 @@
                             "start": "Shuangliu Airport Terminal 2 East-Metro Station",
                             "end": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
                             "mode": "walk",
-                            "start_time": "18:33",
-                            "end_time": "18:44",
+                            "start_time": "21:03",
+                            "end_time": "21:14",
                             "distance": 0.96,
                             "price": 0,
                             "cost": 0
@@ -204,12 +246,12 @@
                     "transports": []
                 },
                 {
-                    "type": "lunch",
-                    "position": "Leimen Ramen - Freshly Simmered Bone Broth (Silverstone Plaza Branch)",
-                    "start_time": "11:00",
-                    "end_time": "12:00",
-                    "price": 55.0,
-                    "cost": 165.0,
+                    "type": "attraction",
+                    "position": "Chengdu Zoo",
+                    "start_time": "09:34",
+                    "end_time": "11:04",
+                    "price": 20.0,
+                    "cost": 60.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -224,22 +266,85 @@
                         },
                         {
                             "start": "Shuangliu Airport Terminal 2 East-Metro Station",
-                            "end": "Chunxi Road-Metro Station",
+                            "end": "Zoo-Metro Station",
                             "mode": "metro",
                             "start_time": "08:41",
-                            "end_time": "09:11",
-                            "distance": 15.01,
-                            "price": 5,
-                            "cost": 15,
+                            "end_time": "09:23",
+                            "distance": 21.25,
+                            "price": 6,
+                            "cost": 18,
                             "tickets": 3
                         },
                         {
-                            "start": "Chunxi Road-Metro Station",
-                            "end": "Leimen Ramen - Freshly Simmered Bone Broth (Silverstone Plaza Branch)",
+                            "start": "Zoo-Metro Station",
+                            "end": "Chengdu Zoo",
                             "mode": "walk",
-                            "start_time": "09:11",
-                            "end_time": "09:11",
-                            "distance": 0.02,
+                            "start_time": "09:23",
+                            "end_time": "09:34",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Chengdu Polar Ocean Park",
+                    "start_time": "12:04",
+                    "end_time": "13:34",
+                    "price": 255.0,
+                    "cost": 765.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Chengdu Zoo",
+                            "end": "Zoo-Metro Station",
+                            "mode": "walk",
+                            "start_time": "11:04",
+                            "end_time": "11:15",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Zoo-Metro Station",
+                            "end": "Wugensong-Metro Station",
+                            "mode": "metro",
+                            "start_time": "11:15",
+                            "end_time": "12:02",
+                            "distance": 23.55,
+                            "price": 6,
+                            "cost": 18,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Wugensong-Metro Station",
+                            "end": "Chengdu Polar Ocean Park",
+                            "mode": "walk",
+                            "start_time": "12:02",
+                            "end_time": "12:04",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Coral Island Water Park",
+                    "start_time": "13:34",
+                    "end_time": "15:04",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Chengdu Polar Ocean Park",
+                            "end": "Coral Island Water Park",
+                            "mode": "walk",
+                            "start_time": "13:34",
+                            "end_time": "13:34",
+                            "distance": 0.025737165284132547,
                             "price": 0,
                             "cost": 0
                         }
@@ -256,32 +361,32 @@
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Leimen Ramen - Freshly Simmered Bone Broth (Silverstone Plaza Branch)",
-                            "end": "Chunxi Road-Metro Station",
+                            "start": "Coral Island Water Park",
+                            "end": "Wugensong-Metro Station",
                             "mode": "walk",
-                            "start_time": "12:00",
-                            "end_time": "12:00",
-                            "distance": 0.02,
+                            "start_time": "15:04",
+                            "end_time": "15:06",
+                            "distance": 0.23,
                             "price": 0,
                             "cost": 0
                         },
                         {
-                            "start": "Chunxi Road-Metro Station",
+                            "start": "Wugensong-Metro Station",
                             "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
                             "mode": "metro",
-                            "start_time": "12:00",
-                            "end_time": "13:43",
-                            "distance": 51.61,
-                            "price": 9,
-                            "cost": 27,
+                            "start_time": "15:06",
+                            "end_time": "16:27",
+                            "distance": 40.79,
+                            "price": 8,
+                            "cost": 24,
                             "tickets": 3
                         },
                         {
                             "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
                             "end": "Chengdu Tianfu International Airport",
                             "mode": "walk",
-                            "start_time": "13:43",
-                            "end_time": "14:27",
+                            "start_time": "16:27",
+                            "end_time": "17:11",
                             "distance": 3.72,
                             "price": 0,
                             "cost": 0
@@ -292,5 +397,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.163954973220825
+    "elapsed_time(sec)": 17.604949951171875
 }

@@ -42,22 +42,66 @@
         },
         {
           "type": "attraction",
+          "position": "Oriental Pearl Tower",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "price": 199.0,
+          "cost": 796.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Oriental Pearl Tower",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:30",
+              "distance": 5.07,
+              "price": 22.45,
+              "cost": 22.45,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
           "position": "The Bund",
-          "start_time": "12:29",
-          "end_time": "13:59",
+          "start_time": "14:01",
+          "end_time": "15:31",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Yong Fu (Huangpu Branch)",
+              "start": "Oriental Pearl Tower",
               "end": "The Bund",
               "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:29",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
+              "start_time": "14:00",
+              "end_time": "14:01",
+              "distance": 0.9,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "15:31",
+          "end_time": "17:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Huangpu River",
+              "mode": "taxi",
+              "start_time": "15:31",
+              "end_time": "15:31",
+              "distance": 0.24,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -65,45 +109,45 @@
         {
           "type": "dinner",
           "position": "Fu He Hui",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:11",
+          "end_time": "18:11",
           "price": 1280.0,
           "cost": 5120.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "The Bund",
+              "start": "Huangpu River",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "13:59",
-              "end_time": "14:09",
-              "distance": 7.0,
-              "price": 29.18,
-              "cost": 29.18,
+              "start_time": "17:01",
+              "end_time": "17:11",
+              "distance": 7.23,
+              "price": 30.02,
+              "cost": 30.02,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Nanjiao Hotel Shanghai",
-          "start_time": "18:49",
+          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+          "start_time": "19:12",
           "end_time": "24:00",
-          "price": 522.0,
-          "cost": 2088.0,
+          "price": 368.0,
+          "cost": 1472.0,
           "rooms": 4,
           "room_type": 1,
           "tickets": 4,
           "transports": [
             {
               "start": "Fu He Hui",
-              "end": "Nanjiao Hotel Shanghai",
+              "end": "Ramada Encore by Wyndham Shanghai Pudong Airport",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:49",
-              "distance": 32.94,
-              "price": 142.93,
-              "cost": 142.93,
+              "start_time": "18:11",
+              "end_time": "19:12",
+              "distance": 40.75,
+              "price": 178.08,
+              "cost": 178.08,
               "cars": 1
             }
           ]
@@ -115,7 +159,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Nanjiao Hotel Shanghai",
+          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -125,22 +169,44 @@
         },
         {
           "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "09:23",
-          "end_time": "10:53",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "Shanghai Tower",
+          "start_time": "09:21",
+          "end_time": "10:51",
+          "price": 180.0,
+          "cost": 720.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjiao Hotel Shanghai",
-              "end": "Huangpu River",
+              "start": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+              "end": "Shanghai Tower",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:23",
-              "distance": 35.39,
-              "price": 153.97,
-              "cost": 153.97,
+              "end_time": "09:21",
+              "distance": 34.37,
+              "price": 149.38,
+              "cost": 149.38,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Tower Observation Deck",
+          "start_time": "10:51",
+          "end_time": "12:21",
+          "price": 180.0,
+          "cost": 720.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Tower",
+              "end": "Shanghai Tower Observation Deck",
+              "mode": "taxi",
+              "start_time": "10:51",
+              "end_time": "10:51",
+              "distance": 0.01,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -148,43 +214,65 @@
         {
           "type": "lunch",
           "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "11:02",
-          "end_time": "12:02",
+          "start_time": "12:30",
+          "end_time": "13:30",
           "price": 203.0,
           "cost": 812.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Huangpu River",
+              "start": "Shanghai Tower Observation Deck",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "10:53",
-              "end_time": "11:02",
-              "distance": 6.14,
-              "price": 26.2,
-              "cost": 26.2,
+              "start_time": "12:21",
+              "end_time": "12:30",
+              "distance": 6.61,
+              "price": 27.83,
+              "cost": 27.83,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shanghai Planetarium",
-          "start_time": "13:24",
-          "end_time": "14:54",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "13:38",
+          "end_time": "15:08",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Planetarium",
+              "end": "Nanjing Road Pedestrian Street",
               "mode": "taxi",
-              "start_time": "12:02",
-              "end_time": "13:24",
-              "distance": 55.1,
-              "price": 242.63,
-              "cost": 242.63,
+              "start_time": "13:30",
+              "end_time": "13:38",
+              "distance": 5.55,
+              "price": 24.13,
+              "cost": 24.13,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lujiazui",
+          "start_time": "15:11",
+          "end_time": "16:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Lujiazui",
+              "mode": "taxi",
+              "start_time": "15:08",
+              "end_time": "15:11",
+              "distance": 2.07,
+              "price": 11.95,
+              "cost": 11.95,
               "cars": 1
             }
           ]
@@ -199,38 +287,38 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Planetarium",
+              "start": "Lujiazui",
               "end": "Kurogi",
               "mode": "taxi",
-              "start_time": "14:54",
-              "end_time": "16:17",
-              "distance": 55.81,
-              "price": 245.84,
-              "cost": 245.84,
+              "start_time": "16:41",
+              "end_time": "16:44",
+              "distance": 2.43,
+              "price": 13.19,
+              "cost": 13.19,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Nanjiao Hotel Shanghai",
-          "start_time": "18:53",
+          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+          "start_time": "18:55",
           "end_time": "24:00",
-          "price": 522.0,
-          "cost": 2088.0,
+          "price": 368.0,
+          "cost": 1472.0,
           "rooms": 4,
           "room_type": 1,
           "tickets": 4,
           "transports": [
             {
               "start": "Kurogi",
-              "end": "Nanjiao Hotel Shanghai",
+              "end": "Ramada Encore by Wyndham Shanghai Pudong Airport",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:53",
-              "distance": 35.46,
-              "price": 154.29,
-              "cost": 154.29,
+              "end_time": "18:55",
+              "distance": 36.78,
+              "price": 160.21,
+              "cost": 160.21,
               "cars": 1
             }
           ]
@@ -242,7 +330,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Nanjiao Hotel Shanghai",
+          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -252,45 +340,88 @@
         },
         {
           "type": "attraction",
-          "position": "Nanjing Road Pedestrian Street",
-          "start_time": "09:22",
-          "end_time": "10:52",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "09:27",
+          "end_time": "10:57",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjiao Hotel Shanghai",
-              "end": "Nanjing Road Pedestrian Street",
+              "start": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+              "end": "Jing'an Sculpture Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:22",
-              "distance": 35.27,
-              "price": 153.4,
-              "cost": 153.4,
+              "end_time": "09:27",
+              "distance": 38.04,
+              "price": 165.87,
+              "cost": 165.87,
               "cars": 1
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 498.0,
-          "cost": 1992.0,
+          "type": "attraction",
+          "position": "Jin Mao Tower",
+          "start_time": "11:02",
+          "end_time": "12:32",
+          "price": 98.0,
+          "cost": 392.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing Road Pedestrian Street",
-              "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "start": "Jing'an Sculpture Park",
+              "end": "Jin Mao Tower",
               "mode": "taxi",
-              "start_time": "10:52",
-              "end_time": "10:55",
-              "distance": 2.22,
-              "price": 12.47,
-              "cost": 12.47,
+              "start_time": "10:57",
+              "end_time": "11:02",
+              "distance": 3.98,
+              "price": 18.64,
+              "cost": 18.64,
               "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jin Mao Tower 88th Floor Observation Deck",
+          "start_time": "12:32",
+          "end_time": "14:02",
+          "price": 98.0,
+          "cost": 392.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jin Mao Tower",
+              "end": "Jin Mao Tower 88th Floor Observation Deck",
+              "mode": "taxi",
+              "start_time": "12:32",
+              "end_time": "12:32",
+              "distance": 0.0,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai World Financial Center",
+          "start_time": "14:03",
+          "end_time": "15:33",
+          "price": 180.0,
+          "cost": 720.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jin Mao Tower 88th Floor Observation Deck",
+              "end": "Shanghai World Financial Center",
+              "mode": "walk",
+              "start_time": "14:02",
+              "end_time": "14:03",
+              "distance": 0.11135139439733038,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -305,15 +436,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "start": "Shanghai World Financial Center",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:33",
+              "end_time": "15:36",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:36",
+              "end_time": "16:35",
+              "distance": 29.58,
+              "price": 7,
+              "cost": 28,
+              "tickets": 4
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:46",
-              "distance": 30.72,
-              "price": 132.93,
-              "cost": 132.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:35",
+              "end_time": "16:50",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL018"
@@ -321,6 +472,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.0697321891784668,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 23.428071975708008,
+  "_eval_score": 97.57275132275133
 }

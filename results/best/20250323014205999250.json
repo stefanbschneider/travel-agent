@@ -7,59 +7,169 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 727.96,
+          "type": "airplane",
+          "start_time": "23:37",
+          "end_time": "01:08",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 572.8,
+          "cost": 572.8,
           "tickets": 1,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL166"
         },
         {
-          "type": "dinner",
-          "position": "Fu He Hui",
-          "start_time": "18:58",
-          "end_time": "19:58",
-          "price": 1280.0,
-          "cost": 1280.0,
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
-              "end": "Fu He Hui",
+              "start": "Shanghai Pudong International Airport",
+              "end": "1933 Old Millfun",
               "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "18:58",
-              "distance": 10.79,
-              "price": 43.25,
-              "cost": 43.25,
+              "start_time": "01:08",
+              "end_time": "01:57",
+              "distance": 32.76,
+              "price": 142.11,
+              "cost": 142.11,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "263-meter Main Observation Deck",
+          "start_time": "10:32",
+          "end_time": "12:02",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "263-meter Main Observation Deck",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 1.82,
+              "price": 11.06,
+              "cost": 11.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "12:09",
+          "end_time": "13:09",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "263-meter Main Observation Deck",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "12:02",
+              "end_time": "12:09",
+              "distance": 5.26,
+              "price": 23.09,
+              "cost": 23.09,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "13:20",
+          "end_time": "14:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "13:09",
+              "end_time": "13:20",
+              "distance": 7.35,
+              "price": 30.43,
+              "cost": 30.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Gucun Park Natural Valley Dinosaur Paradise",
+          "start_time": "14:56",
+          "end_time": "16:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Gucun Park Natural Valley Dinosaur Paradise",
+              "mode": "taxi",
+              "start_time": "14:50",
+              "end_time": "14:56",
+              "distance": 4.57,
+              "price": 20.71,
+              "cost": 20.71,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Four Springs Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 33.0,
+          "cost": 33.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Gucun Park Natural Valley Dinosaur Paradise",
+              "end": "Four Springs Restaurant",
+              "mode": "taxi",
+              "start_time": "16:26",
+              "end_time": "16:37",
+              "distance": 7.6,
+              "price": 31.3,
+              "cost": 31.3,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Cordis Shanghai Hongqiao",
-          "start_time": "20:14",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "start_time": "18:40",
           "end_time": "24:00",
-          "price": 799.0,
-          "cost": 799.0,
+          "price": 303.0,
+          "cost": 303.0,
           "rooms": 1,
-          "room_type": 1,
+          "room_type": 2,
           "tickets": 1,
           "transports": [
             {
-              "start": "Fu He Hui",
-              "end": "Cordis Shanghai Hongqiao",
+              "start": "Four Springs Restaurant",
+              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
               "mode": "taxi",
-              "start_time": "19:58",
-              "end_time": "20:14",
-              "distance": 11.13,
-              "price": 44.77,
-              "cost": 44.77,
+              "start_time": "18:00",
+              "end_time": "18:40",
+              "distance": 27.0,
+              "price": 116.19,
+              "cost": 116.19,
               "cars": 1
             }
           ]
@@ -71,7 +181,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Cordis Shanghai Hongqiao",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -80,76 +190,116 @@
           "transports": []
         },
         {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 18.0,
+          "cost": 18.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:19",
+              "distance": 33.16,
+              "price": 143.92,
+              "cost": 143.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "08:57",
-          "end_time": "10:27",
+          "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+          "start_time": "12:38",
+          "end_time": "14:08",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Cordis Shanghai Hongqiao",
-              "end": "The Bund",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:57",
-              "distance": 18.06,
-              "price": 75.97,
-              "cost": 75.97,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 600.0,
-          "cost": 600.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "The Bund",
-              "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
-              "start_time": "10:27",
-              "end_time": "10:33",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "train",
-          "start_time": "19:55",
-          "end_time": "06:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 727.96,
-          "cost": 727.96,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Yong Fu (Huangpu Branch)",
-              "end": "Shanghai Hongqiao Station",
-              "mode": "taxi",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:20",
-              "distance": 13.78,
-              "price": 56.71,
-              "cost": 56.71,
-              "cars": 1
+              "end_time": "12:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:08",
+              "end_time": "12:19",
+              "distance": 5.99,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Xinzhuang-Metro Station",
+              "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "mode": "walk",
+              "start_time": "12:19",
+              "end_time": "12:38",
+              "distance": 1.6,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "16:36",
+          "end_time": "18:07",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 576.24,
+          "cost": 576.24,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "end": "Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "14:08",
+              "end_time": "14:27",
+              "distance": 1.6,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinzhuang-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "14:27",
+              "end_time": "15:47",
+              "distance": 40.32,
+              "price": 8,
+              "cost": 8,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "walk",
+              "start_time": "15:47",
+              "end_time": "16:02",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "TrainID": "D941"
+          "FlightID": "FL016"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.041512250900268555,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 14.872979879379272,
+  "_eval_score": 95.61547619047619
 }

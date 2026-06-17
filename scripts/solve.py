@@ -61,6 +61,10 @@ def main():
     oracle = not args.no_oracle
     if args.no_oracle:
         env["TPC_USE_ORACLE"] = "0"
+    if args.workers > 1 and "TPC_CP_SEARCH_WORKERS" not in env:
+        # Query-level sharding is the outer parallelism.  Keep each CP-SAT instance
+        # single-threaded by default to avoid N workers × 8 CP threads oversubscription.
+        env["TPC_CP_SEARCH_WORKERS"] = "1"
 
     if args.workers <= 1:
         cmd = _run_cmd(args.split, oracle, args.skip)

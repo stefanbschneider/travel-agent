@@ -7,79 +7,167 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "07:25",
-          "end_time": "08:43",
-          "start": "Guangzhou Baiyun International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 524.97,
-          "cost": 1049.94,
+          "type": "train",
+          "start_time": "07:16",
+          "end_time": "04:24",
+          "start": "Guangzhou Station",
+          "end": "Hangzhou South Railway Station",
+          "price": 419.25,
+          "cost": 838.5,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL292"
+          "TrainID": "K512"
         },
         {
-          "type": "lunch",
-          "position": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 468.0,
-          "cost": 936.0,
+          "type": "attraction",
+          "position": "Autumn Moon over the Calm Lake",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Xiaoshan International Airport",
-              "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
+              "start": "Hangzhou South Railway Station",
+              "end": "Autumn Moon over the Calm Lake",
               "mode": "taxi",
-              "start_time": "08:43",
-              "end_time": "09:26",
-              "distance": 28.82,
-              "price": 124.38,
-              "cost": 124.38,
+              "start_time": "04:24",
+              "end_time": "04:48",
+              "distance": 16.6,
+              "price": 69.39,
+              "cost": 69.39,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Lingyin Temple",
-          "start_time": "12:04",
-          "end_time": "13:34",
+          "position": "Asian Games Theme Park",
+          "start_time": "10:43",
+          "end_time": "12:13",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
-              "end": "Lingyin Temple",
+              "start": "Autumn Moon over the Calm Lake",
+              "end": "Asian Games Theme Park",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:04",
-              "distance": 2.75,
-              "price": 14.34,
-              "cost": 14.34,
+              "start_time": "10:30",
+              "end_time": "10:43",
+              "distance": 8.89,
+              "price": 35.8,
+              "cost": 35.8,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Runhexiang Small Pot Sweet Fermented Rice",
+          "start_time": "12:32",
+          "end_time": "13:32",
+          "price": 11.0,
+          "cost": 22.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Asian Games Theme Park",
+              "end": "Runhexiang Small Pot Sweet Fermented Rice",
+              "mode": "taxi",
+              "start_time": "12:13",
+              "end_time": "12:32",
+              "distance": 13.24,
+              "price": 54.27,
+              "cost": 54.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Grand View of Wu Hill",
+          "start_time": "13:45",
+          "end_time": "15:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Runhexiang Small Pot Sweet Fermented Rice",
+              "end": "Grand View of Wu Hill",
+              "mode": "taxi",
+              "start_time": "13:32",
+              "end_time": "13:45",
+              "distance": 8.7,
+              "price": 35.14,
+              "cost": 35.14,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Green Osmanthus Valley",
+          "start_time": "15:22",
+          "end_time": "16:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Grand View of Wu Hill",
+              "end": "Green Osmanthus Valley",
+              "mode": "taxi",
+              "start_time": "15:15",
+              "end_time": "15:22",
+              "distance": 5.1,
+              "price": 22.54,
+              "cost": 22.54,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Autumn Water Villa",
+          "start_time": "16:55",
+          "end_time": "18:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Green Osmanthus Valley",
+              "end": "Autumn Water Villa",
+              "mode": "taxi",
+              "start_time": "16:52",
+              "end_time": "16:55",
+              "distance": 2.29,
+              "price": 12.71,
+              "cost": 12.71,
               "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 873.0,
-          "cost": 1746.0,
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "18:30",
+          "end_time": "19:30",
+          "price": 10.0,
+          "cost": 20.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Lingyin Temple",
-              "end": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "start": "Autumn Water Villa",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
               "mode": "taxi",
-              "start_time": "13:34",
-              "end_time": "13:37",
-              "distance": 2.17,
-              "price": 12.3,
-              "cost": 12.3,
+              "start_time": "18:25",
+              "end_time": "18:30",
+              "distance": 3.64,
+              "price": 17.43,
+              "cost": 17.43,
               "cars": 1
             }
           ]
@@ -87,7 +175,7 @@
         {
           "type": "accommodation",
           "position": "Zhongshan West Lake Hotel Hangzhou",
-          "start_time": "18:05",
+          "start_time": "19:33",
           "end_time": "24:00",
           "price": 499.0,
           "cost": 998.0,
@@ -96,14 +184,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "start": "Grandma Sun's Scallion Pancake Rolls",
               "end": "Zhongshan West Lake Hotel Hangzhou",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:05",
-              "distance": 3.87,
-              "price": 18.23,
-              "cost": 18.23,
+              "start_time": "19:30",
+              "end_time": "19:33",
+              "distance": 2.16,
+              "price": 12.25,
+              "cost": 12.25,
               "cars": 1
             }
           ]
@@ -124,43 +212,21 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "West Lake Scenic Area",
-          "start_time": "08:37",
-          "end_time": "10:07",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 8.0,
+          "cost": 16.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Zhongshan West Lake Hotel Hangzhou",
-              "end": "West Lake Scenic Area",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:37",
-              "distance": 4.89,
-              "price": 21.82,
-              "cost": 21.82,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Tea Village: The Essence of Jiangnan",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 138.0,
-          "cost": 276.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "West Lake Scenic Area",
-              "end": "Tea Village: The Essence of Jiangnan",
-              "mode": "taxi",
-              "start_time": "10:07",
-              "end_time": "10:08",
-              "distance": 0.76,
+              "end_time": "08:30",
+              "distance": 0.62,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -168,32 +234,137 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:12",
-          "end_time": "18:30",
-          "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Guangzhou Baiyun International Airport",
-          "price": 491.36,
-          "cost": 982.72,
+          "type": "attraction",
+          "position": "Hangzhou Confucius Temple",
+          "start_time": "12:07",
+          "end_time": "13:37",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Tea Village: The Essence of Jiangnan",
-              "end": "Hangzhou Xiaoshan International Airport",
-              "mode": "taxi",
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:45",
-              "distance": 30.08,
-              "price": 130.06,
-              "cost": 130.06,
+              "end_time": "12:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:05",
+              "distance": 1.03,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Hangzhou Confucius Temple",
+              "mode": "walk",
+              "start_time": "12:05",
+              "end_time": "12:07",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hangzhou Museum",
+          "start_time": "13:43",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Confucius Temple",
+              "end": "Hangzhou Museum",
+              "mode": "walk",
+              "start_time": "13:37",
+              "end_time": "13:43",
+              "distance": 0.566632441352035,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jiande Steamed Buns (Fengqi Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Museum",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:19",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:19",
+              "end_time": "15:23",
+              "distance": 2.03,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Jiande Steamed Buns (Fengqi Road Branch)",
+              "mode": "walk",
+              "start_time": "15:23",
+              "end_time": "15:27",
+              "distance": 0.35,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "19:49",
+          "end_time": "15:04",
+          "start": "Hangzhou South Railway Station",
+          "end": "Guangzhou Station",
+          "price": 419.25,
+          "cost": 838.5,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiande Steamed Buns (Fengqi Road Branch)",
+              "end": "Hangzhou South Railway Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:23",
+              "distance": 15.93,
+              "price": 66.36,
+              "cost": 66.36,
               "cars": 1
             }
           ],
-          "FlightID": "FL512"
+          "TrainID": "K511"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03462409973144531,
-  "_eval_score": 94.56292517006803
+  "elapsed_time(sec)": 4.776892185211182,
+  "_eval_score": 98.54166666666666
 }

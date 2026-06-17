@@ -21,51 +21,175 @@
         {
           "type": "attraction",
           "position": "Maple Bridge Scenic Area",
-          "start_time": "13:36",
-          "end_time": "15:06",
+          "start_time": "14:05",
+          "end_time": "15:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Suzhou North Station",
-              "end": "Maple Bridge Scenic Area",
-              "mode": "taxi",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "13:16",
-              "end_time": "13:36",
-              "distance": 13.53,
-              "price": 55.57,
-              "cost": 55.57,
-              "cars": 1
+              "end_time": "13:17",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "West Ring Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:17",
+              "end_time": "13:46",
+              "distance": 14.81,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "West Ring Road-Metro Station",
+              "end": "Maple Bridge Scenic Area",
+              "mode": "walk",
+              "start_time": "13:46",
+              "end_time": "14:05",
+              "distance": 1.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shantang Street",
+          "start_time": "16:09",
+          "end_time": "17:39",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Maple Bridge Scenic Area",
+              "end": "West Ring Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:54",
+              "distance": 1.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Ring Road-Metro Station",
+              "end": "Shantang Street-Metro Station",
+              "mode": "metro",
+              "start_time": "15:54",
+              "end_time": "16:00",
+              "distance": 3.1,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Shantang Street",
+              "mode": "walk",
+              "start_time": "16:00",
+              "end_time": "16:09",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Shangri-La Hotel Suzhou · Shang Palace",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:59",
+          "end_time": "18:59",
           "price": 231.0,
           "cost": 693.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Maple Bridge Scenic Area",
+              "start": "Shantang Street",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "17:39",
+              "end_time": "17:48",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Lion Mountain Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:48",
+              "end_time": "17:58",
+              "distance": 5.0,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Lion Mountain Road-Metro Station",
               "end": "Shangri-La Hotel Suzhou · Shang Palace",
-              "mode": "taxi",
-              "start_time": "15:06",
-              "end_time": "15:10",
-              "distance": 2.92,
-              "price": 14.94,
-              "cost": 14.94,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:58",
+              "end_time": "17:59",
+              "distance": 0.1,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Pingjiang Road Historic District",
+          "start_time": "19:28",
+          "end_time": "20:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Lion Mountain Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:59",
+              "end_time": "19:00",
+              "distance": 0.1,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lion Mountain Road-Metro Station",
+              "end": "Xiangmen-Metro Station",
+              "mode": "metro",
+              "start_time": "19:00",
+              "end_time": "19:15",
+              "distance": 7.79,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Xiangmen-Metro Station",
+              "end": "Pingjiang Road Historic District",
+              "mode": "walk",
+              "start_time": "19:15",
+              "end_time": "19:28",
+              "distance": 1.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Jinke Grand Hotel",
-          "start_time": "18:24",
+          "start_time": "21:39",
           "end_time": "24:00",
           "price": 526.0,
           "cost": 1052.0,
@@ -74,15 +198,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "start": "Pingjiang Road Historic District",
+              "end": "Xiangmen-Metro Station",
+              "mode": "walk",
+              "start_time": "20:58",
+              "end_time": "21:11",
+              "distance": 1.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiangmen-Metro Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "21:11",
+              "end_time": "21:35",
+              "distance": 12.43,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
               "end": "Jinke Grand Hotel",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:24",
-              "distance": 16.17,
-              "price": 67.46,
-              "cost": 67.46,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "21:35",
+              "end_time": "21:39",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -103,45 +247,169 @@
         },
         {
           "type": "attraction",
-          "position": "Shantang Street",
-          "start_time": "08:46",
-          "end_time": "10:16",
+          "position": "Golden Rooster Lake",
+          "start_time": "09:06",
+          "end_time": "10:36",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Jinke Grand Hotel",
-              "end": "Shantang Street",
-              "mode": "taxi",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:46",
-              "distance": 11.09,
-              "price": 44.59,
-              "cost": 44.59,
-              "cars": 1
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "Cultural Expo Center-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "08:58",
+              "distance": 12.3,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Cultural Expo Center-Metro Station",
+              "end": "Golden Rooster Lake",
+              "mode": "walk",
+              "start_time": "08:58",
+              "end_time": "09:06",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Water Tour",
+          "start_time": "11:06",
+          "end_time": "12:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Golden Rooster Lake",
+              "end": "Cultural Expo Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:36",
+              "end_time": "10:44",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Cultural Expo Center-Metro Station",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "metro",
+              "start_time": "10:44",
+              "end_time": "11:00",
+              "distance": 8.17,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Suzhou Water Tour",
+              "mode": "walk",
+              "start_time": "11:00",
+              "end_time": "11:06",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "12:59",
+          "end_time": "13:59",
           "price": 168.0,
           "cost": 504.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shantang Street",
+              "start": "Suzhou Water Tour",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "walk",
+              "start_time": "12:36",
+              "end_time": "12:42",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Oriental Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "12:42",
+              "end_time": "12:53",
+              "distance": 5.66,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Oriental Gate-Metro Station",
               "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-              "mode": "taxi",
-              "start_time": "10:16",
-              "end_time": "10:26",
-              "distance": 6.94,
-              "price": 29.01,
-              "cost": 29.01,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:53",
+              "end_time": "12:59",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "A Hidden Wonderland",
+          "start_time": "14:38",
+          "end_time": "16:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+              "end": "Oriental Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "13:59",
+              "end_time": "14:05",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Oriental Gate-Metro Station",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:05",
+              "end_time": "14:26",
+              "distance": 10.9,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "A Hidden Wonderland",
+              "mode": "walk",
+              "start_time": "14:26",
+              "end_time": "14:38",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -156,15 +424,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+              "start": "A Hidden Wonderland",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:38",
+              "end_time": "16:50",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:50",
+              "end_time": "16:55",
+              "distance": 2.78,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
               "end": "Suzhou North Station",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:17",
-              "distance": 11.83,
-              "price": 47.92,
-              "cost": 47.92,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:55",
+              "end_time": "16:56",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G24"
@@ -172,6 +460,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.029819011688232422,
-  "_eval_score": 93.7420634920635
+  "elapsed_time(sec)": 1.6624550819396973,
+  "_eval_score": 95.4452380952381
 }

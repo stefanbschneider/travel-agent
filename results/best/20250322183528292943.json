@@ -19,31 +19,135 @@
           "FlightID": "FL657"
         },
         {
-          "type": "lunch",
-          "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 337.0,
-          "cost": 1685.0,
+          "type": "attraction",
+          "position": "The Palace Museum",
+          "start_time": "10:49",
+          "end_time": "12:19",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Beijing Daxing International Airport",
-              "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
               "start_time": "09:00",
-              "end_time": "10:05",
-              "distance": 43.82,
-              "price": 191.88,
-              "cost": 191.88,
-              "cars": 1
+              "end_time": "09:11",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "09:11",
+              "end_time": "10:42",
+              "distance": 45.78,
+              "price": 8,
+              "cost": 40,
+              "tickets": 5
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "The Palace Museum",
+              "mode": "walk",
+              "start_time": "10:42",
+              "end_time": "10:49",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "National Museum of China",
+          "start_time": "12:34",
+          "end_time": "14:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "The Palace Museum",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "walk",
+              "start_time": "12:19",
+              "end_time": "12:26",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Wangfujing-Metro Station",
+              "mode": "metro",
+              "start_time": "12:26",
+              "end_time": "12:29",
+              "distance": 1.74,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Wangfujing-Metro Station",
+              "end": "National Museum of China",
+              "mode": "walk",
+              "start_time": "12:29",
+              "end_time": "12:34",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Old Summer Palace",
+          "start_time": "14:57",
+          "end_time": "16:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "National Museum of China",
+              "end": "Wangfujing-Metro Station",
+              "mode": "walk",
+              "start_time": "14:04",
+              "end_time": "14:09",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangfujing-Metro Station",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "metro",
+              "start_time": "14:09",
+              "end_time": "14:35",
+              "distance": 13.36,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Old Summer Palace",
+              "mode": "walk",
+              "start_time": "14:35",
+              "end_time": "14:57",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
           "position": "Mumian Beijing Daxing International Airport",
-          "start_time": "13:03",
+          "start_time": "18:44",
           "end_time": "24:00",
           "price": 729.0,
           "cost": 3645.0,
@@ -52,15 +156,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Tidu (Beijing Fang Branch)",
+              "start": "Old Summer Palace",
+              "end": "Old Summer Palace-Metro Station",
+              "mode": "walk",
+              "start_time": "16:27",
+              "end_time": "16:49",
+              "distance": 1.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Old Summer Palace-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:49",
+              "end_time": "18:38",
+              "distance": 54.98,
+              "price": 9,
+              "cost": 45,
+              "tickets": 5
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
               "end": "Mumian Beijing Daxing International Airport",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "13:03",
-              "distance": 42.35,
-              "price": 185.26,
-              "cost": 185.26,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:38",
+              "end_time": "18:44",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -69,6 +193,184 @@
     {
       "day": 2,
       "activities": [
+        {
+          "type": "breakfast",
+          "position": "Mumian Beijing Daxing International Airport",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Olympic Park",
+          "start_time": "10:33",
+          "end_time": "12:03",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Mumian Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:36",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Olympic Park-Metro Station",
+              "mode": "metro",
+              "start_time": "08:36",
+              "end_time": "10:25",
+              "distance": 54.54,
+              "price": 9,
+              "cost": 45,
+              "tickets": 5
+            },
+            {
+              "start": "Olympic Park-Metro Station",
+              "end": "Olympic Park",
+              "mode": "walk",
+              "start_time": "10:25",
+              "end_time": "10:33",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Tiananmen Square",
+          "start_time": "12:36",
+          "end_time": "14:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Olympic Park",
+              "end": "Olympic Park-Metro Station",
+              "mode": "walk",
+              "start_time": "12:03",
+              "end_time": "12:11",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Olympic Park-Metro Station",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "metro",
+              "start_time": "12:11",
+              "end_time": "12:32",
+              "distance": 10.52,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Tiananmen Square",
+              "mode": "walk",
+              "start_time": "12:32",
+              "end_time": "12:36",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao Guo Temple",
+          "start_time": "14:20",
+          "end_time": "16:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "walk",
+              "start_time": "14:06",
+              "end_time": "14:10",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Changchun Street-Metro Station",
+              "mode": "metro",
+              "start_time": "14:10",
+              "end_time": "14:16",
+              "distance": 3.37,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Bao Guo Temple",
+              "mode": "walk",
+              "start_time": "14:16",
+              "end_time": "14:20",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 35.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Bao Guo Temple",
+              "end": "Changchun Street-Metro Station",
+              "mode": "walk",
+              "start_time": "16:20",
+              "end_time": "16:24",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Dongsi-Metro Station",
+              "mode": "metro",
+              "start_time": "16:24",
+              "end_time": "16:34",
+              "distance": 5.39,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Dongsi-Metro Station",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "16:34",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
         {
           "type": "airplane",
           "start_time": "19:54",
@@ -80,15 +382,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Mumian Beijing Daxing International Airport",
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Dongsi-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:00",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongsi-Metro Station",
+              "end": "Terminal 2-Metro Station",
+              "mode": "metro",
+              "start_time": "18:00",
+              "end_time": "18:45",
+              "distance": 22.81,
+              "price": 6,
+              "cost": 30,
+              "tickets": 5
+            },
+            {
+              "start": "Terminal 2-Metro Station",
               "end": "Beijing Capital International Airport",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "10:06",
-              "distance": 64.65,
-              "price": 285.62,
-              "cost": 285.62,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:45",
+              "end_time": "18:55",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL160"
@@ -96,6 +418,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.031723976135253906,
-  "_eval_score": 87.9920634920635
+  "elapsed_time(sec)": 2.4456212520599365,
+  "_eval_score": 93.20502645502646
 }

@@ -21,19 +21,40 @@
                 {
                     "type": "lunch",
                     "position": "Yong Fu (Huangpu Branch)",
-                    "start_time": "11:30",
-                    "end_time": "12:30",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
                     "price": 600.0,
                     "cost": 2400.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Shanghai Hongqiao International Airport",
-                            "end": "Yong Fu (Huangpu Branch)",
+                            "end": "Hongqiao Terminal 1-Metro Station",
                             "mode": "walk",
                             "start_time": "09:09",
-                            "end_time": "11:30",
-                            "distance": 11.787986086518526,
+                            "end_time": "09:18",
+                            "distance": 0.78,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongqiao Terminal 1-Metro Station",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "09:18",
+                            "end_time": "09:41",
+                            "distance": 11.59,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
+                            "end": "Yong Fu (Huangpu Branch)",
+                            "mode": "walk",
+                            "start_time": "09:41",
+                            "end_time": "09:44",
+                            "distance": 0.31,
                             "price": 0,
                             "cost": 0
                         }
@@ -42,19 +63,124 @@
                 {
                     "type": "attraction",
                     "position": "The Bund",
-                    "start_time": "13:20",
-                    "end_time": "14:50",
+                    "start_time": "12:19",
+                    "end_time": "13:49",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
                             "start": "Yong Fu (Huangpu Branch)",
+                            "end": "Middle Huaihai Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:00",
+                            "end_time": "12:03",
+                            "distance": 0.31,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Middle Huaihai Road-Metro Station",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:03",
+                            "end_time": "12:11",
+                            "distance": 4.13,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
                             "end": "The Bund",
                             "mode": "walk",
-                            "start_time": "12:30",
-                            "end_time": "13:20",
-                            "distance": 4.22759914330109,
+                            "start_time": "12:11",
+                            "end_time": "12:19",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Huangpu River",
+                    "start_time": "14:07",
+                    "end_time": "15:37",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "The Bund",
+                            "end": "Lujiazui-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:49",
+                            "end_time": "13:57",
+                            "distance": 0.74,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Lujiazui-Metro Station",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:57",
+                            "end_time": "13:59",
+                            "distance": 1.37,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Huangpu River",
+                            "mode": "walk",
+                            "start_time": "13:59",
+                            "end_time": "14:07",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Nanjing Road Pedestrian Street",
+                    "start_time": "15:57",
+                    "end_time": "17:27",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Huangpu River",
+                            "end": "International Passenger Transport Center-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:37",
+                            "end_time": "15:45",
+                            "distance": 0.68,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "International Passenger Transport Center-Metro Station",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:45",
+                            "end_time": "15:48",
+                            "distance": 1.66,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Nanjing Road Pedestrian Street",
+                            "mode": "walk",
+                            "start_time": "15:48",
+                            "end_time": "15:57",
+                            "distance": 0.8,
                             "price": 0,
                             "cost": 0
                         }
@@ -63,19 +189,40 @@
                 {
                     "type": "dinner",
                     "position": "Fu He Hui",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
+                    "start_time": "17:49",
+                    "end_time": "18:49",
                     "price": 1280.0,
                     "cost": 5120.0,
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "The Bund",
+                            "start": "Nanjing Road Pedestrian Street",
+                            "end": "Tiantong Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:27",
+                            "end_time": "17:36",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Tiantong Road-Metro Station",
+                            "end": "Jiangsu Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:36",
+                            "end_time": "17:47",
+                            "distance": 5.57,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Jiangsu Road-Metro Station",
                             "end": "Fu He Hui",
                             "mode": "walk",
-                            "start_time": "14:50",
-                            "end_time": "16:13",
-                            "distance": 6.995081601897573,
+                            "start_time": "17:47",
+                            "end_time": "17:49",
+                            "distance": 0.22,
                             "price": 0,
                             "cost": 0
                         }
@@ -84,7 +231,7 @@
                 {
                     "type": "accommodation",
                     "position": "Fairmont Peace Hotel",
-                    "start_time": "19:13",
+                    "start_time": "19:07",
                     "end_time": "24:00",
                     "price": 2527.0,
                     "cost": 10108.0,
@@ -94,11 +241,32 @@
                     "transports": [
                         {
                             "start": "Fu He Hui",
+                            "end": "Jiangsu Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:49",
+                            "end_time": "18:51",
+                            "distance": 0.22,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiangsu Road-Metro Station",
+                            "end": "East Nanjing Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:51",
+                            "end_time": "19:02",
+                            "distance": 5.5,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "East Nanjing Road-Metro Station",
                             "end": "Fairmont Peace Hotel",
                             "mode": "walk",
-                            "start_time": "18:00",
-                            "end_time": "19:13",
-                            "distance": 6.125658594798075,
+                            "start_time": "19:02",
+                            "end_time": "19:07",
+                            "distance": 0.47,
                             "price": 0,
                             "cost": 0
                         }
@@ -121,7 +289,7 @@
                 },
                 {
                     "type": "attraction",
-                    "position": "Huangpu River",
+                    "position": "Lujiazui",
                     "start_time": "08:43",
                     "end_time": "10:13",
                     "price": 0.0,
@@ -130,11 +298,137 @@
                     "transports": [
                         {
                             "start": "Fairmont Peace Hotel",
-                            "end": "Huangpu River",
+                            "end": "East Nanjing Road-Metro Station",
                             "mode": "walk",
                             "start_time": "08:30",
+                            "end_time": "08:35",
+                            "distance": 0.47,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "East Nanjing Road-Metro Station",
+                            "end": "Pudong South Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "08:35",
+                            "end_time": "08:40",
+                            "distance": 2.65,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Pudong South Road-Metro Station",
+                            "end": "Lujiazui",
+                            "mode": "walk",
+                            "start_time": "08:40",
                             "end_time": "08:43",
-                            "distance": 1.1197340522337846,
+                            "distance": 0.27,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Shanghai Natural History Museum",
+                    "start_time": "10:26",
+                    "end_time": "11:56",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Lujiazui",
+                            "end": "Pudong South Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "10:13",
+                            "end_time": "10:16",
+                            "distance": 0.27,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Pudong South Road-Metro Station",
+                            "end": "Qufu Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "10:16",
+                            "end_time": "10:23",
+                            "distance": 3.92,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Qufu Road-Metro Station",
+                            "end": "Shanghai Natural History Museum",
+                            "mode": "walk",
+                            "start_time": "10:23",
+                            "end_time": "10:26",
+                            "distance": 0.26,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Jing'an Sculpture Park",
+                    "start_time": "11:57",
+                    "end_time": "13:27",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Shanghai Natural History Museum",
+                            "end": "Jing'an Sculpture Park",
+                            "mode": "walk",
+                            "start_time": "11:56",
+                            "end_time": "11:57",
+                            "distance": 0.12858341250570846,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Huaihai Road",
+                    "start_time": "13:36",
+                    "end_time": "15:06",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Jing'an Sculpture Park",
+                            "end": "Qufu Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:27",
+                            "end_time": "13:29",
+                            "distance": 0.18,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qufu Road-Metro Station",
+                            "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:29",
+                            "end_time": "13:33",
+                            "distance": 2.05,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "end": "Huaihai Road",
+                            "mode": "walk",
+                            "start_time": "13:33",
+                            "end_time": "13:36",
+                            "distance": 0.33,
                             "price": 0,
                             "cost": 0
                         }
@@ -151,12 +445,33 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Huangpu River",
+                            "start": "Huaihai Road",
+                            "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:06",
+                            "end_time": "15:09",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:09",
+                            "end_time": "16:14",
+                            "distance": 32.73,
+                            "price": 7,
+                            "cost": 28,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "10:13",
-                            "end_time": "16:36",
-                            "distance": 31.974506635805522,
+                            "start_time": "16:14",
+                            "end_time": "16:29",
+                            "distance": 1.27,
                             "price": 0,
                             "cost": 0
                         }
@@ -166,5 +481,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 0.2406148910522461
+    "elapsed_time(sec)": 13.236967325210571
 }
