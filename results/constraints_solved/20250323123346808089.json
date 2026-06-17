@@ -7,79 +7,118 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "airplane",
-                    "start_time": "07:09",
-                    "end_time": "09:04",
-                    "start": "Hangzhou Xiaoshan International Airport",
-                    "end": "Chengdu Shuangliu International Airport",
-                    "price": 791.78,
-                    "cost": 2375.34,
+                    "type": "train",
+                    "start_time": "12:26",
+                    "end_time": "16:48",
+                    "start": "Hangzhou Railway Station",
+                    "end": "Chengdu East Railway Station",
+                    "price": 616.66,
+                    "cost": 1849.98,
                     "tickets": 3,
                     "transports": [],
-                    "FlightID": "FL533"
+                    "TrainID": "K529"
+                },
+                {
+                    "type": "attraction",
+                    "position": "Anlan Bridge",
+                    "start_time": "18:26",
+                    "end_time": "19:56",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Chengdu East Railway Station",
+                            "end": "Anlan Bridge",
+                            "mode": "taxi",
+                            "start_time": "16:48",
+                            "end_time": "18:26",
+                            "distance": 65.73,
+                            "price": 290.48,
+                            "cost": 290.48,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Another Village",
+                    "start_time": "20:18",
+                    "end_time": "21:48",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Anlan Bridge",
+                            "end": "Another Village",
+                            "mode": "taxi",
+                            "start_time": "19:56",
+                            "end_time": "20:18",
+                            "distance": 15.09,
+                            "price": 62.61,
+                            "cost": 62.61,
+                            "cars": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
+                    "start_time": "23:18",
+                    "end_time": "24:00",
+                    "price": 167.0,
+                    "cost": 334.0,
+                    "rooms": 2,
+                    "room_type": 2,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Another Village",
+                            "end": "Quigg Hotel (Chengdu Shuangliu Airport)",
+                            "mode": "taxi",
+                            "start_time": "21:48",
+                            "end_time": "23:18",
+                            "distance": 60.13,
+                            "price": 265.29,
+                            "cost": 265.29,
+                            "cars": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "day": 2,
+            "activities": [
+                {
+                    "type": "breakfast",
+                    "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
+                    "start_time": "07:30",
+                    "end_time": "08:30",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 0,
+                    "transports": []
                 },
                 {
                     "type": "lunch",
-                    "position": "Crane's Call Tea House (People's Park Branch)",
+                    "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
                     "start_time": "11:00",
                     "end_time": "12:00",
-                    "price": 45.0,
-                    "cost": 135.0,
+                    "price": 6.0,
+                    "cost": 18.0,
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Chengdu Shuangliu International Airport",
-                            "end": "Crane's Call Tea House (People's Park Branch)",
+                            "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+                            "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
                             "mode": "taxi",
-                            "start_time": "09:04",
-                            "end_time": "09:26",
-                            "distance": 14.93,
-                            "price": 61.87,
-                            "cost": 61.87,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Chengdu Museum",
-                    "start_time": "12:01",
-                    "end_time": "13:31",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Crane's Call Tea House (People's Park Branch)",
-                            "end": "Chengdu Museum",
-                            "mode": "taxi",
-                            "start_time": "12:00",
-                            "end_time": "12:01",
-                            "distance": 1.33,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Manjushri Lane",
-                    "start_time": "13:33",
-                    "end_time": "15:03",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Chengdu Museum",
-                            "end": "Manjushri Lane",
-                            "mode": "taxi",
-                            "start_time": "13:31",
-                            "end_time": "13:33",
-                            "distance": 1.95,
-                            "price": 11.51,
-                            "cost": 11.51,
+                            "start_time": "08:30",
+                            "end_time": "08:47",
+                            "distance": 11.47,
+                            "price": 46.34,
+                            "cost": 46.34,
                             "cars": 1
                         }
                     ]
@@ -94,127 +133,44 @@
                     "tickets": 3,
                     "transports": [
                         {
-                            "start": "Manjushri Lane",
+                            "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
                             "end": "Hawaii Global Seafood Artistry (High-Tech Branch)",
                             "mode": "taxi",
-                            "start_time": "15:03",
-                            "end_time": "15:19",
-                            "distance": 11.3,
-                            "price": 45.53,
-                            "cost": 45.53,
+                            "start_time": "12:00",
+                            "end_time": "12:15",
+                            "distance": 10.51,
+                            "price": 41.98,
+                            "cost": 41.98,
                             "cars": 1
                         }
                     ]
                 },
                 {
-                    "type": "accommodation",
-                    "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
-                    "start_time": "18:13",
-                    "end_time": "24:00",
-                    "price": 427.0,
-                    "cost": 854.0,
-                    "rooms": 2,
-                    "room_type": 2,
-                    "tickets": 2,
+                    "type": "train",
+                    "start_time": "18:57",
+                    "end_time": "05:24",
+                    "start": "Chengdu West Railway Station",
+                    "end": "Hangzhou South Railway Station",
+                    "price": 616.66,
+                    "cost": 1849.98,
+                    "tickets": 3,
                     "transports": [
                         {
                             "start": "Hawaii Global Seafood Artistry (High-Tech Branch)",
-                            "end": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+                            "end": "Chengdu West Railway Station",
                             "mode": "taxi",
                             "start_time": "18:00",
-                            "end_time": "18:13",
-                            "distance": 9.01,
-                            "price": 36.25,
-                            "cost": 36.25,
-                            "cars": 1
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "day": 2,
-            "activities": [
-                {
-                    "type": "breakfast",
-                    "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
-                    "start_time": "07:30",
-                    "end_time": "08:30",
-                    "price": 0,
-                    "cost": 0,
-                    "tickets": 0,
-                    "transports": []
-                },
-                {
-                    "type": "attraction",
-                    "position": "Panda Valley",
-                    "start_time": "09:55",
-                    "end_time": "11:25",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
-                            "end": "Panda Valley",
-                            "mode": "taxi",
-                            "start_time": "08:30",
-                            "end_time": "09:55",
-                            "distance": 56.82,
-                            "price": 250.4,
-                            "cost": 250.4,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Manjushri Temple",
-                    "start_time": "12:49",
-                    "end_time": "14:19",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Panda Valley",
-                            "end": "Manjushri Temple",
-                            "mode": "taxi",
-                            "start_time": "11:25",
-                            "end_time": "12:49",
-                            "distance": 56.02,
-                            "price": 246.8,
-                            "cost": 246.8,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "airplane",
-                    "start_time": "17:13",
-                    "end_time": "19:08",
-                    "start": "Chengdu Tianfu International Airport",
-                    "end": "Hangzhou Xiaoshan International Airport",
-                    "price": 819.12,
-                    "cost": 2457.36,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Manjushri Temple",
-                            "end": "Chengdu Tianfu International Airport",
-                            "mode": "taxi",
-                            "start_time": "14:19",
-                            "end_time": "15:43",
-                            "distance": 56.06,
-                            "price": 246.97,
-                            "cost": 246.97,
+                            "end_time": "18:20",
+                            "distance": 13.96,
+                            "price": 57.53,
+                            "cost": 57.53,
                             "cars": 1
                         }
                     ],
-                    "FlightID": "FL452"
+                    "TrainID": "K353"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 14.086225986480713
+    "elapsed_time(sec)": 9.892526149749756
 }

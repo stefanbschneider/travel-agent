@@ -52,7 +52,7 @@ def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_s
         return None
 
     start = time.time()
-    templates = (2, 3, 4)
+    templates = (4, 3, 2)
     for index, attr_slots_per_day in enumerate(templates):
         remaining = float(time_limit_sec) - (time.time() - start)
         if remaining <= 0.2:
