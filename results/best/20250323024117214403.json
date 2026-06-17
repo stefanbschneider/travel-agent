@@ -641,13 +641,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "19:04",
-          "start": "Chongqing West Railway Station",
-          "end": "Chengdu South Railway Station",
-          "price": 171.7,
-          "cost": 515.0999999999999,
+          "type": "attraction",
+          "position": "1941 Teahouse and Theater",
+          "start_time": "12:31",
+          "end_time": "14:01",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -662,11 +661,75 @@
             },
             {
               "start": "Linjiangmen-Metro Station",
-              "end": "Chongqing West Railway Station-Metro Station",
+              "end": "Xiaoshizi-Metro Station",
               "mode": "metro",
               "start_time": "12:27",
-              "end_time": "12:56",
-              "distance": 14.6,
+              "end_time": "12:28",
+              "distance": 0.93,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Xiaoshizi-Metro Station",
+              "end": "1941 Teahouse and Theater",
+              "mode": "walk",
+              "start_time": "12:28",
+              "end_time": "12:31",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+          "start_time": "14:05",
+          "end_time": "15:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "1941 Teahouse and Theater",
+              "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+              "mode": "walk",
+              "start_time": "14:01",
+              "end_time": "14:05",
+              "distance": 0.36145056401420345,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "19:04",
+          "start": "Chongqing West Railway Station",
+          "end": "Chengdu South Railway Station",
+          "price": 171.7,
+          "cost": 515.0999999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+              "end": "Xiaoshizi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:36",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshizi-Metro Station",
+              "end": "Chongqing West Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:36",
+              "end_time": "16:07",
+              "distance": 15.5,
               "price": 5,
               "cost": 15,
               "tickets": 3
@@ -675,8 +738,8 @@
               "start": "Chongqing West Railway Station-Metro Station",
               "end": "Chongqing West Railway Station",
               "mode": "walk",
-              "start_time": "12:56",
-              "end_time": "12:57",
+              "start_time": "16:07",
+              "end_time": "16:08",
               "distance": 0.1,
               "price": 0,
               "cost": 0
@@ -688,5 +751,5 @@
     }
   ],
   "elapsed_time(sec)": 12.953267812728882,
-  "_eval_score": 96.30714285714285
+  "_eval_score": 97.25233426704015
 }

@@ -103,12 +103,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 290.0,
-          "cost": 1160.0,
+          "type": "attraction",
+          "position": "Eileen Chang's Former Residence",
+          "start_time": "14:46",
+          "end_time": "16:46",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -123,11 +123,53 @@
             },
             {
               "start": "Qufu Road-Metro Station",
-              "end": "People's Square-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
               "mode": "metro",
               "start_time": "14:37",
-              "end_time": "14:39",
-              "distance": 1.12,
+              "end_time": "14:40",
+              "distance": 1.77,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Eileen Chang's Former Residence",
+              "mode": "walk",
+              "start_time": "14:40",
+              "end_time": "14:46",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 290.0,
+          "cost": 1160.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Eileen Chang's Former Residence",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:46",
+              "end_time": "16:52",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "People's Square-Metro Station",
+              "mode": "metro",
+              "start_time": "16:52",
+              "end_time": "16:54",
+              "distance": 1.48,
               "price": 2,
               "cost": 8,
               "tickets": 4
@@ -136,8 +178,8 @@
               "start": "People's Square-Metro Station",
               "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
               "mode": "walk",
-              "start_time": "14:39",
-              "end_time": "14:45",
+              "start_time": "16:54",
+              "end_time": "17:00",
               "distance": 0.55,
               "price": 0,
               "cost": 0
@@ -431,13 +473,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "lunch",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "11:39",
+          "end_time": "12:39",
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
@@ -452,21 +493,106 @@
             },
             {
               "start": "East Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
               "start_time": "11:15",
-              "end_time": "12:19",
-              "distance": 32.08,
-              "price": 7,
-              "cost": 28,
+              "end_time": "11:29",
+              "distance": 7.36,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "walk",
+              "start_time": "11:29",
+              "end_time": "11:39",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Modern and Contemporary Press and Publication Museum",
+          "start_time": "13:34",
+          "end_time": "15:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:39",
+              "end_time": "12:49",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Zhanghuabang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:49",
+              "end_time": "13:05",
+              "distance": 8.44,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Zhanghuabang-Metro Station",
+              "end": "China Modern and Contemporary Press and Publication Museum",
+              "mode": "walk",
+              "start_time": "13:05",
+              "end_time": "13:34",
+              "distance": 2.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 2330.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Modern and Contemporary Press and Publication Museum",
+              "end": "Zhanghuabang-Metro Station",
+              "mode": "walk",
+              "start_time": "15:34",
+              "end_time": "16:03",
+              "distance": 2.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhanghuabang-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:03",
+              "end_time": "17:17",
+              "distance": 37.17,
+              "price": 8,
+              "cost": 32,
               "tickets": 4
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "12:19",
-              "end_time": "12:34",
+              "start_time": "17:17",
+              "end_time": "17:32",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -478,5 +604,5 @@
     }
   ],
   "elapsed_time(sec)": 5.790332317352295,
-  "_eval_score": 92.65396825396826
+  "_eval_score": 94.13369963369964
 }

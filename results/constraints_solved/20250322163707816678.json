@@ -372,13 +372,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:23",
-                    "end_time": "21:33",
-                    "start": "Suzhou North Station",
-                    "end": "Beijing South Railway Station",
-                    "price": 668.44,
-                    "cost": 668.44,
+                    "type": "attraction",
+                    "position": "Gun Hall No. 1 Live Fire Shooting Club",
+                    "start_time": "14:20",
+                    "end_time": "15:50",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -393,21 +392,64 @@
                         },
                         {
                             "start": "Xingbo Street-Metro Station",
-                            "end": "Suzhou North Railway Station-Metro Station",
+                            "end": "Ligongdi West-Metro Station",
                             "mode": "metro",
                             "start_time": "14:07",
-                            "end_time": "14:35",
-                            "distance": 14.45,
-                            "price": 5,
-                            "cost": 5,
+                            "end_time": "14:09",
+                            "distance": 1.3,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Ligongdi West-Metro Station",
+                            "end": "Gun Hall No. 1 Live Fire Shooting Club",
+                            "mode": "walk",
+                            "start_time": "14:09",
+                            "end_time": "14:20",
+                            "distance": 0.96,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:23",
+                    "end_time": "21:33",
+                    "start": "Suzhou North Station",
+                    "end": "Beijing South Railway Station",
+                    "price": 668.44,
+                    "cost": 668.44,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Gun Hall No. 1 Live Fire Shooting Club",
+                            "end": "Ligongdi West-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:50",
+                            "end_time": "16:01",
+                            "distance": 0.96,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Ligongdi West-Metro Station",
+                            "end": "Suzhou North Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:01",
+                            "end_time": "16:27",
+                            "distance": 13.18,
+                            "price": 4,
+                            "cost": 4,
                             "tickets": 1
                         },
                         {
                             "start": "Suzhou North Railway Station-Metro Station",
                             "end": "Suzhou North Station",
                             "mode": "walk",
-                            "start_time": "14:35",
-                            "end_time": "14:36",
+                            "start_time": "16:27",
+                            "end_time": "16:28",
                             "distance": 0.14,
                             "price": 0,
                             "cost": 0
@@ -418,5 +460,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.5251009464263916
+    "elapsed_time(sec)": 6.118897199630737
 }

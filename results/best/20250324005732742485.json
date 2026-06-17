@@ -973,13 +973,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:12",
-          "end_time": "22:55",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "attraction",
+          "position": "5D Starry Sky Illusion Art Museum",
+          "start_time": "14:21",
+          "end_time": "16:21",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -994,21 +993,64 @@
             },
             {
               "start": "Tangjiadun-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "end": "Dazhi Road-Metro Station",
               "mode": "metro",
               "start_time": "14:08",
-              "end_time": "14:37",
-              "distance": 14.97,
-              "price": 5,
-              "cost": 25,
+              "end_time": "14:15",
+              "distance": 3.59,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "5D Starry Sky Illusion Art Museum",
+              "mode": "walk",
+              "start_time": "14:15",
+              "end_time": "14:21",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:12",
+          "end_time": "22:55",
+          "start": "Wuhan Station",
+          "end": "Beijing West Railway Station",
+          "price": 684.27,
+          "cost": 3421.35,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "5D Starry Sky Illusion Art Museum",
+              "end": "Dazhi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:21",
+              "end_time": "16:27",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "Wuhan Station East Square-Metro Station",
+              "mode": "metro",
+              "start_time": "16:27",
+              "end_time": "16:52",
+              "distance": 12.74,
+              "price": 4,
+              "cost": 20,
               "tickets": 5
             },
             {
               "start": "Wuhan Station East Square-Metro Station",
               "end": "Wuhan Station",
               "mode": "walk",
-              "start_time": "14:37",
-              "end_time": "14:39",
+              "start_time": "16:52",
+              "end_time": "16:54",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -1020,5 +1062,5 @@
     }
   ],
   "elapsed_time(sec)": 4.173580169677734,
-  "_eval_score": 96.4253364389234
+  "_eval_score": 96.79563492063491
 }

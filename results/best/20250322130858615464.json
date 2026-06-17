@@ -317,6 +317,48 @@
           ]
         },
         {
+          "type": "lunch",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "12:23",
+          "end_time": "13:23",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lujiazui",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "11:59",
+              "end_time": "12:02",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "12:13",
+              "distance": 5.95,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "walk",
+              "start_time": "12:13",
+              "end_time": "12:23",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Jing'an Sculpture Park",
           "start_time": "13:55",
@@ -326,15 +368,77 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Lujiazui",
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "13:23",
+              "end_time": "13:33",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:33",
+              "end_time": "13:48",
+              "distance": 7.92,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Qufu Road-Metro Station",
               "end": "Jing'an Sculpture Park",
-              "mode": "taxi",
-              "start_time": "13:50",
-              "end_time": "13:55",
-              "distance": 3.98,
-              "price": 18.64,
-              "cost": 18.64,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:48",
+              "end_time": "13:50",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 18.0,
+          "cost": 72.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jing'an Sculpture Park",
+              "end": "Qufu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:25",
+              "end_time": "15:27",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "15:27",
+              "end_time": "15:57",
+              "distance": 15.13,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "walk",
+              "start_time": "15:57",
+              "end_time": "16:05",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -349,15 +453,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Jing'an Sculpture Park",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:08",
+              "end_time": "18:18",
+              "distance": 5.17,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "taxi",
-              "start_time": "15:25",
-              "end_time": "15:47",
-              "distance": 15.24,
-              "price": 63.27,
-              "cost": 63.27,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:18",
+              "end_time": "18:19",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "D941"
@@ -366,5 +490,5 @@
     }
   ],
   "elapsed_time(sec)": 12.901003122329712,
-  "_eval_score": 96.11111111111111
+  "_eval_score": 97.15972222222223
 }

@@ -372,12 +372,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 220.0,
-                    "cost": 880.0,
+                    "type": "attraction",
+                    "position": "Bazi Bridge",
+                    "start_time": "14:49",
+                    "end_time": "16:19",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -392,21 +392,63 @@
                         },
                         {
                             "start": "West Lake Cultural Plaza-Metro Station",
-                            "end": "Dongyue-Metro Station",
+                            "end": "Zhalongkou-Metro Station",
                             "mode": "metro",
                             "start_time": "14:33",
-                            "end_time": "14:48",
-                            "distance": 7.57,
-                            "price": 3,
-                            "cost": 12,
+                            "end_time": "14:38",
+                            "distance": 2.64,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Zhalongkou-Metro Station",
+                            "end": "Bazi Bridge",
+                            "mode": "walk",
+                            "start_time": "14:38",
+                            "end_time": "14:49",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 220.0,
+                    "cost": 880.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Bazi Bridge",
+                            "end": "Zhalongkou-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:19",
+                            "end_time": "16:30",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Zhalongkou-Metro Station",
+                            "end": "Dongyue-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:30",
+                            "end_time": "16:50",
+                            "distance": 10.21,
+                            "price": 4,
+                            "cost": 16,
                             "tickets": 4
                         },
                         {
                             "start": "Dongyue-Metro Station",
                             "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
                             "mode": "walk",
-                            "start_time": "14:48",
-                            "end_time": "14:55",
+                            "start_time": "16:50",
+                            "end_time": "16:57",
                             "distance": 0.61,
                             "price": 0,
                             "cost": 0
@@ -868,13 +910,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "attraction",
+                    "position": "Asian Games Theme Park",
+                    "start_time": "14:48",
+                    "end_time": "16:18",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -889,11 +930,54 @@
                         },
                         {
                             "start": "Huanglong Sports Center-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Qianjiang Century City-Metro Station",
                             "mode": "metro",
                             "start_time": "14:20",
-                            "end_time": "14:37",
-                            "distance": 8.76,
+                            "end_time": "14:42",
+                            "distance": 11.45,
+                            "price": 4,
+                            "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Qianjiang Century City-Metro Station",
+                            "end": "Asian Games Theme Park",
+                            "mode": "walk",
+                            "start_time": "14:42",
+                            "end_time": "14:48",
+                            "distance": 0.56,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Asian Games Theme Park",
+                            "end": "Qianjiang Century City-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:18",
+                            "end_time": "16:24",
+                            "distance": 0.56,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qianjiang Century City-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:24",
+                            "end_time": "16:37",
+                            "distance": 6.55,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
@@ -902,8 +986,8 @@
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "14:37",
-                            "end_time": "14:42",
+                            "start_time": "16:37",
+                            "end_time": "16:42",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -914,5 +998,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.433282136917114
+    "elapsed_time(sec)": 29.135626077651978
 }

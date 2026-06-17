@@ -994,13 +994,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "19:08",
-          "end_time": "20:39",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 624.58,
-          "cost": 1873.7400000000002,
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 60.0,
           "tickets": 3,
           "transports": [
             {
@@ -1015,21 +1014,64 @@
             },
             {
               "start": "Qiaocheng North-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
               "mode": "metro",
               "start_time": "15:03",
-              "end_time": "15:44",
-              "distance": 20.57,
-              "price": 5,
-              "cost": 15,
+              "end_time": "15:17",
+              "distance": 7.05,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "15:17",
+              "end_time": "15:19",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "19:08",
+          "end_time": "20:39",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 624.58,
+          "cost": 1873.7400000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:52",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "15:44",
-              "end_time": "15:49",
+              "start_time": "18:52",
+              "end_time": "18:57",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -1041,5 +1083,5 @@
     }
   ],
   "elapsed_time(sec)": 5.342754125595093,
-  "_eval_score": 95.94228778467908
+  "_eval_score": 96.40873015873015
 }

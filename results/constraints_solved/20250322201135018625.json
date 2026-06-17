@@ -868,13 +868,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "attraction",
+                    "position": "China Animation Museum",
+                    "start_time": "14:04",
+                    "end_time": "15:34",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -889,21 +888,64 @@
                         },
                         {
                             "start": "Hangfa Factory-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Jianghui Road-Metro Station",
                             "mode": "metro",
                             "start_time": "13:36",
-                            "end_time": "14:05",
-                            "distance": 14.55,
-                            "price": 5,
-                            "cost": 20,
+                            "end_time": "13:46",
+                            "distance": 5.41,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Jianghui Road-Metro Station",
+                            "end": "China Animation Museum",
+                            "mode": "walk",
+                            "start_time": "13:46",
+                            "end_time": "14:04",
+                            "distance": 1.5,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "China Animation Museum",
+                            "end": "Jianghui Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:34",
+                            "end_time": "15:52",
+                            "distance": 1.5,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jianghui Road-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:52",
+                            "end_time": "16:16",
+                            "distance": 12.47,
+                            "price": 4,
+                            "cost": 16,
                             "tickets": 4
                         },
                         {
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "14:05",
-                            "end_time": "14:10",
+                            "start_time": "16:16",
+                            "end_time": "16:21",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -914,5 +956,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.523847341537476
+    "elapsed_time(sec)": 26.932318210601807
 }

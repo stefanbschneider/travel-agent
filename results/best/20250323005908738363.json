@@ -8,32 +8,137 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 2526.08,
+          "start_time": "23:54",
+          "end_time": "04:40",
+          "start": "Beijing Fengtai Station",
+          "end": "Shenzhen East Station",
+          "price": 777.26,
+          "cost": 1554.52,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G335"
+          "TrainID": "K105"
         },
         {
           "type": "attraction",
           "position": "Shangwei Art Village",
-          "start_time": "20:01",
-          "end_time": "21:31",
+          "start_time": "09:00",
+          "end_time": "17:00",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Shenzhen East Station",
+              "end": "Buji-Metro Station",
+              "mode": "walk",
+              "start_time": "04:40",
+              "end_time": "04:43",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Buji-Metro Station",
+              "end": "Hehua-Metro Station",
+              "mode": "metro",
+              "start_time": "04:43",
+              "end_time": "05:01",
+              "distance": 9.27,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Hehua-Metro Station",
               "end": "Shangwei Art Village",
               "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "20:01",
-              "distance": 10.443780740438012,
+              "start_time": "05:01",
+              "end_time": "05:40",
+              "distance": 3.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "18:10",
+          "end_time": "19:10",
+          "price": 20.0,
+          "cost": 40.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shangwei Art Village",
+              "end": "Hehua-Metro Station",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "17:39",
+              "distance": 3.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hehua-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "17:39",
+              "end_time": "18:08",
+              "distance": 14.81,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "18:08",
+              "end_time": "18:10",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Balcony Mountain Forest Park",
+          "start_time": "20:05",
+          "end_time": "21:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "19:10",
+              "end_time": "19:12",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Yangtaishan East-Metro Station",
+              "mode": "metro",
+              "start_time": "19:12",
+              "end_time": "19:37",
+              "distance": 12.67,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Balcony Mountain Forest Park",
+              "mode": "walk",
+              "start_time": "19:37",
+              "end_time": "20:05",
+              "distance": 2.41,
               "price": 0,
               "cost": 0
             }
@@ -41,22 +146,22 @@
         },
         {
           "type": "accommodation",
-          "position": "Vienna International Hotel (Shenzhen North Railway Station)",
-          "start_time": "23:40",
+          "position": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+          "start_time": "22:16",
           "end_time": "24:00",
-          "price": 486.0,
-          "cost": 486.0,
+          "price": 273.0,
+          "cost": 273.0,
           "rooms": 1,
           "room_type": 2,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shangwei Art Village",
-              "end": "Vienna International Hotel (Shenzhen North Railway Station)",
+              "start": "Balcony Mountain Forest Park",
+              "end": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
               "mode": "walk",
-              "start_time": "21:31",
-              "end_time": "23:40",
-              "distance": 10.804428650274115,
+              "start_time": "21:35",
+              "end_time": "22:16",
+              "distance": 3.4955787701203067,
               "price": 0,
               "cost": 0
             }
@@ -69,7 +174,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna International Hotel (Shenzhen North Railway Station)",
+          "position": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -78,21 +183,42 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Dameisha Seaside Park",
-          "start_time": "14:23",
-          "end_time": "15:53",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 44.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Vienna International Hotel (Shenzhen North Railway Station)",
-              "end": "Dameisha Seaside Park",
+              "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "end": "Yangtaishan East-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "14:23",
-              "distance": 29.44397412511176,
+              "end_time": "08:44",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Hongling South-Metro Station",
+              "mode": "metro",
+              "start_time": "08:44",
+              "end_time": "09:20",
+              "distance": 18.34,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Hongling South-Metro Station",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:25",
+              "distance": 0.49,
               "price": 0,
               "cost": 0
             }
@@ -100,20 +226,41 @@
         },
         {
           "type": "dinner",
-          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 519.0,
-          "cost": 1038.0,
+          "price": 22.0,
+          "cost": 44.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Dameisha Seaside Park",
-              "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "Hongling South-Metro Station",
               "mode": "walk",
-              "start_time": "15:53",
-              "end_time": "15:55",
-              "distance": 0.17657878335074215,
+              "start_time": "12:00",
+              "end_time": "12:05",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling South-Metro Station",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "metro",
+              "start_time": "12:05",
+              "end_time": "12:16",
+              "distance": 5.76,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "walk",
+              "start_time": "12:16",
+              "end_time": "12:19",
+              "distance": 0.27,
               "price": 0,
               "cost": 0
             }
@@ -121,22 +268,43 @@
         },
         {
           "type": "accommodation",
-          "position": "Vienna International Hotel (Shenzhen North Railway Station)",
-          "start_time": "23:55",
+          "position": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+          "start_time": "18:42",
           "end_time": "24:00",
-          "price": 486.0,
-          "cost": 486.0,
+          "price": 273.0,
+          "cost": 273.0,
           "rooms": 1,
           "room_type": 2,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-              "end": "Vienna International Hotel (Shenzhen North Railway Station)",
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Shangmeilin-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "23:55",
-              "distance": 29.619923753278137,
+              "end_time": "18:03",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Yangtaishan East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "18:28",
+              "distance": 12.86,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "mode": "walk",
+              "start_time": "18:28",
+              "end_time": "18:42",
+              "distance": 1.21,
               "price": 0,
               "cost": 0
             }
@@ -149,7 +317,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna International Hotel (Shenzhen North Railway Station)",
+          "position": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -158,73 +326,52 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "East Gate Old Street",
-          "start_time": "10:48",
-          "end_time": "12:18",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 1554.52,
           "tickets": 2,
           "transports": [
             {
-              "start": "Vienna International Hotel (Shenzhen North Railway Station)",
-              "end": "East Gate Old Street",
+              "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "end": "Yangtaishan East-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "10:48",
-              "distance": 11.5756514917526,
+              "end_time": "08:44",
+              "distance": 1.21,
               "price": 0,
               "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "15:00",
-          "end_time": "16:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
+            },
             {
-              "start": "East Gate Old Street",
-              "end": "Shenzhen OCT Tourism Resort",
-              "mode": "walk",
-              "start_time": "12:18",
-              "end_time": "15:00",
-              "distance": 13.542950189050254,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "train",
-          "start_time": "19:34",
-          "end_time": "06:33",
-          "start": "Shenzhen North Railway Station",
-          "end": "Beijing West Railway Station",
-          "price": 1165.89,
-          "cost": 2331.78,
-          "tickets": 2,
-          "transports": [
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "08:44",
+              "end_time": "09:14",
+              "distance": 15.16,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
             {
-              "start": "Shenzhen OCT Tourism Resort",
-              "end": "Shenzhen North Railway Station",
+              "start": "Buji-Metro Station",
+              "end": "Shenzhen East Station",
               "mode": "walk",
-              "start_time": "16:30",
-              "end_time": "18:08",
-              "distance": 8.218180583229062,
+              "start_time": "09:14",
+              "end_time": "09:17",
+              "distance": 0.28,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "D902"
+          "TrainID": "K106"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 5.582529067993164,
-  "_eval_score": 88.33333333333333
+  "elapsed_time(sec)": 13.753520250320435,
+  "_eval_score": 92.00992063492063
 }

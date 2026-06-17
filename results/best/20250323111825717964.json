@@ -641,13 +641,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:34",
-          "end_time": "20:04",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 603.53,
-          "cost": 1810.59,
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "15:02",
+          "end_time": "16:32",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -662,11 +661,54 @@
             },
             {
               "start": "Yuhua Gate-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Changfu Street-Metro Station",
               "mode": "metro",
               "start_time": "14:45",
-              "end_time": "15:47",
-              "distance": 31.28,
+              "end_time": "14:51",
+              "distance": 3.28,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "walk",
+              "start_time": "14:51",
+              "end_time": "15:02",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:34",
+          "end_time": "20:04",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 603.53,
+          "cost": 1810.59,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Peach Leaf Ferry",
+              "end": "Changfu Street-Metro Station",
+              "mode": "walk",
+              "start_time": "16:32",
+              "end_time": "16:43",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:43",
+              "end_time": "17:51",
+              "distance": 34.48,
               "price": 7,
               "cost": 21,
               "tickets": 3
@@ -675,8 +717,8 @@
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "15:47",
-              "end_time": "15:50",
+              "start_time": "17:51",
+              "end_time": "17:54",
               "distance": 0.27,
               "price": 0,
               "cost": 0
@@ -688,5 +730,5 @@
     }
   ],
   "elapsed_time(sec)": 2.3334178924560547,
-  "_eval_score": 95.19444444444444
+  "_eval_score": 95.63789682539682
 }

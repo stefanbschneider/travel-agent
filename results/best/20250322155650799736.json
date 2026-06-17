@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "Fosun Foundation Center",
+          "start_time": "14:00",
+          "end_time": "15:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -393,11 +392,75 @@
             },
             {
               "start": "Xiaonanmen-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Lujiazui-Metro Station",
               "mode": "metro",
               "start_time": "13:47",
-              "end_time": "14:47",
-              "distance": 30.18,
+              "end_time": "13:51",
+              "distance": 2.4,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Fosun Foundation Center",
+              "mode": "walk",
+              "start_time": "13:51",
+              "end_time": "14:00",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jinling East Road Ferry",
+          "start_time": "15:40",
+          "end_time": "17:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fosun Foundation Center",
+              "end": "Jinling East Road Ferry",
+              "mode": "walk",
+              "start_time": "15:30",
+              "end_time": "15:40",
+              "distance": 0.8379222503156795,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jinling East Road Ferry",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "17:10",
+              "end_time": "17:12",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "17:12",
+              "end_time": "18:12",
+              "distance": 30.5,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -406,8 +469,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "14:47",
-              "end_time": "15:02",
+              "start_time": "18:12",
+              "end_time": "18:27",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -419,5 +482,5 @@
     }
   ],
   "elapsed_time(sec)": 3.832484006881714,
-  "_eval_score": 94.81216931216932
+  "_eval_score": 96.26948051948052
 }

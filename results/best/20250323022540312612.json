@@ -826,13 +826,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:06",
-          "end_time": "19:38",
-          "start": "Chengdu Shuangliu International Airport",
-          "end": "Guangzhou Baiyun International Airport",
-          "price": 601.51,
-          "cost": 1203.02,
+          "type": "attraction",
+          "position": "Airport Flower Field",
+          "start_time": "13:44",
+          "end_time": "15:14",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -847,21 +846,64 @@
             },
             {
               "start": "Tongzilin-Metro Station",
-              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Shuangliu West Station-Metro Station",
               "mode": "metro",
               "start_time": "12:23",
-              "end_time": "12:46",
-              "distance": 11.69,
-              "price": 4,
-              "cost": 8,
+              "end_time": "12:55",
+              "distance": 16.44,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Shuangliu West Station-Metro Station",
+              "end": "Airport Flower Field",
+              "mode": "walk",
+              "start_time": "12:55",
+              "end_time": "13:44",
+              "distance": 4.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:06",
+          "end_time": "19:38",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 601.51,
+          "cost": 1203.02,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Airport Flower Field",
+              "end": "Shuangliu West Station-Metro Station",
+              "mode": "walk",
+              "start_time": "15:14",
+              "end_time": "16:03",
+              "distance": 4.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu West Station-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "16:03",
+              "end_time": "16:12",
+              "distance": 4.81,
+              "price": 3,
+              "cost": 6,
               "tickets": 2
             },
             {
               "start": "Shuangliu Airport Terminal 2 East-Metro Station",
               "end": "Chengdu Shuangliu International Airport",
               "mode": "walk",
-              "start_time": "12:46",
-              "end_time": "13:01",
+              "start_time": "16:12",
+              "end_time": "16:27",
               "distance": 1.25,
               "price": 0,
               "cost": 0
@@ -873,5 +915,5 @@
     }
   ],
   "elapsed_time(sec)": 6.926152944564819,
-  "_eval_score": 95.6627506265664
+  "_eval_score": 95.7797619047619
 }

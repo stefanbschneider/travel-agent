@@ -67,6 +67,8 @@ _BUDGET_FIELDS = (
     ("inner_transport", r"inner_city_transportation_cost\s*<=\s*([-+]?\d+(?:\.\d+)?)"),
     ("total", r"total_cost\s*<=\s*([-+]?\d+(?:\.\d+)?)"),
 )
+_INNER_TRANSPORT_MODES = {"walk", "metro", "taxi"}
+
 
 
 def solver_constraint_variants(query: dict, parsed_raw: dict, use_oracle: bool = True) -> list[dict]:
@@ -96,14 +98,14 @@ def solver_constraint_variants(query: dict, parsed_raw: dict, use_oracle: bool =
             merged = deepcopy(base)
             if index < len(raw_groups) and isinstance(raw_groups[index], dict):
                 _merge_into(merged, raw_groups[index], use_oracle=True)
-            _merge_into(merged, _parse_logic_snippet(branch, include_inner_transport=False), use_oracle=True)
+            _merge_into(merged, _parse_logic_snippet(branch, include_inner_transport=True), use_oracle=True)
             variants.append(_normalize_variant(merged, use_oracle=True))
         return variants or [_normalize_variant(base, use_oracle=True)]
 
     merged = _base_from_raw(raw)
     for expr in query.get("hard_logic_py", []) or []:
         if isinstance(expr, str):
-            _merge_into(merged, _parse_logic_snippet(expr, include_inner_transport=False), use_oracle=True)
+            _merge_into(merged, _parse_logic_snippet(expr, include_inner_transport=True), use_oracle=True)
     return [_normalize_variant(merged, use_oracle=True)]
 
 
@@ -358,12 +360,19 @@ def _parse_position_names(logic: str, result: dict[str, Any]) -> None:
 
 
 def _parse_excluded_inner_transport(logic: str, result: dict[str, Any]) -> None:
-    match = re.search(r"result\s*=\s*not\s*\(\s*\{([^{}]+)\}\s*(?:&|<=)\s*inner_city_transportation_set", logic, re.DOTALL)
-    if match:
-        modes = re.findall(r"['\"]([^'\"]+)['\"]", match.group(1))
-        if modes:
-            result["excluded_inner_transport"] = modes
+    excluded: list[str] = []
+    for match in re.finditer(r"result\s*=\s*not\s*\(\s*\{([^{}]+)\}\s*(?:&|<=)\s*inner_city_transportation_set", logic, re.DOTALL):
+        excluded.extend(re.findall(r"['\"]([^'\"]+)['\"]", match.group(1)))
 
+    for match in re.finditer(r"\{([^{}]+)\}\s*<=\s*inner_city_transportation_set", logic, re.DOTALL):
+        prefix = logic[max(0, match.start() - 32):match.start()].replace(" ", "")
+        if prefix.endswith("not(") or prefix.endswith("=not("):
+            continue
+        allowed = {m.strip().lower() for m in re.findall(r"['\"]([^'\"]+)['\"]", match.group(1))}
+        excluded.extend(sorted(_INNER_TRANSPORT_MODES - allowed))
+
+    if excluded:
+        result["excluded_inner_transport"] = excluded
 
 def _normalize_variant(constraints: dict, use_oracle: bool) -> dict:
     normalized = deepcopy(constraints) if isinstance(constraints, dict) else {}
@@ -390,8 +399,6 @@ def _normalize_variant(constraints: dict, use_oracle: bool) -> dict:
 
     _normalize_hotel_type(normalized)
     _normalize_intercity_mode(normalized)
-    if use_oracle:
-        normalized.pop("excluded_inner_transport", None)
     return normalized
 
 

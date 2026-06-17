@@ -826,13 +826,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "attraction",
+                    "position": "Asian Games Theme Park",
+                    "start_time": "14:22",
+                    "end_time": "15:52",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -847,11 +846,54 @@
                         },
                         {
                             "start": "Wushan Square-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Qianjiang Century City-Metro Station",
                             "mode": "metro",
                             "start_time": "14:01",
                             "end_time": "14:16",
-                            "distance": 7.86,
+                            "distance": 7.82,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Qianjiang Century City-Metro Station",
+                            "end": "Asian Games Theme Park",
+                            "mode": "walk",
+                            "start_time": "14:16",
+                            "end_time": "14:22",
+                            "distance": 0.56,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Asian Games Theme Park",
+                            "end": "Qianjiang Century City-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:52",
+                            "end_time": "15:58",
+                            "distance": 0.56,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qianjiang Century City-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:58",
+                            "end_time": "16:11",
+                            "distance": 6.55,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
@@ -860,8 +902,8 @@
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "14:16",
-                            "end_time": "14:21",
+                            "start_time": "16:11",
+                            "end_time": "16:16",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -872,5 +914,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.3334691524505615
+    "elapsed_time(sec)": 26.213531017303467
 }

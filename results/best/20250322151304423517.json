@@ -204,13 +204,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 3025.02,
+          "type": "attraction",
+          "position": "Bao'an Xibay Mangrove Park",
+          "start_time": "13:24",
+          "end_time": "15:24",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -225,21 +224,106 @@
             },
             {
               "start": "Huaide-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Gushu-Metro Station",
               "mode": "metro",
               "start_time": "12:58",
-              "end_time": "13:02",
-              "distance": 2.21,
-              "price": 2,
-              "cost": 6,
+              "end_time": "13:13",
+              "distance": 7.78,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Gushu-Metro Station",
+              "end": "Bao'an Xibay Mangrove Park",
+              "mode": "walk",
+              "start_time": "13:13",
+              "end_time": "13:24",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "15:50",
+          "end_time": "17:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bao'an Xibay Mangrove Park",
+              "end": "Gushu-Metro Station",
+              "mode": "walk",
+              "start_time": "15:24",
+              "end_time": "15:35",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gushu-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "15:35",
+              "end_time": "15:48",
+              "distance": 6.64,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "15:48",
+              "end_time": "15:50",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:56",
+          "end_time": "20:21",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1008.34,
+          "cost": 3025.02,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "17:20",
+              "end_time": "17:22",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "17:22",
+              "end_time": "17:46",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 12,
               "tickets": 3
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "13:02",
-              "end_time": "13:07",
+              "start_time": "17:46",
+              "end_time": "17:51",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -251,5 +335,5 @@
     }
   ],
   "elapsed_time(sec)": 0.3392820358276367,
-  "_eval_score": 90.23095238095237
+  "_eval_score": 91.94897959183673
 }

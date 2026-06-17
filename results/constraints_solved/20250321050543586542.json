@@ -326,13 +326,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "12:16",
-                    "end_time": "12:53",
-                    "start": "Shenzhen Station",
-                    "end": "Suzhou Station",
-                    "price": 467.29,
-                    "cost": 1401.8700000000001,
+                    "type": "lunch",
+                    "position": "YO!Tea (Futian CITIC Plaza Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 22.0,
+                    "cost": 66.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -347,11 +346,54 @@
                         },
                         {
                             "start": "Shaibu-Metro Station",
-                            "end": "Luohu-Metro Station",
+                            "end": "Hongling South-Metro Station",
                             "mode": "metro",
                             "start_time": "10:27",
-                            "end_time": "10:30",
-                            "distance": 1.94,
+                            "end_time": "10:31",
+                            "distance": 2.11,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Hongling South-Metro Station",
+                            "end": "YO!Tea (Futian CITIC Plaza Branch)",
+                            "mode": "walk",
+                            "start_time": "10:31",
+                            "end_time": "10:36",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "12:16",
+                    "end_time": "12:53",
+                    "start": "Shenzhen Station",
+                    "end": "Suzhou Station",
+                    "price": 467.29,
+                    "cost": 1401.8700000000001,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "YO!Tea (Futian CITIC Plaza Branch)",
+                            "end": "Hongling South-Metro Station",
+                            "mode": "walk",
+                            "start_time": "12:00",
+                            "end_time": "12:05",
+                            "distance": 0.49,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Hongling South-Metro Station",
+                            "end": "Luohu-Metro Station",
+                            "mode": "metro",
+                            "start_time": "12:05",
+                            "end_time": "12:08",
+                            "distance": 1.68,
                             "price": 2,
                             "cost": 6,
                             "tickets": 3
@@ -360,8 +402,8 @@
                             "start": "Luohu-Metro Station",
                             "end": "Shenzhen Station",
                             "mode": "walk",
-                            "start_time": "10:30",
-                            "end_time": "10:32",
+                            "start_time": "12:08",
+                            "end_time": "12:10",
                             "distance": 0.17,
                             "price": 0,
                             "cost": 0
@@ -372,5 +414,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 2.973722219467163
+    "elapsed_time(sec)": 13.617898941040039
 }

@@ -1032,13 +1032,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:12",
-                    "end_time": "18:30",
-                    "start": "Hangzhou Xiaoshan International Airport",
-                    "end": "Guangzhou Baiyun International Airport",
-                    "price": 491.36,
-                    "cost": 982.72,
+                    "type": "attraction",
+                    "position": "704 Project (Lin Biao's Hangzhou Villa)",
+                    "start_time": "13:21",
+                    "end_time": "14:51",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -1053,11 +1052,54 @@
                         },
                         {
                             "start": "Dongyue-Metro Station",
-                            "end": "Xiaoshan International Airport-Metro Station",
+                            "end": "Yellow Dragon Cave-Metro Station",
                             "mode": "metro",
                             "start_time": "12:36",
-                            "end_time": "13:42",
-                            "distance": 33.2,
+                            "end_time": "12:45",
+                            "distance": 4.91,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "mode": "walk",
+                            "start_time": "12:45",
+                            "end_time": "13:21",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:12",
+                    "end_time": "18:30",
+                    "start": "Hangzhou Xiaoshan International Airport",
+                    "end": "Guangzhou Baiyun International Airport",
+                    "price": 491.36,
+                    "cost": 982.72,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "704 Project (Lin Biao's Hangzhou Villa)",
+                            "end": "Yellow Dragon Cave-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:51",
+                            "end_time": "15:27",
+                            "distance": 3.0,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Yellow Dragon Cave-Metro Station",
+                            "end": "Xiaoshan International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:27",
+                            "end_time": "16:23",
+                            "distance": 28.36,
                             "price": 7,
                             "cost": 14,
                             "tickets": 2
@@ -1066,8 +1108,8 @@
                             "start": "Xiaoshan International Airport-Metro Station",
                             "end": "Hangzhou Xiaoshan International Airport",
                             "mode": "walk",
-                            "start_time": "13:42",
-                            "end_time": "13:43",
+                            "start_time": "16:23",
+                            "end_time": "16:24",
                             "distance": 0.12,
                             "price": 0,
                             "cost": 0
@@ -1078,5 +1120,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 6.724204063415527
+    "elapsed_time(sec)": 28.278922080993652
 }

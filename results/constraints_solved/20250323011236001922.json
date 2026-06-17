@@ -410,13 +410,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "13:58",
-                    "end_time": "14:52",
-                    "start": "Suzhou Station",
-                    "end": "Shenzhen Station",
-                    "price": 467.29,
-                    "cost": 1401.8700000000001,
+                    "type": "lunch",
+                    "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+                    "start_time": "12:41",
+                    "end_time": "13:41",
+                    "price": 9.0,
+                    "cost": 27.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -431,11 +430,54 @@
                         },
                         {
                             "start": "Sanyuanfang-Metro Station",
-                            "end": "Suzhou Railway Station-Metro Station",
+                            "end": "Wangxing Bridge Suzhou University-Metro Station",
                             "mode": "metro",
                             "start_time": "12:34",
+                            "end_time": "12:36",
+                            "distance": 1.22,
+                            "price": 2,
+                            "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Wangxing Bridge Suzhou University-Metro Station",
+                            "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+                            "mode": "walk",
+                            "start_time": "12:36",
                             "end_time": "12:41",
-                            "distance": 3.85,
+                            "distance": 0.42,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "13:58",
+                    "end_time": "14:52",
+                    "start": "Suzhou Station",
+                    "end": "Shenzhen Station",
+                    "price": 467.29,
+                    "cost": 1401.8700000000001,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+                            "end": "Wangxing Bridge Suzhou University-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:41",
+                            "end_time": "13:46",
+                            "distance": 0.42,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wangxing Bridge Suzhou University-Metro Station",
+                            "end": "Suzhou Railway Station-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:46",
+                            "end_time": "13:53",
+                            "distance": 3.95,
                             "price": 2,
                             "cost": 6,
                             "tickets": 3
@@ -444,8 +486,8 @@
                             "start": "Suzhou Railway Station-Metro Station",
                             "end": "Suzhou Station",
                             "mode": "walk",
-                            "start_time": "12:41",
-                            "end_time": "12:42",
+                            "start_time": "13:53",
+                            "end_time": "13:54",
                             "distance": 0.13,
                             "price": 0,
                             "cost": 0
@@ -456,5 +498,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.77168607711792
+    "elapsed_time(sec)": 5.536502122879028
 }

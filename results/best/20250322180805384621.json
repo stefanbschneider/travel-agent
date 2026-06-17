@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:23",
-          "end_time": "21:33",
-          "start": "Suzhou North Station",
-          "end": "Beijing South Railway Station",
-          "price": 668.44,
-          "cost": 668.44,
+          "type": "attraction",
+          "position": "Fengmen Hengjie",
+          "start_time": "14:01",
+          "end_time": "16:01",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -393,11 +392,54 @@
             },
             {
               "start": "Xinghai Square-Metro Station",
-              "end": "Suzhou North Railway Station-Metro Station",
+              "end": "Xujiabang-Metro Station",
               "mode": "metro",
               "start_time": "13:56",
-              "end_time": "14:20",
-              "distance": 12.04,
+              "end_time": "14:00",
+              "distance": 2.09,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Xujiabang-Metro Station",
+              "end": "Fengmen Hengjie",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:01",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:23",
+          "end_time": "21:33",
+          "start": "Suzhou North Station",
+          "end": "Beijing South Railway Station",
+          "price": 668.44,
+          "cost": 668.44,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fengmen Hengjie",
+              "end": "Xujiabang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:01",
+              "end_time": "16:02",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xujiabang-Metro Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:02",
+              "end_time": "16:27",
+              "distance": 12.88,
               "price": 4,
               "cost": 4,
               "tickets": 1
@@ -406,8 +448,8 @@
               "start": "Suzhou North Railway Station-Metro Station",
               "end": "Suzhou North Station",
               "mode": "walk",
-              "start_time": "14:20",
-              "end_time": "14:21",
+              "start_time": "16:27",
+              "end_time": "16:28",
               "distance": 0.14,
               "price": 0,
               "cost": 0
@@ -419,5 +461,5 @@
     }
   ],
   "elapsed_time(sec)": 1.5280489921569824,
-  "_eval_score": 94.8260582010582
+  "_eval_score": 95.56904761904761
 }

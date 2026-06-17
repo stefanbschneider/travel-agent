@@ -393,13 +393,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "19:52",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Guangzhou Baiyun International Airport",
-          "price": 598.63,
-          "cost": 2394.52,
+          "type": "attraction",
+          "position": "Huaihai Road",
+          "start_time": "14:06",
+          "end_time": "16:36",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -414,11 +413,54 @@
             },
             {
               "start": "Qufu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
               "mode": "metro",
               "start_time": "13:59",
-              "end_time": "15:05",
-              "distance": 33.41,
+              "end_time": "14:03",
+              "distance": 2.05,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "end": "Huaihai Road",
+              "mode": "walk",
+              "start_time": "14:03",
+              "end_time": "14:06",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:22",
+          "end_time": "19:52",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 598.63,
+          "cost": 2394.52,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Huaihai Road",
+              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:36",
+              "end_time": "16:39",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:39",
+              "end_time": "17:44",
+              "distance": 32.73,
               "price": 7,
               "cost": 28,
               "tickets": 4
@@ -427,8 +469,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "15:05",
-              "end_time": "15:20",
+              "start_time": "17:44",
+              "end_time": "17:59",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -440,5 +482,5 @@
     }
   ],
   "elapsed_time(sec)": 3.72662615776062,
-  "_eval_score": 95.48809523809524
+  "_eval_score": 96.20833333333334
 }

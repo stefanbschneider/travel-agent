@@ -683,13 +683,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:00",
-          "end_time": "18:03",
-          "start": "Wuhan Tianhe International Airport",
-          "end": "Guangzhou Baiyun International Airport",
-          "price": 457.03,
-          "cost": 1828.12,
+          "type": "attraction",
+          "position": "Ancient Alley Snack Street",
+          "start_time": "14:02",
+          "end_time": "16:02",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -704,11 +703,54 @@
             },
             {
               "start": "Sanjiao Road-Metro Station",
-              "end": "Tianhe Airport-Metro Station",
+              "end": "Tanhualin Wushengmen-Metro Station",
               "mode": "metro",
               "start_time": "13:55",
-              "end_time": "14:41",
-              "distance": 23.43,
+              "end_time": "14:02",
+              "distance": 3.57,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Ancient Alley Snack Street",
+              "mode": "walk",
+              "start_time": "14:02",
+              "end_time": "14:02",
+              "distance": 0.07,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:00",
+          "end_time": "18:03",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 457.03,
+          "cost": 1828.12,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Ancient Alley Snack Street",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "walk",
+              "start_time": "16:02",
+              "end_time": "16:02",
+              "distance": 0.07,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:02",
+              "end_time": "16:52",
+              "distance": 25.45,
               "price": 6,
               "cost": 24,
               "tickets": 4
@@ -717,8 +759,8 @@
               "start": "Tianhe Airport-Metro Station",
               "end": "Wuhan Tianhe International Airport",
               "mode": "walk",
-              "start_time": "14:41",
-              "end_time": "14:47",
+              "start_time": "16:52",
+              "end_time": "16:58",
               "distance": 0.55,
               "price": 0,
               "cost": 0
@@ -730,5 +772,5 @@
     }
   ],
   "elapsed_time(sec)": 3.624953031539917,
-  "_eval_score": 95.33035714285714
+  "_eval_score": 95.86134453781513
 }

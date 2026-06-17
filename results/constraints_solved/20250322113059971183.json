@@ -103,12 +103,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Five Percent Villa Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 298.0,
-                    "cost": 298.0,
+                    "type": "attraction",
+                    "position": "Vega Fairy Tale Town",
+                    "start_time": "14:47",
+                    "end_time": "16:17",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -123,21 +123,63 @@
                         },
                         {
                             "start": "Gongye 4th Road-Metro Station",
-                            "end": "Jianghan Road-Metro Station",
+                            "end": "Garden Road-Metro Station",
                             "mode": "metro",
                             "start_time": "14:38",
-                            "end_time": "15:00",
-                            "distance": 11.34,
-                            "price": 4,
-                            "cost": 4,
+                            "end_time": "14:43",
+                            "distance": 2.79,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Garden Road-Metro Station",
+                            "end": "Vega Fairy Tale Town",
+                            "mode": "walk",
+                            "start_time": "14:43",
+                            "end_time": "14:47",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Five Percent Villa Restaurant",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 298.0,
+                    "cost": 298.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Vega Fairy Tale Town",
+                            "end": "Garden Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:17",
+                            "end_time": "16:21",
+                            "distance": 0.34,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Garden Road-Metro Station",
+                            "end": "Jianghan Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:21",
+                            "end_time": "16:38",
+                            "distance": 8.54,
+                            "price": 3,
+                            "cost": 3,
                             "tickets": 1
                         },
                         {
                             "start": "Jianghan Road-Metro Station",
                             "end": "Five Percent Villa Restaurant",
                             "mode": "walk",
-                            "start_time": "15:00",
-                            "end_time": "15:09",
+                            "start_time": "16:38",
+                            "end_time": "16:47",
                             "distance": 0.76,
                             "price": 0,
                             "cost": 0
@@ -372,6 +414,27 @@
                     ]
                 },
                 {
+                    "type": "attraction",
+                    "position": "Ice and Snow Kingdom",
+                    "start_time": "14:46",
+                    "end_time": "16:16",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Wuhan Polar Ocean Park",
+                            "end": "Ice and Snow Kingdom",
+                            "mode": "walk",
+                            "start_time": "14:46",
+                            "end_time": "14:46",
+                            "distance": 0.060123140279533534,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
                     "type": "airplane",
                     "start_time": "17:00",
                     "end_time": "18:03",
@@ -382,12 +445,12 @@
                     "tickets": 1,
                     "transports": [
                         {
-                            "start": "Wuhan Polar Ocean Park",
+                            "start": "Ice and Snow Kingdom",
                             "end": "Hongtu Avenue-Metro Station",
                             "mode": "walk",
-                            "start_time": "14:46",
-                            "end_time": "14:53",
-                            "distance": 0.64,
+                            "start_time": "16:16",
+                            "end_time": "16:22",
+                            "distance": 0.58,
                             "price": 0,
                             "cost": 0
                         },
@@ -395,8 +458,8 @@
                             "start": "Hongtu Avenue-Metro Station",
                             "end": "Tianhe Airport-Metro Station",
                             "mode": "metro",
-                            "start_time": "14:53",
-                            "end_time": "15:18",
+                            "start_time": "16:22",
+                            "end_time": "16:47",
                             "distance": 12.56,
                             "price": 4,
                             "cost": 4,
@@ -406,8 +469,8 @@
                             "start": "Tianhe Airport-Metro Station",
                             "end": "Wuhan Tianhe International Airport",
                             "mode": "walk",
-                            "start_time": "15:18",
-                            "end_time": "15:24",
+                            "start_time": "16:47",
+                            "end_time": "16:53",
                             "distance": 0.55,
                             "price": 0,
                             "cost": 0
@@ -418,5 +481,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.9494390487670898
+    "elapsed_time(sec)": 12.566486835479736
 }

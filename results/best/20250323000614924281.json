@@ -784,13 +784,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 314.6,
+          "type": "attraction",
+          "position": "704 Project (Lin Biao's Hangzhou Villa)",
+          "start_time": "13:19",
+          "end_time": "14:49",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -805,11 +804,54 @@
             },
             {
               "start": "Wushan Square-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Yellow Dragon Cave-Metro Station",
               "mode": "metro",
               "start_time": "12:36",
-              "end_time": "12:51",
-              "distance": 7.86,
+              "end_time": "12:43",
+              "distance": 3.58,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "704 Project (Lin Biao's Hangzhou Villa)",
+              "mode": "walk",
+              "start_time": "12:43",
+              "end_time": "13:19",
+              "distance": 3.0,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:27",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "704 Project (Lin Biao's Hangzhou Villa)",
+              "end": "Yellow Dragon Cave-Metro Station",
+              "mode": "walk",
+              "start_time": "14:49",
+              "end_time": "15:25",
+              "distance": 3.0,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "15:25",
+              "end_time": "15:40",
+              "distance": 7.93,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -818,8 +860,8 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "12:51",
-              "end_time": "12:56",
+              "start_time": "15:40",
+              "end_time": "15:45",
               "distance": 0.48,
               "price": 0,
               "cost": 0
@@ -831,5 +873,5 @@
     }
   ],
   "elapsed_time(sec)": 7.994946002960205,
-  "_eval_score": 95.28070175438596
+  "_eval_score": 95.51011904761904
 }

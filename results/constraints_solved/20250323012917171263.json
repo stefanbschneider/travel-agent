@@ -288,13 +288,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:34",
-                    "end_time": "20:04",
-                    "start": "Nanjing Lukou International Airport",
-                    "end": "Chongqing Jiangbei International Airport",
-                    "price": 603.53,
-                    "cost": 1810.59,
+                    "type": "attraction",
+                    "position": "Ancient Peach Leaf Ferry",
+                    "start_time": "14:40",
+                    "end_time": "16:10",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -309,11 +308,54 @@
                         },
                         {
                             "start": "Clover Garden-Metro Station",
-                            "end": "Lukou Airport-Metro Station",
+                            "end": "Changfu Street-Metro Station",
                             "mode": "metro",
                             "start_time": "14:21",
-                            "end_time": "15:30",
-                            "distance": 34.56,
+                            "end_time": "14:29",
+                            "distance": 4.13,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Changfu Street-Metro Station",
+                            "end": "Ancient Peach Leaf Ferry",
+                            "mode": "walk",
+                            "start_time": "14:29",
+                            "end_time": "14:40",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:34",
+                    "end_time": "20:04",
+                    "start": "Nanjing Lukou International Airport",
+                    "end": "Chongqing Jiangbei International Airport",
+                    "price": 603.53,
+                    "cost": 1810.59,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Ancient Peach Leaf Ferry",
+                            "end": "Changfu Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:10",
+                            "end_time": "16:21",
+                            "distance": 0.92,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Changfu Street-Metro Station",
+                            "end": "Lukou Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:21",
+                            "end_time": "17:29",
+                            "distance": 34.48,
                             "price": 7,
                             "cost": 21,
                             "tickets": 3
@@ -322,8 +364,8 @@
                             "start": "Lukou Airport-Metro Station",
                             "end": "Nanjing Lukou International Airport",
                             "mode": "walk",
-                            "start_time": "15:30",
-                            "end_time": "15:33",
+                            "start_time": "17:29",
+                            "end_time": "17:32",
                             "distance": 0.27,
                             "price": 0,
                             "cost": 0
@@ -334,5 +376,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.3630919456481934
+    "elapsed_time(sec)": 8.322407960891724
 }

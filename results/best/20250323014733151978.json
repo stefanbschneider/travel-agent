@@ -599,13 +599,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:31",
-          "start": "Suzhou Park Station",
-          "end": "Nanjing South Railway Station",
-          "price": 122.9,
-          "cost": 614.5,
+          "type": "attraction",
+          "position": "A Hidden Wonderland",
+          "start_time": "12:45",
+          "end_time": "14:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -620,21 +619,64 @@
             },
             {
               "start": "Times Square-Metro Station",
-              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "end": "Fuyuan Road-Metro Station",
               "mode": "metro",
               "start_time": "12:09",
-              "end_time": "12:13",
-              "distance": 2.22,
-              "price": 2,
-              "cost": 10,
+              "end_time": "12:33",
+              "distance": 12.3,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "A Hidden Wonderland",
+              "mode": "walk",
+              "start_time": "12:33",
+              "end_time": "12:45",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:31",
+          "start": "Suzhou Park Station",
+          "end": "Nanjing South Railway Station",
+          "price": 122.9,
+          "cost": 614.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "A Hidden Wonderland",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:45",
+              "end_time": "14:57",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "14:57",
+              "end_time": "15:18",
+              "distance": 10.69,
+              "price": 4,
+              "cost": 20,
               "tickets": 5
             },
             {
               "start": "Suzhou Industrial Park Railway Station-Metro Station",
               "end": "Suzhou Park Station",
               "mode": "walk",
-              "start_time": "12:13",
-              "end_time": "12:16",
+              "start_time": "15:18",
+              "end_time": "15:21",
               "distance": 0.32,
               "price": 0,
               "cost": 0
@@ -646,5 +688,5 @@
     }
   ],
   "elapsed_time(sec)": 6.026535987854004,
-  "_eval_score": 95.65419501133786
+  "_eval_score": 95.96111111111111
 }

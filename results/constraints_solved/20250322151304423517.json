@@ -204,13 +204,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:56",
-                    "end_time": "20:21",
-                    "start": "Shenzhen Bao'an International Airport",
-                    "end": "Beijing Daxing International Airport",
-                    "price": 1008.34,
-                    "cost": 3025.02,
+                    "type": "attraction",
+                    "position": "Bao'an Xibay Mangrove Park",
+                    "start_time": "13:24",
+                    "end_time": "14:54",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 3,
                     "transports": [
                         {
@@ -225,21 +224,106 @@
                         },
                         {
                             "start": "Huaide-Metro Station",
-                            "end": "Airport East-Metro Station",
+                            "end": "Gushu-Metro Station",
                             "mode": "metro",
                             "start_time": "12:58",
-                            "end_time": "13:02",
-                            "distance": 2.21,
+                            "end_time": "13:13",
+                            "distance": 7.78,
+                            "price": 3,
+                            "cost": 9,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Gushu-Metro Station",
+                            "end": "Bao'an Xibay Mangrove Park",
+                            "mode": "walk",
+                            "start_time": "13:13",
+                            "end_time": "13:24",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Bihai Bay Park",
+                    "start_time": "15:31",
+                    "end_time": "17:01",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Bao'an Xibay Mangrove Park",
+                            "end": "Gushu-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:54",
+                            "end_time": "15:05",
+                            "distance": 0.93,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Gushu-Metro Station",
+                            "end": "Bihaiwan-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:05",
+                            "end_time": "15:11",
+                            "distance": 3.06,
                             "price": 2,
                             "cost": 6,
+                            "tickets": 3
+                        },
+                        {
+                            "start": "Bihaiwan-Metro Station",
+                            "end": "Bihai Bay Park",
+                            "mode": "walk",
+                            "start_time": "15:11",
+                            "end_time": "15:31",
+                            "distance": 1.71,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "17:56",
+                    "end_time": "20:21",
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Beijing Daxing International Airport",
+                    "price": 1008.34,
+                    "cost": 3025.02,
+                    "tickets": 3,
+                    "transports": [
+                        {
+                            "start": "Bihai Bay Park",
+                            "end": "Bihaiwan-Metro Station",
+                            "mode": "walk",
+                            "start_time": "17:01",
+                            "end_time": "17:21",
+                            "distance": 1.71,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Bihaiwan-Metro Station",
+                            "end": "Airport East-Metro Station",
+                            "mode": "metro",
+                            "start_time": "17:21",
+                            "end_time": "17:38",
+                            "distance": 8.68,
+                            "price": 3,
+                            "cost": 9,
                             "tickets": 3
                         },
                         {
                             "start": "Airport East-Metro Station",
                             "end": "Shenzhen Bao'an International Airport",
                             "mode": "walk",
-                            "start_time": "13:02",
-                            "end_time": "13:07",
+                            "start_time": "17:38",
+                            "end_time": "17:43",
                             "distance": 0.45,
                             "price": 0,
                             "cost": 0
@@ -250,5 +334,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.685655117034912
+    "elapsed_time(sec)": 12.642163038253784
 }

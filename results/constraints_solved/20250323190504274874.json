@@ -826,13 +826,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "lunch",
+                    "position": "Southern Eclectic Buns (Lakeside Branch)",
+                    "start_time": "12:48",
+                    "end_time": "13:48",
+                    "price": 8.0,
+                    "cost": 32.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -847,11 +846,96 @@
                         },
                         {
                             "start": "Gongchen Bridge East-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Longxiang Bridge-Metro Station",
                             "mode": "metro",
                             "start_time": "12:31",
                             "end_time": "12:45",
-                            "distance": 7.01,
+                            "distance": 7.09,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Longxiang Bridge-Metro Station",
+                            "end": "Southern Eclectic Buns (Lakeside Branch)",
+                            "mode": "walk",
+                            "start_time": "12:45",
+                            "end_time": "12:48",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Hangzhou Confucius Temple",
+                    "start_time": "13:55",
+                    "end_time": "15:25",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Southern Eclectic Buns (Lakeside Branch)",
+                            "end": "Longxiang Bridge-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:48",
+                            "end_time": "13:51",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Longxiang Bridge-Metro Station",
+                            "end": "Ding'an Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:51",
+                            "end_time": "13:53",
+                            "distance": 1.03,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Ding'an Road-Metro Station",
+                            "end": "Hangzhou Confucius Temple",
+                            "mode": "walk",
+                            "start_time": "13:53",
+                            "end_time": "13:55",
+                            "distance": 0.19,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Hangzhou Confucius Temple",
+                            "end": "Ding'an Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:25",
+                            "end_time": "15:27",
+                            "distance": 0.19,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Ding'an Road-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:27",
+                            "end_time": "15:41",
+                            "distance": 7.06,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
@@ -860,8 +944,8 @@
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "12:45",
-                            "end_time": "12:50",
+                            "start_time": "15:41",
+                            "end_time": "15:46",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -872,5 +956,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.750720024108887
+    "elapsed_time(sec)": 29.2661030292511
 }

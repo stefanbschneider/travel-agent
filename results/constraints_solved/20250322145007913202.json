@@ -103,12 +103,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "COMMUNE Illusionist (Jiangning Road Branch)",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 259.0,
-                    "cost": 259.0,
+                    "type": "attraction",
+                    "position": "1933 Old Millfun",
+                    "start_time": "15:03",
+                    "end_time": "16:33",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -123,11 +123,53 @@
                         },
                         {
                             "start": "Lujiazui-Metro Station",
-                            "end": "Changping Road-Metro Station",
+                            "end": "Liping Road-Metro Station",
                             "mode": "metro",
                             "start_time": "14:56",
-                            "end_time": "15:07",
-                            "distance": 5.69,
+                            "end_time": "15:01",
+                            "distance": 2.51,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Liping Road-Metro Station",
+                            "end": "1933 Old Millfun",
+                            "mode": "walk",
+                            "start_time": "15:01",
+                            "end_time": "15:03",
+                            "distance": 0.24,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "COMMUNE Illusionist (Jiangning Road Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 259.0,
+                    "cost": 259.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "1933 Old Millfun",
+                            "end": "Liping Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:33",
+                            "end_time": "16:35",
+                            "distance": 0.24,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Liping Road-Metro Station",
+                            "end": "Changping Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:35",
+                            "end_time": "16:47",
+                            "distance": 6.3,
                             "price": 3,
                             "cost": 3,
                             "tickets": 1
@@ -136,8 +178,8 @@
                             "start": "Changping Road-Metro Station",
                             "end": "COMMUNE Illusionist (Jiangning Road Branch)",
                             "mode": "walk",
-                            "start_time": "15:07",
-                            "end_time": "15:17",
+                            "start_time": "16:47",
+                            "end_time": "16:57",
                             "distance": 0.84,
                             "price": 0,
                             "cost": 0
@@ -288,13 +330,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:32",
-                    "end_time": "20:03",
-                    "start": "Shanghai Pudong International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 582.65,
-                    "cost": 582.65,
+                    "type": "attraction",
+                    "position": "Cloudrise Art Museum",
+                    "start_time": "13:03",
+                    "end_time": "14:33",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 1,
                     "transports": [
                         {
@@ -309,21 +350,106 @@
                         },
                         {
                             "start": "Zhenping Road-Metro Station",
-                            "end": "Pudong International Airport-Metro Station",
+                            "end": "Zhongshan North Road-Metro Station",
                             "mode": "metro",
                             "start_time": "12:48",
-                            "end_time": "14:02",
-                            "distance": 37.35,
-                            "price": 8,
-                            "cost": 8,
+                            "end_time": "12:54",
+                            "distance": 3.13,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Zhongshan North Road-Metro Station",
+                            "end": "Cloudrise Art Museum",
+                            "mode": "walk",
+                            "start_time": "12:54",
+                            "end_time": "13:03",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Jing'an Sculpture Park",
+                    "start_time": "14:48",
+                    "end_time": "16:18",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Cloudrise Art Museum",
+                            "end": "Zhongshan North Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:33",
+                            "end_time": "14:42",
+                            "distance": 0.8,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Zhongshan North Road-Metro Station",
+                            "end": "Qufu Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:42",
+                            "end_time": "14:46",
+                            "distance": 2.18,
+                            "price": 2,
+                            "cost": 2,
+                            "tickets": 1
+                        },
+                        {
+                            "start": "Qufu Road-Metro Station",
+                            "end": "Jing'an Sculpture Park",
+                            "mode": "walk",
+                            "start_time": "14:46",
+                            "end_time": "14:48",
+                            "distance": 0.18,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:32",
+                    "end_time": "20:03",
+                    "start": "Shanghai Pudong International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 582.65,
+                    "cost": 582.65,
+                    "tickets": 1,
+                    "transports": [
+                        {
+                            "start": "Jing'an Sculpture Park",
+                            "end": "Qufu Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:18",
+                            "end_time": "16:20",
+                            "distance": 0.18,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qufu Road-Metro Station",
+                            "end": "Pudong International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:20",
+                            "end_time": "17:26",
+                            "distance": 33.41,
+                            "price": 7,
+                            "cost": 7,
                             "tickets": 1
                         },
                         {
                             "start": "Pudong International Airport-Metro Station",
                             "end": "Shanghai Pudong International Airport",
                             "mode": "walk",
-                            "start_time": "14:02",
-                            "end_time": "14:17",
+                            "start_time": "17:26",
+                            "end_time": "17:41",
                             "distance": 1.27,
                             "price": 0,
                             "cost": 0
@@ -334,5 +460,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 2.673534870147705
+    "elapsed_time(sec)": 23.75593113899231
 }

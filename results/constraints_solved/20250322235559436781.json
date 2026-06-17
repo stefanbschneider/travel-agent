@@ -204,12 +204,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 9.0,
-                    "cost": 18.0,
+                    "type": "attraction",
+                    "position": "Chengdu Painting Academy",
+                    "start_time": "12:22",
+                    "end_time": "13:52",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -224,11 +224,74 @@
                         },
                         {
                             "start": "Kuanzhai Alley-Metro Station",
-                            "end": "Tianfu Square-Metro Station",
+                            "end": "Luomashi-Metro Station",
                             "mode": "metro",
                             "start_time": "12:10",
-                            "end_time": "12:13",
-                            "distance": 1.69,
+                            "end_time": "12:12",
+                            "distance": 1.44,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Luomashi-Metro Station",
+                            "end": "Chengdu Painting Academy",
+                            "mode": "walk",
+                            "start_time": "12:12",
+                            "end_time": "12:22",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Chengdu People's Park",
+                    "start_time": "14:03",
+                    "end_time": "15:33",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Chengdu Painting Academy",
+                            "end": "Chengdu People's Park",
+                            "mode": "walk",
+                            "start_time": "13:52",
+                            "end_time": "14:03",
+                            "distance": 0.994115199018521,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 9.0,
+                    "cost": 18.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Chengdu People's Park",
+                            "end": "Luomashi-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:33",
+                            "end_time": "15:37",
+                            "distance": 0.37,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Luomashi-Metro Station",
+                            "end": "Tianfu Square-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:37",
+                            "end_time": "15:39",
+                            "distance": 1.0,
                             "price": 2,
                             "cost": 4,
                             "tickets": 2
@@ -237,8 +300,8 @@
                             "start": "Tianfu Square-Metro Station",
                             "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
                             "mode": "walk",
-                            "start_time": "12:13",
-                            "end_time": "12:16",
+                            "start_time": "15:39",
+                            "end_time": "15:42",
                             "distance": 0.26,
                             "price": 0,
                             "cost": 0
@@ -292,5 +355,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 4.107288122177124
+    "elapsed_time(sec)": 7.766783952713013
 }

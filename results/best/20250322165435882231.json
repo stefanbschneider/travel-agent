@@ -515,13 +515,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:04",
-          "end_time": "22:22",
-          "start": "Shenzhen North Railway Station",
-          "end": "Wuhan Station",
-          "price": 582.03,
-          "cost": 1746.09,
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "12:12",
+          "end_time": "13:42",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -536,11 +535,96 @@
             },
             {
               "start": "Ludan Village-Metro Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
+              "end": "Hongling-Metro Station",
               "mode": "metro",
               "start_time": "12:03",
-              "end_time": "12:26",
-              "distance": 11.55,
+              "end_time": "12:05",
+              "distance": 1.46,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "walk",
+              "start_time": "12:05",
+              "end_time": "12:12",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "13:53",
+          "end_time": "15:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "Hongling-Metro Station",
+              "mode": "walk",
+              "start_time": "13:42",
+              "end_time": "13:49",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Shaibu-Metro Station",
+              "mode": "metro",
+              "start_time": "13:49",
+              "end_time": "13:52",
+              "distance": 1.86,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "East Gate Old Street",
+              "mode": "walk",
+              "start_time": "13:52",
+              "end_time": "13:53",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:04",
+          "end_time": "22:22",
+          "start": "Shenzhen North Railway Station",
+          "end": "Wuhan Station",
+          "price": 582.03,
+          "cost": 1746.09,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "Shaibu-Metro Station",
+              "mode": "walk",
+              "start_time": "15:53",
+              "end_time": "15:54",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:54",
+              "end_time": "16:17",
+              "distance": 11.67,
               "price": 4,
               "cost": 12,
               "tickets": 3
@@ -549,8 +633,8 @@
               "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Shenzhen North Railway Station",
               "mode": "walk",
-              "start_time": "12:26",
-              "end_time": "12:27",
+              "start_time": "16:17",
+              "end_time": "16:18",
               "distance": 0.15,
               "price": 0,
               "cost": 0
@@ -562,5 +646,5 @@
     }
   ],
   "elapsed_time(sec)": 1.3519902229309082,
-  "_eval_score": 94.39682539682539
+  "_eval_score": 95.42630385487529
 }

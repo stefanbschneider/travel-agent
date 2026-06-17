@@ -662,13 +662,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "21:41",
-                    "end_time": "23:19",
-                    "start": "Hangzhou Xiaoshan International Airport",
-                    "end": "Chongqing Jiangbei International Airport",
-                    "price": 639.67,
-                    "cost": 1279.34,
+                    "type": "attraction",
+                    "position": "Deshou Palace Museum of the Southern Song Dynasty Ruins",
+                    "start_time": "15:16",
+                    "end_time": "16:46",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -683,11 +682,96 @@
                         },
                         {
                             "start": "Shuicheng Bridge-Metro Station",
-                            "end": "Xiaoshan International Airport-Metro Station",
+                            "end": "City Station-Metro Station",
                             "mode": "metro",
                             "start_time": "15:05",
-                            "end_time": "15:59",
-                            "distance": 27.29,
+                            "end_time": "15:15",
+                            "distance": 5.28,
+                            "price": 3,
+                            "cost": 6,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "City Station-Metro Station",
+                            "end": "Deshou Palace Museum of the Southern Song Dynasty Ruins",
+                            "mode": "walk",
+                            "start_time": "15:15",
+                            "end_time": "15:16",
+                            "distance": 0.1,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Grandma Sun's Scallion Pancake Rolls",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 10.0,
+                    "cost": 20.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Deshou Palace Museum of the Southern Song Dynasty Ruins",
+                            "end": "City Station-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:46",
+                            "end_time": "16:47",
+                            "distance": 0.1,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "City Station-Metro Station",
+                            "end": "Jiangcheng Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:47",
+                            "end_time": "16:48",
+                            "distance": 0.71,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Jiangcheng Road-Metro Station",
+                            "end": "Grandma Sun's Scallion Pancake Rolls",
+                            "mode": "walk",
+                            "start_time": "16:48",
+                            "end_time": "16:58",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "21:41",
+                    "end_time": "23:19",
+                    "start": "Hangzhou Xiaoshan International Airport",
+                    "end": "Chongqing Jiangbei International Airport",
+                    "price": 639.67,
+                    "cost": 1279.34,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Grandma Sun's Scallion Pancake Rolls",
+                            "end": "Jiangcheng Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "18:10",
+                            "distance": 0.86,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Jiangcheng Road-Metro Station",
+                            "end": "Xiaoshan International Airport-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:10",
+                            "end_time": "18:59",
+                            "distance": 24.54,
                             "price": 6,
                             "cost": 12,
                             "tickets": 2
@@ -696,8 +780,8 @@
                             "start": "Xiaoshan International Airport-Metro Station",
                             "end": "Hangzhou Xiaoshan International Airport",
                             "mode": "walk",
-                            "start_time": "15:59",
-                            "end_time": "16:00",
+                            "start_time": "18:59",
+                            "end_time": "19:00",
                             "distance": 0.12,
                             "price": 0,
                             "cost": 0
@@ -708,5 +792,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 4.048784971237183
+    "elapsed_time(sec)": 18.27832007408142
 }

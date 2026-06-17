@@ -383,6 +383,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Duoyun Bookstore (Guangfulin Branch)",
+          "start_time": "13:14",
+          "end_time": "14:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guangfulin Cultural Site",
+              "end": "Duoyun Bookstore (Guangfulin Branch)",
+              "mode": "walk",
+              "start_time": "13:14",
+              "end_time": "13:14",
+              "distance": 0.029366611595880013,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "17:00",
           "end_time": "18:07",
@@ -393,15 +414,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Guangfulin Cultural Site",
+              "start": "Duoyun Bookstore (Guangfulin Branch)",
+              "end": "Dongjing-Metro Station",
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "15:21",
+              "distance": 3.1,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongjing-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:21",
+              "end_time": "15:50",
+              "distance": 14.79,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "taxi",
-              "start_time": "13:14",
-              "end_time": "13:40",
-              "distance": 17.76,
-              "price": 74.62,
-              "cost": 74.62,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:50",
+              "end_time": "15:51",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G24"
@@ -410,5 +451,5 @@
     }
   ],
   "elapsed_time(sec)": 6.954781770706177,
-  "_eval_score": 97.08333333333334
+  "_eval_score": 97.5
 }

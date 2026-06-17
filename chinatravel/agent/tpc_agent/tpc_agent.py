@@ -313,6 +313,23 @@ class TPCAgent(BaseAgent):
                     meals += 1
         return attrs, meals
 
+    def _eval_proxy(self, plan):
+        attrs, meals = self._activity_counts(plan)
+        days = max(1, len(plan.get("itinerary", []) or []))
+        dav = min(1.0, attrs / (4.0 * days))
+        ddr = min(1.0, meals / (3.0 * days))
+        transit_total = 0
+        transit_count = 0
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                transports = activity.get("transports", []) or []
+                if transports:
+                    transit_total += self._inner_activity_minutes(activity)
+                    transit_count += 1
+        average_transit = transit_total / transit_count if transit_count > 0 else -1
+        att = max(0.0, min(1.0, (-1.0 / 105.0) * average_transit + 8.0 / 7.0))
+        return 5.0 * dav + 5.0 * att + 5.0 * ddr
+
     def _repair_params(self, constraints):
         """Deterministic param priors derived from which constraints are present, tried before
         random restarts so single-signal queries converge fast."""
@@ -378,7 +395,7 @@ class TPCAgent(BaseAgent):
                 passed, total = check(plan)
             except Exception:
                 passed, total = 0, 0
-            key = (passed, -self._plan_total_cost(plan))
+            key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
             if best["plan"] is None or key > best["key"]:
                 best.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
             return self._accepted(passed, total)
@@ -395,7 +412,8 @@ class TPCAgent(BaseAgent):
             check = self._make_checker(query, constraints)
             try:
                 if consider(self._build_plan(query, constraints=constraints), constraints, check, {}):
-                    break
+                    if os.environ.get("TPC_CP_FORCE") != "1":
+                        break
             except Exception:
                 import traceback
                 traceback.print_exc()
@@ -469,7 +487,293 @@ class TPCAgent(BaseAgent):
             if (c_attrs + c_meals) > (best_attrs + best_meals):
                 best_plan = cand
                 best_attrs, best_meals = c_attrs, c_meals
-        return best_plan
+        return self._densify_plan(best_plan, query, constraints, check)
+
+    def _activity_start_position(self, activity):
+        if activity.get("type") in ("airplane", "train"):
+            return str(activity.get("start", "") or activity.get("From", ""))
+        return str(activity.get("position", "") or activity.get("start", ""))
+
+    def _activity_end_position(self, activity):
+        if activity.get("type") in ("airplane", "train"):
+            return str(activity.get("end", "") or activity.get("To", ""))
+        return str(activity.get("position", "") or activity.get("end", ""))
+
+    def _poi_open_bounds(self, poi):
+        open_min = poi.get("open_min", None)
+        close_min = poi.get("close_min", None)
+        if open_min is None:
+            try:
+                open_min = time_to_minutes(str(poi.get("opentime", "00:00")))
+            except Exception:
+                open_min = 0
+        if close_min is None:
+            close_raw = str(poi.get("endtime", "24:00"))
+            try:
+                close_min = 24 * 60 if close_raw == "24:00" else time_to_minutes(close_raw)
+            except Exception:
+                close_min = 24 * 60
+        if close_min <= open_min:
+            close_min += 24 * 60
+        return int(open_min), int(close_min)
+
+    def _densify_dwell_minutes(self, poi, kind):
+        if kind != "attraction":
+            return 60
+        return 90
+
+    def _inner_activity_minutes(self, activity):
+        total = 0
+        for leg in activity.get("transports", []) or []:
+            try:
+                total += time_to_minutes(str(leg["end_time"])) - time_to_minutes(str(leg["start_time"]))
+            except Exception:
+                continue
+        return total
+
+    def _haversine_km(self, a, b):
+        try:
+            lat1 = math.radians(float(a["lat"]))
+            lon1 = math.radians(float(a["lon"]))
+            lat2 = math.radians(float(b["lat"]))
+            lon2 = math.radians(float(b["lon"]))
+        except Exception:
+            return float("inf")
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        s = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+        return 6371.0 * 2.0 * math.atan2(math.sqrt(s), math.sqrt(max(0.0, 1.0 - s)))
+
+    def _day_gaps(self, activities, win_open, win_close, min_minutes):
+        gaps = []
+        for idx in range(len(activities) - 1):
+            try:
+                prev_end = time_to_minutes(str(activities[idx].get("end_time", "")))
+                next_start = time_to_minutes(str(activities[idx + 1].get("start_time", "")))
+            except Exception:
+                continue
+            gap_start = max(prev_end, win_open)
+            gap_end = min(next_start, win_close)
+            if gap_end - gap_start >= min_minutes:
+                gaps.append((idx, gap_start, gap_end))
+        return gaps
+
+    def _find_hotel_for_day(self, plan, day_idx):
+        itinerary = plan.get("itinerary", []) or []
+        for scan in range(day_idx, -1, -1):
+            activities = itinerary[scan].get("activities", []) or []
+            for activity in reversed(activities):
+                if activity.get("type") == "accommodation" and activity.get("position"):
+                    return str(activity["position"])
+        for scan in range(day_idx + 1, len(itinerary)):
+            activities = itinerary[scan].get("activities", []) or []
+            for activity in activities:
+                if activity.get("type") == "accommodation" and activity.get("position"):
+                    return str(activity["position"])
+        return None
+
+    def _insert_breakfast(self, plan, day_idx, hotel_name, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if not activities:
+            return False
+        if day_idx == 0 and activities[0].get("type") in ("airplane", "train"):
+            return False
+        try:
+            if time_to_minutes(str(activities[0].get("start_time", "00:00"))) < time_to_minutes("08:30"):
+                return False
+        except Exception:
+            return False
+        before = self._activity_counts(plan)
+        activity = self._make_hotel_breakfast(hotel_name, "07:30", "08:30")
+        activities.insert(0, activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        del activities[0]
+        return False
+
+    def _insert_activity(self, plan, day_idx, prev_idx, poi, kind, window, city, people, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if prev_idx < 0 or prev_idx + 1 >= len(activities):
+            return False
+        prev_act = activities[prev_idx]
+        next_act = activities[prev_idx + 1]
+        prev_pos = self._activity_end_position(prev_act)
+        next_pos = self._activity_start_position(next_act)
+        poi_name = str(poi.get("name", ""))
+        if not prev_pos or not next_pos or not poi_name:
+            return False
+        try:
+            prev_end_min = time_to_minutes(str(prev_act.get("end_time", "")))
+            next_start_min = time_to_minutes(str(next_act.get("start_time", "")))
+        except Exception:
+            return False
+        if prev_end_min >= next_start_min:
+            return False
+
+        win_open, win_close = window
+        poi_open, poi_close = self._poi_open_bounds(poi)
+        try:
+            transports_in, arrival = self._get_transport(
+                self.env, city, prev_pos, poi_name, str(prev_act.get("end_time", "")), people)
+        except Exception:
+            return False
+        if transports_in is None or arrival is None:
+            return False
+        try:
+            arrival_min = time_to_minutes(str(arrival))
+        except Exception:
+            return False
+        start_min = max(arrival_min, win_open, poi_open)
+        dwell = self._densify_dwell_minutes(poi, kind)
+        end_min = start_min + dwell
+        if end_min > min(win_close, poi_close):
+            return False
+
+        start_time = minutes_to_time(start_min)
+        end_time = minutes_to_time(end_min)
+        try:
+            transports_out, next_arrival = self._get_transport(
+                self.env, city, poi_name, next_pos, end_time, people)
+        except Exception:
+            return False
+        if transports_out is None or next_arrival is None:
+            return False
+        try:
+            if time_to_minutes(str(next_arrival)) > next_start_min:
+                return False
+        except Exception:
+            return False
+
+        if kind == "attraction":
+            activity = self._make_attraction_activity(poi, people, start_time, end_time, transports_in)
+        else:
+            activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_in)
+
+        before = self._activity_counts(plan)
+        old_next_transports = deepcopy(next_act.get("transports", []))
+        next_act["transports"] = transports_out
+        activities.insert(prev_idx + 1, activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        del activities[prev_idx + 1]
+        next_act["transports"] = old_next_transports
+        return False
+
+    def _densify_plan(self, plan, query, constraints, check):
+        """Insert meals/attractions into proven idle gaps without trading away acceptance.
+
+        Every insertion is gated by the full oracle/schema/commonsense checker and reverted on
+        failure, so budget, exclusion, timing, transport, and query-specific hard constraints stay
+        correct even though this pass only reasons locally about idle windows.
+        """
+        try:
+            if not self._accepted(*check(plan)):
+                return plan
+        except Exception:
+            return plan
+        try:
+            from agent.tpc_agent.cp_candidates import build_candidate_context
+            ctx = build_candidate_context(
+                self, query, constraints or {}, {"attractions": 80, "restaurants": 50, "hotels": 1})
+        except Exception:
+            return plan
+
+        dense = deepcopy(plan)
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        constraints = constraints or {}
+        self._active_timing_constraints = constraints.get("timing_constraints", []) or []
+        self._transport_constraints = {
+            "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
+            "conditional_transport": constraints.get("conditional_transport", None),
+            "taxi_cars_equals": constraints.get("taxi_cars_equals", None),
+        }
+        self._forced_inner_mode = None
+        self._budget_limits = self._extract_budget_limits(constraints)
+
+        restaurants = sorted(ctx.get("restaurants", []) or [], key=lambda r: (r.get("price_cents", 0), r.get("name", "")))
+        attractions = list(ctx.get("attractions", []) or [])
+        coords = {}
+        for row in attractions + restaurants + (ctx.get("hotels", []) or []):
+            name = self._norm_text(row.get("name", ""))
+            if name and "lat" in row and "lon" in row:
+                coords[name] = row
+
+        used_restaurants = set()
+        used_attractions = set()
+        for day in dense.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                name = self._norm_text(activity.get("position", ""))
+                if activity.get("type") in ("breakfast", "lunch", "dinner") and name:
+                    used_restaurants.add(name)
+                elif activity.get("type") == "attraction" and name:
+                    used_attractions.add(name)
+
+        itinerary = dense.get("itinerary", []) or []
+        for day_idx, day in enumerate(itinerary):
+            activities = day.get("activities", []) or []
+            if len(activities) < 2:
+                continue
+            meal_types = {a.get("type") for a in activities if a.get("type") in ("breakfast", "lunch", "dinner")}
+
+            if "breakfast" not in meal_types:
+                hotel = self._find_hotel_for_day(dense, day_idx)
+                if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
+                    meal_types.add("breakfast")
+
+            for meal_type, window in (("lunch", (11 * 60, 14 * 60)), ("dinner", (17 * 60, 20 * 60))):
+                if meal_type in meal_types:
+                    continue
+                inserted = False
+                for restaurant in restaurants:
+                    r_name = self._norm_text(restaurant.get("name", ""))
+                    if not r_name or r_name in used_restaurants:
+                        continue
+                    for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
+                        if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
+                            used_restaurants.add(r_name)
+                            meal_types.add(meal_type)
+                            inserted = True
+                            break
+                    if inserted:
+                        break
+
+            while sum(1 for a in activities if a.get("type") == "attraction") < 4:
+                gaps = self._day_gaps(activities, 9 * 60, 18 * 60, 130)
+                if not gaps:
+                    break
+                inserted = False
+                for prev_idx, _gap_start, _gap_end in gaps:
+                    prev_name = self._norm_text(self._activity_end_position(activities[prev_idx]))
+                    prev_coords = coords.get(prev_name)
+                    ranked = sorted(
+                        attractions,
+                        key=lambda a: (
+                            self._haversine_km(prev_coords, a) if prev_coords is not None else float("inf"),
+                            a.get("price_cents", 0),
+                            a.get("name", ""),
+                        ),
+                    )
+                    for attr in ranked:
+                        a_name = self._norm_text(attr.get("name", ""))
+                        if not a_name or a_name in used_attractions:
+                            continue
+                        if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (9 * 60, 18 * 60), city, people, check):
+                            used_attractions.add(a_name)
+                            inserted = True
+                            break
+                    if inserted:
+                        break
+                if not inserted:
+                    break
+
+        return dense
 
     def _room_type_to_numbed(self, room_type):
         if room_type is None:
@@ -1802,7 +2106,7 @@ class TPCAgent(BaseAgent):
 
         mode_order = [m for m in mode_order if self._norm_text(m) not in excluded]
         if len(mode_order) == 0:
-            mode_order = ["taxi"]
+            return None, None
 
         try:
             for mode in mode_order:

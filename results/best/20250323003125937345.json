@@ -599,13 +599,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "20:58",
-          "end_time": "21:40",
-          "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Wuhan Tianhe International Airport",
-          "price": 261.24,
-          "cost": 522.48,
+          "type": "attraction",
+          "position": "Asian Games Theme Park",
+          "start_time": "14:37",
+          "end_time": "16:07",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -620,11 +619,96 @@
             },
             {
               "start": "Shuicheng Bridge-Metro Station",
-              "end": "Xiaoshan International Airport-Metro Station",
+              "end": "Qianjiang Century City-Metro Station",
               "mode": "metro",
               "start_time": "14:12",
-              "end_time": "15:06",
-              "distance": 27.29,
+              "end_time": "14:31",
+              "distance": 9.77,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Qianjiang Century City-Metro Station",
+              "end": "Asian Games Theme Park",
+              "mode": "walk",
+              "start_time": "14:31",
+              "end_time": "14:37",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Asian Games Theme Park",
+              "end": "Qianjiang Century City-Metro Station",
+              "mode": "walk",
+              "start_time": "16:07",
+              "end_time": "16:13",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qianjiang Century City-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:13",
+              "end_time": "16:25",
+              "distance": 6.38,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:25",
+              "end_time": "16:35",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:58",
+          "end_time": "21:40",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 261.24,
+          "cost": 522.48,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:59",
+              "distance": 24.54,
               "price": 6,
               "cost": 12,
               "tickets": 2
@@ -633,8 +717,8 @@
               "start": "Xiaoshan International Airport-Metro Station",
               "end": "Hangzhou Xiaoshan International Airport",
               "mode": "walk",
-              "start_time": "15:06",
-              "end_time": "15:07",
+              "start_time": "18:59",
+              "end_time": "19:00",
               "distance": 0.12,
               "price": 0,
               "cost": 0
@@ -646,5 +730,5 @@
     }
   ],
   "elapsed_time(sec)": 4.075989007949829,
-  "_eval_score": 93.73979591836735
+  "_eval_score": 94.94246031746032
 }

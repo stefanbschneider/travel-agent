@@ -536,13 +536,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 1747.9499999999998,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "15:45",
+          "end_time": "17:15",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -557,21 +556,64 @@
             },
             {
               "start": "Zhenbei Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
               "start_time": "15:14",
-              "end_time": "16:36",
-              "distance": 41.37,
-              "price": 8,
-              "cost": 24,
+              "end_time": "15:43",
+              "distance": 14.55,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "walk",
+              "start_time": "15:43",
+              "end_time": "15:45",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 1747.9499999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Yuanshen Sports Center-Metro Station",
+              "mode": "walk",
+              "start_time": "17:15",
+              "end_time": "17:17",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "17:17",
+              "end_time": "18:11",
+              "distance": 27.38,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "16:36",
-              "end_time": "16:51",
+              "start_time": "18:11",
+              "end_time": "18:26",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -583,5 +625,5 @@
     }
   ],
   "elapsed_time(sec)": 5.002915143966675,
-  "_eval_score": 93.8489010989011
+  "_eval_score": 94.41156462585033
 }

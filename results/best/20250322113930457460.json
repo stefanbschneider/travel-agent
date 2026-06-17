@@ -578,6 +578,69 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Liu Haisu Art Museum",
+          "start_time": "12:39",
+          "end_time": "14:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Fu 1039",
+              "end": "Liu Haisu Art Museum",
+              "mode": "walk",
+              "start_time": "12:34",
+              "end_time": "12:39",
+              "distance": 0.4941832898701268,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Changfeng Park",
+          "start_time": "14:29",
+          "end_time": "15:59",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Liu Haisu Art Museum",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:09",
+              "end_time": "14:17",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
+              "end": "Jinshajiang Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:17",
+              "end_time": "14:21",
+              "distance": 2.11,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Jinshajiang Road-Metro Station",
+              "end": "Changfeng Park",
+              "mode": "walk",
+              "start_time": "14:21",
+              "end_time": "14:29",
+              "distance": 0.69,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "18:32",
           "end_time": "20:03",
@@ -588,32 +651,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Fu 1039",
-              "end": "Jiangsu Road-Metro Station",
+              "start": "Changfeng Park",
+              "end": "Jinshajiang Road-Metro Station",
               "mode": "walk",
-              "start_time": "12:34",
-              "end_time": "12:36",
-              "distance": 0.23,
+              "start_time": "15:59",
+              "end_time": "16:07",
+              "distance": 0.69,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Jiangsu Road-Metro Station",
+              "start": "Jinshajiang Road-Metro Station",
               "end": "Pudong International Airport-Metro Station",
               "mode": "metro",
-              "start_time": "12:36",
-              "end_time": "13:49",
-              "distance": 36.56,
-              "price": 7,
-              "cost": 28,
+              "start_time": "16:07",
+              "end_time": "17:23",
+              "distance": 38.47,
+              "price": 8,
+              "cost": 32,
               "tickets": 4
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "14:04",
+              "start_time": "17:23",
+              "end_time": "17:38",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -625,5 +688,5 @@
     }
   ],
   "elapsed_time(sec)": 14.965412855148315,
-  "_eval_score": 94.52494331065759
+  "_eval_score": 95.57936507936508
 }

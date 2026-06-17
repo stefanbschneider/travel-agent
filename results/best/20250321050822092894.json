@@ -515,13 +515,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:24",
-          "end_time": "20:19",
-          "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Chengdu Tianfu International Airport",
-          "price": 788.36,
-          "cost": 2365.08,
+          "type": "attraction",
+          "position": "Asian Games Theme Park",
+          "start_time": "15:05",
+          "end_time": "16:35",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -536,21 +535,64 @@
             },
             {
               "start": "Fengqi Road-Metro Station",
-              "end": "Xiaoshan International Airport-Metro Station",
+              "end": "Qianjiang Century City-Metro Station",
               "mode": "metro",
               "start_time": "14:43",
-              "end_time": "15:35",
-              "distance": 26.2,
-              "price": 6,
-              "cost": 18,
+              "end_time": "14:59",
+              "distance": 8.27,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Qianjiang Century City-Metro Station",
+              "end": "Asian Games Theme Park",
+              "mode": "walk",
+              "start_time": "14:59",
+              "end_time": "15:05",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:24",
+          "end_time": "20:19",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Chengdu Tianfu International Airport",
+          "price": 788.36,
+          "cost": 2365.08,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Asian Games Theme Park",
+              "end": "Qianjiang Century City-Metro Station",
+              "mode": "walk",
+              "start_time": "16:35",
+              "end_time": "16:41",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qianjiang Century City-Metro Station",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:41",
+              "end_time": "17:17",
+              "distance": 18.17,
+              "price": 5,
+              "cost": 15,
               "tickets": 3
             },
             {
               "start": "Xiaoshan International Airport-Metro Station",
               "end": "Hangzhou Xiaoshan International Airport",
               "mode": "walk",
-              "start_time": "15:35",
-              "end_time": "15:36",
+              "start_time": "17:17",
+              "end_time": "17:18",
               "distance": 0.12,
               "price": 0,
               "cost": 0
@@ -562,5 +604,5 @@
     }
   ],
   "elapsed_time(sec)": 4.413280248641968,
-  "_eval_score": 92.46825396825396
+  "_eval_score": 93.1013431013431
 }

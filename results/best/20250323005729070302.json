@@ -393,13 +393,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:29",
-          "end_time": "19:03",
-          "start": "Wuhan Tianhe International Airport",
-          "end": "Nanjing Lukou International Airport",
-          "price": 464.7,
-          "cost": 1858.8,
+          "type": "attraction",
+          "position": "5D Starry Sky Illusion Art Museum",
+          "start_time": "14:52",
+          "end_time": "16:52",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -414,11 +413,54 @@
             },
             {
               "start": "Tanhualin Wushengmen-Metro Station",
-              "end": "Tianhe Airport-Metro Station",
+              "end": "Dazhi Road-Metro Station",
               "mode": "metro",
               "start_time": "14:38",
-              "end_time": "15:28",
-              "distance": 25.45,
+              "end_time": "14:46",
+              "distance": 4.37,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "5D Starry Sky Illusion Art Museum",
+              "mode": "walk",
+              "start_time": "14:46",
+              "end_time": "14:52",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:29",
+          "end_time": "19:03",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 464.7,
+          "cost": 1858.8,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "5D Starry Sky Illusion Art Museum",
+              "end": "Dazhi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:58",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:58",
+              "end_time": "17:40",
+              "distance": 21.12,
               "price": 6,
               "cost": 24,
               "tickets": 4
@@ -427,8 +469,8 @@
               "start": "Tianhe Airport-Metro Station",
               "end": "Wuhan Tianhe International Airport",
               "mode": "walk",
-              "start_time": "15:28",
-              "end_time": "15:34",
+              "start_time": "17:40",
+              "end_time": "17:46",
               "distance": 0.55,
               "price": 0,
               "cost": 0
@@ -440,5 +482,5 @@
     }
   ],
   "elapsed_time(sec)": 2.0589261054992676,
-  "_eval_score": 94.82142857142857
+  "_eval_score": 95.58928571428572
 }

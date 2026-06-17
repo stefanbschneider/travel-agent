@@ -620,13 +620,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "type": "attraction",
+          "position": "Ageless Village",
+          "start_time": "14:13",
+          "end_time": "15:43",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -641,21 +640,64 @@
             },
             {
               "start": "Xinjiekou-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Longhua Road-Metro Station",
               "mode": "metro",
               "start_time": "12:56",
-              "end_time": "14:07",
-              "distance": 35.57,
-              "price": 7,
-              "cost": 14,
+              "end_time": "13:24",
+              "distance": 14.29,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Longhua Road-Metro Station",
+              "end": "Ageless Village",
+              "mode": "walk",
+              "start_time": "13:24",
+              "end_time": "14:13",
+              "distance": 4.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:22",
+          "end_time": "18:42",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 221.47,
+          "cost": 442.94,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Ageless Village",
+              "end": "Longhua Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:43",
+              "end_time": "16:32",
+              "distance": 4.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longhua Road-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:32",
+              "end_time": "17:58",
+              "distance": 43.4,
+              "price": 8,
+              "cost": 16,
               "tickets": 2
             },
             {
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "14:07",
-              "end_time": "14:10",
+              "start_time": "17:58",
+              "end_time": "18:01",
               "distance": 0.27,
               "price": 0,
               "cost": 0
@@ -667,5 +709,5 @@
     }
   ],
   "elapsed_time(sec)": 5.724604845046997,
-  "_eval_score": 95.0563492063492
+  "_eval_score": 95.20734126984127
 }

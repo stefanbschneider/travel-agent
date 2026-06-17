@@ -679,13 +679,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "21:43",
-          "end_time": "08:44",
-          "start": "Suzhou Station",
-          "end": "Chengdu West Railway Station",
-          "price": 630.35,
-          "cost": 1891.0500000000002,
+          "type": "attraction",
+          "position": "A Hidden Wonderland",
+          "start_time": "12:37",
+          "end_time": "14:37",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -700,21 +699,148 @@
             },
             {
               "start": "Times Square-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
+              "end": "Fuyuan Road-Metro Station",
               "mode": "metro",
               "start_time": "12:01",
-              "end_time": "12:20",
-              "distance": 9.82,
+              "end_time": "12:25",
+              "distance": 12.3,
               "price": 4,
               "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "A Hidden Wonderland",
+              "mode": "walk",
+              "start_time": "12:25",
+              "end_time": "12:37",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "City God Temple",
+          "start_time": "15:14",
+          "end_time": "16:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "A Hidden Wonderland",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:37",
+              "end_time": "14:49",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "14:49",
+              "end_time": "15:08",
+              "distance": 9.93,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "City God Temple",
+              "mode": "walk",
+              "start_time": "15:08",
+              "end_time": "15:14",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "City God Temple",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "16:44",
+              "end_time": "16:50",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "metro",
+              "start_time": "16:50",
+              "end_time": "16:52",
+              "distance": 1.42,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:57",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "21:43",
+          "end_time": "08:44",
+          "start": "Suzhou Station",
+          "end": "Chengdu West Railway Station",
+          "price": 630.35,
+          "cost": 1891.0500000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "18:12",
+              "distance": 3.95,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Suzhou Railway Station-Metro Station",
               "end": "Suzhou Station",
               "mode": "walk",
-              "start_time": "12:20",
-              "end_time": "12:21",
+              "start_time": "18:12",
+              "end_time": "18:13",
               "distance": 0.13,
               "price": 0,
               "cost": 0
@@ -726,5 +852,5 @@
     }
   ],
   "elapsed_time(sec)": 6.989024877548218,
-  "_eval_score": 94.64583333333334
+  "_eval_score": 95.74044486215539
 }

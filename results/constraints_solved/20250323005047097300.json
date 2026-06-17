@@ -309,12 +309,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 220.0,
-                    "cost": 880.0,
+                    "type": "attraction",
+                    "position": "Baochu Pagoda",
+                    "start_time": "15:04",
+                    "end_time": "16:34",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -329,11 +329,53 @@
                         },
                         {
                             "start": "Wushan Square-Metro Station",
-                            "end": "Dongyue-Metro Station",
+                            "end": "Wulinmen-Metro Station",
                             "mode": "metro",
                             "start_time": "14:55",
-                            "end_time": "15:10",
-                            "distance": 7.52,
+                            "end_time": "15:01",
+                            "distance": 3.4,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Wulinmen-Metro Station",
+                            "end": "Baochu Pagoda",
+                            "mode": "walk",
+                            "start_time": "15:01",
+                            "end_time": "15:04",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 220.0,
+                    "cost": 880.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Baochu Pagoda",
+                            "end": "Wulinmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:34",
+                            "end_time": "16:37",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wulinmen-Metro Station",
+                            "end": "Dongyue-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:37",
+                            "end_time": "16:49",
+                            "distance": 6.39,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
@@ -342,8 +384,8 @@
                             "start": "Dongyue-Metro Station",
                             "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
                             "mode": "walk",
-                            "start_time": "15:10",
-                            "end_time": "15:17",
+                            "start_time": "16:49",
+                            "end_time": "16:56",
                             "distance": 0.61,
                             "price": 0,
                             "cost": 0
@@ -679,13 +721,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "lunch",
+                    "position": "Southern Eclectic Buns (Lakeside Branch)",
+                    "start_time": "12:19",
+                    "end_time": "13:19",
+                    "price": 8.0,
+                    "cost": 32.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -700,21 +741,106 @@
                         },
                         {
                             "start": "Shuicheng Bridge-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Longxiang Bridge-Metro Station",
                             "mode": "metro",
                             "start_time": "12:05",
-                            "end_time": "12:28",
-                            "distance": 11.72,
-                            "price": 4,
-                            "cost": 16,
+                            "end_time": "12:16",
+                            "distance": 5.73,
+                            "price": 3,
+                            "cost": 12,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Longxiang Bridge-Metro Station",
+                            "end": "Southern Eclectic Buns (Lakeside Branch)",
+                            "mode": "walk",
+                            "start_time": "12:16",
+                            "end_time": "12:19",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Hangzhou Confucius Temple",
+                    "start_time": "13:26",
+                    "end_time": "14:56",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Southern Eclectic Buns (Lakeside Branch)",
+                            "end": "Longxiang Bridge-Metro Station",
+                            "mode": "walk",
+                            "start_time": "13:19",
+                            "end_time": "13:22",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Longxiang Bridge-Metro Station",
+                            "end": "Ding'an Road-Metro Station",
+                            "mode": "metro",
+                            "start_time": "13:22",
+                            "end_time": "13:24",
+                            "distance": 1.03,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Ding'an Road-Metro Station",
+                            "end": "Hangzhou Confucius Temple",
+                            "mode": "walk",
+                            "start_time": "13:24",
+                            "end_time": "13:26",
+                            "distance": 0.19,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Hangzhou Confucius Temple",
+                            "end": "Ding'an Road-Metro Station",
+                            "mode": "walk",
+                            "start_time": "14:56",
+                            "end_time": "14:58",
+                            "distance": 0.19,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Ding'an Road-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "14:58",
+                            "end_time": "15:12",
+                            "distance": 7.06,
+                            "price": 3,
+                            "cost": 12,
                             "tickets": 4
                         },
                         {
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "12:28",
-                            "end_time": "12:33",
+                            "start_time": "15:12",
+                            "end_time": "15:17",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -725,5 +851,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.332782030105591
+    "elapsed_time(sec)": 27.511849880218506
 }

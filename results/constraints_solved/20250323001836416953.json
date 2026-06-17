@@ -952,13 +952,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "18:30",
-                    "end_time": "18:30",
-                    "start": "Chongqing North Railway Station",
-                    "end": "Shenzhen Station",
-                    "price": 432.71,
-                    "cost": 2163.5499999999997,
+                    "type": "attraction",
+                    "position": "1941 Teahouse and Theater",
+                    "start_time": "13:38",
+                    "end_time": "15:08",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 5,
                     "transports": [
                         {
@@ -973,11 +972,96 @@
                         },
                         {
                             "start": "Jiaochangkou-Metro Station",
-                            "end": "Chongqing North Station South Square-Metro Station",
+                            "end": "Xiaoshizi-Metro Station",
                             "mode": "metro",
                             "start_time": "13:33",
-                            "end_time": "13:45",
-                            "distance": 6.37,
+                            "end_time": "13:35",
+                            "distance": 1.15,
+                            "price": 2,
+                            "cost": 10,
+                            "tickets": 5
+                        },
+                        {
+                            "start": "Xiaoshizi-Metro Station",
+                            "end": "1941 Teahouse and Theater",
+                            "mode": "walk",
+                            "start_time": "13:35",
+                            "end_time": "13:38",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 7.0,
+                    "cost": 35.0,
+                    "tickets": 5,
+                    "transports": [
+                        {
+                            "start": "1941 Teahouse and Theater",
+                            "end": "Xiaoshizi-Metro Station",
+                            "mode": "walk",
+                            "start_time": "15:08",
+                            "end_time": "15:11",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xiaoshizi-Metro Station",
+                            "end": "Guanyinqiao-Metro Station",
+                            "mode": "metro",
+                            "start_time": "15:11",
+                            "end_time": "15:21",
+                            "distance": 5.17,
+                            "price": 3,
+                            "cost": 15,
+                            "tickets": 5
+                        },
+                        {
+                            "start": "Guanyinqiao-Metro Station",
+                            "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+                            "mode": "walk",
+                            "start_time": "15:21",
+                            "end_time": "15:25",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "18:30",
+                    "end_time": "18:30",
+                    "start": "Chongqing North Railway Station",
+                    "end": "Shenzhen Station",
+                    "price": 432.71,
+                    "cost": 2163.5499999999997,
+                    "tickets": 5,
+                    "transports": [
+                        {
+                            "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+                            "end": "Guanyinqiao-Metro Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "18:04",
+                            "distance": 0.33,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Guanyinqiao-Metro Station",
+                            "end": "Chongqing North Station South Square-Metro Station",
+                            "mode": "metro",
+                            "start_time": "18:04",
+                            "end_time": "18:12",
+                            "distance": 4.03,
                             "price": 3,
                             "cost": 15,
                             "tickets": 5
@@ -986,8 +1070,8 @@
                             "start": "Chongqing North Station South Square-Metro Station",
                             "end": "Chongqing North Railway Station",
                             "mode": "walk",
-                            "start_time": "13:45",
-                            "end_time": "13:48",
+                            "start_time": "18:12",
+                            "end_time": "18:15",
                             "distance": 0.27,
                             "price": 0,
                             "cost": 0
@@ -998,5 +1082,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 4.084904909133911
+    "elapsed_time(sec)": 12.464133024215698
 }

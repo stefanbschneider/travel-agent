@@ -7,33 +7,54 @@
             "day": 1,
             "activities": [
                 {
-                    "type": "airplane",
-                    "start_time": "09:31",
-                    "end_time": "11:20",
-                    "start": "Beijing Daxing International Airport",
-                    "end": "Chongqing Jiangbei International Airport",
-                    "price": 732.32,
-                    "cost": 1464.64,
+                    "type": "train",
+                    "start_time": "07:12",
+                    "end_time": "08:58",
+                    "start": "Beijing West Railway Station",
+                    "end": "Chongqing West Railway Station",
+                    "price": 583.42,
+                    "cost": 1166.84,
                     "tickets": 2,
                     "transports": [],
-                    "FlightID": "FL114"
+                    "TrainID": "K507"
                 },
                 {
                     "type": "attraction",
-                    "position": "Hongya Cave",
-                    "start_time": "14:56",
-                    "end_time": "16:26",
+                    "position": "Ci Qi Kou Ancient Town",
+                    "start_time": "10:56",
+                    "end_time": "12:26",
                     "price": 0.0,
                     "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Chongqing Jiangbei International Airport",
-                            "end": "Hongya Cave",
+                            "start": "Chongqing West Railway Station",
+                            "end": "Ci Qi Kou Ancient Town",
                             "mode": "walk",
-                            "start_time": "11:20",
-                            "end_time": "14:56",
-                            "distance": 18.073065853673025,
+                            "start_time": "08:58",
+                            "end_time": "10:56",
+                            "distance": 9.86331332081825,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Cinder Cave",
+                    "start_time": "12:45",
+                    "end_time": "14:15",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Ci Qi Kou Ancient Town",
+                            "end": "Cinder Cave",
+                            "mode": "walk",
+                            "start_time": "12:26",
+                            "end_time": "12:45",
+                            "distance": 1.6585072172185156,
                             "price": 0,
                             "cost": 0
                         }
@@ -41,20 +62,20 @@
                 },
                 {
                     "type": "dinner",
-                    "position": "Chongqing Regent Hotel · Robbins Steakhouse",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 665.0,
-                    "cost": 1330.0,
+                    "position": "Huailiang Pan-Fried Buns (Bayi Road Branch)",
+                    "start_time": "17:01",
+                    "end_time": "18:01",
+                    "price": 9.0,
+                    "cost": 18.0,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Hongya Cave",
-                            "end": "Chongqing Regent Hotel · Robbins Steakhouse",
+                            "start": "Cinder Cave",
+                            "end": "Huailiang Pan-Fried Buns (Bayi Road Branch)",
                             "mode": "walk",
-                            "start_time": "16:26",
-                            "end_time": "16:42",
-                            "distance": 1.4065011155317366,
+                            "start_time": "14:15",
+                            "end_time": "17:01",
+                            "distance": 13.888176519592172,
                             "price": 0,
                             "cost": 0
                         }
@@ -62,22 +83,22 @@
                 },
                 {
                     "type": "accommodation",
-                    "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-                    "start_time": "21:29",
+                    "position": "Yachao Capsule Apartment",
+                    "start_time": "18:06",
                     "end_time": "24:00",
-                    "price": 74.0,
-                    "cost": 148.0,
-                    "rooms": 2,
-                    "room_type": 1,
-                    "tickets": 2,
+                    "price": 31.0,
+                    "cost": 31.0,
+                    "rooms": 1,
+                    "room_type": 2,
+                    "tickets": 1,
                     "transports": [
                         {
-                            "start": "Chongqing Regent Hotel · Robbins Steakhouse",
-                            "end": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+                            "start": "Huailiang Pan-Fried Buns (Bayi Road Branch)",
+                            "end": "Yachao Capsule Apartment",
                             "mode": "walk",
-                            "start_time": "18:00",
-                            "end_time": "21:29",
-                            "distance": 17.49829711097128,
+                            "start_time": "18:01",
+                            "end_time": "18:06",
+                            "distance": 0.47968661840779697,
                             "price": 0,
                             "cost": 0
                         }
@@ -90,7 +111,7 @@
             "activities": [
                 {
                     "type": "breakfast",
-                    "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+                    "position": "Yachao Capsule Apartment",
                     "start_time": "07:30",
                     "end_time": "08:30",
                     "price": 0,
@@ -100,50 +121,113 @@
                 },
                 {
                     "type": "lunch",
-                    "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-                    "start_time": "12:15",
-                    "end_time": "13:15",
-                    "price": 100.0,
-                    "cost": 200.0,
+                    "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+                    "start_time": "11:00",
+                    "end_time": "12:00",
+                    "price": 7.0,
+                    "cost": 14.0,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-                            "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                            "start": "Yachao Capsule Apartment",
+                            "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
                             "mode": "walk",
                             "start_time": "08:30",
-                            "end_time": "12:15",
-                            "distance": 18.773196399830514,
+                            "end_time": "09:28",
+                            "distance": 4.85354973546522,
                             "price": 0,
                             "cost": 0
                         }
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "17:35",
-                    "end_time": "19:24",
-                    "start": "Chongqing Jiangbei International Airport",
-                    "end": "Beijing Capital International Airport",
-                    "price": 725.29,
-                    "cost": 1450.58,
+                    "type": "attraction",
+                    "position": "Beicang Cultural and Creative Block",
+                    "start_time": "12:17",
+                    "end_time": "13:47",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-                            "end": "Chongqing Jiangbei International Airport",
+                            "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+                            "end": "Beicang Cultural and Creative Block",
                             "mode": "walk",
-                            "start_time": "13:15",
-                            "end_time": "17:09",
-                            "distance": 19.533315439900363,
+                            "start_time": "12:00",
+                            "end_time": "12:17",
+                            "distance": 1.4278160131244295,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Chongqing People's Square",
+                    "start_time": "14:14",
+                    "end_time": "15:44",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Beicang Cultural and Creative Block",
+                            "end": "Chongqing People's Square",
+                            "mode": "walk",
+                            "start_time": "13:47",
+                            "end_time": "14:14",
+                            "distance": 2.2834818234096046,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 9.0,
+                    "cost": 18.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Chongqing People's Square",
+                            "end": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+                            "mode": "walk",
+                            "start_time": "15:44",
+                            "end_time": "16:11",
+                            "distance": 2.323077297019611,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "20:56",
+                    "end_time": "21:47",
+                    "start": "Chongqing West Railway Station",
+                    "end": "Beijing West Railway Station",
+                    "price": 583.42,
+                    "cost": 1166.84,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+                            "end": "Chongqing West Railway Station",
+                            "mode": "walk",
+                            "start_time": "18:00",
+                            "end_time": "20:56",
+                            "distance": 14.72115311435148,
                             "price": 0,
                             "cost": 0
                         }
                     ],
-                    "FlightID": "FL333"
+                    "TrainID": "K508"
                 }
             ]
         }
     ],
-    "elapsed_time(sec)": 0.2899293899536133
+    "elapsed_time(sec)": 0.5901329517364502
 }

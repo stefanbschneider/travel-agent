@@ -372,13 +372,12 @@
                     ]
                 },
                 {
-                    "type": "airplane",
-                    "start_time": "18:12",
-                    "end_time": "19:33",
-                    "start": "Chongqing Jiangbei International Airport",
-                    "end": "Shenzhen Bao'an International Airport",
-                    "price": 530.99,
-                    "cost": 2123.96,
+                    "type": "attraction",
+                    "position": "1941 Teahouse and Theater",
+                    "start_time": "13:11",
+                    "end_time": "14:41",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -393,11 +392,75 @@
                         },
                         {
                             "start": "Linjiangmen-Metro Station",
-                            "end": "Jiangbei Airport Terminal 3-Metro Station",
+                            "end": "Xiaoshizi-Metro Station",
                             "mode": "metro",
                             "start_time": "13:07",
-                            "end_time": "13:43",
-                            "distance": 18.4,
+                            "end_time": "13:08",
+                            "distance": 0.93,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Xiaoshizi-Metro Station",
+                            "end": "1941 Teahouse and Theater",
+                            "mode": "walk",
+                            "start_time": "13:08",
+                            "end_time": "13:11",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+                    "start_time": "14:45",
+                    "end_time": "16:15",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "1941 Teahouse and Theater",
+                            "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+                            "mode": "walk",
+                            "start_time": "14:41",
+                            "end_time": "14:45",
+                            "distance": 0.36145056401420345,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "airplane",
+                    "start_time": "18:12",
+                    "end_time": "19:33",
+                    "start": "Chongqing Jiangbei International Airport",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "price": 530.99,
+                    "cost": 2123.96,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+                            "end": "Xiaoshizi-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:15",
+                            "end_time": "16:16",
+                            "distance": 0.14,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Xiaoshizi-Metro Station",
+                            "end": "Jiangbei Airport Terminal 3-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:16",
+                            "end_time": "16:51",
+                            "distance": 17.85,
                             "price": 5,
                             "cost": 20,
                             "tickets": 4
@@ -406,8 +469,8 @@
                             "start": "Jiangbei Airport Terminal 3-Metro Station",
                             "end": "Chongqing Jiangbei International Airport",
                             "mode": "walk",
-                            "start_time": "13:43",
-                            "end_time": "13:57",
+                            "start_time": "16:51",
+                            "end_time": "17:05",
                             "distance": 1.21,
                             "price": 0,
                             "cost": 0
@@ -418,5 +481,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 6.4853150844573975
+    "elapsed_time(sec)": 32.29153323173523
 }

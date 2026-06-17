@@ -578,13 +578,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:34",
-          "end_time": "20:04",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 603.53,
-          "cost": 1810.59,
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "13:59",
+          "end_time": "15:29",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -599,11 +598,75 @@
             },
             {
               "start": "Yunjin Road-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
               "mode": "metro",
               "start_time": "13:36",
-              "end_time": "14:47",
-              "distance": 35.83,
+              "end_time": "13:46",
+              "distance": 5.4,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "13:46",
+              "end_time": "13:59",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beiqiu Museum of Contemporary Art",
+          "start_time": "15:35",
+          "end_time": "17:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Beiqiu Museum of Contemporary Art",
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:35",
+              "distance": 0.5759656668092257,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:34",
+          "end_time": "20:04",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 603.53,
+          "cost": 1810.59,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Beiqiu Museum of Contemporary Art",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "17:05",
+              "end_time": "17:16",
+              "distance": 0.99,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "17:16",
+              "end_time": "18:29",
+              "distance": 36.96,
               "price": 7,
               "cost": 21,
               "tickets": 3
@@ -612,8 +675,8 @@
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "14:47",
-              "end_time": "14:50",
+              "start_time": "18:29",
+              "end_time": "18:32",
               "distance": 0.27,
               "price": 0,
               "cost": 0
@@ -625,5 +688,5 @@
     }
   ],
   "elapsed_time(sec)": 2.363672971725464,
-  "_eval_score": 94.52947845804988
+  "_eval_score": 95.5248015873016
 }

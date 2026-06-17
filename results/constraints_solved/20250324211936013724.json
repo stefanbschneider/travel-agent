@@ -826,13 +826,12 @@
                     ]
                 },
                 {
-                    "type": "train",
-                    "start_time": "17:02",
-                    "end_time": "18:27",
-                    "start": "Hangzhou East Railway Station",
-                    "end": "Suzhou North Station",
-                    "price": 78.65,
-                    "cost": 314.6,
+                    "type": "attraction",
+                    "position": "Asian Games Theme Park",
+                    "start_time": "15:01",
+                    "end_time": "16:31",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -847,21 +846,64 @@
                         },
                         {
                             "start": "Gudun Road-Metro Station",
-                            "end": "East Railway Station (East Square)-Metro Station",
+                            "end": "Qianjiang Century City-Metro Station",
                             "mode": "metro",
                             "start_time": "14:28",
-                            "end_time": "14:50",
-                            "distance": 11.41,
+                            "end_time": "14:55",
+                            "distance": 13.99,
                             "price": 4,
                             "cost": 16,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Qianjiang Century City-Metro Station",
+                            "end": "Asian Games Theme Park",
+                            "mode": "walk",
+                            "start_time": "14:55",
+                            "end_time": "15:01",
+                            "distance": 0.56,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "train",
+                    "start_time": "17:02",
+                    "end_time": "18:27",
+                    "start": "Hangzhou East Railway Station",
+                    "end": "Suzhou North Station",
+                    "price": 78.65,
+                    "cost": 314.6,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Asian Games Theme Park",
+                            "end": "Qianjiang Century City-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:31",
+                            "end_time": "16:37",
+                            "distance": 0.56,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Qianjiang Century City-Metro Station",
+                            "end": "East Railway Station (East Square)-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:37",
+                            "end_time": "16:50",
+                            "distance": 6.55,
+                            "price": 3,
+                            "cost": 12,
                             "tickets": 4
                         },
                         {
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "14:50",
-                            "end_time": "14:55",
+                            "start_time": "16:50",
+                            "end_time": "16:55",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -872,5 +914,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 5.4832799434661865
+    "elapsed_time(sec)": 28.16983413696289
 }

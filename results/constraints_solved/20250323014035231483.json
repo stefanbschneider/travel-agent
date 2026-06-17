@@ -309,12 +309,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 220.0,
-                    "cost": 440.0,
+                    "type": "attraction",
+                    "position": "Baochu Pagoda",
+                    "start_time": "14:56",
+                    "end_time": "16:26",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 2,
                     "transports": [
                         {
@@ -329,11 +329,53 @@
                         },
                         {
                             "start": "Wushan Square-Metro Station",
-                            "end": "Dongyue-Metro Station",
+                            "end": "Wulinmen-Metro Station",
                             "mode": "metro",
                             "start_time": "14:47",
-                            "end_time": "15:02",
-                            "distance": 7.52,
+                            "end_time": "14:53",
+                            "distance": 3.4,
+                            "price": 2,
+                            "cost": 4,
+                            "tickets": 2
+                        },
+                        {
+                            "start": "Wulinmen-Metro Station",
+                            "end": "Baochu Pagoda",
+                            "mode": "walk",
+                            "start_time": "14:53",
+                            "end_time": "14:56",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 220.0,
+                    "cost": 440.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Baochu Pagoda",
+                            "end": "Wulinmen-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:26",
+                            "end_time": "16:29",
+                            "distance": 0.3,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Wulinmen-Metro Station",
+                            "end": "Dongyue-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:29",
+                            "end_time": "16:41",
+                            "distance": 6.39,
                             "price": 3,
                             "cost": 6,
                             "tickets": 2
@@ -342,8 +384,8 @@
                             "start": "Dongyue-Metro Station",
                             "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
                             "mode": "walk",
-                            "start_time": "15:02",
-                            "end_time": "15:09",
+                            "start_time": "16:41",
+                            "end_time": "16:48",
                             "distance": 0.61,
                             "price": 0,
                             "cost": 0
@@ -494,6 +536,48 @@
                     ]
                 },
                 {
+                    "type": "attraction",
+                    "position": "Cloud Pine Study",
+                    "start_time": "13:14",
+                    "end_time": "14:44",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
+                            "end": "Cloud Pine Study",
+                            "mode": "walk",
+                            "start_time": "13:10",
+                            "end_time": "13:14",
+                            "distance": 0.38902382808842784,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "attraction",
+                    "position": "Han Meilin Art Museum",
+                    "start_time": "14:48",
+                    "end_time": "16:18",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 2,
+                    "transports": [
+                        {
+                            "start": "Cloud Pine Study",
+                            "end": "Han Meilin Art Museum",
+                            "mode": "walk",
+                            "start_time": "14:44",
+                            "end_time": "14:48",
+                            "distance": 0.39802414648599194,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
                     "type": "train",
                     "start_time": "17:02",
                     "end_time": "18:27",
@@ -504,12 +588,12 @@
                     "tickets": 2,
                     "transports": [
                         {
-                            "start": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
+                            "start": "Han Meilin Art Museum",
                             "end": "Huanglong Sports Center-Metro Station",
                             "mode": "walk",
-                            "start_time": "13:10",
-                            "end_time": "13:32",
-                            "distance": 1.91,
+                            "start_time": "16:18",
+                            "end_time": "16:32",
+                            "distance": 1.22,
                             "price": 0,
                             "cost": 0
                         },
@@ -517,8 +601,8 @@
                             "start": "Huanglong Sports Center-Metro Station",
                             "end": "East Railway Station (East Square)-Metro Station",
                             "mode": "metro",
-                            "start_time": "13:32",
-                            "end_time": "13:49",
+                            "start_time": "16:32",
+                            "end_time": "16:49",
                             "distance": 8.76,
                             "price": 3,
                             "cost": 6,
@@ -528,8 +612,8 @@
                             "start": "East Railway Station (East Square)-Metro Station",
                             "end": "Hangzhou East Railway Station",
                             "mode": "walk",
-                            "start_time": "13:49",
-                            "end_time": "13:54",
+                            "start_time": "16:49",
+                            "end_time": "16:54",
                             "distance": 0.48,
                             "price": 0,
                             "cost": 0
@@ -540,5 +624,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 3.1991238594055176
+    "elapsed_time(sec)": 21.47815489768982
 }

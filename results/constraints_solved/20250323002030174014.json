@@ -246,12 +246,12 @@
                     ]
                 },
                 {
-                    "type": "dinner",
-                    "position": "Suyan Chinese Restaurant at W Suzhou",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 450.0,
-                    "cost": 1800.0,
+                    "type": "attraction",
+                    "position": "Arhat Hall",
+                    "start_time": "14:34",
+                    "end_time": "16:04",
+                    "price": 0.0,
+                    "cost": 0.0,
                     "tickets": 4,
                     "transports": [
                         {
@@ -266,11 +266,53 @@
                         },
                         {
                             "start": "Meixiang-Metro Station",
-                            "end": "Oriental Gate-Metro Station",
+                            "end": "Shantang Street-Metro Station",
                             "mode": "metro",
                             "start_time": "14:19",
-                            "end_time": "14:29",
-                            "distance": 5.03,
+                            "end_time": "14:25",
+                            "distance": 3.25,
+                            "price": 2,
+                            "cost": 8,
+                            "tickets": 4
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Arhat Hall",
+                            "mode": "walk",
+                            "start_time": "14:25",
+                            "end_time": "14:34",
+                            "distance": 0.78,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "dinner",
+                    "position": "Suyan Chinese Restaurant at W Suzhou",
+                    "start_time": "17:00",
+                    "end_time": "18:00",
+                    "price": 450.0,
+                    "cost": 1800.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Arhat Hall",
+                            "end": "Shantang Street-Metro Station",
+                            "mode": "walk",
+                            "start_time": "16:04",
+                            "end_time": "16:13",
+                            "distance": 0.78,
+                            "price": 0,
+                            "cost": 0
+                        },
+                        {
+                            "start": "Shantang Street-Metro Station",
+                            "end": "Oriental Gate-Metro Station",
+                            "mode": "metro",
+                            "start_time": "16:13",
+                            "end_time": "16:27",
+                            "distance": 7.33,
                             "price": 3,
                             "cost": 12,
                             "tickets": 4
@@ -279,8 +321,8 @@
                             "start": "Oriental Gate-Metro Station",
                             "end": "Suyan Chinese Restaurant at W Suzhou",
                             "mode": "walk",
-                            "start_time": "14:29",
-                            "end_time": "14:33",
+                            "start_time": "16:27",
+                            "end_time": "16:31",
                             "distance": 0.34,
                             "price": 0,
                             "cost": 0
@@ -473,6 +515,27 @@
                     ]
                 },
                 {
+                    "type": "attraction",
+                    "position": "Chai Garden",
+                    "start_time": "14:08",
+                    "end_time": "15:38",
+                    "price": 0.0,
+                    "cost": 0.0,
+                    "tickets": 4,
+                    "transports": [
+                        {
+                            "start": "Pingjiang Road Historic District",
+                            "end": "Chai Garden",
+                            "mode": "walk",
+                            "start_time": "13:50",
+                            "end_time": "14:08",
+                            "distance": 1.5360554249540581,
+                            "price": 0,
+                            "cost": 0
+                        }
+                    ]
+                },
+                {
                     "type": "dinner",
                     "position": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
                     "start_time": "17:00",
@@ -482,12 +545,12 @@
                     "tickets": 4,
                     "transports": [
                         {
-                            "start": "Pingjiang Road Historic District",
+                            "start": "Chai Garden",
                             "end": "Xiangmen-Metro Station",
                             "mode": "walk",
-                            "start_time": "13:50",
-                            "end_time": "14:03",
-                            "distance": 1.14,
+                            "start_time": "15:38",
+                            "end_time": "15:43",
+                            "distance": 0.43,
                             "price": 0,
                             "cost": 0
                         },
@@ -495,8 +558,8 @@
                             "start": "Xiangmen-Metro Station",
                             "end": "Humble Administrator's Garden Suzhou Museum-Metro Station",
                             "mode": "metro",
-                            "start_time": "14:03",
-                            "end_time": "14:06",
+                            "start_time": "15:43",
+                            "end_time": "15:46",
                             "distance": 1.89,
                             "price": 2,
                             "cost": 8,
@@ -506,8 +569,8 @@
                             "start": "Humble Administrator's Garden Suzhou Museum-Metro Station",
                             "end": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
                             "mode": "walk",
-                            "start_time": "14:06",
-                            "end_time": "14:14",
+                            "start_time": "15:46",
+                            "end_time": "15:54",
                             "distance": 0.69,
                             "price": 0,
                             "cost": 0
@@ -599,5 +662,5 @@
             ]
         }
     ],
-    "elapsed_time(sec)": 1.8145108222961426
+    "elapsed_time(sec)": 9.930469274520874
 }

@@ -557,13 +557,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "type": "attraction",
+          "position": "East Lake Park",
+          "start_time": "14:02",
+          "end_time": "15:32",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -578,21 +577,64 @@
             },
             {
               "start": "Liantang-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Xianhu Road-Metro Station",
               "mode": "metro",
               "start_time": "13:46",
-              "end_time": "15:00",
-              "distance": 37.3,
-              "price": 8,
-              "cost": 8,
+              "end_time": "13:47",
+              "distance": 0.81,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Xianhu Road-Metro Station",
+              "end": "East Lake Park",
+              "mode": "walk",
+              "start_time": "13:47",
+              "end_time": "14:02",
+              "distance": 1.31,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:56",
+          "end_time": "20:21",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1008.34,
+          "cost": 1008.34,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Lake Park",
+              "end": "Xianhu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:32",
+              "end_time": "15:47",
+              "distance": 1.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xianhu Road-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "15:47",
+              "end_time": "17:00",
+              "distance": 36.52,
+              "price": 7,
+              "cost": 7,
               "tickets": 1
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "15:00",
-              "end_time": "15:05",
+              "start_time": "17:00",
+              "end_time": "17:05",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -604,5 +646,5 @@
     }
   ],
   "elapsed_time(sec)": 3.571378231048584,
-  "_eval_score": 94.07173382173383
+  "_eval_score": 94.55328798185941
 }

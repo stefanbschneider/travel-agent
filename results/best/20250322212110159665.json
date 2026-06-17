@@ -868,13 +868,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:28",
-          "end_time": "18:19",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Wuhan Tianhe International Airport",
-          "price": 308.03,
-          "cost": 924.0899999999999,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "13:29",
+          "end_time": "14:59",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -889,21 +888,64 @@
             },
             {
               "start": "Lujiazui-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
               "start_time": "13:21",
-              "end_time": "14:21",
-              "distance": 30.5,
-              "price": 7,
-              "cost": 21,
+              "end_time": "13:27",
+              "distance": 3.15,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "walk",
+              "start_time": "13:27",
+              "end_time": "13:29",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:28",
+          "end_time": "18:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 308.03,
+          "cost": 924.0899999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Yuanshen Sports Center-Metro Station",
+              "mode": "walk",
+              "start_time": "14:59",
+              "end_time": "15:01",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:01",
+              "end_time": "15:55",
+              "distance": 27.38,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "14:21",
-              "end_time": "14:36",
+              "start_time": "15:55",
+              "end_time": "16:10",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -915,5 +957,5 @@
     }
   ],
   "elapsed_time(sec)": 7.520181894302368,
-  "_eval_score": 97.16044372294371
+  "_eval_score": 97.51501035196688
 }
