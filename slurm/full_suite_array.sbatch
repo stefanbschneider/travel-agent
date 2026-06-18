@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Full-suite Slurm array runner for the deterministic TPC light solver pass.
+# Full-suite Slurm array runner for the deterministic TPC light solver pass plus per-shard merge/eval.
 #
 # Recommended entrypoint:
 #   bash slurm/submit_full_suite_array.sh
@@ -8,10 +8,10 @@
 #   sbatch slurm/full_suite_array.sbatch
 #
 # Resource defaults are deliberately modest and measured from the green 8-worker
-# probe/full-suite measurements (MaxRSS ~2.7 GB): 32 shards x 8 CPUs, 4G RAM, ~12 min wall (1000/32 ~= 31 queries/shard, ~half the 16-shard time), no GPU, no exclusive node.
+# probe/full-suite measurements (MaxRSS ~2.7 GB): 64 shards x 8 CPUs, 4G RAM, ~12 min wall for solve + per-shard merge/eval, no GPU, no exclusive node.
 #SBATCH --job-name=tpc_full
 #SBATCH --partition=standard
-#SBATCH --array=0-31%32
+#SBATCH --array=0-63%64
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=4G
@@ -101,6 +101,10 @@ singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/py
     --restarts "$RESTARTS" \
     --budget "$BUDGET" \
     --seed-salt "clusterfull-${SLURM_ARRAY_JOB_ID}-${SLURM_ARRAY_TASK_ID}"
+
+echo "[full] merge split=$SPLIT"
+singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/merge.py \
+    --split "$SPLIT"
 
 end_epoch=$(date +%s)
 echo "[full] done task=$SLURM_ARRAY_TASK_ID elapsed_sec=$((end_epoch - start_epoch)) end=$(date -Is)"
