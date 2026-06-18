@@ -14,7 +14,23 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UNSOLVED = "tpc_phase1_constraints_unsolved"
 SOLVED_DIR = os.path.join(ROOT, "results", "constraints_solved")
-UNSOLVED_FILE = os.path.join(ROOT, "chinatravel", "evaluation", "default_splits", UNSOLVED + ".txt")
+UNSOLVABLE_FILE = os.path.join(ROOT, "chinatravel", "evaluation", "default_splits", "tpc_phase1_constraints_unsolvable.txt")
+
+
+def _denylist():
+    if not os.path.exists(UNSOLVABLE_FILE):
+        return set()
+    with open(UNSOLVABLE_FILE) as f:
+        return {line.split("#", 1)[0].strip() for line in f if line.split("#", 1)[0].strip()}
+
+
+def _solvable_remaining():
+    """Unsolved IDs that are NOT confirmed-unsolvable (i.e. still worth attempting)."""
+    if not os.path.exists(UNSOLVED_FILE):
+        return 0
+    deny = _denylist()
+    with open(UNSOLVED_FILE) as f:
+        return sum(1 for line in f if line.strip() and line.strip() not in deny)
 
 
 def _solved_count():
@@ -40,8 +56,12 @@ def main():
     args = ap.parse_args()
 
     for r in range(args.rounds):
-        if _remaining() == 0:
-            print("[iterate] unsolved split empty; stopping at round {}".format(r))
+        if _solvable_remaining() == 0:
+            if _remaining() == 0:
+                print("[iterate] unsolved split empty; stopping at round {}".format(r))
+            else:
+                print("[iterate] all {} remaining unsolved are confirmed-unsolvable (see {}); stopping at round {}".format(
+                    _remaining(), os.path.relpath(UNSOLVABLE_FILE, ROOT), r))
             break
         before = _solved_count()
         solve = [sys.executable, os.path.join("scripts", "solve.py"), "--split", UNSOLVED,

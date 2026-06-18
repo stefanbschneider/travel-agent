@@ -1,0 +1,57 @@
+# Confirmed-unsolvable TPC phase-1 queries. Read by scripts/solve.py to skip wasted retries,
+# and by scripts/iterate.py to stop cleanly when only these remain.
+# Format: one UID per line; everything after '#' is a human-readable reason (parser takes the
+# first whitespace token). Re-enable a UID only after a solver/evaluator parity change AND
+# after re-auditing the reason. All entries below were verified against the EN dataset.
+#
+# Three proven-dead classes:
+#  (P) CASE-SENSITIVE type literal vs DB canonical casing (standalone AND constraint).
+#  (S) hard_logic_py SYNTAX ERROR (compile fails -> evaluator treats block as False; unfixable
+#      from the plan side). Mostly apostrophe-bearing POI names in single quotes
+#      ("People's Square", "Su Xiaoxiao's Tomb") -> unterminated string literal; one has a
+#      stray bullet U+2022.
+#  (T) Required attraction/restaurant/hotel TYPE literal that is ABSENT (or differently-cased)
+#      in the SPECIFIC target city's CSV; the resolver returns the raw target-city value with
+#      no normalization, so the subset/intersection check can never hold.
+# Detection: (P) grep + classifier; (S) py_compile each hard_logic_py block; (T) exact-match
+# the required literal against the target-city attractions.type / restaurants.cuisine /
+# accommodations.featurehoteltype column (exact-match count == 0).
+
+# --- (P) standalone "Swimming pool" (lowercase) AND-constraint; capital-DB cities only ---
+# DB casing: shanghai/nanjing/hangzhou/shenzhen/chengdu/wuhan/chongqing -> "Swimming Pool";
+# beijing/suzhou/guangzhou -> "swimming pool" (matches, not listed).
+20250321002504225956  # (P) Shenzhen; standalone pool AND; DB capital
+20250322210810442265  # (P) Shanghai; standalone pool AND; DB capital
+20250322212234447269  # (P) Shanghai; standalone pool AND; DB capital
+20250324223743493358  # (P) Hangzhou; standalone pool AND; DB capital
+
+# --- (S) hard_logic_py compile/SyntaxError (unfixable from plan) ---
+20250322122731296343  # (S) invalid char U+2022 bullet in block 0
+20250322124519692875  # (S) unterminated string literal (block 1)
+20250322192555845893  # (S) unterminated string literal (block 1)
+20250322230031550699  # (S) unterminated string literal (block 0)
+20250322232258168762  # (S) unterminated string literal (block 0)
+20250323023116666286  # (S) unterminated string literal (block 0)
+20250323031105781142  # (S) unterminated string literal (block 0)
+20250323035748912560  # (S) 'Su Xiaoxiao's Tomb...' single-quote apostrophe (block 0)
+20250323095147120434  # (S) unterminated string literal (block 0)
+20250323102250721169  # (S) unterminated string literal (block 0)
+20250323113356209931  # (S) unterminated string literal (block 1)
+20250323140629198648  # (S) 'People's Square' single-quote apostrophe (block 1)
+20250323232515361347  # (S) unterminated string literal (block 0)
+
+# --- (T) required TYPE literal absent / case-mismatched in the target city ---
+20250322103116580364  # (T) hangzhou accommodations: 'homestay' absent (no variant)
+20250322104924634145  # (T) chongqing attractions: 'Cultural Landscape' absent (no variant)
+20250322121729768751  # (T) shanghai attractions: 'university campus' vs DB 'University campus'
+20250322122032919026  # (T) hangzhou attractions: 'red tourism sites' vs DB 'Red tourism sites'
+20250322122812261533  # (T) chengdu restaurants: 'Hot pot' vs DB 'hot pot'
+20250322123503517813  # (T) chongqing attractions: 'red tourism sites' vs DB 'Red tourism sites'
+20250322130339686185  # (T) shanghai attractions: 'university campus' vs DB 'University campus'
+20250322135241053546  # (T) shanghai attractions: 'Art Museum' vs DB 'Art museum'
+20250322160844700370  # (T) shenzhen restaurants: 'Hot pot' vs DB 'hot pot'
+20250322163920766320  # (T) nanjing restaurants: 'Hot pot' vs DB 'hot pot'
+20250322220725934667  # (T) shanghai accommodations: 'SPA' vs DB 'Spa'
+
+# --- (N) required exact named POI absent from target-city DB ---
+20250323010327713880  # (N) Shanghai restaurants: hard_logic requires 'Bistro Sola'; DB has only reordered 'Sola Bistro'

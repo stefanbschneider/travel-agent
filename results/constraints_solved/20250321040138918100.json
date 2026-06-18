@@ -1,0 +1,155 @@
+{
+  "people_number": 3,
+  "start_city": "Nanjing",
+  "target_city": "Chongqing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:20",
+          "end_time": "16:49",
+          "start": "Nanjing South Railway Station",
+          "end": "Chongqing North Railway Station",
+          "price": 720.72,
+          "cost": 2162.16,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "D2373"
+        },
+        {
+          "type": "dinner",
+          "position": "Chongqing Regent Hotel · Robbins Steakhouse",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 665.0,
+          "cost": 1995.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing North Railway Station",
+              "end": "Chongqing Regent Hotel · Robbins Steakhouse",
+              "mode": "taxi",
+              "start_time": "16:49",
+              "end_time": "16:55",
+              "distance": 4.56,
+              "price": 20.64,
+              "cost": 20.64,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Saifert Hotel (Chongqing North Railway Station)",
+          "start_time": "18:06",
+          "end_time": "24:00",
+          "price": 105.0,
+          "cost": 315.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Regent Hotel · Robbins Steakhouse",
+              "end": "Saifert Hotel (Chongqing North Railway Station)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:06",
+              "distance": 4.15,
+              "price": 19.23,
+              "cost": 19.23,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Saifert Hotel (Chongqing North Railway Station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Ci Qi Kou Ancient Town",
+          "start_time": "08:43",
+          "end_time": "10:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Saifert Hotel (Chongqing North Railway Station)",
+              "end": "Ci Qi Kou Ancient Town",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:43",
+              "distance": 9.22,
+              "price": 36.96,
+              "cost": 36.96,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+          "start_time": "11:00",
+          "end_time": "11:30",
+          "price": 96.0,
+          "cost": 288.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ci Qi Kou Ancient Town",
+              "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "mode": "taxi",
+              "start_time": "10:13",
+              "end_time": "10:31",
+              "distance": 12.16,
+              "price": 49.44,
+              "cost": 49.44,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:43",
+          "end_time": "21:33",
+          "start": "Chongqing North Railway Station",
+          "end": "Nanjing South Railway Station",
+          "price": 720.72,
+          "cost": 2162.16,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "end": "Chongqing North Railway Station",
+              "mode": "taxi",
+              "start_time": "11:30",
+              "end_time": "11:38",
+              "distance": 5.89,
+              "price": 25.32,
+              "cost": 25.32,
+              "cars": 1
+            }
+          ],
+          "TrainID": "D2374"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 0.030162811279296875,
+  "_eval_score": 20.0
+}
