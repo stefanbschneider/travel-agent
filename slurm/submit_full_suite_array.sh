@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Prepare balanced full-suite shards and submit slurm/full_suite_array.sbatch.
+# Prepare balanced full-suite shards and submit solve+per-shard-merge array jobs.
 #
 # Defaults target the current cluster without over-asking:
-#   32 array tasks x 8 CPUs = up to 256 CPUs
+#   64 array tasks x 8 CPUs = up to 512 CPUs
 #   4G RAM per task (8 workers), based on the 8-worker probe MaxRSS ~2.6G
-#   20m wall time per task (slowest observed full-suite shard: 15:59)
+#   20m wall time per task (conservative for solve plus per-shard merge/eval)
 #
 # Tunables:
-#   SHARDS=16 CONCURRENCY=16 WORKERS=8 MEM=4G TIME=00:20:00 PARTITION=standard \
+#   SHARDS=64 CONCURRENCY=64 WORKERS=8 MEM=4G TIME=00:20:00 PARTITION=standard \
 #   RESTARTS=40 BUDGET=30 SPLIT_SOURCE=tpc_phase1 SPLIT_PREFIX=_cluster_full \
 #   CLEAN=1 bash slurm/submit_full_suite_array.sh
 set -euo pipefail
 
 PROJECT="${TPC_PROJECT_DIR:-/beegfs/home/users/f/fabimi/china-travel-agent}"
 SPLIT_DIR="$PROJECT/chinatravel/evaluation/default_splits"
-SHARDS="${SHARDS:-32}"
+SHARDS="${SHARDS:-64}"
 CONCURRENCY="${CONCURRENCY:-$SHARDS}"
 WORKERS="${WORKERS:-8}"
 MEM="${MEM:-4G}"

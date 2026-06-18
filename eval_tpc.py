@@ -8,6 +8,7 @@ import numpy as np
 import sys
 import os
 import json
+import fcntl
 from concurrent.futures import ThreadPoolExecutor
 
 project_root_path = os.path.dirname(os.path.abspath(__file__))
@@ -168,10 +169,17 @@ def load_result(args, query_index,path, verbose=False):
     return ['default'], result
 
 def write_file(file, content):
-    """ Write content in file.
-    """
-    with open(file, 'a', encoding="utf-8") as f:
-        f.write(content)
+    """Append content to file under a process lock."""
+    lock_dir = os.path.join(project_root_path, "cache", "eval_locks")
+    os.makedirs(lock_dir, exist_ok=True)
+    lock_file_path = os.path.join(lock_dir, "{}.lock".format(os.path.basename(file)))
+    with open(lock_file_path, "a", encoding="utf-8") as lock_f:
+        fcntl.flock(lock_f, fcntl.LOCK_EX)
+        try:
+            with open(file, 'a', encoding="utf-8") as f:
+                f.write(content)
+        finally:
+            fcntl.flock(lock_f, fcntl.LOCK_UN)
 
 
 def remove_query_ids_from_split_file(split_file_path, query_ids):
@@ -183,23 +191,34 @@ def remove_query_ids_from_split_file(split_file_path, query_ids):
     if not query_id_set:
         return 0
 
-    with open(split_file_path, "r", encoding="utf-8") as f:
-        lines = [line.strip() for line in f.readlines()]
+    lock_dir = os.path.join(project_root_path, "cache", "eval_locks")
+    os.makedirs(lock_dir, exist_ok=True)
+    lock_file_path = os.path.join(lock_dir, "{}.lock".format(os.path.basename(split_file_path)))
 
-    removed_count = 0
-    kept_lines = []
-    for line in lines:
-        if line and line in query_id_set:
-            removed_count += 1
-            continue
-        kept_lines.append(line)
+    with open(lock_file_path, "a", encoding="utf-8") as lock_f:
+        fcntl.flock(lock_f, fcntl.LOCK_EX)
+        try:
+            with open(split_file_path, "r", encoding="utf-8") as f:
+                lines = [line.strip() for line in f.readlines()]
 
-    if removed_count > 0:
-        with open(split_file_path, "w", encoding="utf-8") as f:
-            if kept_lines:
-                f.write("\n".join(kept_lines) + "\n")
-            else:
-                f.write("")
+            removed_count = 0
+            kept_lines = []
+            for line in lines:
+                if line and line in query_id_set:
+                    removed_count += 1
+                    continue
+                kept_lines.append(line)
+
+            if removed_count > 0:
+                tmp_file_path = "{}.{}.tmp".format(split_file_path, os.getpid())
+                with open(tmp_file_path, "w", encoding="utf-8") as f:
+                    if kept_lines:
+                        f.write("\n".join(kept_lines) + "\n")
+                    else:
+                        f.write("")
+                os.replace(tmp_file_path, split_file_path)
+        finally:
+            fcntl.flock(lock_f, fcntl.LOCK_UN)
 
     return removed_count
 
