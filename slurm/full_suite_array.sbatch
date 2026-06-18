@@ -25,8 +25,13 @@ source /usr/share/modules/init/bash
 module purge
 module load singularity/4.4
 
-export APPTAINER_CACHEDIR="$HOME/.apptainer/cache"
-export SINGULARITY_CACHEDIR="$HOME/.apptainer/cache"
+# FUSE-mount over BeeGFS ($HOME) is forbidden, forcing a slow per-exec SIF extraction.
+# Point the cache/tmp at node-local xfs (/tmp/drive) so squashfuse mounts directly.
+export APPTAINER_CACHEDIR="/tmp/drive/$USER/apptainer"
+export APPTAINER_TMPDIR="/tmp/drive/$USER/apptainer-tmp"
+export SINGULARITY_CACHEDIR="$APPTAINER_CACHEDIR"
+export SINGULARITY_TMPDIR="$APPTAINER_TMPDIR"
+mkdir -p "$APPTAINER_CACHEDIR" "$APPTAINER_TMPDIR"
 export PYTHONUNBUFFERED=1
 export OMP_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
