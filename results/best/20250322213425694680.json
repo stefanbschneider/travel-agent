@@ -641,13 +641,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:31",
-          "start": "Suzhou Park Station",
-          "end": "Nanjing South Railway Station",
-          "price": 122.9,
-          "cost": 614.5,
+          "type": "attraction",
+          "position": "Fengmen Hengjie",
+          "start_time": "15:13",
+          "end_time": "16:43",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -662,21 +661,64 @@
             },
             {
               "start": "Fuyuan Road-Metro Station",
-              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "end": "Xujiabang-Metro Station",
               "mode": "metro",
               "start_time": "14:50",
-              "end_time": "15:11",
-              "distance": 10.69,
+              "end_time": "15:12",
+              "distance": 11.14,
               "price": 4,
               "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Xujiabang-Metro Station",
+              "end": "Fengmen Hengjie",
+              "mode": "walk",
+              "start_time": "15:12",
+              "end_time": "15:13",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:31",
+          "start": "Suzhou Park Station",
+          "end": "Nanjing South Railway Station",
+          "price": 122.9,
+          "cost": 614.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Fengmen Hengjie",
+              "end": "Xujiabang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:43",
+              "end_time": "16:44",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xujiabang-Metro Station",
+              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:44",
+              "end_time": "16:57",
+              "distance": 6.99,
+              "price": 3,
+              "cost": 15,
               "tickets": 5
             },
             {
               "start": "Suzhou Industrial Park Railway Station-Metro Station",
               "end": "Suzhou Park Station",
               "mode": "walk",
-              "start_time": "15:11",
-              "end_time": "15:14",
+              "start_time": "16:57",
+              "end_time": "17:00",
               "distance": 0.32,
               "price": 0,
               "cost": 0
@@ -688,5 +730,5 @@
     }
   ],
   "elapsed_time(sec)": 5.856238126754761,
-  "_eval_score": 96.03730158730158
+  "_eval_score": 96.49900793650794
 }

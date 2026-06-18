@@ -8,58 +8,212 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:11",
-          "end_time": "20:40",
-          "start": "Suzhou New District Station",
-          "end": "Chengdu East Railway Station",
-          "price": 945.53,
-          "cost": 2836.59,
+          "start_time": "21:43",
+          "end_time": "08:44",
+          "start": "Suzhou Station",
+          "end": "Chengdu West Railway Station",
+          "price": 630.35,
+          "cost": 1891.0500000000002,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D637"
+          "TrainID": "K283"
         },
         {
           "type": "attraction",
-          "position": "Manjushri Lane",
-          "start_time": "20:51",
-          "end_time": "22:21",
+          "position": "Jincheng Lake",
+          "start_time": "09:04",
+          "end_time": "10:34",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu East Railway Station",
-              "end": "Manjushri Lane",
+              "start": "Chengdu West Railway Station",
+              "end": "Jincheng Lake",
               "mode": "taxi",
-              "start_time": "20:40",
-              "end_time": "20:51",
-              "distance": 7.96,
-              "price": 32.58,
-              "cost": 32.58,
+              "start_time": "08:44",
+              "end_time": "09:04",
+              "distance": 13.34,
+              "price": 54.71,
+              "cost": 54.71,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beautiful East",
+          "start_time": "10:47",
+          "end_time": "12:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jincheng Lake",
+              "end": "Beautiful East",
+              "mode": "taxi",
+              "start_time": "10:34",
+              "end_time": "10:47",
+              "distance": 8.84,
+              "price": 35.65,
+              "cost": 35.65,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "12:35",
+          "end_time": "13:35",
+          "price": 5.0,
+          "cost": 15.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Beautiful East",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "taxi",
+              "start_time": "12:17",
+              "end_time": "12:35",
+              "distance": 12.48,
+              "price": 50.87,
+              "cost": 50.87,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anshun Covered Bridge",
+          "start_time": "13:41",
+          "end_time": "15:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Anshun Covered Bridge",
+              "mode": "taxi",
+              "start_time": "13:35",
+              "end_time": "13:41",
+              "distance": 4.33,
+              "price": 19.84,
+              "cost": 19.84,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Butterfly Drama Club",
+          "start_time": "15:13",
+          "end_time": "16:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Anshun Covered Bridge",
+              "end": "Butterfly Drama Club",
+              "mode": "taxi",
+              "start_time": "15:11",
+              "end_time": "15:13",
+              "distance": 1.69,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baihua Tan Park",
+          "start_time": "16:47",
+          "end_time": "18:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Butterfly Drama Club",
+              "end": "Baihua Tan Park",
+              "mode": "taxi",
+              "start_time": "16:43",
+              "end_time": "16:47",
+              "distance": 3.27,
+              "price": 16.13,
+              "cost": 16.13,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Crispy and Fragrant Family's Guokui and Liangfen (Gengjia Alley Branch)",
+          "start_time": "18:21",
+          "end_time": "19:21",
+          "price": 11.0,
+          "cost": 33.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Baihua Tan Park",
+              "end": "Crispy and Fragrant Family's Guokui and Liangfen (Gengjia Alley Branch)",
+              "mode": "taxi",
+              "start_time": "18:17",
+              "end_time": "18:21",
+              "distance": 3.19,
+              "price": 15.88,
+              "cost": 15.88,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Atlantis Poseidon Amusement World",
+          "start_time": "20:16",
+          "end_time": "21:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Crispy and Fragrant Family's Guokui and Liangfen (Gengjia Alley Branch)",
+              "end": "Atlantis Poseidon Amusement World",
+              "mode": "taxi",
+              "start_time": "19:21",
+              "end_time": "20:16",
+              "distance": 36.92,
+              "price": 160.86,
+              "cost": 160.86,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "The Longemont Chengdu",
-          "start_time": "22:33",
+          "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
+          "start_time": "22:27",
           "end_time": "24:00",
-          "price": 588.0,
-          "cost": 1764.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 167.0,
+          "cost": 334.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Manjushri Lane",
-              "end": "The Longemont Chengdu",
+              "start": "Atlantis Poseidon Amusement World",
+              "end": "Quigg Hotel (Chengdu Shuangliu Airport)",
               "mode": "taxi",
-              "start_time": "22:21",
-              "end_time": "22:33",
-              "distance": 8.27,
-              "price": 33.65,
-              "cost": 33.65,
+              "start_time": "21:46",
+              "end_time": "22:27",
+              "distance": 27.98,
+              "price": 120.61,
+              "cost": 120.61,
               "cars": 1
             }
           ]
@@ -71,7 +225,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "The Longemont Chengdu",
+          "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -80,157 +234,152 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Panda Valley",
-          "start_time": "10:06",
-          "end_time": "11:36",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 6.0,
+          "cost": 18.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "The Longemont Chengdu",
-              "end": "Panda Valley",
+              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "10:06",
-              "distance": 64.47,
-              "price": 284.8,
-              "cost": 284.8,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Crane's Call Tea House (People's Park Branch)",
-          "start_time": "13:00",
-          "end_time": "14:00",
-          "price": 45.0,
-          "cost": 135.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Panda Valley",
-              "end": "Crane's Call Tea House (People's Park Branch)",
-              "mode": "taxi",
-              "start_time": "11:36",
-              "end_time": "13:00",
-              "distance": 56.06,
-              "price": 246.96,
-              "cost": 246.96,
+              "end_time": "08:47",
+              "distance": 11.47,
+              "price": 46.34,
+              "cost": 46.34,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Manjushri Temple",
-          "start_time": "14:05",
-          "end_time": "15:35",
+          "position": "Chengdu Museum",
+          "start_time": "12:10",
+          "end_time": "13:40",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Crane's Call Tea House (People's Park Branch)",
-              "end": "Manjushri Temple",
-              "mode": "taxi",
-              "start_time": "14:00",
-              "end_time": "14:05",
-              "distance": 3.34,
-              "price": 16.39,
-              "cost": 16.39,
-              "cars": 1
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:04",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Museum",
+              "mode": "walk",
+              "start_time": "12:04",
+              "end_time": "12:10",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Kuanzhai Alley",
-          "start_time": "15:38",
-          "end_time": "17:08",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "13:40",
+          "end_time": "15:10",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Manjushri Temple",
-              "end": "Kuanzhai Alley",
-              "mode": "taxi",
-              "start_time": "15:35",
-              "end_time": "15:38",
-              "distance": 2.23,
-              "price": 12.52,
-              "cost": 12.52,
-              "cars": 1
+              "start": "Chengdu Museum",
+              "end": "China Shadow Puppet Museum",
+              "mode": "walk",
+              "start_time": "13:40",
+              "end_time": "13:40",
+              "distance": 0.07916972935558433,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Mawangzi (Taikoo Li Branch)",
-          "start_time": "17:12",
-          "end_time": "18:12",
-          "price": 140.0,
-          "cost": 420.0,
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 27.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Kuanzhai Alley",
-              "end": "Mawangzi (Taikoo Li Branch)",
-              "mode": "taxi",
-              "start_time": "17:08",
-              "end_time": "17:12",
-              "distance": 3.1,
-              "price": 15.55,
-              "cost": 15.55,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Jinli Ancient Street",
-          "start_time": "18:15",
-          "end_time": "19:45",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
+              "start": "China Shadow Puppet Museum",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:10",
+              "end_time": "15:17",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Mawangzi (Taikoo Li Branch)",
-              "end": "Jinli Ancient Street",
-              "mode": "taxi",
-              "start_time": "18:12",
-              "end_time": "18:15",
-              "distance": 2.66,
-              "price": 13.99,
-              "cost": 13.99,
-              "cars": 1
+              "start": "Luomashi-Metro Station",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "15:17",
+              "end_time": "15:19",
+              "distance": 1.0,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "mode": "walk",
+              "start_time": "15:19",
+              "end_time": "15:22",
+              "distance": 0.26,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "The Longemont Chengdu",
-          "start_time": "19:58",
+          "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
+          "start_time": "18:14",
           "end_time": "24:00",
-          "price": 588.0,
-          "cost": 1764.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 167.0,
+          "cost": 334.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Jinli Ancient Street",
-              "end": "The Longemont Chengdu",
+              "start": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Quigg Hotel (Chengdu Shuangliu Airport)",
               "mode": "taxi",
-              "start_time": "19:45",
-              "end_time": "19:58",
-              "distance": 8.83,
-              "price": 35.6,
-              "cost": 35.6,
+              "start_time": "18:00",
+              "end_time": "18:14",
+              "distance": 9.78,
+              "price": 38.93,
+              "cost": 38.93,
               "cars": 1
             }
           ]
@@ -242,7 +391,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "The Longemont Chengdu",
+          "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -251,67 +400,23 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Chunxi Road",
-          "start_time": "08:40",
-          "end_time": "10:10",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 10.0,
+          "cost": 30.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "The Longemont Chengdu",
-              "end": "Chunxi Road",
+              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "end": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:40",
-              "distance": 6.83,
-              "price": 28.62,
-              "cost": 28.62,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Jinmen Immersive Republic of China Scenic Area",
-          "start_time": "10:31",
-          "end_time": "12:01",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Chunxi Road",
-              "end": "Jinmen Immersive Republic of China Scenic Area",
-              "mode": "taxi",
-              "start_time": "10:10",
-              "end_time": "10:31",
-              "distance": 14.5,
-              "price": 59.94,
-              "cost": 59.94,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "East Suburb Memory",
-          "start_time": "12:19",
-          "end_time": "13:49",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Jinmen Immersive Republic of China Scenic Area",
-              "end": "East Suburb Memory",
-              "mode": "taxi",
-              "start_time": "12:01",
-              "end_time": "12:19",
-              "distance": 12.32,
-              "price": 50.14,
-              "cost": 50.14,
+              "end_time": "08:47",
+              "distance": 11.38,
+              "price": 45.91,
+              "cost": 45.91,
               "cars": 1
             }
           ]
@@ -327,14 +432,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "East Suburb Memory",
+              "start": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
               "end": "Chengdu West Railway Station",
               "mode": "taxi",
-              "start_time": "13:49",
-              "end_time": "14:11",
-              "distance": 14.74,
-              "price": 61.04,
-              "cost": 61.04,
+              "start_time": "12:00",
+              "end_time": "12:13",
+              "distance": 8.97,
+              "price": 36.11,
+              "cost": 36.11,
               "cars": 1
             }
           ],
@@ -343,6 +448,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 1.2312817573547363,
-  "_eval_score": 95.16361416361417
+  "elapsed_time(sec)": 19.40316915512085,
+  "_eval_score": 97.20436507936508
 }
