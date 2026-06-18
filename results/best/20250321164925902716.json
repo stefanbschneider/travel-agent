@@ -7,82 +7,289 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "type": "train",
+          "start_time": "23:54",
+          "end_time": "04:40",
+          "start": "Beijing Fengtai Station",
+          "end": "Shenzhen East Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
+          "TrainID": "K105"
         },
         {
           "type": "attraction",
-          "position": "Dameisha Seaside Park",
-          "start_time": "15:48",
-          "end_time": "17:18",
+          "position": "Luohu Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Dameisha Seaside Park",
-              "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:48",
-              "distance": 50.96,
-              "price": 224.04,
-              "cost": 224.04,
-              "cars": 1
+              "start": "Shenzhen East Station",
+              "end": "Buji-Metro Station",
+              "mode": "walk",
+              "start_time": "04:40",
+              "end_time": "04:43",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Buji-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "04:43",
+              "end_time": "04:55",
+              "distance": 6.42,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Luohu Art Museum",
+              "mode": "walk",
+              "start_time": "04:55",
+              "end_time": "05:00",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Four Seasons Snow and Ice Theme Park",
+          "start_time": "11:24",
+          "end_time": "12:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Luohu Art Museum",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:35",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Henggang-Metro Station",
+              "mode": "metro",
+              "start_time": "10:35",
+              "end_time": "11:02",
+              "distance": 13.57,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Henggang-Metro Station",
+              "end": "Four Seasons Snow and Ice Theme Park",
+              "mode": "walk",
+              "start_time": "11:02",
+              "end_time": "11:24",
+              "distance": 1.87,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Maluan Mountain Country Park",
+          "start_time": "14:21",
+          "end_time": "15:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Four Seasons Snow and Ice Theme Park",
+              "end": "Henggang-Metro Station",
+              "mode": "walk",
+              "start_time": "12:54",
+              "end_time": "13:16",
+              "distance": 1.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Henggang-Metro Station",
+              "end": "Jinlong-Metro Station",
+              "mode": "metro",
+              "start_time": "13:16",
+              "end_time": "13:42",
+              "distance": 13.3,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Jinlong-Metro Station",
+              "end": "Maluan Mountain Country Park",
+              "mode": "walk",
+              "start_time": "13:42",
+              "end_time": "14:21",
+              "distance": 3.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Maluan Mountain",
+          "start_time": "15:54",
+          "end_time": "17:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Maluan Mountain Country Park",
+              "end": "Maluan Mountain",
+              "mode": "walk",
+              "start_time": "15:51",
+              "end_time": "15:54",
+              "distance": 0.26256825980172316,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-          "start_time": "18:02",
-          "end_time": "19:02",
-          "price": 500.0,
-          "cost": 500.0,
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "18:52",
+          "end_time": "19:52",
+          "price": 16.0,
+          "cost": 16.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dameisha Seaside Park",
-              "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "17:18",
-              "end_time": "18:02",
-              "distance": 29.76,
-              "price": 128.62,
-              "cost": 128.62,
-              "cars": 1
+              "start": "Maluan Mountain",
+              "end": "Jinlong-Metro Station",
+              "mode": "walk",
+              "start_time": "17:24",
+              "end_time": "18:00",
+              "distance": 3.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jinlong-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "18:00",
+              "end_time": "18:50",
+              "distance": 25.16,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "18:50",
+              "end_time": "18:52",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cave Exploration Factory (Happy Coast Branch)",
+          "start_time": "20:23",
+          "end_time": "21:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "walk",
+              "start_time": "19:52",
+              "end_time": "19:54",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Qiaocheng East-Metro Station",
+              "mode": "metro",
+              "start_time": "19:54",
+              "end_time": "20:22",
+              "distance": 14.45,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Cave Exploration Factory (Happy Coast Branch)",
+              "mode": "walk",
+              "start_time": "20:22",
+              "end_time": "20:23",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "19:37",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "22:36",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
+          "price": 231.0,
+          "cost": 231.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
-              "start_time": "19:02",
-              "end_time": "19:37",
-              "distance": 23.98,
-              "price": 102.63,
-              "cost": 102.63,
-              "cars": 1
+              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "end": "Qiaocheng East-Metro Station",
+              "mode": "walk",
+              "start_time": "21:53",
+              "end_time": "21:54",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Gankeng-Metro Station",
+              "mode": "metro",
+              "start_time": "21:54",
+              "end_time": "22:28",
+              "distance": 17.01,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "mode": "walk",
+              "start_time": "22:28",
+              "end_time": "22:36",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -93,7 +300,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -102,114 +309,214 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "China Merchants Shekou Cruise Home Port Tour",
-          "start_time": "09:00",
-          "end_time": "10:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "China Merchants Shekou Cruise Home Port Tour",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:00",
-              "distance": 20.57,
-              "price": 87.24,
-              "cost": 87.24,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 835.0,
-          "cost": 835.0,
+          "price": 26.0,
+          "cost": 26.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "China Merchants Shekou Cruise Home Port Tour",
-              "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "mode": "taxi",
-              "start_time": "10:30",
-              "end_time": "10:57",
-              "distance": 18.12,
-              "price": 76.23,
-              "cost": 76.23,
-              "cars": 1
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Gankeng-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Taoyuan-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "09:23",
+              "distance": 22.64,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Taoyuan-Metro Station",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "09:23",
+              "end_time": "09:28",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-          "start_time": "12:27",
-          "end_time": "13:57",
+          "position": "Dutch Flower Town",
+          "start_time": "12:15",
+          "end_time": "13:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "mode": "taxi",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Taoyuan-Metro Station",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:27",
-              "distance": 18.12,
-              "price": 76.23,
-              "cost": 76.23,
-              "cars": 1
+              "end_time": "12:05",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Taoyuan-Metro Station",
+              "end": "Zhongshan Park-Metro Station",
+              "mode": "metro",
+              "start_time": "12:05",
+              "end_time": "12:08",
+              "distance": 1.73,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Zhongshan Park-Metro Station",
+              "end": "Dutch Flower Town",
+              "mode": "walk",
+              "start_time": "12:08",
+              "end_time": "12:15",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao'an Science and Technology Museum",
+          "start_time": "14:05",
+          "end_time": "15:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dutch Flower Town",
+              "end": "Zhongshan Park-Metro Station",
+              "mode": "walk",
+              "start_time": "13:45",
+              "end_time": "13:52",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhongshan Park-Metro Station",
+              "end": "Xin'an Park-Metro Station",
+              "mode": "metro",
+              "start_time": "13:52",
+              "end_time": "13:56",
+              "distance": 2.12,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Xin'an Park-Metro Station",
+              "end": "Bao'an Science and Technology Museum",
+              "mode": "walk",
+              "start_time": "13:56",
+              "end_time": "14:05",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 519.0,
-          "cost": 519.0,
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-              "mode": "taxi",
-              "start_time": "13:57",
-              "end_time": "15:01",
-              "distance": 42.94,
-              "price": 187.94,
-              "cost": 187.94,
-              "cars": 1
+              "start": "Bao'an Science and Technology Museum",
+              "end": "Xin'an Park-Metro Station",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:44",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xin'an Park-Metro Station",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "metro",
+              "start_time": "15:44",
+              "end_time": "16:14",
+              "distance": 15.31,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "walk",
+              "start_time": "16:14",
+              "end_time": "16:17",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "19:15",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "18:30",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
+          "price": 231.0,
+          "cost": 231.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "mode": "taxi",
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "walk",
               "start_time": "18:00",
-              "end_time": "19:15",
-              "distance": 50.46,
-              "price": 221.77,
-              "cost": 221.77,
-              "cars": 1
+              "end_time": "18:03",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Gankeng-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "18:22",
+              "distance": 9.81,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "mode": "walk",
+              "start_time": "18:22",
+              "end_time": "18:30",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -220,7 +527,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -229,54 +536,52 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Dapeng Peninsula",
-          "start_time": "10:20",
-          "end_time": "11:50",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-              "end": "Dapeng Peninsula",
-              "mode": "taxi",
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Gankeng-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "10:20",
-              "distance": 73.98,
-              "price": 327.63,
-              "cost": 327.63,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
-          "tickets": 1,
-          "transports": [
+              "end_time": "08:38",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Dapeng Peninsula",
-              "end": "Shenzhen Bao'an International Airport",
-              "mode": "taxi",
-              "start_time": "11:50",
-              "end_time": "13:42",
-              "distance": 74.69,
-              "price": 330.8,
-              "cost": 330.8,
-              "cars": 1
+              "start": "Gankeng-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "08:48",
+              "distance": 5.28,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Buji-Metro Station",
+              "end": "Shenzhen East Station",
+              "mode": "walk",
+              "start_time": "08:48",
+              "end_time": "08:51",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "FlightID": "FL179"
+          "TrainID": "K106"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.037274837493896484,
-  "_eval_score": 92.30158730158729
+  "elapsed_time(sec)": 52.064128398895264,
+  "_eval_score": 94.53327228327228
 }
