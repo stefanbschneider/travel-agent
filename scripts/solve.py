@@ -8,7 +8,7 @@ it). Use --no-oracle for the Phase-2 NL/parsed-verifier path.
 
 --workers N runs N run_tpc.py processes over disjoint shards of the split concurrently
 (queries are independent and write disjoint files, so this is a clean ~N x speedup on a
-multi-core box). Each worker's output goes to cache/solve_logs/shard<k>.log.
+multi-core box). Each worker's output goes to cache/solve_logs/<split>_shard<k>.log.
 """
 import argparse
 import glob
@@ -37,6 +37,9 @@ def _run_cmd(split, oracle, skip):
     if skip:
         cmd += ["--skip", "1"]
     return cmd
+
+def _safe_log_fragment(value):
+    return "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in str(value))
 
 
 def main():
@@ -92,7 +95,7 @@ def main():
             with open(path, "w") as f:
                 f.write("\n".join(shard) + "\n")
             tmp_splits.append(path)
-            log_path = os.path.join(log_dir, "shard{}.log".format(k))
+            log_path = os.path.join(log_dir, "{}_shard{}.log".format(_safe_log_fragment(args.split), k))
             logf = open(log_path, "w")
             logs.append(logf)
             cmd = _run_cmd(name, oracle, args.skip)

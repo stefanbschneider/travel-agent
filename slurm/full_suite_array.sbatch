@@ -39,11 +39,13 @@ export MKL_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
 export MALLOC_ARENA_MAX=2
 
-# Make the light CP-SAT path explicit and bounded.
 export TPC_USE_CP_SOLVER=1
 export TPC_CP_SEARCH_WORKERS=1
-unset TPC_CP_FORCE
-unset TPC_CP_TIME_LIMIT_SEC
+if [[ -n "${TPC_FULL_ATTR_CAP:-}" ]]; then export TPC_CP_ATTR_CAP="$TPC_FULL_ATTR_CAP"; else unset TPC_CP_ATTR_CAP; fi
+if [[ -n "${TPC_FULL_REST_CAP:-}" ]]; then export TPC_CP_REST_CAP="$TPC_FULL_REST_CAP"; else unset TPC_CP_REST_CAP; fi
+if [[ -n "${TPC_FULL_HOTEL_CAP:-}" ]]; then export TPC_CP_HOTEL_CAP="$TPC_FULL_HOTEL_CAP"; else unset TPC_CP_HOTEL_CAP; fi
+if [[ -n "${TPC_FULL_CP_TIME_LIMIT:-}" ]]; then export TPC_CP_TIME_LIMIT_SEC="$TPC_FULL_CP_TIME_LIMIT"; else unset TPC_CP_TIME_LIMIT_SEC; fi
+if [[ -n "${TPC_FULL_CP_FORCE:-}" ]]; then export TPC_CP_FORCE="$TPC_FULL_CP_FORCE"; else unset TPC_CP_FORCE; fi
 
 BASE_SIF="$HOME/sif/python-312-slim.sif"
 VENV_TAR="$HOME/sif/tpc-venv.tar"
@@ -74,6 +76,7 @@ QUERY_COUNT=$(wc -l < "$SPLIT_FILE")
 start_epoch=$(date +%s)
 echo "[full] array_job=$SLURM_ARRAY_JOB_ID task=$SLURM_ARRAY_TASK_ID job=$SLURM_JOB_ID host=$(hostname) start=$(date -Is)"
 echo "[full] split=$SPLIT queries=$QUERY_COUNT workers=$WORKERS cpus=$SLURM_CPUS_PER_TASK mem=${SLURM_MEM_PER_NODE:-unknown}MB restarts=$RESTARTS budget=$BUDGET"
+echo "[full] cp attr_cap=${TPC_CP_ATTR_CAP:-default} rest_cap=${TPC_CP_REST_CAP:-default} hotel_cap=${TPC_CP_HOTEL_CAP:-default} cp_time_limit=${TPC_CP_TIME_LIMIT_SEC:-default} cp_force=${TPC_CP_FORCE:-unset}"
 echo "[full] base=$BASE_SIF venv_tar=$VENV_TAR"
 
 # Stage the solver venv to node-local scratch once per node. BeeGFS small-file

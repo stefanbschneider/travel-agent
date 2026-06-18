@@ -8,53 +8,95 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:09",
-          "end_time": "18:39",
-          "start": "Chongqing North Railway Station",
+          "start_time": "07:28",
+          "end_time": "09:41",
+          "start": "Chongqing West Railway Station",
           "end": "Suzhou Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "price": 679.06,
+          "cost": 2037.1799999999998,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D2214"
+          "TrainID": "T238"
         },
         {
-          "type": "dinner",
-          "position": "Shangri-La Hotel Suzhou · Shang Palace",
-          "start_time": "18:53",
-          "end_time": "19:53",
-          "price": 231.0,
-          "cost": 693.0,
+          "type": "attraction",
+          "position": "China Kunqu Opera Museum",
+          "start_time": "10:02",
+          "end_time": "11:32",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Suzhou Station",
               "end": "Suzhou Railway Station-Metro Station",
               "mode": "walk",
-              "start_time": "18:39",
-              "end_time": "18:40",
+              "start_time": "09:41",
+              "end_time": "09:42",
               "distance": 0.13,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Suzhou Railway Station-Metro Station",
-              "end": "Lion Mountain Road-Metro Station",
+              "end": "East Ring Road-Metro Station",
               "mode": "metro",
-              "start_time": "18:40",
-              "end_time": "18:52",
-              "distance": 6.41,
+              "start_time": "09:42",
+              "end_time": "09:50",
+              "distance": 4.28,
               "price": 3,
               "cost": 9,
               "tickets": 3
             },
             {
-              "start": "Lion Mountain Road-Metro Station",
-              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "start": "East Ring Road-Metro Station",
+              "end": "China Kunqu Opera Museum",
               "mode": "walk",
-              "start_time": "18:52",
-              "end_time": "18:53",
-              "distance": 0.1,
+              "start_time": "09:50",
+              "end_time": "10:02",
+              "distance": 1.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Patron's Egg Pancake",
+          "start_time": "11:52",
+          "end_time": "12:52",
+          "price": 11.0,
+          "cost": 33.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Kunqu Opera Museum",
+              "end": "East Ring Road-Metro Station",
+              "mode": "walk",
+              "start_time": "11:32",
+              "end_time": "11:44",
+              "distance": 1.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Ring Road-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "metro",
+              "start_time": "11:44",
+              "end_time": "11:47",
+              "distance": 1.76,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Old Patron's Egg Pancake",
+              "mode": "walk",
+              "start_time": "11:47",
+              "end_time": "11:52",
+              "distance": 0.45,
               "price": 0,
               "cost": 0
             }
@@ -62,41 +104,125 @@
         },
         {
           "type": "attraction",
-          "position": "Shantang Street",
-          "start_time": "20:13",
-          "end_time": "21:43",
+          "position": "Ruiguang Pagoda",
+          "start_time": "13:02",
+          "end_time": "14:32",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shangri-La Hotel Suzhou · Shang Palace",
-              "end": "Lion Mountain Road-Metro Station",
+              "start": "Old Patron's Egg Pancake",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
               "mode": "walk",
-              "start_time": "19:53",
-              "end_time": "19:54",
-              "distance": 0.1,
+              "start_time": "12:52",
+              "end_time": "12:57",
+              "distance": 0.45,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Lion Mountain Road-Metro Station",
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:57",
+              "end_time": "12:59",
+              "distance": 1.22,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Ruiguang Pagoda",
+              "mode": "walk",
+              "start_time": "12:59",
+              "end_time": "13:02",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cloud-Crowned Peak",
+          "start_time": "14:45",
+          "end_time": "16:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ruiguang Pagoda",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "walk",
+              "start_time": "14:32",
+              "end_time": "14:35",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
               "end": "Shantang Street-Metro Station",
               "mode": "metro",
-              "start_time": "19:54",
-              "end_time": "20:04",
-              "distance": 5.0,
-              "price": 3,
-              "cost": 9,
+              "start_time": "14:35",
+              "end_time": "14:41",
+              "distance": 3.17,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Shantang Street-Metro Station",
-              "end": "Shantang Street",
+              "end": "Cloud-Crowned Peak",
               "mode": "walk",
-              "start_time": "20:04",
-              "end_time": "20:13",
-              "distance": 0.82,
+              "start_time": "14:41",
+              "end_time": "14:45",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Rui Garden",
+          "start_time": "17:37",
+          "end_time": "19:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Cloud-Crowned Peak",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "16:15",
+              "end_time": "16:19",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Taihu Xiangshan-Metro Station",
+              "mode": "metro",
+              "start_time": "16:19",
+              "end_time": "16:54",
+              "distance": 17.62,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Taihu Xiangshan-Metro Station",
+              "end": "Rui Garden",
+              "mode": "walk",
+              "start_time": "16:54",
+              "end_time": "17:37",
+              "distance": 3.59,
               "price": 0,
               "cost": 0
             }
@@ -104,43 +230,43 @@
         },
         {
           "type": "accommodation",
-          "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
-          "start_time": "21:57",
+          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
+          "start_time": "20:43",
           "end_time": "24:00",
-          "price": 325.0,
-          "cost": 975.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 206.0,
+          "cost": 412.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Shantang Street",
-              "end": "Shantang Street-Metro Station",
+              "start": "Rui Garden",
+              "end": "Taihu Xiangshan-Metro Station",
               "mode": "walk",
-              "start_time": "21:43",
-              "end_time": "21:52",
-              "distance": 0.82,
+              "start_time": "19:07",
+              "end_time": "19:50",
+              "distance": 3.59,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shantang Street-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
+              "start": "Taihu Xiangshan-Metro Station",
+              "end": "Jiangxing West Road-Metro Station",
               "mode": "metro",
-              "start_time": "21:52",
-              "end_time": "21:54",
-              "distance": 1.48,
-              "price": 2,
-              "cost": 6,
+              "start_time": "19:50",
+              "end_time": "20:26",
+              "distance": 18.2,
+              "price": 5,
+              "cost": 15,
               "tickets": 3
             },
             {
-              "start": "Suzhou Railway Station-Metro Station",
-              "end": "Vienna International Hotel (Suzhou Railway Station North Square)",
+              "start": "Jiangxing West Road-Metro Station",
+              "end": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
               "mode": "walk",
-              "start_time": "21:54",
-              "end_time": "21:57",
-              "distance": 0.3,
+              "start_time": "20:26",
+              "end_time": "20:43",
+              "distance": 1.47,
               "price": 0,
               "cost": 0
             }
@@ -153,7 +279,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna International Hotel (Suzhou Railway Station North Square)",
+          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -162,31 +288,94 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "20:05",
-          "start": "Suzhou Station",
-          "end": "Chongqing North Railway Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "type": "attraction",
+          "position": "East Taihu Ecological Park",
+          "start_time": "09:03",
+          "end_time": "10:33",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Vienna International Hotel (Suzhou Railway Station North Square)",
-              "end": "Suzhou Station",
+              "start": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
+              "end": "Jiangxing West Road-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:35",
-              "distance": 0.4279068467741364,
+              "end_time": "08:47",
+              "distance": 1.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangxing West Road-Metro Station",
+              "end": "Lize Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:47",
+              "end_time": "08:51",
+              "distance": 2.26,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Lize Road-Metro Station",
+              "end": "East Taihu Ecological Park",
+              "mode": "walk",
+              "start_time": "08:51",
+              "end_time": "09:03",
+              "distance": 1.05,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:40",
+          "end_time": "14:08",
+          "start": "Suzhou Station",
+          "end": "Chongqing West Railway Station",
+          "price": 679.06,
+          "cost": 2037.1799999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East Taihu Ecological Park",
+              "end": "Lize Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:33",
+              "end_time": "10:45",
+              "distance": 1.05,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lize Road-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "10:45",
+              "end_time": "11:24",
+              "distance": 19.53,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Suzhou Station",
+              "mode": "walk",
+              "start_time": "11:24",
+              "end_time": "11:25",
+              "distance": 0.13,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "D956"
+          "TrainID": "T237"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 2.203019618988037,
-  "_eval_score": 92.29166666666666
+  "elapsed_time(sec)": 25.295787572860718,
+  "_eval_score": 93.5595238095238
 }
