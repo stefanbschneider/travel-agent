@@ -12,7 +12,7 @@
 #   CLEAN=1 bash slurm/submit_full_suite_array.sh
 set -euo pipefail
 
-PROJECT=/beegfs/home/users/f/fabimi/china-travel-agent
+PROJECT="${TPC_PROJECT_DIR:-/beegfs/home/users/f/fabimi/china-travel-agent}"
 SPLIT_DIR="$PROJECT/chinatravel/evaluation/default_splits"
 SHARDS="${SHARDS:-16}"
 CONCURRENCY="${CONCURRENCY:-$SHARDS}"
@@ -28,7 +28,7 @@ CLEAN="${CLEAN:-1}"
 PYTHON_BIN="${PYTHON:-python3}"
 
 cd "$PROJECT"
-mkdir -p cache/solve_logs
+mkdir -p "$PROJECT/cache/solve_logs"
 
 if [[ "$CLEAN" == "1" ]]; then
     make clean-light
@@ -53,11 +53,12 @@ print({"source": source, "prefix": prefix, "shards": shards, "total": sum(counts
 PY
 
 ARRAY_SPEC="0-$((SHARDS - 1))%${CONCURRENCY}"
-EXPORTS="ALL,TPC_FULL_PREFIX=${SPLIT_PREFIX},TPC_FULL_WORKERS=${WORKERS},TPC_FULL_RESTARTS=${RESTARTS},TPC_FULL_BUDGET=${BUDGET}"
+EXPORTS="ALL,TPC_FULL_PREFIX=${SPLIT_PREFIX},TPC_FULL_WORKERS=${WORKERS},TPC_FULL_RESTARTS=${RESTARTS},TPC_FULL_BUDGET=${BUDGET},TPC_PROJECT_DIR=${PROJECT}"
 
 echo "Submitting full-suite array: partition=$PARTITION array=$ARRAY_SPEC workers=$WORKERS mem=$MEM time=$TIME restarts=$RESTARTS budget=$BUDGET"
 JOB=$(sbatch --parsable \
     --partition "$PARTITION" \
+    --output="$PROJECT/cache/solve_logs/full_suite_%A_%a.log" \
     --array "$ARRAY_SPEC" \
     --cpus-per-task "$WORKERS" \
     --mem "$MEM" \
