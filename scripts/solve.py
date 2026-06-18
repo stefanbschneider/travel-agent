@@ -22,6 +22,21 @@ SPLIT_DIR = os.path.join(ROOT, "chinatravel", "evaluation", "default_splits")
 
 def _split_path(name):
     return os.path.join(SPLIT_DIR, name + ".txt")
+UNSOLVABLE_FILE = os.path.join(SPLIT_DIR, "tpc_phase1_constraints_unsolvable.txt")
+
+
+def _read_denylist():
+    """Confirmed-unsolvable UIDs (one per line; trailing '#' comments carry the reason).
+    These are skipped to avoid wasted retries. See the file header for proof classes."""
+    if not os.path.exists(UNSOLVABLE_FILE):
+        return set()
+    deny = set()
+    with open(UNSOLVABLE_FILE) as f:
+        for line in f:
+            uid = line.split("#", 1)[0].strip()
+            if uid:
+                deny.add(uid)
+    return deny
 
 
 def _read_uids(split):
@@ -69,12 +84,20 @@ def main():
         # single-threaded by default to avoid N workers × 8 CP threads oversubscription.
         env["TPC_CP_SEARCH_WORKERS"] = "1"
 
-    if args.workers <= 1:
+    deny = _read_denylist()
+    all_uids = _read_uids(args.split)
+    skipped = [u for u in all_uids if u in deny]
+    if skipped:
+        print("solve: skipping {} confirmed-unsolvable UID(s) ({}): {}".format(
+            len(skipped), os.path.relpath(UNSOLVABLE_FILE, ROOT), skipped))
+    uids = [u for u in all_uids if u not in deny]
+    if not uids:
+        print("solve: nothing to do (split empty or fully denylisted)")
+        return 0
+    if args.workers <= 1 and not skipped:
         cmd = _run_cmd(args.split, oracle, args.skip)
         print("solve:", " ".join(cmd))
         return subprocess.call(cmd, cwd=ROOT, env=env)
-
-    uids = _read_uids(args.split)
     workers = max(1, min(args.workers, len(uids)))
     shards = [uids[i::workers] for i in range(workers)]  # round-robin balances slow queries
 
