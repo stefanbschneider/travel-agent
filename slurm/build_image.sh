@@ -11,12 +11,15 @@
 # Rootless equivalent (what this script does):
 #   1. Pull the base python:3.12-slim SIF. Pulling is a pure image conversion
 #      (no %post), so it works as a non-root user.
-#   2. Create a 3.12 venv on the shared BeeGFS ($HOME/tpc-venv), bind-mounted at
-#      runtime. The container interpreter is 3.12, so the venv is 3.12 too --
-#      this preserves the repo's 3.12-only convention without fakeroot.
+#   2. Create a 3.12 venv on the shared BeeGFS ($HOME/tpc-venv). The container
+#      interpreter is 3.12, so the venv is 3.12 too -- this preserves the repo's
+#      3.12-only convention without fakeroot.
 #   3. pip install the SAME pinned deps as the .def into that venv.
+#   4. Pack the venv into $HOME/sif/tpc-venv.tar so Slurm jobs can extract one
+#      sequential artifact to node-local /tmp/drive instead of walking thousands
+#      of BeeGFS site-packages files per process.
 # Result: compute nodes run the solver with the container's 3.12 interpreter and
-# the pinned deps -- no root, no internet at runtime.
+# the pinned deps staged node-locally -- no root, no internet at runtime.
 #
 # Keep this pinned list IN SYNC with slurm/tpc-solver-py312.def.
 set -euo pipefail
@@ -24,6 +27,7 @@ set -euo pipefail
 SIF_DIR="$HOME/sif"
 BASE_SIF="$SIF_DIR/python-312-slim.sif"
 VENV_DIR="$HOME/tpc-venv"   # on BeeGFS via $HOME -> /beegfs/...
+VENV_TAR="$SIF_DIR/tpc-venv.tar"
 
 source /usr/share/modules/init/bash
 module purge
@@ -69,7 +73,13 @@ echo "[build] self-check"
 singularity exec --bind /beegfs "$BASE_SIF" "$VENV_DIR/bin/python" -c \
     "import sys,ortools,z3,numpy,pandas,sklearn,geopy,func_timeout,datasets,json_repair,jsonschema,fuzzywuzzy; print('import-ok', sys.version.split()[0])"
 
+# 5. Pack the venv as one sequential BeeGFS artifact for fast node-local staging.
+# Runtime jobs extract this tarball to /tmp/drive instead of walking thousands of
+# small site-packages files with cp -a.
+echo "[build] packing venv tar at $VENV_TAR"
+tar -C "$HOME" -cf "$VENV_TAR" "$(basename "$VENV_DIR")"
+
 echo "[build] done."
 echo "[build] Run the solver with:"
 echo "       module load singularity/4.4"
-echo "       singularity exec --bind /beegfs $BASE_SIF $VENV_DIR/bin/python scripts/solve.py --split <name> ..."
+echo "       bash slurm/submit_full_suite_array.sh"
