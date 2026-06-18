@@ -42,7 +42,7 @@ unset TPC_CP_TIME_LIMIT_SEC
 
 BASE_SIF="$HOME/sif/python-312-slim.sif"
 TPC_VENV="$HOME/tpc-venv"
-PROJECT=/beegfs/home/users/f/fabimi/china-travel-agent
+PROJECT="${TPC_PROJECT_DIR:-/beegfs/home/users/f/fabimi/china-travel-agent}"
 cd "$PROJECT"
 
 SPLIT_PREFIX="${TPC_FULL_PREFIX:-_cluster_full}"
