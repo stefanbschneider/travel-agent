@@ -162,6 +162,48 @@
           "transports": []
         },
         {
+          "type": "lunch",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "price": 16.0,
+          "cost": 48.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Intercity Shanghai Hongqiao Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:32",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:32",
+              "end_time": "09:13",
+              "distance": 20.87,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "walk",
+              "start_time": "09:13",
+              "end_time": "09:23",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "17:28",
           "end_time": "18:19",
@@ -172,12 +214,33 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Intercity Shanghai Hongqiao Airport",
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "12:30",
+              "end_time": "12:40",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "12:40",
+              "end_time": "13:39",
+              "distance": 29.96,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "17:25",
-              "distance": 44.64428583234451,
+              "start_time": "13:39",
+              "end_time": "13:54",
+              "distance": 1.27,
               "price": 0,
               "cost": 0
             }
@@ -188,5 +251,5 @@
     }
   ],
   "elapsed_time(sec)": 0.6609930992126465,
-  "_eval_score": 89.375
+  "_eval_score": 92.85714285714286
 }

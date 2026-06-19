@@ -8,6 +8,8 @@ import numpy as np
 import sys
 import os
 import json
+import fcntl
+from concurrent.futures import ThreadPoolExecutor
 
 project_root_path = os.path.dirname(os.path.abspath(__file__))
 if project_root_path not in sys.path: sys.path.insert(0, project_root_path)
@@ -141,20 +143,20 @@ def cal_per_query_pr_scores(query_index, result_data, all_pass_id):
 def load_result(args, query_index,path, verbose=False):
 
     def load_result_for_method(path):
-        plans = {}
-        for query_id in query_index:
-            result_file = os.path.join(
-                path, "{}.json".format(query_id)
-            )
-
+        def _load_one(query_id):
+            result_file = os.path.join(path, "{}.json".format(query_id))
             try:
                 if os.path.exists(result_file):
-                    result = load_json_file(result_file)
-                    plans[query_id] = result
-                else:
-                    plans[query_id] = {}
-            except:
-                plans[query_id] = {}
+                    return query_id, load_json_file(result_file)
+            except Exception:
+                pass
+            return query_id, {}
+
+        max_workers = min(32, (os.cpu_count() or 4) * 4)
+        plans = {}
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            for query_id, result in pool.map(_load_one, query_index):
+                plans[query_id] = result
         return plans
 
     result = {}
@@ -167,10 +169,17 @@ def load_result(args, query_index,path, verbose=False):
     return ['default'], result
 
 def write_file(file, content):
-    """ Write content in file.
-    """
-    with open(file, 'a', encoding="utf-8") as f:
-        f.write(content)
+    """Append content to file under a process lock."""
+    lock_dir = os.path.join(project_root_path, "cache", "eval_locks")
+    os.makedirs(lock_dir, exist_ok=True)
+    lock_file_path = os.path.join(lock_dir, "{}.lock".format(os.path.basename(file)))
+    with open(lock_file_path, "a", encoding="utf-8") as lock_f:
+        fcntl.flock(lock_f, fcntl.LOCK_EX)
+        try:
+            with open(file, 'a', encoding="utf-8") as f:
+                f.write(content)
+        finally:
+            fcntl.flock(lock_f, fcntl.LOCK_UN)
 
 
 def remove_query_ids_from_split_file(split_file_path, query_ids):
@@ -182,23 +191,34 @@ def remove_query_ids_from_split_file(split_file_path, query_ids):
     if not query_id_set:
         return 0
 
-    with open(split_file_path, "r", encoding="utf-8") as f:
-        lines = [line.strip() for line in f.readlines()]
+    lock_dir = os.path.join(project_root_path, "cache", "eval_locks")
+    os.makedirs(lock_dir, exist_ok=True)
+    lock_file_path = os.path.join(lock_dir, "{}.lock".format(os.path.basename(split_file_path)))
 
-    removed_count = 0
-    kept_lines = []
-    for line in lines:
-        if line and line in query_id_set:
-            removed_count += 1
-            continue
-        kept_lines.append(line)
+    with open(lock_file_path, "a", encoding="utf-8") as lock_f:
+        fcntl.flock(lock_f, fcntl.LOCK_EX)
+        try:
+            with open(split_file_path, "r", encoding="utf-8") as f:
+                lines = [line.strip() for line in f.readlines()]
 
-    if removed_count > 0:
-        with open(split_file_path, "w", encoding="utf-8") as f:
-            if kept_lines:
-                f.write("\n".join(kept_lines) + "\n")
-            else:
-                f.write("")
+            removed_count = 0
+            kept_lines = []
+            for line in lines:
+                if line and line in query_id_set:
+                    removed_count += 1
+                    continue
+                kept_lines.append(line)
+
+            if removed_count > 0:
+                tmp_file_path = "{}.{}.tmp".format(split_file_path, os.getpid())
+                with open(tmp_file_path, "w", encoding="utf-8") as f:
+                    if kept_lines:
+                        f.write("\n".join(kept_lines) + "\n")
+                    else:
+                        f.write("")
+                os.replace(tmp_file_path, split_file_path)
+        finally:
+            fcntl.flock(lock_f, fcntl.LOCK_UN)
 
     return removed_count
 
@@ -391,6 +411,22 @@ if __name__ == "__main__":
         updated_best = 0
         solved_query_ids = set()
 
+        def _prev_score(query_id):
+            best_file = os.path.join(best_dir, "{}.json".format(query_id))
+            if not os.path.exists(best_file):
+                return query_id, -1.0
+            try:
+                with open(best_file) as f:
+                    stored = json.load(f)
+                return query_id, float(stored.get("_eval_score", 0))
+            except Exception:
+                return query_id, -1.0
+
+        prev_scores = {}
+        with ThreadPoolExecutor(max_workers=min(32, (os.cpu_count() or 4) * 4)) as pool:
+            for query_id, score in pool.map(_prev_score, query_index):
+                prev_scores[query_id] = score
+
         for query_id in query_index:
             src_file = os.path.join(project_root_path, "results", args.method, "{}.json".format(query_id))
             if not os.path.exists(src_file):
@@ -416,21 +452,15 @@ if __name__ == "__main__":
 
             # -- constraints_solved: save if all hard constraints pass -------
             if query_id in all_pass_set:
-                dest = os.path.join(constraints_solved_dir, "{}.json".format(query_id))
-                shutil.copy2(src_file, dest)
-                updated_constraints += 1
                 solved_query_ids.add(query_id)
+                dest = os.path.join(constraints_solved_dir, "{}.json".format(query_id))
+                if not os.path.exists(dest):
+                    shutil.copy2(src_file, dest)
+                    updated_constraints += 1
 
             # -- best: save if no previous result or current score is higher -
             best_file = os.path.join(best_dir, "{}.json".format(query_id))
-            previous_score = -1.0
-            if os.path.exists(best_file):
-                try:
-                    with open(best_file) as f:
-                        stored = json.load(f)
-                    previous_score = float(stored.get("_eval_score", 0))
-                except Exception:
-                    previous_score = -1.0
+            previous_score = prev_scores.get(query_id, -1.0)
 
             if current_score > previous_score:
                 try:

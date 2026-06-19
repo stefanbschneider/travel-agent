@@ -7,35 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "07:38",
-          "end_time": "09:23",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Nanjing Lukou International Airport",
-          "price": 676.89,
-          "cost": 1353.78,
+          "type": "train",
+          "start_time": "17:42",
+          "end_time": "01:43",
+          "start": "Chengdu West Railway Station",
+          "end": "Nanjing Station",
+          "price": 563.16,
+          "cost": 1126.32,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL478"
+          "TrainID": "K292"
         },
         {
-          "type": "lunch",
-          "position": "Mai Restaurant at Hotel Indigo Nanjing Garden Expo",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 331.0,
-          "cost": 662.0,
+          "type": "attraction",
+          "position": "Four Directions City",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
-              "end": "Mai Restaurant at Hotel Indigo Nanjing Garden Expo",
+              "start": "Nanjing Station",
+              "end": "Four Directions City",
               "mode": "taxi",
-              "start_time": "09:23",
-              "end_time": "10:22",
-              "distance": 39.83,
-              "price": 173.91,
-              "cost": 173.91,
+              "start_time": "01:43",
+              "end_time": "01:52",
+              "distance": 6.26,
+              "price": 26.62,
+              "cost": 26.62,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
+          "start_time": "10:38",
+          "end_time": "12:08",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Four Directions City",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 5.87,
+              "price": 25.25,
+              "cost": 25.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Mushroom Restaurant (Xiaohuowaxiang Branch)",
+          "start_time": "12:09",
+          "end_time": "13:09",
+          "price": 44.0,
+          "cost": 88.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Mushroom Restaurant (Xiaohuowaxiang Branch)",
+              "mode": "taxi",
+              "start_time": "12:08",
+              "end_time": "12:09",
+              "distance": 1.08,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -43,108 +87,133 @@
         {
           "type": "attraction",
           "position": "Confucius Temple",
-          "start_time": "12:30",
-          "end_time": "14:00",
+          "start_time": "13:10",
+          "end_time": "14:40",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Mai Restaurant at Hotel Indigo Nanjing Garden Expo",
+              "start": "Mushroom Restaurant (Xiaohuowaxiang Branch)",
               "end": "Confucius Temple",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:30",
-              "distance": 20.05,
-              "price": 84.94,
-              "cost": 84.94,
+              "start_time": "13:09",
+              "end_time": "13:10",
+              "distance": 0.98,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple Yuhua Stone Museum",
-          "start_time": "14:01",
-          "end_time": "16:01",
+          "position": "Jiulong Lake Park",
+          "start_time": "14:57",
+          "end_time": "16:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Confucius Temple",
-              "end": "Confucius Temple Yuhua Stone Museum",
-              "mode": "walk",
-              "start_time": "14:00",
-              "end_time": "14:01",
-              "distance": 0.14000629410462556,
-              "price": 0,
-              "cost": 0
+              "end": "Jiulong Lake Park",
+              "mode": "taxi",
+              "start_time": "14:40",
+              "end_time": "14:57",
+              "distance": 11.72,
+              "price": 47.44,
+              "cost": 47.44,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiangxinzhou Bridge",
+          "start_time": "16:57",
+          "end_time": "18:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiulong Lake Park",
+              "end": "Jiangxinzhou Bridge",
+              "mode": "taxi",
+              "start_time": "16:27",
+              "end_time": "16:57",
+              "distance": 20.59,
+              "price": 87.35,
+              "cost": 87.35,
+              "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 736.0,
-          "cost": 1472.0,
+          "position": "Brimming Bowl Northeast Earth Oven Barbecue (Yunjin Road Branch)",
+          "start_time": "18:41",
+          "end_time": "19:41",
+          "price": 78.0,
+          "cost": 156.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple Yuhua Stone Museum",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "16:01",
-              "end_time": "16:08",
-              "distance": 0.64,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Jiangxinzhou Bridge",
+              "end": "Brimming Bowl Northeast Earth Oven Barbecue (Yunjin Road Branch)",
+              "mode": "taxi",
+              "start_time": "18:27",
+              "end_time": "18:41",
+              "distance": 9.63,
+              "price": 38.4,
+              "cost": 38.4,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiangxin Island",
+          "start_time": "19:47",
+          "end_time": "21:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
             {
-              "start": "Confucius Temple-Metro Station",
-              "end": "Drum Tower-Metro Station",
-              "mode": "metro",
-              "start_time": "16:08",
-              "end_time": "16:15",
-              "distance": 3.92,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Drum Tower-Metro Station",
-              "end": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
-              "mode": "walk",
-              "start_time": "16:15",
-              "end_time": "16:17",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "start": "Brimming Bowl Northeast Earth Oven Barbecue (Yunjin Road Branch)",
+              "end": "Jiangxin Island",
+              "mode": "taxi",
+              "start_time": "19:41",
+              "end_time": "19:47",
+              "distance": 4.08,
+              "price": 18.98,
+              "cost": 18.98,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "18:56",
+          "position": "Xingyuan Hotel",
+          "start_time": "21:29",
           "end_time": "24:00",
-          "price": 786.0,
-          "cost": 1572.0,
-          "rooms": 2,
-          "room_type": 1,
-          "tickets": 2,
+          "price": 96.0,
+          "cost": 96.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
           "transports": [
             {
-              "start": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
-              "end": "Pullman Nanjing Lukou Airport",
+              "start": "Jiangxin Island",
+              "end": "Xingyuan Hotel",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:56",
-              "distance": 37.55,
-              "price": 163.65,
-              "cost": 163.65,
+              "start_time": "21:17",
+              "end_time": "21:29",
+              "distance": 8.53,
+              "price": 34.54,
+              "cost": 34.54,
               "cars": 1
             }
           ]
@@ -156,7 +225,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Pullman Nanjing Lukou Airport",
+          "position": "Xingyuan Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -165,108 +234,64 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "09:20",
-          "end_time": "10:50",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Pullman Nanjing Lukou Airport",
-              "end": "Confucius Temple and Qinhuai River Scenic Area",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:20",
-              "distance": 33.54,
-              "price": 145.61,
-              "cost": 145.61,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Meat Master House (Xinjiekou Branch)",
+          "position": "Zhu's Plum Blossom Cake",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 84.0,
-          "cost": 168.0,
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple and Qinhuai River Scenic Area",
-              "end": "Meat Master House (Xinjiekou Branch)",
+              "start": "Xingyuan Hotel",
+              "end": "Zhu's Plum Blossom Cake",
               "mode": "taxi",
-              "start_time": "10:50",
-              "end_time": "10:53",
-              "distance": 2.27,
-              "price": 12.64,
-              "cost": 12.64,
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 14.92,
+              "price": 61.84,
+              "cost": 61.84,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Zhongshan Scenic Area",
-          "start_time": "12:11",
-          "end_time": "13:41",
+          "position": "Ageless Village",
+          "start_time": "13:20",
+          "end_time": "14:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Meat Master House (Xinjiekou Branch)",
-              "end": "Zhongshan Scenic Area",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:11",
-              "distance": 7.95,
-              "price": 32.53,
-              "cost": 32.53,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Ancient Peach Leaf Ferry",
-          "start_time": "14:38",
-          "end_time": "16:08",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Zhongshan Scenic Area",
-              "end": "Wangjiawan-Metro Station",
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Yunnan Road-Metro Station",
               "mode": "walk",
-              "start_time": "13:41",
-              "end_time": "14:13",
-              "distance": 2.69,
+              "start_time": "12:00",
+              "end_time": "12:05",
+              "distance": 0.5,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Wangjiawan-Metro Station",
-              "end": "Changfu Street-Metro Station",
+              "start": "Yunnan Road-Metro Station",
+              "end": "Longhua Road-Metro Station",
               "mode": "metro",
-              "start_time": "14:13",
-              "end_time": "14:27",
-              "distance": 7.18,
-              "price": 3,
-              "cost": 6,
+              "start_time": "12:05",
+              "end_time": "12:31",
+              "distance": 13.19,
+              "price": 4,
+              "cost": 8,
               "tickets": 2
             },
             {
-              "start": "Changfu Street-Metro Station",
-              "end": "Ancient Peach Leaf Ferry",
+              "start": "Longhua Road-Metro Station",
+              "end": "Ageless Village",
               "mode": "walk",
-              "start_time": "14:27",
-              "end_time": "14:38",
-              "distance": 0.92,
+              "start_time": "12:31",
+              "end_time": "13:20",
+              "distance": 4.09,
               "price": 0,
               "cost": 0
             }
@@ -274,41 +299,41 @@
         },
         {
           "type": "dinner",
-          "position": "La Mia Casa Italian Restaurant (Shanghai Road Branch)",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 135.0,
-          "cost": 270.0,
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Ancient Peach Leaf Ferry",
-              "end": "Changfu Street-Metro Station",
+              "start": "Ageless Village",
+              "end": "Longhua Road-Metro Station",
               "mode": "walk",
-              "start_time": "16:08",
-              "end_time": "16:19",
-              "distance": 0.92,
+              "start_time": "14:50",
+              "end_time": "15:39",
+              "distance": 4.09,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Changfu Street-Metro Station",
-              "end": "Yunnan Road-Metro Station",
+              "start": "Longhua Road-Metro Station",
+              "end": "Xuanwu Gate-Metro Station",
               "mode": "metro",
-              "start_time": "16:19",
-              "end_time": "16:25",
-              "distance": 3.3,
-              "price": 2,
-              "cost": 4,
+              "start_time": "15:39",
+              "end_time": "16:07",
+              "distance": 14.08,
+              "price": 5,
+              "cost": 10,
               "tickets": 2
             },
             {
-              "start": "Yunnan Road-Metro Station",
-              "end": "La Mia Casa Italian Restaurant (Shanghai Road Branch)",
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "mode": "walk",
-              "start_time": "16:25",
-              "end_time": "16:29",
-              "distance": 0.38,
+              "start_time": "16:07",
+              "end_time": "16:16",
+              "distance": 0.79,
               "price": 0,
               "cost": 0
             }
@@ -316,24 +341,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "18:55",
+          "position": "Xingyuan Hotel",
+          "start_time": "18:24",
           "end_time": "24:00",
-          "price": 786.0,
-          "cost": 1572.0,
-          "rooms": 2,
-          "room_type": 1,
-          "tickets": 2,
+          "price": 96.0,
+          "cost": 96.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
           "transports": [
             {
-              "start": "La Mia Casa Italian Restaurant (Shanghai Road Branch)",
-              "end": "Pullman Nanjing Lukou Airport",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Xingyuan Hotel",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:55",
-              "distance": 37.17,
-              "price": 161.98,
-              "cost": 161.98,
+              "end_time": "18:24",
+              "distance": 16.53,
+              "price": 69.1,
+              "cost": 69.1,
               "cars": 1
             }
           ]
@@ -345,7 +370,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Pullman Nanjing Lukou Airport",
+          "position": "Xingyuan Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -354,138 +379,116 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Nanjing Presidential Palace",
-          "start_time": "09:24",
-          "end_time": "10:54",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Pullman Nanjing Lukou Airport",
-              "end": "Nanjing Presidential Palace",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:24",
-              "distance": 36.03,
-              "price": 156.85,
-              "cost": 156.85,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Wine Thieves Neo-Bistro",
+          "position": "Lu's Plum Blossom Cake (Laomendong Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 185.0,
-          "cost": 370.0,
+          "price": 9.0,
+          "cost": 18.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Presidential Palace",
-              "end": "Wine Thieves Neo-Bistro",
+              "start": "Xingyuan Hotel",
+              "end": "Lu's Plum Blossom Cake (Laomendong Branch)",
               "mode": "taxi",
-              "start_time": "10:54",
-              "end_time": "10:58",
-              "distance": 2.8,
-              "price": 14.49,
-              "cost": 14.49,
+              "start_time": "08:30",
+              "end_time": "08:47",
+              "distance": 11.83,
+              "price": 47.95,
+              "cost": 47.95,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Jiangnan Silk Culture Museum",
-          "start_time": "12:15",
-          "end_time": "14:45",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "12:31",
+          "end_time": "14:01",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Wine Thieves Neo-Bistro",
-              "end": "Shanghai Road-Metro Station",
+              "start": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "end": "Wuding Gate-Metro Station",
               "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:06",
-              "distance": 0.52,
+              "end_time": "12:09",
+              "distance": 0.79,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shanghai Road-Metro Station",
-              "end": "Zhangfuyuan-Metro Station",
+              "start": "Wuding Gate-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
               "mode": "metro",
-              "start_time": "12:06",
-              "end_time": "12:08",
-              "distance": 1.44,
+              "start_time": "12:09",
+              "end_time": "12:18",
+              "distance": 4.84,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "12:18",
+              "end_time": "12:31",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "15:15",
+          "end_time": "17:55",
+          "start": "Nanjing Station",
+          "end": "Chengdu West Railway Station",
+          "price": 563.16,
+          "cost": 1126.32,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "14:01",
+              "end_time": "14:14",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "14:14",
+              "end_time": "14:21",
+              "distance": 3.56,
               "price": 2,
               "cost": 4,
               "tickets": 2
             },
             {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Jiangnan Silk Culture Museum",
+              "start": "Nanjing Station-Metro Station",
+              "end": "Nanjing Station",
               "mode": "walk",
-              "start_time": "12:08",
-              "end_time": "12:15",
-              "distance": 0.6,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "17:30",
-          "end_time": "19:15",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 662.51,
-          "cost": 1325.02,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Jiangnan Silk Culture Museum",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "walk",
-              "start_time": "14:45",
-              "end_time": "14:52",
-              "distance": 0.6,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "14:52",
-              "end_time": "16:00",
-              "distance": 34.4,
-              "price": 7,
-              "cost": 14,
-              "tickets": 2
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
-              "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
-              "start_time": "16:00",
-              "end_time": "16:03",
-              "distance": 0.27,
+              "start_time": "14:21",
+              "end_time": "14:23",
+              "distance": 0.25,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL692"
+          "TrainID": "K1157"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03307795524597168,
-  "_eval_score": 95.90079365079364
+  "elapsed_time(sec)": 45.424046754837036,
+  "_eval_score": 96.80555555555556
 }

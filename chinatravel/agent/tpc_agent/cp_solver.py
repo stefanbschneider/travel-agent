@@ -381,6 +381,7 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
     agent._forced_inner_mode = "taxi" if constraints.get("taxi_cars_equals") is not None else None
     try:
         first_plan = None
+        passing = []
         for order in orderings:
             plan = _reconstruct_one(agent, query, constraints, ctx, assignment, order, lunch_pool, dinner_pool)
             if plan is None:
@@ -394,7 +395,9 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
             except Exception:
                 continue
             if passed == total:
-                return plan
+                passing.append(plan)
+        if passing:
+            return max(passing, key=lambda p: agent._eval_proxy(p))
         return first_plan if check is None else None
     finally:
         agent._transport_constraints = saved["tc"]
@@ -486,6 +489,7 @@ def _attraction_orderings(agent, attrs: list[dict], constraints: dict, hotel: di
 
     add(list(attrs))
     add(_nn_order(attrs, _centroid(attrs)))
+    add(_nn_order(attrs, (hotel.get("lat"), hotel.get("lon"))))
     return orders
 
 
@@ -554,6 +558,21 @@ def _fill_day(agent, city, people, constraints, base_visit, attr_queue, lunch_po
                 continue
         if not attr_queue:
             break
+        visit_est = _visit_len_for(agent, attr_queue[0], constraints, base_visit)
+        if not lunch_done and lunch_pool and clock < LUNCH_LATEST_START and clock + visit_est > LUNCH_LATEST_START:
+            placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock,
+                                 LUNCH_OPEN, LUNCH_CLOSE, day_close)
+            lunch_done = True
+            if placed:
+                pos, clock = placed
+                continue
+        if not dinner_done and dinner_pool and clock < DINNER_LATEST_START and clock + visit_est > DINNER_LATEST_START:
+            placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock,
+                                 DINNER_OPEN, DINNER_CLOSE, day_close)
+            dinner_done = True
+            if placed:
+                pos, clock = placed
+                continue
         attr = attr_queue[0]
         outcome = _place_attraction(agent, city, people, constraints, base_visit, attr, activities, pos, clock, day_close)
         if outcome == "placed":

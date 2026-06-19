@@ -2,7 +2,6 @@ import sys
 import os
 import json
 import numpy as np
-from datasets import load_dataset as hg_load_dataset
 import ast
 
 project_root_path = os.path.dirname(
@@ -115,6 +114,7 @@ def load_query(args):
     #     config_name = "validation"
     # elif args.splits in ["human1000"]:
     #     config_name = "test"
+    from datasets import load_dataset as hg_load_dataset
     query_data = hg_load_dataset("LAMDA-NeSy/ChinaTravel", name=config_name)[args.splits].to_list()
 
 

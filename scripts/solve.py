@@ -8,7 +8,7 @@ it). Use --no-oracle for the Phase-2 NL/parsed-verifier path.
 
 --workers N runs N run_tpc.py processes over disjoint shards of the split concurrently
 (queries are independent and write disjoint files, so this is a clean ~N x speedup on a
-multi-core box). Each worker's output goes to cache/solve_logs/shard<k>.log.
+multi-core box). Each worker's output goes to cache/solve_logs/<split>_shard<k>.log.
 """
 import argparse
 import glob
@@ -22,6 +22,21 @@ SPLIT_DIR = os.path.join(ROOT, "chinatravel", "evaluation", "default_splits")
 
 def _split_path(name):
     return os.path.join(SPLIT_DIR, name + ".txt")
+UNSOLVABLE_FILE = os.path.join(SPLIT_DIR, "tpc_phase1_constraints_unsolvable.txt")
+
+
+def _read_denylist():
+    """Confirmed-unsolvable UIDs (one per line; trailing '#' comments carry the reason).
+    These are skipped to avoid wasted retries. See the file header for proof classes."""
+    if not os.path.exists(UNSOLVABLE_FILE):
+        return set()
+    deny = set()
+    with open(UNSOLVABLE_FILE) as f:
+        for line in f:
+            uid = line.split("#", 1)[0].strip()
+            if uid:
+                deny.add(uid)
+    return deny
 
 
 def _read_uids(split):
@@ -37,6 +52,9 @@ def _run_cmd(split, oracle, skip):
     if skip:
         cmd += ["--skip", "1"]
     return cmd
+
+def _safe_log_fragment(value):
+    return "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in str(value))
 
 
 def main():
@@ -66,12 +84,20 @@ def main():
         # single-threaded by default to avoid N workers × 8 CP threads oversubscription.
         env["TPC_CP_SEARCH_WORKERS"] = "1"
 
-    if args.workers <= 1:
+    deny = _read_denylist()
+    all_uids = _read_uids(args.split)
+    skipped = [u for u in all_uids if u in deny]
+    if skipped:
+        print("solve: skipping {} confirmed-unsolvable UID(s) ({}): {}".format(
+            len(skipped), os.path.relpath(UNSOLVABLE_FILE, ROOT), skipped))
+    uids = [u for u in all_uids if u not in deny]
+    if not uids:
+        print("solve: nothing to do (split empty or fully denylisted)")
+        return 0
+    if args.workers <= 1 and not skipped:
         cmd = _run_cmd(args.split, oracle, args.skip)
         print("solve:", " ".join(cmd))
         return subprocess.call(cmd, cwd=ROOT, env=env)
-
-    uids = _read_uids(args.split)
     workers = max(1, min(args.workers, len(uids)))
     shards = [uids[i::workers] for i in range(workers)]  # round-robin balances slow queries
 
@@ -92,7 +118,7 @@ def main():
             with open(path, "w") as f:
                 f.write("\n".join(shard) + "\n")
             tmp_splits.append(path)
-            log_path = os.path.join(log_dir, "shard{}.log".format(k))
+            log_path = os.path.join(log_dir, "{}_shard{}.log".format(_safe_log_fragment(args.split), k))
             logf = open(log_path, "w")
             logs.append(logf)
             cmd = _run_cmd(name, oracle, args.skip)

@@ -7,142 +7,214 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "11:45",
-          "end_time": "12:04",
-          "start": "Chongqing Jiangbei International Airport",
-          "end": "Chengdu Tianfu International Airport",
-          "price": 248.46,
-          "cost": 1242.3,
+          "type": "train",
+          "start_time": "05:15",
+          "end_time": "08:58",
+          "start": "Chongqing North Railway Station",
+          "end": "Chengdu West Railway Station",
+          "price": 105.66,
+          "cost": 528.3,
           "tickets": 5,
           "transports": [],
-          "FlightID": "FL362"
+          "TrainID": "K1256"
         },
         {
           "type": "attraction",
-          "position": "Chengdu Museum",
-          "start_time": "14:41",
-          "end_time": "16:11",
+          "position": "Cat Museum",
+          "start_time": "10:00",
+          "end_time": "11:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu Tianfu International Airport",
-              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "mode": "walk",
-              "start_time": "12:04",
-              "end_time": "12:48",
-              "distance": 3.72,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Chengdu West Railway Station",
+              "end": "Cat Museum",
+              "mode": "taxi",
+              "start_time": "08:58",
+              "end_time": "08:58",
+              "distance": 0.31,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "11:43",
+          "end_time": "12:43",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
             {
-              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "end": "Luomashi-Metro Station",
-              "mode": "metro",
-              "start_time": "12:48",
-              "end_time": "14:35",
-              "distance": 53.61,
-              "price": 9,
-              "cost": 45,
-              "tickets": 5
-            },
+              "start": "Cat Museum",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "11:30",
+              "end_time": "11:43",
+              "distance": 8.9,
+              "price": 35.87,
+              "cost": 71.74,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "12:46",
+          "end_time": "14:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
             {
-              "start": "Luomashi-Metro Station",
-              "end": "Chengdu Museum",
-              "mode": "walk",
-              "start_time": "14:35",
-              "end_time": "14:41",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Chengdu Cultural Park",
+              "mode": "taxi",
+              "start_time": "12:43",
+              "end_time": "12:46",
+              "distance": 2.21,
+              "price": 12.42,
+              "cost": 24.84,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baihua Tan Park",
+          "start_time": "14:16",
+          "end_time": "15:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Cultural Park",
+              "end": "Baihua Tan Park",
+              "mode": "taxi",
+              "start_time": "14:16",
+              "end_time": "14:16",
+              "distance": 0.49,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liu Bei's Tomb",
+          "start_time": "15:47",
+          "end_time": "17:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Baihua Tan Park",
+              "end": "Liu Bei's Tomb",
+              "mode": "taxi",
+              "start_time": "15:46",
+              "end_time": "15:47",
+              "distance": 0.94,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Mawangzi (Taikoo Li Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 140.0,
-          "cost": 700.0,
+          "position": "Grandpa and Grandma Chen's Egg Pancakes",
+          "start_time": "17:21",
+          "end_time": "18:21",
+          "price": 9.0,
+          "cost": 45.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu Museum",
-              "end": "Luomashi-Metro Station",
-              "mode": "walk",
-              "start_time": "16:11",
-              "end_time": "16:17",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Liu Bei's Tomb",
+              "end": "Grandpa and Grandma Chen's Egg Pancakes",
+              "mode": "taxi",
+              "start_time": "17:17",
+              "end_time": "17:21",
+              "distance": 2.88,
+              "price": 14.77,
+              "cost": 29.54,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liu Xiang's Tomb",
+          "start_time": "18:25",
+          "end_time": "19:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
             {
-              "start": "Luomashi-Metro Station",
-              "end": "Chunxi Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:17",
-              "end_time": "16:21",
-              "distance": 2.01,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
+              "start": "Grandpa and Grandma Chen's Egg Pancakes",
+              "end": "Liu Xiang's Tomb",
+              "mode": "taxi",
+              "start_time": "18:21",
+              "end_time": "18:25",
+              "distance": 2.84,
+              "price": 14.63,
+              "cost": 29.26,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Butterfly Drama Club",
+          "start_time": "19:59",
+          "end_time": "21:29",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
             {
-              "start": "Chunxi Road-Metro Station",
-              "end": "Mawangzi (Taikoo Li Branch)",
-              "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:26",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
+              "start": "Liu Xiang's Tomb",
+              "end": "Butterfly Drama Club",
+              "mode": "taxi",
+              "start_time": "19:55",
+              "end_time": "19:59",
+              "distance": 2.97,
+              "price": 15.09,
+              "cost": 30.18,
+              "cars": 2
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-          "start_time": "18:10",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "21:32",
           "end_time": "24:00",
-          "price": 481.0,
-          "cost": 2405.0,
+          "price": 158.0,
+          "cost": 790.0,
           "rooms": 5,
           "room_type": 1,
           "tickets": 5,
           "transports": [
             {
-              "start": "Mawangzi (Taikoo Li Branch)",
-              "end": "Chunxi Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:05",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chunxi Road-Metro Station",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "metro",
-              "start_time": "18:05",
-              "end_time": "18:07",
-              "distance": 1.44,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "mode": "walk",
-              "start_time": "18:07",
-              "end_time": "18:10",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "start": "Butterfly Drama Club",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
+              "start_time": "21:29",
+              "end_time": "21:32",
+              "distance": 2.13,
+              "price": 12.16,
+              "cost": 24.32,
+              "cars": 2
             }
           ]
         }
@@ -153,7 +225,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
+          "position": "Chengdu Yuehuimei Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -162,125 +234,63 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Manjushri Lane",
-          "start_time": "08:45",
-          "end_time": "10:15",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Liangjia Lane-Metro Station",
-              "mode": "metro",
-              "start_time": "08:33",
-              "end_time": "08:39",
-              "distance": 3.23,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Liangjia Lane-Metro Station",
-              "end": "Manjushri Lane",
-              "mode": "walk",
-              "start_time": "08:39",
-              "end_time": "08:45",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "position": "Pengzhen Guanyin Pavilion Old Teahouse",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 250.0,
-          "cost": 1250.0,
+          "price": 13.0,
+          "cost": 65.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Manjushri Lane",
-              "end": "Liangjia Lane-Metro Station",
-              "mode": "walk",
-              "start_time": "10:15",
-              "end_time": "10:21",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liangjia Lane-Metro Station",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "metro",
-              "start_time": "10:21",
-              "end_time": "10:27",
-              "distance": 3.23,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-              "mode": "walk",
-              "start_time": "10:27",
-              "end_time": "10:29",
-              "distance": 0.22,
-              "price": 0,
-              "cost": 0
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Pengzhen Guanyin Pavilion Old Teahouse",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:02",
+              "distance": 21.61,
+              "price": 91.96,
+              "cost": 183.92,
+              "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Airport Flower Field",
-          "start_time": "13:29",
-          "end_time": "14:59",
+          "start_time": "13:54",
+          "end_time": "15:24",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-              "end": "Tianfu Square-Metro Station",
+              "start": "Pengzhen Guanyin Pavilion Old Teahouse",
+              "end": "Shuangliu Square-Metro Station",
               "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 0.22,
+              "end_time": "13:01",
+              "distance": 5.15,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Tianfu Square-Metro Station",
+              "start": "Shuangliu Square-Metro Station",
               "end": "Shuangliu West Station-Metro Station",
               "mode": "metro",
-              "start_time": "12:02",
-              "end_time": "12:40",
-              "distance": 19.05,
-              "price": 5,
-              "cost": 25,
+              "start_time": "13:01",
+              "end_time": "13:05",
+              "distance": 2.34,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
               "start": "Shuangliu West Station-Metro Station",
               "end": "Airport Flower Field",
               "mode": "walk",
-              "start_time": "12:40",
-              "end_time": "13:29",
+              "start_time": "13:05",
+              "end_time": "13:54",
               "distance": 4.09,
               "price": 0,
               "cost": 0
@@ -289,41 +299,41 @@
         },
         {
           "type": "dinner",
-          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 233.0,
-          "cost": 1165.0,
+          "price": 9.0,
+          "cost": 45.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Airport Flower Field",
               "end": "Shuangliu West Station-Metro Station",
               "mode": "walk",
-              "start_time": "14:59",
-              "end_time": "15:48",
+              "start_time": "15:24",
+              "end_time": "16:13",
               "distance": 4.09,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Shuangliu West Station-Metro Station",
-              "end": "Taisheng South Road-Metro Station",
+              "end": "Tianfu Square-Metro Station",
               "mode": "metro",
-              "start_time": "15:48",
-              "end_time": "16:28",
-              "distance": 20.37,
+              "start_time": "16:13",
+              "end_time": "16:51",
+              "distance": 19.05,
               "price": 5,
               "cost": 25,
               "tickets": 5
             },
             {
-              "start": "Taisheng South Road-Metro Station",
-              "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+              "start": "Tianfu Square-Metro Station",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
               "mode": "walk",
-              "start_time": "16:28",
-              "end_time": "16:33",
-              "distance": 0.46,
+              "start_time": "16:51",
+              "end_time": "16:54",
+              "distance": 0.26,
               "price": 0,
               "cost": 0
             }
@@ -331,45 +341,25 @@
         },
         {
           "type": "accommodation",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-          "start_time": "18:10",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "18:03",
           "end_time": "24:00",
-          "price": 481.0,
-          "cost": 2405.0,
+          "price": 158.0,
+          "cost": 790.0,
           "rooms": 5,
           "room_type": 1,
           "tickets": 5,
           "transports": [
             {
-              "start": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-              "end": "Taisheng South Road-Metro Station",
-              "mode": "walk",
+              "start": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:05",
-              "distance": 0.46,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Taisheng South Road-Metro Station",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "metro",
-              "start_time": "18:05",
-              "end_time": "18:07",
-              "distance": 1.32,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "mode": "walk",
-              "start_time": "18:07",
-              "end_time": "18:10",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "end_time": "18:03",
+              "distance": 2.2,
+              "price": 12.4,
+              "cost": 24.8,
+              "cars": 2
             }
           ]
         }
@@ -380,7 +370,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
+          "position": "Chengdu Yuehuimei Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -389,126 +379,64 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Manjushri Temple",
-          "start_time": "08:44",
-          "end_time": "10:14",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Liangjia Lane-Metro Station",
-              "mode": "metro",
-              "start_time": "08:33",
-              "end_time": "08:39",
-              "distance": 3.23,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Liangjia Lane-Metro Station",
-              "end": "Manjushri Temple",
-              "mode": "walk",
-              "start_time": "08:39",
-              "end_time": "08:44",
-              "distance": 0.43,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Grill Master Spicy Grilled Fish (IFS Branch)",
+          "position": "Zhang Lao Er Liangfen at Dongzikou (Wenshu Temple Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 100.0,
-          "cost": 500.0,
+          "price": 17.0,
+          "cost": 85.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Manjushri Temple",
-              "end": "Liangjia Lane-Metro Station",
-              "mode": "walk",
-              "start_time": "10:14",
-              "end_time": "10:19",
-              "distance": 0.43,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liangjia Lane-Metro Station",
-              "end": "Chunxi Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:19",
-              "end_time": "10:25",
-              "distance": 3.23,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Chunxi Road-Metro Station",
-              "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
-              "mode": "walk",
-              "start_time": "10:25",
-              "end_time": "10:26",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Zhang Lao Er Liangfen at Dongzikou (Wenshu Temple Branch)",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:30",
+              "distance": 0.34,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Kuanzhai Alley",
-          "start_time": "12:13",
-          "end_time": "13:43",
+          "position": "Chengdu Museum",
+          "start_time": "12:12",
+          "end_time": "13:42",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Grill Master Spicy Grilled Fish (IFS Branch)",
-              "end": "Chunxi Road-Metro Station",
+              "start": "Zhang Lao Er Liangfen at Dongzikou (Wenshu Temple Branch)",
+              "end": "Manjushri Temple-Metro Station",
               "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 0.14,
+              "end_time": "12:05",
+              "distance": 0.47,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Chunxi Road-Metro Station",
+              "start": "Manjushri Temple-Metro Station",
               "end": "Luomashi-Metro Station",
               "mode": "metro",
-              "start_time": "12:01",
-              "end_time": "12:05",
-              "distance": 2.01,
+              "start_time": "12:05",
+              "end_time": "12:06",
+              "distance": 0.71,
               "price": 2,
               "cost": 10,
               "tickets": 5
             },
             {
               "start": "Luomashi-Metro Station",
-              "end": "Kuanzhai Alley",
+              "end": "Chengdu Museum",
               "mode": "walk",
-              "start_time": "12:05",
-              "end_time": "12:13",
-              "distance": 0.68,
+              "start_time": "12:06",
+              "end_time": "12:12",
+              "distance": 0.56,
               "price": 0,
               "cost": 0
             }
@@ -516,41 +444,20 @@
         },
         {
           "type": "attraction",
-          "position": "Anshun Covered Bridge",
-          "start_time": "14:02",
-          "end_time": "16:02",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "13:42",
+          "end_time": "15:12",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Kuanzhai Alley",
-              "end": "Luomashi-Metro Station",
+              "start": "Chengdu Museum",
+              "end": "China Shadow Puppet Museum",
               "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "13:51",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Luomashi-Metro Station",
-              "end": "Niuwangmiao-Metro Station",
-              "mode": "metro",
-              "start_time": "13:51",
-              "end_time": "13:58",
-              "distance": 3.66,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Niuwangmiao-Metro Station",
-              "end": "Anshun Covered Bridge",
-              "mode": "walk",
-              "start_time": "13:58",
-              "end_time": "14:02",
-              "distance": 0.36,
+              "start_time": "13:42",
+              "end_time": "13:42",
+              "distance": 0.07916972935558433,
               "price": 0,
               "cost": 0
             }
@@ -558,41 +465,41 @@
         },
         {
           "type": "dinner",
-          "position": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
+          "position": "Shen Tang Sweet Noodles",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 984.0,
-          "cost": 4920.0,
+          "price": 16.0,
+          "cost": 80.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Anshun Covered Bridge",
-              "end": "Niuwangmiao-Metro Station",
+              "start": "China Shadow Puppet Museum",
+              "end": "Luomashi-Metro Station",
               "mode": "walk",
-              "start_time": "16:02",
-              "end_time": "16:06",
-              "distance": 0.36,
+              "start_time": "15:12",
+              "end_time": "15:19",
+              "distance": 0.61,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Niuwangmiao-Metro Station",
-              "end": "Financial City-Metro Station",
+              "start": "Luomashi-Metro Station",
+              "end": "Yiguanmiao-Metro Station",
               "mode": "metro",
-              "start_time": "16:06",
-              "end_time": "16:21",
-              "distance": 7.51,
-              "price": 3,
-              "cost": 15,
+              "start_time": "15:19",
+              "end_time": "15:26",
+              "distance": 3.78,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
-              "start": "Financial City-Metro Station",
-              "end": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
+              "start": "Yiguanmiao-Metro Station",
+              "end": "Shen Tang Sweet Noodles",
               "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:26",
-              "distance": 0.48,
+              "start_time": "15:26",
+              "end_time": "15:30",
+              "distance": 0.37,
               "price": 0,
               "cost": 0
             }
@@ -600,45 +507,25 @@
         },
         {
           "type": "accommodation",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-          "start_time": "18:24",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "18:07",
           "end_time": "24:00",
-          "price": 481.0,
-          "cost": 2405.0,
+          "price": 158.0,
+          "cost": 790.0,
           "rooms": 5,
           "room_type": 1,
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-              "end": "Financial City-Metro Station",
-              "mode": "walk",
+              "start": "Shen Tang Sweet Noodles",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:05",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Financial City-Metro Station",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "metro",
-              "start_time": "18:05",
-              "end_time": "18:21",
-              "distance": 8.3,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "mode": "walk",
-              "start_time": "18:21",
-              "end_time": "18:24",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "end_time": "18:07",
+              "distance": 5.05,
+              "price": 22.36,
+              "cost": 44.72,
+              "cars": 2
             }
           ]
         }
@@ -649,7 +536,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
+          "position": "Chengdu Yuehuimei Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -658,168 +545,85 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Jinli Ancient Street",
-          "start_time": "08:43",
-          "end_time": "10:13",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "People's Park-Metro Station",
-              "mode": "metro",
-              "start_time": "08:33",
-              "end_time": "08:34",
-              "distance": 0.88,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "People's Park-Metro Station",
-              "end": "Jinli Ancient Street",
-              "mode": "walk",
-              "start_time": "08:34",
-              "end_time": "08:43",
-              "distance": 0.82,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Chengdu Kempinski Hotel · Yi Shi German Western Restaurant",
+          "position": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 146.0,
-          "cost": 730.0,
+          "price": 10.0,
+          "cost": 50.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Jinli Ancient Street",
-              "end": "People's Park-Metro Station",
-              "mode": "walk",
-              "start_time": "10:13",
-              "end_time": "10:22",
-              "distance": 0.82,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "People's Park-Metro Station",
-              "end": "Tongzilin-Metro Station",
-              "mode": "metro",
-              "start_time": "10:22",
-              "end_time": "10:31",
-              "distance": 4.98,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Tongzilin-Metro Station",
-              "end": "Chengdu Kempinski Hotel · Yi Shi German Western Restaurant",
-              "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "10:35",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:30",
+              "distance": 0.21,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Sichuan Museum",
-          "start_time": "12:16",
-          "end_time": "13:46",
+          "position": "Chengdu Painting Academy",
+          "start_time": "12:13",
+          "end_time": "13:43",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu Kempinski Hotel · Yi Shi German Western Restaurant",
-              "end": "Tongzilin-Metro Station",
+              "start": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+              "end": "Manjushri Temple-Metro Station",
               "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:04",
-              "distance": 0.34,
+              "end_time": "12:02",
+              "distance": 0.18,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Tongzilin-Metro Station",
-              "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Luomashi-Metro Station",
               "mode": "metro",
-              "start_time": "12:04",
-              "end_time": "12:16",
-              "distance": 6.18,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
-              "end": "Sichuan Museum",
-              "mode": "walk",
-              "start_time": "12:16",
-              "end_time": "12:16",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Baihua Tan Park",
-          "start_time": "13:48",
-          "end_time": "15:18",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Sichuan Museum",
-              "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
-              "mode": "walk",
-              "start_time": "13:46",
-              "end_time": "13:46",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
-              "end": "Tonghuimen-Metro Station",
-              "mode": "metro",
-              "start_time": "13:46",
-              "end_time": "13:47",
-              "distance": 0.88,
+              "start_time": "12:02",
+              "end_time": "12:03",
+              "distance": 0.71,
               "price": 2,
               "cost": 10,
               "tickets": 5
             },
             {
-              "start": "Tonghuimen-Metro Station",
-              "end": "Baihua Tan Park",
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Painting Academy",
               "mode": "walk",
-              "start_time": "13:47",
-              "end_time": "13:48",
-              "distance": 0.15,
+              "start_time": "12:03",
+              "end_time": "12:13",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu People's Park",
+          "start_time": "13:54",
+          "end_time": "15:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Painting Academy",
+              "end": "Chengdu People's Park",
+              "mode": "walk",
+              "start_time": "13:43",
+              "end_time": "13:54",
+              "distance": 0.994115199018521,
               "price": 0,
               "cost": 0
             }
@@ -827,41 +631,41 @@
         },
         {
           "type": "dinner",
-          "position": "Chengdu Diaoyutai Boutique Hotel · Pinju · Chengdu Restaurant",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 216.0,
-          "cost": 1080.0,
+          "price": 5.0,
+          "cost": 25.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Baihua Tan Park",
-              "end": "Tonghuimen-Metro Station",
+              "start": "Chengdu People's Park",
+              "end": "Luomashi-Metro Station",
               "mode": "walk",
-              "start_time": "15:18",
-              "end_time": "15:19",
-              "distance": 0.15,
+              "start_time": "15:24",
+              "end_time": "15:28",
+              "distance": 0.37,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Tonghuimen-Metro Station",
+              "start": "Luomashi-Metro Station",
               "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
-              "start_time": "15:19",
-              "end_time": "15:19",
-              "distance": 0.42,
+              "start_time": "15:28",
+              "end_time": "15:30",
+              "distance": 1.44,
               "price": 2,
               "cost": 10,
               "tickets": 5
             },
             {
               "start": "Kuanzhai Alley-Metro Station",
-              "end": "Chengdu Diaoyutai Boutique Hotel · Pinju · Chengdu Restaurant",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
               "mode": "walk",
-              "start_time": "15:19",
-              "end_time": "15:20",
-              "distance": 0.13,
+              "start_time": "15:30",
+              "end_time": "15:40",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             }
@@ -869,45 +673,25 @@
         },
         {
           "type": "accommodation",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-          "start_time": "18:07",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "18:01",
           "end_time": "24:00",
-          "price": 481.0,
-          "cost": 2405.0,
+          "price": 158.0,
+          "cost": 790.0,
           "rooms": 5,
           "room_type": 1,
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu Diaoyutai Boutique Hotel · Pinju · Chengdu Restaurant",
-              "end": "Kuanzhai Alley-Metro Station",
-              "mode": "walk",
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
               "start_time": "18:00",
               "end_time": "18:01",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Kuanzhai Alley-Metro Station",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "metro",
-              "start_time": "18:01",
-              "end_time": "18:04",
-              "distance": 1.69,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "mode": "walk",
-              "start_time": "18:04",
-              "end_time": "18:07",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "distance": 1.3,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         }
@@ -918,7 +702,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
+          "position": "Chengdu Yuehuimei Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -927,31 +711,53 @@
           "transports": []
         },
         {
+          "type": "lunch",
+          "position": "Wang's Specialty Guokui (Ma'annan Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 16.0,
+          "cost": 80.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Wang's Specialty Guokui (Ma'annan Road Branch)",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:32",
+              "distance": 1.55,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Chunxi Road",
-          "start_time": "08:38",
-          "end_time": "10:08",
+          "start_time": "12:11",
+          "end_time": "13:41",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Lia! By Minyoun Chengdu Rezen Hotel (Chunxi Taikoo Li Store)",
-              "end": "Tianfu Square-Metro Station",
+              "start": "Wang's Specialty Guokui (Ma'annan Road Branch)",
+              "end": "Hongxing Bridge-Metro Station",
               "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 0.33,
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 0.64,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Tianfu Square-Metro Station",
+              "start": "Hongxing Bridge-Metro Station",
               "end": "Second Municipal Hospital-Metro Station",
               "mode": "metro",
-              "start_time": "08:33",
-              "end_time": "08:36",
-              "distance": 1.78,
+              "start_time": "12:07",
+              "end_time": "12:09",
+              "distance": 1.32,
               "price": 2,
               "cost": 10,
               "tickets": 5
@@ -960,8 +766,8 @@
               "start": "Second Municipal Hospital-Metro Station",
               "end": "Chunxi Road",
               "mode": "walk",
-              "start_time": "08:36",
-              "end_time": "08:38",
+              "start_time": "12:09",
+              "end_time": "12:11",
               "distance": 0.22,
               "price": 0,
               "cost": 0
@@ -969,136 +775,52 @@
           ]
         },
         {
-          "type": "lunch",
-          "position": "Tingxiang Old Mansion Sichuan Cuisine (Kuanzhai Alley Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 141.0,
-          "cost": 705.0,
+          "type": "train",
+          "start_time": "14:12",
+          "end_time": "17:42",
+          "start": "Chengdu East Railway Station",
+          "end": "Chongqing West Railway Station",
+          "price": 105.66,
+          "cost": 528.3,
           "tickets": 5,
           "transports": [
             {
               "start": "Chunxi Road",
               "end": "Second Municipal Hospital-Metro Station",
               "mode": "walk",
-              "start_time": "10:08",
-              "end_time": "10:10",
+              "start_time": "13:41",
+              "end_time": "13:43",
               "distance": 0.22,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Second Municipal Hospital-Metro Station",
-              "end": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu East Railway Station-Metro Station",
               "mode": "metro",
-              "start_time": "10:10",
-              "end_time": "10:16",
-              "distance": 3.22,
-              "price": 2,
-              "cost": 10,
+              "start_time": "13:43",
+              "end_time": "13:55",
+              "distance": 6.41,
+              "price": 3,
+              "cost": 15,
               "tickets": 5
             },
             {
-              "start": "Kuanzhai Alley-Metro Station",
-              "end": "Tingxiang Old Mansion Sichuan Cuisine (Kuanzhai Alley Branch)",
+              "start": "Chengdu East Railway Station-Metro Station",
+              "end": "Chengdu East Railway Station",
               "mode": "walk",
-              "start_time": "10:16",
-              "end_time": "10:21",
-              "distance": 0.46,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beautiful East",
-          "start_time": "13:02",
-          "end_time": "14:32",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Tingxiang Old Mansion Sichuan Cuisine (Kuanzhai Alley Branch)",
-              "end": "Kuanzhai Alley-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:05",
-              "distance": 0.46,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Kuanzhai Alley-Metro Station",
-              "end": "Honghe-Metro Station",
-              "mode": "metro",
-              "start_time": "12:05",
-              "end_time": "12:29",
-              "distance": 12.23,
-              "price": 4,
-              "cost": 20,
-              "tickets": 5
-            },
-            {
-              "start": "Honghe-Metro Station",
-              "end": "Beautiful East",
-              "mode": "walk",
-              "start_time": "12:29",
-              "end_time": "13:02",
-              "distance": 2.77,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "18:07",
-          "end_time": "18:26",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 259.16,
-          "cost": 1295.8000000000002,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Beautiful East",
-              "end": "Honghe-Metro Station",
-              "mode": "walk",
-              "start_time": "14:32",
-              "end_time": "15:05",
-              "distance": 2.77,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Honghe-Metro Station",
-              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "mode": "metro",
-              "start_time": "15:05",
-              "end_time": "16:30",
-              "distance": 42.66,
-              "price": 8,
-              "cost": 40,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "end": "Chengdu Tianfu International Airport",
-              "mode": "walk",
-              "start_time": "16:30",
-              "end_time": "17:14",
-              "distance": 3.72,
+              "start_time": "13:55",
+              "end_time": "13:55",
+              "distance": 0.0,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL448"
+          "TrainID": "K874"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.8421738147735596,
-  "_eval_score": 95.84325396825398
+  "elapsed_time(sec)": 69.04972219467163,
+  "_eval_score": 97.33333333333334
 }
