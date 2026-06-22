@@ -11,8 +11,8 @@ document them here.
    generated query literal's case differs from the database value (e.g. "Hot pot" vs
    "hot pot", "Swimming pool" vs "Swimming Pool", "red tourism sites" vs
    "Red tourism sites"), the clause can never be true, so the query is unsolvable by
-   any agent. ~16 of our remaining unsolved Phase-1 queries are unsolvable for this
-   reason. Confirmed unfixed in upstream main.
+    any agent. Multiple remaining failures in Phase 1 are unsatisfiable for this
+    reason. Confirmed unfixed in upstream main.
 
 2. Overall score double-counts EPR-micro.
    eval_tpc.py:343 computes 0.1*EPR_micro + 0.1*EPR_micro instead of the documented
@@ -28,6 +28,14 @@ document them here.
 - Local upstream divergence report: `docs/upstream_divergence.md`
 
 **Important commands:**
+
+Latest verified score snapshot (`results/best`, 2026-06-19):
+
+- Overall: 94.5397 (official: 94.5397)
+- FPR: 97.1000
+- C-LPR: 98.9070
+- MicEPR/MacEPR: 100.0000 / 100.0000
+- DAV/ATT/DDR: 67.5472 / 82.4077 / 69.5045
 
 `TPCAgent` runs a per-query oracle-guided search. Drive it with the resumable scripts in
 `scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
