@@ -51,6 +51,17 @@ python scripts/solve.py --split tpc_phase1 --restarts 40 --budget 30 --workers 8
 python scripts/merge.py --split tpc_phase1
 ```
 
+Tail-prioritized rerun queue (score gap + hard-logic failure signature), then solve/merge only
+the highest-leverage IDs:
+```
+python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 150 --min-score 99
+python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
+python scripts/merge.py --split tpc_phase1_tail_focus
+```
+`scripts/rank_tail.py` writes:
+- ranking report: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
+- focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
+
 Or run the whole recommended pipeline (search -> pack -> score -> zip) at full parallelism with
 one command (see the `Makefile` for tunable variables):
 ```
@@ -82,6 +93,8 @@ Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`
 `TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
 checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
 `scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
+`scripts/rank_tail.py` (read-only) ranks low-score queries by score gap + hard-logic failure
+signature and writes a focused split for targeted reruns.
 `scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
 against budget/time constraints) to show where more attractions can be packed safely.
 `eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the current
