@@ -2,7 +2,8 @@
 
 Upstream remote: `upstream https://github.com/LAMDASZ-ML/ChinaTravel.git`.
 
-Checked on branch `fabi/dev2` after `git fetch upstream`.
+Checked on branch `merge-remote-changes` against `origin/main` and `upstream/main` after
+`git fetch upstream` on 2026-06-22 14:24 CEST.
 
 ## Scoring and verifier code
 
@@ -33,14 +34,17 @@ git diff --stat upstream/main -- chinatravel/evaluation chinatravel/symbol_verif
 
 Observed result: 267 files changed, 334877 insertions, 0 deletions. The additions are local benchmark artifacts such as `chinatravel/environment/database/**` CSV files and split/query data needed for offline Phase-1 scoring. The only deletion in this scoped diff is `chinatravel/environment/.DS_Store`.
 
-## Known upstream bugs retained for leaderboard parity
+## Current upstream evaluation state
 
-The local verifier keeps upstream behavior for parity:
+The current upstream main branch now includes concept-name canonicalization in
+`symbol_verification/concept_func.py`, so the earlier case-sensitive unsatisfiable-query
+issue is fixed there.
 
-1. Case-sensitive type/cuisine/feature matching in `symbol_verification/concept_func.py` can make some generated queries unsatisfiable when literal casing differs from the database value.
-2. The benchmark `eval_tpc.py` overall score double-counts EPR-micro and omits EPR-macro. Local scoring reports both the parity `overall` and the corrected `overall_official`.
+The remaining parity issue is the benchmark `eval_tpc.py` overall score: it still
+double-counts EPR-micro and omits EPR-macro. Local scoring reports both the parity
+`overall` and the corrected `overall_official`.
 
-Both issues were confirmed still present in `upstream/main`; they are documented in `README.md`.
+These notes are mirrored in `README.md`.
 
 ## Solver-scope note
 

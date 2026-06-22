@@ -1,25 +1,21 @@
-## Known upstream evaluation bugs (cannot be fixed locally)
+## Current upstream evaluation state
 
-These live in the organizers' benchmark (github.com/LAMDASZ-ML/ChinaTravel) and the
-leaderboard scoring server, not in our agent. We mirror them verbatim for parity and
-document them here.
+These notes track the organizers' benchmark (github.com/LAMDASZ-ML/ChinaTravel) and the
+leaderboard scoring server so local evaluation stays aligned with current upstream
+behavior.
 
-1. Case-sensitive constraint matching → unsatisfiable queries.
-   chinatravel/symbol_verification/concept_func.py attraction_type/restaurant_type/
-   accommodation_type return the raw type/cuisine/featurehoteltype column value, and
-   hard_logic compares them with case-sensitive set membership ({"X"} & set). When a
-   generated query literal's case differs from the database value (e.g. "Hot pot" vs
-   "hot pot", "Swimming pool" vs "Swimming Pool", "red tourism sites" vs
-   "Red tourism sites"), the clause can never be true, so the query is unsolvable by
-    any agent. Multiple remaining failures in Phase 1 are unsatisfiable for this
-    reason. Confirmed unfixed in upstream main.
+1. Concept-name canonicalization is fixed in current upstream main.
+    The verifier now normalizes equivalent labels such as "Swimming pool" / "Swimming Pool",
+    "cafe" / "coffee shop", and "university campus" / "University campus" before evaluation,
+    so the earlier case-sensitive unsatisfiable-query issue no longer applies to the latest
+    competition code.
 
-2. Overall score double-counts EPR-micro.
-   eval_tpc.py:343 computes 0.1*EPR_micro + 0.1*EPR_micro instead of the documented
-   0.1*EPR_micro + 0.1*EPR_macro, so the leaderboard "overall" weights EPR-micro twice
-   and ignores EPR-macro. We keep this verbatim as `overall` for leaderboard parity and
-   additionally report the corrected `overall_official` (eval_tpc.py:345). The two differ
-   only when EPR-micro != EPR-macro. Confirmed unfixed in upstream main.
+2. Overall score still double-counts EPR-micro on the leaderboard.
+    eval_tpc.py:343 computes 0.1*EPR_micro + 0.1*EPR_micro instead of the documented
+    0.1*EPR_micro + 0.1*EPR_macro, so the leaderboard "overall" weights EPR-micro twice
+    and ignores EPR-macro. We keep this verbatim as `overall` for leaderboard parity and
+    additionally report the corrected `overall_official` (eval_tpc.py:345). The two differ
+    only when EPR-micro != EPR-macro.
 
 **Important links:**
 
@@ -88,8 +84,9 @@ checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py -
 `scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
 `scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
 against budget/time constraints) to show where more attractions can be packed safely.
-`eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the leaderboard formula,
-which doubles EPR-micro) and `overall_official` (the documented 10% EPR-micro + 10% EPR-macro).
+`eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the current
+leaderboard formula, which still doubles EPR-micro) and `overall_official` (the documented
+10% EPR-micro + 10% EPR-macro).
 
 **Notes:**
 
@@ -269,6 +266,57 @@ In TPC@IJCAI2025, the evaluation code is provided in the `eval_tpc.py` file. You
 ```bash
 python eval_tpc.py --splits tpc_phase1 --method YOUR_METHOD_NAME
 ```
+
+### Evaluation Metrics
+
+The overall score is a weighted combination of the following metrics, evaluated in a cascading fashion (each level gates the next):
+
+#### 1. Schema Constraint (gate)
+
+Validates that the output JSON conforms to the expected structure (`chinatravel/evaluation/output_schema.json`). Plans that fail are immediately invalid and score 0 on all downstream metrics.
+
+#### 2. Commonsense Constraints — Mic.EPR / Mac.EPR (weight: 0.2)
+
+Checks that the plan is factually consistent with the environment database across 7 categories:
+
+| Check | What it verifies |
+|-------|-----------------|
+| Intercity transport | Flight/train ID exists with correct times and endpoints |
+| Attractions | Named attractions exist in the target city's database |
+| Hotels | Named hotel exists |
+| Restaurants | Named restaurant exists |
+| Inner-city transport | Metro/taxi/walk routes are valid |
+| Time | No overlapping activities, correct chronological ordering |
+| Space | Sequential locations are reachable from the prior position |
+
+- **Mic.EPR** (micro): percentage of individual constraint checks passed across all queries.
+- **Mac.EPR** (macro): average per-query pass rate.
+
+#### 3. Conditional Logical Pass Rate — C-LPR (weight: 0.25)
+
+Evaluates query-specific hard constraints (budget limits, required transport types, must-visit attractions, hotel/room requirements, etc.) encoded as executable DSL snippets in `hard_logic_py`. Only evaluated on queries that already pass all commonsense constraints.
+
+#### 4. Full Pass Rate — FPR (weight: 0.4)
+
+Percentage of queries that pass **all three** constraint levels (schema ∩ commonsense ∩ logical). This is the strictest and highest-weighted metric.
+
+#### 5. Preference / Quality Scores (weight: 0.05 each, only for fully-passing plans)
+
+| Metric | Formula | Interpretation |
+|--------|---------|----------------|
+| **DAV** (Daily Attraction Visits) | `attraction_count / (4 × days)` | Targets 4 attractions per day |
+| **ATT** (Average Transport Time) | `(-1/105) × avg_minutes + 8/7` | Penalizes long commutes; shorter is better |
+| **DDR** (Daily Dining Rate) | `(meals_per_day) / 3` | Targets 3 meals (breakfast + lunch + dinner) per day |
+
+All preference scores are clamped to [0, 1] then reported as percentages (0–100).
+
+#### Overall Score Formula
+
+```
+Overall = 0.1×Mic.EPR + 0.1×Mic.EPR + 0.25×C-LPR + 0.05×DAV + 0.05×ATT + 0.05×DDR + 0.4×FPR
+```
+
+> **Note:** The leaderboard formula double-counts Mic.EPR (0.1 + 0.1) instead of using 0.1×Mic.EPR + 0.1×Mac.EPR as documented. We replicate this for leaderboard parity. See "Current upstream evaluation state" at the top of this file.
 
 ## 📚 Docs
 

@@ -128,6 +128,53 @@ Any solver or repair logic developed here should stay modular so it can be reuse
 
 See extra eval args `--index` and `--update_best` to check and update best and solved results.
 
+## Comparison: Our TPCAgent vs Branch-and-Bound PR Approach
+
+Both approaches are now largely combinatorial and deterministic, with limited LLM dependence in practice.
+
+| Aspect | Our TPCAgent (current) | Branch-and-Bound PR (#22) |
+|--------|-------------------------|----------------------------|
+| Primary search | Constraint-first multi-tier search (base build + repairs + random restarts) | Branch-and-bound over skeleton choices |
+| Exact solver tier | CP-SAT rescue (optional, targeted) | B&B primary, plus CP-SAT / MILP experiments |
+| Constraint handling | Branch-local variants + acceptance checker (logic, then schema/commonsense gate) | Skeleton-level pruning with many iterative assembler fixes |
+| Plan assembly | Deterministic builder + reconstruction + constraint-safe packing/densify | Deterministic assembler inside chosen skeleton |
+| LLM role | Mostly constraint extraction; practical runs are largely solver/heuristic driven | Mostly NL2SL and ranking support; core solving is combinatorial |
+| Optimization target | Direct acceptance objective used in selection | Hard-logic-focused with iterative bug-fix tuning |
+
+### Practical Learnings We Should Keep
+
+1. Preserve deterministic-first design. Keep LLM usage narrow (parsing only) and push decisions into searchable/checked components.
+2. Keep branch-local OR handling strict. Avoid cross-branch leakage in required entities and budgets.
+3. Continue early feasibility filtering. Filter closed/invalid candidates as early as possible before expensive search or repair.
+4. Keep name canonicalization robust. Normalize whitespace/casing and maintain safe fuzzy fallback for entity matching.
+5. Prioritize invariant-safe densification. Any DAV/DDR lift must remain acceptance-gated (never trade FPR/C-LPR for preferences).
+6. Maintain cached, resumable workflows. Content-aware caching and resumable heavy/light loops are high leverage for iterative per-query optimization.
+7. Keep CP-SAT focused. Use CP-SAT as a rescue tier for hard leftovers where greedy/repair search stalls, not as mandatory first-line for every query.
+
+### Concrete PR-Derived Actions To Test (Priority Order)
+
+1. Add explicit restaurant "unuse" rollback semantics in assembly/repair.
+    If a restaurant is tentatively selected but rejected later (timing, window close, budget), return it to the candidate pool immediately so it remains available for later meal slots.
+2. Preserve ordered pins for required entities.
+    Do not use unordered sets when parsing/propagating required POI or restaurant pins; keep insertion order to avoid losing NL-specified sequences.
+3. Harden entity-name canonicalization.
+    Normalize interior whitespace (collapse repeated spaces), trim, and lowercase before matching; keep current fuzzy fallback only after normalized exact/contains checks.
+4. Add meal-window-close guards before candidate commitment.
+    Skip restaurants whose open time is already beyond the slot close (breakfast/lunch/dinner), instead of selecting then failing later in reconstruction.
+5. Move closed-venue filtering earlier in the pipeline.
+    Pre-filter by open-hours feasibility before expensive search and before CP candidate extraction to reduce dead-end branches.
+6. Add a focused second-pass parse for OR/compound constraints.
+    Keep the primary parse, then run a narrow follow-up pass for OR-group structure and conditional clauses; use only when confidence is low or branch extraction is ambiguous.
+7. Expand failure-class diagnostics in iterative runs.
+    Keep per-query eval traces and bucket failures (timing, required entity/type, budget, transport condition) so repair priors can target the dominant residual class.
+
+These actions should be validated with monotonic acceptance criteria: retain only changes that improve full-score aggregates while preserving or improving FPR and C-LPR.
+
+### Notes For Phase 2
+
+- Current architecture already aligns with a no-oracle harness direction: parsed constraints, deterministic builder, symbolic verification, and optional exact solver rescue.
+- Main risk is parser parity on unseen query phrasing; keep improving no-oracle robustness without weakening hard-constraint reliability.
+
 ## Remaining Priorities
 
 1. **Phase-2 no-oracle robustness.** Improve parity between oracle hard-logic pass and parsed-verifier pass on held-out style queries.
