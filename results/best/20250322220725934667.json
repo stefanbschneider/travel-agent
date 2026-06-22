@@ -7,59 +7,147 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 727.96,
+          "type": "airplane",
+          "start_time": "09:00",
+          "end_time": "10:31",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 613.96,
+          "cost": 613.96,
           "tickets": 1,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL169"
+        },
+        {
+          "type": "lunch",
+          "position": "Yong Fu (Huangpu Branch)",
+          "start_time": "11:23",
+          "end_time": "12:23",
+          "price": 600.0,
+          "cost": 600.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Yong Fu (Huangpu Branch)",
+              "mode": "taxi",
+              "start_time": "10:31",
+              "end_time": "11:23",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Museum",
+          "start_time": "12:26",
+          "end_time": "13:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Shanghai Museum",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:26",
+              "distance": 2.48,
+              "price": 13.37,
+              "cost": 13.37,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "13:57",
+          "end_time": "15:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Museum",
+              "end": "Nanjing Road Pedestrian Street",
+              "mode": "taxi",
+              "start_time": "13:56",
+              "end_time": "13:57",
+              "distance": 1.28,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lujiazui",
+          "start_time": "15:30",
+          "end_time": "17:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Lujiazui",
+              "mode": "taxi",
+              "start_time": "15:27",
+              "end_time": "15:30",
+              "distance": 2.07,
+              "price": 11.95,
+              "cost": 11.95,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "dinner",
           "position": "Fu He Hui",
-          "start_time": "18:58",
-          "end_time": "19:58",
+          "start_time": "17:12",
+          "end_time": "18:12",
           "price": 1280.0,
           "cost": 1280.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Lujiazui",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "18:58",
-              "distance": 10.79,
-              "price": 43.25,
-              "cost": 43.25,
+              "start_time": "17:00",
+              "end_time": "17:12",
+              "distance": 8.25,
+              "price": 33.56,
+              "cost": 33.56,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Crystal Orange Hotel",
-          "start_time": "20:07",
+          "position": "J Hotel Shanghai Tower",
+          "start_time": "18:23",
           "end_time": "24:00",
-          "price": 660.0,
-          "cost": 660.0,
+          "price": 4834.0,
+          "cost": 4834.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
               "start": "Fu He Hui",
-              "end": "Crystal Orange Hotel",
+              "end": "J Hotel Shanghai Tower",
               "mode": "taxi",
-              "start_time": "19:58",
-              "end_time": "20:07",
-              "distance": 6.02,
-              "price": 25.77,
-              "cost": 25.77,
+              "start_time": "18:12",
+              "end_time": "18:23",
+              "distance": 7.4,
+              "price": 30.6,
+              "cost": 30.6,
               "cars": 1
             }
           ]
@@ -71,7 +159,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Crystal Orange Hotel",
+          "position": "J Hotel Shanghai Tower",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -81,20 +169,64 @@
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "08:32",
-          "end_time": "10:02",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "08:35",
+          "end_time": "10:05",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Crystal Orange Hotel",
-              "end": "The Bund",
+              "start": "J Hotel Shanghai Tower",
+              "end": "Jing'an Sculpture Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 1.68,
+              "end_time": "08:35",
+              "distance": 3.43,
+              "price": 16.7,
+              "cost": 16.7,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Bund",
+          "start_time": "10:08",
+          "end_time": "11:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Sculpture Park",
+              "end": "The Bund",
+              "mode": "taxi",
+              "start_time": "10:05",
+              "end_time": "10:08",
+              "distance": 2.56,
+              "price": 13.67,
+              "cost": 13.67,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "11:38",
+          "end_time": "13:08",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Huangpu River",
+              "mode": "taxi",
+              "start_time": "11:38",
+              "end_time": "11:38",
+              "distance": 0.24,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -102,54 +234,73 @@
           ]
         },
         {
-          "type": "lunch",
-          "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 600.0,
-          "cost": 600.0,
+          "type": "attraction",
+          "position": "Bank of China",
+          "start_time": "13:11",
+          "end_time": "14:41",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "The Bund",
-              "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
-              "start_time": "10:02",
-              "end_time": "10:08",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
-              "cars": 1
+              "start": "Huangpu River",
+              "end": "Bank of China",
+              "mode": "walk",
+              "start_time": "13:08",
+              "end_time": "13:11",
+              "distance": 0.3275296223485583,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "19:55",
-          "end_time": "06:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 727.96,
-          "cost": 727.96,
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
           "tickets": 1,
           "transports": [
             {
-              "start": "Yong Fu (Huangpu Branch)",
-              "end": "Shanghai Hongqiao Station",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:20",
-              "distance": 13.78,
-              "price": 56.71,
-              "cost": 56.71,
-              "cars": 1
+              "start": "Bank of China",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "14:41",
+              "end_time": "14:47",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "14:47",
+              "end_time": "15:49",
+              "distance": 31.3,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "walk",
+              "start_time": "15:49",
+              "end_time": "16:04",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "TrainID": "D941"
+          "FlightID": "FL018"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03145766258239746,
-  "_eval_score": 20.0
+  "elapsed_time(sec)": 52.827709913253784,
+  "_eval_score": 96.82738095238095
 }
