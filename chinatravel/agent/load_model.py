@@ -22,6 +22,7 @@ def init_agent(kwargs):
     from .nesy_verifier import LLMModuloAgent
 
     from .tpc_agent.tpc_agent import TPCAgent
+    from .UrbanTrip.tpc_agent import UrbanTrip
 
     if kwargs["method"] == "RuleNeSy":
         agent = RuleDrivenAgent(
@@ -68,6 +69,10 @@ def init_agent(kwargs):
         )
     elif kwargs["method"] == "TPCAgent":
         agent = TPCAgent(
+            **kwargs
+        )
+    elif kwargs["method"] == "UrbanTrip":
+        agent = UrbanTrip(
             **kwargs
         )
     else:

@@ -19,8 +19,8 @@ project_root_path = os.path.dirname(
 if project_root_path not in sys.path:
     sys.path.insert(0, project_root_path)
 
-from agent.base import AbstractAgent, BaseAgent
-from agent.tpc_agent.utils import (
+from chinatravel.agent.base import AbstractAgent, BaseAgent
+from chinatravel.agent.UrbanTrip.utils import (
     time_compare_if_earlier_equal,
     calc_cost_from_itinerary_wo_intercity,
     add_time_delta,
@@ -42,8 +42,8 @@ from chinatravel.symbol_verification.hard_constraint import (
 from chinatravel.symbol_verification.preference import evaluate_preference_py
 from chinatravel.environment.tools.poi.apis import Poi
 
-from agent.nesy_verifier.verifier.commonsense_constraint_nl import collect_commonsense_constraints_error
-from agent.nesy_verifier.verifier.personal_constraint_nl import collect_personal_error
+from chinatravel.agent.nesy_verifier.verifier.commonsense_constraint_nl import collect_commonsense_constraints_error
+from chinatravel.agent.nesy_verifier.verifier.personal_constraint_nl import collect_personal_error
 
 from chinatravel.symbol_verification.concept_func import *
 from chinatravel.agent.nesy_agent.nl2sl_hybrid import nl2sl_reflect
@@ -73,8 +73,7 @@ class UrbanTrip(BaseAgent):
             method_name = method_name + "_oracletranslation"
 
         self.log_dir = os.path.join(self.cache_dir, method_name)
-        if not os.path.exists(self.log_dir):
-            os.makedirs(self.log_dir)
+        os.makedirs(self.log_dir, exist_ok=True)
 
         sys.stdout = Logger(
             "{}/{}.log".format(

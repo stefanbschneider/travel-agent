@@ -9,7 +9,7 @@ if project_root_path not in sys.path:
 if os.path.dirname(project_root_path) not in sys.path:
     sys.path.append(os.path.dirname(project_root_path))
 
-from agent.llms import AbstractLLM
+from chinatravel.agent.llms import AbstractLLM
 
 
 class TPCLLM(AbstractLLM):
@@ -19,4 +19,3 @@ class TPCLLM(AbstractLLM):
 
     def _get_response(self, messages, one_line, json_mode):
         return "Empty LLM response"
-

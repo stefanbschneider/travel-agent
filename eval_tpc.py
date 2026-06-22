@@ -63,6 +63,12 @@ DEFAULT_PR=[
 METHOD_LIST = [
 ]
 
+
+def _method_has_en_suffix(method):
+    base_method = method.split("_oracletranslation")[0].split("_oracle_translation")[0]
+    return base_method.endswith("_en")
+
+
 from tqdm import tqdm
 from chinatravel.symbol_verification.concept_func import func_dict
 from copy import deepcopy
@@ -263,6 +269,8 @@ if __name__ == "__main__":
     parser.add_argument("--update_best", action="store_true", default=False,
                         help="Auto-update results/best and results/constraints_solved")
     args = parser.parse_args()
+    if args.lang == "en" and not _method_has_en_suffix(args.method):
+        args.method += "_en"
 
     # print(args.splits)
 
@@ -378,6 +386,7 @@ if __name__ == "__main__":
                 query_data,
                 result_data[method],
                 list(set(commonsense_pass_id) & set(logi_pass_id)),
+                lang=args.lang,
             )
 
         # ------------------------------------------------------------------ #
