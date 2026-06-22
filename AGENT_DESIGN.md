@@ -115,6 +115,45 @@ Key improvements in place: branch-local OR handling, CP-SAT rescue for leftovers
 
 Negative lesson: a cuisine-normalization attempt regressed the full score and was reverted. Keep changes behavior-scoped and validate with full eval before retaining.
 
+## Phase 1 Leaderboard Findings (2026-06-22)
+
+Latest self-reported best result:
+
+| Metric | Score |
+|--------|-------|
+| MicEPR | 100.00 |
+| MacEPR | 100.00 |
+| C-LPR | 99.3834 |
+| FPR | 98.20 |
+| DAV | 67.0812 |
+| ATT | 82.4477 |
+| DDR | 69.5406 |
+| Overall | 95.0793 |
+
+The attached public leaderboard snapshot shows the top 7 clustered in the 95.3-98.1 range, so the main gap is no longer basic feasibility. Phase 1 is now a score-maximization problem over already-valid plans.
+
+### Score-gap interpretation
+
+With FPR and C-LPR already near ceiling, hard-constraint work has limited remaining upside. Even a perfect 100/100 on FPR and C-LPR would only add about +0.87 overall from the current best, which is not enough to reach the top-5 band by itself. The remaining lift must come from DAV, ATT, and DDR, while preserving validity.
+
+### Highest-leverage Phase 1 actions
+
+1. Keep searching after the first accepted plan. The current solver stops early once it finds any accepted candidate, but that is leaving preference score on the table. Continue sampling accepted candidates until the per-query time budget is exhausted, then keep the best accepted one.
+2. Add a post-acceptance local optimizer. Current packing/densification mainly adds meals and attractions in idle gaps. Extend this into a small acceptance-gated neighborhood search over hotel choice, intercity mode preferences, restaurant rotation, attraction rotation, and visit length.
+3. Search `visit_minutes` explicitly. Try shorter optional attraction dwell times such as 60 and 75 minutes, not only the default 90, while respecting explicit stay-duration constraints. This is a low-risk way to improve DAV and sometimes ATT.
+4. Use route-aware ranking instead of price-first ranking. Candidate ordering should consider distance to the current anchor, hotel, and intercity endpoints so the plan spends less time in transit.
+5. Optimize the low-score tail first. A handful of very weak plans can move the average more than many small gains on already-strong plans. Rank queries by current score and failure signature, not only by unsolved status.
+6. Extend CP-SAT from rescue to optimization. The CP tier currently helps only when greedy search stalls. Run it on already-accepted queries as a preference optimizer with soft travel and clustering terms, not just as a feasibility fallback.
+
+### Practical implication
+
+For Phase 1, the best return on engineering time is now:
+
+1. Preserve current hard-constraint strength.
+2. Increase the number of accepted candidates per query that are explored.
+3. Improve preference quality on accepted plans using local search or CP-based refinement.
+4. Spend extra compute on the worst-scoring queries first.
+
 ## Competition Phase 1 Strategy: Per-Query Optimization
 
 Treat the leaderboard as a per-query optimization problem over the released 1000 queries:
@@ -177,7 +216,7 @@ These actions should be validated with monotonic acceptance criteria: retain onl
 
 ## Remaining Priorities
 
-1. **Phase-2 no-oracle robustness.** Improve parity between oracle hard-logic pass and parsed-verifier pass on held-out style queries.
-2. **Operational reliability.** Keep solve/merge scripts robust for long resumable runs and HPC usage.
-3. **Preference uplift under strict validity.** Improve DAV/DDR/ATT without reducing FPR/C-LPR.
+1. **Phase 1 leaderboard uplift.** Improve DAV/ATT/DDR on already-valid plans while preserving current hard-constraint rates.
+2. **Phase-2 no-oracle robustness.** Improve parity between oracle hard-logic pass and parsed-verifier pass on held-out style queries.
+3. **Operational reliability.** Keep solve/merge scripts robust for long resumable runs and HPC usage.
 4. **Harness packaging.** Keep a reproducible, self-contained harness for organizer evaluation on Qwen3.6-27B via SGLang.
