@@ -3,7 +3,6 @@ import os
 import time
 import math
 import json
-import re
 from difflib import SequenceMatcher
 from copy import deepcopy
 
@@ -88,10 +87,11 @@ class TPCAgent(BaseAgent):
         is additionally gated on schema + commonsense validity, because FPR == schema ∩
         commonsense ∩ logic; the +2 makes acceptance require all three.
         """
-        if self.use_oracle:
-            hard_logic_py = query.get("hard_logic_py", []) or []
+        hard_logic_py = query.get("hard_logic_py", []) or []
+        target_city = query.get("target_city", "")
 
-            def base(plan):
+        def base_check(plan):
+            if self.use_oracle:
                 if not hard_logic_py:
                     return 0, 0
                 try:
@@ -99,18 +99,15 @@ class TPCAgent(BaseAgent):
                 except Exception:
                     return 0, len(hard_logic_py)
                 return sum(1 for r in res if bool(r)), len(res)
-        else:
-            target_city = query.get("target_city", "")
 
-            def base(plan):
-                try:
-                    res = evaluate_parsed_constraints(constraints, plan, target_city)
-                except Exception:
-                    return 0, 0
-                return sum(1 for r in res if r), len(res)
+            try:
+                res = evaluate_parsed_constraints(constraints, plan, target_city)
+            except Exception:
+                return 0, 0
+            return sum(1 for r in res if r), len(res)
 
         def check(plan):
-            passed, total = base(plan)
+            passed, total = base_check(plan)
             extra = 0
             if passed == total:
                 # Env validity only matters once every hard constraint is met.
@@ -233,7 +230,7 @@ class TPCAgent(BaseAgent):
 
     def _slot_visit_len(self, params, constraints):
         """Conservative slot length used before the specific attraction is chosen: the
-        longest dwell any constraint demands (clamped to 240), at least visit_minutes/90."""
+        longest dwell any constraint demands (clamped to 240), at least 60 minutes."""
         longest = 0
         for d in constraints.get("stay_duration", []) or []:
             if isinstance(d, dict):
@@ -241,7 +238,7 @@ class TPCAgent(BaseAgent):
                     longest = max(longest, int(d.get("min_minutes", 0)))
                 except (TypeError, ValueError):
                     pass
-        return min(240, max(int(params.get("visit_minutes", 90)), longest, 90))
+        return min(240, max(int(params.get("visit_minutes", 90)), longest, 60))
 
     def _visit_len(self, attr, params, constraints):
         """Actual visit length for a chosen attraction: visit_minutes, raised to this POI's
@@ -255,6 +252,24 @@ class TPCAgent(BaseAgent):
                 except (TypeError, ValueError):
                     pass
         return min(240, max(int(params.get("visit_minutes", 90)), need))
+
+    def _visit_minutes_candidates(self, constraints):
+        """Return dwell baselines explored by search (small values improve packing density).
+
+        Candidates remain bounded by named minimum-dwell constraints so required visits are
+        never shortened below what the query asks for.
+        """
+        longest = 0
+        for d in (constraints or {}).get("stay_duration", []) or []:
+            if isinstance(d, dict):
+                try:
+                    longest = max(longest, int(d.get("min_minutes", 0)))
+                except (TypeError, ValueError):
+                    pass
+        base = [60, 75, 90, 105]
+        floor = min(240, max(60, longest))
+        values = sorted(set(min(240, max(v, floor)) for v in base))
+        return values if values else [90]
 
     def _rotate_tail(self, items, is_pinned, offset):
         """Rotate only the non-pinned tail of `items` by `offset` (pinned entries stay at front)."""
@@ -334,6 +349,8 @@ class TPCAgent(BaseAgent):
         """Deterministic param priors derived from which constraints are present, tried before
         random restarts so single-signal queries converge fast."""
         candidates = []
+        for vm in self._visit_minutes_candidates(constraints):
+            candidates.append({"visit_minutes": vm})
         budgets = constraints.get("budgets", {}) or {}
         if budgets.get("inner_transport") is not None:
             candidates.append({"forced_inner_mode": "walk"})
@@ -367,11 +384,12 @@ class TPCAgent(BaseAgent):
                 unique.append(p)
         return unique
 
-    def _random_params(self, rng):
+    def _random_params(self, rng, constraints):
         params = {
             "attr_offset": rng.randint(0, 12),
             "hotel_index": rng.randint(0, 4),
             "attr_per_day": rng.choice([2, 3, 4]),
+            "visit_minutes": rng.choice(self._visit_minutes_candidates(constraints)),
         }
         forced = rng.choice([None, "metro", "walk", "taxi"])
         if forced is not None:
@@ -388,8 +406,9 @@ class TPCAgent(BaseAgent):
         keeping the best accepted plan found within budget; finally pack it."""
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
-        best = {"plan": None, "key": None, "constraints": None, "check": None, "params": None}
-        best_accepted = {"plan": None, "key": None, "constraints": None, "check": None, "params": None}
+        init_key = (-1, float("-inf"), float("-inf"))
+        best = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None}
+        best_accepted = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None}
 
         def consider(plan, constraints, check, params):
             try:
@@ -434,7 +453,14 @@ class TPCAgent(BaseAgent):
                     default_limit = min(30.0, remaining / 2.0)
                     cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
                     cp_limit = max(1.0, min(cp_limit, remaining))
-                    cp_plan = solve_with_cp_sat(self, query, constraints, check, cp_limit)
+                    cp_plan = solve_with_cp_sat(
+                        self,
+                        query,
+                        constraints,
+                        check,
+                        cp_limit,
+                        self._visit_minutes_candidates(constraints),
+                    )
                     if cp_plan is not None:
                         consider(cp_plan, constraints, check, {"solver": "cp_sat"})
                 except Exception:
@@ -450,7 +476,7 @@ class TPCAgent(BaseAgent):
 
             while restarts < self.max_restarts and not out_of_budget():
                 restarts += 1
-                params = self._random_params(rng)
+                params = self._random_params(rng, constraints)
                 try:
                     consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
                 except Exception:

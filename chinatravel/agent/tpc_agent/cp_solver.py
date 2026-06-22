@@ -26,7 +26,14 @@ DINNER_OPEN, DINNER_LATEST_START, DINNER_CLOSE = 17 * 60, 19 * 60, 20 * 60
 STATION_BUFFER = 45
 
 
-def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_sec: float) -> dict | None:
+def solve_with_cp_sat(
+    agent,
+    query: dict,
+    constraints: dict,
+    check,
+    time_limit_sec: float,
+    visit_minutes_candidates: list[int] | None = None,
+) -> dict | None:
     """Build and check one CP-SAT itinerary candidate.
 
     OR-Tools is imported lazily so the legacy greedy/search path still imports in
@@ -53,14 +60,30 @@ def solve_with_cp_sat(agent, query: dict, constraints: dict, check, time_limit_s
 
     start = time.time()
     templates = (4, 3, 2)
+    visit_candidates = visit_minutes_candidates or _visit_minutes_candidates(constraints)
     for index, attr_slots_per_day in enumerate(templates):
         remaining = float(time_limit_sec) - (time.time() - start)
         if remaining <= 0.2:
             break
         per_template = max(1.0, remaining / max(1, len(templates) - index))
-        plan = _solve_template(cp_model, agent, query, constraints, check, ctx, attr_slots_per_day, per_template)
-        if plan is not None:
-            return plan
+        for visit_minutes in visit_candidates:
+            inner_remaining = float(time_limit_sec) - (time.time() - start)
+            if inner_remaining <= 0.2:
+                break
+            per_attempt = min(per_template, max(0.5, inner_remaining / max(1, len(visit_candidates))))
+            plan = _solve_template(
+                cp_model,
+                agent,
+                query,
+                constraints,
+                check,
+                ctx,
+                attr_slots_per_day,
+                per_attempt,
+                visit_minutes,
+            )
+            if plan is not None:
+                return plan
     return None
 
 
@@ -120,7 +143,17 @@ def build_candidate_context_relaxed(agent, query: dict, constraints: dict, caps:
     return ctx
 
 
-def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_slots_per_day: int, time_limit_sec: float) -> dict | None:
+def _solve_template(
+    cp_model,
+    agent,
+    query,
+    constraints,
+    check,
+    ctx: dict,
+    attr_slots_per_day: int,
+    time_limit_sec: float,
+    visit_minutes: int,
+) -> dict | None:
     attractions = ctx["attractions"]
     restaurants = ctx["restaurants"]
     hotels = ctx["hotels"]
@@ -131,7 +164,6 @@ def _solve_template(cp_model, agent, query, constraints, check, ctx: dict, attr_
     if not attractions or not restaurants or not hotels or not outbound or not returning:
         return None
 
-    visit_minutes = _base_visit_minutes(constraints)
     attr_slot_count = max(1, attr_slots_per_day * days)
     meal_slots = _meal_slots(days)
 
@@ -733,8 +765,19 @@ def _visit_len_for(agent, attr: dict, constraints: dict, base: int) -> int:
     return min(240, max(90, need))
 
 
-def _base_visit_minutes(constraints: dict) -> int:
-    return 90
+def _visit_minutes_candidates(constraints: dict) -> list[int]:
+    longest = 0
+    for d in constraints.get("stay_duration", []) or []:
+        if not isinstance(d, dict):
+            continue
+        try:
+            longest = max(longest, int(d.get("min_minutes", 0)))
+        except (TypeError, ValueError):
+            continue
+    floor = min(240, max(60, longest))
+    base = [60, 75, 90, 105]
+    vals = sorted(set(min(240, max(v, floor)) for v in base))
+    return vals if vals else [90]
 
 
 def _meal_slots(days: int) -> list[dict]:
