@@ -26,10 +26,10 @@ def _denylist():
 
 def _solvable_remaining():
     """Unsolved IDs that are NOT confirmed-unsolvable (i.e. still worth attempting)."""
-    if not os.path.exists(UNSOLVED_FILE):
+    if not os.path.exists(UNSOLVED):
         return 0
     deny = _denylist()
-    with open(UNSOLVED_FILE) as f:
+    with open(UNSOLVED) as f:
         return sum(1 for line in f if line.strip() and line.strip() not in deny)
 
 
@@ -40,9 +40,9 @@ def _solved_count():
 
 
 def _remaining():
-    if not os.path.exists(UNSOLVED_FILE):
+    if not os.path.exists(UNSOLVED):
         return 0
-    with open(UNSOLVED_FILE) as f:
+    with open(UNSOLVED) as f:
         return sum(1 for line in f if line.strip())
 
 
