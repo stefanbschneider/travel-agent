@@ -385,10 +385,11 @@ class TPCAgent(BaseAgent):
 
     def _solve(self, query):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
-        keeping the best (most-constraints-passed, then cheapest) plan; finally pack it."""
+        keeping the best accepted plan found within budget; finally pack it."""
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         best = {"plan": None, "key": None, "constraints": None, "check": None, "params": None}
+        best_accepted = {"plan": None, "key": None, "constraints": None, "check": None, "params": None}
 
         def consider(plan, constraints, check, params):
             try:
@@ -398,27 +399,33 @@ class TPCAgent(BaseAgent):
             key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
             if best["plan"] is None or key > best["key"]:
                 best.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
-            return self._accepted(passed, total)
+            accepted = self._accepted(passed, total)
+            if accepted and (best_accepted["plan"] is None or key > best_accepted["key"]):
+                best_accepted.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
+            return accepted
 
         def out_of_budget():
             return time.time() - self.start_clock > self.solve_budget_sec
 
         restarts = 0
-        solved = False
         for variant in variants:
-            if solved or out_of_budget():
+            if out_of_budget():
                 break
             constraints = deepcopy(variant or {})
             check = self._make_checker(query, constraints)
+            accepted_base = False
             try:
-                if consider(self._build_plan(query, constraints=constraints), constraints, check, {}):
-                    if os.environ.get("TPC_CP_FORCE") != "1":
-                        break
+                accepted_base = consider(self._build_plan(query, constraints=constraints), constraints, check, {})
             except Exception:
                 import traceback
                 traceback.print_exc()
 
-            if os.environ.get("TPC_USE_CP_SOLVER", "1") != "0" and not out_of_budget():
+            run_cp = (
+                os.environ.get("TPC_USE_CP_SOLVER", "1") != "0"
+                and not out_of_budget()
+                and (os.environ.get("TPC_CP_FORCE") == "1" or not accepted_base)
+            )
+            if run_cp:
                 try:
                     from agent.tpc_agent.cp_solver import solve_with_cp_sat
 
@@ -428,9 +435,8 @@ class TPCAgent(BaseAgent):
                     cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
                     cp_limit = max(1.0, min(cp_limit, remaining))
                     cp_plan = solve_with_cp_sat(self, query, constraints, check, cp_limit)
-                    if cp_plan is not None and consider(cp_plan, constraints, check, {"solver": "cp_sat"}):
-                        solved = True
-                        break
+                    if cp_plan is not None:
+                        consider(cp_plan, constraints, check, {"solver": "cp_sat"})
                 except Exception:
                     pass
 
@@ -438,32 +444,26 @@ class TPCAgent(BaseAgent):
                 if out_of_budget():
                     break
                 try:
-                    if consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params):
-                        solved = True
-                        break
+                    consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
                 except Exception:
                     continue
-            if solved:
-                break
 
             while restarts < self.max_restarts and not out_of_budget():
                 restarts += 1
                 params = self._random_params(rng)
                 try:
-                    if consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params):
-                        solved = True
-                        break
+                    consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
                 except Exception:
                     continue
-            if solved:
-                break
 
-        if best["plan"] is not None and best["check"] is not None:
-            packed = self._pack_plan(best["plan"], query, best["constraints"], best["check"], best["params"])
+        chosen = best_accepted if best_accepted["plan"] is not None else best
+
+        if chosen["plan"] is not None and chosen["check"] is not None:
+            packed = self._pack_plan(chosen["plan"], query, chosen["constraints"], chosen["check"], chosen["params"])
             if packed is not None:
-                best["plan"] = packed
+                chosen["plan"] = packed
 
-        return best["plan"] if best["plan"] is not None else self._build_plan(query)
+        return chosen["plan"] if chosen["plan"] is not None else self._build_plan(query)
 
     def _pack_plan(self, plan, query, constraints, check, base_params):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
