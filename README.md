@@ -41,8 +41,26 @@ Heavy resumable search over the still-unsolved queries (stops when a round adds 
 `--workers` defaults to all cores and runs that many `run_tpc.py` processes over disjoint
 query shards:
 ```
-python scripts/iterate.py --rounds 10 --restarts 800 --budget 240 --workers 8
+python scripts/iterate_unsolved.py --rounds 10 --restarts 800 --budget 240 --workers 8
 ```
+
+Execution profiles (recommended):
+
+- Short local run (~10 min, M1 MacBook):
+```
+make short-local
+```
+
+- Long local overnight (~7 h, M1 MacBook):
+```
+make overnight-local
+```
+
+- Long overnight HPC run via SLURM:
+```
+make hpc-tail-submit
+```
+See `slurm/README_tail_hpc.md` for resource/profile overrides.
 
 Light pass + constraint-safe packing across all 1000 (lifts DAV/DDR; the monotonic merge keeps
 the heavy gains):

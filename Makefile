@@ -16,15 +16,46 @@ TAIL_MIN_SCORE ?= 99
 TAIL_FOCUS_SPLIT ?= $(SPLIT)_tail_focus
 TAIL_RESTARTS ?= 1200
 TAIL_BUDGET ?= 300
+TAIL_ROUNDS ?= 4
+TAIL_STOP_NO_IMPROVE ?= 1
+TAIL_ARTIFACTS_ROOT ?= cache/hpc_tail_runs
+TAIL_RUN_ID ?=
+TAIL_SEED_PREFIX ?= tail
 
-.PHONY: all heavy light tail-round merge score submission upload upload-check clean-light help
+# Ready-made run profiles
+SHORT_LOCAL_WORKERS ?= 4
+SHORT_LOCAL_TOPK ?= 24
+SHORT_LOCAL_RESTARTS ?= 120
+SHORT_LOCAL_BUDGET ?= 20
+SHORT_LOCAL_ROUNDS ?= 1
+
+OVERNIGHT_LOCAL_WORKERS ?= 8
+OVERNIGHT_LOCAL_TOPK ?= 180
+OVERNIGHT_LOCAL_RESTARTS ?= 900
+OVERNIGHT_LOCAL_BUDGET ?= 180
+OVERNIGHT_LOCAL_ROUNDS ?= 6
+OVERNIGHT_LOCAL_STOP ?= 2
+
+HPC_PARTITION ?= standard
+HPC_WORKERS ?= 8
+HPC_MEM ?= 6G
+HPC_TIME ?= 07:30:00
+HPC_ROUNDS ?= 8
+HPC_TOPK ?= 240
+HPC_MIN_SCORE ?= 99
+HPC_RESTARTS ?= 1200
+HPC_BUDGET ?= 300
+HPC_STOP ?= 2
+HPC_RUN_ID ?= tail_hpc_$(shell date +%Y%m%d_%H%M%S)
+
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local hpc-tail-submit merge score submission upload upload-check clean-light help
 
 # Default: the full recommended workflow.
 all: heavy light score submission
 
 # Heavy resumable search over the unsolved split.
 heavy:
-	$(PYTHON) scripts/iterate.py \
+	$(PYTHON) scripts/iterate_unsolved.py \
 		--rounds $(HEAVY_ROUNDS) \
 		--restarts $(HEAVY_RESTARTS) \
 		--budget $(HEAVY_BUDGET) \
@@ -56,6 +87,69 @@ tail-round:
 	$(PYTHON) scripts/merge.py --split $(TAIL_FOCUS_SPLIT)
 	$(PYTHON) scripts/score.py
 
+# Multi-round tail optimization with per-round artifacts (rank -> solve -> merge -> score).
+tail-iterate:
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rounds $(TAIL_ROUNDS) \
+		--top-k $(TAIL_TOPK) \
+		--min-score $(TAIL_MIN_SCORE) \
+		--restarts $(TAIL_RESTARTS) \
+		--budget $(TAIL_BUDGET) \
+		--workers $(WORKERS) \
+		--stop-no-improve-rounds $(TAIL_STOP_NO_IMPROVE) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		$(if $(TAIL_RUN_ID),--run-id $(TAIL_RUN_ID)) \
+		--seed-prefix $(TAIL_SEED_PREFIX)
+
+# Short local profile (~10min on laptop): one compact tail round.
+short-local:
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rounds $(SHORT_LOCAL_ROUNDS) \
+		--top-k $(SHORT_LOCAL_TOPK) \
+		--min-score $(TAIL_MIN_SCORE) \
+		--restarts $(SHORT_LOCAL_RESTARTS) \
+		--budget $(SHORT_LOCAL_BUDGET) \
+		--workers $(SHORT_LOCAL_WORKERS) \
+		--stop-no-improve-rounds 1 \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix short \
+		--run-id short_local_$(shell date +%Y%m%d_%H%M%S)
+
+# Long local overnight profile (~7h target on laptop).
+overnight-local:
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rounds $(OVERNIGHT_LOCAL_ROUNDS) \
+		--top-k $(OVERNIGHT_LOCAL_TOPK) \
+		--min-score $(TAIL_MIN_SCORE) \
+		--restarts $(OVERNIGHT_LOCAL_RESTARTS) \
+		--budget $(OVERNIGHT_LOCAL_BUDGET) \
+		--workers $(OVERNIGHT_LOCAL_WORKERS) \
+		--stop-no-improve-rounds $(OVERNIGHT_LOCAL_STOP) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix overnight \
+		--run-id overnight_local_$(shell date +%Y%m%d_%H%M%S)
+
+# Submit one 7h tail-iterate run to SLURM (single controller job orchestrating multi-round solve/merge/score).
+hpc-tail-submit:
+	bash slurm/submit_tail_overnight.sh \
+		PARTITION=$(HPC_PARTITION) \
+		WORKERS=$(HPC_WORKERS) \
+		MEM=$(HPC_MEM) \
+		TIME=$(HPC_TIME) \
+		ROUNDS=$(HPC_ROUNDS) \
+		TOPK=$(HPC_TOPK) \
+		MIN_SCORE=$(HPC_MIN_SCORE) \
+		RESTARTS=$(HPC_RESTARTS) \
+		BUDGET=$(HPC_BUDGET) \
+		STOP_NO_IMPROVE=$(HPC_STOP) \
+		RUN_ID=$(HPC_RUN_ID)
+
 # Re-run the monotonic merge alone.
 merge:
 	$(PYTHON) scripts/merge.py --split $(SPLIT)
@@ -86,6 +180,10 @@ help:
 	  'make heavy          - resumable heavy search on the unsolved split' \
 	  'make light          - light packing pass across all 1000 + merge' \
 	  'make tail-round     - rank low-score tail -> focused solve -> merge -> score' \
+	  'make tail-iterate   - multi-round tail optimization with reproducible artifacts' \
+	  'make short-local    - short local profile (~10 min) using iterate_tail' \
+	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
+	  'make hpc-tail-submit - submit 7h tail iterate controller job to SLURM' \
 	  'make merge          - monotonic merge only' \
 	  'make score          - evaluate results/best' \
 	  'make submission     - build the next submission zip (version from git tags; override with VERSION=vN)' \
@@ -107,4 +205,33 @@ help:
 	  '  TAIL_FOCUS_SPLIT=<n>   default: $(TAIL_FOCUS_SPLIT)' \
 	  '  TAIL_RESTARTS=<n>      default: $(TAIL_RESTARTS)' \
 	  '  TAIL_BUDGET=<sec>      default: $(TAIL_BUDGET)' \
+	  '  TAIL_ROUNDS=<n>        default: $(TAIL_ROUNDS)' \
+	  '  TAIL_STOP_NO_IMPROVE=<n> default: $(TAIL_STOP_NO_IMPROVE)' \
+	  '  TAIL_ARTIFACTS_ROOT=<path> default: $(TAIL_ARTIFACTS_ROOT)' \
+	  '  TAIL_RUN_ID=<id>       default: auto timestamp' \
+	  '  TAIL_SEED_PREFIX=<str> default: $(TAIL_SEED_PREFIX)' \
+	  '' \
+	  'Profile knobs:' \
+	  '  SHORT_LOCAL_WORKERS=<n> default: $(SHORT_LOCAL_WORKERS)' \
+	  '  SHORT_LOCAL_TOPK=<n>    default: $(SHORT_LOCAL_TOPK)' \
+	  '  SHORT_LOCAL_RESTARTS=<n> default: $(SHORT_LOCAL_RESTARTS)' \
+	  '  SHORT_LOCAL_BUDGET=<sec> default: $(SHORT_LOCAL_BUDGET)' \
+	  '  SHORT_LOCAL_ROUNDS=<n>  default: $(SHORT_LOCAL_ROUNDS)' \
+	  '  OVERNIGHT_LOCAL_WORKERS=<n> default: $(OVERNIGHT_LOCAL_WORKERS)' \
+	  '  OVERNIGHT_LOCAL_TOPK=<n> default: $(OVERNIGHT_LOCAL_TOPK)' \
+	  '  OVERNIGHT_LOCAL_RESTARTS=<n> default: $(OVERNIGHT_LOCAL_RESTARTS)' \
+	  '  OVERNIGHT_LOCAL_BUDGET=<sec> default: $(OVERNIGHT_LOCAL_BUDGET)' \
+	  '  OVERNIGHT_LOCAL_ROUNDS=<n> default: $(OVERNIGHT_LOCAL_ROUNDS)' \
+	  '  OVERNIGHT_LOCAL_STOP=<n> default: $(OVERNIGHT_LOCAL_STOP)' \
+	  '  HPC_PARTITION=<name>    default: $(HPC_PARTITION)' \
+	  '  HPC_WORKERS=<n>         default: $(HPC_WORKERS)' \
+	  '  HPC_MEM=<xG>            default: $(HPC_MEM)' \
+	  '  HPC_TIME=<HH:MM:SS>     default: $(HPC_TIME)' \
+	  '  HPC_ROUNDS=<n>          default: $(HPC_ROUNDS)' \
+	  '  HPC_TOPK=<n>            default: $(HPC_TOPK)' \
+	  '  HPC_MIN_SCORE=<n>       default: $(HPC_MIN_SCORE)' \
+	  '  HPC_RESTARTS=<n>        default: $(HPC_RESTARTS)' \
+	  '  HPC_BUDGET=<sec>        default: $(HPC_BUDGET)' \
+	  '  HPC_STOP=<n>            default: $(HPC_STOP)' \
+	  '  HPC_RUN_ID=<id>         default: $(HPC_RUN_ID)' \
 	  '  VERSION=<vN>           default: next version after the highest v<N> git tag'
