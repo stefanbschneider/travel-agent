@@ -51,6 +51,84 @@ The challenge includes curated traveler queries and a tool environment that mode
 
 - Phase 2 baseline code: coming soon
 
+## Phase 2: Agent Environment & Harness Evaluation
+
+### How the Harness Is Called
+
+- **Query Mode**: Agents are called **per individual query**, not in batch.
+- **Harness Script**: `scripts/solve_script_with_harness.py` is the baseline harness that:
+  - Loads queries individually (with optional limit and resume)
+  - Removes oracle-only verifier fields
+  - Asks agent to solve through `agent_env.cli`
+  - Parses the itinerary JSON output
+  - Saves results in official `results/<method>/<uid>.json` format
+  - Runs official evaluators
+
+### Supported Agent Runners
+
+- **`opencode`**: calls `opencode run` with generated per-run configuration
+- **`codex`**: calls `codex exec` with configurable model and provider overrides
+
+### Timeout & Time Constraints
+
+- Timeout is **configurable per runner** in the harness config file (`agent_env/config.toml`):
+  - Under `[opencode]` section: set `timeout` field
+  - Under `[codex]` section: set `timeout` field
+- Each query receives its own **independent timeout** — the harness processes queries sequentially
+
+### Key Configuration Fields
+
+For Phase 2 harness configuration (`agent_env/config.toml`):
+- `[run].split`: benchmark split to load
+- `[run].limit`: number of split queries to solve (useful for testing)
+- `[run].method`: output method name
+- `[run].tool_python`: Python command for CLI calls
+- `[run].resume`: skip queries with existing result files
+- `[opencode]` and `[codex]`: model, **timeout**, API key environment variable, provider, parsing settings
+
+### Output Structure
+
+For each query, the harness writes:
+- `prompt.txt`: exact prompt sent to agent
+- `output.txt`: final agent message
+- `output.json`: parsed itinerary
+- `results/<method>/<uid>.json`: official result file
+- `evaluation.json`: schema, commonsense, and logical evaluation results
+
+For a full split: `agent_env/runs/<method>/<split>_summary.json` containing aggregated results.
+
+### Agent Interface
+
+Agents communicate through `agent_env` which provides:
+- **Query Tools**: list splits, load query metadata, call WorldEnv commands
+- **Attraction Tools**: list types, search, filter, check opening hours, find nearby
+- **Accommodation Tools**: search, filter, find nearby
+- **Restaurant Tools**: search by food, cuisine, filter, check opening hours
+- **Transport Tools**: query in-city transport (walk/taxi/metro), intercity transport (train/airplane), POI lookup
+
+Expected answer format: JSON object matching `chinatravel/evaluation/output_schema.json`, usually wrapped in `<output>...</output>` tags.
+
+### Running the Harness
+
+```bash
+# Basic usage
+python agent_env/scripts/solve_script_with_harness.py
+
+# Common overrides
+python agent_env/scripts/solve_script_with_harness.py --split easy --limit 1
+python agent_env/scripts/solve_script_with_harness.py --split easy --uid <uid>
+python agent_env/scripts/solve_script_with_harness.py --harness opencode --model dashscope/qwen3.6-27b
+python agent_env/scripts/solve_script_with_harness.py --harness codex --model qwen3.6-35b-a3b
+python agent_env/scripts/solve_script_with_harness.py --resume
+```
+
+### Phase 2 Evaluation Details
+
+- **Model**: All harnesses evaluated on Qwen3.6-27B (same as final eval)
+- **Deployment**: SGLang on 2x A800 80G GPUs without NVLink
+- **Runs**: Each harness run 5 times; scores averaged
+- **Test Set**: Held-out test set (not released publicly in Phase 1)
+
 ## Rules
 
 ### Eligibility
