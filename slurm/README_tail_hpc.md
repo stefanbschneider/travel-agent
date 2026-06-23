@@ -1,0 +1,89 @@
+# Tail Optimization Workflows
+
+This repository now supports three deterministic workflows targeting different runtimes.
+
+## 1) Short Local Run (~10 min, M1 MacBook)
+
+Use a single compact tail round:
+
+```bash
+make short-local
+```
+
+Typical override examples:
+
+```bash
+make short-local SHORT_LOCAL_WORKERS=4 SHORT_LOCAL_TOPK=24 SHORT_LOCAL_RESTARTS=120 SHORT_LOCAL_BUDGET=20
+```
+
+## 2) Long Local Overnight (~7 h, M1 MacBook)
+
+Use multi-round tail iteration with conservative stop-on-no-improve:
+
+```bash
+make overnight-local
+```
+
+Typical override examples:
+
+```bash
+make overnight-local \
+  OVERNIGHT_LOCAL_WORKERS=8 \
+  OVERNIGHT_LOCAL_ROUNDS=6 \
+  OVERNIGHT_LOCAL_TOPK=180 \
+  OVERNIGHT_LOCAL_RESTARTS=900 \
+  OVERNIGHT_LOCAL_BUDGET=180 \
+  OVERNIGHT_LOCAL_STOP=2
+```
+
+## 3) Long Overnight On HPC (SLURM)
+
+Submit one controller job that runs `scripts/iterate_tail.py` inside the containerized environment.
+
+```bash
+make hpc-tail-submit
+```
+
+Or with explicit resource/profile overrides:
+
+```bash
+make hpc-tail-submit \
+  HPC_PARTITION=standard \
+  HPC_WORKERS=8 \
+  HPC_MEM=6G \
+  HPC_TIME=07:30:00 \
+  HPC_ROUNDS=8 \
+  HPC_TOPK=240 \
+  HPC_RESTARTS=1200 \
+  HPC_BUDGET=300 \
+  HPC_STOP=2 \
+  HPC_RUN_ID=tail_hpc_$(date +%Y%m%d_%H%M%S)
+```
+
+Equivalent direct submit helper:
+
+```bash
+bash slurm/submit_tail_overnight.sh
+```
+
+## Determinism Guidance
+
+- Keep `RUN_ID`/`TAIL_RUN_ID` fixed per run to freeze split names and seed salts.
+- `iterate_tail.py` seed salt format is deterministic by round:
+  - `<seed-prefix>_<run-id>_rXX`
+- Keep container image and staged venv tar fixed for the run.
+- Merge is serialized inside each round; do not run concurrent merges.
+
+## Artifact Layout
+
+All profile runs write to `cache/hpc_tail_runs/<run-id>/`:
+
+- `run_config.json`: full config used for the run.
+- `summary.json`: final summary across rounds.
+- `logs/rXX_rank.log`: rank output for round `XX`.
+- `logs/rXX_solve.log`: solve output for round `XX`.
+- `logs/rXX_merge.log`: merge output for round `XX`.
+- `logs/rXX_score.log`: score output for round `XX`.
+- `rounds/rXX/summary.json`: per-round summary.
+
+These files are intended for reproducibility and auditability of overnight runs.
