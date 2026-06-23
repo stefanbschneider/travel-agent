@@ -22,7 +22,7 @@
           "type": "attraction",
           "position": "Nanjing Road Pedestrian Street",
           "start_time": "19:25",
-          "end_time": "20:55",
+          "end_time": "20:25",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -61,44 +61,86 @@
           ]
         },
         {
-          "type": "accommodation",
-          "position": "HSIAFEI MANSION",
-          "start_time": "21:44",
-          "end_time": "24:00",
-          "price": 590.0,
-          "cost": 590.0,
-          "rooms": 1,
-          "room_type": 2,
+          "type": "attraction",
+          "position": "Lujiazui",
+          "start_time": "20:42",
+          "end_time": "21:42",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Nanjing Road Pedestrian Street",
               "end": "Tiantong Road-Metro Station",
               "mode": "walk",
-              "start_time": "20:55",
-              "end_time": "21:04",
+              "start_time": "20:25",
+              "end_time": "20:34",
               "distance": 0.8,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Tiantong Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "20:34",
+              "end_time": "20:39",
+              "distance": 2.93,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Lujiazui",
+              "mode": "walk",
+              "start_time": "20:39",
+              "end_time": "20:42",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Cordis Shanghai Hongqiao",
+          "start_time": "22:26",
+          "end_time": "24:00",
+          "price": 799.0,
+          "cost": 799.0,
+          "rooms": 1,
+          "room_type": 1,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lujiazui",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "21:42",
+              "end_time": "21:45",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
               "end": "Hongqiao Railway Station-Metro Station",
               "mode": "metro",
-              "start_time": "21:04",
-              "end_time": "21:37",
-              "distance": 16.52,
+              "start_time": "21:45",
+              "end_time": "22:23",
+              "distance": 19.08,
               "price": 5,
               "cost": 5,
               "tickets": 1
             },
             {
               "start": "Hongqiao Railway Station-Metro Station",
-              "end": "HSIAFEI MANSION",
+              "end": "Cordis Shanghai Hongqiao",
               "mode": "walk",
-              "start_time": "21:37",
-              "end_time": "21:44",
-              "distance": 0.61,
+              "start_time": "22:23",
+              "end_time": "22:26",
+              "distance": 0.28,
               "price": 0,
               "cost": 0
             }
@@ -111,7 +153,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "HSIAFEI MANSION",
+          "position": "Cordis Shanghai Hongqiao",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -121,41 +163,41 @@
         },
         {
           "type": "attraction",
-          "position": "Lujiazui",
-          "start_time": "09:18",
-          "end_time": "10:48",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "09:05",
+          "end_time": "10:05",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "HSIAFEI MANSION",
+              "start": "Cordis Shanghai Hongqiao",
               "end": "Hongqiao Railway Station-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:37",
-              "distance": 0.61,
+              "end_time": "08:33",
+              "distance": 0.28,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Hongqiao Railway Station-Metro Station",
-              "end": "Pudong South Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
               "mode": "metro",
-              "start_time": "08:37",
-              "end_time": "09:15",
-              "distance": 19.08,
+              "start_time": "08:33",
+              "end_time": "09:03",
+              "distance": 15.49,
               "price": 5,
               "cost": 5,
               "tickets": 1
             },
             {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Lujiazui",
+              "start": "Qufu Road-Metro Station",
+              "end": "Jing'an Sculpture Park",
               "mode": "walk",
-              "start_time": "09:15",
-              "end_time": "09:18",
-              "distance": 0.27,
+              "start_time": "09:03",
+              "end_time": "09:05",
+              "distance": 0.18,
               "price": 0,
               "cost": 0
             }
@@ -163,41 +205,83 @@
         },
         {
           "type": "attraction",
-          "position": "Shanghai Natural History Museum",
-          "start_time": "11:01",
-          "end_time": "12:31",
+          "position": "The Bund",
+          "start_time": "10:20",
+          "end_time": "11:20",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Lujiazui",
-              "end": "Pudong South Road-Metro Station",
+              "start": "Jing'an Sculpture Park",
+              "end": "Qufu Road-Metro Station",
               "mode": "walk",
-              "start_time": "10:48",
-              "end_time": "10:51",
-              "distance": 0.27,
+              "start_time": "10:05",
+              "end_time": "10:07",
+              "distance": 0.18,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Qufu Road-Metro Station",
+              "start": "Qufu Road-Metro Station",
+              "end": "Lujiazui-Metro Station",
               "mode": "metro",
-              "start_time": "10:51",
-              "end_time": "10:58",
-              "distance": 3.92,
+              "start_time": "10:07",
+              "end_time": "10:12",
+              "distance": 2.95,
               "price": 2,
               "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Qufu Road-Metro Station",
-              "end": "Shanghai Natural History Museum",
+              "start": "Lujiazui-Metro Station",
+              "end": "The Bund",
               "mode": "walk",
-              "start_time": "10:58",
-              "end_time": "11:01",
-              "distance": 0.26,
+              "start_time": "10:12",
+              "end_time": "10:20",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "11:38",
+          "end_time": "12:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "11:20",
+              "end_time": "11:28",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "metro",
+              "start_time": "11:28",
+              "end_time": "11:30",
+              "distance": 1.37,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Huangpu River",
+              "mode": "walk",
+              "start_time": "11:30",
+              "end_time": "11:38",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             }
@@ -206,29 +290,29 @@
         {
           "type": "lunch",
           "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "12:49",
-          "end_time": "13:49",
+          "start_time": "12:57",
+          "end_time": "13:57",
           "price": 498.0,
           "cost": 498.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Natural History Museum",
-              "end": "Qufu Road-Metro Station",
+              "start": "Huangpu River",
+              "end": "International Passenger Transport Center-Metro Station",
               "mode": "walk",
-              "start_time": "12:31",
-              "end_time": "12:34",
-              "distance": 0.26,
+              "start_time": "12:38",
+              "end_time": "12:46",
+              "distance": 0.68,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Qufu Road-Metro Station",
+              "start": "International Passenger Transport Center-Metro Station",
               "end": "Pudong South Road-Metro Station",
               "mode": "metro",
-              "start_time": "12:34",
-              "end_time": "12:41",
-              "distance": 3.92,
+              "start_time": "12:46",
+              "end_time": "12:49",
+              "distance": 1.87,
               "price": 2,
               "cost": 2,
               "tickets": 1
@@ -237,8 +321,8 @@
               "start": "Pudong South Road-Metro Station",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "walk",
-              "start_time": "12:41",
-              "end_time": "12:49",
+              "start_time": "12:49",
+              "end_time": "12:57",
               "distance": 0.69,
               "price": 0,
               "cost": 0
@@ -246,52 +330,52 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "dinner",
+          "position": "Happy Square Alla Torre Italian Handmade Pizza (Bingu Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 130.0,
+          "cost": 130.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "end": "Pudong South Road-Metro Station",
+              "end": "Happy Square Alla Torre Italian Handmade Pizza (Bingu Branch)",
               "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "13:57",
-              "distance": 0.69,
+              "start_time": "13:57",
+              "end_time": "16:25",
+              "distance": 12.408907796997225,
               "price": 0,
               "cost": 0
-            },
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "19:55",
+          "end_time": "06:21",
+          "start": "Shanghai Hongqiao Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 727.96,
+          "cost": 727.96,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "13:57",
-              "end_time": "14:56",
-              "distance": 29.58,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
+              "start": "Happy Square Alla Torre Italian Handmade Pizza (Bingu Branch)",
+              "end": "Shanghai Hongqiao Station",
               "mode": "walk",
-              "start_time": "14:56",
-              "end_time": "15:11",
-              "distance": 1.27,
+              "start_time": "18:00",
+              "end_time": "19:22",
+              "distance": 6.893689739212138,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL018"
+          "TrainID": "D941"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 9.121984004974365,
-  "_eval_score": 92.24801587301587
+  "elapsed_time(sec)": 181.40230512619019,
+  "_eval_score": 94.11177248677248
 }

@@ -7,81 +7,103 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "type": "train",
+          "start_time": "07:26",
+          "end_time": "17:56",
+          "start": "Beijing West Railway Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 1263.04,
+          "cost": 1263.04,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
-        },
-        {
-          "type": "attraction",
-          "position": "Sea World Culture and Arts Center",
-          "start_time": "15:02",
-          "end_time": "16:32",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Sea World Culture and Arts Center",
-              "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:02",
-              "distance": 20.36,
-              "price": 86.3,
-              "cost": 86.3,
-              "cars": 1
-            }
-          ]
+          "TrainID": "G335"
         },
         {
           "type": "dinner",
           "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "18:08",
+          "end_time": "19:08",
           "price": 500.0,
           "cost": 500.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Sea World Culture and Arts Center",
+              "start": "Shenzhen North Railway Station",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "16:32",
-              "end_time": "16:50",
-              "distance": 12.56,
-              "price": 51.22,
-              "cost": 51.22,
+              "start_time": "17:56",
+              "end_time": "18:08",
+              "distance": 8.11,
+              "price": 33.1,
+              "cost": 33.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shenzhen China Resources Building Art Center",
+          "start_time": "19:20",
+          "end_time": "20:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+              "end": "Shenzhen China Resources Building Art Center",
+              "mode": "taxi",
+              "start_time": "19:08",
+              "end_time": "19:20",
+              "distance": 8.32,
+              "price": 33.84,
+              "cost": 33.84,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shenzhen Unicorn Starry Sky Art Museum",
+          "start_time": "20:46",
+          "end_time": "21:46",
+          "price": 39.9,
+          "cost": 39.9,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen China Resources Building Art Center",
+              "end": "Shenzhen Unicorn Starry Sky Art Museum",
+              "mode": "taxi",
+              "start_time": "20:20",
+              "end_time": "20:46",
+              "distance": 17.97,
+              "price": 75.55,
+              "cost": 75.55,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "18:35",
+          "position": "MeiJing Hotel Shenzhen",
+          "start_time": "22:05",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
+          "price": 398.0,
+          "cost": 398.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "start": "Shenzhen Unicorn Starry Sky Art Museum",
+              "end": "MeiJing Hotel Shenzhen",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:35",
-              "distance": 23.98,
-              "price": 102.63,
-              "cost": 102.63,
+              "start_time": "21:46",
+              "end_time": "22:05",
+              "distance": 12.71,
+              "price": 51.91,
+              "cost": 51.91,
               "cars": 1
             }
           ]
@@ -93,7 +115,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "MeiJing Hotel Shenzhen",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -104,21 +126,65 @@
         {
           "type": "attraction",
           "position": "Qianjiang Art Center",
-          "start_time": "09:18",
-          "end_time": "10:48",
+          "start_time": "08:48",
+          "end_time": "09:48",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "start": "MeiJing Hotel Shenzhen",
               "end": "Qianjiang Art Center",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:18",
-              "distance": 32.39,
-              "price": 140.47,
-              "cost": 140.47,
+              "end_time": "08:48",
+              "distance": 12.4,
+              "price": 50.5,
+              "cost": 50.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Sea World Culture and Arts Center",
+          "start_time": "10:29",
+          "end_time": "11:29",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Qianjiang Art Center",
+              "end": "Sea World Culture and Arts Center",
+              "mode": "taxi",
+              "start_time": "09:48",
+              "end_time": "10:29",
+              "distance": 27.96,
+              "price": 120.54,
+              "cost": 120.54,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "He Xiangning Art Museum",
+          "start_time": "11:42",
+          "end_time": "12:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Sea World Culture and Arts Center",
+              "end": "He Xiangning Art Museum",
+              "mode": "taxi",
+              "start_time": "11:29",
+              "end_time": "11:42",
+              "distance": 8.94,
+              "price": 35.99,
+              "cost": 35.99,
               "cars": 1
             }
           ]
@@ -126,43 +192,43 @@
         {
           "type": "lunch",
           "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
-          "start_time": "11:04",
-          "end_time": "12:04",
+          "start_time": "12:55",
+          "end_time": "13:55",
           "price": 835.0,
           "cost": 835.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Qianjiang Art Center",
+              "start": "He Xiangning Art Museum",
               "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
               "mode": "taxi",
-              "start_time": "10:48",
-              "end_time": "11:04",
-              "distance": 11.27,
-              "price": 45.44,
-              "cost": 45.44,
+              "start_time": "12:42",
+              "end_time": "12:55",
+              "distance": 8.84,
+              "price": 35.65,
+              "cost": 35.65,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shenzhen China Resources Building Art Center",
-          "start_time": "12:23",
-          "end_time": "13:53",
+          "position": "Hua Art Museum",
+          "start_time": "14:08",
+          "end_time": "15:08",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "end": "Shenzhen China Resources Building Art Center",
+              "end": "Hua Art Museum",
               "mode": "taxi",
-              "start_time": "12:04",
-              "end_time": "12:23",
-              "distance": 12.87,
-              "price": 52.62,
-              "cost": 52.62,
+              "start_time": "13:55",
+              "end_time": "14:08",
+              "distance": 8.72,
+              "price": 35.24,
+              "cost": 35.24,
               "cars": 1
             }
           ]
@@ -177,38 +243,38 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen China Resources Building Art Center",
+              "start": "Hua Art Museum",
               "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
               "mode": "taxi",
-              "start_time": "13:53",
-              "end_time": "14:50",
-              "distance": 38.26,
-              "price": 166.86,
-              "cost": 166.86,
+              "start_time": "15:08",
+              "end_time": "15:59",
+              "distance": 34.19,
+              "price": 148.55,
+              "cost": 148.55,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
-          "start_time": "19:15",
+          "position": "MeiJing Hotel Shenzhen",
+          "start_time": "18:45",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
+          "price": 398.0,
+          "cost": 398.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
               "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "end": "MeiJing Hotel Shenzhen",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "19:15",
-              "distance": 50.46,
-              "price": 221.77,
-              "cost": 221.77,
+              "end_time": "18:45",
+              "distance": 30.16,
+              "price": 130.44,
+              "cost": 130.44,
               "cars": 1
             }
           ]
@@ -220,7 +286,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "position": "MeiJing Hotel Shenzhen",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -232,20 +298,64 @@
           "type": "attraction",
           "position": "Guangming Culture and Arts Center",
           "start_time": "08:55",
-          "end_time": "10:25",
+          "end_time": "09:55",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "start": "MeiJing Hotel Shenzhen",
               "end": "Guangming Culture and Arts Center",
               "mode": "taxi",
               "start_time": "08:30",
               "end_time": "08:55",
-              "distance": 17.29,
-              "price": 72.48,
-              "cost": 72.48,
+              "distance": 16.96,
+              "price": 71.01,
+              "cost": 71.01,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dafen Art Museum",
+          "start_time": "10:33",
+          "end_time": "11:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guangming Culture and Arts Center",
+              "end": "Dafen Art Museum",
+              "mode": "taxi",
+              "start_time": "09:55",
+              "end_time": "10:33",
+              "distance": 25.53,
+              "price": 109.59,
+              "cost": 109.59,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Luohu Art Museum",
+          "start_time": "11:44",
+          "end_time": "12:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dafen Art Museum",
+              "end": "Luohu Art Museum",
+              "mode": "taxi",
+              "start_time": "11:33",
+              "end_time": "11:44",
+              "distance": 7.42,
+              "price": 30.67,
+              "cost": 30.67,
               "cars": 1
             }
           ]
@@ -253,21 +363,21 @@
         {
           "type": "lunch",
           "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-          "start_time": "11:05",
-          "end_time": "12:05",
+          "start_time": "12:55",
+          "end_time": "13:55",
           "price": 590.0,
           "cost": 590.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Guangming Culture and Arts Center",
+              "start": "Luohu Art Museum",
               "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "10:25",
-              "end_time": "11:05",
-              "distance": 27.03,
-              "price": 116.34,
-              "cost": 116.34,
+              "start_time": "12:44",
+              "end_time": "12:55",
+              "distance": 7.66,
+              "price": 31.52,
+              "cost": 31.52,
               "cars": 1
             }
           ]
@@ -275,8 +385,8 @@
         {
           "type": "attraction",
           "position": "Baishilong Music Theme Park",
-          "start_time": "12:25",
-          "end_time": "14:25",
+          "start_time": "14:15",
+          "end_time": "15:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -285,8 +395,8 @@
               "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
               "end": "Convention and Exhibition Center-Metro Station",
               "mode": "walk",
-              "start_time": "12:05",
-              "end_time": "12:07",
+              "start_time": "13:55",
+              "end_time": "13:57",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -295,8 +405,8 @@
               "start": "Convention and Exhibition Center-Metro Station",
               "end": "Baishilong-Metro Station",
               "mode": "metro",
-              "start_time": "12:07",
-              "end_time": "12:22",
+              "start_time": "13:57",
+              "end_time": "14:12",
               "distance": 7.64,
               "price": 3,
               "cost": 3,
@@ -306,8 +416,8 @@
               "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
               "mode": "walk",
-              "start_time": "12:22",
-              "end_time": "12:25",
+              "start_time": "14:12",
+              "end_time": "14:15",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -315,94 +425,94 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Shenzhen Art Museum (New Venue)",
-          "start_time": "14:47",
-          "end_time": "16:17",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
               "end": "Baishilong-Metro Station",
               "mode": "walk",
-              "start_time": "14:25",
-              "end_time": "14:28",
+              "start_time": "15:45",
+              "end_time": "15:48",
               "distance": 0.28,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Baishilong-Metro Station",
-              "end": "Hongshan-Metro Station",
+              "end": "Huangbeiling-Metro Station",
               "mode": "metro",
-              "start_time": "14:28",
-              "end_time": "14:33",
-              "distance": 2.98,
-              "price": 2,
-              "cost": 2,
+              "start_time": "15:48",
+              "end_time": "16:10",
+              "distance": 11.44,
+              "price": 4,
+              "cost": 4,
               "tickets": 1
             },
             {
-              "start": "Hongshan-Metro Station",
-              "end": "Shenzhen Art Museum (New Venue)",
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "mode": "walk",
-              "start_time": "14:33",
-              "end_time": "14:47",
-              "distance": 1.23,
+              "start_time": "16:10",
+              "end_time": "16:12",
+              "distance": 0.2,
               "price": 0,
               "cost": 0
             }
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "type": "train",
+          "start_time": "19:34",
+          "end_time": "06:33",
+          "start": "Shenzhen North Railway Station",
+          "end": "Beijing West Railway Station",
+          "price": 1165.89,
+          "cost": 1165.89,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Art Museum (New Venue)",
-              "end": "Hongshan-Metro Station",
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Huangbeiling-Metro Station",
               "mode": "walk",
-              "start_time": "16:17",
-              "end_time": "16:31",
-              "distance": 1.23,
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.2,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Hongshan-Metro Station",
-              "end": "Airport East-Metro Station",
+              "start": "Huangbeiling-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
               "mode": "metro",
-              "start_time": "16:31",
-              "end_time": "17:12",
-              "distance": 20.83,
-              "price": 5,
-              "cost": 5,
+              "start_time": "18:02",
+              "end_time": "18:28",
+              "distance": 13.03,
+              "price": 4,
+              "cost": 4,
               "tickets": 1
             },
             {
-              "start": "Airport East-Metro Station",
-              "end": "Shenzhen Bao'an International Airport",
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Shenzhen North Railway Station",
               "mode": "walk",
-              "start_time": "17:12",
-              "end_time": "17:17",
-              "distance": 0.45,
+              "start_time": "18:28",
+              "end_time": "18:29",
+              "distance": 0.15,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL179"
+          "TrainID": "D902"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03629112243652344,
-  "_eval_score": 94.84432234432234
+  "elapsed_time(sec)": 180.68659210205078,
+  "_eval_score": 97.64814814814814
 }
