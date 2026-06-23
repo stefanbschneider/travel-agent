@@ -7,21 +7,42 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "12:07",
+          "end_time": "14:32",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 949.32,
+          "cost": 949.32,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL096"
+        },
+        {
+          "type": "dinner",
+          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+          "start_time": "18:29",
+          "end_time": "19:29",
+          "price": 400.0,
+          "cost": 400.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+              "mode": "walk",
+              "start_time": "14:32",
+              "end_time": "18:29",
+              "distance": 19.80624830917448,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
           "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "start_time": "19:47",
+          "start_time": "23:12",
           "end_time": "24:00",
           "price": 231.0,
           "cost": 231.0,
@@ -30,12 +51,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
               "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
               "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "19:47",
-              "distance": 9.330526273706072,
+              "start_time": "19:29",
+              "end_time": "23:12",
+              "distance": 18.601989096355027,
               "price": 0,
               "cost": 0
             }
@@ -58,41 +79,20 @@
         },
         {
           "type": "attraction",
-          "position": "Shekou Industrial Zone",
-          "start_time": "13:45",
-          "end_time": "14:45",
+          "position": "China Merchants Shekou Cruise Home Port Tour",
+          "start_time": "14:01",
+          "end_time": "15:16",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Shekou Industrial Zone",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "13:45",
-              "distance": 26.268105863483058,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "China Merchants Shekou Cruise Home Port Tour",
-          "start_time": "15:04",
-          "end_time": "16:04",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shekou Industrial Zone",
               "end": "China Merchants Shekou Cruise Home Port Tour",
               "mode": "walk",
-              "start_time": "14:45",
-              "end_time": "15:04",
-              "distance": 1.64727178686883,
+              "start_time": "08:30",
+              "end_time": "14:01",
+              "distance": 27.618552418493916,
               "price": 0,
               "cost": 0
             }
@@ -101,8 +101,8 @@
         {
           "type": "attraction",
           "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-          "start_time": "16:04",
-          "end_time": "17:04",
+          "start_time": "15:16",
+          "end_time": "16:31",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -111,9 +111,30 @@
               "start": "China Merchants Shekou Cruise Home Port Tour",
               "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
               "mode": "walk",
-              "start_time": "16:04",
-              "end_time": "16:04",
+              "start_time": "15:16",
+              "end_time": "15:16",
               "distance": 0.0,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shenzhen Bay Park",
+          "start_time": "18:01",
+          "end_time": "19:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "end": "Shenzhen Bay Park",
+              "mode": "walk",
+              "start_time": "16:31",
+              "end_time": "18:01",
+              "distance": 7.53043215441445,
               "price": 0,
               "cost": 0
             }
@@ -122,7 +143,7 @@
         {
           "type": "accommodation",
           "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "start_time": "22:35",
+          "start_time": "23:17",
           "end_time": "24:00",
           "price": 231.0,
           "cost": 231.0,
@@ -131,12 +152,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "start": "Shenzhen Bay Park",
               "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
               "mode": "walk",
-              "start_time": "17:04",
-              "end_time": "22:35",
-              "distance": 27.618552418493916,
+              "start_time": "19:16",
+              "end_time": "23:17",
+              "distance": 20.09084196451843,
               "price": 0,
               "cost": 0
             }
@@ -159,20 +180,41 @@
         },
         {
           "type": "attraction",
-          "position": "Shenzhen Bay Park",
-          "start_time": "12:31",
-          "end_time": "13:31",
+          "position": "East Gate Old Street",
+          "start_time": "10:49",
+          "end_time": "12:04",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Shenzhen Bay Park",
+              "end": "East Gate Old Street",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "12:31",
-              "distance": 20.09084196451843,
+              "end_time": "10:49",
+              "distance": 11.65634673668004,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
+          "start_time": "12:26",
+          "end_time": "13:26",
+          "price": 706.0,
+          "cost": 706.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
+              "mode": "walk",
+              "start_time": "12:04",
+              "end_time": "12:26",
+              "distance": 1.8829349221288807,
               "price": 0,
               "cost": 0
             }
@@ -180,20 +222,20 @@
         },
         {
           "type": "attraction",
-          "position": "Cave Exploration Factory (Happy Coast Branch)",
-          "start_time": "14:05",
-          "end_time": "15:35",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "13:39",
+          "end_time": "15:09",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bay Park",
-              "end": "Cave Exploration Factory (Happy Coast Branch)",
+              "start": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
+              "end": "Deng Xiaoping Portrait Square",
               "mode": "walk",
-              "start_time": "13:31",
-              "end_time": "14:05",
-              "distance": 2.8413944396024418,
+              "start_time": "13:26",
+              "end_time": "13:39",
+              "distance": 1.1461720410102596,
               "price": 0,
               "cost": 0
             }
@@ -209,12 +251,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "start": "Deng Xiaoping Portrait Square",
               "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "walk",
-              "start_time": "15:35",
-              "end_time": "16:59",
-              "distance": 7.034493153437228,
+              "start_time": "15:09",
+              "end_time": "16:24",
+              "distance": 6.250820431571054,
               "price": 0,
               "cost": 0
             }
@@ -246,6 +288,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 20.509618282318115,
-  "_eval_score": 88.75
+  "elapsed_time(sec)": 180.518385887146,
+  "_eval_score": 89.86111111111111
 }

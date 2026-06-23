@@ -19,14 +19,12 @@
           "TrainID": "D2294"
         },
         {
-          "type": "accommodation",
-          "position": "Ji Hotel (Nanjing South Railway Station Square Store)",
-          "start_time": "20:22",
-          "end_time": "24:00",
-          "price": 508.0,
-          "cost": 508.0,
-          "rooms": 1,
-          "room_type": 1,
+          "type": "attraction",
+          "position": "Confucius Temple",
+          "start_time": "20:29",
+          "end_time": "21:29",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -41,21 +39,65 @@
             },
             {
               "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Hongyun Avenue-Metro Station",
+              "end": "Confucius Temple-Metro Station",
               "mode": "metro",
               "start_time": "20:12",
-              "end_time": "20:14",
-              "distance": 1.43,
-              "price": 2,
-              "cost": 2,
+              "end_time": "20:23",
+              "distance": 5.92,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Confucius Temple",
+              "mode": "walk",
+              "start_time": "20:23",
+              "end_time": "20:29",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Ji Hotel (Nanjing South Railway Station Square Store)",
+          "start_time": "21:57",
+          "end_time": "24:00",
+          "price": 508.0,
+          "cost": 508.0,
+          "rooms": 1,
+          "room_type": 1,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Confucius Temple",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "21:29",
+              "end_time": "21:35",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "21:35",
+              "end_time": "21:49",
+              "distance": 7.26,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
               "start": "Hongyun Avenue-Metro Station",
               "end": "Ji Hotel (Nanjing South Railway Station Square Store)",
               "mode": "walk",
-              "start_time": "20:14",
-              "end_time": "20:22",
+              "start_time": "21:49",
+              "end_time": "21:57",
               "distance": 0.73,
               "price": 0,
               "cost": 0
@@ -79,9 +121,9 @@
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
           "start_time": "08:58",
-          "end_time": "10:28",
+          "end_time": "09:58",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -109,11 +151,53 @@
             },
             {
               "start": "Confucius Temple-Metro Station",
-              "end": "Confucius Temple",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
               "mode": "walk",
               "start_time": "08:52",
               "end_time": "08:58",
-              "distance": 0.52,
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhongshan Scenic Area",
+          "start_time": "10:52",
+          "end_time": "11:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "09:58",
+              "end_time": "10:04",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "metro",
+              "start_time": "10:04",
+              "end_time": "10:20",
+              "distance": 8.1,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Zhongshan Scenic Area",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:52",
+              "distance": 2.69,
               "price": 0,
               "cost": 0
             }
@@ -121,41 +205,41 @@
         },
         {
           "type": "lunch",
-          "position": "Li's Halal Restaurant (Dading Lane Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 29.0,
-          "cost": 29.0,
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "12:44",
+          "end_time": "13:44",
+          "price": 74.0,
+          "cost": 74.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Confucius Temple",
-              "end": "Confucius Temple-Metro Station",
+              "start": "Zhongshan Scenic Area",
+              "end": "Wangjiawan-Metro Station",
               "mode": "walk",
-              "start_time": "10:28",
-              "end_time": "10:34",
-              "distance": 0.52,
+              "start_time": "11:52",
+              "end_time": "12:24",
+              "distance": 2.69,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Confucius Temple-Metro Station",
-              "end": "Zhangfuyuan-Metro Station",
+              "start": "Wangjiawan-Metro Station",
+              "end": "Confucius Temple-Metro Station",
               "mode": "metro",
-              "start_time": "10:34",
-              "end_time": "10:36",
-              "distance": 1.01,
-              "price": 2,
-              "cost": 2,
+              "start_time": "12:24",
+              "end_time": "12:40",
+              "distance": 8.1,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Li's Halal Restaurant (Dading Lane Branch)",
+              "start": "Confucius Temple-Metro Station",
+              "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "walk",
-              "start_time": "10:36",
-              "end_time": "10:41",
-              "distance": 0.44,
+              "start_time": "12:40",
+              "end_time": "12:44",
+              "distance": 0.39,
               "price": 0,
               "cost": 0
             }
@@ -164,40 +248,40 @@
         {
           "type": "attraction",
           "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-          "start_time": "12:55",
-          "end_time": "14:25",
+          "start_time": "14:08",
+          "end_time": "15:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "end": "Confucius Temple-Metro Station",
               "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:55",
-              "distance": 4.630525344282477,
+              "start_time": "13:44",
+              "end_time": "13:48",
+              "distance": 0.39,
               "price": 0,
               "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Cherry Blossom Avenue",
-          "start_time": "14:26",
-          "end_time": "16:26",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
+            },
             {
-              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "end": "Cherry Blossom Avenue",
+              "start": "Confucius Temple-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "13:48",
+              "end_time": "13:55",
+              "distance": 3.74,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
               "mode": "walk",
-              "start_time": "14:25",
-              "end_time": "14:26",
-              "distance": 0.0974006350805857,
+              "start_time": "13:55",
+              "end_time": "14:08",
+              "distance": 1.09,
               "price": 0,
               "cost": 0
             }
@@ -214,12 +298,33 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Cherry Blossom Avenue",
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "15:38",
+              "end_time": "15:51",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:51",
+              "end_time": "15:58",
+              "distance": 3.56,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
               "mode": "walk",
-              "start_time": "16:26",
-              "end_time": "16:53",
-              "distance": 2.2983938134967556,
+              "start_time": "15:58",
+              "end_time": "16:00",
+              "distance": 0.25,
               "price": 0,
               "cost": 0
             }
@@ -229,6 +334,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 18.484933137893677,
-  "_eval_score": 93.16865079365078
+  "elapsed_time(sec)": 180.56559109687805,
+  "_eval_score": 93.32993197278911
 }
