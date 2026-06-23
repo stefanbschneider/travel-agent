@@ -63,6 +63,34 @@ All knobs are environment variables read at construction; defaults reproduce the
 | `TPC_USE_CP_SOLVER` | `1` | Enable CP-SAT rescue tier (`0` disables it). |
 | `TPC_CP_TIME_LIMIT_SEC` | auto | Per-query CP-SAT time cap (bounded by remaining solve budget). |
 
+## Tail-focused optimization workflow (`scripts/rank_tail.py`)
+
+When aggregate hard metrics are already high, the best leaderboard gains usually come from
+improving the low-score tail rather than re-running all 1000 queries uniformly.
+
+`scripts/rank_tail.py` builds a focused split from current `results/best` by combining:
+
+- per-query `_eval_score` gap from 100,
+- hard-logic failure density (`failed_clauses`),
+- weighted failure signature severity (DSL functions seen in failed clauses).
+
+Example:
+
+```bash
+python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 120 --min-score 99
+python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
+python scripts/merge.py --split tpc_phase1_tail_focus
+python scripts/score.py
+```
+
+Artifacts:
+
+- ranking report CSV: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
+- focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
+
+This loop is monotonic-safe: `scripts/merge.py` only updates `results/best/<uid>.json` when
+the per-query weighted score increases.
+
 ## Results (tpc_phase1, 1000 queries)
 
 Latest verified `results/best` score (2026-06-19):
@@ -103,3 +131,4 @@ The headline numbers use the **oracle** path (`TPC_USE_ORACLE=1`), where the que
 - `chinatravel/agent/tpc_agent/cp_solver.py` — CP-SAT solver tier and reconstruction.
 - `chinatravel/agent/tpc_agent/parsed_verifier.py` — no-oracle constraint verifier.
 - Workflow scripts: `scripts/solve.py`, `scripts/iterate.py`, `scripts/merge.py`, `scripts/score.py`.
+- Tail-priority script: `scripts/rank_tail.py`.
