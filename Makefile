@@ -21,6 +21,10 @@ TAIL_STOP_NO_IMPROVE ?= 1
 TAIL_ARTIFACTS_ROOT ?= cache/hpc_tail_runs
 TAIL_RUN_ID ?=
 TAIL_SEED_PREFIX ?= tail
+TAIL_RESUME ?= 0
+TAIL_SKIP_EXISTING ?= 1
+TAIL_HEARTBEAT_SEC ?= 60
+TAIL_STREAM_SOLVE_LOG ?= 0
 
 # Ready-made run profiles
 SHORT_LOCAL_WORKERS ?= 4
@@ -101,7 +105,11 @@ tail-iterate:
 		--stop-no-improve-rounds $(TAIL_STOP_NO_IMPROVE) \
 		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
 		$(if $(TAIL_RUN_ID),--run-id $(TAIL_RUN_ID)) \
-		--seed-prefix $(TAIL_SEED_PREFIX)
+		--seed-prefix $(TAIL_SEED_PREFIX) \
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,)
 
 # Short local profile (~10min on laptop): one compact tail round.
 short-local:
@@ -133,7 +141,11 @@ overnight-local:
 		--stop-no-improve-rounds $(OVERNIGHT_LOCAL_STOP) \
 		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
 		--seed-prefix overnight \
-		--run-id overnight_local_$(shell date +%Y%m%d_%H%M%S)
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
+		$(if $(TAIL_RUN_ID),--run-id $(TAIL_RUN_ID),--run-id overnight_local_$(shell date +%Y%m%d_%H%M%S)) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,)
 
 # Submit one 7h tail-iterate run to SLURM (single controller job orchestrating multi-round solve/merge/score).
 hpc-tail-submit:
@@ -210,6 +222,10 @@ help:
 	  '  TAIL_ARTIFACTS_ROOT=<path> default: $(TAIL_ARTIFACTS_ROOT)' \
 	  '  TAIL_RUN_ID=<id>       default: auto timestamp' \
 	  '  TAIL_SEED_PREFIX=<str> default: $(TAIL_SEED_PREFIX)' \
+	  '  TAIL_RESUME=<0|1>      default: $(TAIL_RESUME)' \
+	  '  TAIL_SKIP_EXISTING=<0|1> default: $(TAIL_SKIP_EXISTING)' \
+	  '  TAIL_HEARTBEAT_SEC=<sec> default: $(TAIL_HEARTBEAT_SEC)' \
+	  '  TAIL_STREAM_SOLVE_LOG=<0|1> default: $(TAIL_STREAM_SOLVE_LOG)' \
 	  '' \
 	  'Profile knobs:' \
 	  '  SHORT_LOCAL_WORKERS=<n> default: $(SHORT_LOCAL_WORKERS)' \

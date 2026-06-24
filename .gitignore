@@ -27,3 +27,7 @@ agent_env/config.toml
 *.egg-info/
 
 .vscode/
+
+# Generated split shards/focus files from solve.py and iterate_tail.py
+chinatravel/evaluation/default_splits/_tmp_*_shard*.txt
+chinatravel/evaluation/default_splits/tpc_phase1_tail_focus_*.txt
