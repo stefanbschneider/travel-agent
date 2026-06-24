@@ -3,7 +3,6 @@ import os
 import time
 import math
 import json
-import re
 from difflib import SequenceMatcher
 from copy import deepcopy
 
@@ -88,10 +87,11 @@ class TPCAgent(BaseAgent):
         is additionally gated on schema + commonsense validity, because FPR == schema ∩
         commonsense ∩ logic; the +2 makes acceptance require all three.
         """
-        if self.use_oracle:
-            hard_logic_py = query.get("hard_logic_py", []) or []
+        hard_logic_py = query.get("hard_logic_py", []) or []
+        target_city = query.get("target_city", "")
 
-            def base(plan):
+        def base_check(plan):
+            if self.use_oracle:
                 if not hard_logic_py:
                     return 0, 0
                 try:
@@ -99,18 +99,15 @@ class TPCAgent(BaseAgent):
                 except Exception:
                     return 0, len(hard_logic_py)
                 return sum(1 for r in res if bool(r)), len(res)
-        else:
-            target_city = query.get("target_city", "")
 
-            def base(plan):
-                try:
-                    res = evaluate_parsed_constraints(constraints, plan, target_city)
-                except Exception:
-                    return 0, 0
-                return sum(1 for r in res if r), len(res)
+            try:
+                res = evaluate_parsed_constraints(constraints, plan, target_city)
+            except Exception:
+                return 0, 0
+            return sum(1 for r in res if r), len(res)
 
         def check(plan):
-            passed, total = base(plan)
+            passed, total = base_check(plan)
             extra = 0
             if passed == total:
                 # Env validity only matters once every hard constraint is met.
@@ -233,7 +230,7 @@ class TPCAgent(BaseAgent):
 
     def _slot_visit_len(self, params, constraints):
         """Conservative slot length used before the specific attraction is chosen: the
-        longest dwell any constraint demands (clamped to 240), at least visit_minutes/90."""
+        longest dwell any constraint demands (clamped to 240), at least 60 minutes."""
         longest = 0
         for d in constraints.get("stay_duration", []) or []:
             if isinstance(d, dict):
@@ -241,7 +238,7 @@ class TPCAgent(BaseAgent):
                     longest = max(longest, int(d.get("min_minutes", 0)))
                 except (TypeError, ValueError):
                     pass
-        return min(240, max(int(params.get("visit_minutes", 90)), longest, 90))
+        return min(240, max(int(params.get("visit_minutes", 90)), longest, 60))
 
     def _visit_len(self, attr, params, constraints):
         """Actual visit length for a chosen attraction: visit_minutes, raised to this POI's
@@ -255,6 +252,24 @@ class TPCAgent(BaseAgent):
                 except (TypeError, ValueError):
                     pass
         return min(240, max(int(params.get("visit_minutes", 90)), need))
+
+    def _visit_minutes_candidates(self, constraints):
+        """Return dwell baselines explored by search (small values improve packing density).
+
+        Candidates remain bounded by named minimum-dwell constraints so required visits are
+        never shortened below what the query asks for.
+        """
+        longest = 0
+        for d in (constraints or {}).get("stay_duration", []) or []:
+            if isinstance(d, dict):
+                try:
+                    longest = max(longest, int(d.get("min_minutes", 0)))
+                except (TypeError, ValueError):
+                    pass
+        base = [60, 75, 90, 105]
+        floor = min(240, max(60, longest))
+        values = sorted(set(min(240, max(v, floor)) for v in base))
+        return values if values else [90]
 
     def _rotate_tail(self, items, is_pinned, offset):
         """Rotate only the non-pinned tail of `items` by `offset` (pinned entries stay at front)."""
@@ -313,7 +328,7 @@ class TPCAgent(BaseAgent):
                     meals += 1
         return attrs, meals
 
-    def _eval_proxy(self, plan):
+    def _default_preference_components(self, plan):
         attrs, meals = self._activity_counts(plan)
         days = max(1, len(plan.get("itinerary", []) or []))
         dav = min(1.0, attrs / (4.0 * days))
@@ -328,12 +343,28 @@ class TPCAgent(BaseAgent):
                     transit_count += 1
         average_transit = transit_total / transit_count if transit_count > 0 else -1
         att = max(0.0, min(1.0, (-1.0 / 105.0) * average_transit + 8.0 / 7.0))
+        return dav, att, ddr
+
+    def _eval_proxy(self, plan):
+        dav, att, ddr = self._default_preference_components(plan)
         return 5.0 * dav + 5.0 * att + 5.0 * ddr
+
+    def _accepted_eval_key(self, plan):
+        """Rank fully valid plans by the default leaderboard preference components.
+
+        Once a plan passes every hard/env check, prefer the strongest DAV/ATT/DDR combination
+        instead of reusing the generic search key that still prioritizes raw passed-count.
+        """
+        dav, att, ddr = self._default_preference_components(plan)
+        attrs, meals = self._activity_counts(plan)
+        return (dav + att + ddr, dav + ddr, attrs + meals, -self._plan_total_cost(plan))
 
     def _repair_params(self, constraints):
         """Deterministic param priors derived from which constraints are present, tried before
         random restarts so single-signal queries converge fast."""
         candidates = []
+        for vm in self._visit_minutes_candidates(constraints):
+            candidates.append({"visit_minutes": vm})
         budgets = constraints.get("budgets", {}) or {}
         if budgets.get("inner_transport") is not None:
             candidates.append({"forced_inner_mode": "walk"})
@@ -367,11 +398,12 @@ class TPCAgent(BaseAgent):
                 unique.append(p)
         return unique
 
-    def _random_params(self, rng):
+    def _random_params(self, rng, constraints):
         params = {
             "attr_offset": rng.randint(0, 12),
             "hotel_index": rng.randint(0, 4),
             "attr_per_day": rng.choice([2, 3, 4]),
+            "visit_minutes": rng.choice(self._visit_minutes_candidates(constraints)),
         }
         forced = rng.choice([None, "metro", "walk", "taxi"])
         if forced is not None:
@@ -385,40 +417,64 @@ class TPCAgent(BaseAgent):
 
     def _solve(self, query):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
-        keeping the best (most-constraints-passed, then cheapest) plan; finally pack it."""
+        keeping the best accepted plan found within budget; finally pack it."""
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
-        best = {"plan": None, "key": None, "constraints": None, "check": None, "params": None}
+        init_key = (-1, float("-inf"), float("-inf"))
+        accepted_init_key = (float("-inf"), float("-inf"), float("-inf"), float("-inf"))
+        best = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None}
+        best_accepted = {
+            "plan": None,
+            "key": accepted_init_key,
+            "constraints": None,
+            "check": None,
+            "params": None,
+        }
 
         def consider(plan, constraints, check, params):
             try:
                 passed, total = check(plan)
             except Exception:
                 passed, total = 0, 0
-            key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
-            if best["plan"] is None or key > best["key"]:
-                best.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
-            return self._accepted(passed, total)
+            search_key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
+            if best["plan"] is None or search_key > best["key"]:
+                best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params)
+            accepted = self._accepted(passed, total)
+            if accepted:
+                accepted_key = self._accepted_eval_key(plan)
+                if best_accepted["plan"] is None or accepted_key > best_accepted["key"]:
+                    best_accepted.update(
+                        plan=plan,
+                        key=accepted_key,
+                        constraints=constraints,
+                        check=check,
+                        params=params,
+                    )
+            return accepted
 
         def out_of_budget():
             return time.time() - self.start_clock > self.solve_budget_sec
 
         restarts = 0
-        solved = False
         for variant in variants:
-            if solved or out_of_budget():
+            if out_of_budget():
                 break
             constraints = deepcopy(variant or {})
             check = self._make_checker(query, constraints)
+            accepted_base = False
             try:
-                if consider(self._build_plan(query, constraints=constraints), constraints, check, {}):
-                    if os.environ.get("TPC_CP_FORCE") != "1":
-                        break
+                accepted_base = consider(self._build_plan(query, constraints=constraints), constraints, check, {})
             except Exception:
                 import traceback
                 traceback.print_exc()
 
-            if os.environ.get("TPC_USE_CP_SOLVER", "1") != "0" and not out_of_budget():
+            run_cp_after_pass = os.environ.get("TPC_CP_AFTER_PASS", "1") != "0"
+            run_cp = (
+                os.environ.get("TPC_USE_CP_SOLVER", "1") != "0"
+                and not out_of_budget()
+                and (os.environ.get("TPC_CP_FORCE") == "1" or run_cp_after_pass or not accepted_base)
+            )
+            if run_cp:
                 try:
                     from agent.tpc_agent.cp_solver import solve_with_cp_sat
 
@@ -427,10 +483,16 @@ class TPCAgent(BaseAgent):
                     default_limit = min(30.0, remaining / 2.0)
                     cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
                     cp_limit = max(1.0, min(cp_limit, remaining))
-                    cp_plan = solve_with_cp_sat(self, query, constraints, check, cp_limit)
-                    if cp_plan is not None and consider(cp_plan, constraints, check, {"solver": "cp_sat"}):
-                        solved = True
-                        break
+                    cp_plan = solve_with_cp_sat(
+                        self,
+                        query,
+                        constraints,
+                        check,
+                        cp_limit,
+                        self._visit_minutes_candidates(constraints),
+                    )
+                    if cp_plan is not None:
+                        consider(cp_plan, constraints, check, {"solver": "cp_sat"})
                 except Exception:
                     pass
 
@@ -438,32 +500,26 @@ class TPCAgent(BaseAgent):
                 if out_of_budget():
                     break
                 try:
-                    if consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params):
-                        solved = True
-                        break
+                    consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
                 except Exception:
                     continue
-            if solved:
-                break
 
             while restarts < self.max_restarts and not out_of_budget():
                 restarts += 1
-                params = self._random_params(rng)
+                params = self._random_params(rng, constraints)
                 try:
-                    if consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params):
-                        solved = True
-                        break
+                    consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
                 except Exception:
                     continue
-            if solved:
-                break
 
-        if best["plan"] is not None and best["check"] is not None:
-            packed = self._pack_plan(best["plan"], query, best["constraints"], best["check"], best["params"])
+        chosen = best_accepted if best_accepted["plan"] is not None else best
+
+        if chosen["plan"] is not None and chosen["check"] is not None:
+            packed = self._pack_plan(chosen["plan"], query, chosen["constraints"], chosen["check"], chosen["params"])
             if packed is not None:
-                best["plan"] = packed
+                chosen["plan"] = packed
 
-        return best["plan"] if best["plan"] is not None else self._build_plan(query)
+        return chosen["plan"] if chosen["plan"] is not None else self._build_plan(query)
 
     def _pack_plan(self, plan, query, constraints, check, base_params):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
@@ -594,6 +650,153 @@ class TPCAgent(BaseAgent):
         del activities[0]
         return False
 
+    def _insert_activity_before_first(self, plan, day_idx, poi, kind, window, city, people, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if not activities:
+            return False
+        first_act = activities[0]
+        next_pos = self._activity_start_position(first_act)
+        poi_name = str(poi.get("name", ""))
+        if not next_pos or not poi_name:
+            return False
+
+        prev_pos = None
+        anchor_min = None
+        transports_in = first_act.get("transports", []) or []
+        if transports_in:
+            first_leg = transports_in[0]
+            prev_pos = str(first_leg.get("start", "") or "")
+            try:
+                anchor_min = time_to_minutes(str(first_leg.get("start_time", "")))
+            except Exception:
+                anchor_min = None
+        if (not prev_pos or anchor_min is None) and day_idx > 0:
+            hotel_name = self._find_hotel_for_day(plan, day_idx)
+            if hotel_name:
+                prev_pos = hotel_name
+                anchor_min = time_to_minutes("08:30")
+        if not prev_pos or anchor_min is None:
+            return False
+
+        try:
+            next_start_min = time_to_minutes(str(first_act.get("start_time", "")))
+        except Exception:
+            return False
+        if anchor_min >= next_start_min:
+            return False
+
+        win_open, win_close = window
+        poi_open, poi_close = self._poi_open_bounds(poi)
+        try:
+            transports_to_poi, arrival = self._get_transport(
+                self.env, city, prev_pos, poi_name, minutes_to_time(anchor_min), people)
+        except Exception:
+            return False
+        if transports_to_poi is None or arrival is None:
+            return False
+        try:
+            arrival_min = time_to_minutes(str(arrival))
+        except Exception:
+            return False
+
+        start_min = max(arrival_min, win_open, poi_open)
+        dwell = self._densify_dwell_minutes(poi, kind)
+        end_min = start_min + dwell
+        if end_min > min(win_close, poi_close):
+            return False
+
+        end_time = minutes_to_time(end_min)
+        try:
+            transports_to_next, next_arrival = self._get_transport(
+                self.env, city, poi_name, next_pos, end_time, people)
+        except Exception:
+            return False
+        if transports_to_next is None or next_arrival is None:
+            return False
+        try:
+            if time_to_minutes(str(next_arrival)) > next_start_min:
+                return False
+        except Exception:
+            return False
+
+        start_time = minutes_to_time(start_min)
+        if kind == "attraction":
+            activity = self._make_attraction_activity(poi, people, start_time, end_time, transports_to_poi)
+        else:
+            activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
+
+        before = self._activity_counts(plan)
+        old_first_transports = deepcopy(first_act.get("transports", []))
+        first_act["transports"] = transports_to_next
+        activities.insert(0, activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        del activities[0]
+        first_act["transports"] = old_first_transports
+        return False
+
+    def _insert_activity_after_last(self, plan, day_idx, poi, kind, window, city, people, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if not activities:
+            return False
+        last_act = activities[-1]
+        prev_pos = self._activity_end_position(last_act)
+        poi_name = str(poi.get("name", ""))
+        if not prev_pos or not poi_name:
+            return False
+        if last_act.get("type") in ("airplane", "train"):
+            return False
+
+        # Preserve final intercity departure on the last day.
+        itinerary = plan.get("itinerary", []) or []
+        if day_idx == len(itinerary) - 1:
+            return False
+
+        try:
+            start_anchor_min = time_to_minutes(str(last_act.get("end_time", "")))
+        except Exception:
+            return False
+
+        win_open, win_close = window
+        poi_open, poi_close = self._poi_open_bounds(poi)
+        try:
+            transports_to_poi, arrival = self._get_transport(
+                self.env, city, prev_pos, poi_name, minutes_to_time(start_anchor_min), people)
+        except Exception:
+            return False
+        if transports_to_poi is None or arrival is None:
+            return False
+        try:
+            arrival_min = time_to_minutes(str(arrival))
+        except Exception:
+            return False
+
+        start_min = max(arrival_min, win_open, poi_open)
+        dwell = self._densify_dwell_minutes(poi, kind)
+        end_min = start_min + dwell
+        if end_min > min(win_close, poi_close):
+            return False
+
+        start_time = minutes_to_time(start_min)
+        end_time = minutes_to_time(end_min)
+        if kind == "attraction":
+            activity = self._make_attraction_activity(poi, people, start_time, end_time, transports_to_poi)
+        else:
+            activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
+
+        before = self._activity_counts(plan)
+        activities.append(activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        activities.pop()
+        return False
+
     def _insert_activity(self, plan, day_idx, prev_idx, poi, kind, window, city, people, check):
         activities = plan["itinerary"][day_idx].get("activities", [])
         if prev_idx < 0 or prev_idx + 1 >= len(activities):
@@ -718,7 +921,7 @@ class TPCAgent(BaseAgent):
         itinerary = dense.get("itinerary", []) or []
         for day_idx, day in enumerate(itinerary):
             activities = day.get("activities", []) or []
-            if len(activities) < 2:
+            if not activities:
                 continue
             meal_types = {a.get("type") for a in activities if a.get("type") in ("breakfast", "lunch", "dinner")}
 
@@ -735,6 +938,11 @@ class TPCAgent(BaseAgent):
                     r_name = self._norm_text(restaurant.get("name", ""))
                     if not r_name or r_name in used_restaurants:
                         continue
+                    if self._insert_activity_before_first(dense, day_idx, restaurant, meal_type, window, city, people, check):
+                        used_restaurants.add(r_name)
+                        meal_types.add(meal_type)
+                        inserted = True
+                        break
                     for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
                         if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
                             used_restaurants.add(r_name)
@@ -742,6 +950,11 @@ class TPCAgent(BaseAgent):
                             inserted = True
                             break
                     if inserted:
+                        break
+                    if self._insert_activity_after_last(dense, day_idx, restaurant, meal_type, window, city, people, check):
+                        used_restaurants.add(r_name)
+                        meal_types.add(meal_type)
+                        inserted = True
                         break
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:

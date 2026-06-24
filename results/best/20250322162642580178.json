@@ -22,7 +22,7 @@
           "type": "attraction",
           "position": "Maple Bridge Scenic Area",
           "start_time": "13:36",
-          "end_time": "15:06",
+          "end_time": "14:36",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -41,6 +41,50 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Suzhou Museum",
+          "start_time": "14:44",
+          "end_time": "15:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Maple Bridge Scenic Area",
+              "end": "Suzhou Museum",
+              "mode": "taxi",
+              "start_time": "14:36",
+              "end_time": "14:44",
+              "distance": 5.97,
+              "price": 25.61,
+              "cost": 25.61,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shantang Street",
+          "start_time": "15:47",
+          "end_time": "16:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Suzhou Museum",
+              "end": "Shantang Street",
+              "mode": "taxi",
+              "start_time": "15:44",
+              "end_time": "15:47",
+              "distance": 2.44,
+              "price": 13.26,
+              "cost": 13.26,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shangri-La Hotel Suzhou · Shang Palace",
           "start_time": "17:00",
@@ -50,38 +94,38 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Maple Bridge Scenic Area",
+              "start": "Shantang Street",
               "end": "Shangri-La Hotel Suzhou · Shang Palace",
               "mode": "taxi",
-              "start_time": "15:06",
-              "end_time": "15:10",
-              "distance": 2.92,
-              "price": 14.94,
-              "cost": 14.94,
+              "start_time": "16:47",
+              "end_time": "16:55",
+              "distance": 5.91,
+              "price": 25.37,
+              "cost": 25.37,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Jinke Grand Hotel",
-          "start_time": "18:24",
+          "position": "Suzhou International Conference Hotel",
+          "start_time": "18:26",
           "end_time": "24:00",
-          "price": 526.0,
-          "cost": 526.0,
+          "price": 699.0,
+          "cost": 699.0,
           "rooms": 1,
-          "room_type": 2,
+          "room_type": 1,
           "tickets": 1,
           "transports": [
             {
               "start": "Shangri-La Hotel Suzhou · Shang Palace",
-              "end": "Jinke Grand Hotel",
+              "end": "Suzhou International Conference Hotel",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:24",
-              "distance": 16.17,
-              "price": 67.46,
-              "cost": 67.46,
+              "end_time": "18:26",
+              "distance": 17.96,
+              "price": 75.5,
+              "cost": 75.5,
               "cars": 1
             }
           ]
@@ -93,7 +137,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Jinke Grand Hotel",
+          "position": "Suzhou International Conference Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -103,22 +147,66 @@
         },
         {
           "type": "attraction",
-          "position": "Shantang Street",
-          "start_time": "08:46",
-          "end_time": "10:16",
+          "position": "Pingjiang Road Historic District",
+          "start_time": "08:48",
+          "end_time": "09:48",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Jinke Grand Hotel",
-              "end": "Shantang Street",
+              "start": "Suzhou International Conference Hotel",
+              "end": "Pingjiang Road Historic District",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:46",
-              "distance": 11.09,
-              "price": 44.59,
-              "cost": 44.59,
+              "end_time": "08:48",
+              "distance": 12.59,
+              "price": 51.37,
+              "cost": 51.37,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Golden Rooster Lake",
+          "start_time": "09:57",
+          "end_time": "10:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Pingjiang Road Historic District",
+              "end": "Golden Rooster Lake",
+              "mode": "taxi",
+              "start_time": "09:48",
+              "end_time": "09:57",
+              "distance": 6.35,
+              "price": 26.91,
+              "cost": 26.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Water Tour",
+          "start_time": "11:10",
+          "end_time": "12:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Golden Rooster Lake",
+              "end": "Suzhou Water Tour",
+              "mode": "taxi",
+              "start_time": "10:57",
+              "end_time": "11:10",
+              "distance": 8.84,
+              "price": 35.63,
+              "cost": 35.63,
               "cars": 1
             }
           ]
@@ -126,22 +214,64 @@
         {
           "type": "lunch",
           "position": "Left Courtyard Right Garden Fresh Beef Hot Pot (Suzhou Dayue Spring Breeze Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "12:27",
+          "end_time": "13:27",
           "price": 127.0,
           "cost": 127.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shantang Street",
+              "start": "Suzhou Water Tour",
               "end": "Left Courtyard Right Garden Fresh Beef Hot Pot (Suzhou Dayue Spring Breeze Store)",
               "mode": "taxi",
-              "start_time": "10:16",
-              "end_time": "10:28",
-              "distance": 8.62,
-              "price": 34.85,
-              "cost": 34.85,
+              "start_time": "12:10",
+              "end_time": "12:27",
+              "distance": 11.52,
+              "price": 46.55,
+              "cost": 46.55,
               "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing-Hangzhou Grand Canal",
+          "start_time": "13:50",
+          "end_time": "15:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Left Courtyard Right Garden Fresh Beef Hot Pot (Suzhou Dayue Spring Breeze Store)",
+              "end": "Longdaobang-Metro Station",
+              "mode": "walk",
+              "start_time": "13:27",
+              "end_time": "13:30",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longdaobang-Metro Station",
+              "end": "Baofeng-Metro Station",
+              "mode": "metro",
+              "start_time": "13:30",
+              "end_time": "13:45",
+              "distance": 7.8,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Baofeng-Metro Station",
+              "end": "Beijing-Hangzhou Grand Canal",
+              "mode": "walk",
+              "start_time": "13:45",
+              "end_time": "13:50",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -156,15 +286,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Left Courtyard Right Garden Fresh Beef Hot Pot (Suzhou Dayue Spring Breeze Store)",
+              "start": "Beijing-Hangzhou Grand Canal",
+              "end": "Baofeng-Metro Station",
+              "mode": "walk",
+              "start_time": "15:20",
+              "end_time": "15:25",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baofeng-Metro Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:25",
+              "end_time": "15:49",
+              "distance": 12.14,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
               "end": "Suzhou North Station",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:06",
-              "distance": 4.21,
-              "price": 19.43,
-              "cost": 19.43,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:49",
+              "end_time": "15:50",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G24"
@@ -172,6 +322,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.028081178665161133,
-  "_eval_score": 93.75
+  "elapsed_time(sec)": 30.321616888046265,
+  "_eval_score": 96.83170995670996
 }

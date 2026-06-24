@@ -7,142 +7,148 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:20",
-          "end_time": "18:57",
-          "start": "Hangzhou East Railway Station",
-          "end": "Guangzhou East Station",
-          "price": 628.88,
-          "cost": 628.88,
+          "type": "airplane",
+          "start_time": "08:49",
+          "end_time": "10:07",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 527.69,
+          "cost": 527.69,
           "tickets": 1,
           "transports": [],
-          "TrainID": "D3123"
+          "FlightID": "FL511"
+        },
+        {
+          "type": "lunch",
+          "position": "Guangzhou Yuehai Sheraton Hotel · Cai Yue Xuan Chinese Restaurant (Tianhe City Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 201.0,
+          "cost": 201.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guangzhou Baiyun International Airport",
+              "end": "Guangzhou Yuehai Sheraton Hotel · Cai Yue Xuan Chinese Restaurant (Tianhe City Branch)",
+              "mode": "taxi",
+              "start_time": "10:07",
+              "end_time": "10:49",
+              "distance": 28.18,
+              "price": 121.52,
+              "cost": 121.52,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "Shamian Island",
-          "start_time": "19:28",
-          "end_time": "20:58",
+          "position": "Chen Clan Ancestral Hall",
+          "start_time": "12:10",
+          "end_time": "13:40",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Guangzhou East Station",
-              "end": "Yantang-Metro Station",
-              "mode": "walk",
-              "start_time": "18:57",
-              "end_time": "19:04",
-              "distance": 0.66,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Guangzhou Yuehai Sheraton Hotel · Cai Yue Xuan Chinese Restaurant (Tianhe City Branch)",
+              "end": "Chen Clan Ancestral Hall",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:10",
+              "distance": 7.19,
+              "price": 29.86,
+              "cost": 29.86,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shamian Island",
+          "start_time": "13:43",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Yantang-Metro Station",
-              "end": "Cultural Park-Metro Station",
-              "mode": "metro",
-              "start_time": "19:04",
-              "end_time": "19:23",
-              "distance": 9.78,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Cultural Park-Metro Station",
+              "start": "Chen Clan Ancestral Hall",
               "end": "Shamian Island",
-              "mode": "walk",
-              "start_time": "19:23",
-              "end_time": "19:28",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:40",
+              "end_time": "13:43",
+              "distance": 2.21,
+              "price": 12.45,
+              "cost": 12.45,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Guangdong Museum",
-          "start_time": "21:22",
-          "end_time": "22:52",
+          "start_time": "15:25",
+          "end_time": "16:55",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Shamian Island",
-              "end": "Cultural Park-Metro Station",
-              "mode": "walk",
-              "start_time": "20:58",
-              "end_time": "21:03",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Cultural Park-Metro Station",
-              "end": "Liede-Metro Station",
-              "mode": "metro",
-              "start_time": "21:03",
-              "end_time": "21:20",
-              "distance": 8.58,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Liede-Metro Station",
               "end": "Guangdong Museum",
-              "mode": "walk",
-              "start_time": "21:20",
-              "end_time": "21:22",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:13",
+              "end_time": "15:25",
+              "distance": 8.43,
+              "price": 34.2,
+              "cost": 34.2,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Guangzhou Rosewood Hotel · Guang Yu Xuan",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 430.0,
+          "cost": 430.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guangdong Museum",
+              "end": "Guangzhou Rosewood Hotel · Guang Yu Xuan",
+              "mode": "taxi",
+              "start_time": "16:55",
+              "end_time": "16:56",
+              "distance": 0.74,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Yuwa Hotel(Guangzhou East Railway Station)",
-          "start_time": "23:12",
+          "position": "Ausotel Smart Guangzhou Baiyun International Airport Terminal 2",
+          "start_time": "18:41",
           "end_time": "24:00",
-          "price": 537.0,
-          "cost": 537.0,
+          "price": 319.0,
+          "cost": 319.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "Guangdong Museum",
-              "end": "Liede-Metro Station",
-              "mode": "walk",
-              "start_time": "22:52",
-              "end_time": "22:54",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liede-Metro Station",
-              "end": "Guangzhou East Station-Metro Station",
-              "mode": "metro",
-              "start_time": "22:54",
-              "end_time": "23:01",
-              "distance": 3.67,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Guangzhou East Station-Metro Station",
-              "end": "Yuwa Hotel(Guangzhou East Railway Station)",
-              "mode": "walk",
-              "start_time": "23:01",
-              "end_time": "23:12",
-              "distance": 0.94,
-              "price": 0,
-              "cost": 0
+              "start": "Guangzhou Rosewood Hotel · Guang Yu Xuan",
+              "end": "Ausotel Smart Guangzhou Baiyun International Airport Terminal 2",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:41",
+              "distance": 27.79,
+              "price": 119.76,
+              "cost": 119.76,
+              "cars": 1
             }
           ]
         }
@@ -153,7 +159,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Yuwa Hotel(Guangzhou East Railway Station)",
+          "position": "Ausotel Smart Guangzhou Baiyun International Airport Terminal 2",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -164,134 +170,74 @@
         {
           "type": "attraction",
           "position": "Guangzhou Zoo",
-          "start_time": "08:50",
-          "end_time": "10:20",
+          "start_time": "09:06",
+          "end_time": "10:36",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Yuwa Hotel(Guangzhou East Railway Station)",
-              "end": "Guangzhou East Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:41",
-              "distance": 0.94,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Guangzhou East Station-Metro Station",
-              "end": "Shaheding-Metro Station",
-              "mode": "metro",
-              "start_time": "08:41",
-              "end_time": "08:44",
-              "distance": 1.88,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Shaheding-Metro Station",
+              "start": "Ausotel Smart Guangzhou Baiyun International Airport Terminal 2",
               "end": "Guangzhou Zoo",
-              "mode": "walk",
-              "start_time": "08:44",
-              "end_time": "08:50",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:06",
+              "distance": 24.51,
+              "price": 104.98,
+              "cost": 104.98,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Museum of the Nanyue King (Tomb Exhibition Area)",
-          "start_time": "10:44",
-          "end_time": "12:14",
+          "start_time": "10:42",
+          "end_time": "12:12",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Guangzhou Zoo",
-              "end": "Shaheding-Metro Station",
-              "mode": "walk",
-              "start_time": "10:20",
-              "end_time": "10:26",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shaheding-Metro Station",
-              "end": "Yuexiu Park-Metro Station",
-              "mode": "metro",
-              "start_time": "10:26",
-              "end_time": "10:35",
-              "distance": 4.74,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Yuexiu Park-Metro Station",
               "end": "Museum of the Nanyue King (Tomb Exhibition Area)",
-              "mode": "walk",
-              "start_time": "10:35",
-              "end_time": "10:44",
-              "distance": 0.76,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:36",
+              "end_time": "10:42",
+              "distance": 4.55,
+              "price": 20.62,
+              "cost": 20.62,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Great Buddha Ancient Temple",
-          "start_time": "12:30",
-          "end_time": "14:00",
+          "start_time": "12:14",
+          "end_time": "13:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Museum of the Nanyue King (Tomb Exhibition Area)",
-              "end": "Yuexiu Park-Metro Station",
-              "mode": "walk",
-              "start_time": "12:14",
-              "end_time": "12:23",
-              "distance": 0.76,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuexiu Park-Metro Station",
-              "end": "Peasant Movement Institute-Metro Station",
-              "mode": "metro",
-              "start_time": "12:23",
-              "end_time": "12:27",
-              "distance": 2.08,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Peasant Movement Institute-Metro Station",
               "end": "Great Buddha Ancient Temple",
-              "mode": "walk",
-              "start_time": "12:27",
-              "end_time": "12:30",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:12",
+              "end_time": "12:14",
+              "distance": 1.82,
+              "price": 11.06,
+              "cost": 11.06,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Beijing Road Pedestrian Street",
-          "start_time": "14:01",
-          "end_time": "15:31",
+          "start_time": "13:45",
+          "end_time": "15:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -300,8 +246,8 @@
               "start": "Great Buddha Ancient Temple",
               "end": "Beijing Road Pedestrian Street",
               "mode": "walk",
-              "start_time": "14:00",
-              "end_time": "14:01",
+              "start_time": "13:44",
+              "end_time": "13:45",
               "distance": 0.14235225747462002,
               "price": 0,
               "cost": 0
@@ -309,94 +255,52 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Danggong Dessert Shop (Lujiang Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 11.0,
-          "cost": 11.0,
+          "type": "airplane",
+          "start_time": "18:35",
+          "end_time": "19:53",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 515.86,
+          "cost": 515.86,
           "tickets": 1,
           "transports": [
             {
               "start": "Beijing Road Pedestrian Street",
               "end": "Peasant Movement Institute-Metro Station",
               "mode": "walk",
-              "start_time": "15:31",
-              "end_time": "15:32",
+              "start_time": "15:15",
+              "end_time": "15:16",
               "distance": 0.15,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Peasant Movement Institute-Metro Station",
-              "end": "Lujiang-Metro Station",
+              "end": "Airport South (Terminal 1)-Metro Station",
               "mode": "metro",
-              "start_time": "15:32",
-              "end_time": "15:41",
-              "distance": 4.81,
-              "price": 3,
-              "cost": 3,
+              "start_time": "15:16",
+              "end_time": "16:13",
+              "distance": 28.93,
+              "price": 7,
+              "cost": 7,
               "tickets": 1
             },
             {
-              "start": "Lujiang-Metro Station",
-              "end": "Danggong Dessert Shop (Lujiang Branch)",
+              "start": "Airport South (Terminal 1)-Metro Station",
+              "end": "Guangzhou Baiyun International Airport",
               "mode": "walk",
-              "start_time": "15:41",
-              "end_time": "15:43",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "train",
-          "start_time": "19:20",
-          "end_time": "05:54",
-          "start": "Guangzhou South Railway Station",
-          "end": "Hangzhou East Railway Station",
-          "price": 628.88,
-          "cost": 628.88,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Danggong Dessert Shop (Lujiang Branch)",
-              "end": "Lujiang-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiang-Metro Station",
-              "end": "Guangzhou South Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:26",
-              "distance": 12.44,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Guangzhou South Railway Station-Metro Station",
-              "end": "Guangzhou South Railway Station",
-              "mode": "walk",
-              "start_time": "18:26",
-              "end_time": "18:28",
-              "distance": 0.19,
+              "start_time": "16:13",
+              "end_time": "16:13",
+              "distance": 0.05,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "D933"
+          "FlightID": "FL295"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 8.515835285186768,
-  "_eval_score": 95.19973544973544
+  "elapsed_time(sec)": 183.71205234527588,
+  "_eval_score": 96.6715367965368
 }

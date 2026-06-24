@@ -25,13 +25,13 @@ behavior.
 
 **Important commands:**
 
-Latest verified score snapshot (`results/best`, 2026-06-19):
+Latest verified score snapshot (`results/best`, 2026-06-22):
 
-- Overall: 94.5397 (official: 94.5397)
-- FPR: 97.1000
-- C-LPR: 98.9070
+- Overall: 95.4340 (official: 95.4340)
+- FPR: 98.9000
+- C-LPR: 99.5796
 - MicEPR/MacEPR: 100.0000 / 100.0000
-- DAV/ATT/DDR: 67.5472 / 82.4077 / 69.5045
+- DAV/ATT/DDR: 67.5720 / 82.4808 / 69.5298
 
 `TPCAgent` runs a per-query oracle-guided search. Drive it with the resumable scripts in
 `scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
@@ -41,8 +41,50 @@ Heavy resumable search over the still-unsolved queries (stops when a round adds 
 `--workers` defaults to all cores and runs that many `run_tpc.py` processes over disjoint
 query shards:
 ```
-python scripts/iterate.py --rounds 10 --restarts 800 --budget 240 --workers 8
+python scripts/iterate_unsolved.py --rounds 10 --restarts 800 --budget 240 --workers 8
 ```
+
+Execution profiles (recommended):
+
+- Short local run (~10 min, M1 MacBook):
+```
+make short-local
+```
+
+- Long local overnight (~7 h, M1 MacBook):
+```
+make overnight-local
+```
+
+- Local preference-only optimization on already-valid plans:
+```
+make preference-local
+```
+
+- Quick local preference pass (single round):
+```
+make preference-quick
+```
+
+- Long overnight HPC run via SLURM:
+```
+make hpc-tail-submit
+```
+See `slurm/README_tail_hpc.md` for resource/profile overrides.
+
+- Two-phase HPC workflow (recommended for preference pushing):
+```
+# Phase A: solve unresolved hard-constraint tail
+make hpc-unsolved
+
+# Phase B: improve preference on already-solved plans (constraint-safe densify)
+make hpc-preference
+
+# Same Phase B submitted as one SLURM controller job
+make hpc-preference-submit
+```
+The two-phase split avoids spending all rounds on the same hard-unsolved IDs and
+lets preference optimization focus on accepted plans.
 
 Light pass + constraint-safe packing across all 1000 (lifts DAV/DDR; the monotonic merge keeps
 the heavy gains):
@@ -51,8 +93,47 @@ python scripts/solve.py --split tpc_phase1 --restarts 40 --budget 30 --workers 8
 python scripts/merge.py --split tpc_phase1
 ```
 
-Or run the whole recommended pipeline (search -> pack -> score -> zip) at full parallelism with
-one command (see the `Makefile` for tunable variables):
+Tail-prioritized rerun queue (score gap + hard-logic failure signature), then solve/merge only
+the highest-leverage IDs:
+```
+python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 150 --min-score 99
+python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
+python scripts/merge.py --split tpc_phase1_tail_focus
+```
+`scripts/rank_tail.py` writes:
+- ranking report: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
+- focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
+
+`scripts/rank_tail.py` now supports explicit modes:
+- `--mode tail`: mixed low-score tail (legacy behavior)
+- `--mode unsolved`: prioritize unresolved hard-constraint failures
+- `--mode preference`: prioritize already-accepted plans with the most preference headroom
+
+`scripts/iterate_tail.py` can now run either solver search or preference densification per round:
+- `--runner solve`: call `scripts/solve.py` on the focused split
+- `--runner densify`: call `scripts/densify.py` on the focused split
+
+Recommended tail-optimization loop (repeat until progress flattens):
+```
+# 1) Refresh the lowest-score queue from current results/best
+python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 120 --min-score 99
+
+# 2) Run heavier search only on this focused split
+python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
+
+# 3) Monotonic merge and score
+python scripts/merge.py --split tpc_phase1_tail_focus
+python scripts/score.py
+```
+
+How to read the ranking report (`cache/tail_rankings/...csv`):
+- `score`: current per-query `_eval_score` from `results/best/<uid>.json`.
+- `priority`: ranking objective used to build the focused split (higher means more leverage).
+- `failed_clauses`: number of failed `hard_logic_py` clauses under current plan.
+- `top_signature` / `top_failed_funcs`: dominant failure pattern for targeted repairs.
+
+Or run the default preference pipeline (preference optimize -> score -> zip) with one command
+(see the `Makefile` for tunable variables):
 ```
 make
 ```
@@ -82,6 +163,8 @@ Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`
 `TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
 checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
 `scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
+`scripts/rank_tail.py` (read-only) ranks low-score queries by score gap + hard-logic failure
+signature and writes a focused split for targeted reruns.
 `scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
 against budget/time constraints) to show where more attractions can be packed safely.
 `eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the current

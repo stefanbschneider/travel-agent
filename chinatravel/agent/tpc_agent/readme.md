@@ -22,12 +22,12 @@ If that single pass missed a constraint, the query was lost — there was no rec
 
 `_solve(query)` keeps the best plan by `(passed_checks, proxy_preference, -total_cost)` and runs the following tiers per query:
 
-1. **Base build** — build once from the parsed constraints. If it already passes, stop.
+1. **Base build** — build once from the parsed constraints to seed the search with a strong baseline candidate.
 2. **Guided repair** (`_repair_params`) — a small set of deterministic parameter priors chosen from *which* constraints are present (e.g. an inner-transport budget triggers trying forced walk/metro; hotel constraints trigger trying several acceptable hotels rather than only the first; timing/window/dwell constraints trigger trying attraction-ordering offsets). Cheap and targeted, tried before any randomness so single-signal queries converge in a couple of builds.
 3. **Random multi-start** (`_random_params`) — up to `TPC_MAX_RESTARTS` randomized rebuilds, per-query seeded for reproducibility, bounded by `TPC_SOLVE_BUDGET_SEC`.
 4. **CP-SAT rescue** (`cp_solver.solve_with_cp_sat`) — optional OR-Tools tier for leftovers where the greedy family struggles.
 
-The search early-exits on the first fully accepted plan.
+The search keeps exploring within budget and returns the strongest accepted plan found.
 
 ### Scorer in the loop (`_make_checker`)
 
@@ -61,7 +61,38 @@ All knobs are environment variables read at construction; defaults reproduce the
 | `TPC_SOLVE_BUDGET_SEC` | `120` | Wall-clock budget per query; the search self-limits to this. |
 | `TPC_SEED_SALT` | `0` | Salt mixed into the per-query RNG seed so distinct search rounds explore different parameters. |
 | `TPC_USE_CP_SOLVER` | `1` | Enable CP-SAT rescue tier (`0` disables it). |
+| `TPC_CP_AFTER_PASS` | `1` | Keep running CP-SAT even when the greedy base plan already passes acceptance (`0` keeps the old skip-CP-after-pass behavior). |
+| `TPC_CP_FOUR_SLOT_SHARE` | `0.75` | Fraction of per-query CP time reserved for dense 4-attractions/day template attempts before fallback templates are tried. |
+| `TPC_CP_FOUR_SLOT_ROUNDS` | `2` | Number of rounds over visit-duration candidates spent on the 4-attractions/day template before trying 3/2 templates. |
 | `TPC_CP_TIME_LIMIT_SEC` | auto | Per-query CP-SAT time cap (bounded by remaining solve budget). |
+
+## Tail-focused optimization workflow (`scripts/rank_tail.py`)
+
+When aggregate hard metrics are already high, the best leaderboard gains usually come from
+improving the low-score tail rather than re-running all 1000 queries uniformly.
+
+`scripts/rank_tail.py` builds a focused split from current `results/best` by combining:
+
+- per-query `_eval_score` gap from 100,
+- hard-logic failure density (`failed_clauses`),
+- weighted failure signature severity (DSL functions seen in failed clauses).
+
+Example:
+
+```bash
+python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 120 --min-score 99
+python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
+python scripts/merge.py --split tpc_phase1_tail_focus
+python scripts/score.py
+```
+
+Artifacts:
+
+- ranking report CSV: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
+- focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
+
+This loop is monotonic-safe: `scripts/merge.py` only updates `results/best/<uid>.json` when
+the per-query weighted score increases.
 
 ## Results (tpc_phase1, 1000 queries)
 
@@ -103,3 +134,4 @@ The headline numbers use the **oracle** path (`TPC_USE_ORACLE=1`), where the que
 - `chinatravel/agent/tpc_agent/cp_solver.py` — CP-SAT solver tier and reconstruction.
 - `chinatravel/agent/tpc_agent/parsed_verifier.py` — no-oracle constraint verifier.
 - Workflow scripts: `scripts/solve.py`, `scripts/iterate.py`, `scripts/merge.py`, `scripts/score.py`.
+- Tail-priority script: `scripts/rank_tail.py`.

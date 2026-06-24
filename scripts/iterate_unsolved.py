@@ -14,7 +14,9 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UNSOLVED = "tpc_phase1_constraints_unsolved"
 SOLVED_DIR = os.path.join(ROOT, "results", "constraints_solved")
-UNSOLVABLE_FILE = os.path.join(ROOT, "chinatravel", "evaluation", "default_splits", "tpc_phase1_constraints_unsolvable.txt")
+SPLITS_DIR = os.path.join(ROOT, "chinatravel", "evaluation", "default_splits")
+UNSOLVED_FILE = os.path.join(SPLITS_DIR, UNSOLVED + ".txt")
+UNSOLVABLE_FILE = os.path.join(SPLITS_DIR, "tpc_phase1_constraints_unsolvable.txt")
 
 
 def _denylist():
