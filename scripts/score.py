@@ -5,6 +5,7 @@ Runs eval_tpc.py with live terminal output so progress indicators (for example t
 remain visible. Metrics are parsed from the newly appended tail of
 your_tpc_scores.json (append-only file).
 """
+import argparse
 import ast
 import os
 import re
@@ -74,7 +75,10 @@ def _read_new_scores(start_offset: int):
 
 
 def main():
-    cmd = [sys.executable, "eval_tpc.py", "--splits", "tpc_phase1", "--method", "best", "--lang", "en"]
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--split", default="tpc_phase1", help="split to score results/best on")
+    args = ap.parse_args()
+    cmd = [sys.executable, "eval_tpc.py", "--splits", args.split, "--method", "best", "--lang", "en"]
     start_offset = os.path.getsize(SCORES_FILE) if os.path.exists(SCORES_FILE) else 0
 
     print("score: running eval_tpc.py (live output follows)")
@@ -99,7 +103,7 @@ def main():
         print("score: could not parse metrics from your_tpc_scores.json", file=sys.stderr)
         return 1
 
-    print("=== results/best on tpc_phase1 ===")
+    print("=== results/best on {} ===".format(args.split))
     for label, key in ORDER:
         if key in scores:
             print("{}: {:.4f}".format(label, float(scores[key])))

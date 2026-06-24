@@ -4,8 +4,8 @@
 Per round:
 1) Rank the current low-score tail and emit a focused split.
 2) Solve that focused split with deterministic seed salt.
-3) Monotonically merge into results/best.
-4) Score and record a round summary.
+3) Monotonically merge into results/best and record focus-subset metrics.
+4) Score the full base split once after the loop.
 
 All artifacts are written under a run directory so overnight cluster runs are
 reproducible and auditable.
@@ -305,7 +305,6 @@ def main() -> int:
         rank_log = os.path.join(logs_dir, "{}_rank.log".format(round_name))
         solve_log = os.path.join(logs_dir, "{}_solve.log".format(round_name))
         merge_log = os.path.join(logs_dir, "{}_merge.log".format(round_name))
-        score_log = os.path.join(logs_dir, "{}_score.log".format(round_name))
 
         rank_cmd = [
             sys.executable,
@@ -371,15 +370,6 @@ def main() -> int:
             print("[tail-iterate] {} merge failed rc={}".format(round_name, rc), file=sys.stderr)
             return rc
 
-        score_cmd = [
-            sys.executable,
-            os.path.join("scripts", "score.py"),
-        ]
-        print("[tail-iterate] {} score...".format(round_name))
-        rc = _run(score_cmd, log_path=score_log)
-        if rc != 0:
-            print("[tail-iterate] {} score failed rc={}".format(round_name, rc), file=sys.stderr)
-            return rc
 
         metrics = _read_metrics(os.path.join(ROOT, "your_tpc_scores.json")) or {}
 
@@ -403,12 +393,12 @@ def main() -> int:
             "rank_mode": args.rank_mode,
             "runner": args.runner,
             "best_updates": best_updates,
+            "metrics_source": "merge_focus",
             "metrics": metrics,
             "logs": {
                 "rank": os.path.relpath(rank_log, ROOT),
                 "solve": os.path.relpath(solve_log, ROOT),
                 "merge": os.path.relpath(merge_log, ROOT),
-                "score": os.path.relpath(score_log, ROOT),
             },
         }
         round_summaries.append(summary)
@@ -433,9 +423,31 @@ def main() -> int:
             print("[tail-iterate] stopping after {} no-improve round(s)".format(no_improve_streak))
             break
 
+    final_metrics = None
+    final_score_log = os.path.join(logs_dir, "final_score.log")
+    if round_summaries:
+        print("[tail-iterate] final full-set score on {}...".format(args.split))
+        final_score_cmd = [
+            sys.executable,
+            os.path.join("scripts", "score.py"),
+            "--split", args.split,
+        ]
+        rc = _run(
+            final_score_cmd,
+            log_path=final_score_log,
+            heartbeat_sec=args.heartbeat_sec,
+            heartbeat_label="final score",
+        )
+        if rc == 0:
+            final_metrics = _read_metrics(os.path.join(ROOT, "your_tpc_scores.json"))
+        else:
+            print("[tail-iterate] final score failed rc={}".format(rc), file=sys.stderr)
+
     out = {
         "run_id": run_id,
         "finished_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "final_score_split": args.split,
+        "final_metrics": final_metrics,
         "rounds": round_summaries,
     }
     with open(os.path.join(run_dir, "summary.json"), "w", encoding="utf-8") as f:

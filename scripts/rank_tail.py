@@ -59,6 +59,51 @@ def _safe_float(value, default=0.0):
         return float(default)
 
 
+def _plan_fingerprint(path):
+    try:
+        st = os.stat(path)
+    except OSError:
+        return None
+    return [st.st_mtime_ns, st.st_size]
+
+
+def _rank_cache_path(split, method, min_score):
+    out_dir = os.path.join(ROOT, "cache", "tail_rankings")
+    os.makedirs(out_dir, exist_ok=True)
+    return os.path.join(out_dir, "{}_{}_ms{:g}_rank_cache.json".format(split, method, float(min_score)))
+
+
+def _load_rank_cache(path, split, method, min_score):
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    if (
+        not isinstance(data, dict)
+        or data.get("version") != 1
+        or data.get("split") != split
+        or data.get("method") != method
+        or float(data.get("min_score", -1)) != float(min_score)
+    ):
+        return {}
+    entries = data.get("entries")
+    return entries if isinstance(entries, dict) else {}
+
+
+def _save_rank_cache(path, split, method, min_score, entries):
+    payload = {
+        "version": 1,
+        "split": split,
+        "method": method,
+        "min_score": float(min_score),
+        "entries": entries,
+    }
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False)
+    os.replace(tmp, path)
+
 def _extract_funcs_from_clause(clause, funcs):
     return sorted({fn for fn in funcs if re.search(r"\b" + re.escape(fn) + r"\b", clause)})
 
@@ -150,60 +195,93 @@ def main():
     args = ap.parse_args()
 
     split_ids = _read_split_ids(args.split)
-    query_args = argparse.Namespace(splits=args.split, lang=args.lang, oracle_translation=True)
-    query_index, query_data = load_query(query_args)
-    query_set = set(query_index)
+    cache_path = _rank_cache_path(args.split, args.method, args.min_score)
+    cache = _load_rank_cache(cache_path, args.split, args.method, args.min_score)
 
-    missing_from_data = [uid for uid in split_ids if uid not in query_set]
-    if missing_from_data:
-        print("warning: {} IDs from split not present in loaded data".format(len(missing_from_data)), file=sys.stderr)
+    method_dir = os.path.join(ROOT, "results", args.method)
+    plan_paths = {uid: os.path.join(method_dir, uid + ".json") for uid in split_ids}
+    fps = {uid: _plan_fingerprint(plan_paths[uid]) for uid in split_ids}
+    recompute = [
+        uid for uid in split_ids
+        if uid not in cache or cache[uid].get("fp") != fps[uid]
+    ]
+
+    # Query data is only needed to (re)evaluate changed/new plans.
+    query_data = {}
+    if recompute:
+        query_args = argparse.Namespace(splits=args.split, lang=args.lang, oracle_translation=True)
+        query_index, query_data = load_query(query_args)
+        query_set = set(query_index)
+        missing_from_data = [uid for uid in recompute if uid not in query_set]
+        if missing_from_data:
+            print("warning: {} IDs to recompute not present in loaded data".format(len(missing_from_data)), file=sys.stderr)
 
     funcs = sorted(func_dict.keys(), key=len, reverse=True)
-    method_dir = os.path.join(ROOT, "results", args.method)
-    rows = []
 
+    new_cache = {}
+    n_hit = 0
+    n_recomputed = 0
     for uid in split_ids:
+        fp = fps[uid]
+        ent = cache.get(uid)
+        if ent is not None and ent.get("fp") == fp:
+            new_cache[uid] = ent
+            n_hit += 1
+            continue
+        n_recomputed += 1
         query = query_data.get(uid)
         if query is None:
             continue
-
-        plan_path = os.path.join(method_dir, uid + ".json")
-        plan = _load_json(plan_path)
+        plan = _load_json(plan_paths[uid])
         if not isinstance(plan, dict):
             plan = {"itinerary": []}
-
         score = _safe_float(plan.get("_eval_score", 0.0), 0.0)
         if score > args.min_score:
+            new_cache[uid] = {"fp": fp, "score": score, "evaluated": False}
             continue
-
         hard_logic = query.get("hard_logic_py", []) or []
         try:
             checks = evaluate_constraints_py(hard_logic, plan)
         except Exception:
             checks = [False] * len(hard_logic)
-
         failed_indices = [i for i, ok in enumerate(checks) if not ok]
         failed_clauses = [hard_logic[i] for i in failed_indices if i < len(hard_logic)]
         fail_count = len(failed_clauses)
-
-        if not _include_row(args.mode, score, fail_count):
-            continue
-
         sig_counter = Counter()
         all_failed_funcs = []
         for clause in failed_clauses:
             sig = tuple(_extract_funcs_from_clause(clause, funcs))
             sig_counter[sig] += 1
             all_failed_funcs.extend(list(sig))
-
         top_sig, top_sig_count = (), 0
         if sig_counter:
             top_sig, top_sig_count = sig_counter.most_common(1)[0]
-
         top_funcs = []
         if all_failed_funcs:
             top_funcs = [name for name, _ in Counter(all_failed_funcs).most_common(3)]
+        new_cache[uid] = {
+            "fp": fp,
+            "score": score,
+            "evaluated": True,
+            "fail_count": fail_count,
+            "top_sig": list(top_sig),
+            "top_sig_count": top_sig_count,
+            "top_funcs": top_funcs,
+        }
 
+    rows = []
+    for uid in split_ids:
+        fp = fps[uid]
+        ent = new_cache.get(uid)
+        if ent is None or not ent.get("evaluated"):
+            continue
+        score = ent["score"]
+        fail_count = ent["fail_count"]
+        top_sig = tuple(ent.get("top_sig") or [])
+        top_sig_count = ent.get("top_sig_count", 0)
+        top_funcs = ent.get("top_funcs") or []
+        if not _include_row(args.mode, score, fail_count):
+            continue
         priority = _row_priority(args.mode, score, fail_count, list(top_sig))
         rows.append({
             "uid": uid,
@@ -213,10 +291,14 @@ def main():
             "top_signature": _format_signature(top_sig),
             "top_signature_count": top_sig_count,
             "top_failed_funcs": ",".join(top_funcs),
-            "plan_exists": int(os.path.exists(plan_path)),
+            "plan_exists": int(fp is not None),
             "mode": args.mode,
             "accepted_score": int(_is_accepted_score(score)),
         })
+
+    _save_rank_cache(cache_path, args.split, args.method, args.min_score, new_cache)
+    print("rank-cache: reused {} recomputed {} (cache={})".format(
+        n_hit, n_recomputed, os.path.relpath(cache_path, ROOT)))
 
     rows.sort(key=lambda r: (-r["priority"], r["score"], -r["failed_clauses"], r["uid"]))
 
