@@ -328,7 +328,7 @@ class TPCAgent(BaseAgent):
                     meals += 1
         return attrs, meals
 
-    def _eval_proxy(self, plan):
+    def _default_preference_components(self, plan):
         attrs, meals = self._activity_counts(plan)
         days = max(1, len(plan.get("itinerary", []) or []))
         dav = min(1.0, attrs / (4.0 * days))
@@ -343,7 +343,21 @@ class TPCAgent(BaseAgent):
                     transit_count += 1
         average_transit = transit_total / transit_count if transit_count > 0 else -1
         att = max(0.0, min(1.0, (-1.0 / 105.0) * average_transit + 8.0 / 7.0))
+        return dav, att, ddr
+
+    def _eval_proxy(self, plan):
+        dav, att, ddr = self._default_preference_components(plan)
         return 5.0 * dav + 5.0 * att + 5.0 * ddr
+
+    def _accepted_eval_key(self, plan):
+        """Rank fully valid plans by the default leaderboard preference components.
+
+        Once a plan passes every hard/env check, prefer the strongest DAV/ATT/DDR combination
+        instead of reusing the generic search key that still prioritizes raw passed-count.
+        """
+        dav, att, ddr = self._default_preference_components(plan)
+        attrs, meals = self._activity_counts(plan)
+        return (dav + att + ddr, dav + ddr, attrs + meals, -self._plan_total_cost(plan))
 
     def _repair_params(self, constraints):
         """Deterministic param priors derived from which constraints are present, tried before
@@ -407,20 +421,35 @@ class TPCAgent(BaseAgent):
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         init_key = (-1, float("-inf"), float("-inf"))
+        accepted_init_key = (float("-inf"), float("-inf"), float("-inf"), float("-inf"))
         best = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None}
-        best_accepted = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None}
+        best_accepted = {
+            "plan": None,
+            "key": accepted_init_key,
+            "constraints": None,
+            "check": None,
+            "params": None,
+        }
 
         def consider(plan, constraints, check, params):
             try:
                 passed, total = check(plan)
             except Exception:
                 passed, total = 0, 0
-            key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
-            if best["plan"] is None or key > best["key"]:
-                best.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
+            search_key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
+            if best["plan"] is None or search_key > best["key"]:
+                best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params)
             accepted = self._accepted(passed, total)
-            if accepted and (best_accepted["plan"] is None or key > best_accepted["key"]):
-                best_accepted.update(plan=plan, key=key, constraints=constraints, check=check, params=params)
+            if accepted:
+                accepted_key = self._accepted_eval_key(plan)
+                if best_accepted["plan"] is None or accepted_key > best_accepted["key"]:
+                    best_accepted.update(
+                        plan=plan,
+                        key=accepted_key,
+                        constraints=constraints,
+                        check=check,
+                        params=params,
+                    )
             return accepted
 
         def out_of_budget():
@@ -439,10 +468,11 @@ class TPCAgent(BaseAgent):
                 import traceback
                 traceback.print_exc()
 
+            run_cp_after_pass = os.environ.get("TPC_CP_AFTER_PASS", "1") != "0"
             run_cp = (
                 os.environ.get("TPC_USE_CP_SOLVER", "1") != "0"
                 and not out_of_budget()
-                and (os.environ.get("TPC_CP_FORCE") == "1" or not accepted_base)
+                and (os.environ.get("TPC_CP_FORCE") == "1" or run_cp_after_pass or not accepted_base)
             )
             if run_cp:
                 try:
