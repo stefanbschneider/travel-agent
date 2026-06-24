@@ -59,8 +59,42 @@ def solve_with_cp_sat(
         return None
 
     start = time.time()
-    templates = (4, 3, 2)
     visit_candidates = visit_minutes_candidates or _visit_minutes_candidates(constraints)
+    dense_share = float(os.environ.get("TPC_CP_FOUR_SLOT_SHARE", "0.75"))
+    dense_share = max(0.0, min(1.0, dense_share))
+    dense_rounds = max(1, int(os.environ.get("TPC_CP_FOUR_SLOT_ROUNDS", "2")))
+
+    dense_time_budget = max(0.5, float(time_limit_sec) * dense_share)
+    # Phase 1: spend most of the budget on the dense 4-slot/day template.
+    for round_idx in range(dense_rounds):
+        remaining = float(time_limit_sec) - (time.time() - start)
+        if remaining <= 0.2:
+            break
+        elapsed = time.time() - start
+        if elapsed >= dense_time_budget and round_idx > 0:
+            break
+        for i, visit_minutes in enumerate(visit_candidates):
+            inner_remaining = float(time_limit_sec) - (time.time() - start)
+            if inner_remaining <= 0.2:
+                break
+            slots_left = max(1, (dense_rounds - round_idx) * len(visit_candidates) - i)
+            per_attempt = min(max(1.0, remaining / slots_left), max(0.5, inner_remaining / slots_left))
+            plan = _solve_template(
+                cp_model,
+                agent,
+                query,
+                constraints,
+                check,
+                ctx,
+                4,
+                per_attempt,
+                visit_minutes,
+            )
+            if plan is not None:
+                return plan
+
+    # Phase 2: only then back off to lighter 3/2-slot templates.
+    templates = (3, 2)
     for index, attr_slots_per_day in enumerate(templates):
         remaining = float(time_limit_sec) - (time.time() - start)
         if remaining <= 0.2:

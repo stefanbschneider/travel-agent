@@ -738,6 +738,65 @@ class TPCAgent(BaseAgent):
         first_act["transports"] = old_first_transports
         return False
 
+    def _insert_activity_after_last(self, plan, day_idx, poi, kind, window, city, people, check):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if not activities:
+            return False
+        last_act = activities[-1]
+        prev_pos = self._activity_end_position(last_act)
+        poi_name = str(poi.get("name", ""))
+        if not prev_pos or not poi_name:
+            return False
+        if last_act.get("type") in ("airplane", "train"):
+            return False
+
+        # Preserve final intercity departure on the last day.
+        itinerary = plan.get("itinerary", []) or []
+        if day_idx == len(itinerary) - 1:
+            return False
+
+        try:
+            start_anchor_min = time_to_minutes(str(last_act.get("end_time", "")))
+        except Exception:
+            return False
+
+        win_open, win_close = window
+        poi_open, poi_close = self._poi_open_bounds(poi)
+        try:
+            transports_to_poi, arrival = self._get_transport(
+                self.env, city, prev_pos, poi_name, minutes_to_time(start_anchor_min), people)
+        except Exception:
+            return False
+        if transports_to_poi is None or arrival is None:
+            return False
+        try:
+            arrival_min = time_to_minutes(str(arrival))
+        except Exception:
+            return False
+
+        start_min = max(arrival_min, win_open, poi_open)
+        dwell = self._densify_dwell_minutes(poi, kind)
+        end_min = start_min + dwell
+        if end_min > min(win_close, poi_close):
+            return False
+
+        start_time = minutes_to_time(start_min)
+        end_time = minutes_to_time(end_min)
+        if kind == "attraction":
+            activity = self._make_attraction_activity(poi, people, start_time, end_time, transports_to_poi)
+        else:
+            activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
+
+        before = self._activity_counts(plan)
+        activities.append(activity)
+        try:
+            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+                return True
+        except Exception:
+            pass
+        activities.pop()
+        return False
+
     def _insert_activity(self, plan, day_idx, prev_idx, poi, kind, window, city, people, check):
         activities = plan["itinerary"][day_idx].get("activities", [])
         if prev_idx < 0 or prev_idx + 1 >= len(activities):
@@ -891,6 +950,11 @@ class TPCAgent(BaseAgent):
                             inserted = True
                             break
                     if inserted:
+                        break
+                    if self._insert_activity_after_last(dense, day_idx, restaurant, meal_type, window, city, people, check):
+                        used_restaurants.add(r_name)
+                        meal_types.add(meal_type)
+                        inserted = True
                         break
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:
