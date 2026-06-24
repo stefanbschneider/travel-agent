@@ -39,7 +39,7 @@ SHORT_LOCAL_RESTARTS ?= 120
 SHORT_LOCAL_BUDGET ?= 20
 SHORT_LOCAL_ROUNDS ?= 1
 
-OVERNIGHT_LOCAL_WORKERS ?= 8
+OVERNIGHT_LOCAL_WORKERS ?= 7
 OVERNIGHT_LOCAL_TOPK ?= 180
 OVERNIGHT_LOCAL_RESTARTS ?= 900
 OVERNIGHT_LOCAL_BUDGET ?= 180
@@ -58,7 +58,24 @@ HPC_BUDGET ?= 300
 HPC_STOP ?= 2
 HPC_RUN_ID ?= tail_hpc_$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local hpc-tail-submit merge score submission upload upload-check clean-light help
+# Two-phase HPC profiles (solve unresolved tail first, then preference on solved plans)
+HPC_UNSOLVED_WORKERS ?= $(HPC_WORKERS)
+HPC_UNSOLVED_ROUNDS ?= 8
+HPC_UNSOLVED_TOPK ?= 240
+HPC_UNSOLVED_MIN_SCORE ?= 99
+HPC_UNSOLVED_RESTARTS ?= 1200
+HPC_UNSOLVED_BUDGET ?= 300
+HPC_UNSOLVED_STOP ?= 2
+HPC_UNSOLVED_RUN_ID ?= hpc_unsolved_$(shell date +%Y%m%d_%H%M%S)
+
+HPC_PREFERENCE_WORKERS ?= $(HPC_WORKERS)
+HPC_PREFERENCE_ROUNDS ?= 10
+HPC_PREFERENCE_TOPK ?= 400
+HPC_PREFERENCE_MIN_SCORE ?= 99.5
+HPC_PREFERENCE_STOP ?= 3
+HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
+
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local hpc-tail-submit hpc-unsolved hpc-preference merge score submission upload upload-check clean-light help
 
 # Default: the full recommended workflow.
 all: heavy light score submission
@@ -180,6 +197,50 @@ hpc-tail-submit:
 		STOP_NO_IMPROVE=$(HPC_STOP) \
 		RUN_ID=$(HPC_RUN_ID)
 
+# Phase A (HPC): prioritize unresolved constraint failures with heavy solve rounds.
+hpc-unsolved:
+	TPC_USE_CP_SOLVER=$(TPC_USE_CP_SOLVER) \
+	TPC_CP_AFTER_PASS=$(TPC_CP_AFTER_PASS) \
+	TPC_CP_FOUR_SLOT_SHARE=$(TPC_CP_FOUR_SLOT_SHARE) \
+	TPC_CP_FOUR_SLOT_ROUNDS=$(TPC_CP_FOUR_SLOT_ROUNDS) \
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rank-mode unsolved \
+		--runner solve \
+		--rounds $(HPC_UNSOLVED_ROUNDS) \
+		--top-k $(HPC_UNSOLVED_TOPK) \
+		--min-score $(HPC_UNSOLVED_MIN_SCORE) \
+		--restarts $(HPC_UNSOLVED_RESTARTS) \
+		--budget $(HPC_UNSOLVED_BUDGET) \
+		--workers $(HPC_UNSOLVED_WORKERS) \
+		--stop-no-improve-rounds $(HPC_UNSOLVED_STOP) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix hpc_unsolved \
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,) \
+		--run-id $(HPC_UNSOLVED_RUN_ID)
+
+# Phase B (HPC): optimize preference on already-solved plans via densification.
+hpc-preference:
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rank-mode preference \
+		--runner densify \
+		--rounds $(HPC_PREFERENCE_ROUNDS) \
+		--top-k $(HPC_PREFERENCE_TOPK) \
+		--min-score $(HPC_PREFERENCE_MIN_SCORE) \
+		--workers $(HPC_PREFERENCE_WORKERS) \
+		--stop-no-improve-rounds $(HPC_PREFERENCE_STOP) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix hpc_preference \
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		--run-id $(HPC_PREFERENCE_RUN_ID)
+
 # Re-run the monotonic merge alone.
 merge:
 	$(PYTHON) scripts/merge.py --split $(SPLIT)
@@ -214,6 +275,8 @@ help:
 	  'make short-local    - short local profile (~10 min) using iterate_tail' \
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
 	  'make hpc-tail-submit - submit 7h tail iterate controller job to SLURM' \
+	  'make hpc-unsolved   - HPC phase A: solve unresolved tail with CP + heavy search' \
+	  'make hpc-preference - HPC phase B: improve preference on solved plans via densify' \
 	  'make merge          - monotonic merge only' \
 	  'make score          - evaluate results/best' \
 	  'make submission     - build the next submission zip (version from git tags; override with VERSION=vN)' \
@@ -272,4 +335,18 @@ help:
 	  '  HPC_BUDGET=<sec>        default: $(HPC_BUDGET)' \
 	  '  HPC_STOP=<n>            default: $(HPC_STOP)' \
 	  '  HPC_RUN_ID=<id>         default: $(HPC_RUN_ID)' \
+	  '  HPC_UNSOLVED_WORKERS=<n> default: $(HPC_UNSOLVED_WORKERS)' \
+	  '  HPC_UNSOLVED_ROUNDS=<n> default: $(HPC_UNSOLVED_ROUNDS)' \
+	  '  HPC_UNSOLVED_TOPK=<n>   default: $(HPC_UNSOLVED_TOPK)' \
+	  '  HPC_UNSOLVED_MIN_SCORE=<n> default: $(HPC_UNSOLVED_MIN_SCORE)' \
+	  '  HPC_UNSOLVED_RESTARTS=<n> default: $(HPC_UNSOLVED_RESTARTS)' \
+	  '  HPC_UNSOLVED_BUDGET=<sec> default: $(HPC_UNSOLVED_BUDGET)' \
+	  '  HPC_UNSOLVED_STOP=<n>   default: $(HPC_UNSOLVED_STOP)' \
+	  '  HPC_UNSOLVED_RUN_ID=<id> default: $(HPC_UNSOLVED_RUN_ID)' \
+	  '  HPC_PREFERENCE_WORKERS=<n> default: $(HPC_PREFERENCE_WORKERS)' \
+	  '  HPC_PREFERENCE_ROUNDS=<n> default: $(HPC_PREFERENCE_ROUNDS)' \
+	  '  HPC_PREFERENCE_TOPK=<n> default: $(HPC_PREFERENCE_TOPK)' \
+	  '  HPC_PREFERENCE_MIN_SCORE=<n> default: $(HPC_PREFERENCE_MIN_SCORE)' \
+	  '  HPC_PREFERENCE_STOP=<n> default: $(HPC_PREFERENCE_STOP)' \
+	  '  HPC_PREFERENCE_RUN_ID=<id> default: $(HPC_PREFERENCE_RUN_ID)' \
 	  '  VERSION=<vN>           default: next version after the highest v<N> git tag'

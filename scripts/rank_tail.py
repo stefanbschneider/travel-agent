@@ -99,6 +99,32 @@ def _compute_priority(score, failed_clause_count, signature_funcs):
     return score_gap + 0.8 * sig_weight + 1.5 * failed_clause_count
 
 
+def _is_accepted_score(score):
+    """Accepted per-query results occupy the 85-100 range in eval_tpc.py.
+
+    Non-accepted plans cannot reach 85 because they lose the 40-point FPR term,
+    so this threshold is a cheap proxy for "all hard/schema/commonsense checks
+    passed" without rerunning the full evaluator inside the ranker.
+    """
+    return score >= 85.0
+
+
+def _include_row(mode, score, failed_clause_count):
+    if mode == "preference":
+        return _is_accepted_score(score)
+    if mode == "unsolved":
+        return not _is_accepted_score(score) or failed_clause_count > 0
+    return True
+
+
+def _row_priority(mode, score, failed_clause_count, signature_funcs):
+    if mode == "preference":
+        # Among fully valid plans, per-query score differs only by preference,
+        # so rank directly by remaining score gap.
+        return max(0.0, 100.0 - score)
+    return _compute_priority(score, failed_clause_count, signature_funcs)
+
+
 def _format_signature(sig):
     return ",".join(sig) if sig else "no_dsl_funcs"
 
@@ -108,6 +134,12 @@ def main():
     ap.add_argument("--split", default="tpc_phase1", help="source split name")
     ap.add_argument("--method", default=DEFAULT_METHOD, help="results directory under results/")
     ap.add_argument("--lang", choices=["en", "zh"], default="en")
+    ap.add_argument(
+        "--mode",
+        choices=["tail", "unsolved", "preference"],
+        default="tail",
+        help="tail: current mixed low-score ranking; unsolved: prioritize constraint failures only; preference: prioritize already-solved low-preference queries",
+    )
     ap.add_argument("--top-k", type=int, default=150, help="top K IDs to emit to focus split")
     ap.add_argument("--min-score", type=float, default=100.0,
                     help="only consider queries with score <= min-score")
@@ -152,6 +184,10 @@ def main():
 
         failed_indices = [i for i, ok in enumerate(checks) if not ok]
         failed_clauses = [hard_logic[i] for i in failed_indices if i < len(hard_logic)]
+        fail_count = len(failed_clauses)
+
+        if not _include_row(args.mode, score, fail_count):
+            continue
 
         sig_counter = Counter()
         all_failed_funcs = []
@@ -168,8 +204,7 @@ def main():
         if all_failed_funcs:
             top_funcs = [name for name, _ in Counter(all_failed_funcs).most_common(3)]
 
-        fail_count = len(failed_clauses)
-        priority = _compute_priority(score, fail_count, list(top_sig))
+        priority = _row_priority(args.mode, score, fail_count, list(top_sig))
         rows.append({
             "uid": uid,
             "score": score,
@@ -179,6 +214,8 @@ def main():
             "top_signature_count": top_sig_count,
             "top_failed_funcs": ",".join(top_funcs),
             "plan_exists": int(os.path.exists(plan_path)),
+            "mode": args.mode,
+            "accepted_score": int(_is_accepted_score(score)),
         })
 
     rows.sort(key=lambda r: (-r["priority"], r["score"], -r["failed_clauses"], r["uid"]))
@@ -208,6 +245,8 @@ def main():
                 "top_signature_count",
                 "top_failed_funcs",
                 "plan_exists",
+                "mode",
+                "accepted_score",
             ],
         )
         writer.writeheader()
@@ -220,7 +259,7 @@ def main():
 
     print("tail-ranking report: {}".format(os.path.relpath(report_path, ROOT)))
     print("focus split: {} ({} IDs)".format(os.path.relpath(focus_split_path, ROOT), len(focus_ids)))
-    print("\nTop 20 by priority:")
+    print("\nTop 20 by priority (mode={}):".format(args.mode))
     for i, row in enumerate(focus[:20], start=1):
         print(
             "{idx:>2}. {uid} score={score:6.2f} priority={priority:7.2f} fails={fails:>2} sig={sig}".format(
