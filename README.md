@@ -56,6 +56,16 @@ make short-local
 make overnight-local
 ```
 
+- Local preference-only optimization on already-valid plans:
+```
+make preference-local
+```
+
+- Quick local preference pass (single round):
+```
+make preference-quick
+```
+
 - Long overnight HPC run via SLURM:
 ```
 make hpc-tail-submit
@@ -69,6 +79,9 @@ make hpc-unsolved
 
 # Phase B: improve preference on already-solved plans (constraint-safe densify)
 make hpc-preference
+
+# Same Phase B submitted as one SLURM controller job
+make hpc-preference-submit
 ```
 The two-phase split avoids spending all rounds on the same hard-unsolved IDs and
 lets preference optimization focus on accepted plans.
@@ -119,8 +132,8 @@ How to read the ranking report (`cache/tail_rankings/...csv`):
 - `failed_clauses`: number of failed `hard_logic_py` clauses under current plan.
 - `top_signature` / `top_failed_funcs`: dominant failure pattern for targeted repairs.
 
-Or run the whole recommended pipeline (search -> pack -> score -> zip) at full parallelism with
-one command (see the `Makefile` for tunable variables):
+Or run the default preference pipeline (preference optimize -> score -> zip) with one command
+(see the `Makefile` for tunable variables):
 ```
 make
 ```

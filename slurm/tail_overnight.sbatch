@@ -64,6 +64,8 @@ flock -u 9
 
 SPLIT="${TPC_TAIL_SPLIT:-tpc_phase1}"
 METHOD="${TPC_TAIL_METHOD:-best}"
+RANK_MODE="${TPC_TAIL_RANK_MODE:-tail}"
+RUNNER="${TPC_TAIL_RUNNER:-solve}"
 ROUNDS="${TPC_TAIL_ROUNDS:-8}"
 TOPK="${TPC_TAIL_TOPK:-240}"
 MIN_SCORE="${TPC_TAIL_MIN_SCORE:-99}"
@@ -77,12 +79,14 @@ SEED_PREFIX="${TPC_TAIL_SEED_PREFIX:-tailhpc}"
 
 start_epoch=$(date +%s)
 echo "[tail-hpc] job=$SLURM_JOB_ID host=$(hostname) start=$(date -Is)"
-echo "[tail-hpc] split=$SPLIT method=$METHOD rounds=$ROUNDS topk=$TOPK min_score=$MIN_SCORE"
+echo "[tail-hpc] split=$SPLIT method=$METHOD rank_mode=$RANK_MODE runner=$RUNNER rounds=$ROUNDS topk=$TOPK min_score=$MIN_SCORE"
 echo "[tail-hpc] restarts=$RESTARTS budget=$BUDGET workers=$WORKERS stop_no_improve=$STOP_NO_IMPROVE run_id=$RUN_ID"
 
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/iterate_tail.py \
     --split "$SPLIT" \
     --method "$METHOD" \
+    --rank-mode "$RANK_MODE" \
+    --runner "$RUNNER" \
     --rounds "$ROUNDS" \
     --top-k "$TOPK" \
     --min-score "$MIN_SCORE" \
