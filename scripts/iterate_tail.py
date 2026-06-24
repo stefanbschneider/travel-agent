@@ -196,6 +196,18 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--split", default="tpc_phase1", help="base split for ranking")
     ap.add_argument("--method", default="best", help="results method dir for ranking")
+    ap.add_argument(
+        "--rank-mode",
+        choices=["tail", "unsolved", "preference"],
+        default="tail",
+        help="which subset to rank each round: mixed low-score tail, unresolved constraint tail, or already-solved low-preference queries",
+    )
+    ap.add_argument(
+        "--runner",
+        choices=["solve", "densify"],
+        default="solve",
+        help="solve: rerun TPCAgent search on the focus split; densify: improve already-solved plans only",
+    )
     ap.add_argument("--rounds", type=int, default=4)
     ap.add_argument("--top-k", type=int, default=120)
     ap.add_argument("--min-score", type=float, default=99.0)
@@ -234,6 +246,8 @@ def main() -> int:
         "config": {
             "split": args.split,
             "method": args.method,
+            "rank_mode": args.rank_mode,
+            "runner": args.runner,
             "rounds": args.rounds,
             "top_k": args.top_k,
             "min_score": args.min_score,
@@ -298,6 +312,7 @@ def main() -> int:
             os.path.join("scripts", "rank_tail.py"),
             "--split", args.split,
             "--method", args.method,
+            "--mode", args.rank_mode,
             "--top-k", str(args.top_k),
             "--min-score", str(args.min_score),
             "--focus-split", focus_split,
@@ -314,27 +329,35 @@ def main() -> int:
             print("[tail-iterate] {} focus split empty; stopping".format(round_name))
             break
 
-        solve_cmd = [
-            sys.executable,
-            os.path.join("scripts", "solve.py"),
-            "--split", focus_split,
-            "--restarts", str(args.restarts),
-            "--budget", str(args.budget),
-            "--workers", str(args.workers),
-            "--seed-salt", seed_salt,
-        ]
-        if args.skip_existing:
-            solve_cmd.append("--skip")
-        print("[tail-iterate] {} solve {} IDs...".format(round_name, focus_count))
+        if args.runner == "solve":
+            work_cmd = [
+                sys.executable,
+                os.path.join("scripts", "solve.py"),
+                "--split", focus_split,
+                "--restarts", str(args.restarts),
+                "--budget", str(args.budget),
+                "--workers", str(args.workers),
+                "--seed-salt", seed_salt,
+            ]
+            if args.skip_existing:
+                work_cmd.append("--skip")
+        else:
+            work_cmd = [
+                sys.executable,
+                os.path.join("scripts", "densify.py"),
+                "--split", focus_split,
+                "--workers", str(args.workers),
+            ]
+        print("[tail-iterate] {} {} {} IDs...".format(round_name, args.runner, focus_count))
         rc = _run(
-            solve_cmd,
+            work_cmd,
             log_path=solve_log,
             heartbeat_sec=args.heartbeat_sec,
-            heartbeat_label="{} solve".format(round_name),
+            heartbeat_label="{} {}".format(round_name, args.runner),
             stream_output=args.stream_solve_log,
         )
         if rc != 0:
-            print("[tail-iterate] {} solve failed rc={}".format(round_name, rc), file=sys.stderr)
+            print("[tail-iterate] {} {} failed rc={}".format(round_name, args.runner, rc), file=sys.stderr)
             return rc
 
         merge_cmd = [
@@ -377,6 +400,8 @@ def main() -> int:
             "focus_split": focus_split,
             "focus_count": focus_count,
             "seed_salt": seed_salt,
+            "rank_mode": args.rank_mode,
+            "runner": args.runner,
             "best_updates": best_updates,
             "metrics": metrics,
             "logs": {

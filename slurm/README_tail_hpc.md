@@ -1,6 +1,6 @@
 # Tail Optimization Workflows
 
-This repository now supports three deterministic workflows targeting different runtimes.
+This repository now supports four deterministic workflows targeting different runtimes.
 
 ## 1) Short Local Run (~10 min, M1 MacBook)
 
@@ -65,6 +65,41 @@ Equivalent direct submit helper:
 ```bash
 bash slurm/submit_tail_overnight.sh
 ```
+
+## 4) Two-Phase HPC Workflow (Recommended)
+
+For stronger preference gains, split overnight compute into two deterministic phases:
+
+```bash
+# Phase A: resolve hard-constraint tail first
+make hpc-unsolved
+
+# Phase B: then optimize preference on accepted plans
+make hpc-preference
+```
+
+Typical override examples:
+
+```bash
+make hpc-unsolved \
+  HPC_UNSOLVED_WORKERS=8 \
+  HPC_UNSOLVED_ROUNDS=8 \
+  HPC_UNSOLVED_TOPK=240 \
+  HPC_UNSOLVED_RESTARTS=1200 \
+  HPC_UNSOLVED_BUDGET=300 \
+  HPC_UNSOLVED_STOP=2
+
+make hpc-preference \
+  HPC_PREFERENCE_WORKERS=8 \
+  HPC_PREFERENCE_ROUNDS=10 \
+  HPC_PREFERENCE_TOPK=400 \
+  HPC_PREFERENCE_MIN_SCORE=99.5 \
+  HPC_PREFERENCE_STOP=3
+```
+
+Why this split helps:
+- unresolved-tail rounds are dominated by hard-logic feasibility search
+- preference rounds avoid those cases and spend budget on improving DAV/ATT/DDR of already-valid plans
 
 ## Determinism Guidance
 

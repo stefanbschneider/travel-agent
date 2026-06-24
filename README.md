@@ -62,6 +62,17 @@ make hpc-tail-submit
 ```
 See `slurm/README_tail_hpc.md` for resource/profile overrides.
 
+- Two-phase HPC workflow (recommended for preference pushing):
+```
+# Phase A: solve unresolved hard-constraint tail
+make hpc-unsolved
+
+# Phase B: improve preference on already-solved plans (constraint-safe densify)
+make hpc-preference
+```
+The two-phase split avoids spending all rounds on the same hard-unsolved IDs and
+lets preference optimization focus on accepted plans.
+
 Light pass + constraint-safe packing across all 1000 (lifts DAV/DDR; the monotonic merge keeps
 the heavy gains):
 ```
@@ -79,6 +90,15 @@ python scripts/merge.py --split tpc_phase1_tail_focus
 `scripts/rank_tail.py` writes:
 - ranking report: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
 - focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
+
+`scripts/rank_tail.py` now supports explicit modes:
+- `--mode tail`: mixed low-score tail (legacy behavior)
+- `--mode unsolved`: prioritize unresolved hard-constraint failures
+- `--mode preference`: prioritize already-accepted plans with the most preference headroom
+
+`scripts/iterate_tail.py` can now run either solver search or preference densification per round:
+- `--runner solve`: call `scripts/solve.py` on the focused split
+- `--runner densify`: call `scripts/densify.py` on the focused split
 
 Recommended tail-optimization loop (repeat until progress flattens):
 ```
