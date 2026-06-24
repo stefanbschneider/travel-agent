@@ -24,6 +24,18 @@ Use multi-round tail iteration with conservative stop-on-no-improve:
 make overnight-local
 ```
 
+For preference-only optimization on already-valid plans:
+
+```bash
+make preference-local
+```
+
+For a single quick local preference round:
+
+```bash
+make preference-quick
+```
+
 Typical override examples:
 
 ```bash
@@ -76,6 +88,9 @@ make hpc-unsolved
 
 # Phase B: then optimize preference on accepted plans
 make hpc-preference
+
+# Or submit Phase B as a dedicated SLURM controller job
+make hpc-preference-submit
 ```
 
 Typical override examples:

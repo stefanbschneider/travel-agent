@@ -46,6 +46,13 @@ OVERNIGHT_LOCAL_BUDGET ?= 180
 OVERNIGHT_LOCAL_ROUNDS ?= 6
 OVERNIGHT_LOCAL_STOP ?= 2
 
+PREFERENCE_LOCAL_WORKERS ?= $(OVERNIGHT_LOCAL_WORKERS)
+PREFERENCE_LOCAL_ROUNDS ?= 6
+PREFERENCE_LOCAL_TOPK ?= 240
+PREFERENCE_LOCAL_MIN_SCORE ?= 99.5
+PREFERENCE_LOCAL_STOP ?= 2
+PREFERENCE_LOCAL_RUN_ID ?=
+
 HPC_PARTITION ?= standard
 HPC_WORKERS ?= 8
 HPC_MEM ?= 6G
@@ -75,10 +82,10 @@ HPC_PREFERENCE_MIN_SCORE ?= 99.5
 HPC_PREFERENCE_STOP ?= 3
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local hpc-tail-submit hpc-unsolved hpc-preference merge score submission upload upload-check clean-light help
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
-# Default: the full recommended workflow.
-all: heavy light score submission
+# Default: preference optimization on already-solved plans.
+all: preference-local score submission
 
 # Heavy resumable search over the unsolved split.
 heavy:
@@ -182,6 +189,32 @@ overnight-local:
 		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
 		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,)
 
+# Local preference optimization profile: only densify already-solved plans (constraint-safe).
+preference-local:
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rank-mode preference \
+		--runner densify \
+		--rounds $(PREFERENCE_LOCAL_ROUNDS) \
+		--top-k $(PREFERENCE_LOCAL_TOPK) \
+		--min-score $(PREFERENCE_LOCAL_MIN_SCORE) \
+		--workers $(PREFERENCE_LOCAL_WORKERS) \
+		--stop-no-improve-rounds $(PREFERENCE_LOCAL_STOP) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix preference_local \
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		$(if $(PREFERENCE_LOCAL_RUN_ID),--run-id $(PREFERENCE_LOCAL_RUN_ID),--run-id preference_local_$(shell date +%Y%m%d_%H%M%S))
+
+# Quick local preference pass (~10-20 min depending on hardware).
+preference-quick:
+	$(MAKE) preference-local \
+		PREFERENCE_LOCAL_ROUNDS=1 \
+		PREFERENCE_LOCAL_TOPK=$(SHORT_LOCAL_TOPK) \
+		PREFERENCE_LOCAL_WORKERS=$(SHORT_LOCAL_WORKERS) \
+		PREFERENCE_LOCAL_STOP=1
+
 # Submit one 7h tail-iterate run to SLURM (single controller job orchestrating multi-round solve/merge/score).
 hpc-tail-submit:
 	bash slurm/submit_tail_overnight.sh \
@@ -241,6 +274,23 @@ hpc-preference:
 		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
 		--run-id $(HPC_PREFERENCE_RUN_ID)
 
+# Submit preference-only densify rounds to SLURM.
+hpc-preference-submit:
+	bash slurm/submit_tail_overnight.sh \
+		PARTITION=$(HPC_PARTITION) \
+		WORKERS=$(HPC_PREFERENCE_WORKERS) \
+		MEM=$(HPC_MEM) \
+		TIME=$(HPC_TIME) \
+		SPLIT=$(SPLIT) \
+		METHOD=$(TAIL_METHOD) \
+		RANK_MODE=preference \
+		RUNNER=densify \
+		ROUNDS=$(HPC_PREFERENCE_ROUNDS) \
+		TOPK=$(HPC_PREFERENCE_TOPK) \
+		MIN_SCORE=$(HPC_PREFERENCE_MIN_SCORE) \
+		STOP_NO_IMPROVE=$(HPC_PREFERENCE_STOP) \
+		RUN_ID=$(HPC_PREFERENCE_RUN_ID)
+
 # Re-run the monotonic merge alone.
 merge:
 	$(PYTHON) scripts/merge.py --split $(SPLIT)
@@ -267,16 +317,19 @@ clean-light:
 
 help:
 	@printf '%s\n' \
-	  'make                - full recommended workflow (heavy -> light -> score -> submission)' \
+	  'make                - default preference workflow (preference-local -> score -> submission)' \
 	  'make heavy          - resumable heavy search on the unsolved split' \
 	  'make light          - light packing pass across all 1000 + merge' \
 	  'make tail-round     - rank low-score tail -> focused solve -> merge -> score' \
 	  'make tail-iterate   - multi-round tail optimization with reproducible artifacts' \
 	  'make short-local    - short local profile (~10 min) using iterate_tail' \
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
+	  'make preference-local - local preference optimization on already-solved plans (densify only)' \
+	  'make preference-quick - one-round quick local preference pass' \
 	  'make hpc-tail-submit - submit 7h tail iterate controller job to SLURM' \
 	  'make hpc-unsolved   - HPC phase A: solve unresolved tail with CP + heavy search' \
 	  'make hpc-preference - HPC phase B: improve preference on solved plans via densify' \
+	  'make hpc-preference-submit - submit HPC preference-only densify run to SLURM' \
 	  'make merge          - monotonic merge only' \
 	  'make score          - evaluate results/best' \
 	  'make submission     - build the next submission zip (version from git tags; override with VERSION=vN)' \
@@ -324,6 +377,12 @@ help:
 	  '  OVERNIGHT_LOCAL_BUDGET=<sec> default: $(OVERNIGHT_LOCAL_BUDGET)' \
 	  '  OVERNIGHT_LOCAL_ROUNDS=<n> default: $(OVERNIGHT_LOCAL_ROUNDS)' \
 	  '  OVERNIGHT_LOCAL_STOP=<n> default: $(OVERNIGHT_LOCAL_STOP)' \
+	  '  PREFERENCE_LOCAL_WORKERS=<n> default: $(PREFERENCE_LOCAL_WORKERS)' \
+	  '  PREFERENCE_LOCAL_ROUNDS=<n> default: $(PREFERENCE_LOCAL_ROUNDS)' \
+	  '  PREFERENCE_LOCAL_TOPK=<n> default: $(PREFERENCE_LOCAL_TOPK)' \
+	  '  PREFERENCE_LOCAL_MIN_SCORE=<n> default: $(PREFERENCE_LOCAL_MIN_SCORE)' \
+	  '  PREFERENCE_LOCAL_STOP=<n> default: $(PREFERENCE_LOCAL_STOP)' \
+	  '  PREFERENCE_LOCAL_RUN_ID=<id> default: auto timestamp' \
 	  '  HPC_PARTITION=<name>    default: $(HPC_PARTITION)' \
 	  '  HPC_WORKERS=<n>         default: $(HPC_WORKERS)' \
 	  '  HPC_MEM=<xG>            default: $(HPC_MEM)' \
