@@ -26,6 +26,12 @@ TAIL_SKIP_EXISTING ?= 1
 TAIL_HEARTBEAT_SEC ?= 60
 TAIL_STREAM_SOLVE_LOG ?= 0
 
+# TPC solver tuning knobs (propagated as env vars)
+TPC_USE_CP_SOLVER ?= 1
+TPC_CP_AFTER_PASS ?= 1
+TPC_CP_FOUR_SLOT_SHARE ?= 0.75
+TPC_CP_FOUR_SLOT_ROUNDS ?= 2
+
 # Ready-made run profiles
 SHORT_LOCAL_WORKERS ?= 4
 SHORT_LOCAL_TOPK ?= 24
@@ -93,6 +99,10 @@ tail-round:
 
 # Multi-round tail optimization with per-round artifacts (rank -> solve -> merge -> score).
 tail-iterate:
+	TPC_USE_CP_SOLVER=$(TPC_USE_CP_SOLVER) \
+	TPC_CP_AFTER_PASS=$(TPC_CP_AFTER_PASS) \
+	TPC_CP_FOUR_SLOT_SHARE=$(TPC_CP_FOUR_SLOT_SHARE) \
+	TPC_CP_FOUR_SLOT_ROUNDS=$(TPC_CP_FOUR_SLOT_ROUNDS) \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
@@ -113,6 +123,10 @@ tail-iterate:
 
 # Short local profile (~10min on laptop): one compact tail round.
 short-local:
+	TPC_USE_CP_SOLVER=$(TPC_USE_CP_SOLVER) \
+	TPC_CP_AFTER_PASS=$(TPC_CP_AFTER_PASS) \
+	TPC_CP_FOUR_SLOT_SHARE=$(TPC_CP_FOUR_SLOT_SHARE) \
+	TPC_CP_FOUR_SLOT_ROUNDS=$(TPC_CP_FOUR_SLOT_ROUNDS) \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
@@ -129,6 +143,10 @@ short-local:
 
 # Long local overnight profile (~7h target on laptop).
 overnight-local:
+	TPC_USE_CP_SOLVER=$(TPC_USE_CP_SOLVER) \
+	TPC_CP_AFTER_PASS=$(TPC_CP_AFTER_PASS) \
+	TPC_CP_FOUR_SLOT_SHARE=$(TPC_CP_FOUR_SLOT_SHARE) \
+	TPC_CP_FOUR_SLOT_ROUNDS=$(TPC_CP_FOUR_SLOT_ROUNDS) \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
@@ -226,6 +244,10 @@ help:
 	  '  TAIL_SKIP_EXISTING=<0|1> default: $(TAIL_SKIP_EXISTING)' \
 	  '  TAIL_HEARTBEAT_SEC=<sec> default: $(TAIL_HEARTBEAT_SEC)' \
 	  '  TAIL_STREAM_SOLVE_LOG=<0|1> default: $(TAIL_STREAM_SOLVE_LOG)' \
+	  '  TPC_USE_CP_SOLVER=<0|1> default: $(TPC_USE_CP_SOLVER)' \
+	  '  TPC_CP_AFTER_PASS=<0|1> default: $(TPC_CP_AFTER_PASS)' \
+	  '  TPC_CP_FOUR_SLOT_SHARE=<0..1> default: $(TPC_CP_FOUR_SLOT_SHARE)' \
+	  '  TPC_CP_FOUR_SLOT_ROUNDS=<n> default: $(TPC_CP_FOUR_SLOT_ROUNDS)' \
 	  '' \
 	  'Profile knobs:' \
 	  '  SHORT_LOCAL_WORKERS=<n> default: $(SHORT_LOCAL_WORKERS)' \
