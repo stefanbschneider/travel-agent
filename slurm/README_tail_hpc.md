@@ -133,7 +133,7 @@ All profile runs write to `cache/hpc_tail_runs/<run-id>/`:
 - `logs/rXX_rank.log`: rank output for round `XX`.
 - `logs/rXX_solve.log`: solve output for round `XX`.
 - `logs/rXX_merge.log`: merge output for round `XX`.
-- `logs/rXX_score.log`: score output for round `XX`.
-- `rounds/rXX/summary.json`: per-round summary.
+- `logs/final_score.log`: final full-set score, run once after the loop.
+- `rounds/rXX/summary.json`: per-round summary. Its `metrics` are the focus-subset evaluation from the merge stage; the true full-set `overall` is in top-level `summary.json` under `final_metrics`.
 
 These files are intended for reproducibility and auditability of overnight runs.
