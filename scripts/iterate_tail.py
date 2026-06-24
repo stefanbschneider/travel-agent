@@ -16,9 +16,12 @@ import ast
 import datetime as dt
 import json
 import os
+import queue
 import re
 import subprocess
 import sys
+import threading
+import time
 from typing import Optional
 
 
@@ -38,13 +41,87 @@ def _ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
-def _run(cmd, *, env=None, cwd=ROOT, log_path: Optional[str] = None, check=False) -> int:
-    if log_path:
+def _run(
+    cmd,
+    *,
+    env=None,
+    cwd=ROOT,
+    log_path: Optional[str] = None,
+    check=False,
+    heartbeat_sec: float = 0.0,
+    heartbeat_label: Optional[str] = None,
+    stream_output: bool = False,
+) -> int:
+    started = time.monotonic()
+    if heartbeat_label:
+        label = heartbeat_label
+    elif len(cmd) > 1:
+        label = os.path.basename(str(cmd[1]))
+    else:
+        label = "command"
+
+    if log_path and (heartbeat_sec > 0 or stream_output):
+        with open(log_path, "w", encoding="utf-8") as logf:
+            proc = subprocess.Popen(
+                cmd,
+                cwd=cwd,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
+
+            q = queue.Queue()
+            sentinel = object()
+
+            def _reader():
+                try:
+                    assert proc.stdout is not None
+                    for line in proc.stdout:
+                        q.put(line)
+                finally:
+                    q.put(sentinel)
+
+            t = threading.Thread(target=_reader, daemon=True)
+            t.start()
+
+            next_heartbeat = None
+            if heartbeat_sec > 0:
+                next_heartbeat = time.monotonic() + max(1.0, float(heartbeat_sec))
+
+            while True:
+                try:
+                    item = q.get(timeout=0.5)
+                except queue.Empty:
+                    item = None
+
+                if item is sentinel:
+                    break
+                if isinstance(item, str):
+                    logf.write(item)
+                    if stream_output:
+                        # Prefix streamed lines so long runs are easier to scan in one terminal.
+                        print("[tail-iterate] {} | {}".format(label, item.rstrip("\n")))
+
+                if next_heartbeat is not None and time.monotonic() >= next_heartbeat:
+                    elapsed = int(time.monotonic() - started)
+                    print("[tail-iterate] {} still running... {}s elapsed".format(label, elapsed))
+                    next_heartbeat = time.monotonic() + max(1.0, float(heartbeat_sec))
+
+            rc = proc.wait()
+            elapsed = int(time.monotonic() - started)
+            print("[tail-iterate] {} finished rc={} ({}s)".format(label, rc, elapsed))
+    elif log_path:
         with open(log_path, "w", encoding="utf-8") as logf:
             proc = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=logf, stderr=subprocess.STDOUT)
             rc = proc.wait()
     else:
         rc = subprocess.call(cmd, cwd=cwd, env=env)
+        if heartbeat_sec > 0:
+            elapsed = int(time.monotonic() - started)
+            print("[tail-iterate] {} finished rc={} ({}s)".format(label, rc, elapsed))
+
     if check and rc != 0:
         raise RuntimeError("command failed rc={} cmd={}".format(rc, " ".join(cmd)))
     return rc
@@ -91,6 +168,30 @@ def _focus_size(split_name: str) -> int:
         return sum(1 for line in f if line.strip())
 
 
+def _read_json_if_exists(path: str):
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def _load_existing_round_summaries(rounds_dir: str, max_rounds: int):
+    summaries = []
+    for r in range(max_rounds):
+        round_name = "r{:02d}".format(r)
+        summary_path = os.path.join(rounds_dir, round_name, "summary.json")
+        data = _read_json_if_exists(summary_path)
+        if not isinstance(data, dict):
+            break
+        if data.get("round") != r:
+            break
+        summaries.append(data)
+    return summaries
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--split", default="tpc_phase1", help="base split for ranking")
@@ -108,6 +209,14 @@ def main() -> int:
                     help="optional stable run id; default uses timestamp")
     ap.add_argument("--seed-prefix", default="tail",
                     help="prefix used for deterministic per-round seed salts")
+    ap.add_argument("--resume", action="store_true",
+                    help="resume an existing run-id from artifacts if available")
+    ap.add_argument("--skip-existing", action="store_true",
+                    help="pass --skip to solve.py to avoid recomputing existing per-query outputs")
+    ap.add_argument("--heartbeat-sec", type=float, default=60.0,
+                    help="print a heartbeat line while long subprocesses are running (0 disables)")
+    ap.add_argument("--stream-solve-log", action="store_true",
+                    help="stream solve.py output to terminal while also writing solve log file")
     args = ap.parse_args()
 
     run_id = args.run_id or _ts_now()
@@ -134,18 +243,35 @@ def main() -> int:
             "stop_no_improve_rounds": args.stop_no_improve_rounds,
             "seed_prefix": args.seed_prefix,
             "artifacts_root": args.artifacts_root,
+            "resume": bool(args.resume),
+            "skip_existing": bool(args.skip_existing),
         },
     }
-    with open(os.path.join(run_dir, "run_config.json"), "w", encoding="utf-8") as f:
-        json.dump(run_meta, f, ensure_ascii=False, indent=2)
+    run_config_path = os.path.join(run_dir, "run_config.json")
+    if not args.resume or not os.path.exists(run_config_path):
+        with open(run_config_path, "w", encoding="utf-8") as f:
+            json.dump(run_meta, f, ensure_ascii=False, indent=2)
 
     print("[tail-iterate] run_id={}".format(run_id))
     print("[tail-iterate] artifacts={}".format(os.path.relpath(run_dir, ROOT)))
 
+    existing = _load_existing_round_summaries(rounds_dir, args.rounds) if args.resume else []
+    start_round = len(existing)
+    round_summaries = list(existing)
     no_improve_streak = 0
-    round_summaries = []
+    if existing:
+        # Continue streak from the tail of existing completed rounds.
+        for s in reversed(existing):
+            best_updates = s.get("best_updates")
+            if best_updates is None:
+                break
+            if int(best_updates) <= 0:
+                no_improve_streak += 1
+            else:
+                break
+        print("[tail-iterate] resume: found {} completed round(s), next={}".format(len(existing), start_round))
 
-    for r in range(args.rounds):
+    for r in range(start_round, args.rounds):
         round_name = "r{:02d}".format(r)
         round_dir = os.path.join(rounds_dir, round_name)
         _ensure_dir(round_dir)
@@ -188,8 +314,16 @@ def main() -> int:
             "--workers", str(args.workers),
             "--seed-salt", seed_salt,
         ]
+        if args.skip_existing:
+            solve_cmd.append("--skip")
         print("[tail-iterate] {} solve {} IDs...".format(round_name, focus_count))
-        rc = _run(solve_cmd, log_path=solve_log)
+        rc = _run(
+            solve_cmd,
+            log_path=solve_log,
+            heartbeat_sec=args.heartbeat_sec,
+            heartbeat_label="{} solve".format(round_name),
+            stream_output=args.stream_solve_log,
+        )
         if rc != 0:
             print("[tail-iterate] {} solve failed rc={}".format(round_name, rc), file=sys.stderr)
             return rc
