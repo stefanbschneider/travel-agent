@@ -13,12 +13,9 @@
 #      even after canonicalization.
 #  (N) Required exact named POI absent from target-city DB.
 
-# --- (T) required TYPE literal absent in the target city after normalization ---
-20250322103116580364  # (T) hangzhou accommodations: 'homestay' absent (no variant)
-20250322104924634145  # (T) chongqing attractions: 'Cultural Landscape' absent (no variant)
-20250322122812261533  # (T) chengdu restaurants: 'Hot pot' canonicalizes to 'hot pot', still absent in city DB
-20250322160844700370  # (T) shenzhen restaurants: 'Hot pot' canonicalizes to 'hot pot', still absent in city DB
-20250322163920766320  # (T) nanjing restaurants: 'Hot pot' canonicalizes to 'hot pot', still absent in city DB
+# Re-audited on 2026-06-24 against current results/best:
+# - Removed stale entries that now pass end-to-end evaluation.
+# - One dataset-blocked UID remains.
 
 # --- (N) required exact named POI absent from target-city DB ---
-20250323010327713880  # (N) Shanghai restaurants: hard_logic requires 'Bistro Sola'; DB has only reordered 'Sola Bistro'
+20250323010327713880  # (N) Shanghai restaurants: hard_logic requires exact name 'Bistro Sola' which is absent in DB; near-match 'Sola Bistro' does not satisfy exact string check.
