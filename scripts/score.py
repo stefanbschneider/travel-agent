@@ -31,6 +31,21 @@ def _parse_scores_from_text(text: str):
                     scores = candidate
             except (ValueError, SyntaxError):
                 pass
+
+    if isinstance(scores, dict):
+        return scores
+
+    # Append-only writer may concatenate objects without newlines.
+    for match in reversed(list(re.finditer(r"\{[^{}]*overall[^{}]*\}", text, flags=re.IGNORECASE))):
+        chunk = match.group(0)
+        cleaned = re.sub(r"np\.float\d*\(([^()]+)\)", r"\1", chunk)
+        try:
+            candidate = ast.literal_eval(cleaned)
+            if isinstance(candidate, dict):
+                return candidate
+        except (ValueError, SyntaxError):
+            continue
+
     return scores
 
 
