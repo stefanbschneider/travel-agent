@@ -246,6 +246,15 @@ def main() -> int:
             "resume": bool(args.resume),
             "skip_existing": bool(args.skip_existing),
         },
+        "solver_env": {
+            "TPC_USE_CP_SOLVER": os.environ.get("TPC_USE_CP_SOLVER", None),
+            "TPC_CP_AFTER_PASS": os.environ.get("TPC_CP_AFTER_PASS", None),
+            "TPC_CP_FOUR_SLOT_SHARE": os.environ.get("TPC_CP_FOUR_SLOT_SHARE", None),
+            "TPC_CP_FOUR_SLOT_ROUNDS": os.environ.get("TPC_CP_FOUR_SLOT_ROUNDS", None),
+            "TPC_CP_TIME_LIMIT_SEC": os.environ.get("TPC_CP_TIME_LIMIT_SEC", None),
+            "TPC_SOLVE_BUDGET_SEC": os.environ.get("TPC_SOLVE_BUDGET_SEC", None),
+            "TPC_MAX_RESTARTS": os.environ.get("TPC_MAX_RESTARTS", None),
+        },
     }
     run_config_path = os.path.join(run_dir, "run_config.json")
     if not args.resume or not os.path.exists(run_config_path):
