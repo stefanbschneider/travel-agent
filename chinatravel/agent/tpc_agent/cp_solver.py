@@ -486,6 +486,7 @@ def _reconstruct_one(agent, query, constraints, ctx, assignment, attr_order, lun
     attr_queue = list(attr_order)
     lunch_pool = list(lunch_src)
     dinner_pool = list(dinner_src)
+    poi_coords = _build_poi_coord_index(assignment, hotel)
     for day in range(1, days + 1):
         is_last = day == days
         activities = []
@@ -509,7 +510,7 @@ def _reconstruct_one(agent, query, constraints, ctx, assignment, attr_order, lun
         day_close = int(returning["begin_min"]) - STATION_BUFFER if is_last else DAY_CLOSE
         pos, clock = _fill_day(
             agent, city, people, constraints, base_visit, attr_queue, lunch_pool, dinner_pool,
-            activities, pos, clock, day_close,
+            activities, pos, clock, day_close, poi_coords,
         )
 
         if is_last:
@@ -599,7 +600,7 @@ def _is_num(v) -> bool:
         return False
 
 
-def _fill_day(agent, city, people, constraints, base_visit, attr_queue, lunch_pool, dinner_pool, activities, pos, clock, day_close):
+def _fill_day(agent, city, people, constraints, base_visit, attr_queue, lunch_pool, dinner_pool, activities, pos, clock, day_close, poi_coords):
     """Greedily place attractions (earliest feasible) interleaving lunch/dinner by
     clock window. Optional attractions that do not fit are dropped; required ones
     are left in the queue for a later day (and ultimately fail the build)."""
@@ -610,54 +611,65 @@ def _fill_day(agent, city, people, constraints, base_visit, attr_queue, lunch_po
         guard += 1
         if not lunch_done and lunch_pool and clock >= LUNCH_OPEN and clock < LUNCH_LATEST_START:
             placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock,
-                                 LUNCH_OPEN, LUNCH_CLOSE, day_close)
+                                 LUNCH_OPEN, LUNCH_CLOSE, day_close, poi_coords)
             lunch_done = True
             if placed:
                 pos, clock = placed
                 continue
         if not dinner_done and dinner_pool and clock >= DINNER_OPEN and clock < DINNER_LATEST_START:
             placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock,
-                                 DINNER_OPEN, DINNER_CLOSE, day_close)
+                                 DINNER_OPEN, DINNER_CLOSE, day_close, poi_coords)
             dinner_done = True
             if placed:
                 pos, clock = placed
                 continue
         if not attr_queue:
             break
-        visit_est = _visit_len_for(agent, attr_queue[0], constraints, base_visit)
+        candidate_indices = _next_attr_indices(agent, constraints, attr_queue, pos, poi_coords)
+        probe_attr = attr_queue[candidate_indices[0]] if candidate_indices else attr_queue[0]
+        visit_est = _visit_len_for(agent, probe_attr, constraints, base_visit)
         if not lunch_done and lunch_pool and clock < LUNCH_LATEST_START and clock + visit_est > LUNCH_LATEST_START:
             placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock,
-                                 LUNCH_OPEN, LUNCH_CLOSE, day_close)
+                                 LUNCH_OPEN, LUNCH_CLOSE, day_close, poi_coords)
             lunch_done = True
             if placed:
                 pos, clock = placed
                 continue
         if not dinner_done and dinner_pool and clock < DINNER_LATEST_START and clock + visit_est > DINNER_LATEST_START:
             placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock,
-                                 DINNER_OPEN, DINNER_CLOSE, day_close)
+                                 DINNER_OPEN, DINNER_CLOSE, day_close, poi_coords)
             dinner_done = True
             if placed:
                 pos, clock = placed
                 continue
-        attr = attr_queue[0]
-        outcome = _place_attraction(agent, city, people, constraints, base_visit, attr, activities, pos, clock, day_close)
-        if outcome == "placed":
-            placed_attr = activities[-1]
-            pos = placed_attr["position"]
-            clock = time_to_minutes(placed_attr["end_time"])
-            attr_queue.pop(0)
-        elif outcome == "drop":
-            attr_queue.pop(0)
-        else:  # "carry": cannot fit remaining day
+        placed_any = False
+        dropped_any = False
+        for candidate_idx in candidate_indices:
+            attr = attr_queue[candidate_idx]
+            outcome = _place_attraction(agent, city, people, constraints, base_visit, attr, activities, pos, clock, day_close)
+            if outcome == "placed":
+                placed_attr = activities[-1]
+                pos = placed_attr["position"]
+                clock = time_to_minutes(placed_attr["end_time"])
+                attr_queue.pop(candidate_idx)
+                placed_any = True
+                break
+            if outcome == "drop":
+                attr_queue.pop(candidate_idx)
+                dropped_any = True
+                break
+        if placed_any or dropped_any:
+            continue
+        else:  # every promising candidate is carry: cannot fit remaining day
             break
 
     # Place any meal still due before its window closes (e.g. late morning arrival).
     if not lunch_done and lunch_pool and clock < LUNCH_LATEST_START:
-        placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock, LUNCH_OPEN, LUNCH_CLOSE, day_close)
+        placed = _place_meal(agent, city, people, "lunch", lunch_pool, activities, pos, clock, LUNCH_OPEN, LUNCH_CLOSE, day_close, poi_coords)
         if placed:
             pos, clock = placed
     if not dinner_done and dinner_pool and clock < DINNER_LATEST_START:
-        placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock, DINNER_OPEN, DINNER_CLOSE, day_close)
+        placed = _place_meal(agent, city, people, "dinner", dinner_pool, activities, pos, clock, DINNER_OPEN, DINNER_CLOSE, day_close, poi_coords)
         if placed:
             pos, clock = placed
     return pos, clock
@@ -695,7 +707,9 @@ def _place_attraction(agent, city, people, constraints, base_visit, attr, activi
     return "placed"
 
 
-def _place_meal(agent, city, people, meal_type, pool, activities, pos, clock, window_open, window_close, day_close):
+def _place_meal(agent, city, people, meal_type, pool, activities, pos, clock, window_open, window_close, day_close, poi_coords):
+    pos_coord = poi_coords.get(_norm_name(pos))
+    best = None
     for i, rest in enumerate(pool):
         name = str(rest["name"])
         transports, arrival = agent._get_transport(agent.env, city, pos, name, minutes_to_time(min(clock, 23 * 60 + 59)), people)
@@ -705,10 +719,67 @@ def _place_meal(agent, city, people, meal_type, pool, activities, pos, clock, wi
         end = start + 60
         if end > window_close or end > day_close:
             continue
+        dist = 1e9
+        rest_coord = poi_coords.get(_norm_name(name))
+        if pos_coord is not None and rest_coord is not None:
+            dist = _haversine(pos_coord, rest_coord)
+        cand = (dist, i, rest, transports, start, end)
+        if best is None or cand < best:
+            best = cand
+    if best is not None:
+        _dist, idx, rest, transports, start, end = best
         activities.append(agent._make_meal_activity(meal_type, rest, people, minutes_to_time(start), minutes_to_time(end), transports))
-        pool.pop(i)
-        return name, end
+        pool.pop(idx)
+        return str(rest["name"]), end
     return None
+
+
+def _build_poi_coord_index(assignment: dict, hotel: dict) -> dict[str, tuple[float, float]]:
+    index = {}
+
+    def add(name, lat, lon):
+        if name is None:
+            return
+        key = _norm_name(name)
+        if not key:
+            return
+        if _is_num(lat) and _is_num(lon):
+            index[key] = (float(lat), float(lon))
+
+    add(hotel.get("name"), hotel.get("lat"), hotel.get("lon"))
+    for row in (assignment.get("attrs", []) or []):
+        add(row.get("name"), row.get("lat"), row.get("lon"))
+    for row in (assignment.get("lunch", []) or []):
+        add(row.get("name"), row.get("lat"), row.get("lon"))
+    for row in (assignment.get("dinner", []) or []):
+        add(row.get("name"), row.get("lat"), row.get("lon"))
+    return index
+
+
+def _next_attr_indices(agent, constraints: dict, attr_queue: list[dict], pos: str, poi_coords: dict[str, tuple[float, float]], limit: int = 6) -> list[int]:
+    if not attr_queue:
+        return []
+    pos_coord = poi_coords.get(_norm_name(pos))
+    scored = []
+    for idx, attr in enumerate(attr_queue):
+        required_pri = 0 if (attr.get("required") or attr.get("type_match")) else 1
+        window = _attr_window(agent, attr, constraints)
+        window_pri = 0 if any(v is not None for v in window.values()) else 1
+        dist = 1e9
+        attr_coord = poi_coords.get(_norm_name(attr.get("name", "")))
+        if pos_coord is not None and attr_coord is not None:
+            dist = _haversine(pos_coord, attr_coord)
+        scored.append((required_pri, window_pri, dist, idx))
+    scored.sort()
+    head = [item[3] for item in scored[:max(1, limit)]]
+    if len(head) == len(attr_queue):
+        return head
+    tail = [i for i in range(len(attr_queue)) if i not in set(head)]
+    return head + tail
+
+
+def _norm_name(value: Any) -> str:
+    return str(value).strip().lower() if value is not None else ""
 
 
 # ---------------------------------------------------------------------------
