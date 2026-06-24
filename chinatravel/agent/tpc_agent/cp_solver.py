@@ -495,16 +495,6 @@ def _reconstruct_one(agent, query, constraints, ctx, assignment, attr_order, lun
             activities.append(out_act)
             pos = out_act["end"]
             clock = time_to_minutes(out_act["end_time"])
-            # On first day, try to place breakfast at hotel if arrival permits and we have time
-            # Check if arrival time allows reaching hotel before breakfast window ends (08:30)
-            if clock < 8 * 60 + 30:  # Still have time for breakfast window
-                transports, arrival = agent._get_transport(agent.env, city, pos, hotel_name, minutes_to_time(min(clock, 23 * 60 + 59)), people)
-                if transports is not None and arrival is not None:
-                    arrival_min = time_to_minutes(arrival)
-                    if arrival_min <= 8 * 60 + 30:  # Can reach hotel before breakfast ends
-                        activities.append(agent._make_hotel_breakfast(hotel_name, "07:30", "08:30"))
-                        pos = hotel_name
-                        clock = 8 * 60 + 30
         else:
             # Skip hotel breakfast on days that open with an early-anchored
             # attraction (window latest-start before breakfast ends); start at the
@@ -522,17 +512,6 @@ def _reconstruct_one(agent, query, constraints, ctx, assignment, attr_order, lun
             agent, city, people, constraints, base_visit, attr_queue, lunch_pool, dinner_pool,
             activities, pos, clock, day_close, poi_coords,
         )
-
-        # On last day, ensure breakfast was placed if we haven't seen it yet
-        if is_last:
-            has_breakfast = any(a.get("type") == "breakfast" for a in activities)
-            if not has_breakfast:
-                # Try to place breakfast at hotel before departure
-                # We're back at hotel from fill_day, so just add breakfast if time permits
-                breakfast_end = 8 * 60 + 30
-                if clock <= breakfast_end:
-                    activities.append(agent._make_hotel_breakfast(hotel_name, "07:30", "08:30"))
-                    clock = breakfast_end
 
         if is_last:
             transports, arrival = agent._get_transport(agent.env, city, pos, returning["From"], minutes_to_time(min(clock, 23 * 60 + 59)), people)
