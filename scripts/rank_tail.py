@@ -19,6 +19,7 @@ import os
 import re
 import sys
 from collections import Counter
+from copy import deepcopy
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
@@ -67,10 +68,10 @@ def _plan_fingerprint(path):
     return [st.st_mtime_ns, st.st_size]
 
 
-def _rank_cache_path(split, method, min_score):
+def _rank_cache_path(split, method, min_score, pref_metric):
     out_dir = os.path.join(ROOT, "cache", "tail_rankings")
     os.makedirs(out_dir, exist_ok=True)
-    return os.path.join(out_dir, "{}_{}_ms{:g}_rank_cache.json".format(split, method, float(min_score)))
+    return os.path.join(out_dir, "{}_{}_ms{:g}_{}_rank_cache.json".format(split, method, float(min_score), pref_metric))
 
 
 def _load_rank_cache(path, split, method, min_score):
@@ -154,6 +155,28 @@ def _is_accepted_score(score):
     return score >= 85.0
 
 
+_PR_CONSTRAINTS = None  # lazy cache of eval_tpc.DEFAULT_PR
+_PREF_INDEX = {"dav": 0, "att": 1, "ddr": 2}
+
+
+def _pref_components(plan):
+    """Per-query [DAV, ATT, DDR] in [0,1] (== eval_tpc.cal_per_query_pr_scores ordering)."""
+    global _PR_CONSTRAINTS
+    if _PR_CONSTRAINTS is None:
+        from eval_tpc import DEFAULT_PR
+        _PR_CONSTRAINTS = DEFAULT_PR
+    out = []
+    for constraint in _PR_CONSTRAINTS:
+        vars_dict = deepcopy(func_dict)
+        vars_dict["plan"] = plan
+        try:
+            exec(constraint, {"__builtins__": {"set": set}}, vars_dict)
+            out.append(max(0.0, min(1.0, float(vars_dict.get("result", 0.0)))))
+        except Exception:
+            out.append(0.0)
+    return out
+
+
 def _include_row(mode, score, failed_clause_count):
     if mode == "preference":
         return _is_accepted_score(score)
@@ -162,10 +185,13 @@ def _include_row(mode, score, failed_clause_count):
     return True
 
 
-def _row_priority(mode, score, failed_clause_count, signature_funcs):
+def _row_priority(mode, score, failed_clause_count, signature_funcs, pref_metric, comp):
     if mode == "preference":
-        # Among fully valid plans, per-query score differs only by preference,
-        # so rank directly by remaining score gap.
+        # Among fully valid plans, per-query score differs only by preference.
+        # With a single chosen component, rank by that component's remaining gap;
+        # otherwise rank directly by the blended remaining score gap.
+        if pref_metric != "overall" and comp is not None:
+            return (1.0 - comp[_PREF_INDEX[pref_metric]]) * 100.0
         return max(0.0, 100.0 - score)
     return _compute_priority(score, failed_clause_count, signature_funcs)
 
@@ -192,10 +218,12 @@ def main():
                     help="output split name (default: <split>_tail_focus)")
     ap.add_argument("--report-name", default=None,
                     help="CSV basename (default: <split>_<method>_tail_ranking.csv)")
+    ap.add_argument("--pref-metric", choices=["overall", "dav", "att", "ddr"], default="overall",
+                    help="preference mode only: rank by this component's gap; overall = blended remaining score gap")
     args = ap.parse_args()
 
     split_ids = _read_split_ids(args.split)
-    cache_path = _rank_cache_path(args.split, args.method, args.min_score)
+    cache_path = _rank_cache_path(args.split, args.method, args.min_score, args.pref_metric)
     cache = _load_rank_cache(cache_path, args.split, args.method, args.min_score)
 
     method_dir = os.path.join(ROOT, "results", args.method)
@@ -268,6 +296,8 @@ def main():
             "top_sig_count": top_sig_count,
             "top_funcs": top_funcs,
         }
+        if args.pref_metric != "overall" and _is_accepted_score(score):
+            new_cache[uid]["pref"] = _pref_components(plan)
 
     rows = []
     for uid in split_ids:
@@ -282,7 +312,8 @@ def main():
         top_funcs = ent.get("top_funcs") or []
         if not _include_row(args.mode, score, fail_count):
             continue
-        priority = _row_priority(args.mode, score, fail_count, list(top_sig))
+        comp = ent.get("pref")
+        priority = _row_priority(args.mode, score, fail_count, list(top_sig), args.pref_metric, comp)
         rows.append({
             "uid": uid,
             "score": score,
@@ -294,6 +325,9 @@ def main():
             "plan_exists": int(fp is not None),
             "mode": args.mode,
             "accepted_score": int(_is_accepted_score(score)),
+            "dav": comp[0] if comp else "",
+            "att": comp[1] if comp else "",
+            "ddr": comp[2] if comp else "",
         })
 
     _save_rank_cache(cache_path, args.split, args.method, args.min_score, new_cache)
@@ -329,6 +363,9 @@ def main():
                 "plan_exists",
                 "mode",
                 "accepted_score",
+                "dav",
+                "att",
+                "ddr",
             ],
         )
         writer.writeheader()
@@ -341,7 +378,7 @@ def main():
 
     print("tail-ranking report: {}".format(os.path.relpath(report_path, ROOT)))
     print("focus split: {} ({} IDs)".format(os.path.relpath(focus_split_path, ROOT), len(focus_ids)))
-    print("\nTop 20 by priority (mode={}):".format(args.mode))
+    print("\nTop 20 by priority (mode={}, pref-metric={}):".format(args.mode, args.pref_metric))
     for i, row in enumerate(focus[:20], start=1):
         print(
             "{idx:>2}. {uid} score={score:6.2f} priority={priority:7.2f} fails={fails:>2} sig={sig}".format(

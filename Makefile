@@ -51,6 +51,7 @@ PREFERENCE_LOCAL_ROUNDS ?= 6
 PREFERENCE_LOCAL_TOPK ?= 240
 PREFERENCE_LOCAL_MIN_SCORE ?= 99.5
 PREFERENCE_LOCAL_STOP ?= 2
+PREFERENCE_LOCAL_METRIC ?= overall
 PREFERENCE_LOCAL_RUN_ID ?=
 
 HPC_PARTITION ?= standard
@@ -80,6 +81,7 @@ HPC_PREFERENCE_ROUNDS ?= 10
 HPC_PREFERENCE_TOPK ?= 400
 HPC_PREFERENCE_MIN_SCORE ?= 99.5
 HPC_PREFERENCE_STOP ?= 3
+HPC_PREFERENCE_METRIC ?= overall
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
 .PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
@@ -195,6 +197,7 @@ preference-local:
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
 		--rank-mode preference \
+		--pref-metric $(PREFERENCE_LOCAL_METRIC) \
 		--runner densify \
 		--rounds $(PREFERENCE_LOCAL_ROUNDS) \
 		--top-k $(PREFERENCE_LOCAL_TOPK) \
@@ -262,6 +265,7 @@ hpc-preference:
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
 		--rank-mode preference \
+		--pref-metric $(HPC_PREFERENCE_METRIC) \
 		--runner densify \
 		--rounds $(HPC_PREFERENCE_ROUNDS) \
 		--top-k $(HPC_PREFERENCE_TOPK) \
@@ -284,6 +288,7 @@ hpc-preference-submit:
 		SPLIT=$(SPLIT) \
 		METHOD=$(TAIL_METHOD) \
 		RANK_MODE=preference \
+		PREF_METRIC=$(HPC_PREFERENCE_METRIC) \
 		RUNNER=densify \
 		ROUNDS=$(HPC_PREFERENCE_ROUNDS) \
 		TOPK=$(HPC_PREFERENCE_TOPK) \
@@ -383,6 +388,7 @@ help:
 	  '  PREFERENCE_LOCAL_MIN_SCORE=<n> default: $(PREFERENCE_LOCAL_MIN_SCORE)' \
 	  '  PREFERENCE_LOCAL_STOP=<n> default: $(PREFERENCE_LOCAL_STOP)' \
 	  '  PREFERENCE_LOCAL_RUN_ID=<id> default: auto timestamp' \
+	  '  PREFERENCE_LOCAL_METRIC=<overall|ddr|dav|att> default: $(PREFERENCE_LOCAL_METRIC)' \
 	  '  HPC_PARTITION=<name>    default: $(HPC_PARTITION)' \
 	  '  HPC_WORKERS=<n>         default: $(HPC_WORKERS)' \
 	  '  HPC_MEM=<xG>            default: $(HPC_MEM)' \
@@ -408,4 +414,5 @@ help:
 	  '  HPC_PREFERENCE_MIN_SCORE=<n> default: $(HPC_PREFERENCE_MIN_SCORE)' \
 	  '  HPC_PREFERENCE_STOP=<n> default: $(HPC_PREFERENCE_STOP)' \
 	  '  HPC_PREFERENCE_RUN_ID=<id> default: $(HPC_PREFERENCE_RUN_ID)' \
+	  '  HPC_PREFERENCE_METRIC=<overall|ddr|dav|att> default: $(HPC_PREFERENCE_METRIC)' \
 	  '  VERSION=<vN>           default: next version after the highest v<N> git tag'

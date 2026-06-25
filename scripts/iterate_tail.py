@@ -202,6 +202,8 @@ def main() -> int:
         default="tail",
         help="which subset to rank each round: mixed low-score tail, unresolved constraint tail, or already-solved low-preference queries",
     )
+    ap.add_argument("--pref-metric", choices=["overall", "dav", "att", "ddr"], default="overall",
+                    help="preference mode only: rank each round's focus by this component's gap")
     ap.add_argument(
         "--runner",
         choices=["solve", "densify"],
@@ -247,6 +249,7 @@ def main() -> int:
             "split": args.split,
             "method": args.method,
             "rank_mode": args.rank_mode,
+            "pref_metric": args.pref_metric,
             "runner": args.runner,
             "rounds": args.rounds,
             "top_k": args.top_k,
@@ -312,6 +315,7 @@ def main() -> int:
             "--split", args.split,
             "--method", args.method,
             "--mode", args.rank_mode,
+            "--pref-metric", args.pref_metric,
             "--top-k", str(args.top_k),
             "--min-score", str(args.min_score),
             "--focus-split", focus_split,
