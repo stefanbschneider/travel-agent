@@ -109,12 +109,14 @@ make hpc-preference \
   HPC_PREFERENCE_ROUNDS=10 \
   HPC_PREFERENCE_TOPK=400 \
   HPC_PREFERENCE_MIN_SCORE=99.5 \
+  HPC_PREFERENCE_METRIC=ddr \
   HPC_PREFERENCE_STOP=3
 ```
 
 Why this split helps:
 - unresolved-tail rounds are dominated by hard-logic feasibility search
 - preference rounds avoid those cases and spend budget on improving DAV/ATT/DDR of already-valid plans
+- focus a single preference component with `HPC_PREFERENCE_METRIC` (`ddr` has the most headroom): each round ranks its focus split by that component's per-query gap instead of the blended total; `overall` (default) keeps the blended remaining-score behavior
 
 ## Determinism Guidance
 
