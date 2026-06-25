@@ -7,35 +7,101 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:31",
-          "end_time": "13:47",
-          "start": "Guangzhou South Railway Station",
-          "end": "Chongqing West Railway Station",
-          "price": 636.31,
-          "cost": 1908.9299999999998,
+          "type": "airplane",
+          "start_time": "08:18",
+          "end_time": "09:31",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 474.01,
+          "cost": 1422.03,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G3722"
+          "FlightID": "FL275"
+        },
+        {
+          "type": "lunch",
+          "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 96.0,
+          "cost": 288.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "mode": "taxi",
+              "start_time": "09:31",
+              "end_time": "09:59",
+              "distance": 19.05,
+              "price": 80.42,
+              "cost": 80.42,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "Hongya Cave",
-          "start_time": "14:11",
-          "end_time": "15:41",
+          "position": "Three Gorges Museum",
+          "start_time": "12:03",
+          "end_time": "13:18",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing West Railway Station",
-              "end": "Hongya Cave",
+              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "end": "Three Gorges Museum",
               "mode": "taxi",
-              "start_time": "13:47",
-              "end_time": "14:11",
-              "distance": 16.1,
-              "price": 67.14,
-              "cost": 67.14,
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.23,
+              "price": 12.5,
+              "cost": 12.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing Shibati Traditional Style Area",
+          "start_time": "13:21",
+          "end_time": "14:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Three Gorges Museum",
+              "end": "Chongqing Shibati Traditional Style Area",
+              "mode": "taxi",
+              "start_time": "13:18",
+              "end_time": "13:21",
+              "distance": 2.44,
+              "price": 13.25,
+              "cost": 13.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "White Mansion",
+          "start_time": "14:56",
+          "end_time": "16:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Shibati Traditional Style Area",
+              "end": "White Mansion",
+              "mode": "taxi",
+              "start_time": "14:36",
+              "end_time": "14:56",
+              "distance": 13.92,
+              "price": 57.34,
+              "cost": 57.34,
               "cars": 1
             }
           ]
@@ -50,38 +116,38 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Hongya Cave",
+              "start": "White Mansion",
               "end": "Chongqing Regent Hotel · Robbins Steakhouse",
               "mode": "taxi",
-              "start_time": "15:41",
-              "end_time": "15:43",
-              "distance": 1.41,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "16:11",
+              "end_time": "16:30",
+              "distance": 12.87,
+              "price": 52.62,
+              "cost": 52.62,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Honglou Yinxing Hotel",
-          "start_time": "18:20",
+          "position": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
+          "start_time": "18:30",
           "end_time": "24:00",
-          "price": 344.0,
-          "cost": 688.0,
+          "price": 358.0,
+          "cost": 716.0,
           "rooms": 2,
           "room_type": 2,
           "tickets": 2,
           "transports": [
             {
               "start": "Chongqing Regent Hotel · Robbins Steakhouse",
-              "end": "Honglou Yinxing Hotel",
+              "end": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:20",
-              "distance": 13.74,
-              "price": 56.55,
-              "cost": 56.55,
+              "end_time": "18:30",
+              "distance": 20.59,
+              "price": 87.33,
+              "cost": 87.33,
               "cars": 1
             }
           ]
@@ -93,7 +159,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Honglou Yinxing Hotel",
+          "position": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -104,43 +170,21 @@
         {
           "type": "attraction",
           "position": "Ci Qi Kou Ancient Town",
-          "start_time": "08:43",
-          "end_time": "10:13",
+          "start_time": "09:08",
+          "end_time": "10:23",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Honglou Yinxing Hotel",
+              "start": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
               "end": "Ci Qi Kou Ancient Town",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:43",
-              "distance": 9.11,
-              "price": 36.58,
-              "cost": 36.58,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 96.0,
-          "cost": 288.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Ci Qi Kou Ancient Town",
-              "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "mode": "taxi",
-              "start_time": "10:13",
-              "end_time": "10:31",
-              "distance": 12.16,
-              "price": 49.44,
-              "cost": 49.44,
+              "end_time": "09:08",
+              "distance": 25.67,
+              "price": 110.23,
+              "cost": 110.23,
               "cars": 1
             }
           ]
@@ -148,64 +192,88 @@
         {
           "type": "attraction",
           "position": "Chongqing Happy Valley",
-          "start_time": "12:20",
-          "end_time": "13:50",
+          "start_time": "10:39",
+          "end_time": "11:54",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "start": "Ci Qi Kou Ancient Town",
               "end": "Chongqing Happy Valley",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:20",
-              "distance": 13.58,
-              "price": 55.82,
-              "cost": 55.82,
+              "start_time": "10:23",
+              "end_time": "10:39",
+              "distance": 11.32,
+              "price": 45.66,
+              "cost": 45.66,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+          "start_time": "12:14",
+          "end_time": "13:14",
+          "price": 100.0,
+          "cost": 300.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Happy Valley",
+              "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "mode": "taxi",
+              "start_time": "11:54",
+              "end_time": "12:14",
+              "distance": 13.53,
+              "price": 55.57,
+              "cost": 55.57,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Chongqing Runze Shooting Club",
-          "start_time": "14:25",
-          "end_time": "15:55",
+          "position": "Liberation Monument Pedestrian Street",
+          "start_time": "13:15",
+          "end_time": "14:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing Happy Valley",
-              "end": "Huangmaoping-Metro Station",
-              "mode": "walk",
-              "start_time": "13:50",
-              "end_time": "14:02",
-              "distance": 1.08,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "end": "Liberation Monument Pedestrian Street",
+              "mode": "taxi",
+              "start_time": "13:14",
+              "end_time": "13:15",
+              "distance": 1.32,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Two Rivers Ferry",
+          "start_time": "14:30",
+          "end_time": "15:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
             {
-              "start": "Huangmaoping-Metro Station",
-              "end": "Jintong Road-Metro Station",
-              "mode": "metro",
-              "start_time": "14:02",
-              "end_time": "14:12",
-              "distance": 5.04,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Jintong Road-Metro Station",
-              "end": "Chongqing Runze Shooting Club",
-              "mode": "walk",
-              "start_time": "14:12",
-              "end_time": "14:25",
-              "distance": 1.1,
-              "price": 0,
-              "cost": 0
+              "start": "Liberation Monument Pedestrian Street",
+              "end": "Two Rivers Ferry",
+              "mode": "taxi",
+              "start_time": "14:30",
+              "end_time": "14:30",
+              "distance": 0.57,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -219,58 +287,38 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing Runze Shooting Club",
-              "end": "Jintong Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:55",
-              "end_time": "16:08",
-              "distance": 1.1,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jintong Road-Metro Station",
-              "end": "Linjiangmen-Metro Station",
-              "mode": "metro",
-              "start_time": "16:08",
-              "end_time": "16:26",
-              "distance": 9.45,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Linjiangmen-Metro Station",
+              "start": "Two Rivers Ferry",
               "end": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-              "mode": "walk",
-              "start_time": "16:26",
-              "end_time": "16:28",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:45",
+              "end_time": "15:47",
+              "distance": 1.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Honglou Yinxing Hotel",
-          "start_time": "18:19",
+          "position": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
+          "start_time": "18:33",
           "end_time": "24:00",
-          "price": 344.0,
-          "cost": 688.0,
+          "price": 358.0,
+          "cost": 716.0,
           "rooms": 2,
           "room_type": 2,
           "tickets": 2,
           "transports": [
             {
               "start": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-              "end": "Honglou Yinxing Hotel",
+              "end": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:19",
-              "distance": 13.21,
-              "price": 54.16,
-              "cost": 54.16,
+              "end_time": "18:33",
+              "distance": 22.02,
+              "price": 93.81,
+              "cost": 93.81,
               "cars": 1
             }
           ]
@@ -282,7 +330,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Honglou Yinxing Hotel",
+          "position": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -292,44 +340,66 @@
         },
         {
           "type": "attraction",
-          "position": "Liberation Monument Pedestrian Street",
-          "start_time": "08:51",
-          "end_time": "10:21",
+          "position": "Nanshan Scenic Area",
+          "start_time": "09:00",
+          "end_time": "10:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Honglou Yinxing Hotel",
-              "end": "Liberation Monument Pedestrian Street",
+              "start": "ELONG ETANG (CHONG QING  JIANG BEI INTERNATIONAL AIRPORT  HOTEL))",
+              "end": "Nanshan Scenic Area",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:51",
-              "distance": 14.42,
-              "price": 59.58,
-              "cost": 59.58,
+              "end_time": "09:00",
+              "distance": 20.14,
+              "price": 85.32,
+              "cost": 85.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liziba Light Rail Station",
+          "start_time": "10:27",
+          "end_time": "11:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanshan Scenic Area",
+              "end": "Liziba Light Rail Station",
+              "mode": "taxi",
+              "start_time": "10:15",
+              "end_time": "10:27",
+              "distance": 8.21,
+              "price": 33.44,
+              "cost": 33.44,
               "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 100.0,
-          "cost": 300.0,
+          "position": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+          "start_time": "11:46",
+          "end_time": "12:46",
+          "price": 89.0,
+          "cost": 267.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Liberation Monument Pedestrian Street",
-              "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "start": "Liziba Light Rail Station",
+              "end": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
               "mode": "taxi",
-              "start_time": "10:21",
-              "end_time": "10:22",
-              "distance": 1.32,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "11:42",
+              "end_time": "11:46",
+              "distance": 3.17,
+              "price": 15.79,
+              "cost": 15.79,
               "cars": 1
             }
           ]
@@ -337,19 +407,19 @@
         {
           "type": "attraction",
           "position": "1941 Teahouse and Theater",
-          "start_time": "12:07",
-          "end_time": "13:37",
+          "start_time": "12:54",
+          "end_time": "14:24",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "start": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
               "end": "Linjiangmen-Metro Station",
               "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:03",
-              "distance": 0.32,
+              "start_time": "12:46",
+              "end_time": "12:50",
+              "distance": 0.34,
               "price": 0,
               "cost": 0
             },
@@ -357,8 +427,8 @@
               "start": "Linjiangmen-Metro Station",
               "end": "Xiaoshizi-Metro Station",
               "mode": "metro",
-              "start_time": "12:03",
-              "end_time": "12:04",
+              "start_time": "12:50",
+              "end_time": "12:51",
               "distance": 0.93,
               "price": 2,
               "cost": 6,
@@ -368,8 +438,8 @@
               "start": "Xiaoshizi-Metro Station",
               "end": "1941 Teahouse and Theater",
               "mode": "walk",
-              "start_time": "12:04",
-              "end_time": "12:07",
+              "start_time": "12:51",
+              "end_time": "12:54",
               "distance": 0.3,
               "price": 0,
               "cost": 0
@@ -379,8 +449,8 @@
         {
           "type": "attraction",
           "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-          "start_time": "13:41",
-          "end_time": "15:11",
+          "start_time": "14:28",
+          "end_time": "15:58",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -389,8 +459,8 @@
               "start": "1941 Teahouse and Theater",
               "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
               "mode": "walk",
-              "start_time": "13:37",
-              "end_time": "13:41",
+              "start_time": "14:24",
+              "end_time": "14:28",
               "distance": 0.36145056401420345,
               "price": 0,
               "cost": 0
@@ -410,8 +480,8 @@
               "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
               "end": "Xiaoshizi-Metro Station",
               "mode": "walk",
-              "start_time": "15:11",
-              "end_time": "15:12",
+              "start_time": "15:58",
+              "end_time": "15:59",
               "distance": 0.14,
               "price": 0,
               "cost": 0
@@ -420,8 +490,8 @@
               "start": "Xiaoshizi-Metro Station",
               "end": "Guanyinqiao-Metro Station",
               "mode": "metro",
-              "start_time": "15:12",
-              "end_time": "15:22",
+              "start_time": "15:59",
+              "end_time": "16:09",
               "distance": 5.17,
               "price": 3,
               "cost": 9,
@@ -431,8 +501,8 @@
               "start": "Guanyinqiao-Metro Station",
               "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
               "mode": "walk",
-              "start_time": "15:22",
-              "end_time": "15:26",
+              "start_time": "16:09",
+              "end_time": "16:13",
               "distance": 0.33,
               "price": 0,
               "cost": 0
@@ -486,6 +556,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 0.0316770076751709,
-  "_eval_score": 96.60555555555555
+  "elapsed_time(sec)": 182.64776420593262,
+  "_eval_score": 98.92777777777778
 }
