@@ -7,100 +7,80 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "07:02",
-          "end_time": "08:21",
-          "start": "Beijing Capital International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 550.5,
-          "cost": 1651.5,
+          "type": "train",
+          "start_time": "07:00",
+          "end_time": "11:29",
+          "start": "Beijing South Railway Station",
+          "end": "Shanghai Station",
+          "price": 693.75,
+          "cost": 2081.25,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL084"
+          "TrainID": "G1"
         },
         {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "11:33",
+          "end_time": "12:33",
           "price": 600.0,
           "cost": 1800.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Shanghai Station",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "08:21",
-              "end_time": "09:13",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "11:29",
+              "end_time": "11:33",
+              "distance": 3.21,
+              "price": 15.94,
+              "cost": 15.94,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "12:06",
-          "end_time": "13:36",
+          "position": "Shanghai Natural History Museum",
+          "start_time": "12:36",
+          "end_time": "14:21",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Yong Fu (Huangpu Branch)",
-              "end": "The Bund",
+              "end": "Shanghai Natural History Museum",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:06",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
+              "start_time": "12:33",
+              "end_time": "12:36",
+              "distance": 2.36,
+              "price": 12.96,
+              "cost": 12.96,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "13:52",
-          "end_time": "15:22",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "14:21",
+          "end_time": "16:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "The Bund",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
-              "start_time": "13:36",
-              "end_time": "13:44",
-              "distance": 0.74,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "metro",
-              "start_time": "13:44",
-              "end_time": "13:50",
-              "distance": 3.15,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "mode": "walk",
-              "start_time": "13:50",
-              "end_time": "13:52",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "start": "Shanghai Natural History Museum",
+              "end": "Jing'an Sculpture Park",
+              "mode": "taxi",
+              "start_time": "14:21",
+              "end_time": "14:21",
+              "distance": 0.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -114,58 +94,60 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:22",
-              "end_time": "15:24",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:24",
-              "end_time": "15:44",
-              "distance": 10.01,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
+              "start": "Jing'an Sculpture Park",
               "end": "Fu He Hui",
-              "mode": "walk",
-              "start_time": "15:44",
-              "end_time": "15:46",
-              "distance": 0.22,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:06",
+              "end_time": "16:12",
+              "distance": 4.61,
+              "price": 20.82,
+              "cost": 20.82,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Venice Town",
+          "start_time": "18:07",
+          "end_time": "19:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Venice Town",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 4.78,
+              "price": 21.41,
+              "cost": 21.41,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
-          "start_time": "18:49",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+          "start_time": "20:02",
           "end_time": "24:00",
-          "price": 339.0,
-          "cost": 1017.0,
+          "price": 501.0,
+          "cost": 1503.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
           "transports": [
             {
-              "start": "Fu He Hui",
-              "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "start": "Venice Town",
+              "end": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:49",
-              "distance": 32.88,
-              "price": 142.67,
-              "cost": 142.67,
+              "start_time": "19:52",
+              "end_time": "20:02",
+              "distance": 7.3,
+              "price": 30.25,
+              "cost": 30.25,
               "cars": 1
             }
           ]
@@ -177,7 +159,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -187,22 +169,44 @@
         },
         {
           "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "09:11",
-          "end_time": "10:41",
+          "position": "The Bund",
+          "start_time": "08:35",
+          "end_time": "10:20",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
-              "end": "Huangpu River",
+              "start": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+              "end": "The Bund",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:11",
-              "distance": 27.5,
-              "price": 118.44,
-              "cost": 118.44,
+              "end_time": "08:35",
+              "distance": 3.51,
+              "price": 16.97,
+              "cost": 16.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River",
+          "start_time": "10:20",
+          "end_time": "12:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "Huangpu River",
+              "mode": "taxi",
+              "start_time": "10:20",
+              "end_time": "10:20",
+              "distance": 0.24,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -210,8 +214,8 @@
         {
           "type": "lunch",
           "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "12:14",
+          "end_time": "13:14",
           "price": 203.0,
           "cost": 609.0,
           "tickets": 3,
@@ -220,8 +224,8 @@
               "start": "Huangpu River",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "10:41",
-              "end_time": "10:50",
+              "start_time": "12:05",
+              "end_time": "12:14",
               "distance": 6.14,
               "price": 26.2,
               "cost": 26.2,
@@ -231,68 +235,68 @@
         },
         {
           "type": "attraction",
-          "position": "Shanghai Planetarium",
-          "start_time": "13:22",
-          "end_time": "14:52",
+          "position": "Shanghai Museum",
+          "start_time": "13:20",
+          "end_time": "15:05",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Planetarium",
+              "end": "Shanghai Museum",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "13:22",
-              "distance": 55.1,
-              "price": 242.63,
-              "cost": 242.63,
+              "start_time": "13:14",
+              "end_time": "13:20",
+              "distance": 4.27,
+              "price": 19.65,
+              "cost": 19.65,
               "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+          "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 1026.0,
-          "cost": 3078.0,
+          "price": 290.0,
+          "cost": 870.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Planetarium",
-              "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+              "start": "Shanghai Museum",
+              "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
               "mode": "taxi",
-              "start_time": "14:52",
-              "end_time": "16:13",
-              "distance": 54.17,
-              "price": 238.48,
-              "cost": 238.48,
+              "start_time": "15:05",
+              "end_time": "15:05",
+              "distance": 0.19,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
-          "start_time": "18:40",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+          "start_time": "18:03",
           "end_time": "24:00",
-          "price": 339.0,
-          "cost": 1017.0,
+          "price": 501.0,
+          "cost": 1503.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
           "transports": [
             {
-              "start": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
-              "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "start": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+              "end": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:40",
-              "distance": 27.02,
-              "price": 116.29,
-              "cost": 116.29,
+              "end_time": "18:03",
+              "distance": 2.05,
+              "price": 11.87,
+              "cost": 11.87,
               "cars": 1
             }
           ]
@@ -304,7 +308,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -315,21 +319,43 @@
         {
           "type": "attraction",
           "position": "Nanjing Road Pedestrian Street",
-          "start_time": "09:12",
-          "end_time": "10:42",
+          "start_time": "08:34",
+          "end_time": "10:19",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "start": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
               "end": "Nanjing Road Pedestrian Street",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:12",
-              "distance": 28.24,
-              "price": 121.77,
-              "cost": 121.77,
+              "end_time": "08:34",
+              "distance": 2.89,
+              "price": 14.8,
+              "cost": 14.8,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lujiazui",
+          "start_time": "10:22",
+          "end_time": "12:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Lujiazui",
+              "mode": "taxi",
+              "start_time": "10:19",
+              "end_time": "10:22",
+              "distance": 2.07,
+              "price": 11.95,
+              "cost": 11.95,
               "cars": 1
             }
           ]
@@ -337,30 +363,30 @@
         {
           "type": "lunch",
           "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "12:07",
+          "end_time": "13:07",
           "price": 498.0,
           "cost": 1494.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing Road Pedestrian Street",
+              "start": "Lujiazui",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "taxi",
-              "start_time": "10:42",
-              "end_time": "10:45",
-              "distance": 2.22,
-              "price": 12.47,
-              "cost": 12.47,
+              "start_time": "12:07",
+              "end_time": "12:07",
+              "distance": 0.43,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "1933 Old Millfun",
-          "start_time": "12:15",
-          "end_time": "13:45",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "13:21",
+          "end_time": "14:51",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -369,166 +395,82 @@
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "end": "Pudong South Road-Metro Station",
               "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:08",
+              "start_time": "13:07",
+              "end_time": "13:15",
               "distance": 0.69,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Pudong South Road-Metro Station",
-              "end": "Liping Road-Metro Station",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
-              "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 2.72,
+              "start_time": "13:15",
+              "end_time": "13:19",
+              "distance": 2.2,
               "price": 2,
               "cost": 6,
               "tickets": 3
             },
             {
-              "start": "Liping Road-Metro Station",
-              "end": "1933 Old Millfun",
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "walk",
-              "start_time": "12:13",
-              "end_time": "12:15",
-              "distance": 0.24,
+              "start_time": "13:19",
+              "end_time": "13:21",
+              "distance": 0.21,
               "price": 0,
               "cost": 0
             }
           ]
         },
         {
-          "type": "attraction",
-          "position": "China Securities Museum",
-          "start_time": "13:49",
-          "end_time": "15:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "1933 Old Millfun",
-              "end": "Liping Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:45",
-              "end_time": "13:47",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "metro",
-              "start_time": "13:47",
-              "end_time": "13:49",
-              "distance": 1.21,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "China Securities Museum",
-              "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "13:49",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "type": "train",
           "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 48.0,
+          "end_time": "21:33",
+          "start": "Shanghai Hongqiao Station",
+          "end": "Beijing South Railway Station",
+          "price": 693.75,
+          "cost": 2081.25,
           "tickets": 3,
           "transports": [
             {
-              "start": "China Securities Museum",
-              "end": "International Passenger Transport Center-Metro Station",
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "walk",
-              "start_time": "15:19",
-              "end_time": "15:19",
-              "distance": 0.08,
+              "start_time": "14:51",
+              "end_time": "14:53",
+              "distance": 0.21,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
               "mode": "metro",
-              "start_time": "15:19",
-              "end_time": "15:30",
-              "distance": 5.51,
-              "price": 3,
-              "cost": 9,
+              "start_time": "14:53",
+              "end_time": "15:35",
+              "distance": 21.0,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "start": "Hongqiao Railway Station-Metro Station",
+              "end": "Shanghai Hongqiao Station",
               "mode": "walk",
-              "start_time": "15:30",
-              "end_time": "15:40",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "19:32",
-          "end_time": "20:51",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Beijing Capital International Airport",
-          "price": 521.78,
-          "cost": 1565.34,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "19:09",
-              "distance": 29.96,
-              "price": 7,
-              "cost": 21,
-              "tickets": 3
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "19:09",
-              "end_time": "19:24",
-              "distance": 1.27,
+              "start_time": "15:35",
+              "end_time": "15:36",
+              "distance": 0.12,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL003"
+          "TrainID": "G24"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03446602821350098,
-  "_eval_score": 96.38194444444444
+  "elapsed_time(sec)": 182.1369867324829,
+  "_eval_score": 97.63888888888889
 }
