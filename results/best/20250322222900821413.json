@@ -44,7 +44,7 @@
           "type": "attraction",
           "position": "The Bund",
           "start_time": "12:06",
-          "end_time": "13:21",
+          "end_time": "13:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -65,8 +65,8 @@
         {
           "type": "attraction",
           "position": "Huangpu River",
-          "start_time": "13:21",
-          "end_time": "14:36",
+          "start_time": "13:06",
+          "end_time": "14:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -75,8 +75,8 @@
               "start": "The Bund",
               "end": "Huangpu River",
               "mode": "taxi",
-              "start_time": "13:21",
-              "end_time": "13:21",
+              "start_time": "13:06",
+              "end_time": "13:06",
               "distance": 0.24,
               "price": 11.0,
               "cost": 11.0,
@@ -86,23 +86,22 @@
         },
         {
           "type": "attraction",
-          "position": "Shanghai Museum",
-          "start_time": "14:38",
-          "end_time": "15:53",
+          "position": "Bank of China",
+          "start_time": "14:09",
+          "end_time": "15:39",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Huangpu River",
-              "end": "Shanghai Museum",
-              "mode": "taxi",
-              "start_time": "14:36",
-              "end_time": "14:38",
-              "distance": 1.98,
-              "price": 11.63,
-              "cost": 11.63,
-              "cars": 1
+              "end": "Bank of China",
+              "mode": "walk",
+              "start_time": "14:06",
+              "end_time": "14:09",
+              "distance": 0.3275296223485583,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -116,38 +115,80 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Museum",
+              "start": "Bank of China",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "15:39",
+              "end_time": "15:45",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:45",
+              "end_time": "15:59",
+              "distance": 7.23,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
+              "mode": "walk",
+              "start_time": "15:59",
+              "end_time": "16:01",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "18:09",
+          "end_time": "19:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Nanjing Road Pedestrian Street",
               "mode": "taxi",
-              "start_time": "15:53",
-              "end_time": "16:00",
-              "distance": 5.3,
-              "price": 23.26,
-              "cost": 23.26,
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 6.42,
+              "price": 27.17,
+              "cost": 27.17,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Wassim Hotel (Shanghai Pudong Theme Park)",
-          "start_time": "18:37",
+          "position": "Nanjiao Hotel Shanghai",
+          "start_time": "20:01",
           "end_time": "24:00",
-          "price": 469.0,
-          "cost": 1876.0,
+          "price": 522.0,
+          "cost": 2088.0,
           "rooms": 4,
           "room_type": 1,
           "tickets": 4,
           "transports": [
             {
-              "start": "Fu He Hui",
-              "end": "Wassim Hotel (Shanghai Pudong Theme Park)",
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Nanjiao Hotel Shanghai",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:37",
-              "distance": 25.07,
-              "price": 107.51,
-              "cost": 107.51,
+              "start_time": "19:09",
+              "end_time": "20:01",
+              "distance": 35.27,
+              "price": 153.4,
+              "cost": 153.4,
               "cars": 1
             }
           ]
@@ -159,7 +200,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Wassim Hotel (Shanghai Pudong Theme Park)",
+          "position": "Nanjiao Hotel Shanghai",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -169,44 +210,22 @@
         },
         {
           "type": "attraction",
-          "position": "Nanjing Road Pedestrian Street",
-          "start_time": "09:00",
-          "end_time": "10:15",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Wassim Hotel (Shanghai Pudong Theme Park)",
-              "end": "Nanjing Road Pedestrian Street",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:00",
-              "distance": 20.37,
-              "price": 86.36,
-              "cost": 86.36,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
           "position": "Lujiazui",
-          "start_time": "10:18",
-          "end_time": "11:33",
+          "start_time": "09:22",
+          "end_time": "10:22",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing Road Pedestrian Street",
+              "start": "Nanjiao Hotel Shanghai",
               "end": "Lujiazui",
               "mode": "taxi",
-              "start_time": "10:15",
-              "end_time": "10:18",
-              "distance": 2.07,
-              "price": 11.95,
-              "cost": 11.95,
+              "start_time": "08:30",
+              "end_time": "09:22",
+              "distance": 35.11,
+              "price": 152.71,
+              "cost": 152.71,
               "cars": 1
             }
           ]
@@ -214,8 +233,8 @@
         {
           "type": "attraction",
           "position": "Shanghai Natural History Museum",
-          "start_time": "11:39",
-          "end_time": "12:54",
+          "start_time": "10:28",
+          "end_time": "11:28",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -224,8 +243,8 @@
               "start": "Lujiazui",
               "end": "Shanghai Natural History Museum",
               "mode": "taxi",
-              "start_time": "11:33",
-              "end_time": "11:39",
+              "start_time": "10:22",
+              "end_time": "10:28",
               "distance": 4.11,
               "price": 19.08,
               "cost": 19.08,
@@ -234,23 +253,45 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "11:28",
+          "end_time": "12:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Natural History Museum",
+              "end": "Jing'an Sculpture Park",
+              "mode": "taxi",
+              "start_time": "11:28",
+              "end_time": "11:28",
+              "distance": 0.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "13:00",
-          "end_time": "14:00",
+          "start_time": "12:34",
+          "end_time": "13:34",
           "price": 203.0,
           "cost": 812.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Natural History Museum",
+              "start": "Jing'an Sculpture Park",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "12:54",
-              "end_time": "13:00",
+              "start_time": "12:28",
+              "end_time": "12:34",
               "distance": 4.5,
-              "price": 20.45,
-              "cost": 20.45,
+              "price": 20.47,
+              "cost": 20.47,
               "cars": 1
             }
           ]
@@ -258,8 +299,8 @@
         {
           "type": "attraction",
           "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "14:20",
-          "end_time": "15:50",
+          "start_time": "13:54",
+          "end_time": "15:24",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -268,8 +309,8 @@
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
               "end": "Jiashan Road-Metro Station",
               "mode": "walk",
-              "start_time": "14:00",
-              "end_time": "14:03",
+              "start_time": "13:34",
+              "end_time": "13:37",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -278,8 +319,8 @@
               "start": "Jiashan Road-Metro Station",
               "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
-              "start_time": "14:03",
-              "end_time": "14:18",
+              "start_time": "13:37",
+              "end_time": "13:52",
               "distance": 7.8,
               "price": 3,
               "cost": 12,
@@ -289,8 +330,8 @@
               "start": "Yuanshen Sports Center-Metro Station",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "walk",
-              "start_time": "14:18",
-              "end_time": "14:20",
+              "start_time": "13:52",
+              "end_time": "13:54",
               "distance": 0.21,
               "price": 0,
               "cost": 0
@@ -311,8 +352,8 @@
               "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "end": "Yuanshen Sports Center-Metro Station",
               "mode": "walk",
-              "start_time": "15:50",
-              "end_time": "15:52",
+              "start_time": "15:24",
+              "end_time": "15:26",
               "distance": 0.21,
               "price": 0,
               "cost": 0
@@ -321,8 +362,8 @@
               "start": "Yuanshen Sports Center-Metro Station",
               "end": "Pudong International Airport-Metro Station",
               "mode": "metro",
-              "start_time": "15:52",
-              "end_time": "16:46",
+              "start_time": "15:26",
+              "end_time": "16:20",
               "distance": 27.38,
               "price": 6,
               "cost": 24,
@@ -332,8 +373,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "16:46",
-              "end_time": "17:01",
+              "start_time": "16:20",
+              "end_time": "16:35",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -344,6 +385,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 185.36825323104858,
-  "_eval_score": 97.60912698412699
+  "elapsed_time(sec)": 138.86789560317993,
+  "_eval_score": 98.08058608058607
 }
