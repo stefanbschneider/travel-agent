@@ -268,6 +268,7 @@ def main() -> int:
             "TPC_CP_AFTER_PASS": os.environ.get("TPC_CP_AFTER_PASS", None),
             "TPC_CP_FOUR_SLOT_SHARE": os.environ.get("TPC_CP_FOUR_SLOT_SHARE", None),
             "TPC_CP_FOUR_SLOT_ROUNDS": os.environ.get("TPC_CP_FOUR_SLOT_ROUNDS", None),
+            "TPC_CP_RECON_SHUFFLES": os.environ.get("TPC_CP_RECON_SHUFFLES", None),
             "TPC_CP_TIME_LIMIT_SEC": os.environ.get("TPC_CP_TIME_LIMIT_SEC", None),
             "TPC_SOLVE_BUDGET_SEC": os.environ.get("TPC_SOLVE_BUDGET_SEC", None),
             "TPC_MAX_RESTARTS": os.environ.get("TPC_MAX_RESTARTS", None),
