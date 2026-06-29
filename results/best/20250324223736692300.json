@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:39",
-          "end_time": "09:09",
+          "start_time": "01:46",
+          "end_time": "03:16",
           "start": "Guangzhou Baiyun International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 601.04,
-          "cost": 2404.16,
+          "end": "Shanghai Pudong International Airport",
+          "price": 589.3,
+          "cost": 2357.2,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL248"
+          "FlightID": "FL247"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "03:16",
+              "end_time": "03:31",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "03:31",
+              "end_time": "04:39",
+              "distance": 34.08,
+              "price": 7,
+              "cost": 28,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "04:39",
+              "end_time": "04:46",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "West Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "09:09",
-              "end_time": "09:18",
-              "distance": 0.78,
+              "start_time": "09:00",
+              "end_time": "09:07",
+              "distance": 0.59,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Hongqiao Terminal 1-Metro Station",
+              "start": "West Nanjing Road-Metro Station",
               "end": "Jing'an Temple-Metro Station",
               "mode": "metro",
-              "start_time": "09:18",
-              "end_time": "09:38",
-              "distance": 10.09,
-              "price": 4,
-              "cost": 16,
+              "start_time": "09:07",
+              "end_time": "09:09",
+              "distance": 1.48,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Jing'an Temple-Metro Station",
               "end": "Anfu Road",
               "mode": "walk",
-              "start_time": "09:38",
-              "end_time": "09:43",
+              "start_time": "09:09",
+              "end_time": "09:14",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -360,13 +402,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:27",
-          "end_time": "09:57",
-          "start": "Shanghai Station",
-          "end": "Guangzhou Station",
-          "price": 605.95,
-          "cost": 2423.8,
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
@@ -381,31 +422,74 @@
             },
             {
               "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Shanghai Railway Station-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
               "start_time": "15:38",
-              "end_time": "15:53",
-              "distance": 7.54,
+              "end_time": "15:50",
+              "distance": 6.16,
               "price": 3,
               "cost": 12,
               "tickets": 4
             },
             {
-              "start": "Shanghai Railway Station-Metro Station",
-              "end": "Shanghai Station",
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "15:53",
-              "end_time": "15:55",
-              "distance": 0.21,
+              "start_time": "15:50",
+              "end_time": "16:00",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:32",
+          "end_time": "23:02",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 602.14,
+          "cost": 2408.56,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:51",
+              "distance": 20.87,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "Shanghai Hongqiao International Airport",
+              "mode": "walk",
+              "start_time": "18:51",
+              "end_time": "19:00",
+              "distance": 0.78,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "Z99"
+          "FlightID": "FL027"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 183.74210286140442,
-  "_eval_score": 98.33333333333334
+  "_eval_score": 99.82222222222222
 }

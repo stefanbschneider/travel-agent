@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:58",
-          "end_time": "08:18",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 277.83,
-          "cost": 555.66,
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL071"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "07:17",
+          "end_time": "08:17",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "walk",
+              "start_time": "00:53",
+              "end_time": "07:17",
+              "distance": 32.08029663048204,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Laomendong Historical Block",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "end": "Laomendong Historical Block",
+              "mode": "walk",
+              "start_time": "08:17",
+              "end_time": "08:28",
+              "distance": 0.9675505217579383,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Laomendong Historical Block",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "mode": "taxi",
-              "start_time": "08:18",
-              "end_time": "09:07",
-              "distance": 32.94,
-              "price": 142.93,
-              "cost": 142.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:04",
+              "distance": 0.34656388181023273,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -383,5 +424,5 @@
     }
   ],
   "elapsed_time(sec)": 0.030341148376464844,
-  "_eval_score": 96.59285714285714
+  "_eval_score": 96.6937441643324
 }

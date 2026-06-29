@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "02:56",
-          "end_time": "04:27",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 565.32,
-          "cost": 1695.96,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL020"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Xiangmei North-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "04:01",
+              "distance": 23.94,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Xiangmei North-Metro Station",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "walk",
+              "start_time": "04:01",
+              "end_time": "04:06",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Joyful Gathering (Jingtian Branch)",
+              "end": "Xiangmei North-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiangmei North-Metro Station",
+              "end": "Xingdong-Metro Station",
+              "mode": "metro",
+              "start_time": "08:05",
+              "end_time": "08:29",
+              "distance": 12.1,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Xingdong-Metro Station",
               "end": "Bao'an Jesus the King Church",
-              "mode": "taxi",
-              "start_time": "04:27",
-              "end_time": "04:44",
-              "distance": 11.57,
-              "price": 46.76,
-              "cost": 46.76,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:29",
+              "end_time": "08:40",
+              "distance": 0.95,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -942,13 +1004,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:16",
-          "end_time": "17:47",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 559.04,
-          "cost": 1677.12,
+          "type": "attraction",
+          "position": "Cave Exploration Factory (Happy Coast Branch)",
+          "start_time": "15:24",
+          "end_time": "16:24",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -963,31 +1024,116 @@
             },
             {
               "start": "Shaibu-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Qiaocheng East-Metro Station",
               "mode": "metro",
               "start_time": "14:57",
-              "end_time": "16:02",
-              "distance": 32.69,
-              "price": 7,
-              "cost": 21,
+              "end_time": "15:23",
+              "distance": 13.1,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Cave Exploration Factory (Happy Coast Branch)",
+              "mode": "walk",
+              "start_time": "15:23",
+              "end_time": "15:24",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 27.0,
+          "cost": 81.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "end": "Qiaocheng East-Metro Station",
+              "mode": "walk",
+              "start_time": "16:24",
+              "end_time": "16:25",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Dongjiaotou-Metro Station",
+              "mode": "metro",
+              "start_time": "16:25",
+              "end_time": "16:41",
+              "distance": 8.45,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Dongjiaotou-Metro Station",
+              "end": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
+              "mode": "walk",
+              "start_time": "16:41",
+              "end_time": "16:44",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:37",
+          "end_time": "01:08",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 572.8,
+          "cost": 1718.3999999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
+              "end": "Dongjiaotou-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongjiaotou-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "18:45",
+              "distance": 21.0,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "16:02",
-              "end_time": "16:07",
+              "start_time": "18:45",
+              "end_time": "18:50",
               "distance": 0.45,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL162"
+          "FlightID": "FL166"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 193.66127038002014,
-  "_eval_score": 98.87918871252205
+  "_eval_score": 99.64285714285714
 }

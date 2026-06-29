@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "10:05",
+          "end_time": "11:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Jing'an Park",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 0.4434750434069161,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jing'an Park",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "11:05",
+              "end_time": "11:13",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "11:13",
+              "end_time": "11:15",
+              "distance": 1.16,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
               "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:15",
+              "end_time": "11:18",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -382,5 +486,5 @@
     }
   ],
   "elapsed_time(sec)": 0.03260087966918945,
-  "_eval_score": 96.78030303030303
+  "_eval_score": 99.06462585034014
 }

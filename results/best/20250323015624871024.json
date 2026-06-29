@@ -298,13 +298,12 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
           "start_time": "17:00",
-          "end_time": "20:14",
-          "start": "Beijing South Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 35.0,
           "tickets": 5,
           "transports": [
             {
@@ -319,31 +318,74 @@
             },
             {
               "start": "Wangjing South-Metro Station",
-              "end": "Beijing South Railway Station-Metro Station",
+              "end": "Dongsi-Metro Station",
               "mode": "metro",
               "start_time": "16:09",
-              "end_time": "16:40",
-              "distance": 15.93,
-              "price": 5,
-              "cost": 25,
+              "end_time": "16:26",
+              "distance": 8.67,
+              "price": 3,
+              "cost": 15,
               "tickets": 5
             },
             {
-              "start": "Beijing South Railway Station-Metro Station",
-              "end": "Beijing South Railway Station",
+              "start": "Dongsi-Metro Station",
+              "end": "Helude Candied Hawthorn Sticks",
               "mode": "walk",
-              "start_time": "16:40",
-              "end_time": "16:40",
-              "distance": 0.02,
+              "start_time": "16:26",
+              "end_time": "16:26",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "21:21",
+          "end_time": "06:46",
+          "start": "Beijing Railway Station",
+          "end": "Nanjing Station",
+          "price": 538.92,
+          "cost": 2694.6,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Dongsi-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:00",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongsi-Metro Station",
+              "end": "Beijing Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 2.31,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Beijing Railway Station-Metro Station",
+              "end": "Beijing Railway Station",
+              "mode": "walk",
+              "start_time": "18:04",
+              "end_time": "18:06",
+              "distance": 0.24,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G21"
+          "TrainID": "D5"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 124.16706109046936,
-  "_eval_score": 97.6765873015873
+  "_eval_score": 98.54166666666666
 }

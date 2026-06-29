@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:02",
-          "end_time": "07:37",
-          "start": "Shanghai Hongqiao Station",
+          "start_time": "05:46",
+          "end_time": "06:11",
+          "start": "Shanghai Station",
           "end": "Suzhou Station",
-          "price": 50.99,
-          "cost": 152.97,
+          "price": 55.23,
+          "cost": 165.69,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D3072"
+          "TrainID": "G7032"
+        },
+        {
+          "type": "breakfast",
+          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+          "start_time": "06:22",
+          "end_time": "07:22",
+          "price": 10.0,
+          "cost": 30.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "06:11",
+              "end_time": "06:12",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "metro",
+              "start_time": "06:12",
+              "end_time": "06:19",
+              "distance": 3.85,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "mode": "walk",
+              "start_time": "06:19",
+              "end_time": "06:22",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Suzhou Station",
+              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "walk",
+              "start_time": "07:22",
+              "end_time": "07:25",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Mudu-Metro Station",
+              "mode": "metro",
+              "start_time": "07:25",
+              "end_time": "07:45",
+              "distance": 10.37,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Mudu-Metro Station",
               "end": "Floral Mountain Retreat · Pure Vegetarian Lodge",
-              "mode": "taxi",
-              "start_time": "07:37",
-              "end_time": "07:55",
-              "distance": 12.3,
-              "price": 50.04,
-              "cost": 50.04,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:45",
+              "end_time": "08:32",
+              "distance": 3.94,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -489,13 +551,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "17:27",
-          "start": "Suzhou North Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 55.23,
-          "cost": 165.69,
+          "type": "dinner",
+          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 27.0,
           "tickets": 3,
           "transports": [
             {
@@ -510,31 +571,74 @@
             },
             {
               "start": "Meixiang-Metro Station",
-              "end": "Suzhou North Railway Station-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
               "mode": "metro",
               "start_time": "16:36",
-              "end_time": "16:55",
-              "distance": 9.67,
-              "price": 4,
-              "cost": 12,
+              "end_time": "16:43",
+              "distance": 3.69,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
-              "start": "Suzhou North Railway Station-Metro Station",
-              "end": "Suzhou North Station",
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
               "mode": "walk",
-              "start_time": "16:55",
-              "end_time": "16:56",
-              "distance": 0.14,
+              "start_time": "16:43",
+              "end_time": "16:48",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "22:55",
+          "end_time": "23:20",
+          "start": "Suzhou Station",
+          "end": "Shanghai Hongqiao Station",
+          "price": 55.23,
+          "cost": 165.69,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "18:12",
+              "distance": 3.95,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Suzhou Station",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:13",
+              "distance": 0.13,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G3251"
+          "TrainID": "G7167"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.95910382270813,
-  "_eval_score": 98.07873851294904
+  "_eval_score": 99.14115646258503
 }

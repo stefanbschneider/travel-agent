@@ -360,13 +360,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "18:27",
-          "end_time": "22:13",
-          "start": "Chengdu East Railway Station",
-          "end": "Hangzhou Railway Station",
-          "price": 616.66,
-          "cost": 1849.98,
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 15.0,
           "tickets": 3,
           "transports": [
             {
@@ -381,31 +380,74 @@
             },
             {
               "start": "Jinjiang Hotel-Metro Station",
-              "end": "Chengdu East Railway Station-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
               "start_time": "14:56",
-              "end_time": "15:10",
-              "distance": 7.45,
-              "price": 3,
-              "cost": 9,
+              "end_time": "15:00",
+              "distance": 2.25,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
-              "start": "Chengdu East Railway Station-Metro Station",
-              "end": "Chengdu East Railway Station",
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
               "mode": "walk",
-              "start_time": "15:10",
+              "start_time": "15:00",
               "end_time": "15:10",
-              "distance": 0.0,
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:32",
+          "end_time": "23:27",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 786.3,
+          "cost": 2358.8999999999996,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "19:59",
+              "distance": 54.5,
+              "price": 9,
+              "cost": 27,
+              "tickets": 3
+            },
+            {
+              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "end": "Chengdu Tianfu International Airport",
+              "mode": "walk",
+              "start_time": "19:59",
+              "end_time": "20:43",
+              "distance": 3.72,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "K530"
+          "FlightID": "FL460"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 188.48233819007874,
-  "_eval_score": 98.33333333333334
+  "_eval_score": 98.87755102040816
 }

@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:57",
-          "end_time": "11:10",
+          "start_time": "04:31",
+          "end_time": "05:44",
           "start": "Chengdu Shuangliu International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 493.19,
-          "cost": 1479.57,
+          "price": 471.1,
+          "cost": 1413.3000000000002,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL468"
+          "FlightID": "FL465"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:50",
+          "end_time": "07:50",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "05:44",
+              "end_time": "05:50",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Pengliuyang-Metro Station",
+              "mode": "metro",
+              "start_time": "05:50",
+              "end_time": "06:43",
+              "distance": 26.72,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Pengliuyang-Metro Station",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "walk",
+              "start_time": "06:43",
+              "end_time": "06:50",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bronze Sculpture of the Yellow Crane's Return",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Pengliuyang-Metro Station",
+              "mode": "walk",
+              "start_time": "07:50",
+              "end_time": "07:57",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pengliuyang-Metro Station",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "metro",
+              "start_time": "07:57",
+              "end_time": "08:00",
+              "distance": 1.51,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Bronze Sculpture of the Yellow Crane's Return",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Tianhe International Airport",
+              "start": "Bronze Sculpture of the Yellow Crane's Return",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Huquan-Metro Station",
+              "mode": "metro",
+              "start_time": "10:06",
+              "end_time": "10:21",
+              "distance": 7.79,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Huquan-Metro Station",
               "end": "Shrimp King (Huquan Branch)",
-              "mode": "taxi",
-              "start_time": "11:10",
-              "end_time": "11:59",
-              "distance": 32.81,
-              "price": 142.33,
-              "cost": 142.33,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:21",
+              "end_time": "10:27",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -729,5 +833,5 @@
     }
   ],
   "elapsed_time(sec)": 182.74644660949707,
-  "_eval_score": 98.92339065255732
+  "_eval_score": 99.62725779967158
 }

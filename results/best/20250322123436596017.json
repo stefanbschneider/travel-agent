@@ -7,16 +7,184 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "03:41",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "03:41",
+              "end_time": "04:31",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "04:31",
+              "end_time": "04:37",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:11",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "walk",
+              "start_time": "08:11",
+              "end_time": "08:15",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:04",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "metro",
+              "start_time": "10:04",
+              "end_time": "10:09",
+              "distance": 2.57,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "walk",
+              "start_time": "10:09",
+              "end_time": "10:12",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "12:10",
+          "end_time": "13:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Gangxia North-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:10",
+              "distance": 3.67,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "walk",
+              "start_time": "12:10",
+              "end_time": "12:10",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,22 +196,22 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Gangxia North-Metro Station",
               "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "17:57",
-              "distance": 0.15,
+              "start_time": "13:10",
+              "end_time": "13:10",
+              "distance": 0.08,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shenzhen North Railway Station-Metro Station",
+              "start": "Gangxia North-Metro Station",
               "end": "Chegongmiao-Metro Station",
               "mode": "metro",
-              "start_time": "17:57",
-              "end_time": "18:13",
-              "distance": 8.24,
+              "start_time": "13:10",
+              "end_time": "13:18",
+              "distance": 4.34,
               "price": 3,
               "cost": 3,
               "tickets": 1
@@ -52,8 +220,8 @@
               "start": "Chegongmiao-Metro Station",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
               "mode": "walk",
-              "start_time": "18:13",
-              "end_time": "18:20",
+              "start_time": "13:18",
+              "end_time": "13:25",
               "distance": 0.67,
               "price": 0,
               "cost": 0
@@ -772,5 +940,5 @@
     }
   ],
   "elapsed_time(sec)": 182.38673305511475,
-  "_eval_score": 96.5296451914099
+  "_eval_score": 98.61961451247166
 }

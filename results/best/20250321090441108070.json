@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "18:23",
-          "end_time": "06:53",
-          "start": "Chengdu West Railway Station",
-          "end": "Shanghai Station",
-          "price": 664.28,
-          "cost": 1328.56,
+          "type": "airplane",
+          "start_time": "03:11",
+          "end_time": "05:15",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 813.51,
+          "cost": 1627.02,
           "tickets": 2,
           "transports": [],
-          "TrainID": "K284"
+          "FlightID": "FL402"
+        },
+        {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 60.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "05:15",
+              "end_time": "05:24",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "Baoshan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "05:24",
+              "end_time": "05:51",
+              "distance": 13.98,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Baoshan Road-Metro Station",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "walk",
+              "start_time": "05:51",
+              "end_time": "05:54",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Station",
+              "start": "Valley Sand Noodle Shop",
+              "end": "Baoshan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:03",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baoshan Road-Metro Station",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "07:03",
+              "end_time": "07:06",
+              "distance": 1.69,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
               "end": "People's Square",
-              "mode": "taxi",
-              "start_time": "06:53",
-              "end_time": "06:57",
-              "distance": 2.89,
-              "price": 14.82,
-              "cost": 14.82,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:06",
+              "end_time": "07:11",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -212,6 +274,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Jinling East Road Ferry",
+          "start_time": "09:15",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Lujiazui-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:13",
+              "distance": 19.54,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Jinling East Road Ferry",
+              "mode": "walk",
+              "start_time": "09:13",
+              "end_time": "09:15",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "11:00",
@@ -221,15 +325,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Jinling East Road Ferry",
+              "end": "Lujiazui-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:17",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lujiazui-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:17",
+              "end_time": "10:51",
+              "distance": 17.23,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Qibao-Metro Station",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:19",
-              "distance": 33.16,
-              "price": 143.92,
-              "cost": 143.92,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:59",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -449,5 +573,5 @@
     }
   ],
   "elapsed_time(sec)": 48.60912251472473,
-  "_eval_score": 98.93877551020408
+  "_eval_score": 99.63392857142857
 }

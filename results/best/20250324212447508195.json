@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "08:22",
-          "end_time": "08:10",
-          "start": "Hangzhou Railway Station",
-          "end": "Beijing Fengtai Station",
-          "price": 449.4,
-          "cost": 1797.6,
+          "type": "airplane",
+          "start_time": "00:05",
+          "end_time": "01:29",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "TrainID": "K1277"
+          "FlightID": "FL499"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zengshengkui Snack Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:29",
+              "end_time": "01:40",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "01:40",
+              "end_time": "03:11",
+              "distance": 45.78,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Zengshengkui Snack Shop",
+              "mode": "walk",
+              "start_time": "03:11",
+              "end_time": "03:16",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing Fengtai Station",
-              "end": "Fengtai East Street-Metro Station",
+              "start": "Zengshengkui Snack Shop",
+              "end": "National Art Museum of China-Metro Station",
               "mode": "walk",
-              "start_time": "08:10",
-              "end_time": "08:20",
-              "distance": 0.84,
+              "start_time": "07:00",
+              "end_time": "07:05",
+              "distance": 0.44,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Fengtai East Street-Metro Station",
+              "start": "National Art Museum of China-Metro Station",
               "end": "Xizhimen-Metro Station",
               "mode": "metro",
-              "start_time": "08:20",
-              "end_time": "08:41",
-              "distance": 10.84,
-              "price": 4,
-              "cost": 16,
+              "start_time": "07:05",
+              "end_time": "07:15",
+              "distance": 5.09,
+              "price": 3,
+              "cost": 12,
               "tickets": 4
             },
             {
               "start": "Xizhimen-Metro Station",
               "end": "Beijing Exhibition Center",
               "mode": "walk",
-              "start_time": "08:41",
-              "end_time": "08:49",
+              "start_time": "07:15",
+              "end_time": "07:23",
               "distance": 0.75,
               "price": 0,
               "cost": 0
@@ -650,5 +692,5 @@
     }
   ],
   "elapsed_time(sec)": 34.171955823898315,
-  "_eval_score": 98.82698412698412
+  "_eval_score": 99.45535714285714
 }

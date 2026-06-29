@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:35",
-          "end_time": "08:17",
+          "start_time": "00:20",
+          "end_time": "01:02",
           "start": "Wuhan Tianhe International Airport",
           "end": "Hangzhou Xiaoshan International Airport",
-          "price": 242.31,
-          "cost": 726.9300000000001,
+          "price": 233.16,
+          "cost": 699.48,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL622"
+          "FlightID": "FL628"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 24.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:02",
+              "end_time": "01:03",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "01:03",
+              "end_time": "01:54",
+              "distance": 25.98,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "01:54",
+              "end_time": "01:57",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Hangzhou Xiaoshan International Airport",
-              "end": "Xiaoshan International Airport-Metro Station",
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Longxiang Bridge-Metro Station",
               "mode": "walk",
-              "start_time": "08:17",
-              "end_time": "08:18",
-              "distance": 0.12,
+              "start_time": "07:30",
+              "end_time": "07:33",
+              "distance": 0.33,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Xiaoshan International Airport-Metro Station",
+              "start": "Longxiang Bridge-Metro Station",
               "end": "Wulinmen-Metro Station",
               "mode": "metro",
-              "start_time": "08:18",
-              "end_time": "09:11",
-              "distance": 27.0,
-              "price": 6,
-              "cost": 18,
+              "start_time": "07:33",
+              "end_time": "07:36",
+              "distance": 1.86,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Wulinmen-Metro Station",
               "end": "Baochu Pagoda",
               "mode": "walk",
-              "start_time": "09:11",
-              "end_time": "09:14",
+              "start_time": "07:36",
+              "end_time": "07:39",
               "distance": 0.3,
               "price": 0,
               "cost": 0
@@ -620,5 +662,5 @@
     }
   ],
   "elapsed_time(sec)": 183.3662073612213,
-  "_eval_score": 99.26303854875283
+  "_eval_score": 99.84415584415584
 }

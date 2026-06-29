@@ -402,13 +402,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "15:07",
+          "end_time": "16:07",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -423,11 +422,96 @@
             },
             {
               "start": "Changshu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Jing'an Temple-Metro Station",
               "mode": "metro",
               "start_time": "15:00",
-              "end_time": "16:09",
-              "distance": 34.68,
+              "end_time": "15:02",
+              "distance": 1.1,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Anfu Road",
+              "mode": "walk",
+              "start_time": "15:02",
+              "end_time": "15:07",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Anfu Road",
+              "end": "Jing'an Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:07",
+              "end_time": "16:12",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:12",
+              "end_time": "16:34",
+              "distance": 11.11,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "16:44",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 640.93,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "19:09",
+              "distance": 29.96,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -436,18 +520,18 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "16:09",
-              "end_time": "16:24",
+              "start_time": "19:09",
+              "end_time": "19:24",
               "distance": 1.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 68.64345502853394,
-  "_eval_score": 98.08163265306123
+  "_eval_score": 98.9047619047619
 }

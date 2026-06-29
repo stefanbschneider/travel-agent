@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xia's Morning Delights",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 11.0,
+          "cost": 22.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "00:53",
+              "end_time": "00:56",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Sanshan Street-Metro Station",
+              "mode": "metro",
+              "start_time": "00:56",
+              "end_time": "02:03",
+              "distance": 33.61,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Sanshan Street-Metro Station",
+              "end": "Xia's Morning Delights",
+              "mode": "walk",
+              "start_time": "02:03",
+              "end_time": "02:10",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
+              "start": "Xia's Morning Delights",
+              "end": "Sanshan Street-Metro Station",
               "mode": "walk",
-              "start_time": "08:11",
-              "end_time": "08:14",
-              "distance": 0.29,
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.59,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Nanjing South Railway Station-Metro Station",
+              "start": "Sanshan Street-Metro Station",
               "end": "Confucius Temple-Metro Station",
               "mode": "metro",
-              "start_time": "08:14",
-              "end_time": "08:25",
-              "distance": 5.92,
-              "price": 3,
-              "cost": 6,
+              "start_time": "07:07",
+              "end_time": "07:08",
+              "distance": 0.89,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Confucius Temple-Metro Station",
               "end": "Black Clothes Lane",
               "mode": "walk",
-              "start_time": "08:25",
-              "end_time": "08:31",
+              "start_time": "07:08",
+              "end_time": "07:14",
               "distance": 0.51,
               "price": 0,
               "cost": 0
@@ -788,13 +830,12 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
           "start_time": "17:00",
-          "end_time": "18:40",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
           "tickets": 2,
           "transports": [
             {
@@ -809,31 +850,74 @@
             },
             {
               "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Nanjing Station-Metro Station",
+              "end": "Wuding Gate-Metro Station",
               "mode": "metro",
               "start_time": "16:30",
-              "end_time": "16:37",
-              "distance": 3.56,
-              "price": 2,
-              "cost": 4,
+              "end_time": "16:39",
+              "distance": 4.84,
+              "price": 3,
+              "cost": 6,
               "tickets": 2
             },
             {
-              "start": "Nanjing Station-Metro Station",
-              "end": "Nanjing Station",
+              "start": "Wuding Gate-Metro Station",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
               "mode": "walk",
-              "start_time": "16:37",
-              "end_time": "16:39",
-              "distance": 0.25,
+              "start_time": "16:39",
+              "end_time": "16:48",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "end": "Wuding Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wuding Gate-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:09",
+              "end_time": "19:13",
+              "distance": 32.31,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Nanjing Lukou International Airport",
+              "mode": "walk",
+              "start_time": "19:13",
+              "end_time": "19:16",
+              "distance": 0.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7021"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 185.45011949539185,
-  "_eval_score": 98.42460317460318
+  "_eval_score": 99.3051948051948
 }

@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "02:29",
+              "end_time": "03:41",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 422.54,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beihai Park Boat Ride",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Beihai Park Boat Ride",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 1.26,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Beihai Park Boat Ride",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 36.52,
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 4.02,
+              "price": 18.77,
+              "cost": 37.54,
               "cars": 2
             }
           ]
@@ -278,32 +322,54 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
           "start_time": "17:00",
-          "end_time": "20:14",
-          "start": "Beijing South Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 35.0,
           "tickets": 5,
           "transports": [
             {
               "start": "798 Art District",
-              "end": "Beijing South Railway Station",
+              "end": "Helude Candied Hawthorn Sticks",
               "mode": "taxi",
               "start_time": "15:37",
-              "end_time": "16:03",
-              "distance": 17.47,
-              "price": 73.3,
-              "cost": 146.6,
+              "end_time": "15:52",
+              "distance": 10.25,
+              "price": 40.81,
+              "cost": 81.62,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:22",
+          "end_time": "00:29",
+          "start": "Beijing Daxing International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 416.91,
+          "cost": 2084.55,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:10",
+              "distance": 46.77,
+              "price": 205.16,
+              "cost": 410.32,
               "cars": 2
             }
           ],
-          "TrainID": "G21"
+          "FlightID": "FL154"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 133.04920291900635,
-  "_eval_score": 97.69642857142858
+  "_eval_score": 99.71111111111111
 }

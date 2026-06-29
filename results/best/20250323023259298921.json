@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:12",
-          "end_time": "08:58",
-          "start": "Beijing West Railway Station",
-          "end": "Chongqing West Railway Station",
-          "price": 583.42,
-          "cost": 583.42,
+          "type": "airplane",
+          "start_time": "00:20",
+          "end_time": "02:09",
+          "start": "Beijing Capital International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 747.95,
+          "cost": 747.95,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K507"
+          "FlightID": "FL119"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 9.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "02:09",
+              "end_time": "02:23",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "02:23",
+              "end_time": "03:03",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "03:03",
+              "end_time": "03:10",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Chongqing West Railway Station",
-              "end": "Chongqing West Railway Station-Metro Station",
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
               "mode": "walk",
-              "start_time": "08:58",
-              "end_time": "08:59",
-              "distance": 0.1,
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Chongqing West Railway Station-Metro Station",
+              "start": "Dalongshan-Metro Station",
               "end": "Chaotianmen-Metro Station",
               "mode": "metro",
-              "start_time": "08:59",
-              "end_time": "09:31",
-              "distance": 16.14,
-              "price": 5,
-              "cost": 5,
+              "start_time": "07:07",
+              "end_time": "07:24",
+              "distance": 8.96,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
               "start": "Chaotianmen-Metro Station",
               "end": "Arhat Temple",
               "mode": "walk",
-              "start_time": "09:31",
-              "end_time": "09:32",
+              "start_time": "07:24",
+              "end_time": "07:25",
               "distance": 0.08,
               "price": 0,
               "cost": 0
@@ -620,5 +662,5 @@
     }
   ],
   "elapsed_time(sec)": 182.6731264591217,
-  "_eval_score": 99.44444444444444
+  "_eval_score": 99.98484848484848
 }

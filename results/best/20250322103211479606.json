@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "00:53",
+              "end_time": "00:56",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Yunnan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "00:56",
+              "end_time": "02:11",
+              "distance": 37.65,
+              "price": 8,
+              "cost": 16,
+              "tickets": 2
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "walk",
+              "start_time": "02:11",
+              "end_time": "02:16",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Yunnan Road-Metro Station",
               "mode": "walk",
-              "start_time": "08:11",
-              "end_time": "08:14",
-              "distance": 0.29,
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 0.5,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Nanjing South Railway Station-Metro Station",
+              "start": "Yunnan Road-Metro Station",
               "end": "Changfu Street-Metro Station",
               "mode": "metro",
-              "start_time": "08:14",
-              "end_time": "08:27",
-              "distance": 6.94,
-              "price": 3,
-              "cost": 6,
+              "start_time": "08:05",
+              "end_time": "08:11",
+              "distance": 3.3,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Changfu Street-Metro Station",
               "end": "Ancient Peach Leaf Ferry",
               "mode": "walk",
-              "start_time": "08:27",
-              "end_time": "08:38",
+              "start_time": "08:11",
+              "end_time": "08:22",
               "distance": 0.92,
               "price": 0,
               "cost": 0
@@ -531,13 +573,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
@@ -552,31 +593,74 @@
             },
             {
               "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Xuanwu Gate-Metro Station",
               "mode": "metro",
               "start_time": "15:55",
-              "end_time": "17:08",
-              "distance": 36.96,
-              "price": 7,
-              "cost": 14,
+              "end_time": "15:58",
+              "distance": 1.93,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "walk",
+              "start_time": "15:58",
+              "end_time": "16:07",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Xuanwu Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:09",
+              "end_time": "19:26",
+              "distance": 38.61,
+              "price": 8,
+              "cost": 16,
               "tickets": 2
             },
             {
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "17:08",
-              "end_time": "17:11",
+              "start_time": "19:26",
+              "end_time": "19:29",
               "distance": 0.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL645"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 184.93222904205322,
-  "_eval_score": 98.7031746031746
+  "_eval_score": 99.67316017316017
 }

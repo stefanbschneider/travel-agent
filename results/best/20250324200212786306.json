@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:01",
-          "end_time": "09:22",
+          "start_time": "03:00",
+          "end_time": "05:21",
           "start": "Guangzhou Baiyun International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 987.11,
-          "cost": 4935.55,
+          "end": "Beijing Capital International Airport",
+          "price": 902.14,
+          "cost": 4510.7,
           "tickets": 5,
           "transports": [],
-          "FlightID": "FL253"
+          "FlightID": "FL259"
+        },
+        {
+          "type": "breakfast",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 7.0,
+          "cost": 35.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Capital International Airport",
+              "end": "Terminal 2-Metro Station",
+              "mode": "walk",
+              "start_time": "05:21",
+              "end_time": "05:31",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Terminal 2-Metro Station",
+              "end": "Dongsi-Metro Station",
+              "mode": "metro",
+              "start_time": "05:31",
+              "end_time": "06:16",
+              "distance": 22.81,
+              "price": 6,
+              "cost": 30,
+              "tickets": 5
+            },
+            {
+              "start": "Dongsi-Metro Station",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "walk",
+              "start_time": "06:16",
+              "end_time": "06:16",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:10",
+          "end_time": "10:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Dongsi-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongsi-Metro Station",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "09:00",
+              "end_time": "09:03",
+              "distance": 1.55,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Corner Tower",
+              "mode": "walk",
+              "start_time": "09:03",
+              "end_time": "09:10",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing Daxing International Airport",
+              "start": "Corner Tower",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:10",
+              "end_time": "10:17",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Niujie-Metro Station",
+              "mode": "metro",
+              "start_time": "10:17",
+              "end_time": "10:29",
+              "distance": 6.02,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Niujie-Metro Station",
               "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
-              "mode": "taxi",
-              "start_time": "09:22",
-              "end_time": "10:26",
-              "distance": 42.83,
-              "price": 187.45,
-              "cost": 374.9,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:29",
+              "end_time": "10:32",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -508,5 +612,5 @@
     }
   ],
   "elapsed_time(sec)": 0.03432011604309082,
-  "_eval_score": 95.10079365079365
+  "_eval_score": 96.29318394024276
 }

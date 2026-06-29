@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:57",
-          "end_time": "11:10",
+          "start_time": "04:31",
+          "end_time": "05:44",
           "start": "Chengdu Shuangliu International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 493.19,
-          "cost": 1479.57,
+          "price": 471.1,
+          "cost": 1413.3000000000002,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL468"
+          "FlightID": "FL465"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:50",
+          "end_time": "07:50",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "05:44",
+              "end_time": "05:50",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Pengliuyang-Metro Station",
+              "mode": "metro",
+              "start_time": "05:50",
+              "end_time": "06:43",
+              "distance": 26.72,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Pengliuyang-Metro Station",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "walk",
+              "start_time": "06:43",
+              "end_time": "06:50",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Pengliuyang-Metro Station",
+              "mode": "walk",
+              "start_time": "07:50",
+              "end_time": "07:57",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pengliuyang-Metro Station",
+              "end": "Simenkou Yellow Crane Tower-Metro Station",
+              "mode": "metro",
+              "start_time": "07:57",
+              "end_time": "07:58",
+              "distance": 0.66,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Simenkou Yellow Crane Tower-Metro Station",
+              "end": "Hanyang Riverside Park",
+              "mode": "walk",
+              "start_time": "07:58",
+              "end_time": "08:17",
+              "distance": 1.64,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Tianhe International Airport",
+              "start": "Hanyang Riverside Park",
+              "end": "Simenkou Yellow Crane Tower-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:19",
+              "distance": 1.64,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Simenkou Yellow Crane Tower-Metro Station",
+              "end": "Tieji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:19",
+              "end_time": "10:34",
+              "distance": 7.58,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Tieji Road-Metro Station",
               "end": "Green Grain Restaurant (East Lake Branch)",
-              "mode": "taxi",
-              "start_time": "11:10",
-              "end_time": "11:49",
-              "distance": 26.18,
-              "price": 112.5,
-              "cost": 112.5,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:34",
+              "end_time": "10:51",
+              "distance": 1.47,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -665,5 +769,5 @@
     }
   ],
   "elapsed_time(sec)": 188.06259489059448,
-  "_eval_score": 98.11309523809524
+  "_eval_score": 98.74173280423281
 }

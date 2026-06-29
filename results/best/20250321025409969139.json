@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:12",
-          "end_time": "08:58",
-          "start": "Beijing West Railway Station",
-          "end": "Chongqing West Railway Station",
-          "price": 583.42,
-          "cost": 1166.84,
+          "type": "airplane",
+          "start_time": "00:20",
+          "end_time": "02:09",
+          "start": "Beijing Capital International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 747.95,
+          "cost": 1495.9,
           "tickets": 2,
           "transports": [],
-          "TrainID": "K507"
+          "FlightID": "FL119"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:18",
+          "end_time": "07:18",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "02:09",
+              "end_time": "06:18",
+              "distance": 20.75685237874858,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beicang Cultural and Creative Block",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Beicang Cultural and Creative Block",
+              "mode": "walk",
+              "start_time": "07:18",
+              "end_time": "08:05",
+              "distance": 3.973278982530578,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,12 +70,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chongqing West Railway Station",
+              "start": "Beicang Cultural and Creative Block",
               "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
               "mode": "walk",
-              "start_time": "08:58",
-              "end_time": "12:00",
-              "distance": 15.167724940595251,
+              "start_time": "10:00",
+              "end_time": "10:50",
+              "distance": 4.176807965429821,
               "price": 0,
               "cost": 0
             }
@@ -293,5 +335,5 @@
     }
   ],
   "elapsed_time(sec)": 141.77926301956177,
-  "_eval_score": 94.7123015873016
+  "_eval_score": 96.14285714285714
 }

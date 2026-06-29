@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:22",
-          "end_time": "08:54",
+          "start_time": "01:47",
+          "end_time": "03:19",
           "start": "Guangzhou Baiyun International Airport",
-          "end": "Chengdu Tianfu International Airport",
-          "price": 608.76,
-          "cost": 1217.52,
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 598.06,
+          "cost": 1196.12,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL288"
+          "FlightID": "FL289"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:19",
+              "end_time": "03:34",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "03:34",
+              "end_time": "04:05",
+              "distance": 15.61,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "walk",
+              "start_time": "04:05",
+              "end_time": "04:08",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "08:03",
+              "end_time": "08:04",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "China Shadow Puppet Museum",
+              "mode": "walk",
+              "start_time": "08:04",
+              "end_time": "08:11",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Tianfu International Airport",
+              "start": "China Shadow Puppet Museum",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:07",
+              "end_time": "10:09",
+              "distance": 1.16,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "People's Park-Metro Station",
               "end": "Crane's Call Tea House (People's Park Branch)",
-              "mode": "taxi",
-              "start_time": "08:54",
-              "end_time": "10:16",
-              "distance": 55.18,
-              "price": 243.03,
-              "cost": 243.03,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:09",
+              "end_time": "10:12",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -683,5 +787,5 @@
     }
   ],
   "elapsed_time(sec)": 205.9394690990448,
-  "_eval_score": 97.87599206349206
+  "_eval_score": 98.68956043956044
 }

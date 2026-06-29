@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:07",
-          "end_time": "10:57",
+          "start_time": "02:36",
+          "end_time": "05:50",
           "start": "Suzhou Station",
           "end": "Hangzhou Railway Station",
           "price": 60.5,
           "cost": 242.0,
           "tickets": 4,
           "transports": [],
-          "TrainID": "Z281"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 32.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "City Station-Metro Station",
+              "mode": "walk",
+              "start_time": "05:50",
+              "end_time": "05:52",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "05:52",
+              "end_time": "05:55",
+              "distance": 1.96,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "05:55",
+              "end_time": "05:58",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hangzhou Confucius Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "07:30",
+              "end_time": "07:33",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "metro",
+              "start_time": "07:33",
+              "end_time": "07:35",
+              "distance": 1.03,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Hangzhou Confucius Temple",
+              "mode": "walk",
+              "start_time": "07:35",
+              "end_time": "07:37",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Hangzhou Railway Station",
+              "start": "Hangzhou Confucius Temple",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Wushan Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:02",
+              "end_time": "10:03",
+              "distance": 0.81,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Wushan Square-Metro Station",
               "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
-              "mode": "taxi",
-              "start_time": "10:57",
-              "end_time": "11:04",
-              "distance": 4.88,
-              "price": 21.76,
-              "cost": 21.76,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:03",
+              "end_time": "10:38",
+              "distance": 2.95,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -692,13 +796,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 314.6,
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 40.0,
           "tickets": 4,
           "transports": [
             {
@@ -713,11 +816,96 @@
             },
             {
               "start": "Yellow Dragon Cave-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "metro",
               "start_time": "16:09",
-              "end_time": "16:24",
-              "distance": 7.93,
+              "end_time": "16:18",
+              "distance": 4.7,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:18",
+              "end_time": "16:28",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Grand View of Wu Hill",
+          "start_time": "18:18",
+          "end_time": "19:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:12",
+              "distance": 1.3,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Grand View of Wu Hill",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:18",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:43",
+          "end_time": "22:07",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Grand View of Wu Hill",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "walk",
+              "start_time": "19:18",
+              "end_time": "19:24",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "19:24",
+              "end_time": "19:38",
+              "distance": 7.06,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -726,18 +914,18 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "16:24",
-              "end_time": "16:29",
+              "start_time": "19:38",
+              "end_time": "19:43",
               "distance": 0.48,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7192"
+          "TrainID": "G7350"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.032607078552246094,
-  "_eval_score": 97.71376811594203
+  "_eval_score": 99.15277777777777
 }

@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:04",
-          "end_time": "07:16",
+          "start_time": "00:41",
+          "end_time": "00:53",
           "start": "Shanghai Hongqiao International Airport",
           "end": "Hangzhou Xiaoshan International Airport",
-          "price": 185.48,
-          "cost": 927.4,
+          "price": 134.14,
+          "cost": 670.6999999999999,
           "tickets": 5,
           "transports": [],
-          "FlightID": "FL059"
+          "FlightID": "FL054"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 40.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "00:53",
+              "end_time": "00:54",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "00:54",
+              "end_time": "01:45",
+              "distance": 25.98,
+              "price": 6,
+              "cost": 30,
+              "tickets": 5
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "01:45",
+              "end_time": "01:48",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Hangzhou Xiaoshan International Airport",
-              "end": "Xiaoshan International Airport-Metro Station",
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Longxiang Bridge-Metro Station",
               "mode": "walk",
-              "start_time": "07:16",
-              "end_time": "07:17",
-              "distance": 0.12,
+              "start_time": "07:30",
+              "end_time": "07:33",
+              "distance": 0.33,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Xiaoshan International Airport-Metro Station",
+              "start": "Longxiang Bridge-Metro Station",
               "end": "Yellow Dragon Cave-Metro Station",
               "mode": "metro",
-              "start_time": "07:17",
-              "end_time": "08:13",
-              "distance": 28.36,
-              "price": 7,
-              "cost": 35,
+              "start_time": "07:33",
+              "end_time": "07:38",
+              "distance": 2.56,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
               "start": "Yellow Dragon Cave-Metro Station",
               "end": "Autumn Water Villa",
               "mode": "walk",
-              "start_time": "08:13",
-              "end_time": "08:24",
+              "start_time": "07:38",
+              "end_time": "07:49",
               "distance": 0.96,
               "price": 0,
               "cost": 0
@@ -770,5 +812,5 @@
     }
   ],
   "elapsed_time(sec)": 180.95949387550354,
-  "_eval_score": 99.47278911564626
+  "_eval_score": 99.9080459770115
 }

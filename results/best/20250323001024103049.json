@@ -7,16 +7,37 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "18:57",
-          "end_time": "05:24",
-          "start": "Chengdu West Railway Station",
-          "end": "Hangzhou South Railway Station",
-          "price": 616.66,
-          "cost": 1233.32,
+          "type": "airplane",
+          "start_time": "00:24",
+          "end_time": "02:19",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 730.91,
+          "cost": 1461.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "K353"
+          "FlightID": "FL458"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 8.0,
+          "cost": 16.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "02:19",
+              "end_time": "07:30",
+              "distance": 25.916705924831163,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,12 +49,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou South Railway Station",
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
               "end": "Grand View of Wu Hill",
               "mode": "walk",
-              "start_time": "05:24",
-              "end_time": "08:12",
-              "distance": 14.077088321578502,
+              "start_time": "08:30",
+              "end_time": "08:45",
+              "distance": 1.279276648246567,
               "price": 0,
               "cost": 0
             }
@@ -188,5 +209,5 @@
     }
   ],
   "elapsed_time(sec)": 0.4826028347015381,
-  "_eval_score": 90.99659863945578
+  "_eval_score": 91.375
 }

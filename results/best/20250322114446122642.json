@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:30",
-          "end_time": "09:10",
-          "start": "Chengdu Shuangliu International Airport",
+          "start_time": "01:04",
+          "end_time": "02:44",
+          "start": "Chengdu Tianfu International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 633.07,
-          "cost": 1266.14,
+          "price": 639.2,
+          "cost": 1278.4,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL425"
+          "FlightID": "FL424"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 48.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:44",
+              "end_time": "02:49",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "02:49",
+              "end_time": "03:39",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "03:39",
+              "end_time": "03:45",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Ludan Village-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:19",
+              "distance": 6.82,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Ludan Village-Metro Station",
               "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-              "mode": "taxi",
-              "start_time": "09:10",
-              "end_time": "09:58",
-              "distance": 32.12,
-              "price": 139.22,
-              "cost": 139.22,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:19",
+              "end_time": "08:22",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -620,5 +682,5 @@
     }
   ],
   "elapsed_time(sec)": 181.2150239944458,
-  "_eval_score": 99.17460317460316
+  "_eval_score": 99.69913419913419
 }

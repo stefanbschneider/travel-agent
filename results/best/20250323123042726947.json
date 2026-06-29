@@ -7,16 +7,100 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:05",
-          "end_time": "11:01",
-          "start": "Beijing West Railway Station",
-          "end": "Wuhan Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "airplane",
+          "start_time": "03:43",
+          "end_time": "05:02",
+          "start": "Beijing Capital International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 519.12,
+          "cost": 2595.6,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G71"
+          "FlightID": "FL150"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:08",
+          "end_time": "07:08",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "05:02",
+              "end_time": "05:08",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Pengliuyang-Metro Station",
+              "mode": "metro",
+              "start_time": "05:08",
+              "end_time": "06:01",
+              "distance": 26.72,
+              "price": 6,
+              "cost": 30,
+              "tickets": 5
+            },
+            {
+              "start": "Pengliuyang-Metro Station",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "walk",
+              "start_time": "06:01",
+              "end_time": "06:08",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Pengliuyang-Metro Station",
+              "mode": "walk",
+              "start_time": "07:08",
+              "end_time": "07:15",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pengliuyang-Metro Station",
+              "end": "Simenkou Yellow Crane Tower-Metro Station",
+              "mode": "metro",
+              "start_time": "07:15",
+              "end_time": "07:16",
+              "distance": 0.66,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Simenkou Yellow Crane Tower-Metro Station",
+              "end": "Hanyang Riverside Park",
+              "mode": "walk",
+              "start_time": "07:16",
+              "end_time": "07:35",
+              "distance": 1.64,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,22 +112,22 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Wuhan Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "start": "Hanyang Riverside Park",
+              "end": "Simenkou Yellow Crane Tower-Metro Station",
               "mode": "walk",
-              "start_time": "11:01",
-              "end_time": "11:03",
-              "distance": 0.19,
+              "start_time": "10:00",
+              "end_time": "10:19",
+              "distance": 1.64,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Wuhan Station East Square-Metro Station",
+              "start": "Simenkou Yellow Crane Tower-Metro Station",
               "end": "Tieji Road-Metro Station",
               "mode": "metro",
-              "start_time": "11:03",
-              "end_time": "11:15",
-              "distance": 6.11,
+              "start_time": "10:19",
+              "end_time": "10:34",
+              "distance": 7.58,
               "price": 3,
               "cost": 15,
               "tickets": 5
@@ -52,8 +136,8 @@
               "start": "Tieji Road-Metro Station",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "walk",
-              "start_time": "11:15",
-              "end_time": "11:32",
+              "start_time": "10:34",
+              "end_time": "10:51",
               "distance": 1.47,
               "price": 0,
               "cost": 0
@@ -1078,13 +1162,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:12",
-          "end_time": "22:55",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "dinner",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "17:10",
+          "end_time": "18:10",
+          "price": 5.0,
+          "cost": 25.0,
           "tickets": 5,
           "transports": [
             {
@@ -1099,31 +1182,116 @@
             },
             {
               "start": "Huquan-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "end": "Sanyang Road-Metro Station",
               "mode": "metro",
               "start_time": "16:39",
               "end_time": "17:02",
-              "distance": 11.78,
+              "distance": 11.65,
               "price": 4,
               "cost": 20,
               "tickets": 5
             },
             {
-              "start": "Wuhan Station East Square-Metro Station",
-              "end": "Wuhan Station",
+              "start": "Sanyang Road-Metro Station",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
               "mode": "walk",
               "start_time": "17:02",
-              "end_time": "17:04",
-              "distance": 0.19,
+              "end_time": "17:10",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Historical and Cultural District",
+          "start_time": "18:25",
+          "end_time": "19:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Sanyang Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:10",
+              "end_time": "18:18",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyang Road-Metro Station",
+              "end": "Dazhi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "18:18",
+              "end_time": "18:19",
+              "distance": 0.91,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "Hankou Historical and Cultural District",
+              "mode": "walk",
+              "start_time": "18:19",
+              "end_time": "18:25",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:07",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 521.9,
+          "cost": 2609.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hankou Historical and Cultural District",
+              "end": "Dazhi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "19:25",
+              "end_time": "19:31",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "19:31",
+              "end_time": "20:13",
+              "distance": 21.12,
+              "price": 6,
+              "cost": 30,
+              "tickets": 5
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "walk",
+              "start_time": "20:13",
+              "end_time": "20:19",
+              "distance": 0.55,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G340"
+          "FlightID": "FL580"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 187.9438934326172,
-  "_eval_score": 97.37404761904762
+  "_eval_score": 98.78325123152709
 }

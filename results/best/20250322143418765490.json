@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:04",
-          "end_time": "08:50",
-          "start": "Chongqing West Railway Station",
-          "end": "Chengdu East Railway Station",
-          "price": 171.7,
-          "cost": 858.5,
+          "type": "airplane",
+          "start_time": "04:39",
+          "end_time": "04:58",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 299.27,
+          "cost": 1496.35,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G8512"
+          "FlightID": "FL363"
+        },
+        {
+          "type": "breakfast",
+          "position": "Chengdu Waldorf Astoria Hotel · Brasserie 99 Kitchen",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 212.0,
+          "cost": 1060.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "04:58",
+              "end_time": "05:13",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Financial City-Metro Station",
+              "mode": "metro",
+              "start_time": "05:13",
+              "end_time": "05:33",
+              "distance": 10.34,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Financial City-Metro Station",
+              "end": "Chengdu Waldorf Astoria Hotel · Brasserie 99 Kitchen",
+              "mode": "walk",
+              "start_time": "05:33",
+              "end_time": "05:39",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,22 +70,22 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu East Railway Station",
-              "end": "Chengdu East Railway Station-Metro Station",
+              "start": "Chengdu Waldorf Astoria Hotel · Brasserie 99 Kitchen",
+              "end": "Financial City-Metro Station",
               "mode": "walk",
-              "start_time": "08:50",
-              "end_time": "08:50",
-              "distance": 0.0,
+              "start_time": "07:30",
+              "end_time": "07:36",
+              "distance": 0.51,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Chengdu East Railway Station-Metro Station",
+              "start": "Financial City-Metro Station",
               "end": "Niuwangmiao-Metro Station",
               "mode": "metro",
-              "start_time": "08:50",
-              "end_time": "08:59",
-              "distance": 4.69,
+              "start_time": "07:36",
+              "end_time": "07:51",
+              "distance": 7.51,
               "price": 3,
               "cost": 15,
               "tickets": 5
@@ -52,8 +94,8 @@
               "start": "Niuwangmiao-Metro Station",
               "end": "Anshun Covered Bridge",
               "mode": "walk",
-              "start_time": "08:59",
-              "end_time": "09:03",
+              "start_time": "07:51",
+              "end_time": "07:55",
               "distance": 0.36,
               "price": 0,
               "cost": 0
@@ -911,13 +953,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:07",
-          "end_time": "18:26",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 259.16,
-          "cost": 1295.8000000000002,
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "15:22",
+          "end_time": "16:22",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -932,31 +973,116 @@
             },
             {
               "start": "Tonghuimen-Metro Station",
-              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
               "start_time": "15:20",
-              "end_time": "17:08",
-              "distance": 54.39,
-              "price": 9,
-              "cost": 45,
+              "end_time": "15:20",
+              "distance": 0.42,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
-              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "end": "Chengdu Tianfu International Airport",
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu Cultural Park",
               "mode": "walk",
-              "start_time": "17:08",
-              "end_time": "17:52",
-              "distance": 3.72,
+              "start_time": "15:20",
+              "end_time": "15:22",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fourth Aunt Feng's Stewed Beef with Ox Feet · Intangible Cultural Heritage Designated Store",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 40.0,
+          "cost": 200.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Cultural Park",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "16:22",
+              "end_time": "16:24",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Nijiaqiao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:24",
+              "end_time": "16:33",
+              "distance": 4.76,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Nijiaqiao-Metro Station",
+              "end": "Fourth Aunt Feng's Stewed Beef with Ox Feet · Intangible Cultural Heritage Designated Store",
+              "mode": "walk",
+              "start_time": "16:33",
+              "end_time": "16:37",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:20",
+          "end_time": "22:39",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 279.92,
+          "cost": 1399.6000000000001,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Fourth Aunt Feng's Stewed Beef with Ox Feet · Intangible Cultural Heritage Designated Store",
+              "end": "Nijiaqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nijiaqiao-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "18:28",
+              "distance": 12.17,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "walk",
+              "start_time": "18:28",
+              "end_time": "18:43",
+              "distance": 1.25,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL448"
+          "FlightID": "FL444"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 209.93644833564758,
-  "_eval_score": 98.67352092352093
+  "_eval_score": 99.73544973544973
 }

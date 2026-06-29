@@ -7,16 +7,121 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 727.96,
+          "type": "airplane",
+          "start_time": "03:17",
+          "end_time": "04:48",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+          "start_time": "07:17",
+          "end_time": "08:17",
+          "price": 108.0,
+          "cost": 108.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "07:17",
+              "distance": 12.484014188323826,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eileen Chang's Former Residence",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+              "end": "Eileen Chang's Former Residence",
+              "mode": "walk",
+              "start_time": "08:17",
+              "end_time": "08:29",
+              "distance": 1.0602721999112275,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Le Caisa Pizza (Jing'an Joy City Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 76.0,
+          "cost": 76.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eileen Chang's Former Residence",
+              "end": "Le Caisa Pizza (Jing'an Joy City Branch)",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:27",
+              "distance": 2.2503730150745165,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Holy Trinity Church",
+          "start_time": "12:24",
+          "end_time": "13:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Le Caisa Pizza (Jing'an Joy City Branch)",
+              "end": "Holy Trinity Church",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:24",
+              "distance": 2.015249098893861,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hoping Fat Tea Cafe (People's Square Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 84.0,
+          "cost": 84.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Holy Trinity Church",
+              "end": "Hoping Fat Tea Cafe (People's Square Branch)",
+              "mode": "walk",
+              "start_time": "13:24",
+              "end_time": "13:44",
+              "distance": 1.7011332649927464,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,33 +133,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "18:42",
-              "end_time": "18:43",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
-              "end": "Tiantong Road-Metro Station",
-              "mode": "metro",
-              "start_time": "18:43",
-              "end_time": "19:16",
-              "distance": 16.52,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Tiantong Road-Metro Station",
+              "start": "Hoping Fat Tea Cafe (People's Square Branch)",
               "end": "Nanjing Road Pedestrian Street",
               "mode": "walk",
-              "start_time": "19:16",
-              "end_time": "19:25",
-              "distance": 0.8,
+              "start_time": "18:00",
+              "end_time": "18:19",
+              "distance": 1.5975248671596134,
               "price": 0,
               "cost": 0
             }
@@ -377,5 +461,5 @@
     }
   ],
   "elapsed_time(sec)": 181.40230512619019,
-  "_eval_score": 94.11177248677248
+  "_eval_score": 97.94982993197279
 }

@@ -330,13 +330,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "21:22",
-          "start": "Wuhan Station",
-          "end": "Guangzhou South Railway Station",
-          "price": 543.6,
-          "cost": 1630.8000000000002,
+          "type": "dinner",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "17:07",
+          "end_time": "18:07",
+          "price": 5.0,
+          "cost": 15.0,
           "tickets": 3,
           "transports": [
             {
@@ -351,31 +350,74 @@
             },
             {
               "start": "Huquan-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "end": "Sanyang Road-Metro Station",
               "mode": "metro",
               "start_time": "16:36",
               "end_time": "16:59",
-              "distance": 11.78,
+              "distance": 11.65,
               "price": 4,
               "cost": 12,
               "tickets": 3
             },
             {
-              "start": "Wuhan Station East Square-Metro Station",
-              "end": "Wuhan Station",
+              "start": "Sanyang Road-Metro Station",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
               "mode": "walk",
               "start_time": "16:59",
-              "end_time": "17:01",
-              "distance": 0.19,
+              "end_time": "17:07",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:09",
+          "end_time": "22:12",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 453.61,
+          "cost": 1360.83,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Sanyang Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:07",
+              "end_time": "18:15",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyang Road-Metro Station",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:15",
+              "end_time": "18:56",
+              "distance": 20.72,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "walk",
+              "start_time": "18:56",
+              "end_time": "19:02",
+              "distance": 0.55,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G695"
+          "FlightID": "FL597"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.89795804023743,
-  "_eval_score": 96.07142857142857
+  "_eval_score": 96.84615384615384
 }

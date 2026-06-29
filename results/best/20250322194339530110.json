@@ -8,15 +8,162 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
+          "start_time": "01:11",
+          "end_time": "03:36",
           "start": "Beijing Capital International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 2847.96,
+          "price": 923.58,
+          "cost": 2770.7400000000002,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL096"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Hong Kong Mingxingfang Tea Restaurant (Shuiwei Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 55.0,
+          "cost": 165.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "03:41",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Futian Port-Metro Station",
+              "mode": "metro",
+              "start_time": "03:41",
+              "end_time": "04:38",
+              "distance": 29.0,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Hong Kong Mingxingfang Tea Restaurant (Shuiwei Branch)",
+              "mode": "walk",
+              "start_time": "04:38",
+              "end_time": "04:42",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hong Kong Mingxingfang Tea Restaurant (Shuiwei Branch)",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.4709917185774121,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "New World Restaurant (Wanda Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 55.0,
+          "cost": 165.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:01",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Shangchuan-Metro Station",
+              "mode": "metro",
+              "start_time": "10:01",
+              "end_time": "10:38",
+              "distance": 18.95,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Shangchuan-Metro Station",
+              "end": "New World Restaurant (Wanda Branch)",
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "10:47",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "12:16",
+          "end_time": "13:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "New World Restaurant (Wanda Branch)",
+              "end": "Shangchuan-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:09",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangchuan-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "12:09",
+              "end_time": "12:14",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "12:14",
+              "end_time": "12:16",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +175,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "13:16",
+              "end_time": "13:18",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "13:18",
+              "end_time": "14:44",
+              "distance": 43.47,
+              "price": 8,
+              "cost": 24,
+              "tickets": 3
+            },
+            {
+              "start": "Dameisha-Metro Station",
               "end": "Dameisha Seaside Park",
-              "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:48",
-              "distance": 50.96,
-              "price": 224.04,
-              "cost": 224.04,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "14:53",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -342,5 +509,5 @@
     }
   ],
   "elapsed_time(sec)": 192.5712184906006,
-  "_eval_score": 96.56385281385282
+  "_eval_score": 99.31746031746032
 }

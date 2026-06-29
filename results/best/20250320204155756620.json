@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:14",
-          "end_time": "08:05",
+          "start_time": "00:33",
+          "end_time": "01:24",
           "start": "Wuhan Tianhe International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 359.89,
-          "cost": 719.78,
+          "end": "Shanghai Pudong International Airport",
+          "price": 303.66,
+          "cost": 607.32,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL563"
+          "FlightID": "FL566"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 56.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:24",
+              "end_time": "01:39",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:39",
+              "end_time": "02:47",
+              "distance": 34.08,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "02:47",
+              "end_time": "02:54",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:07",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Longbai Xincun-Metro Station",
+              "mode": "metro",
+              "start_time": "09:07",
+              "end_time": "09:27",
+              "distance": 10.36,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Longbai Xincun-Metro Station",
               "end": "Sake Devourer (Music Workshop Branch)",
-              "mode": "taxi",
-              "start_time": "08:05",
-              "end_time": "08:10",
-              "distance": 3.6,
-              "price": 17.3,
-              "cost": 17.3,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "09:27",
+              "end_time": "09:28",
+              "distance": 0.1,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -577,5 +639,5 @@
     }
   ],
   "elapsed_time(sec)": 134.63306760787964,
-  "_eval_score": 98.54603174603174
+  "_eval_score": 98.89569160997732
 }

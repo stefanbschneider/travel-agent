@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:53",
-          "end_time": "09:00",
+          "start_time": "01:22",
+          "end_time": "02:29",
           "start": "Nanjing Lukou International Airport",
           "end": "Beijing Daxing International Airport",
-          "price": 470.31,
-          "cost": 2351.55,
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "FlightID": "FL657"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:29",
+              "end_time": "02:40",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "02:40",
+              "end_time": "04:13",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 40,
+              "tickets": 5
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "04:13",
+              "end_time": "04:19",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "07:06",
+              "end_time": "07:08",
+              "distance": 1.11,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Corner Tower",
+              "mode": "walk",
+              "start_time": "07:08",
+              "end_time": "07:15",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing Daxing International Airport",
+              "start": "Corner Tower",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Qianmen-Metro Station",
+              "mode": "metro",
+              "start_time": "10:07",
+              "end_time": "10:14",
+              "distance": 3.77,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Qianmen-Metro Station",
               "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
-              "start_time": "09:00",
-              "end_time": "10:05",
-              "distance": 43.82,
-              "price": 191.88,
-              "cost": 383.76,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:14",
+              "end_time": "10:18",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -343,5 +447,5 @@
     }
   ],
   "elapsed_time(sec)": 187.7895839214325,
-  "_eval_score": 96.07413419913419
+  "_eval_score": 97.47985347985349
 }

@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:56",
-          "end_time": "09:34",
+          "start_time": "00:36",
+          "end_time": "02:14",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Hangzhou Xiaoshan International Airport",
-          "price": 628.14,
-          "cost": 1256.28,
+          "price": 703.38,
+          "cost": 1406.76,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL374"
+          "FlightID": "FL377"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 16.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:14",
+              "end_time": "02:15",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "02:15",
+              "end_time": "03:06",
+              "distance": 25.98,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "03:06",
+              "end_time": "03:09",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hangzhou Confucius Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "07:30",
+              "end_time": "07:33",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "metro",
+              "start_time": "07:33",
+              "end_time": "07:35",
+              "distance": 1.03,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Hangzhou Confucius Temple",
+              "mode": "walk",
+              "start_time": "07:35",
+              "end_time": "07:37",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Xiaoshan International Airport",
+              "start": "Hangzhou Confucius Temple",
+              "end": "Ding'an Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ding'an Road-Metro Station",
+              "end": "Wushan Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:02",
+              "end_time": "10:03",
+              "distance": 0.81,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Wushan Square-Metro Station",
               "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
-              "mode": "taxi",
-              "start_time": "09:34",
-              "end_time": "10:17",
-              "distance": 28.82,
-              "price": 124.38,
-              "cost": 124.38,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:03",
+              "end_time": "10:38",
+              "distance": 2.95,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -558,5 +662,5 @@
     }
   ],
   "elapsed_time(sec)": 181.69824314117432,
-  "_eval_score": 98.9515873015873
+  "_eval_score": 99.87229437229436
 }

@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 157.3,
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
           "tickets": 2,
           "transports": [
             {
@@ -393,11 +392,54 @@
             },
             {
               "start": "Wulinmen-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "metro",
               "start_time": "16:37",
-              "end_time": "16:49",
-              "distance": 6.42,
+              "end_time": "16:45",
+              "distance": 4.09,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:55",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:43",
+          "end_time": "22:07",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou Station",
+          "price": 78.65,
+          "cost": 157.3,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:24",
+              "distance": 7.14,
               "price": 3,
               "cost": 6,
               "tickets": 2
@@ -406,18 +448,18 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "16:49",
-              "end_time": "16:54",
+              "start_time": "18:24",
+              "end_time": "18:29",
               "distance": 0.48,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7192"
+          "TrainID": "G7350"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.44252276420593,
-  "_eval_score": 94.91309523809524
+  "_eval_score": 95.7840909090909
 }

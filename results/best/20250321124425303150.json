@@ -7,16 +7,100 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:40",
-          "end_time": "11:35",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "type": "airplane",
+          "start_time": "03:07",
+          "end_time": "04:26",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 532.46,
+          "cost": 2129.84,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G66"
+          "FlightID": "FL574"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:16",
+          "end_time": "07:16",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "04:26",
+              "end_time": "04:37",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:37",
+              "end_time": "06:10",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "06:10",
+              "end_time": "06:16",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:16",
+              "end_time": "07:22",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "07:22",
+              "end_time": "07:24",
+              "distance": 1.11,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Corner Tower",
+              "mode": "walk",
+              "start_time": "07:24",
+              "end_time": "07:31",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
+              "start": "Corner Tower",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "10:07",
+              "end_time": "10:09",
+              "distance": 1.26,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
               "end": "Beijing Puxuan Hotel · Left Bank",
-              "mode": "taxi",
-              "start_time": "11:35",
-              "end_time": "11:47",
-              "distance": 8.19,
-              "price": 33.36,
-              "cost": 33.36,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:09",
+              "end_time": "10:09",
+              "distance": 0.05,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -729,5 +833,5 @@
     }
   ],
   "elapsed_time(sec)": 184.81671571731567,
-  "_eval_score": 99.21086860670195
+  "_eval_score": 99.79310344827587
 }

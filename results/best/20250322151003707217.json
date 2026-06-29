@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "09:05",
+          "end_time": "10:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jing'an Park",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:05",
+              "distance": 0.4437023611480386,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Temple",
+          "start_time": "10:07",
+          "end_time": "11:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jing'an Park",
+              "end": "Jing'an Temple",
+              "mode": "walk",
+              "start_time": "10:05",
+              "end_time": "10:07",
+              "distance": 0.21751811424618941,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jing'an Temple",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "11:07",
+              "end_time": "11:16",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "People's Square-Metro Station",
+              "mode": "metro",
+              "start_time": "11:16",
+              "end_time": "11:18",
+              "distance": 1.48,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "People's Square-Metro Station",
               "end": "Ministry Of Crab",
-              "mode": "taxi",
-              "start_time": "10:31",
+              "mode": "walk",
+              "start_time": "11:18",
               "end_time": "11:22",
-              "distance": 34.02,
-              "price": 147.79,
-              "cost": 147.79,
-              "cars": 1
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -441,13 +545,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:24",
+          "end_time": "18:24",
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
@@ -462,11 +565,54 @@
             },
             {
               "start": "West Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
               "start_time": "16:55",
-              "end_time": "18:03",
-              "distance": 34.08,
+              "end_time": "17:14",
+              "distance": 9.66,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "walk",
+              "start_time": "17:14",
+              "end_time": "17:24",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:24",
+              "end_time": "18:34",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:34",
+              "end_time": "19:33",
+              "distance": 29.96,
               "price": 7,
               "cost": 28,
               "tickets": 4
@@ -475,18 +621,18 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "18:03",
-              "end_time": "18:18",
+              "start_time": "19:33",
+              "end_time": "19:48",
               "distance": 1.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.03320908546447754,
-  "_eval_score": 96.24305555555556
+  "_eval_score": 98.43095238095238
 }

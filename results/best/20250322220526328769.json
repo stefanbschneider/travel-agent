@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "02:56",
-          "end_time": "04:27",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 565.32,
-          "cost": 1695.96,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL020"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Xiangmei North-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "04:01",
+              "distance": 23.94,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Xiangmei North-Metro Station",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "walk",
+              "start_time": "04:01",
+              "end_time": "04:06",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Airport East-Metro Station",
+              "start": "Joyful Gathering (Jingtian Branch)",
+              "end": "Xiangmei North-Metro Station",
               "mode": "walk",
-              "start_time": "04:27",
-              "end_time": "04:32",
-              "distance": 0.45,
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 0.43,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Airport East-Metro Station",
+              "start": "Xiangmei North-Metro Station",
               "end": "Honey Lake-Metro Station",
               "mode": "metro",
-              "start_time": "04:32",
-              "end_time": "05:22",
-              "distance": 25.23,
-              "price": 6,
-              "cost": 18,
+              "start_time": "08:05",
+              "end_time": "08:08",
+              "distance": 1.77,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Honey Lake-Metro Station",
               "end": "Futian District Sports Park",
               "mode": "walk",
-              "start_time": "05:22",
-              "end_time": "05:32",
+              "start_time": "08:08",
+              "end_time": "08:18",
               "distance": 0.87,
               "price": 0,
               "cost": 0
@@ -1078,13 +1120,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:16",
-          "end_time": "17:47",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 559.04,
-          "cost": 1677.12,
+          "type": "attraction",
+          "position": "East Lake Park",
+          "start_time": "15:19",
+          "end_time": "16:19",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -1099,31 +1140,116 @@
             },
             {
               "start": "Shaibu-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Xianhu Road-Metro Station",
               "mode": "metro",
               "start_time": "14:55",
-              "end_time": "16:00",
-              "distance": 32.69,
-              "price": 7,
-              "cost": 21,
+              "end_time": "15:04",
+              "distance": 4.79,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Xianhu Road-Metro Station",
+              "end": "East Lake Park",
+              "mode": "walk",
+              "start_time": "15:04",
+              "end_time": "15:19",
+              "distance": 1.31,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 60.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East Lake Park",
+              "end": "Xianhu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:19",
+              "end_time": "16:34",
+              "distance": 1.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xianhu Road-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "16:34",
+              "end_time": "16:57",
+              "distance": 11.73,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "16:57",
+              "end_time": "16:59",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:37",
+          "end_time": "01:08",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 572.8,
+          "cost": 1718.3999999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:52",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "16:00",
-              "end_time": "16:05",
+              "start_time": "18:52",
+              "end_time": "18:57",
               "distance": 0.45,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL162"
+          "FlightID": "FL166"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 58.50203084945679,
-  "_eval_score": 97.9397619047619
+  "_eval_score": 99.12287414965986
 }

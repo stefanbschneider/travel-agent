@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "11:05",
-          "end_time": "12:26",
+          "start_time": "01:46",
+          "end_time": "03:07",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 561.72,
-          "cost": 2808.6000000000004,
+          "price": 498.12,
+          "cost": 2490.6,
           "tickets": 5,
           "transports": [],
-          "FlightID": "FL194"
+          "FlightID": "FL199"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 45.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "03:07",
+              "end_time": "03:21",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "03:21",
+              "end_time": "04:01",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 25,
+              "tickets": 5
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "04:01",
+              "end_time": "04:08",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 9.0,
+          "cost": 45.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Jiaochangkou-Metro Station",
+              "mode": "metro",
+              "start_time": "07:07",
+              "end_time": "07:23",
+              "distance": 8.33,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Jiaochangkou-Metro Station",
+              "end": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+              "mode": "walk",
+              "start_time": "07:23",
+              "end_time": "07:25",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +112,32 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "start": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+              "end": "Jiaochangkou-Metro Station",
               "mode": "walk",
-              "start_time": "12:26",
-              "end_time": "12:40",
-              "distance": 1.21,
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.24,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "start": "Jiaochangkou-Metro Station",
               "end": "Xiaoshizi-Metro Station",
               "mode": "metro",
-              "start_time": "12:40",
-              "end_time": "13:15",
-              "distance": 17.85,
-              "price": 5,
-              "cost": 25,
+              "start_time": "12:02",
+              "end_time": "12:04",
+              "distance": 1.15,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
               "start": "Xiaoshizi-Metro Station",
               "end": "Liberation Monument Pedestrian Street",
               "mode": "walk",
-              "start_time": "13:15",
-              "end_time": "13:19",
+              "start_time": "12:04",
+              "end_time": "12:08",
               "distance": 0.39,
               "price": 0,
               "cost": 0
@@ -1167,5 +1251,5 @@
     }
   ],
   "elapsed_time(sec)": 191.4764745235443,
-  "_eval_score": 98.21314102564102
+  "_eval_score": 99.0735544217687
 }

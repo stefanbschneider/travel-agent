@@ -489,13 +489,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "dinner",
+          "position": "Four Springs Restaurant",
+          "start_time": "17:43",
+          "end_time": "18:43",
+          "price": 33.0,
+          "cost": 132.0,
           "tickets": 4,
           "transports": [
             {
@@ -510,31 +509,74 @@
             },
             {
               "start": "Pudong Avenue-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Zhenping Road-Metro Station",
               "mode": "metro",
               "start_time": "17:18",
-              "end_time": "18:16",
-              "distance": 29.03,
-              "price": 7,
-              "cost": 28,
+              "end_time": "17:35",
+              "distance": 8.55,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Zhenping Road-Metro Station",
+              "end": "Four Springs Restaurant",
+              "mode": "walk",
+              "start_time": "17:35",
+              "end_time": "17:43",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Four Springs Restaurant",
+              "end": "Zhenping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:43",
+              "end_time": "18:51",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhenping Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:51",
+              "end_time": "20:05",
+              "distance": 37.35,
+              "price": 8,
+              "cost": 32,
               "tickets": 4
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "18:16",
-              "end_time": "18:31",
+              "start_time": "20:05",
+              "end_time": "20:20",
               "distance": 1.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 203.5824077129364,
-  "_eval_score": 97.70029239766082
+  "_eval_score": 98.21349206349205
 }
