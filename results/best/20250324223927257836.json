@@ -595,12 +595,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 7.0,
-          "cost": 28.0,
+          "type": "attraction",
+          "position": "Arhat Temple",
+          "start_time": "15:15",
+          "end_time": "16:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -615,11 +615,53 @@
             },
             {
               "start": "Xiaoshizi-Metro Station",
-              "end": "Guanyinqiao-Metro Station",
+              "end": "Chaotianmen-Metro Station",
               "mode": "metro",
               "start_time": "15:13",
-              "end_time": "15:23",
-              "distance": 5.17,
+              "end_time": "15:14",
+              "distance": 0.79,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Chaotianmen-Metro Station",
+              "end": "Arhat Temple",
+              "mode": "walk",
+              "start_time": "15:14",
+              "end_time": "15:15",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 28.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Arhat Temple",
+              "end": "Chaotianmen-Metro Station",
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:46",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chaotianmen-Metro Station",
+              "end": "Guanyinqiao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:46",
+              "end_time": "16:56",
+              "distance": 5.38,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -628,8 +670,8 @@
               "start": "Guanyinqiao-Metro Station",
               "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
               "mode": "walk",
-              "start_time": "15:23",
-              "end_time": "15:27",
+              "start_time": "16:56",
+              "end_time": "17:00",
               "distance": 0.33,
               "price": 0,
               "cost": 0
@@ -684,5 +726,5 @@
     }
   ],
   "elapsed_time(sec)": 186.27014636993408,
-  "_eval_score": 98.53214285714284
+  "_eval_score": 98.85416666666666
 }

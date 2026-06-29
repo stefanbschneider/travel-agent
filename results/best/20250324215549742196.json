@@ -107,6 +107,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "15:11",
+          "end_time": "16:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu People's Park",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:03",
+              "end_time": "15:07",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "15:07",
+              "end_time": "15:09",
+              "distance": 1.0,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Chengdu Library",
+              "mode": "walk",
+              "start_time": "15:09",
+              "end_time": "15:11",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
           "start_time": "17:00",
@@ -116,15 +158,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu People's Park",
+              "start": "Chengdu Library",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "16:11",
+              "end_time": "16:13",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Financial City-Metro Station",
+              "mode": "metro",
+              "start_time": "16:13",
+              "end_time": "16:29",
+              "distance": 8.3,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Financial City-Metro Station",
               "end": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-              "mode": "taxi",
-              "start_time": "15:03",
-              "end_time": "15:16",
-              "distance": 8.83,
-              "price": 35.6,
-              "cost": 35.6,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:29",
+              "end_time": "16:34",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -666,5 +728,5 @@
     }
   ],
   "elapsed_time(sec)": 188.74729537963867,
-  "_eval_score": 98.41460622710622
+  "_eval_score": 98.73809523809524
 }

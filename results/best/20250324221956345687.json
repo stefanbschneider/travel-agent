@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Beijing Confucius Temple",
+          "start_time": "15:36",
+          "end_time": "16:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Yonghe Temple",
+              "end": "Beijing Confucius Temple",
+              "mode": "walk",
+              "start_time": "15:33",
+              "end_time": "15:36",
+              "distance": 0.256841590341126,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Jumbo Seafood (Beijing SKP Branch)",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Yonghe Temple",
+              "start": "Beijing Confucius Temple",
+              "end": "Yonghe Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:36",
+              "end_time": "16:42",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yonghe Temple-Metro Station",
+              "end": "Dawanglu-Metro Station",
+              "mode": "metro",
+              "start_time": "16:42",
+              "end_time": "16:55",
+              "distance": 6.78,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Dawanglu-Metro Station",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
-              "mode": "taxi",
-              "start_time": "15:33",
-              "end_time": "15:43",
-              "distance": 6.68,
-              "price": 28.09,
-              "cost": 56.18,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "16:55",
+              "end_time": "16:59",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +428,5 @@
     }
   ],
   "elapsed_time(sec)": 182.2906699180603,
-  "_eval_score": 97.80540293040292
+  "_eval_score": 98.4795918367347
 }

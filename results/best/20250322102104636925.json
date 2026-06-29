@@ -19,6 +19,48 @@
           "FlightID": "FL011"
         },
         {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:59",
+              "end_time": "09:04",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "09:04",
+              "end_time": "09:28",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "09:28",
+              "end_time": "09:30",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "1949 Duck Season · Beijing Roast Duck (Happy Coast Shopping Center Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Shenzhen Bay Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:32",
+              "end_time": "10:54",
+              "distance": 11.49,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Shenzhen Bay Park-Metro Station",
               "end": "1949 Duck Season · Beijing Roast Duck (Happy Coast Shopping Center Branch)",
-              "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:31",
-              "distance": 21.75,
-              "price": 92.58,
-              "cost": 92.58,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:54",
+              "end_time": "11:00",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -597,12 +659,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "More Than Cuisine (Seaworld Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 68.0,
-          "cost": 204.0,
+          "type": "attraction",
+          "position": "Dashabe Ecological Corridor",
+          "start_time": "15:07",
+          "end_time": "16:07",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -617,21 +679,63 @@
             },
             {
               "start": "Qiaocheng East-Metro Station",
-              "end": "Sea World-Metro Station",
+              "end": "Baishizhou-Metro Station",
               "mode": "metro",
               "start_time": "14:51",
-              "end_time": "15:10",
-              "distance": 9.89,
-              "price": 4,
-              "cost": 12,
+              "end_time": "14:57",
+              "distance": 3.15,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Baishizhou-Metro Station",
+              "end": "Dashabe Ecological Corridor",
+              "mode": "walk",
+              "start_time": "14:57",
+              "end_time": "15:07",
+              "distance": 0.91,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "More Than Cuisine (Seaworld Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 68.0,
+          "cost": 204.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Dashabe Ecological Corridor",
+              "end": "Baishizhou-Metro Station",
+              "mode": "walk",
+              "start_time": "16:07",
+              "end_time": "16:17",
+              "distance": 0.91,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishizhou-Metro Station",
+              "end": "Sea World-Metro Station",
+              "mode": "metro",
+              "start_time": "16:17",
+              "end_time": "16:33",
+              "distance": 8.06,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Sea World-Metro Station",
               "end": "More Than Cuisine (Seaworld Branch)",
               "mode": "walk",
-              "start_time": "15:10",
-              "end_time": "15:12",
+              "start_time": "16:33",
+              "end_time": "16:35",
               "distance": 0.22,
               "price": 0,
               "cost": 0
@@ -686,5 +790,5 @@
     }
   ],
   "elapsed_time(sec)": 185.04966711997986,
-  "_eval_score": 97.80631868131869
+  "_eval_score": 98.47619047619048
 }

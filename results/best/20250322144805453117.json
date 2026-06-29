@@ -19,12 +19,12 @@
           "TrainID": "G2"
         },
         {
-          "type": "lunch",
-          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 74.0,
-          "cost": 148.0,
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -50,11 +50,32 @@
             },
             {
               "start": "Confucius Temple-Metro Station",
-              "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "end": "Black Clothes Lane",
               "mode": "walk",
               "start_time": "08:25",
-              "end_time": "08:29",
-              "distance": 0.39,
+              "end_time": "08:31",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 74.0,
+          "cost": 148.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Black Clothes Lane",
+              "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:36",
+              "distance": 0.5727338756491355,
               "price": 0,
               "cost": 0
             }
@@ -456,12 +477,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 736.0,
-          "cost": 1472.0,
+          "type": "attraction",
+          "position": "Cherry Blossom Avenue",
+          "start_time": "15:33",
+          "end_time": "16:33",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -476,21 +497,63 @@
             },
             {
               "start": "Yuhua Gate-Metro Station",
-              "end": "Drum Tower-Metro Station",
+              "end": "Jiuhua Mountain-Metro Station",
               "mode": "metro",
               "start_time": "15:08",
               "end_time": "15:20",
-              "distance": 6.17,
+              "distance": 6.07,
               "price": 3,
               "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Jiuhua Mountain-Metro Station",
+              "end": "Cherry Blossom Avenue",
+              "mode": "walk",
+              "start_time": "15:20",
+              "end_time": "15:33",
+              "distance": 1.12,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 736.0,
+          "cost": 1472.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Cherry Blossom Avenue",
+              "end": "Jiuhua Mountain-Metro Station",
+              "mode": "walk",
+              "start_time": "16:33",
+              "end_time": "16:46",
+              "distance": 1.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiuhua Mountain-Metro Station",
+              "end": "Drum Tower-Metro Station",
+              "mode": "metro",
+              "start_time": "16:46",
+              "end_time": "16:50",
+              "distance": 2.11,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Drum Tower-Metro Station",
               "end": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
               "mode": "walk",
-              "start_time": "15:20",
-              "end_time": "15:22",
+              "start_time": "16:50",
+              "end_time": "16:52",
               "distance": 0.21,
               "price": 0,
               "cost": 0
@@ -772,5 +835,5 @@
     }
   ],
   "elapsed_time(sec)": 185.45011949539185,
-  "_eval_score": 97.56084656084656
+  "_eval_score": 98.42460317460318
 }

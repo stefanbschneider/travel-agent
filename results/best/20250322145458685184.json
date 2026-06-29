@@ -618,12 +618,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Helude Candied Hawthorn Sticks",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 7.0,
-          "cost": 28.0,
+          "type": "attraction",
+          "position": "Central Academy of Fine Arts Art Museum",
+          "start_time": "15:28",
+          "end_time": "16:28",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -638,11 +638,53 @@
             },
             {
               "start": "Wangjing South-Metro Station",
-              "end": "Dongsi-Metro Station",
+              "end": "Futong-Metro Station",
               "mode": "metro",
               "start_time": "15:24",
-              "end_time": "15:41",
-              "distance": 8.67,
+              "end_time": "15:26",
+              "distance": 1.19,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Futong-Metro Station",
+              "end": "Central Academy of Fine Arts Art Museum",
+              "mode": "walk",
+              "start_time": "15:26",
+              "end_time": "15:28",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 28.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Central Academy of Fine Arts Art Museum",
+              "end": "Futong-Metro Station",
+              "mode": "walk",
+              "start_time": "16:28",
+              "end_time": "16:30",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futong-Metro Station",
+              "end": "Dongsi-Metro Station",
+              "mode": "metro",
+              "start_time": "16:30",
+              "end_time": "16:47",
+              "distance": 8.8,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -651,8 +693,8 @@
               "start": "Dongsi-Metro Station",
               "end": "Helude Candied Hawthorn Sticks",
               "mode": "walk",
-              "start_time": "15:41",
-              "end_time": "15:41",
+              "start_time": "16:47",
+              "end_time": "16:47",
               "distance": 0.04,
               "price": 0,
               "cost": 0
@@ -707,5 +749,5 @@
     }
   ],
   "elapsed_time(sec)": 184.14157962799072,
-  "_eval_score": 98.25503663003664
+  "_eval_score": 98.60945767195767
 }

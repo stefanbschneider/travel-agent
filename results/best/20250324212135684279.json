@@ -256,6 +256,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "15:17",
+          "end_time": "16:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Museum",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:05",
+              "end_time": "15:10",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Liping Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:10",
+              "end_time": "15:15",
+              "distance": 2.95,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "15:15",
+              "end_time": "15:17",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
           "start_time": "17:00",
@@ -265,15 +307,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Museum",
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:17",
+              "end_time": "16:19",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "People's Square-Metro Station",
+              "mode": "metro",
+              "start_time": "16:19",
+              "end_time": "16:26",
+              "distance": 3.96,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "People's Square-Metro Station",
               "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
-              "mode": "taxi",
-              "start_time": "15:05",
-              "end_time": "15:05",
-              "distance": 0.19,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:26",
+              "end_time": "16:32",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -425,13 +487,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "21:33",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Beijing South Railway Station",
-          "price": 693.75,
-          "cost": 2081.25,
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "14:57",
+          "end_time": "15:57",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -446,21 +507,64 @@
             },
             {
               "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
+              "end": "Pudong Avenue-Metro Station",
               "mode": "metro",
               "start_time": "14:53",
-              "end_time": "15:35",
-              "distance": 21.0,
-              "price": 6,
-              "cost": 18,
+              "end_time": "14:56",
+              "distance": 1.67,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "walk",
+              "start_time": "14:56",
+              "end_time": "14:57",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "21:33",
+          "start": "Shanghai Hongqiao Station",
+          "end": "Beijing South Railway Station",
+          "price": 693.75,
+          "cost": 2081.25,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "15:57",
+              "end_time": "15:58",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:58",
+              "end_time": "16:37",
+              "distance": 19.77,
+              "price": 5,
+              "cost": 15,
               "tickets": 3
             },
             {
               "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
               "mode": "walk",
-              "start_time": "15:35",
-              "end_time": "15:36",
+              "start_time": "16:37",
+              "end_time": "16:38",
               "distance": 0.12,
               "price": 0,
               "cost": 0
@@ -472,5 +576,5 @@
     }
   ],
   "elapsed_time(sec)": 182.1369867324829,
-  "_eval_score": 97.63888888888889
+  "_eval_score": 98.47222222222223
 }

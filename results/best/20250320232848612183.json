@@ -19,6 +19,48 @@
           "FlightID": "FL059"
         },
         {
+          "type": "attraction",
+          "position": "Autumn Water Villa",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "07:16",
+              "end_time": "07:17",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Yellow Dragon Cave-Metro Station",
+              "mode": "metro",
+              "start_time": "07:17",
+              "end_time": "08:13",
+              "distance": 28.36,
+              "price": 7,
+              "cost": 35,
+              "tickets": 5
+            },
+            {
+              "start": "Yellow Dragon Cave-Metro Station",
+              "end": "Autumn Water Villa",
+              "mode": "walk",
+              "start_time": "08:13",
+              "end_time": "08:24",
+              "distance": 0.96,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
           "start_time": "11:00",
@@ -28,15 +70,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Hangzhou Xiaoshan International Airport",
+              "start": "Autumn Water Villa",
               "end": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
-              "mode": "taxi",
-              "start_time": "07:16",
-              "end_time": "07:58",
-              "distance": 28.13,
-              "price": 121.28,
-              "cost": 242.56,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:48",
+              "distance": 1.538312742999545,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -729,5 +770,5 @@
     }
   ],
   "elapsed_time(sec)": 180.95949387550354,
-  "_eval_score": 99.20734126984127
+  "_eval_score": 99.47278911564626
 }

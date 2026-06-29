@@ -234,6 +234,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "09:11",
+          "end_time": "10:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:10",
+              "distance": 18.05,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "walk",
+              "start_time": "09:10",
+              "end_time": "09:11",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "11:00",
@@ -243,15 +285,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "10:11",
+              "end_time": "10:12",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:12",
+              "end_time": "10:49",
+              "distance": 18.75,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Qibao-Metro Station",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:19",
-              "distance": 33.16,
-              "price": 143.92,
-              "cost": 143.92,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:49",
+              "end_time": "10:57",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -345,5 +407,5 @@
     }
   ],
   "elapsed_time(sec)": 38.72843384742737,
-  "_eval_score": 97.11309523809524
+  "_eval_score": 97.6996336996337
 }

@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Meiyuan New Village Memorial Hall",
+          "start_time": "15:19",
+          "end_time": "16:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Six Dynasties Museum",
+              "end": "Meiyuan New Village Memorial Hall",
+              "mode": "walk",
+              "start_time": "15:17",
+              "end_time": "15:19",
+              "distance": 0.24342330196232928,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Nanjing Jinling Hotel - Plum Garden",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Six Dynasties Museum",
+              "start": "Meiyuan New Village Memorial Hall",
+              "end": "Jiuhua Mountain-Metro Station",
+              "mode": "walk",
+              "start_time": "16:19",
+              "end_time": "16:30",
+              "distance": 0.95,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiuhua Mountain-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "16:30",
+              "end_time": "16:35",
+              "distance": 2.69,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "taxi",
-              "start_time": "15:17",
-              "end_time": "15:20",
-              "distance": 2.28,
-              "price": 12.69,
-              "cost": 12.69,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:35",
+              "end_time": "16:36",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -516,5 +557,5 @@
     }
   ],
   "elapsed_time(sec)": 180.62009167671204,
-  "_eval_score": 98.05116959064328
+  "_eval_score": 98.48650793650793
 }

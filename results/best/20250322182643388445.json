@@ -19,6 +19,48 @@
           "TrainID": "G2"
         },
         {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing South Railway Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:11",
+              "end_time": "08:14",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Changfu Street-Metro Station",
+              "mode": "metro",
+              "start_time": "08:14",
+              "end_time": "08:27",
+              "distance": 6.94,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "walk",
+              "start_time": "08:27",
+              "end_time": "08:38",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Ancient Peach Leaf Ferry",
+              "end": "Changfu Street-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:41",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "10:41",
+              "end_time": "10:43",
+              "distance": 1.04,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "mode": "taxi",
-              "start_time": "08:11",
-              "end_time": "08:19",
-              "distance": 5.8,
-              "price": 25.02,
-              "cost": 25.02,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:43",
+              "end_time": "10:47",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -516,5 +578,5 @@
     }
   ],
   "elapsed_time(sec)": 185.7354691028595,
-  "_eval_score": 98.30680868838763
+  "_eval_score": 98.68174603174603
 }

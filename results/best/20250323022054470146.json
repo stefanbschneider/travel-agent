@@ -107,6 +107,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Baochu Pagoda",
+          "start_time": "15:32",
+          "end_time": "16:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Lake Cultural Plaza",
+              "end": "West Lake Cultural Plaza-Metro Station",
+              "mode": "walk",
+              "start_time": "15:22",
+              "end_time": "15:27",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Lake Cultural Plaza-Metro Station",
+              "end": "Wulinmen-Metro Station",
+              "mode": "metro",
+              "start_time": "15:27",
+              "end_time": "15:29",
+              "distance": 1.48,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Wulinmen-Metro Station",
+              "end": "Baochu Pagoda",
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:32",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
           "start_time": "17:00",
@@ -116,15 +158,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "West Lake Cultural Plaza",
+              "start": "Baochu Pagoda",
+              "end": "Wulinmen-Metro Station",
+              "mode": "walk",
+              "start_time": "16:32",
+              "end_time": "16:35",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wulinmen-Metro Station",
+              "end": "Huanglong Sports Center-Metro Station",
+              "mode": "metro",
+              "start_time": "16:35",
+              "end_time": "16:39",
+              "distance": 2.46,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Huanglong Sports Center-Metro Station",
               "end": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
-              "mode": "taxi",
-              "start_time": "15:22",
-              "end_time": "15:29",
-              "distance": 5.11,
-              "price": 22.57,
-              "cost": 22.57,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:39",
+              "end_time": "17:00",
+              "distance": 1.81,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -687,5 +749,5 @@
     }
   ],
   "elapsed_time(sec)": 181.45693802833557,
-  "_eval_score": 98.85416666666666
+  "_eval_score": 99.16666666666666
 }

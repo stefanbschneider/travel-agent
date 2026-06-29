@@ -212,6 +212,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Tianfu Greenway",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "end": "Cuqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:43",
+              "distance": 1.16,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Cuqiao-Metro Station",
+              "end": "South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "08:43",
+              "end_time": "08:57",
+              "distance": 7.43,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "South Railway Station-Metro Station",
+              "end": "Tianfu Greenway",
+              "mode": "walk",
+              "start_time": "08:57",
+              "end_time": "09:00",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
           "start_time": "11:00",
@@ -221,15 +263,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "start": "Tianfu Greenway",
+              "end": "South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:33",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "South Railway Station-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "10:33",
+              "end_time": "10:46",
+              "distance": 6.83,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
               "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:45",
-              "distance": 10.32,
-              "price": 41.15,
-              "cost": 41.15,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:46",
+              "end_time": "10:56",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -297,12 +359,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 9.0,
-          "cost": 18.0,
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "15:19",
+          "end_time": "16:49",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -328,11 +390,32 @@
             },
             {
               "start": "Tianfu Square-Metro Station",
-              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Chengdu Library",
               "mode": "walk",
               "start_time": "15:17",
-              "end_time": "15:20",
-              "distance": 0.26,
+              "end_time": "15:19",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Library",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "mode": "walk",
+              "start_time": "16:49",
+              "end_time": "16:54",
+              "distance": 0.4655110105311973,
               "price": 0,
               "cost": 0
             }
@@ -366,5 +449,5 @@
     }
   ],
   "elapsed_time(sec)": 32.54895901679993,
-  "_eval_score": 97.52380952380952
+  "_eval_score": 97.58412698412698
 }

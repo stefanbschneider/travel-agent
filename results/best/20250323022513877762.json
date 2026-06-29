@@ -489,13 +489,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "20:58",
-          "end_time": "15:27",
-          "start": "Shenzhen East Station",
-          "end": "Chongqing North Railway Station",
-          "price": 540.88,
-          "cost": 1622.6399999999999,
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "18:06",
+          "end_time": "19:36",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -510,11 +509,54 @@
             },
             {
               "start": "Huangbeiling-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "Shaibu-Metro Station",
               "mode": "metro",
               "start_time": "18:02",
-              "end_time": "18:14",
-              "distance": 6.42,
+              "end_time": "18:04",
+              "distance": 1.45,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "18:04",
+              "end_time": "18:06",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:58",
+          "end_time": "15:27",
+          "start": "Shenzhen East Station",
+          "end": "Chongqing North Railway Station",
+          "price": 540.88,
+          "cost": 1622.6399999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Shaibu-Metro Station",
+              "mode": "walk",
+              "start_time": "19:36",
+              "end_time": "19:38",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "19:38",
+              "end_time": "19:49",
+              "distance": 5.88,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -523,8 +565,8 @@
               "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
               "mode": "walk",
-              "start_time": "18:14",
-              "end_time": "18:17",
+              "start_time": "19:49",
+              "end_time": "19:52",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -536,5 +578,5 @@
     }
   ],
   "elapsed_time(sec)": 183.01141166687012,
-  "_eval_score": 97.68880534670008
+  "_eval_score": 98.17539682539683
 }

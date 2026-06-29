@@ -156,13 +156,12 @@
             {
               "start": "Round Garden (Jinmao Branch)",
               "end": "263-meter Main Observation Deck",
-              "mode": "taxi",
+              "mode": "walk",
               "start_time": "13:46",
-              "end_time": "13:47",
-              "distance": 1.08,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "end_time": "13:58",
+              "distance": 1.0756998704236687,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -311,9 +310,9 @@
         },
         {
           "type": "attraction",
-          "position": "Century Park",
-          "start_time": "09:11",
-          "end_time": "10:26",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:34",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -330,22 +329,22 @@
             },
             {
               "start": "Chuansha-Metro Station",
-              "end": "Yingchun Road-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
               "mode": "metro",
               "start_time": "08:34",
               "end_time": "09:03",
-              "distance": 14.53,
+              "distance": 14.95,
               "price": 5,
               "cost": 5,
               "tickets": 1
             },
             {
-              "start": "Yingchun Road-Metro Station",
-              "end": "Century Park",
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
               "mode": "walk",
               "start_time": "09:03",
-              "end_time": "09:11",
-              "distance": 0.69,
+              "end_time": "09:04",
+              "distance": 0.13,
               "price": 0,
               "cost": 0
             }
@@ -361,22 +360,22 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Century Park",
-              "end": "Yingchun Road-Metro Station",
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
               "mode": "walk",
-              "start_time": "10:26",
-              "end_time": "10:34",
-              "distance": 0.69,
+              "start_time": "10:34",
+              "end_time": "10:35",
+              "distance": 0.13,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Yingchun Road-Metro Station",
+              "start": "Yanggao Middle Road-Metro Station",
               "end": "Shanghai Stadium-Metro Station",
               "mode": "metro",
-              "start_time": "10:34",
-              "end_time": "10:55",
-              "distance": 10.97,
+              "start_time": "10:35",
+              "end_time": "10:57",
+              "distance": 11.04,
               "price": 4,
               "cost": 4,
               "tickets": 1
@@ -385,8 +384,8 @@
               "start": "Shanghai Stadium-Metro Station",
               "end": "Spice Point",
               "mode": "walk",
-              "start_time": "10:55",
-              "end_time": "10:57",
+              "start_time": "10:57",
+              "end_time": "10:59",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -436,13 +435,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "type": "attraction",
+          "position": "Juliet's Balcony",
+          "start_time": "14:02",
+          "end_time": "15:02",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -457,11 +455,54 @@
             },
             {
               "start": "Jiangsu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Changshu Road-Metro Station",
               "mode": "metro",
               "start_time": "13:56",
-              "end_time": "15:09",
-              "distance": 36.56,
+              "end_time": "13:59",
+              "distance": 1.92,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Juliet's Balcony",
+              "mode": "walk",
+              "start_time": "13:59",
+              "end_time": "14:02",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "16:36",
+          "end_time": "18:07",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 576.24,
+          "cost": 576.24,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Juliet's Balcony",
+              "end": "Changshu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:02",
+              "end_time": "15:05",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:05",
+              "end_time": "16:14",
+              "distance": 34.68,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -470,8 +511,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "15:09",
-              "end_time": "15:24",
+              "start_time": "16:14",
+              "end_time": "16:29",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -483,5 +524,5 @@
     }
   ],
   "elapsed_time(sec)": 8.10819697380066,
-  "_eval_score": 95.9534632034632
+  "_eval_score": 96.7202380952381
 }

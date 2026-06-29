@@ -19,6 +19,48 @@
           "TrainID": "G2"
         },
         {
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing South Railway Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:11",
+              "end_time": "08:14",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:14",
+              "end_time": "08:33",
+              "distance": 9.57,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "08:33",
+              "end_time": "08:46",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Nanjing Suning Zhongshan International Golf Hotel · Lanting",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:13",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Xuzhuang · Suning Headquarters-Metro Station",
+              "mode": "metro",
+              "start_time": "10:13",
+              "end_time": "10:31",
+              "distance": 9.17,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Xuzhuang · Suning Headquarters-Metro Station",
               "end": "Nanjing Suning Zhongshan International Golf Hotel · Lanting",
-              "mode": "taxi",
-              "start_time": "08:11",
-              "end_time": "08:32",
-              "distance": 14.27,
-              "price": 58.93,
-              "cost": 58.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:31",
+              "end_time": "10:47",
+              "distance": 1.36,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -495,5 +557,5 @@
     }
   ],
   "elapsed_time(sec)": 135.8497314453125,
-  "_eval_score": 98.33688387635756
+  "_eval_score": 98.65079365079364
 }

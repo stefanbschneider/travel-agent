@@ -19,6 +19,48 @@
           "TrainID": "G8512"
         },
         {
+          "type": "attraction",
+          "position": "Chengdu City Tour Sightseeing Bus",
+          "start_time": "09:15",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu East Railway Station",
+              "end": "Chengdu East Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:50",
+              "end_time": "08:50",
+              "distance": 0.0,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chengdu East Railway Station-Metro Station",
+              "end": "Jinjiang Hotel-Metro Station",
+              "mode": "metro",
+              "start_time": "08:50",
+              "end_time": "09:04",
+              "distance": 7.45,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jinjiang Hotel-Metro Station",
+              "end": "Chengdu City Tour Sightseeing Bus",
+              "mode": "walk",
+              "start_time": "09:04",
+              "end_time": "09:15",
+              "distance": 0.94,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Crane's Call Tea House (People's Park Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu East Railway Station",
+              "start": "Chengdu City Tour Sightseeing Bus",
+              "end": "Jinjiang Hotel-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:26",
+              "distance": 0.94,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jinjiang Hotel-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:26",
+              "end_time": "10:28",
+              "distance": 1.36,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "People's Park-Metro Station",
               "end": "Crane's Call Tea House (People's Park Branch)",
-              "mode": "taxi",
-              "start_time": "08:50",
-              "end_time": "09:02",
-              "distance": 8.37,
-              "price": 34.01,
-              "cost": 34.01,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:28",
+              "end_time": "10:31",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -554,5 +616,5 @@
     }
   ],
   "elapsed_time(sec)": 133.0548837184906,
-  "_eval_score": 97.85978835978835
+  "_eval_score": 98.25167084377611
 }

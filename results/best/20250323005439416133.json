@@ -41,6 +41,48 @@
         },
         {
           "type": "attraction",
+          "position": "Ancient Alley Snack Street",
+          "start_time": "13:44",
+          "end_time": "14:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Green Grain Restaurant (East Lake Branch)",
+              "end": "Tieji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "13:14",
+              "end_time": "13:31",
+              "distance": 1.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tieji Road-Metro Station",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "metro",
+              "start_time": "13:31",
+              "end_time": "13:44",
+              "distance": 6.93,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Ancient Alley Snack Street",
+              "mode": "walk",
+              "start_time": "13:44",
+              "end_time": "13:44",
+              "distance": 0.07,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
           "position": "Wuhan Yangtze River Bridge",
           "start_time": "15:03",
           "end_time": "16:03",
@@ -49,12 +91,12 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Green Grain Restaurant (East Lake Branch)",
+              "start": "Ancient Alley Snack Street",
               "end": "Wuhan Yangtze River Bridge",
               "mode": "walk",
-              "start_time": "13:14",
-              "end_time": "15:03",
-              "distance": 9.137170389447165,
+              "start_time": "14:44",
+              "end_time": "14:56",
+              "distance": 1.043836480435802,
               "price": 0,
               "cost": 0
             }
@@ -246,13 +288,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "21:22",
-          "start": "Wuhan Station",
-          "end": "Guangzhou South Railway Station",
-          "price": 543.6,
-          "cost": 1630.8000000000002,
+          "type": "attraction",
+          "position": "Chaotown (Zhuodaoquan Branch)",
+          "start_time": "15:30",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -267,11 +308,54 @@
             },
             {
               "start": "Guanggu Tongji Hospital-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "end": "Huquan-Metro Station",
               "mode": "metro",
               "start_time": "15:05",
-              "end_time": "15:32",
-              "distance": 13.99,
+              "end_time": "15:24",
+              "distance": 9.69,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Huquan-Metro Station",
+              "end": "Chaotown (Zhuodaoquan Branch)",
+              "mode": "walk",
+              "start_time": "15:24",
+              "end_time": "15:30",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:03",
+          "end_time": "21:22",
+          "start": "Wuhan Station",
+          "end": "Guangzhou South Railway Station",
+          "price": 543.6,
+          "cost": 1630.8000000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chaotown (Zhuodaoquan Branch)",
+              "end": "Huquan-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:36",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huquan-Metro Station",
+              "end": "Wuhan Station East Square-Metro Station",
+              "mode": "metro",
+              "start_time": "16:36",
+              "end_time": "16:59",
+              "distance": 11.78,
               "price": 4,
               "cost": 12,
               "tickets": 3
@@ -280,8 +364,8 @@
               "start": "Wuhan Station East Square-Metro Station",
               "end": "Wuhan Station",
               "mode": "walk",
-              "start_time": "15:32",
-              "end_time": "15:34",
+              "start_time": "16:59",
+              "end_time": "17:01",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -293,5 +377,5 @@
     }
   ],
   "elapsed_time(sec)": 181.89795804023743,
-  "_eval_score": 94.20238095238095
+  "_eval_score": 96.07142857142857
 }

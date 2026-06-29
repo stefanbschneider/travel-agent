@@ -19,12 +19,12 @@
           "TrainID": "D636"
         },
         {
-          "type": "lunch",
-          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 74.0,
-          "cost": 222.0,
+          "type": "attraction",
+          "position": "Crescent Lake Park",
+          "start_time": "09:08",
+          "end_time": "10:38",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -39,11 +39,53 @@
             },
             {
               "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Confucius Temple-Metro Station",
+              "end": "Clover Garden-Metro Station",
               "mode": "metro",
               "start_time": "08:49",
-              "end_time": "09:00",
-              "distance": 5.92,
+              "end_time": "09:06",
+              "distance": 8.5,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Crescent Lake Park",
+              "mode": "walk",
+              "start_time": "09:06",
+              "end_time": "09:08",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 74.0,
+          "cost": 222.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Crescent Lake Park",
+              "end": "Clover Garden-Metro Station",
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "10:40",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "10:40",
+              "end_time": "10:49",
+              "distance": 4.56,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -52,8 +94,8 @@
               "start": "Confucius Temple-Metro Station",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:04",
+              "start_time": "10:49",
+              "end_time": "10:53",
               "distance": 0.39,
               "price": 0,
               "cost": 0
@@ -456,12 +498,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 334.0,
-          "cost": 1002.0,
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "15:33",
+          "end_time": "16:33",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -476,21 +518,63 @@
             },
             {
               "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Xinmofan Road-Metro Station",
+              "end": "Confucius Temple-Metro Station",
               "mode": "metro",
               "start_time": "15:20",
-              "end_time": "15:25",
-              "distance": 2.85,
+              "end_time": "15:27",
+              "distance": 3.74,
               "price": 2,
               "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Black Clothes Lane",
+              "mode": "walk",
+              "start_time": "15:27",
+              "end_time": "15:33",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 334.0,
+          "cost": 1002.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Black Clothes Lane",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:33",
+              "end_time": "16:39",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:39",
+              "end_time": "16:51",
+              "distance": 6.22,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Xinmofan Road-Metro Station",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
               "mode": "walk",
-              "start_time": "15:25",
-              "end_time": "15:27",
+              "start_time": "16:51",
+              "end_time": "16:53",
               "distance": 0.2,
               "price": 0,
               "cost": 0
@@ -814,5 +898,5 @@
     }
   ],
   "elapsed_time(sec)": 137.88141322135925,
-  "_eval_score": 97.46825396825396
+  "_eval_score": 98.32460317460317
 }

@@ -234,6 +234,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:03",
+              "distance": 14.95,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
+              "mode": "walk",
+              "start_time": "09:03",
+              "end_time": "09:04",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "11:00",
@@ -243,15 +285,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:04",
+              "end_time": "10:05",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:05",
+              "end_time": "10:46",
+              "distance": 20.63,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Qibao-Metro Station",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:19",
-              "distance": 33.16,
-              "price": 143.92,
-              "cost": 143.92,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:46",
+              "end_time": "10:54",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -345,5 +407,5 @@
     }
   ],
   "elapsed_time(sec)": 197.60488271713257,
-  "_eval_score": 97.09325396825398
+  "_eval_score": 97.6923076923077
 }

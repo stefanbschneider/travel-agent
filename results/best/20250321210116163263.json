@@ -19,6 +19,48 @@
           "FlightID": "FL533"
         },
         {
+          "type": "attraction",
+          "position": "Baihua Tan Park",
+          "start_time": "09:47",
+          "end_time": "10:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "09:04",
+              "end_time": "09:19",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Tonghuimen-Metro Station",
+              "mode": "metro",
+              "start_time": "09:19",
+              "end_time": "09:46",
+              "distance": 13.5,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Tonghuimen-Metro Station",
+              "end": "Baihua Tan Park",
+              "mode": "walk",
+              "start_time": "09:46",
+              "end_time": "09:47",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Baihua Tan Park",
+              "end": "Tonghuimen-Metro Station",
+              "mode": "walk",
+              "start_time": "10:47",
+              "end_time": "10:48",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tonghuimen-Metro Station",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:48",
+              "end_time": "10:51",
+              "distance": 1.73,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
               "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-              "mode": "taxi",
-              "start_time": "09:04",
-              "end_time": "09:26",
-              "distance": 15.23,
-              "price": 63.25,
-              "cost": 63.25,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:53",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +449,5 @@
     }
   ],
   "elapsed_time(sec)": 181.73986887931824,
-  "_eval_score": 98.15705128205127
+  "_eval_score": 98.7687074829932
 }

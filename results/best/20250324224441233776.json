@@ -19,6 +19,48 @@
           "FlightID": "FL084"
         },
         {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:41",
+          "end_time": "10:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "08:21",
+              "end_time": "08:36",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Liping Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:36",
+              "end_time": "09:39",
+              "distance": 31.51,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "09:39",
+              "end_time": "09:41",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:41",
+              "end_time": "10:43",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:43",
+              "end_time": "10:54",
+              "distance": 5.7,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
               "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
-              "start_time": "08:21",
-              "end_time": "09:13",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:54",
+              "end_time": "10:57",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -447,12 +509,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 48.0,
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "15:35",
+          "end_time": "16:35",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -467,11 +529,53 @@
             },
             {
               "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
+              "end": "Pudong Avenue-Metro Station",
               "mode": "metro",
               "start_time": "15:31",
-              "end_time": "15:43",
-              "distance": 6.16,
+              "end_time": "15:34",
+              "distance": 1.67,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "walk",
+              "start_time": "15:34",
+              "end_time": "15:35",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 48.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "16:35",
+              "end_time": "16:36",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:36",
+              "end_time": "16:47",
+              "distance": 5.55,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -480,8 +584,8 @@
               "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "15:43",
-              "end_time": "15:53",
+              "start_time": "16:47",
+              "end_time": "16:57",
               "distance": 0.86,
               "price": 0,
               "cost": 0
@@ -536,5 +640,5 @@
     }
   ],
   "elapsed_time(sec)": 183.21286964416504,
-  "_eval_score": 97.89682539682539
+  "_eval_score": 98.75736961451247
 }

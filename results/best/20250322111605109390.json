@@ -212,6 +212,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Jincheng Lake",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "end": "Cuqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:43",
+              "distance": 1.16,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Cuqiao-Metro Station",
+              "end": "Jiaozi Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "08:43",
+              "end_time": "08:55",
+              "distance": 6.45,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Jiaozi Avenue-Metro Station",
+              "end": "Jincheng Lake",
+              "mode": "walk",
+              "start_time": "08:55",
+              "end_time": "09:00",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
           "start_time": "11:00",
@@ -221,15 +263,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "start": "Jincheng Lake",
+              "end": "Jiaozi Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:35",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiaozi Avenue-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "10:35",
+              "end_time": "10:55",
+              "distance": 10.2,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
               "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:47",
-              "distance": 11.47,
-              "price": 46.34,
-              "cost": 46.34,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:55",
+              "end_time": "10:58",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -339,6 +401,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Tianfu Greenway",
+          "start_time": "18:16",
+          "end_time": "19:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Grandpa and Grandma Chen's Egg Pancakes",
+              "end": "Provincial Gymnasium-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Provincial Gymnasium-Metro Station",
+              "end": "South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:07",
+              "end_time": "18:13",
+              "distance": 3.09,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "South Railway Station-Metro Station",
+              "end": "Tianfu Greenway",
+              "mode": "walk",
+              "start_time": "18:13",
+              "end_time": "18:16",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "22:35",
           "end_time": "23:48",
@@ -349,15 +453,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Grandpa and Grandma Chen's Egg Pancakes",
+              "start": "Tianfu Greenway",
+              "end": "South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "19:46",
+              "end_time": "19:49",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "South Railway Station-Metro Station",
+              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "mode": "metro",
+              "start_time": "19:49",
+              "end_time": "21:26",
+              "distance": 48.73,
+              "price": 9,
+              "cost": 18,
+              "tickets": 2
+            },
+            {
+              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
               "end": "Chengdu Tianfu International Airport",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "19:19",
-              "distance": 52.74,
-              "price": 232.01,
-              "cost": 232.01,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "21:26",
+              "end_time": "22:10",
+              "distance": 3.72,
+              "price": 0,
+              "cost": 0
             }
           ],
           "FlightID": "FL466"
@@ -366,5 +490,5 @@
     }
   ],
   "elapsed_time(sec)": 34.34716081619263,
-  "_eval_score": 97.9739010989011
+  "_eval_score": 98.38253968253969
 }

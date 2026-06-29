@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Huaihai Road",
+          "start_time": "15:41",
+          "end_time": "16:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Fuxing Park",
+              "end": "Huaihai Road",
+              "mode": "walk",
+              "start_time": "15:39",
+              "end_time": "15:41",
+              "distance": 0.20968168861696815,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Fu He Hui",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Fuxing Park",
+              "start": "Huaihai Road",
+              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:41",
+              "end_time": "16:44",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:44",
+              "end_time": "16:52",
+              "distance": 4.05,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "15:39",
-              "end_time": "15:45",
-              "distance": 4.41,
-              "price": 20.12,
-              "cost": 20.12,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:54",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -516,5 +557,5 @@
     }
   ],
   "elapsed_time(sec)": 193.00529146194458,
-  "_eval_score": 98.2266081871345
+  "_eval_score": 98.66984126984127
 }
