@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:11",
-          "end_time": "08:46",
-          "start": "Suzhou New District Station",
-          "end": "Nanjing South Railway Station",
-          "price": 113.45,
-          "cost": 340.35,
+          "start_time": "00:02",
+          "end_time": "02:15",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 94.54,
+          "cost": 283.62,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D636"
+          "TrainID": "T136"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "walk",
+              "start_time": "02:15",
+              "end_time": "02:17",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
+              "end": "Yunnan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "02:17",
+              "end_time": "02:24",
+              "distance": 3.93,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "walk",
+              "start_time": "02:24",
+              "end_time": "02:29",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Yunnan Road-Metro Station",
               "mode": "walk",
-              "start_time": "08:46",
-              "end_time": "08:49",
-              "distance": 0.29,
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 0.5,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Nanjing South Railway Station-Metro Station",
+              "start": "Yunnan Road-Metro Station",
               "end": "Changfu Street-Metro Station",
               "mode": "metro",
-              "start_time": "08:49",
-              "end_time": "09:02",
-              "distance": 6.94,
-              "price": 3,
-              "cost": 9,
+              "start_time": "08:05",
+              "end_time": "08:11",
+              "distance": 3.3,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Changfu Street-Metro Station",
               "end": "Ancient Peach Leaf Ferry",
               "mode": "walk",
-              "start_time": "09:02",
-              "end_time": "09:13",
+              "start_time": "08:11",
+              "end_time": "08:22",
               "distance": 0.92,
               "price": 0,
               "cost": 0
@@ -360,13 +402,12 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
           "start_time": "17:00",
-          "end_time": "18:12",
-          "start": "Nanjing Station",
-          "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 368.70000000000005,
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 18.0,
           "tickets": 3,
           "transports": [
             {
@@ -381,11 +422,54 @@
             },
             {
               "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Nanjing Station-Metro Station",
+              "end": "Xuanwu Gate-Metro Station",
               "mode": "metro",
               "start_time": "15:08",
-              "end_time": "15:15",
-              "distance": 3.56,
+              "end_time": "15:11",
+              "distance": 1.93,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "walk",
+              "start_time": "15:11",
+              "end_time": "15:20",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "22:24",
+          "end_time": "02:26",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 75.63,
+          "cost": 226.89,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Xuanwu Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:09",
+              "end_time": "18:13",
+              "distance": 2.44,
               "price": 2,
               "cost": 6,
               "tickets": 3
@@ -394,18 +478,18 @@
               "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
               "mode": "walk",
-              "start_time": "15:15",
-              "end_time": "15:17",
+              "start_time": "18:13",
+              "end_time": "18:15",
               "distance": 0.25,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7021"
+          "TrainID": "K1805"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.90985488891602,
-  "_eval_score": 98.33333333333334
+  "_eval_score": 100.0
 }

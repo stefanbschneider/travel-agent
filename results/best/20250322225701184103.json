@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:10",
-          "start": "Nanjing South Railway Station",
-          "end": "Suzhou North Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "start_time": "00:03",
+          "end_time": "02:32",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 94.54,
+          "cost": 189.08,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G1509"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "02:32",
+              "end_time": "02:33",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "metro",
+              "start_time": "02:33",
+              "end_time": "02:40",
+              "distance": 3.85,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "mode": "walk",
+              "start_time": "02:40",
+              "end_time": "02:43",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Suzhou North Station",
-              "end": "Suzhou North Railway Station-Metro Station",
+              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "end": "Sanyuanfang-Metro Station",
               "mode": "walk",
-              "start_time": "08:10",
-              "end_time": "08:11",
-              "distance": 0.14,
+              "start_time": "07:00",
+              "end_time": "07:03",
+              "distance": 0.3,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Suzhou North Railway Station-Metro Station",
+              "start": "Sanyuanfang-Metro Station",
               "end": "Shantang Street-Metro Station",
               "mode": "metro",
-              "start_time": "08:11",
-              "end_time": "08:35",
-              "distance": 12.03,
-              "price": 4,
-              "cost": 8,
+              "start_time": "07:03",
+              "end_time": "07:09",
+              "distance": 3.17,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Shantang Street-Metro Station",
               "end": "Arhat Hall",
               "mode": "walk",
-              "start_time": "08:35",
-              "end_time": "08:44",
+              "start_time": "07:09",
+              "end_time": "07:18",
               "distance": 0.78,
               "price": 0,
               "cost": 0
@@ -809,13 +851,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:31",
-          "start": "Suzhou Park Station",
-          "end": "Nanjing South Railway Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "type": "dinner",
+          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 18.0,
           "tickets": 2,
           "transports": [
             {
@@ -830,31 +871,116 @@
             },
             {
               "start": "Meixiang-Metro Station",
-              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
               "mode": "metro",
               "start_time": "16:22",
-              "end_time": "16:37",
-              "distance": 7.76,
-              "price": 3,
-              "cost": 6,
+              "end_time": "16:29",
+              "distance": 3.69,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
-              "start": "Suzhou Industrial Park Railway Station-Metro Station",
-              "end": "Suzhou Park Station",
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
               "mode": "walk",
-              "start_time": "16:37",
-              "end_time": "16:40",
-              "distance": 0.32,
+              "start_time": "16:29",
+              "end_time": "16:34",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guanqian Street",
+          "start_time": "18:14",
+          "end_time": "19:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "18:07",
+              "distance": 1.42,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Guanqian Street",
+              "mode": "walk",
+              "start_time": "18:07",
+              "end_time": "18:14",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:39",
+          "end_time": "02:23",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 75.63,
+          "cost": 151.26,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guanqian Street",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "19:14",
+              "end_time": "19:21",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "19:21",
+              "end_time": "19:26",
+              "distance": 2.57,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Suzhou Station",
+              "mode": "walk",
+              "start_time": "19:26",
+              "end_time": "19:27",
+              "distance": 0.13,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7376"
+          "TrainID": "K8366"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 185.43273258209229,
-  "_eval_score": 97.28926482873851
+  "_eval_score": 99.04112554112554
 }

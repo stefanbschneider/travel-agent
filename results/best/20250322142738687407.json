@@ -8,15 +8,141 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:33",
-          "end_time": "14:21",
+          "start_time": "00:00",
+          "end_time": "01:48",
           "start": "Shanghai Pudong International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 702.54,
-          "cost": 1405.08,
+          "price": 767.51,
+          "cost": 1535.02,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL033"
+          "FlightID": "FL036"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "01:48",
+              "end_time": "02:02",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "02:02",
+              "end_time": "02:42",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "02:42",
+              "end_time": "02:49",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cave Ship No. 1",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Zhongshutuo-Metro Station",
+              "mode": "metro",
+              "start_time": "07:07",
+              "end_time": "07:12",
+              "distance": 2.96,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Zhongshutuo-Metro Station",
+              "end": "Cave Ship No. 1",
+              "mode": "walk",
+              "start_time": "07:12",
+              "end_time": "07:19",
+              "distance": 0.65,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Cave Ship No. 1",
+              "end": "Zhongshutuo-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:37",
+              "distance": 0.65,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhongshutuo-Metro Station",
+              "end": "Jiaochangkou-Metro Station",
+              "mode": "metro",
+              "start_time": "10:37",
+              "end_time": "10:52",
+              "distance": 7.85,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Jiaochangkou-Metro Station",
+              "end": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+              "mode": "walk",
+              "start_time": "10:52",
+              "end_time": "10:54",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +154,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
+              "start": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
+              "end": "Jiaochangkou-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiaochangkou-Metro Station",
+              "end": "Shijingpo-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "12:28",
+              "distance": 13.21,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Shijingpo-Metro Station",
               "end": "White Mansion",
-              "mode": "taxi",
-              "start_time": "14:21",
-              "end_time": "14:59",
-              "distance": 25.81,
-              "price": 110.82,
-              "cost": 110.82,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:28",
+              "end_time": "12:38",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -536,5 +682,5 @@
     }
   ],
   "elapsed_time(sec)": 184.91439175605774,
-  "_eval_score": 98.34440267335005
+  "_eval_score": 99.76190476190476
 }

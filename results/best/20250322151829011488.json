@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 72.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "04:04",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "04:04",
+              "end_time": "04:10",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Airport East-Metro Station",
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
               "mode": "walk",
-              "start_time": "08:59",
-              "end_time": "09:04",
-              "distance": 0.45,
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Airport East-Metro Station",
+              "start": "Meicun-Metro Station",
               "end": "Convention and Exhibition Center-Metro Station",
               "mode": "metro",
-              "start_time": "09:04",
-              "end_time": "09:58",
-              "distance": 27.49,
-              "price": 6,
-              "cost": 18,
+              "start_time": "08:06",
+              "end_time": "08:13",
+              "distance": 3.83,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Convention and Exhibition Center-Metro Station",
               "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
               "mode": "walk",
-              "start_time": "09:58",
-              "end_time": "10:00",
+              "start_time": "08:13",
+              "end_time": "08:15",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -1188,5 +1230,5 @@
     }
   ],
   "elapsed_time(sec)": 202.07880115509033,
-  "_eval_score": 97.94808201058201
+  "_eval_score": 98.41198979591837
 }

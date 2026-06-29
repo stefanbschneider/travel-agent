@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:07",
-          "end_time": "10:57",
+          "start_time": "02:36",
+          "end_time": "05:50",
           "start": "Suzhou Station",
           "end": "Hangzhou Railway Station",
           "price": 60.5,
           "cost": 121.0,
           "tickets": 2,
           "transports": [],
-          "TrainID": "Z281"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Huifei Snacks (Yucai Lane Branch)",
+          "start_time": "06:11",
+          "end_time": "07:11",
+          "price": 15.0,
+          "cost": 30.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "City Station-Metro Station",
+              "mode": "walk",
+              "start_time": "05:50",
+              "end_time": "05:52",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Datieguan-Metro Station",
+              "mode": "metro",
+              "start_time": "05:52",
+              "end_time": "06:01",
+              "distance": 4.55,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Datieguan-Metro Station",
+              "end": "Huifei Snacks (Yucai Lane Branch)",
+              "mode": "walk",
+              "start_time": "06:01",
+              "end_time": "06:11",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baochu Pagoda",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Huifei Snacks (Yucai Lane Branch)",
+              "end": "Datieguan-Metro Station",
+              "mode": "walk",
+              "start_time": "07:11",
+              "end_time": "07:21",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Datieguan-Metro Station",
+              "end": "Wulinmen-Metro Station",
+              "mode": "metro",
+              "start_time": "07:21",
+              "end_time": "07:26",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Wulinmen-Metro Station",
+              "end": "Baochu Pagoda",
+              "mode": "walk",
+              "start_time": "07:26",
+              "end_time": "07:29",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Railway Station",
+              "start": "Baochu Pagoda",
+              "end": "Wulinmen-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:03",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wulinmen-Metro Station",
+              "end": "Shuicheng Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "10:03",
+              "end_time": "10:17",
+              "distance": 7.28,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Shuicheng Bridge-Metro Station",
               "end": "Tea Village: The Essence of Jiangnan",
-              "mode": "taxi",
-              "start_time": "10:57",
-              "end_time": "11:06",
-              "distance": 6.27,
-              "price": 26.66,
-              "cost": 26.66,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:17",
+              "end_time": "11:05",
+              "distance": 4.07,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -298,13 +402,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 157.3,
+          "type": "dinner",
+          "position": "Zhouping's Zongzi Shop",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 13.0,
+          "cost": 26.0,
           "tickets": 2,
           "transports": [
             {
@@ -319,11 +422,54 @@
             },
             {
               "start": "Qianjiang Century City-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "metro",
               "start_time": "16:02",
-              "end_time": "16:15",
-              "distance": 6.55,
+              "end_time": "16:14",
+              "distance": 6.38,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Zhouping's Zongzi Shop",
+              "mode": "walk",
+              "start_time": "16:14",
+              "end_time": "16:24",
+              "distance": 0.84,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:43",
+          "end_time": "22:07",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou Station",
+          "price": 78.65,
+          "cost": 157.3,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhouping's Zongzi Shop",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.84,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:24",
+              "distance": 7.14,
               "price": 3,
               "cost": 6,
               "tickets": 2
@@ -332,18 +478,18 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "16:15",
-              "end_time": "16:20",
+              "start_time": "18:24",
+              "end_time": "18:29",
               "distance": 0.48,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7192"
+          "TrainID": "G7350"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.9717879295349,
-  "_eval_score": 97.70833333333334
+  "_eval_score": 99.81269841269841
 }

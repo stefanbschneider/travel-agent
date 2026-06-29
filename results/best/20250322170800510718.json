@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "gaga (Ping'an Flagship Store)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 108.0,
+          "cost": 324.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Shopping Park-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "04:07",
+              "distance": 26.9,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Shopping Park-Metro Station",
+              "end": "gaga (Ping'an Flagship Store)",
+              "mode": "walk",
+              "start_time": "04:07",
+              "end_time": "04:09",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "gaga (Ping'an Flagship Store)",
+              "end": "Shopping Park-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shopping Park-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "09:02",
+              "end_time": "09:55",
+              "distance": 26.86,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Dameisha-Metro Station",
               "end": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
-              "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "10:15",
-              "distance": 51.02,
-              "price": 224.28,
-              "cost": 224.28,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "09:55",
+              "end_time": "10:04",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -728,5 +790,5 @@
     }
   ],
   "elapsed_time(sec)": 181.1691279411316,
-  "_eval_score": 98.26554232804233
+  "_eval_score": 98.66198979591837
 }

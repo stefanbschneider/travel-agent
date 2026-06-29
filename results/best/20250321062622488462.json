@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:54",
-          "end_time": "09:06",
+          "start_time": "00:55",
+          "end_time": "01:07",
           "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 206.01,
-          "cost": 412.02,
+          "end": "Shanghai Pudong International Airport",
+          "price": 174.65,
+          "cost": 349.3,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL483"
+          "FlightID": "FL481"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 56.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:07",
+              "end_time": "01:22",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:22",
+              "end_time": "02:30",
+              "distance": 34.08,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "02:30",
+              "end_time": "02:37",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "West Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "09:06",
-              "end_time": "09:15",
-              "distance": 0.78,
+              "start_time": "09:00",
+              "end_time": "09:07",
+              "distance": 0.59,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Hongqiao Terminal 1-Metro Station",
+              "start": "West Nanjing Road-Metro Station",
               "end": "Jing'an Temple-Metro Station",
               "mode": "metro",
-              "start_time": "09:15",
-              "end_time": "09:35",
-              "distance": 10.09,
-              "price": 4,
-              "cost": 8,
+              "start_time": "09:07",
+              "end_time": "09:09",
+              "distance": 1.48,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Jing'an Temple-Metro Station",
               "end": "Anfu Road",
               "mode": "walk",
-              "start_time": "09:35",
-              "end_time": "09:40",
+              "start_time": "09:09",
+              "end_time": "09:14",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -1188,5 +1230,5 @@
     }
   ],
   "elapsed_time(sec)": 197.07187914848328,
-  "_eval_score": 98.79287918871253
+  "_eval_score": 99.13307823129252
 }

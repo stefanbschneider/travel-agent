@@ -8,15 +8,78 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +91,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jululu Road",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:06",
+              "end_time": "10:16",
+              "distance": 5.09,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:17",
-              "distance": 30.72,
-              "price": 132.93,
-              "cost": 132.93,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:16",
+              "end_time": "10:24",
+              "distance": 0.69,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -467,13 +550,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "dinner",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "17:49",
+          "end_time": "18:49",
+          "price": 18.0,
+          "cost": 72.0,
           "tickets": 4,
           "transports": [
             {
@@ -488,11 +570,54 @@
             },
             {
               "start": "Zhanghuabang-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Qibao-Metro Station",
               "mode": "metro",
               "start_time": "16:48",
-              "end_time": "18:02",
-              "distance": 37.17,
+              "end_time": "17:41",
+              "distance": 26.61,
+              "price": 6,
+              "cost": 24,
+              "tickets": 4
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "walk",
+              "start_time": "17:41",
+              "end_time": "17:49",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:49",
+              "end_time": "18:57",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:57",
+              "end_time": "20:24",
+              "distance": 43.52,
               "price": 8,
               "cost": 32,
               "tickets": 4
@@ -501,18 +626,18 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "18:02",
-              "end_time": "18:17",
+              "start_time": "20:24",
+              "end_time": "20:39",
               "distance": 1.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 200.9052631855011,
-  "_eval_score": 96.99603174603175
+  "_eval_score": 98.5328798185941
 }

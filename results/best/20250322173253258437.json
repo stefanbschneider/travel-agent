@@ -7,16 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:40",
-          "end_time": "11:35",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "type": "airplane",
+          "start_time": "03:07",
+          "end_time": "04:26",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 532.46,
+          "cost": 2129.84,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G66"
+          "FlightID": "FL574"
+        },
+        {
+          "type": "breakfast",
+          "position": "Apricot Garden Restaurant (Xisi North Street Branch)",
+          "start_time": "06:14",
+          "end_time": "07:14",
+          "price": 59.0,
+          "cost": 236.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "04:26",
+              "end_time": "04:37",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Ping'anli-Metro Station",
+              "mode": "metro",
+              "start_time": "04:37",
+              "end_time": "06:11",
+              "distance": 47.07,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Ping'anli-Metro Station",
+              "end": "Apricot Garden Restaurant (Xisi North Street Branch)",
+              "mode": "walk",
+              "start_time": "06:11",
+              "end_time": "06:14",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Lu Xun Museum (Beijing New Culture Movement Memorial Hall)",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Apricot Garden Restaurant (Xisi North Street Branch)",
+              "end": "Beijing Lu Xun Museum (Beijing New Culture Movement Memorial Hall)",
+              "mode": "walk",
+              "start_time": "07:14",
+              "end_time": "07:22",
+              "distance": 0.7078085268647654,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +91,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
+              "start": "Beijing Lu Xun Museum (Beijing New Culture Movement Memorial Hall)",
+              "end": "Ping'anli-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:08",
+              "distance": 0.73,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ping'anli-Metro Station",
+              "end": "Qianmen-Metro Station",
+              "mode": "metro",
+              "start_time": "10:08",
+              "end_time": "10:16",
+              "distance": 4.32,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Qianmen-Metro Station",
               "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
-              "start_time": "11:35",
-              "end_time": "11:44",
-              "distance": 6.24,
-              "price": 26.54,
-              "cost": 26.54,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:16",
+              "end_time": "10:20",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -619,13 +702,12 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Halal Bai Ji Rice Cake (North Entrance of Niujie Store)",
           "start_time": "17:00",
-          "end_time": "21:11",
-          "start": "Beijing West Railway Station",
-          "end": "Wuhan Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "end_time": "18:00",
+          "price": 33.0,
+          "cost": 132.0,
           "tickets": 4,
           "transports": [
             {
@@ -640,31 +722,74 @@
             },
             {
               "start": "Goldfish Alley-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
+              "end": "Niujie-Metro Station",
               "mode": "metro",
               "start_time": "14:42",
-              "end_time": "14:58",
-              "distance": 8.03,
+              "end_time": "14:51",
+              "distance": 4.98,
               "price": 3,
               "cost": 12,
               "tickets": 4
             },
             {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Beijing West Railway Station",
+              "start": "Niujie-Metro Station",
+              "end": "Halal Bai Ji Rice Cake (North Entrance of Niujie Store)",
               "mode": "walk",
-              "start_time": "14:58",
-              "end_time": "14:58",
-              "distance": 0.08,
+              "start_time": "14:51",
+              "end_time": "14:54",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:32",
+          "end_time": "23:51",
+          "start": "Beijing Daxing International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 534.69,
+          "cost": 2138.76,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Halal Bai Ji Rice Cake (North Entrance of Niujie Store)",
+              "end": "Niujie-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "19:27",
+              "distance": 42.24,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Beijing Daxing International Airport",
+              "mode": "walk",
+              "start_time": "19:27",
+              "end_time": "19:38",
+              "distance": 0.93,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G83"
+          "FlightID": "FL147"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.9665298461914,
-  "_eval_score": 98.85416666666666
+  "_eval_score": 99.9392446633826
 }

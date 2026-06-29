@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "09:14",
+          "end_time": "10:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:07",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Jing'an Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "09:07",
+              "end_time": "09:09",
+              "distance": 1.48,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Anfu Road",
+              "mode": "walk",
+              "start_time": "09:09",
+              "end_time": "09:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,32 +112,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Pudong International Airport-Metro Station",
+              "start": "Anfu Road",
+              "end": "Jing'an Temple-Metro Station",
               "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "10:46",
-              "distance": 1.27,
+              "start_time": "10:14",
+              "end_time": "10:19",
+              "distance": 0.45,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Jing'an Temple-Metro Station",
               "end": "Yu Garden-Metro Station",
               "mode": "metro",
-              "start_time": "10:46",
-              "end_time": "11:49",
-              "distance": 31.51,
-              "price": 7,
-              "cost": 28,
+              "start_time": "10:19",
+              "end_time": "10:26",
+              "distance": 3.93,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Yu Garden-Metro Station",
               "end": "Da Ivo Italian Magic Mirror Restaurant",
               "mode": "walk",
-              "start_time": "11:49",
-              "end_time": "11:57",
+              "start_time": "10:26",
+              "end_time": "10:34",
               "distance": 0.68,
               "price": 0,
               "cost": 0
@@ -856,5 +940,5 @@
     }
   ],
   "elapsed_time(sec)": 193.05531191825867,
-  "_eval_score": 97.37802840434419
+  "_eval_score": 98.56519274376417
 }

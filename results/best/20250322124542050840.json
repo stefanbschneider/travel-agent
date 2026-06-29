@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 72.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "04:04",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "04:04",
+              "end_time": "04:10",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Honey Lake",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Jingtian-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:09",
+              "distance": 1.91,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Jingtian-Metro Station",
+              "end": "Honey Lake",
+              "mode": "walk",
+              "start_time": "08:09",
+              "end_time": "08:14",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Honey Lake",
+              "end": "Jingtian-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jingtian-Metro Station",
+              "end": "Ludan Village-Metro Station",
+              "mode": "metro",
+              "start_time": "10:05",
+              "end_time": "10:18",
+              "distance": 7.0,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Ludan Village-Metro Station",
               "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-              "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:47",
-              "distance": 32.12,
-              "price": 139.22,
-              "cost": 139.22,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:18",
+              "end_time": "10:21",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -686,5 +790,5 @@
     }
   ],
   "elapsed_time(sec)": 185.22295761108398,
-  "_eval_score": 98.52266483516483
+  "_eval_score": 99.24489795918367
 }

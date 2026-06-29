@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:01",
-          "end_time": "08:57",
+          "start_time": "03:11",
+          "end_time": "04:07",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 330.37,
-          "cost": 991.11,
+          "price": 426.14,
+          "cost": 1278.42,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL383"
+          "FlightID": "FL390"
+        },
+        {
+          "type": "breakfast",
+          "position": "Wang's Fresh Fish Paste Noodle Soup (Shenyang Road Main Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "04:07",
+              "end_time": "04:13",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Huangpu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:13",
+              "end_time": "04:53",
+              "distance": 20.01,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Huangpu Road-Metro Station",
+              "end": "Wang's Fresh Fish Paste Noodle Soup (Shenyang Road Main Store)",
+              "mode": "walk",
+              "start_time": "04:53",
+              "end_time": "04:58",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Tianhe International Airport",
+              "start": "Wang's Fresh Fish Paste Noodle Soup (Shenyang Road Main Store)",
+              "end": "Huangpu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:05",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangpu Road-Metro Station",
+              "end": "Guanggu Tongji Hospital-Metro Station",
+              "mode": "metro",
+              "start_time": "07:05",
+              "end_time": "07:45",
+              "distance": 20.42,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Guanggu Tongji Hospital-Metro Station",
               "end": "Optics Valley International Tennis Center",
-              "mode": "taxi",
-              "start_time": "08:57",
-              "end_time": "09:57",
-              "distance": 40.32,
-              "price": 176.15,
-              "cost": 176.15,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:45",
+              "end_time": "07:53",
+              "distance": 0.69,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -1092,5 +1154,5 @@
     }
   ],
   "elapsed_time(sec)": 40.044888973236084,
-  "_eval_score": 98.2515360983103
+  "_eval_score": 98.55208333333333
 }

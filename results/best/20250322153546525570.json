@@ -7,16 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "08:00",
-          "end_time": "11:30",
-          "start": "Wuhan Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 446.81,
-          "cost": 1340.43,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "01:24",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 303.66,
+          "cost": 910.98,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G1722"
+          "FlightID": "FL566"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:24",
+              "end_time": "01:39",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:39",
+              "end_time": "02:47",
+              "distance": 34.08,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "02:47",
+              "end_time": "02:54",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +91,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Jululu Road",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:06",
+              "end_time": "10:08",
+              "distance": 1.16,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
               "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
-              "start_time": "11:30",
-              "end_time": "11:50",
-              "distance": 13.78,
-              "price": 56.71,
-              "cost": 56.71,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:08",
+              "end_time": "10:11",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -705,5 +788,5 @@
     }
   ],
   "elapsed_time(sec)": 186.65238881111145,
-  "_eval_score": 98.2317857142857
+  "_eval_score": 98.8862433862434
 }

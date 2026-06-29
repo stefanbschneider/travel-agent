@@ -8,15 +8,36 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:03",
-          "end_time": "07:30",
+          "start_time": "02:29",
+          "end_time": "04:00",
           "start": "Suzhou Station",
-          "end": "Shanghai Station",
-          "price": 55.23,
-          "cost": 110.46,
+          "end": "Shanghai South Railway Station",
+          "price": 33.99,
+          "cost": 67.98,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G7029"
+          "TrainID": "K1808"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 58.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai South Railway Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "walk",
+              "start_time": "04:00",
+              "end_time": "06:08",
+              "distance": 10.706902257721213,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,12 +49,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "263-meter Main Observation Deck",
               "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "08:28",
-              "distance": 4.849769468577921,
+              "start_time": "08:00",
+              "end_time": "08:24",
+              "distance": 2.00744467696377,
               "price": 0,
               "cost": 0
             }
@@ -620,31 +641,73 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
           "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 110.46,
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 32.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Anfu Road",
-              "end": "Shanghai Hongqiao Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
               "start_time": "13:56",
-              "end_time": "16:28",
-              "distance": 12.696737181736335,
+              "end_time": "16:14",
+              "distance": 11.574537945801584,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Duolun Road Cultural Celebrities Street",
+          "start_time": "19:07",
+          "end_time": "20:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Duolun Road Cultural Celebrities Street",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "19:07",
+              "distance": 5.656491579687811,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:39",
+          "end_time": "00:40",
+          "start": "Shanghai Station",
+          "end": "Suzhou Station",
+          "price": 33.99,
+          "cost": 67.98,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Duolun Road Cultural Celebrities Street",
+              "end": "Shanghai Station",
+              "mode": "walk",
+              "start_time": "20:07",
+              "end_time": "20:51",
+              "distance": 3.72252857672662,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G24"
+          "TrainID": "K1506"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 189.62730932235718,
-  "_eval_score": 97.52380952380952
+  "_eval_score": 98.79648526077098
 }

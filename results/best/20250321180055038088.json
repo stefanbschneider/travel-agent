@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "09:02",
-          "start": "Chengdu East Railway Station",
-          "end": "Chongqing North Railway Station",
-          "price": 158.49,
-          "cost": 475.47,
+          "type": "airplane",
+          "start_time": "04:22",
+          "end_time": "04:41",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 305.66,
+          "cost": 916.98,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D620"
+          "FlightID": "FL449"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "04:41",
+              "end_time": "04:55",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "04:55",
+              "end_time": "05:35",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "05:35",
+              "end_time": "05:42",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,22 +70,22 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing North Railway Station",
-              "end": "Chongqing North Station South Square-Metro Station",
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
               "mode": "walk",
-              "start_time": "09:02",
-              "end_time": "09:05",
-              "distance": 0.27,
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Chongqing North Station South Square-Metro Station",
+              "start": "Dalongshan-Metro Station",
               "end": "Chaotianmen-Metro Station",
               "mode": "metro",
-              "start_time": "09:05",
-              "end_time": "09:16",
-              "distance": 5.8,
+              "start_time": "07:07",
+              "end_time": "07:24",
+              "distance": 8.96,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -52,8 +94,8 @@
               "start": "Chaotianmen-Metro Station",
               "end": "Arhat Temple",
               "mode": "walk",
-              "start_time": "09:16",
-              "end_time": "09:17",
+              "start_time": "07:24",
+              "end_time": "07:25",
               "distance": 0.08,
               "price": 0,
               "cost": 0
@@ -359,13 +401,12 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
           "start_time": "17:00",
-          "end_time": "19:04",
-          "start": "Chongqing West Railway Station",
-          "end": "Chengdu South Railway Station",
-          "price": 171.7,
-          "cost": 515.0999999999999,
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 21.0,
           "tickets": 3,
           "transports": [
             {
@@ -380,31 +421,74 @@
             },
             {
               "start": "Xiaoshizi-Metro Station",
-              "end": "Chongqing West Railway Station-Metro Station",
+              "end": "Guanyinqiao-Metro Station",
               "mode": "metro",
               "start_time": "16:21",
-              "end_time": "16:52",
-              "distance": 15.5,
+              "end_time": "16:31",
+              "distance": 5.17,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Guanyinqiao-Metro Station",
+              "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "mode": "walk",
+              "start_time": "16:31",
+              "end_time": "16:35",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:10",
+          "end_time": "22:29",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 275.15,
+          "cost": 825.4499999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "end": "Guanyinqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Guanyinqiao-Metro Station",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "18:42",
+              "distance": 19.11,
               "price": 5,
               "cost": 15,
               "tickets": 3
             },
             {
-              "start": "Chongqing West Railway Station-Metro Station",
-              "end": "Chongqing West Railway Station",
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Chongqing Jiangbei International Airport",
               "mode": "walk",
-              "start_time": "16:52",
-              "end_time": "16:53",
-              "distance": 0.1,
+              "start_time": "18:42",
+              "end_time": "18:56",
+              "distance": 1.21,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G8768"
+          "FlightID": "FL367"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 123.14427828788757,
-  "_eval_score": 98.33333333333334
+  "_eval_score": 99.94920634920635
 }

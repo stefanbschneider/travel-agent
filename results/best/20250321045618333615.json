@@ -7,16 +7,121 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:09",
-          "end_time": "16:53",
-          "start": "Chongqing North Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 720.72,
-          "cost": 2162.16,
+          "type": "airplane",
+          "start_time": "01:00",
+          "end_time": "02:30",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 647.51,
+          "cost": 1942.53,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D2214"
+          "FlightID": "FL392"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 10.0,
+          "cost": 30.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:30",
+              "end_time": "02:33",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Wuding Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "02:33",
+              "end_time": "03:37",
+              "distance": 32.31,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Wuding Gate-Metro Station",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "walk",
+              "start_time": "03:37",
+              "end_time": "03:46",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jinling Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "end": "Jinling Art Museum",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:12",
+              "distance": 1.0046616839697964,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Lu's Plum Blossom Cake (Laomendong Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jinling Art Museum",
+              "end": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:12",
+              "distance": 1.0370834171355054,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Laomendong Archway",
+          "start_time": "12:13",
+          "end_time": "13:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "end": "Laomendong Archway",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:13",
+              "distance": 1.1066684007797147,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,15 +133,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Laomendong Archway",
+              "end": "Wuding Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "13:13",
+              "end_time": "13:20",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wuding Gate-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "13:20",
+              "end_time": "13:26",
+              "distance": 3.27,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "taxi",
-              "start_time": "16:53",
-              "end_time": "17:05",
-              "distance": 8.32,
-              "price": 33.81,
-              "cost": 33.81,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:26",
+              "end_time": "13:27",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -613,13 +738,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:34",
-          "end_time": "20:04",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 603.53,
-          "cost": 1810.59,
+          "type": "dinner",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "17:10",
+          "end_time": "18:10",
+          "price": 6.0,
+          "cost": 18.0,
           "tickets": 3,
           "transports": [
             {
@@ -634,11 +758,54 @@
             },
             {
               "start": "Xuanwu Gate-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Yunnan Road-Metro Station",
               "mode": "metro",
               "start_time": "17:02",
-              "end_time": "18:19",
-              "distance": 38.61,
+              "end_time": "17:05",
+              "distance": 1.5,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "walk",
+              "start_time": "17:05",
+              "end_time": "17:10",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:34",
+          "end_time": "22:04",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 577.68,
+          "cost": 1733.04,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Yunnan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:10",
+              "end_time": "18:15",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:15",
+              "end_time": "19:30",
+              "distance": 37.65,
               "price": 8,
               "cost": 24,
               "tickets": 3
@@ -647,18 +814,18 @@
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "18:19",
-              "end_time": "18:22",
+              "start_time": "19:30",
+              "end_time": "19:33",
               "distance": 0.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL685"
+          "FlightID": "FL686"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 131.25035881996155,
-  "_eval_score": 98.125
+  "_eval_score": 99.92939244663383
 }

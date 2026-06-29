@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:22",
-          "end_time": "08:54",
+          "start_time": "01:47",
+          "end_time": "03:19",
           "start": "Guangzhou Baiyun International Airport",
-          "end": "Chengdu Tianfu International Airport",
-          "price": 608.76,
-          "cost": 1826.28,
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 598.06,
+          "cost": 1794.1799999999998,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL288"
+          "FlightID": "FL289"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:19",
+              "end_time": "03:34",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "03:34",
+              "end_time": "04:05",
+              "distance": 15.61,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "walk",
+              "start_time": "04:05",
+              "end_time": "04:08",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "08:03",
+              "end_time": "08:04",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "China Shadow Puppet Museum",
+              "mode": "walk",
+              "start_time": "08:04",
+              "end_time": "08:11",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu Tianfu International Airport",
+              "start": "China Shadow Puppet Museum",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:07",
+              "end_time": "10:09",
+              "distance": 1.16,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "People's Park-Metro Station",
               "end": "Crane's Call Tea House (People's Park Branch)",
-              "mode": "taxi",
-              "start_time": "08:54",
-              "end_time": "10:16",
-              "distance": 55.18,
-              "price": 243.03,
-              "cost": 243.03,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:09",
+              "end_time": "10:12",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -554,32 +658,178 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:06",
-          "end_time": "19:38",
-          "start": "Chengdu Shuangliu International Airport",
-          "end": "Guangzhou Baiyun International Airport",
-          "price": 601.51,
-          "cost": 1804.53,
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 15.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Huanglongxi",
-              "end": "Chengdu Shuangliu International Airport",
-              "mode": "taxi",
+              "end": "Science City-Metro Station",
+              "mode": "walk",
               "start_time": "13:09",
-              "end_time": "13:48",
-              "distance": 26.16,
-              "price": 112.43,
-              "cost": 112.43,
-              "cars": 1
+              "end_time": "15:30",
+              "distance": 11.83,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Science City-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "15:30",
+              "end_time": "16:30",
+              "distance": 30.46,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:40",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Painting Academy",
+          "start_time": "18:22",
+          "end_time": "19:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:12",
+              "distance": 1.44,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Painting Academy",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:22",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "19:36",
+          "end_time": "20:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Painting Academy",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "19:22",
+              "end_time": "19:32",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "19:32",
+              "end_time": "19:34",
+              "distance": 1.44,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu Cultural Park",
+              "mode": "walk",
+              "start_time": "19:34",
+              "end_time": "19:36",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:50",
+          "end_time": "01:22",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 652.14,
+          "cost": 1956.42,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Cultural Park",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "20:36",
+              "end_time": "20:38",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "20:38",
+              "end_time": "21:05",
+              "distance": 13.91,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "walk",
+              "start_time": "21:05",
+              "end_time": "21:20",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "FlightID": "FL433"
+          "FlightID": "FL439"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 193.71855854988098,
-  "_eval_score": 97.68620600414079
+  "_eval_score": 99.19557823129253
 }

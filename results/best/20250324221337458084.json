@@ -7,16 +7,100 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:48",
-          "end_time": "12:20",
-          "start": "Hangzhou East Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 730.27,
-          "cost": 2921.08,
+          "type": "airplane",
+          "start_time": "00:05",
+          "end_time": "01:29",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G32"
+          "FlightID": "FL499"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:29",
+              "end_time": "01:40",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:40",
+              "end_time": "03:13",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "03:13",
+              "end_time": "03:19",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "07:06",
+              "end_time": "07:08",
+              "distance": 1.11,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Corner Tower",
+              "mode": "walk",
+              "start_time": "07:08",
+              "end_time": "07:15",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Corner Tower",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Dawanglu-Metro Station",
+              "mode": "metro",
+              "start_time": "10:07",
+              "end_time": "10:20",
+              "distance": 6.75,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Dawanglu-Metro Station",
               "end": "Cool Xiang · Jiangnan Courtyard Restaurant · Scholar-Official Hunan Cuisine (Guomao Branch)",
-              "mode": "taxi",
-              "start_time": "12:20",
-              "end_time": "12:33",
-              "distance": 9.17,
-              "price": 36.81,
-              "cost": 36.81,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:29",
+              "distance": 0.83,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +491,5 @@
     }
   ],
   "elapsed_time(sec)": 182.34744429588318,
-  "_eval_score": 98.4684065934066
+  "_eval_score": 99.58412698412698
 }

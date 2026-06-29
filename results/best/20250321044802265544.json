@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:31",
-          "end_time": "11:20",
-          "start": "Beijing Daxing International Airport",
+          "start_time": "00:20",
+          "end_time": "02:09",
+          "start": "Beijing Capital International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 732.32,
-          "cost": 2196.96,
+          "price": 747.95,
+          "cost": 2243.8500000000004,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL114"
+          "FlightID": "FL119"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "02:09",
+              "end_time": "02:23",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "02:23",
+              "end_time": "03:03",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "03:03",
+              "end_time": "03:10",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Linjiangmen-Metro Station",
+              "mode": "metro",
+              "start_time": "07:07",
+              "end_time": "07:23",
+              "distance": 8.09,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Linjiangmen-Metro Station",
               "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-              "mode": "taxi",
-              "start_time": "11:20",
-              "end_time": "11:49",
-              "distance": 19.53,
-              "price": 82.6,
-              "cost": 82.6,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:23",
+              "end_time": "07:26",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -360,13 +422,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:35",
-          "end_time": "19:24",
-          "start": "Chongqing Jiangbei International Airport",
-          "end": "Beijing Capital International Airport",
-          "price": 725.29,
-          "cost": 2175.87,
+          "type": "dinner",
+          "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 21.0,
           "tickets": 3,
           "transports": [
             {
@@ -381,11 +442,54 @@
             },
             {
               "start": "Chaotianmen-Metro Station",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Guanyinqiao-Metro Station",
               "mode": "metro",
               "start_time": "15:19",
-              "end_time": "15:53",
-              "distance": 17.07,
+              "end_time": "15:29",
+              "distance": 5.38,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Guanyinqiao-Metro Station",
+              "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:33",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:16",
+          "end_time": "01:05",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Beijing Capital International Airport",
+          "price": 687.46,
+          "cost": 2062.38,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "end": "Guanyinqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Guanyinqiao-Metro Station",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "18:42",
+              "distance": 19.11,
               "price": 5,
               "cost": 15,
               "tickets": 3
@@ -394,18 +498,18 @@
               "start": "Jiangbei Airport Terminal 3-Metro Station",
               "end": "Chongqing Jiangbei International Airport",
               "mode": "walk",
-              "start_time": "15:53",
-              "end_time": "16:07",
+              "start_time": "18:42",
+              "end_time": "18:56",
               "distance": 1.21,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL333"
+          "FlightID": "FL337"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 126.92736482620239,
-  "_eval_score": 98.24908424908426
+  "_eval_score": 99.76825396825396
 }

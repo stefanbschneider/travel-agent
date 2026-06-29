@@ -7,16 +7,100 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:29",
+              "end_time": "02:40",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "02:40",
+              "end_time": "04:13",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 40,
+              "tickets": 5
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "04:13",
+              "end_time": "04:19",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Fire Virtue Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Shichahai-Metro Station",
+              "mode": "metro",
+              "start_time": "07:06",
+              "end_time": "07:09",
+              "distance": 1.84,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Beijing Fire Virtue Temple",
+              "mode": "walk",
+              "start_time": "07:09",
+              "end_time": "07:18",
+              "distance": 0.81,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,22 +112,22 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
-              "end": "Beijing South Railway Station-Metro Station",
+              "start": "Beijing Fire Virtue Temple",
+              "end": "Shichahai-Metro Station",
               "mode": "walk",
-              "start_time": "12:08",
-              "end_time": "12:08",
-              "distance": 0.02,
+              "start_time": "10:00",
+              "end_time": "10:09",
+              "distance": 0.81,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Beijing South Railway Station-Metro Station",
+              "start": "Shichahai-Metro Station",
               "end": "Qianmen-Metro Station",
               "mode": "metro",
-              "start_time": "12:08",
-              "end_time": "12:16",
-              "distance": 4.23,
+              "start_time": "10:09",
+              "end_time": "10:17",
+              "distance": 4.15,
               "price": 3,
               "cost": 15,
               "tickets": 5
@@ -52,8 +136,8 @@
               "start": "Qianmen-Metro Station",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "walk",
-              "start_time": "12:16",
-              "end_time": "12:20",
+              "start_time": "10:17",
+              "end_time": "10:21",
               "distance": 0.39,
               "price": 0,
               "cost": 0
@@ -545,5 +629,5 @@
     }
   ],
   "elapsed_time(sec)": 186.38313174247742,
-  "_eval_score": 96.86904761904762
+  "_eval_score": 98.11309523809524
 }

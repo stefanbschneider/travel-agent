@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:14",
-          "end_time": "08:05",
+          "start_time": "00:33",
+          "end_time": "01:24",
           "start": "Wuhan Tianhe International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 359.89,
-          "cost": 1079.67,
+          "end": "Shanghai Pudong International Airport",
+          "price": 303.66,
+          "cost": 910.98,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL563"
+          "FlightID": "FL566"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 87.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:24",
+              "end_time": "01:39",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:39",
+              "end_time": "02:43",
+              "distance": 32.08,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "walk",
+              "start_time": "02:43",
+              "end_time": "02:49",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "East Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "08:05",
-              "end_time": "08:14",
-              "distance": 0.78,
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.58,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Hongqiao Terminal 1-Metro Station",
+              "start": "East Nanjing Road-Metro Station",
               "end": "Liping Road-Metro Station",
               "mode": "metro",
-              "start_time": "08:14",
-              "end_time": "08:47",
-              "distance": 16.52,
-              "price": 5,
-              "cost": 15,
+              "start_time": "08:06",
+              "end_time": "08:11",
+              "distance": 2.95,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Liping Road-Metro Station",
               "end": "1933 Old Millfun",
               "mode": "walk",
-              "start_time": "08:47",
-              "end_time": "08:49",
+              "start_time": "08:11",
+              "end_time": "08:13",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -706,5 +748,5 @@
     }
   ],
   "elapsed_time(sec)": 186.03882718086243,
-  "_eval_score": 98.41117216117216
+  "_eval_score": 98.7716049382716
 }

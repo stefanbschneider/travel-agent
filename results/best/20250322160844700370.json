@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:30",
-          "end_time": "09:10",
-          "start": "Chengdu Shuangliu International Airport",
+          "start_time": "01:04",
+          "end_time": "02:44",
+          "start": "Chengdu Tianfu International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 633.07,
-          "cost": 1266.14,
+          "price": 639.2,
+          "cost": 1278.4,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL425"
+          "FlightID": "FL424"
+        },
+        {
+          "type": "breakfast",
+          "position": "gaga (Ping'an Flagship Store)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 108.0,
+          "cost": 216.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:44",
+              "end_time": "02:49",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Shopping Park-Metro Station",
+              "mode": "metro",
+              "start_time": "02:49",
+              "end_time": "03:42",
+              "distance": 26.9,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Shopping Park-Metro Station",
+              "end": "gaga (Ping'an Flagship Store)",
+              "mode": "walk",
+              "start_time": "03:42",
+              "end_time": "03:44",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "gaga (Ping'an Flagship Store)",
               "end": "Shenzhen Park Hyatt Hotel · The Dining Room",
-              "mode": "taxi",
-              "start_time": "09:10",
-              "end_time": "09:50",
-              "distance": 27.12,
-              "price": 116.76,
-              "cost": 116.76,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:01",
+              "distance": 0.09890260989554171,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -640,5 +681,5 @@
     }
   ],
   "elapsed_time(sec)": 181.47102284431458,
-  "_eval_score": 98.59637188208617
+  "_eval_score": 99.17748917748918
 }

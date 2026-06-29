@@ -7,16 +7,37 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "06:47",
+              "distance": 15.989463545918232,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,12 +49,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
               "end": "Nanshan Park",
               "mode": "walk",
-              "start_time": "04:40",
-              "end_time": "09:28",
-              "distance": 24.083151291618265,
+              "start_time": "08:00",
+              "end_time": "08:44",
+              "distance": 3.749612802266795,
               "price": 0,
               "cost": 0
             }
@@ -263,31 +284,115 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "attraction",
+          "position": "Dafen Oil Painting Village",
+          "start_time": "09:38",
+          "end_time": "10:38",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Shenzhen East Station",
+              "end": "Dafen Oil Painting Village",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:44",
-              "distance": 6.213208845243376,
+              "end_time": "09:38",
+              "distance": 5.716236263432473,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dafen Oil Painting Village",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "12:08",
+              "distance": 7.543101623587697,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "14:16",
+          "end_time": "15:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:16",
+              "distance": 1.3458113504488103,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "15:16",
+              "end_time": "16:45",
+              "distance": 7.471833336275014,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "23:04",
+              "distance": 25.401116431542157,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.5062198638916016,
-  "_eval_score": 90.32395382395381
+  "_eval_score": 93.11210317460318
 }

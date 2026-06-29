@@ -8,15 +8,120 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
+          "start_time": "01:11",
+          "end_time": "03:36",
           "start": "Beijing Capital International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Hong Kong Mingxingfang Tea Restaurant (Shuiwei Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 55.0,
+          "cost": 55.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "03:41",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Futian Port-Metro Station",
+              "mode": "metro",
+              "start_time": "03:41",
+              "end_time": "04:38",
+              "distance": 29.0,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Hong Kong Mingxingfang Tea Restaurant (Shuiwei Branch)",
+              "mode": "walk",
+              "start_time": "04:38",
+              "end_time": "04:42",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Hong Kong Mingxingfang Tea Restaurant (Shuiwei Branch)",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.4709917185774121,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "New World Restaurant (Wanda Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 55.0,
+          "cost": 55.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:01",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Shangchuan-Metro Station",
+              "mode": "metro",
+              "start_time": "10:01",
+              "end_time": "10:38",
+              "distance": 18.95,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Shangchuan-Metro Station",
+              "end": "New World Restaurant (Wanda Branch)",
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "10:47",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +133,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "New World Restaurant (Wanda Branch)",
+              "end": "Shangchuan-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:09",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangchuan-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "12:09",
+              "end_time": "12:31",
+              "distance": 11.35,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Shekou Port-Metro Station",
               "end": "China Merchants Shekou Cruise Home Port Tour",
-              "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:03",
-              "distance": 21.3,
-              "price": 90.54,
-              "cost": 90.54,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:31",
+              "end_time": "12:40",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -467,13 +592,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "type": "dinner",
+          "position": "Keming Ice Room (Jindi Weixin Center Branch)",
+          "start_time": "17:08",
+          "end_time": "18:08",
+          "price": 53.0,
+          "cost": 53.0,
           "tickets": 1,
           "transports": [
             {
@@ -488,11 +612,54 @@
             },
             {
               "start": "Lianhua Village-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Shawei-Metro Station",
               "mode": "metro",
               "start_time": "16:53",
-              "end_time": "17:47",
-              "distance": 27.46,
+              "end_time": "17:01",
+              "distance": 4.03,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Shawei-Metro Station",
+              "end": "Keming Ice Room (Jindi Weixin Center Branch)",
+              "mode": "walk",
+              "start_time": "17:01",
+              "end_time": "17:08",
+              "distance": 0.64,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Keming Ice Room (Jindi Weixin Center Branch)",
+              "end": "Shawei-Metro Station",
+              "mode": "walk",
+              "start_time": "18:08",
+              "end_time": "18:15",
+              "distance": 0.64,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shawei-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:15",
+              "end_time": "19:08",
+              "distance": 26.59,
               "price": 6,
               "cost": 6,
               "tickets": 1
@@ -501,18 +668,18 @@
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "17:47",
-              "end_time": "17:52",
+              "start_time": "19:08",
+              "end_time": "19:13",
               "distance": 0.45,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL179"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.48229026794434,
-  "_eval_score": 97.09391534391534
+  "_eval_score": 99.13636363636363
 }

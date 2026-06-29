@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:04",
-          "end_time": "08:50",
-          "start": "Chongqing West Railway Station",
-          "end": "Chengdu East Railway Station",
-          "price": 171.7,
-          "cost": 858.5,
+          "type": "airplane",
+          "start_time": "04:39",
+          "end_time": "04:58",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 299.27,
+          "cost": 1496.35,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G8512"
+          "FlightID": "FL363"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "04:58",
+              "end_time": "05:13",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "05:13",
+              "end_time": "05:44",
+              "distance": 15.61,
+              "price": 5,
+              "cost": 25,
+              "tickets": 5
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "walk",
+              "start_time": "05:44",
+              "end_time": "05:47",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu East Railway Station",
-              "end": "Chengdu East Railway Station-Metro Station",
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
               "mode": "walk",
-              "start_time": "08:50",
-              "end_time": "08:50",
-              "distance": 0.0,
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 0.33,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Chengdu East Railway Station-Metro Station",
+              "start": "Manjushri Temple-Metro Station",
               "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
-              "start_time": "08:50",
-              "end_time": "09:08",
-              "distance": 9.44,
-              "price": 4,
-              "cost": 20,
+              "start_time": "08:03",
+              "end_time": "08:06",
+              "distance": 1.84,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
               "start": "Kuanzhai Alley-Metro Station",
               "end": "Chengdu Cultural Park",
               "mode": "walk",
-              "start_time": "09:08",
-              "end_time": "09:10",
+              "start_time": "08:06",
+              "end_time": "08:08",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -927,52 +969,115 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:07",
-          "end_time": "18:26",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 259.16,
-          "cost": 1295.8000000000002,
+          "type": "attraction",
+          "position": "Chengdu IFS Sculpture Garden",
+          "start_time": "15:05",
+          "end_time": "16:05",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Butterfly Drama Club",
-              "end": "Second Municipal Hospital-Metro Station",
+              "end": "Chengdu IFS Sculpture Garden",
               "mode": "walk",
               "start_time": "15:01",
-              "end_time": "15:01",
-              "distance": 0.04,
+              "end_time": "15:05",
+              "distance": 0.37977188278479124,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 25.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu IFS Sculpture Garden",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "16:05",
+              "end_time": "16:09",
+              "distance": 0.4,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Second Municipal Hospital-Metro Station",
-              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
-              "start_time": "15:01",
-              "end_time": "16:44",
-              "distance": 51.96,
-              "price": 9,
-              "cost": 45,
+              "start_time": "16:09",
+              "end_time": "16:15",
+              "distance": 3.22,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
-              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "end": "Chengdu Tianfu International Airport",
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
               "mode": "walk",
-              "start_time": "16:44",
-              "end_time": "17:28",
-              "distance": 3.72,
+              "start_time": "16:15",
+              "end_time": "16:25",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:20",
+          "end_time": "22:39",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 279.92,
+          "cost": 1399.6000000000001,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:37",
+              "distance": 13.91,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "walk",
+              "start_time": "18:37",
+              "end_time": "18:52",
+              "distance": 1.25,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL448"
+          "FlightID": "FL444"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 217.2710621356964,
-  "_eval_score": 97.91167434715823
+  "_eval_score": 98.99089635854341
 }

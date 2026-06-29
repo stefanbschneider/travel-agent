@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:31",
-          "end_time": "08:27",
+          "start_time": "01:48",
+          "end_time": "02:44",
           "start": "Wuhan Tianhe International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 358.71,
-          "cost": 1434.84,
+          "price": 372.34,
+          "cost": 1489.36,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL608"
+          "FlightID": "FL606"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "02:44",
+              "end_time": "02:58",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "02:58",
+              "end_time": "03:38",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "03:38",
+              "end_time": "03:45",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
               "mode": "walk",
-              "start_time": "08:27",
-              "end_time": "08:41",
-              "distance": 1.21,
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "start": "Dalongshan-Metro Station",
               "end": "Chaotianmen-Metro Station",
               "mode": "metro",
-              "start_time": "08:41",
-              "end_time": "09:15",
-              "distance": 17.07,
-              "price": 5,
-              "cost": 20,
+              "start_time": "07:07",
+              "end_time": "07:24",
+              "distance": 8.96,
+              "price": 3,
+              "cost": 12,
               "tickets": 4
             },
             {
               "start": "Chaotianmen-Metro Station",
               "end": "Arhat Temple",
               "mode": "walk",
-              "start_time": "09:15",
-              "end_time": "09:16",
+              "start_time": "07:24",
+              "end_time": "07:25",
               "distance": 0.08,
               "price": 0,
               "cost": 0
@@ -620,5 +662,5 @@
     }
   ],
   "elapsed_time(sec)": 182.3869171142578,
-  "_eval_score": 99.36961451247166
+  "_eval_score": 99.88095238095238
 }

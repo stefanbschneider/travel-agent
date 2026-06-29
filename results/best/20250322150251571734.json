@@ -7,16 +7,226 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "10:42",
-          "end_time": "18:28",
-          "start": "Chengdu East Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 867.54,
-          "cost": 1735.08,
+          "type": "airplane",
+          "start_time": "01:04",
+          "end_time": "02:44",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 639.2,
+          "cost": 1278.4,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2963"
+          "FlightID": "FL424"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 48.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:44",
+              "end_time": "02:49",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "02:49",
+              "end_time": "03:39",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "03:39",
+              "end_time": "03:45",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Donggualing-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:09",
+              "distance": 1.79,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "walk",
+              "start_time": "08:09",
+              "end_time": "08:17",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 40.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Donggualing-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:08",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "10:08",
+              "end_time": "10:11",
+              "distance": 1.79,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "10:11",
+              "end_time": "10:13",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "12:11",
+          "end_time": "13:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "12:07",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "walk",
+              "start_time": "12:07",
+              "end_time": "12:11",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "13:17",
+          "end_time": "14:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "walk",
+              "start_time": "13:11",
+              "end_time": "13:15",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Gangxia North-Metro Station",
+              "mode": "metro",
+              "start_time": "13:15",
+              "end_time": "13:17",
+              "distance": 1.14,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "walk",
+              "start_time": "13:17",
+              "end_time": "13:17",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,15 +238,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Gangxia North-Metro Station",
+              "mode": "walk",
+              "start_time": "14:17",
+              "end_time": "14:17",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Chegongmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "14:17",
+              "end_time": "14:25",
+              "distance": 4.34,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Chegongmiao-Metro Station",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "18:28",
-              "end_time": "18:40",
-              "distance": 8.11,
-              "price": 33.1,
-              "cost": 33.1,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:25",
+              "end_time": "14:32",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -321,5 +551,5 @@
     }
   ],
   "elapsed_time(sec)": 180.45155000686646,
-  "_eval_score": 96.225
+  "_eval_score": 99.73015873015873
 }

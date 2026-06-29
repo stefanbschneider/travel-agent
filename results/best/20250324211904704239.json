@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:45",
-          "end_time": "09:09",
+          "start_time": "00:05",
+          "end_time": "01:29",
           "start": "Hangzhou Xiaoshan International Airport",
           "end": "Beijing Daxing International Airport",
-          "price": 611.21,
-          "cost": 2444.84,
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL500"
+          "FlightID": "FL499"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:29",
+              "end_time": "01:40",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:40",
+              "end_time": "03:13",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "03:13",
+              "end_time": "03:19",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing Daxing International Airport",
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "07:06",
+              "end_time": "07:08",
+              "distance": 1.22,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
               "end": "Beijing Puxuan Hotel · Left Bank",
-              "mode": "taxi",
-              "start_time": "09:09",
-              "end_time": "10:19",
-              "distance": 46.69,
-              "price": 204.78,
-              "cost": 204.78,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:08",
+              "end_time": "07:08",
+              "distance": 0.05,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -428,5 +490,5 @@
     }
   ],
   "elapsed_time(sec)": 181.41719579696655,
-  "_eval_score": 99.01700680272108
+  "_eval_score": 99.75555555555556
 }

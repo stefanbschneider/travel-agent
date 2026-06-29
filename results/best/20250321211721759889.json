@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:24",
-          "end_time": "10:02",
+          "start_time": "01:30",
+          "end_time": "03:08",
           "start": "Hangzhou Xiaoshan International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 646.82,
-          "cost": 1940.46,
+          "price": 677.13,
+          "cost": 2031.3899999999999,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL527"
+          "FlightID": "FL530"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "03:08",
+              "end_time": "03:22",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "03:22",
+              "end_time": "04:02",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "04:02",
+              "end_time": "04:09",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cave Ship No. 1",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Dalongshan-Metro Station",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Zhongshutuo-Metro Station",
+              "mode": "metro",
+              "start_time": "07:07",
+              "end_time": "07:12",
+              "distance": 2.96,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Zhongshutuo-Metro Station",
+              "end": "Cave Ship No. 1",
+              "mode": "walk",
+              "start_time": "07:12",
+              "end_time": "07:19",
+              "distance": 0.65,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
+              "start": "Cave Ship No. 1",
+              "end": "Zhongshutuo-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:37",
+              "distance": 0.65,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhongshutuo-Metro Station",
+              "end": "Linjiangmen-Metro Station",
+              "mode": "metro",
+              "start_time": "10:37",
+              "end_time": "10:52",
+              "distance": 7.79,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Linjiangmen-Metro Station",
               "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "mode": "taxi",
-              "start_time": "10:02",
-              "end_time": "10:30",
-              "distance": 19.05,
-              "price": 80.42,
-              "cost": 80.42,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:52",
+              "end_time": "10:57",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -846,5 +950,5 @@
     }
   ],
   "elapsed_time(sec)": 134.1966998577118,
-  "_eval_score": 99.27083333333334
+  "_eval_score": 99.92118226600985
 }

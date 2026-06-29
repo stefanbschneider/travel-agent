@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "08:32",
-          "end_time": "09:33",
-          "start": "Chongqing North Railway Station",
-          "end": "Hangzhou South Railway Station",
-          "price": 525.06,
-          "cost": 1575.1799999999998,
+          "type": "airplane",
+          "start_time": "00:36",
+          "end_time": "02:14",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 703.38,
+          "cost": 2110.14,
           "tickets": 3,
           "transports": [],
-          "TrainID": "K73"
+          "FlightID": "FL377"
+        },
+        {
+          "type": "breakfast",
+          "position": "Huifei Snacks (Yucai Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 15.0,
+          "cost": 45.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:14",
+              "end_time": "02:15",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Datieguan-Metro Station",
+              "mode": "metro",
+              "start_time": "02:15",
+              "end_time": "03:05",
+              "distance": 25.28,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Datieguan-Metro Station",
+              "end": "Huifei Snacks (Yucai Lane Branch)",
+              "mode": "walk",
+              "start_time": "03:05",
+              "end_time": "03:15",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Hangzhou South Railway Station",
-              "end": "South Railway Station-Metro Station",
+              "start": "Huifei Snacks (Yucai Lane Branch)",
+              "end": "Datieguan-Metro Station",
               "mode": "walk",
-              "start_time": "09:33",
-              "end_time": "09:36",
-              "distance": 0.3,
+              "start_time": "07:00",
+              "end_time": "07:10",
+              "distance": 0.88,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "South Railway Station-Metro Station",
+              "start": "Datieguan-Metro Station",
               "end": "Zhalongkou-Metro Station",
               "mode": "metro",
-              "start_time": "09:36",
-              "end_time": "10:07",
-              "distance": 15.99,
-              "price": 5,
-              "cost": 15,
+              "start_time": "07:10",
+              "end_time": "07:13",
+              "distance": 1.52,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Zhalongkou-Metro Station",
               "end": "Bazi Bridge",
               "mode": "walk",
-              "start_time": "10:07",
-              "end_time": "10:18",
+              "start_time": "07:13",
+              "end_time": "07:24",
               "distance": 0.92,
               "price": 0,
               "cost": 0
@@ -767,52 +809,115 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "16:51",
-          "end_time": "15:35",
-          "start": "Hangzhou South Railway Station",
-          "end": "Chongqing North Railway Station",
-          "price": 525.06,
-          "cost": 1575.1799999999998,
+          "type": "attraction",
+          "position": "China Umbrella Museum",
+          "start_time": "15:21",
+          "end_time": "16:21",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "China Knife, Scissors, and Sword Museum",
-              "end": "Gongchen Bridge East-Metro Station",
+              "end": "China Umbrella Museum",
               "mode": "walk",
               "start_time": "15:21",
-              "end_time": "15:29",
-              "distance": 0.7,
+              "end_time": "15:21",
+              "distance": 0.05603816410315453,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 30.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Umbrella Museum",
+              "end": "Gongchen Bridge East-Metro Station",
+              "mode": "walk",
+              "start_time": "16:21",
+              "end_time": "16:28",
+              "distance": 0.64,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Gongchen Bridge East-Metro Station",
-              "end": "South Railway Station-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "metro",
-              "start_time": "15:29",
-              "end_time": "16:12",
-              "distance": 21.51,
+              "start_time": "16:28",
+              "end_time": "16:46",
+              "distance": 9.18,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:46",
+              "end_time": "16:56",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:17",
+          "end_time": "23:55",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 613.67,
+          "cost": 1841.0099999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:59",
+              "distance": 24.54,
               "price": 6,
               "cost": 18,
               "tickets": 3
             },
             {
-              "start": "South Railway Station-Metro Station",
-              "end": "Hangzhou South Railway Station",
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Hangzhou Xiaoshan International Airport",
               "mode": "walk",
-              "start_time": "16:12",
-              "end_time": "16:15",
-              "distance": 0.3,
+              "start_time": "18:59",
+              "end_time": "19:00",
+              "distance": 0.12,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "K74"
+          "FlightID": "FL529"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 189.51013469696045,
-  "_eval_score": 98.67698412698412
+  "_eval_score": 99.74120082815735
 }

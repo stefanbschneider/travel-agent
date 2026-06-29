@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:03",
-          "end_time": "07:30",
+          "start_time": "02:29",
+          "end_time": "04:00",
           "start": "Suzhou Station",
-          "end": "Shanghai Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "end": "Shanghai South Railway Station",
+          "price": 33.99,
+          "cost": 33.99,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G7029"
+          "TrainID": "K1808"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 29.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai South Railway Station",
+              "end": "Shanghai South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "04:00",
+              "end_time": "04:02",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shanghai South Railway Station-Metro Station",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:02",
+              "end_time": "04:23",
+              "distance": 10.62,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "walk",
+              "start_time": "04:23",
+              "end_time": "04:29",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Station",
-              "end": "Shanghai Railway Station-Metro Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "East Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "07:32",
-              "distance": 0.21,
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.58,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shanghai Railway Station-Metro Station",
+              "start": "East Nanjing Road-Metro Station",
               "end": "Liping Road-Metro Station",
               "mode": "metro",
-              "start_time": "07:32",
-              "end_time": "07:40",
-              "distance": 4.26,
-              "price": 3,
-              "cost": 3,
+              "start_time": "08:06",
+              "end_time": "08:11",
+              "distance": 2.95,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Liping Road-Metro Station",
               "end": "1933 Old Millfun",
               "mode": "walk",
-              "start_time": "07:40",
-              "end_time": "07:42",
+              "start_time": "08:11",
+              "end_time": "08:13",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -551,13 +593,12 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
           "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
           "tickets": 1,
           "transports": [
             {
@@ -572,31 +613,74 @@
             },
             {
               "start": "Pudong Avenue-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
               "start_time": "16:01",
-              "end_time": "16:40",
-              "distance": 19.77,
-              "price": 5,
-              "cost": 5,
+              "end_time": "16:12",
+              "distance": 5.55,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Hongqiao Railway Station-Metro Station",
-              "end": "Shanghai Hongqiao Station",
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "16:40",
-              "end_time": "16:41",
-              "distance": 0.12,
+              "start_time": "16:12",
+              "end_time": "16:22",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:39",
+          "end_time": "00:40",
+          "start": "Shanghai Station",
+          "end": "Suzhou Station",
+          "price": 33.99,
+          "cost": 33.99,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Shanghai Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:27",
+              "distance": 8.51,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Shanghai Railway Station-Metro Station",
+              "end": "Shanghai Station",
+              "mode": "walk",
+              "start_time": "18:27",
+              "end_time": "18:29",
+              "distance": 0.21,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G24"
+          "TrainID": "K1506"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 182.71498036384583,
-  "_eval_score": 98.81031746031746
+  "_eval_score": 99.9069264069264
 }

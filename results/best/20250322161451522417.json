@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:26",
-          "end_time": "09:30",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:14",
+          "end_time": "02:18",
+          "start": "Shanghai Pudong International Airport",
           "end": "Chengdu Shuangliu International Airport",
-          "price": 838.84,
-          "cost": 3355.36,
+          "price": 800.01,
+          "cost": 3200.04,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL049"
+          "FlightID": "FL041"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:18",
+              "end_time": "02:33",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "02:33",
+              "end_time": "03:04",
+              "distance": 15.61,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "walk",
+              "start_time": "03:04",
+              "end_time": "03:07",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "08:03",
+              "end_time": "08:06",
+              "distance": 1.82,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "People's Park-Metro Station",
               "end": "Crane's Call Tea House (People's Park Branch)",
-              "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:52",
-              "distance": 14.93,
-              "price": 61.87,
-              "cost": 61.87,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:06",
+              "end_time": "08:09",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -598,5 +660,5 @@
     }
   ],
   "elapsed_time(sec)": 184.42053294181824,
-  "_eval_score": 98.54603174603174
+  "_eval_score": 99.0702947845805
 }

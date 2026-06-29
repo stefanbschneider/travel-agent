@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:11",
-          "end_time": "08:46",
-          "start": "Suzhou New District Station",
-          "end": "Nanjing South Railway Station",
-          "price": 113.45,
-          "cost": 226.9,
+          "start_time": "00:02",
+          "end_time": "02:15",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 94.54,
+          "cost": 189.08,
           "tickets": 2,
           "transports": [],
-          "TrainID": "D636"
+          "TrainID": "T136"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Station",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "walk",
+              "start_time": "02:15",
+              "end_time": "03:56",
+              "distance": 8.435601243745523,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Laomendong Historical Block",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "end": "Laomendong Historical Block",
+              "mode": "walk",
+              "start_time": "07:00",
+              "end_time": "07:11",
+              "distance": 0.9675505217579383,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,33 +70,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:46",
-              "end_time": "08:49",
-              "distance": 0.29,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "08:49",
-              "end_time": "09:00",
-              "distance": 5.92,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
+              "start": "Laomendong Historical Block",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:04",
-              "distance": 0.39,
+              "start_time": "10:00",
+              "end_time": "10:04",
+              "distance": 0.34656388181023273,
               "price": 0,
               "cost": 0
             }
@@ -393,31 +414,73 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Zhu's Plum Blossom Cake",
           "start_time": "17:00",
-          "end_time": "18:12",
-          "start": "Nanjing Station",
-          "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Former National Government (Ministry of Foreign Affairs) Site",
-              "end": "Nanjing Station",
+              "end": "Zhu's Plum Blossom Cake",
               "mode": "walk",
               "start_time": "15:55",
-              "end_time": "16:21",
-              "distance": 2.1928331207222755,
+              "end_time": "16:19",
+              "distance": 2.038118341680823,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hohai University Library",
+          "start_time": "18:13",
+          "end_time": "19:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Hohai University Library",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:13",
+              "distance": 1.1454846251131598,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "22:24",
+          "end_time": "02:26",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 75.63,
+          "cost": 151.26,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hohai University Library",
+              "end": "Nanjing Station",
+              "mode": "walk",
+              "start_time": "19:13",
+              "end_time": "20:04",
+              "distance": 4.263172129074258,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7021"
+          "TrainID": "K1805"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 182.28577375411987,
-  "_eval_score": 96.78463203463204
+  "_eval_score": 99.46349206349205
 }

@@ -8,15 +8,120 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:07",
-          "end_time": "10:57",
+          "start_time": "02:36",
+          "end_time": "05:50",
           "start": "Suzhou Station",
           "end": "Hangzhou Railway Station",
           "price": 60.5,
           "cost": 121.0,
           "tickets": 2,
           "transports": [],
-          "TrainID": "Z281"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Jiande Steamed Buns (Fengqi Road Branch)",
+          "start_time": "06:01",
+          "end_time": "07:01",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "City Station-Metro Station",
+              "mode": "walk",
+              "start_time": "05:50",
+              "end_time": "05:52",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "05:52",
+              "end_time": "05:57",
+              "distance": 2.74,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Jiande Steamed Buns (Fengqi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:57",
+              "end_time": "06:01",
+              "distance": 0.35,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beishan Street Historical and Cultural District",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiande Steamed Buns (Fengqi Road Branch)",
+              "end": "Beishan Street Historical and Cultural District",
+              "mode": "walk",
+              "start_time": "07:01",
+              "end_time": "07:10",
+              "distance": 0.7530987261731604,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baochu Pagoda",
+          "start_time": "10:09",
+          "end_time": "11:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beishan Street Historical and Cultural District",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Wulinmen-Metro Station",
+              "mode": "metro",
+              "start_time": "10:05",
+              "end_time": "10:06",
+              "distance": 0.97,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Wulinmen-Metro Station",
+              "end": "Baochu Pagoda",
+              "mode": "walk",
+              "start_time": "10:06",
+              "end_time": "10:09",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,12 +133,33 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Railway Station",
+              "start": "Baochu Pagoda",
+              "end": "Wulinmen-Metro Station",
+              "mode": "walk",
+              "start_time": "11:09",
+              "end_time": "11:12",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wulinmen-Metro Station",
+              "end": "Huanglong Sports Center-Metro Station",
+              "mode": "metro",
+              "start_time": "11:12",
+              "end_time": "11:16",
+              "distance": 2.46,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Huanglong Sports Center-Metro Station",
               "end": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
               "mode": "walk",
-              "start_time": "10:57",
-              "end_time": "12:01",
-              "distance": 5.353181103294137,
+              "start_time": "11:16",
+              "end_time": "11:38",
+              "distance": 1.91,
               "price": 0,
               "cost": 0
             }
@@ -494,13 +620,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 157.3,
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
           "tickets": 2,
           "transports": [
             {
@@ -515,11 +640,54 @@
             },
             {
               "start": "Ding'an Road-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "metro",
               "start_time": "16:42",
-              "end_time": "16:56",
-              "distance": 7.06,
+              "end_time": "16:44",
+              "distance": 1.3,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:44",
+              "end_time": "16:54",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:43",
+          "end_time": "22:07",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou Station",
+          "price": 78.65,
+          "cost": 157.3,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:24",
+              "distance": 7.14,
               "price": 3,
               "cost": 6,
               "tickets": 2
@@ -528,18 +696,18 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "16:56",
-              "end_time": "17:01",
+              "start_time": "18:24",
+              "end_time": "18:29",
               "distance": 0.48,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7192"
+          "TrainID": "G7350"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 184.8350384235382,
-  "_eval_score": 97.1984126984127
+  "_eval_score": 99.39393939393939
 }

@@ -7,16 +7,205 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2911.84,
+          "type": "airplane",
+          "start_time": "03:17",
+          "end_time": "04:48",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 18.0,
+          "cost": 72.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:06",
+              "end_time": "10:32",
+              "distance": 13.41,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "walk",
+              "start_time": "10:32",
+              "end_time": "10:40",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+          "start_time": "12:38",
+          "end_time": "13:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:08",
+              "end_time": "12:19",
+              "distance": 5.99,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Xinzhuang-Metro Station",
+              "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "mode": "walk",
+              "start_time": "12:19",
+              "end_time": "12:38",
+              "distance": 1.6,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 29.0,
+          "cost": 116.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "end": "Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "13:38",
+              "end_time": "13:57",
+              "distance": 1.6,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinzhuang-Metro Station",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:57",
+              "end_time": "14:30",
+              "distance": 16.96,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "walk",
+              "start_time": "14:30",
+              "end_time": "14:36",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +217,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:06",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Disney-Metro Station",
+              "mode": "metro",
+              "start_time": "18:06",
+              "end_time": "18:47",
+              "distance": 20.51,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Disney-Metro Station",
               "end": "Shanghai Lavender Park",
-              "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "19:34",
-              "distance": 34.86,
-              "price": 151.59,
-              "cost": 151.59,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:47",
+              "end_time": "19:05",
+              "distance": 1.51,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -492,5 +701,5 @@
     }
   ],
   "elapsed_time(sec)": 194.14548516273499,
-  "_eval_score": 97.35714285714286
+  "_eval_score": 99.64502164502164
 }

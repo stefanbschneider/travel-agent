@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "03:41",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Taoyuan-Metro Station",
+              "mode": "metro",
+              "start_time": "03:41",
+              "end_time": "04:14",
+              "distance": 16.55,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Taoyuan-Metro Station",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "04:14",
+              "end_time": "04:19",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
-              "end": "Buji-Metro Station",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Taoyuan-Metro Station",
               "mode": "walk",
-              "start_time": "04:40",
-              "end_time": "04:43",
-              "distance": 0.28,
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 0.44,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Buji-Metro Station",
+              "start": "Taoyuan-Metro Station",
               "end": "Tongle South-Metro Station",
               "mode": "metro",
-              "start_time": "04:43",
-              "end_time": "05:25",
-              "distance": 21.43,
-              "price": 6,
-              "cost": 6,
+              "start_time": "08:05",
+              "end_time": "08:10",
+              "distance": 2.82,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Tongle South-Metro Station",
               "end": "Zhongshan Park",
               "mode": "walk",
-              "start_time": "05:25",
-              "end_time": "05:33",
+              "start_time": "08:10",
+              "end_time": "08:18",
               "distance": 0.74,
               "price": 0,
               "cost": 0
@@ -641,13 +683,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "lunch",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "11:13",
+          "end_time": "12:13",
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
@@ -662,31 +703,242 @@
             },
             {
               "start": "South China City-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "Hongling South-Metro Station",
               "mode": "metro",
               "start_time": "10:38",
-              "end_time": "10:54",
-              "distance": 8.16,
+              "end_time": "11:08",
+              "distance": 15.17,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Hongling South-Metro Station",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "walk",
+              "start_time": "11:08",
+              "end_time": "11:13",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lychee Park",
+          "start_time": "12:25",
+          "end_time": "13:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "Hongling South-Metro Station",
+              "mode": "walk",
+              "start_time": "12:13",
+              "end_time": "12:18",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling South-Metro Station",
+              "end": "Hongling-Metro Station",
+              "mode": "metro",
+              "start_time": "12:18",
+              "end_time": "12:19",
+              "distance": 0.93,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Lychee Park",
+              "mode": "walk",
+              "start_time": "12:19",
+              "end_time": "12:25",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "People's Park",
+          "start_time": "13:44",
+          "end_time": "14:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lychee Park",
+              "end": "Hongling-Metro Station",
+              "mode": "walk",
+              "start_time": "13:25",
+              "end_time": "13:31",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Honghu-Metro Station",
+              "mode": "metro",
+              "start_time": "13:31",
+              "end_time": "13:36",
+              "distance": 2.69,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Honghu-Metro Station",
+              "end": "People's Park",
+              "mode": "walk",
+              "start_time": "13:36",
+              "end_time": "13:44",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shenzhen Children's Park",
+          "start_time": "15:17",
+          "end_time": "16:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "People's Park",
+              "end": "Honghu-Metro Station",
+              "mode": "walk",
+              "start_time": "14:44",
+              "end_time": "14:52",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Honghu-Metro Station",
+              "end": "Qiaoxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "14:52",
+              "end_time": "15:14",
+              "distance": 11.26,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Qiaoxiang-Metro Station",
+              "end": "Shenzhen Children's Park",
+              "mode": "walk",
+              "start_time": "15:14",
+              "end_time": "15:17",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Children's Park",
+              "end": "Qiaoxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:17",
+              "end_time": "16:20",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qiaoxiang-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "16:20",
+              "end_time": "16:28",
+              "distance": 4.43,
               "price": 3,
               "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Buji-Metro Station",
-              "end": "Shenzhen East Station",
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "walk",
-              "start_time": "10:54",
-              "end_time": "10:57",
-              "distance": 0.28,
+              "start_time": "16:28",
+              "end_time": "16:30",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:52",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "walk",
+              "start_time": "18:52",
+              "end_time": "18:57",
+              "distance": 0.45,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 7.350685119628906,
-  "_eval_score": 95.46428571428572
+  "_eval_score": 98.53061224489795
 }

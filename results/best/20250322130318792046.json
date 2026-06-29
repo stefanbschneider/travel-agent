@@ -7,16 +7,121 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:40",
-          "end_time": "11:35",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "type": "airplane",
+          "start_time": "03:07",
+          "end_time": "04:26",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 532.46,
+          "cost": 2129.84,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G66"
+          "FlightID": "FL574"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:16",
+          "end_time": "07:16",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "04:26",
+              "end_time": "04:37",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:37",
+              "end_time": "06:10",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "06:10",
+              "end_time": "06:16",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "07:16",
+              "end_time": "07:22",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "metro",
+              "start_time": "07:22",
+              "end_time": "07:24",
+              "distance": 1.11,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Corner Tower",
+              "mode": "walk",
+              "start_time": "07:24",
+              "end_time": "07:31",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Gate of Divine Prowess",
+          "start_time": "10:04",
+          "end_time": "11:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Corner Tower",
+              "end": "Gate of Divine Prowess",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:04",
+              "distance": 0.36354262789817426,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +133,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
+              "start": "Gate of Divine Prowess",
+              "end": "Nanluoguxiang-Metro Station",
+              "mode": "walk",
+              "start_time": "11:04",
+              "end_time": "11:10",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanluoguxiang-Metro Station",
+              "end": "Qianmen-Metro Station",
+              "mode": "metro",
+              "start_time": "11:10",
+              "end_time": "11:17",
+              "distance": 3.77,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Qianmen-Metro Station",
               "end": "Tidu (Beijing Fang Branch)",
-              "mode": "taxi",
-              "start_time": "11:35",
-              "end_time": "11:44",
-              "distance": 6.24,
-              "price": 26.54,
-              "cost": 26.54,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:17",
+              "end_time": "11:21",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -724,5 +849,5 @@
     }
   ],
   "elapsed_time(sec)": 182.4408347606659,
-  "_eval_score": 98.64583333333334
+  "_eval_score": 99.54124149659864
 }

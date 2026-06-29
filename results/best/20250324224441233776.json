@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:02",
-          "end_time": "08:21",
+          "start_time": "01:55",
+          "end_time": "03:14",
           "start": "Beijing Capital International Airport",
           "end": "Shanghai Pudong International Airport",
-          "price": 550.5,
-          "cost": 1651.5,
+          "price": 485.15,
+          "cost": 1455.4499999999998,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL084"
+          "FlightID": "FL081"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "03:14",
+              "end_time": "03:29",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "03:29",
+              "end_time": "04:37",
+              "distance": 34.08,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "04:37",
+              "end_time": "04:44",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Pudong International Airport-Metro Station",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "West Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "08:21",
-              "end_time": "08:36",
-              "distance": 1.27,
+              "start_time": "09:00",
+              "end_time": "09:07",
+              "distance": 0.59,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "West Nanjing Road-Metro Station",
               "end": "Liping Road-Metro Station",
               "mode": "metro",
-              "start_time": "08:36",
-              "end_time": "09:39",
-              "distance": 31.51,
-              "price": 7,
-              "cost": 21,
+              "start_time": "09:07",
+              "end_time": "09:17",
+              "distance": 5.18,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Liping Road-Metro Station",
               "end": "1933 Old Millfun",
               "mode": "walk",
-              "start_time": "09:39",
-              "end_time": "09:41",
+              "start_time": "09:17",
+              "end_time": "09:19",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -640,5 +682,5 @@
     }
   ],
   "elapsed_time(sec)": 183.21286964416504,
-  "_eval_score": 98.75736961451247
+  "_eval_score": 99.3138528138528
 }

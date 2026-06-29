@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:29",
-          "end_time": "08:50",
+          "start_time": "01:04",
+          "end_time": "02:25",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 574.54,
-          "cost": 1149.08,
+          "price": 541.8,
+          "cost": 1083.6,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL342"
+          "FlightID": "FL344"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 48.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:25",
+              "end_time": "02:30",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "02:30",
+              "end_time": "03:20",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "03:20",
+              "end_time": "03:26",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:11",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "walk",
+              "start_time": "08:11",
+              "end_time": "08:15",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,32 +112,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Airport East-Metro Station",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
               "mode": "walk",
-              "start_time": "08:50",
-              "end_time": "08:55",
-              "distance": 0.45,
+              "start_time": "10:00",
+              "end_time": "10:04",
+              "distance": 0.37,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Airport East-Metro Station",
+              "start": "Lianhua Village-Metro Station",
               "end": "Donggualing-Metro Station",
               "mode": "metro",
-              "start_time": "08:55",
-              "end_time": "09:48",
-              "distance": 26.95,
-              "price": 6,
-              "cost": 12,
+              "start_time": "10:04",
+              "end_time": "10:06",
+              "distance": 1.31,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Donggualing-Metro Station",
               "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
               "mode": "walk",
-              "start_time": "09:48",
-              "end_time": "09:54",
+              "start_time": "10:06",
+              "end_time": "10:12",
               "distance": 0.55,
               "price": 0,
               "cost": 0
@@ -545,5 +629,5 @@
     }
   ],
   "elapsed_time(sec)": 186.82705235481262,
-  "_eval_score": 96.8452380952381
+  "_eval_score": 98.47704081632654
 }

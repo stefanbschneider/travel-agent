@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:28",
-          "end_time": "10:32",
-          "start": "Chengdu Shuangliu International Airport",
+          "start_time": "03:11",
+          "end_time": "05:15",
+          "start": "Chengdu Tianfu International Airport",
           "end": "Shanghai Hongqiao International Airport",
-          "price": 832.84,
-          "cost": 832.84,
+          "price": 813.51,
+          "cost": 813.51,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL408"
+          "FlightID": "FL402"
+        },
+        {
+          "type": "breakfast",
+          "position": "Four Springs Restaurant",
+          "start_time": "07:20",
+          "end_time": "08:20",
+          "price": 33.0,
+          "cost": 33.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Four Springs Restaurant",
+              "mode": "walk",
+              "start_time": "05:15",
+              "end_time": "07:20",
+              "distance": 10.442762434423104,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eileen Chang's Former Residence",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Four Springs Restaurant",
+              "end": "Eileen Chang's Former Residence",
+              "mode": "walk",
+              "start_time": "08:20",
+              "end_time": "09:00",
+              "distance": 3.363692082425571,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,33 +70,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
-              "mode": "walk",
-              "start_time": "10:32",
-              "end_time": "10:41",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongqiao Terminal 1-Metro Station",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:41",
-              "end_time": "11:14",
-              "distance": 16.57,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
+              "start": "Eileen Chang's Former Residence",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "walk",
-              "start_time": "11:14",
-              "end_time": "11:22",
-              "distance": 0.69,
+              "start_time": "10:00",
+              "end_time": "11:10",
+              "distance": 5.8995604997747,
               "price": 0,
               "cost": 0
             }
@@ -1058,5 +1079,5 @@
     }
   ],
   "elapsed_time(sec)": 196.4679136276245,
-  "_eval_score": 96.85714285714286
+  "_eval_score": 97.25396825396825
 }

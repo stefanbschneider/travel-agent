@@ -7,16 +7,247 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2911.84,
+          "type": "airplane",
+          "start_time": "03:17",
+          "end_time": "04:48",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 18.0,
+          "cost": 72.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:06",
+              "end_time": "10:32",
+              "distance": 13.41,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "walk",
+              "start_time": "10:32",
+              "end_time": "10:40",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+          "start_time": "12:38",
+          "end_time": "13:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:08",
+              "end_time": "12:19",
+              "distance": 5.99,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Xinzhuang-Metro Station",
+              "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "mode": "walk",
+              "start_time": "12:19",
+              "end_time": "12:38",
+              "distance": 1.6,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deqiu Cultural and Creative Valley",
+          "start_time": "14:17",
+          "end_time": "15:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "end": "Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "13:38",
+              "end_time": "13:57",
+              "distance": 1.6,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinzhuang-Metro Station",
+              "end": "Yindu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:57",
+              "end_time": "14:01",
+              "distance": 2.46,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yindu Road-Metro Station",
+              "end": "Deqiu Cultural and Creative Valley",
+              "mode": "walk",
+              "start_time": "14:01",
+              "end_time": "14:17",
+              "distance": 1.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Korea Street",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Deqiu Cultural and Creative Valley",
+              "end": "Yindu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:17",
+              "end_time": "15:33",
+              "distance": 1.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yindu Road-Metro Station",
+              "end": "Longbai Xincun-Metro Station",
+              "mode": "metro",
+              "start_time": "15:33",
+              "end_time": "15:52",
+              "distance": 9.89,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Longbai Xincun-Metro Station",
+              "end": "Korea Street",
+              "mode": "walk",
+              "start_time": "15:52",
+              "end_time": "16:03",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,15 +259,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Korea Street",
+              "end": "Longbai Xincun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:11",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longbai Xincun-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "18:11",
+              "end_time": "18:25",
+              "distance": 7.49,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "18:58",
-              "distance": 10.79,
-              "price": 43.25,
-              "cost": 43.25,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:25",
+              "end_time": "18:27",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -444,5 +695,5 @@
     }
   ],
   "elapsed_time(sec)": 196.67111659049988,
-  "_eval_score": 95.71978021978023
+  "_eval_score": 98.2251461988304
 }

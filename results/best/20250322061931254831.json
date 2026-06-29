@@ -557,13 +557,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "type": "dinner",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "17:10",
+          "end_time": "18:10",
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
@@ -578,11 +577,54 @@
             },
             {
               "start": "Xuanwu Gate-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Yunnan Road-Metro Station",
               "mode": "metro",
               "start_time": "17:02",
-              "end_time": "18:19",
-              "distance": 38.61,
+              "end_time": "17:05",
+              "distance": 1.5,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "walk",
+              "start_time": "17:05",
+              "end_time": "17:10",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Yunnan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:10",
+              "end_time": "18:15",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:15",
+              "end_time": "19:30",
+              "distance": 37.65,
               "price": 8,
               "cost": 16,
               "tickets": 2
@@ -591,18 +633,18 @@
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "18:19",
-              "end_time": "18:22",
+              "start_time": "19:30",
+              "end_time": "19:33",
               "distance": 0.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL645"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 186.47278547286987,
-  "_eval_score": 97.94365079365079
+  "_eval_score": 98.5532879818594
 }

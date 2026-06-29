@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:27",
-          "end_time": "11:12",
+          "start_time": "03:00",
+          "end_time": "04:45",
           "start": "Nanjing Lukou International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 690.19,
-          "cost": 1380.38,
+          "end": "Chengdu Tianfu International Airport",
+          "price": 709.26,
+          "cost": 1418.52,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL698"
+          "FlightID": "FL696"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:19",
+          "end_time": "08:19",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Tianfu International Airport",
+              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "mode": "walk",
+              "start_time": "04:45",
+              "end_time": "05:29",
+              "distance": 3.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "05:29",
+              "end_time": "07:16",
+              "distance": 53.95,
+              "price": 9,
+              "cost": 18,
+              "tickets": 2
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "walk",
+              "start_time": "07:16",
+              "end_time": "07:19",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hovering Leap Theater (Chunxi Road Maoye Department Store Branch)",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "price": 39.9,
+          "cost": 79.8,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:19",
+              "end_time": "08:22",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "metro",
+              "start_time": "08:22",
+              "end_time": "08:26",
+              "distance": 2.0,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Hovering Leap Theater (Chunxi Road Maoye Department Store Branch)",
+              "mode": "walk",
+              "start_time": "08:26",
+              "end_time": "08:29",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +112,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Hovering Leap Theater (Chunxi Road Maoye Department Store Branch)",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "11:00",
+              "end_time": "11:03",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "11:03",
+              "end_time": "11:04",
+              "distance": 0.9,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
               "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
-              "mode": "taxi",
-              "start_time": "11:12",
-              "end_time": "11:36",
-              "distance": 16.29,
-              "price": 67.98,
-              "cost": 67.98,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:04",
+              "end_time": "11:05",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -707,5 +811,5 @@
     }
   ],
   "elapsed_time(sec)": 189.8932065963745,
-  "_eval_score": 97.47504578754578
+  "_eval_score": 98.10714285714286
 }

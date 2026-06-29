@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:58",
-          "end_time": "08:18",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 277.83,
-          "cost": 555.66,
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL071"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Harmony Full House (Danfeng Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 38.0,
+          "cost": 76.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "00:53",
+              "end_time": "00:56",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Zhujiang Road-Metro Station",
+              "mode": "metro",
+              "start_time": "00:56",
+              "end_time": "02:09",
+              "distance": 36.55,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Zhujiang Road-Metro Station",
+              "end": "Harmony Full House (Danfeng Street Branch)",
+              "mode": "walk",
+              "start_time": "02:09",
+              "end_time": "02:13",
+              "distance": 0.4,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
-              "end": "Lukou Airport-Metro Station",
+              "start": "Harmony Full House (Danfeng Street Branch)",
+              "end": "Zhujiang Road-Metro Station",
               "mode": "walk",
-              "start_time": "08:18",
-              "end_time": "08:21",
-              "distance": 0.27,
+              "start_time": "08:00",
+              "end_time": "08:04",
+              "distance": 0.4,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Lukou Airport-Metro Station",
+              "start": "Zhujiang Road-Metro Station",
               "end": "Changfu Street-Metro Station",
               "mode": "metro",
-              "start_time": "08:21",
-              "end_time": "09:29",
-              "distance": 34.48,
-              "price": 7,
-              "cost": 14,
+              "start_time": "08:04",
+              "end_time": "08:08",
+              "distance": 2.09,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Changfu Street-Metro Station",
               "end": "Ancient Peach Leaf Ferry",
               "mode": "walk",
-              "start_time": "09:29",
-              "end_time": "09:40",
+              "start_time": "08:08",
+              "end_time": "08:19",
               "distance": 0.92,
               "price": 0,
               "cost": 0
@@ -510,13 +552,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "type": "dinner",
+          "position": "Harmony Full House (Fengfu Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 37.0,
+          "cost": 74.0,
           "tickets": 2,
           "transports": [
             {
@@ -531,11 +572,54 @@
             },
             {
               "start": "Wuding Gate-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Zhangfuyuan-Metro Station",
               "mode": "metro",
               "start_time": "15:23",
-              "end_time": "16:27",
-              "distance": 32.31,
+              "end_time": "15:27",
+              "distance": 2.16,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Zhangfuyuan-Metro Station",
+              "end": "Harmony Full House (Fengfu Road Branch)",
+              "mode": "walk",
+              "start_time": "15:27",
+              "end_time": "15:32",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Harmony Full House (Fengfu Road Branch)",
+              "end": "Zhangfuyuan-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhangfuyuan-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "19:13",
+              "distance": 34.4,
               "price": 7,
               "cost": 14,
               "tickets": 2
@@ -544,18 +628,18 @@
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "16:27",
-              "end_time": "16:30",
+              "start_time": "19:13",
+              "end_time": "19:16",
               "distance": 0.27,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL645"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 188.75011157989502,
-  "_eval_score": 98.40793650793651
+  "_eval_score": 99.55194805194805
 }
