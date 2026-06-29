@@ -7,16 +7,121 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "06:47",
+              "distance": 15.989463545918232,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "11:55",
+          "end_time": "12:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "11:55",
+              "distance": 19.589678701486665,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "12:25",
+              "end_time": "12:57",
+              "distance": 2.686353578392103,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "14:16",
+          "end_time": "14:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:16",
+              "distance": 1.3458113504488103,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "14:47",
+          "end_time": "15:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "East Gate Old Street",
+              "mode": "walk",
+              "start_time": "14:46",
+              "end_time": "14:47",
+              "distance": 0.1522080904217493,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
@@ -30,33 +135,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "17:57",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shenzhen North Railway Station-Metro Station",
-              "end": "Gankeng-Metro Station",
-              "mode": "metro",
-              "start_time": "17:57",
-              "end_time": "18:14",
-              "distance": 8.8,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Gankeng-Metro Station",
+              "start": "East Gate Old Street",
               "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
               "mode": "walk",
-              "start_time": "18:14",
-              "end_time": "18:22",
-              "distance": 0.75,
+              "start_time": "15:17",
+              "end_time": "17:36",
+              "distance": 11.65634673668004,
               "price": 0,
               "cost": 0
             }
@@ -225,6 +309,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Dashabe Ecological Corridor",
+          "start_time": "16:05",
+          "end_time": "16:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "end": "Dashabe Ecological Corridor",
+              "mode": "walk",
+              "start_time": "15:23",
+              "end_time": "16:05",
+              "distance": 3.54437548599252,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
           "start_time": "17:00",
@@ -234,12 +339,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "start": "Dashabe Ecological Corridor",
               "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
               "mode": "walk",
-              "start_time": "15:23",
-              "end_time": "15:48",
-              "distance": 2.1552158298487614,
+              "start_time": "16:35",
+              "end_time": "16:53",
+              "distance": 1.56935035764396,
               "price": 0,
               "cost": 0
             }
@@ -399,11 +504,32 @@
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
-              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Baishilong-Metro Station",
               "mode": "walk",
               "start_time": "15:29",
-              "end_time": "16:18",
-              "distance": 4.107292087707023,
+              "end_time": "15:32",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "15:32",
+              "end_time": "15:39",
+              "distance": 3.8,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "15:39",
+              "end_time": "15:41",
+              "distance": 0.24,
               "price": 0,
               "cost": 0
             }
@@ -457,5 +583,5 @@
     }
   ],
   "elapsed_time(sec)": 181.33068585395813,
-  "_eval_score": 94.4069264069264
+  "_eval_score": 96.00466853408031
 }

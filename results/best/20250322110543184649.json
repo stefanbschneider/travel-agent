@@ -7,16 +7,142 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "06:47",
+              "distance": 15.989463545918232,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dashabe Ecological Corridor",
+          "start_time": "08:50",
+          "end_time": "09:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Dashabe Ecological Corridor",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:50",
+              "distance": 4.190100107410137,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dashabe Ecological Corridor",
+              "end": "Baishizhou-Metro Station",
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:30",
+              "distance": 0.91,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishizhou-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "09:30",
+              "end_time": "10:04",
+              "distance": 17.43,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "10:04",
+              "end_time": "10:06",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "People's Park",
+          "start_time": "14:22",
+          "end_time": "14:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "People's Park",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:22",
+              "distance": 1.8583614448721892,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Honghu Park",
+          "start_time": "15:09",
+          "end_time": "15:39",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "People's Park",
+              "end": "Honghu Park",
+              "mode": "walk",
+              "start_time": "14:52",
+              "end_time": "15:09",
+              "distance": 1.446582724240433,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
@@ -30,12 +156,33 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Honghu Park",
+              "end": "Shuibei-Metro Station",
+              "mode": "walk",
+              "start_time": "15:39",
+              "end_time": "15:42",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuibei-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:42",
+              "end_time": "16:03",
+              "distance": 10.54,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Vienna International Hotel (Shenzhen North Railway Station)",
               "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "18:00",
-              "distance": 0.37054308325132795,
+              "start_time": "16:03",
+              "end_time": "16:09",
+              "distance": 0.5,
               "price": 0,
               "cost": 0
             }
@@ -415,5 +562,5 @@
     }
   ],
   "elapsed_time(sec)": 30.886959314346313,
-  "_eval_score": 94.22936507936508
+  "_eval_score": 95.73650793650793
 }

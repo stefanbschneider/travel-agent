@@ -19,12 +19,12 @@
           "FlightID": "FL425"
         },
         {
-          "type": "lunch",
-          "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 590.0,
-          "cost": 1180.0,
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "09:41",
+          "end_time": "10:11",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -39,21 +39,63 @@
             },
             {
               "start": "Airport East-Metro Station",
-              "end": "Convention and Exhibition Center-Metro Station",
+              "end": "Bao'an Center-Metro Station",
               "mode": "metro",
               "start_time": "09:15",
-              "end_time": "10:09",
-              "distance": 27.49,
-              "price": 6,
-              "cost": 12,
+              "end_time": "09:39",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "09:39",
+              "end_time": "09:41",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 590.0,
+          "cost": 1180.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:11",
+              "end_time": "10:13",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "10:13",
+              "end_time": "10:49",
+              "distance": 18.02,
+              "price": 5,
+              "cost": 10,
               "tickets": 2
             },
             {
               "start": "Convention and Exhibition Center-Metro Station",
               "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
               "mode": "walk",
-              "start_time": "10:09",
-              "end_time": "10:11",
+              "start_time": "10:49",
+              "end_time": "10:51",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -503,5 +545,5 @@
     }
   ],
   "elapsed_time(sec)": 184.01764512062073,
-  "_eval_score": 96.03084415584416
+  "_eval_score": 96.74603174603175
 }
