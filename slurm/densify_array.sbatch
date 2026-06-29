@@ -35,6 +35,10 @@ export TPC_DENSIFY_ATTR_WIN_OPEN="${TPC_DENSIFY_ATTR_WIN_OPEN:-9}"
 export TPC_DENSIFY_ATTR_WIN_CLOSE="${TPC_DENSIFY_ATTR_WIN_CLOSE:-21}"
 export TPC_DENSIFY_ATTR_DWELL="${TPC_DENSIFY_ATTR_DWELL:-60}"
 export TPC_DENSIFY_ATTR_CANDIDATES="${TPC_DENSIFY_ATTR_CANDIDATES:-24}"
+# Window-meal extension (default off): swap a bounding intercity to a wider-window option
+# and add the meal it unlocks. Enable with --export=...,TPC_DENSIFY_LATE_DINNER=1,TPC_DENSIFY_EARLY_BREAKFAST=1
+export TPC_DENSIFY_LATE_DINNER="${TPC_DENSIFY_LATE_DINNER:-0}"
+export TPC_DENSIFY_EARLY_BREAKFAST="${TPC_DENSIFY_EARLY_BREAKFAST:-0}"
 
 BASE_SIF="${TPC_BASE_SIF:-$HOME/sif/python-312-slim.sif}"
 VENV_TAR="${TPC_VENV_TAR:-$HOME/sif/tpc-venv.tar}"
@@ -68,7 +72,7 @@ awk -v n="$TASKS" -v i="$TASK_ID" 'NF && ((NR-1) % n == i) {print}' "chinatravel
 COUNT=$(wc -l < "$SHARD_FILE")
 start_epoch=$(date +%s)
 echo "[densify-array] job=$SLURM_JOB_ID array=$SLURM_ARRAY_JOB_ID task=$TASK_ID host=$(hostname) start=$(date -Is) split=$BASE_SPLIT shard=$SHARD_SPLIT count=$COUNT"
-echo "[densify-array] gap_min=$TPC_DENSIFY_ATTR_GAP_MIN win=$TPC_DENSIFY_ATTR_WIN_OPEN-$TPC_DENSIFY_ATTR_WIN_CLOSE dwell=$TPC_DENSIFY_ATTR_DWELL candidates=$TPC_DENSIFY_ATTR_CANDIDATES"
+echo "[densify-array] gap_min=$TPC_DENSIFY_ATTR_GAP_MIN win=$TPC_DENSIFY_ATTR_WIN_OPEN-$TPC_DENSIFY_ATTR_WIN_CLOSE dwell=$TPC_DENSIFY_ATTR_DWELL candidates=$TPC_DENSIFY_ATTR_CANDIDATES late_dinner=$TPC_DENSIFY_LATE_DINNER early_breakfast=$TPC_DENSIFY_EARLY_BREAKFAST"
 
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/densify.py --split "$SHARD_SPLIT" --workers 1
 

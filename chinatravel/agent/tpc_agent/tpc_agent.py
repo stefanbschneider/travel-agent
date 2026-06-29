@@ -872,6 +872,117 @@ class TPCAgent(BaseAgent):
         next_act["transports"] = old_next_transports
         return False
 
+    def _extend_window_meals(self, plan, query, constraints, check, restaurants):
+        """Swap a bounding intercity to a wider-window option and add the meal it unlocks.
+
+        Purely additive: every existing activity is preserved and the trial is discarded
+        unless the full checker accepts it and the activity count rises. This targets
+        travel-day DDR -- a last-day dinner reachable after a later return, a day-1
+        breakfast reachable after an earlier arrival -- the meal slots the default
+        earliest-departure selection closes. Gains are locked in by the monotonic merge.
+        """
+        if not plan.get("itinerary"):
+            return
+        start_city = query.get("start_city", "")
+        target_city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        intercity_mode = constraints.get("intercity_mode", None)
+        outbound_pref = return_pref = None
+        if isinstance(intercity_mode, dict):
+            outbound_pref = intercity_mode.get("outbound", None)
+            return_pref = intercity_mode.get("return", None)
+        elif isinstance(intercity_mode, str):
+            outbound_pref = return_pref = intercity_mode
+        if os.environ.get("TPC_DENSIFY_LATE_DINNER", "0") == "1":
+            self._swap_return_add_dinner(plan, start_city, target_city, people, return_pref, restaurants, check)
+        if os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "0") == "1":
+            self._swap_outbound_add_breakfast(plan, start_city, target_city, people, outbound_pref, restaurants, check)
+
+    def _swap_return_add_dinner(self, plan, start_city, target_city, people, return_pref, restaurants, check):
+        itinerary = plan.get("itinerary", []) or []
+        last_idx = len(itinerary) - 1
+        if last_idx < 0:
+            return
+        acts = itinerary[last_idx].get("activities", []) or []
+        if len(acts) < 2 or acts[-1].get("type") not in ("airplane", "train"):
+            return
+        if any(a.get("type") == "dinner" for a in acts):
+            return
+        try:
+            cur_dep = time_to_minutes(str(acts[-1].get("start_time", "")))
+        except Exception:
+            return
+        if cur_dep >= time_to_minutes("20:30"):
+            return
+        later = self._get_intercity(
+            self.env, target_city, start_city, "00:00", return_pref,
+            self._budget_limits, {}, pending_intercity=None, people=people, window="late")
+        if later is None:
+            return
+        try:
+            new_dep = time_to_minutes(str(later.get("BeginTime", "")))
+        except Exception:
+            return
+        if new_dep < time_to_minutes("20:30") or new_dep <= cur_dep:
+            return
+        trial = deepcopy(plan)
+        tacts = trial["itinerary"][last_idx]["activities"]
+        prev_pos = self._activity_end_position(tacts[-2])
+        try:
+            transports, _ = self._get_transport(
+                self.env, target_city, prev_pos, later["From"], str(tacts[-2].get("end_time", "")), people)
+        except Exception:
+            transports = None
+        tacts[-1] = self._make_intercity_activity(later, people, transports or [])
+        for restaurant in restaurants:
+            if not self._norm_text(restaurant.get("name", "")):
+                continue
+            if self._insert_activity(
+                    trial, last_idx, len(tacts) - 2, restaurant, "dinner",
+                    (17 * 60, 20 * 60), target_city, people, check):
+                itinerary[last_idx]["activities"] = trial["itinerary"][last_idx]["activities"]
+                return
+
+    def _swap_outbound_add_breakfast(self, plan, start_city, target_city, people, outbound_pref, restaurants, check):
+        itinerary = plan.get("itinerary", []) or []
+        if not itinerary:
+            return
+        acts = itinerary[0].get("activities", []) or []
+        if len(acts) < 2 or acts[0].get("type") not in ("airplane", "train"):
+            return
+        if any(a.get("type") == "breakfast" for a in acts):
+            return
+        try:
+            cur_arr = time_to_minutes(str(acts[0].get("end_time", "")))
+        except Exception:
+            return
+        earlier = self._get_intercity(
+            self.env, start_city, target_city, "00:00", outbound_pref,
+            self._budget_limits, {}, pending_intercity=None, people=people, window="early_arrival")
+        if earlier is None:
+            return
+        try:
+            new_dep = time_to_minutes(str(earlier.get("BeginTime", "")))
+            new_arr = time_to_minutes(str(earlier.get("EndTime", "")))
+            if new_arr < new_dep:
+                new_arr += 1440
+        except Exception:
+            return
+        # Breakfast must end by 09:00; require an arrival early enough to seat it with transport.
+        if new_arr > time_to_minutes("08:15") or new_arr >= cur_arr:
+            return
+        trial = deepcopy(plan)
+        tacts = trial["itinerary"][0]["activities"]
+        tacts[0] = self._make_intercity_activity(earlier, people, [])
+        for restaurant in restaurants:
+            if not self._norm_text(restaurant.get("name", "")):
+                continue
+            if self._insert_activity(
+                    trial, 0, 0, restaurant, "breakfast",
+                    (6 * 60, 9 * 60), target_city, people, check):
+                itinerary[0]["activities"] = trial["itinerary"][0]["activities"]
+                return
+
     def _densify_plan(self, plan, query, constraints, check):
         """Insert meals/attractions into proven idle gaps without trading away acceptance.
 
@@ -911,6 +1022,8 @@ class TPCAgent(BaseAgent):
             name = self._norm_text(row.get("name", ""))
             if name and "lat" in row and "lon" in row:
                 coords[name] = row
+
+        self._extend_window_meals(dense, query, constraints, check, restaurants)
 
         used_restaurants = set()
         used_attractions = set()
@@ -1284,8 +1397,20 @@ class TPCAgent(BaseAgent):
         if "intercity_back_pref" in params:
             return_pref = params["intercity_back_pref"]
 
-        outbound = self._get_intercity(env, start_city, target_city, "07:00", outbound_pref, budget_limits, budget_tracker, people=people)
-        return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
+        _ic_late = os.environ.get("TPC_INTERCITY_LATE_RETURN", "0") == "1"
+        _ic_early = os.environ.get("TPC_INTERCITY_EARLY_ARRIVAL", "0") == "1"
+        outbound = self._get_intercity(
+            env, start_city, target_city, "00:00" if _ic_early else "07:00", outbound_pref,
+            budget_limits, budget_tracker, people=people,
+            window="early_arrival" if _ic_early else None)
+        if _ic_late:
+            # Latest affordable departure maximizes the last-day in-city window so the
+            # densify pass can place breakfast/lunch/dinner and a 4th attraction.
+            return_transport = self._get_intercity(
+                env, target_city, start_city, "00:00", return_pref, budget_limits,
+                budget_tracker, pending_intercity=outbound, people=people, window="late")
+        else:
+            return_transport = self._get_intercity(env, target_city, start_city, "17:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
         # If no return at 17:00, try earlier
         if return_transport is None:
             return_transport = self._get_intercity(env, target_city, start_city, "14:00", return_pref, budget_limits, budget_tracker, pending_intercity=outbound, people=people)
@@ -2168,6 +2293,7 @@ class TPCAgent(BaseAgent):
         budget_tracker=None,
         pending_intercity=None,
         people=1,
+        window=None,
     ):
         """Get first affordable intercity transport, falling back to cheapest available."""
         preferred = self._norm_text(preferred_mode)
@@ -2184,6 +2310,7 @@ class TPCAgent(BaseAgent):
         best = None
         best_cost = None
         for transport_type in transport_order:
+            affordable = []
             try:
                 df = env.intercitytransport.select(from_city, to_city, transport_type, earliest)
                 if df is not None and len(df) > 0:
@@ -2201,12 +2328,25 @@ class TPCAgent(BaseAgent):
                         # Multiply by people so the budget check accounts for total cost
                         projected_intercity_total = (cost + pending_cost) * people
                         if self._affordable_main_cost("intercity_transport", projected_intercity_total, budget_limits, budget_tracker):
-                            return cand
+                            if window is None:
+                                return cand
+                            affordable.append(cand)
                         if best is None or best_cost is None or cost < best_cost:
                             best = cand
                             best_cost = cost
             except Exception:
                 pass
+            # Window modes maximize in-destination time among affordable options while
+            # preserving transport-type priority (the preferred mode is tried first).
+            if window and affordable:
+                if window == "late":
+                    return max(affordable, key=lambda c: time_to_minutes(str(c.get("BeginTime", "00:00"))))
+                if window == "early_arrival":
+                    def _arrival_min(c):
+                        begin = time_to_minutes(str(c.get("BeginTime", "00:00")))
+                        end = time_to_minutes(str(c.get("EndTime", "23:59")))
+                        return end + (1440 if end < begin else 0)
+                    return min(affordable, key=_arrival_min)
         return best
 
     def _pick_attraction(self, good_attrs, attr_idx, start_time, end_time):

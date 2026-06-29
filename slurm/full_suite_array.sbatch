@@ -47,6 +47,11 @@ if [[ -n "${TPC_FULL_HOTEL_CAP:-}" ]]; then export TPC_CP_HOTEL_CAP="$TPC_FULL_H
 if [[ -n "${TPC_FULL_CP_TIME_LIMIT:-}" ]]; then export TPC_CP_TIME_LIMIT_SEC="$TPC_FULL_CP_TIME_LIMIT"; else unset TPC_CP_TIME_LIMIT_SEC; fi
 if [[ -n "${TPC_FULL_CP_FORCE:-}" ]]; then export TPC_CP_FORCE="$TPC_FULL_CP_FORCE"; else unset TPC_CP_FORCE; fi
 
+# Window-maximizing intercity selection (default off preserves the legacy light pass).
+# Enable per run with --export=ALL,TPC_INTERCITY_LATE_RETURN=1,TPC_INTERCITY_EARLY_ARRIVAL=1
+export TPC_INTERCITY_LATE_RETURN="${TPC_INTERCITY_LATE_RETURN:-0}"
+export TPC_INTERCITY_EARLY_ARRIVAL="${TPC_INTERCITY_EARLY_ARRIVAL:-0}"
+
 BASE_SIF="$HOME/sif/python-312-slim.sif"
 VENV_TAR="$HOME/sif/tpc-venv.tar"
 PROJECT="${TPC_PROJECT_DIR:-/beegfs/home/users/f/fabimi/china-travel-agent}"
