@@ -76,6 +76,8 @@ def _run_parallel(args):
             logf = open(log_path, "w", encoding="utf-8")
             logs.append(logf)
             cmd = [sys.executable, "scripts/densify.py", "--split", name, "--workers", "1"]
+            if args.method:
+                cmd.extend(["--method", args.method])
             if args.no_oracle:
                 cmd.append("--no-oracle")
             procs.append((k, len(shard), subprocess.Popen(cmd, cwd=ROOT, stdout=logf, stderr=subprocess.STDOUT)))
@@ -105,7 +107,7 @@ def _process(args):
     if args.no_oracle:
         os.environ["TPC_USE_ORACLE"] = "0"
     oracle = not args.no_oracle
-    method = METHOD_NOORACLE if args.no_oracle else METHOD_ORACLE
+    method = args.method or (METHOD_NOORACLE if args.no_oracle else METHOD_ORACLE)
     result_dir = os.path.join(ROOT, "results", method)
     best_dir = os.path.join(ROOT, "results", "best")
     os.makedirs(result_dir, exist_ok=True)
@@ -171,6 +173,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--split", default="tpc_phase1", help="split name under chinatravel/evaluation/default_splits")
     ap.add_argument("--no-oracle", dest="no_oracle", action="store_true", help="use the parsed-verifier/no-oracle method dir")
+    ap.add_argument("--method", default=os.environ.get("TPC_DENSIFY_METHOD"),
+                    help="results directory to write (default: canonical oracle/no-oracle method)")
     ap.add_argument("--workers", type=int, default=os.cpu_count() or 1, help="parallel densify subprocesses over disjoint shards")
     args = ap.parse_args()
     if args.workers > 1:
