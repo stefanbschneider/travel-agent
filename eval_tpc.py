@@ -229,6 +229,46 @@ def remove_query_ids_from_split_file(split_file_path, query_ids):
     return removed_count
 
 
+def write_suboptimal_split_file(source_split_path, suboptimal_split_path, solved_query_ids):
+    """Write a split copy excluding solved/optimal query IDs, preserving order."""
+    if not os.path.exists(source_split_path):
+        return 0, 0
+
+    solved_set = {str(query_id).strip() for query_id in solved_query_ids}
+
+    lock_dir = os.path.join(project_root_path, "cache", "eval_locks")
+    os.makedirs(lock_dir, exist_ok=True)
+    lock_file_path = os.path.join(lock_dir, "{}.lock".format(os.path.basename(suboptimal_split_path)))
+
+    with open(lock_file_path, "a", encoding="utf-8") as lock_f:
+        fcntl.flock(lock_f, fcntl.LOCK_EX)
+        try:
+            with open(source_split_path, "r", encoding="utf-8") as f:
+                lines = [line.strip() for line in f.readlines()]
+
+            kept_lines = []
+            removed_count = 0
+            for line in lines:
+                if not line:
+                    continue
+                if line in solved_set:
+                    removed_count += 1
+                    continue
+                kept_lines.append(line)
+
+            tmp_file_path = "{}.{}.tmp".format(suboptimal_split_path, os.getpid())
+            with open(tmp_file_path, "w", encoding="utf-8") as f:
+                if kept_lines:
+                    f.write("\n".join(kept_lines) + "\n")
+                else:
+                    f.write("")
+            os.replace(tmp_file_path, suboptimal_split_path)
+        finally:
+            fcntl.flock(lock_f, fcntl.LOCK_UN)
+
+    return len(kept_lines), removed_count
+
+
 def _resolve_method_dir(method, lang):
     """Pick the results directory name for a method under a locale.
 
@@ -249,7 +289,7 @@ def _resolve_method_dir(method, lang):
         return method_en
 
     # Keep unsuffixed names for common aggregate folders even if not created yet.
-    if method in {"best", "constraints_solved"}:
+    if method in {"best", "constraints_solved", "optimal"}:
         return method
 
     return method_en
@@ -377,6 +417,96 @@ if __name__ == "__main__":
         scores['overall'] = final_score
         scores['overall_official'] = final_score_official
         print(scores)
+
+        # ------------------------------------------------------------------ #
+        # Auto-promote optimal best plans and maintain a suboptimal split     #
+        # ------------------------------------------------------------------ #
+        if args.method == "best":
+            optimal_dir = os.path.join(project_root_path, "results", "optimal")
+            os.makedirs(optimal_dir, exist_ok=True)
+
+            source_split_file = os.path.join(
+                project_root_path,
+                "chinatravel",
+                "evaluation",
+                "default_splits",
+                "{}.txt".format(args.splits),
+            )
+            suboptimal_split_file = os.path.join(
+                project_root_path,
+                "chinatravel",
+                "evaluation",
+                "default_splits",
+                "{}_suboptimal.txt".format(args.splits),
+            )
+
+            commonsense_pass_set = set(commonsense_pass_id)
+            logi_pass_set = set(logi_pass_id)
+            all_pass_set = set(all_pass_id)
+            per_query_pr_for_best = cal_per_query_pr_scores(query_index, result_data[method], set(all_pass_id))
+
+            optimal_query_ids = set()
+            optimal_copied = 0
+            optimal_already_present = 0
+            max_workers = min(32, (os.cpu_count() or 4) * 4)
+
+            def _is_optimal(query_id):
+                comm_score = 100.0 if query_id in commonsense_pass_set else 0.0
+                logic_score = 100.0 if query_id in logi_pass_set else 0.0
+                all_pass_score = 100.0 if query_id in all_pass_set else 0.0
+                pr = per_query_pr_for_best.get(query_id, np.zeros(len(DEFAULT_PR)))
+                dav_score = pr[0] * 100
+                att_score = pr[1] * 100
+                ddr_score = pr[2] * 100
+                score = (
+                    0.1 * comm_score
+                    + 0.1 * comm_score
+                    + 0.25 * logic_score
+                    + 0.05 * dav_score
+                    + 0.05 * att_score
+                    + 0.05 * ddr_score
+                    + 0.4 * all_pass_score
+                )
+                return query_id, score >= (100.0 - 1e-9)
+
+            with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                for query_id, is_optimal in pool.map(_is_optimal, query_index):
+                    if is_optimal:
+                        optimal_query_ids.add(query_id)
+
+            for query_id in optimal_query_ids:
+                src_file = os.path.join(project_root_path, "results", "best", "{}.json".format(query_id))
+                dest_file = os.path.join(optimal_dir, "{}.json".format(query_id))
+                if not os.path.exists(src_file):
+                    continue
+                if os.path.exists(dest_file):
+                    optimal_already_present += 1
+                    continue
+                shutil.copy2(src_file, dest_file)
+                optimal_copied += 1
+
+            remaining_suboptimal = -1
+            removed_suboptimal = 0
+            if os.path.exists(source_split_file):
+                remaining_suboptimal, removed_suboptimal = write_suboptimal_split_file(
+                    source_split_file,
+                    suboptimal_split_file,
+                    optimal_query_ids,
+                )
+            else:
+                print("suboptimal split skipped: source split file missing ({})".format(source_split_file))
+
+            print(
+                "optimal: {} total optimal ids in eval, {} newly copied, {} already present in {}".format(
+                    len(optimal_query_ids), optimal_copied, optimal_already_present, optimal_dir
+                )
+            )
+            if remaining_suboptimal >= 0:
+                print(
+                    "suboptimal split: {} ids remaining in {} ({} removed this run)".format(
+                        remaining_suboptimal, suboptimal_split_file, removed_suboptimal
+                    )
+                )
 
         score_file = os.path.join('your_tpc_scores.json')
         write_file(score_file, json.dumps(scores))

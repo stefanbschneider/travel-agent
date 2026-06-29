@@ -168,6 +168,23 @@ def _focus_size(split_name: str) -> int:
         return sum(1 for line in f if line.strip())
 
 
+def _select_rank_split(base_split: str, method: str):
+    """Select source split for ranking, preferring <base>_suboptimal for best."""
+    if method != "best" or base_split.endswith("_suboptimal"):
+        return base_split, None
+
+    sub_split = "{}_suboptimal".format(base_split)
+    sub_split_path = os.path.join(SPLITS_DIR, sub_split + ".txt")
+    if not os.path.exists(sub_split_path):
+        return base_split, None
+
+    sub_count = _focus_size(sub_split)
+    if sub_count <= 0:
+        return base_split, None
+
+    return sub_split, sub_count
+
+
 def _read_json_if_exists(path: str):
     if not os.path.exists(path):
         return None
@@ -233,6 +250,8 @@ def main() -> int:
                     help="stream solve.py output to terminal while also writing solve log file")
     args = ap.parse_args()
 
+    rank_split, rank_split_count = _select_rank_split(args.split, args.method)
+
     run_id = args.run_id or _ts_now()
     run_id = _safe_name(run_id)
     artifacts_root = os.path.join(ROOT, args.artifacts_root)
@@ -247,6 +266,7 @@ def main() -> int:
         "created_at": dt.datetime.now().isoformat(timespec="seconds"),
         "config": {
             "split": args.split,
+            "rank_split": rank_split,
             "method": args.method,
             "rank_mode": args.rank_mode,
             "pref_metric": args.pref_metric,
@@ -281,6 +301,14 @@ def main() -> int:
 
     print("[tail-iterate] run_id={}".format(run_id))
     print("[tail-iterate] artifacts={}".format(os.path.relpath(run_dir, ROOT)))
+    if rank_split != args.split:
+        print(
+            "[tail-iterate] ranking source split={} (auto-selected from {} with {} remaining IDs)".format(
+                rank_split, args.split, rank_split_count
+            )
+        )
+    else:
+        print("[tail-iterate] ranking source split={}".format(rank_split))
 
     existing = _load_existing_round_summaries(rounds_dir, args.rounds) if args.resume else []
     start_round = len(existing)
@@ -313,14 +341,14 @@ def main() -> int:
         rank_cmd = [
             sys.executable,
             os.path.join("scripts", "rank_tail.py"),
-            "--split", args.split,
+            "--split", rank_split,
             "--method", args.method,
             "--mode", args.rank_mode,
             "--pref-metric", args.pref_metric,
             "--top-k", str(args.top_k),
             "--min-score", str(args.min_score),
             "--focus-split", focus_split,
-            "--report-name", "{}_{}_tail_ranking_{}.csv".format(args.split, args.method, round_name),
+            "--report-name", "{}_{}_tail_ranking_{}.csv".format(rank_split, args.method, round_name),
         ]
         print("[tail-iterate] {} ranking...".format(round_name))
         rc = _run(rank_cmd, log_path=rank_log)
@@ -392,6 +420,7 @@ def main() -> int:
         summary = {
             "round": r,
             "round_name": round_name,
+            "rank_split": rank_split,
             "focus_split": focus_split,
             "focus_count": focus_count,
             "seed_salt": seed_salt,
