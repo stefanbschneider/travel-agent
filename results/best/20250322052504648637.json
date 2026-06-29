@@ -7,16 +7,37 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "07:17",
+          "end_time": "08:17",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "walk",
+              "start_time": "00:53",
+              "end_time": "07:17",
+              "distance": 32.08029663048204,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,33 +49,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:11",
-              "end_time": "08:14",
-              "distance": 0.29,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Changfu Street-Metro Station",
-              "mode": "metro",
-              "start_time": "08:14",
-              "end_time": "08:27",
-              "distance": 6.94,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Changfu Street-Metro Station",
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
               "end": "Ancient Peach Leaf Ferry",
               "mode": "walk",
-              "start_time": "08:27",
-              "end_time": "08:38",
-              "distance": 0.92,
+              "start_time": "08:17",
+              "end_time": "08:45",
+              "distance": 2.3498124915186414,
               "price": 0,
               "cost": 0
             }
@@ -411,6 +411,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "09:48",
+          "end_time": "10:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Ji Hotel (Nanjing South Railway Station Square Store)",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.73,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "08:52",
+              "distance": 7.26,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Black Clothes Lane",
+              "mode": "walk",
+              "start_time": "08:52",
+              "end_time": "08:58",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Republic Red Mansion (Laomendong Branch)",
           "start_time": "11:00",
@@ -420,12 +462,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Ji Hotel (Nanjing South Railway Station Square Store)",
+              "start": "Black Clothes Lane",
               "end": "Republic Red Mansion (Laomendong Branch)",
               "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "09:34",
-              "distance": 5.357665445352885,
+              "start_time": "10:18",
+              "end_time": "10:36",
+              "distance": 1.5500149444208615,
               "price": 0,
               "cost": 0
             }
@@ -500,5 +542,5 @@
     }
   ],
   "elapsed_time(sec)": 180.3561635017395,
-  "_eval_score": 97.06349206349206
+  "_eval_score": 97.33253968253968
 }

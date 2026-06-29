@@ -7,16 +7,142 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "06:47",
+              "distance": 15.989463545918232,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "11:55",
+          "end_time": "12:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "11:55",
+              "distance": 19.589678701486665,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "Hongling-Metro Station",
+              "mode": "walk",
+              "start_time": "12:25",
+              "end_time": "12:32",
+              "distance": 0.63,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "12:32",
+              "end_time": "12:38",
+              "distance": 3.28,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "12:38",
+              "end_time": "12:40",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "14:16",
+          "end_time": "14:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:16",
+              "distance": 1.3458113504488103,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "15:51",
+          "end_time": "16:21",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "walk",
+              "start_time": "14:46",
+              "end_time": "15:51",
+              "distance": 5.494999071093056,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
@@ -30,33 +156,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "17:57",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shenzhen North Railway Station-Metro Station",
-              "end": "Hongshan-Metro Station",
-              "mode": "metro",
-              "start_time": "17:57",
-              "end_time": "17:59",
-              "distance": 1.44,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Hongshan-Metro Station",
+              "start": "Guan Shanyue Art Museum",
               "end": "MeiJing Hotel Shenzhen",
               "mode": "walk",
-              "start_time": "17:59",
-              "end_time": "18:05",
-              "distance": 0.54,
+              "start_time": "16:21",
+              "end_time": "18:02",
+              "distance": 8.445545577065566,
               "price": 0,
               "cost": 0
             }
@@ -499,5 +604,5 @@
     }
   ],
   "elapsed_time(sec)": 181.87175130844116,
-  "_eval_score": 94.91269841269842
+  "_eval_score": 95.91223155929038
 }

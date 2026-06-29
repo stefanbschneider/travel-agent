@@ -19,6 +19,48 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:08",
+              "end_time": "01:23",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Baoshan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:23",
+              "end_time": "02:29",
+              "distance": 33.3,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Baoshan Road-Metro Station",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "walk",
+              "start_time": "02:29",
+              "end_time": "02:32",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
           "start_time": "10:00",
@@ -28,14 +70,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:50",
-              "distance": 28.62,
-              "price": 123.5,
-              "cost": 123.5,
+              "start_time": "07:00",
+              "end_time": "07:09",
+              "distance": 6.01,
+              "price": 25.72,
+              "cost": 25.72,
               "cars": 1
             }
           ]
@@ -371,5 +413,5 @@
     }
   ],
   "elapsed_time(sec)": 45.406898498535156,
-  "_eval_score": 99.07460317460317
+  "_eval_score": 99.80654761904762
 }

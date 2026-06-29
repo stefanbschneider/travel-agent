@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 29.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:56",
+              "distance": 32.55,
+              "price": 141.18,
+              "cost": 141.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Gucun Park",
           "start_time": "09:00",
@@ -28,15 +50,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Gucun Park-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:37",
+              "distance": 15.89,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Gucun Park-Metro Station",
               "end": "Gucun Park",
-              "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "02:19",
-              "distance": 47.42,
-              "price": 208.09,
-              "cost": 208.09,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:37",
+              "end_time": "08:39",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -428,34 +470,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Postal and Telecommunications New Village-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:18",
-              "distance": 4.47,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Postal and Telecommunications New Village-Metro Station",
               "end": "Duolun Road Cultural Celebrities Street",
-              "mode": "walk",
-              "start_time": "18:18",
-              "end_time": "18:24",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:08",
+              "distance": 5.66,
+              "price": 24.5,
+              "cost": 24.5,
+              "cars": 1
             }
           ]
         },
@@ -470,34 +492,14 @@
           "transports": [
             {
               "start": "Duolun Road Cultural Celebrities Street",
-              "end": "Postal and Telecommunications New Village-Metro Station",
-              "mode": "walk",
-              "start_time": "19:24",
-              "end_time": "19:30",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Postal and Telecommunications New Village-Metro Station",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "metro",
-              "start_time": "19:30",
-              "end_time": "19:34",
-              "distance": 2.06,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
               "end": "Garden Bridge",
-              "mode": "walk",
-              "start_time": "19:34",
-              "end_time": "19:35",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:24",
+              "end_time": "19:27",
+              "distance": 2.21,
+              "price": 12.44,
+              "cost": 12.44,
+              "cars": 1
             }
           ]
         },
@@ -549,5 +551,5 @@
     }
   ],
   "elapsed_time(sec)": 8.029937028884888,
-  "_eval_score": 98.10544217687075
+  "_eval_score": 99.08253968253968
 }
