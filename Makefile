@@ -197,6 +197,8 @@ overnight-local:
 
 # Local preference optimization profile: only densify already-solved plans (constraint-safe).
 preference-local:
+	TPC_PREF_FAST_INNER=1 \
+	TPC_DENSIFY_TIGHTEN_TRANSPORT=1 \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
@@ -266,6 +268,8 @@ hpc-unsolved:
 
 # Phase B (HPC): optimize preference on already-solved plans via densification.
 hpc-preference:
+	TPC_PREF_FAST_INNER=1 \
+	TPC_DENSIFY_TIGHTEN_TRANSPORT=1 \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \

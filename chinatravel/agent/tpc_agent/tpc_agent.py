@@ -587,6 +587,64 @@ class TPCAgent(BaseAgent):
                 continue
         return total
 
+    def _transport_duration_minutes(self, transports):
+        total = 0
+        for leg in transports or []:
+            try:
+                total += time_to_minutes(str(leg.get("end_time", ""))) - time_to_minutes(str(leg.get("start_time", "")))
+            except Exception:
+                continue
+        return total
+
+    def _tighten_transport_segments(self, plan, city, people, check):
+        """Replace long legs with faster feasible routes while preserving acceptance.
+
+        This improves ATT even when no new meals/attractions can be inserted.
+        """
+        improved = 0
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                if activity.get("type") in ("airplane", "train"):
+                    continue
+                old_transports = activity.get("transports", []) or []
+                if not old_transports:
+                    continue
+                to_pos = str(activity.get("position", "") or "")
+                from_pos = str(old_transports[0].get("start", "") or "")
+                start_time = str(old_transports[0].get("start_time", "") or "")
+                act_start = str(activity.get("start_time", "") or "")
+                if not to_pos or not from_pos or not start_time or not act_start:
+                    continue
+
+                try:
+                    new_transports, new_arrival = self._get_transport(self.env, city, from_pos, to_pos, start_time, people)
+                except Exception:
+                    continue
+                if not new_transports or new_arrival is None:
+                    continue
+
+                try:
+                    if time_to_minutes(str(new_arrival)) > time_to_minutes(act_start):
+                        continue
+                except Exception:
+                    continue
+
+                old_minutes = self._transport_duration_minutes(old_transports)
+                new_minutes = self._transport_duration_minutes(new_transports)
+                if new_minutes >= old_minutes - 5:
+                    continue
+
+                backup = deepcopy(old_transports)
+                activity["transports"] = new_transports
+                try:
+                    if self._accepted(*check(plan)):
+                        improved += 1
+                    else:
+                        activity["transports"] = backup
+                except Exception:
+                    activity["transports"] = backup
+        return improved
+
     def _haversine_km(self, a, b):
         try:
             lat1 = math.radians(float(a["lat"]))
@@ -985,6 +1043,9 @@ class TPCAgent(BaseAgent):
                         break
                 if not inserted:
                     break
+
+        if os.environ.get("TPC_DENSIFY_TIGHTEN_TRANSPORT", "1") != "0":
+            self._tighten_transport_segments(dense, city, people, check)
 
         return dense
 
@@ -2278,6 +2339,7 @@ class TPCAgent(BaseAgent):
         )
         conditional = self._transport_constraints.get("conditional_transport", None)
         mode_order = ["metro", "walk", "taxi"]
+        prefer_fast_inner = os.environ.get("TPC_PREF_FAST_INNER", "0") == "1"
         # Search may pin the inner-city mode; explicit choice overrides the budget/conditional heuristics
         # but still respects excluded modes and the taxi car-count guard below.
         forced_inner = self._norm_text(getattr(self, "_forced_inner_mode", None) or "")
@@ -2288,6 +2350,8 @@ class TPCAgent(BaseAgent):
         inner_budget_limit = getattr(self, "_budget_limits", {}).get("inner_transport", -1)
         if inner_budget_limit >= 0 and not forced_inner:
             mode_order = ["walk", "metro", "taxi"] if inner_budget_limit <= 50 else ["metro", "walk", "taxi"]
+        elif prefer_fast_inner and not forced_inner:
+            mode_order = ["metro", "taxi", "walk"]
         taxi_cars_equals = self._transport_constraints.get("taxi_cars_equals", None)
         if taxi_cars_equals is not None:
             try:
