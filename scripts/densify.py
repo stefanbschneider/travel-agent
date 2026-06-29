@@ -150,9 +150,15 @@ def _process(args):
             dense = agent._densify_plan(plan, query, constraints, check)
             if agent._accepted(*check(dense)):
                 accepted += 1
-            if agent._activity_counts(dense) > agent._activity_counts(plan) and agent._accepted(*check(dense)):
-                _save_json(os.path.join(result_dir, uid + ".json"), dense)
-                improved += 1
+                better_counts = agent._activity_counts(dense) > agent._activity_counts(plan)
+                try:
+                    base_pref = sum(agent._default_preference_components(plan))
+                    dense_pref = sum(agent._default_preference_components(dense))
+                except Exception:
+                    base_pref = dense_pref = 0.0
+                if better_counts or dense_pref > base_pref + 1e-9:
+                    _save_json(os.path.join(result_dir, uid + ".json"), dense)
+                    improved += 1
         except Exception as exc:
             print("densify: {} failed: {}".format(uid, exc))
             skipped += 1

@@ -1110,7 +1110,138 @@ class TPCAgent(BaseAgent):
                 if not inserted:
                     break
 
+        dense = self._upgrade_transport_modes(dense, query, constraints, check)
         return dense
+
+    def _rebuild_hop(self, city, from_pos, to_pos, start_time, people, mode):
+        """Build one inner-city hop in `mode`, mirroring _get_transport's segment dicts.
+        Returns (transports_list, duration_min) or (None, None)."""
+        try:
+            result = self.env.transportation.goto(city, from_pos, to_pos, start_time, mode)
+        except Exception:
+            return None, None
+        if not isinstance(result, list) or len(result) == 0:
+            return None, None
+        transports = []
+        for seg in result:
+            t = {
+                "start": seg["start"],
+                "end": seg["end"],
+                "mode": seg["mode"],
+                "start_time": seg["start_time"],
+                "end_time": seg["end_time"],
+                "distance": seg["distance"],
+            }
+            if seg["mode"] == "taxi":
+                cars = max(1, int(math.ceil(float(people) / 4.0)))
+                t["price"] = seg["cost"]
+                t["cost"] = seg["cost"] * cars
+                t["cars"] = cars
+            elif seg["mode"] == "metro":
+                t["price"] = seg["cost"]
+                t["cost"] = seg["cost"] * people
+                t["tickets"] = people
+            else:
+                t["price"] = 0
+                t["cost"] = 0
+            transports.append(t)
+        try:
+            dur = time_to_minutes(str(transports[-1]["end_time"])) - time_to_minutes(str(transports[0]["start_time"]))
+        except Exception:
+            return None, None
+        if dur < 0:
+            return None, None
+        return transports, dur
+
+    def _upgrade_transport_modes(self, plan, query, constraints, check):
+        """Acceptance-gated ATT optimizer: swap each inner-city hop to a faster mode, keeping
+        the leg's start_time fixed so arrivals only move earlier (no downstream cascade). Each
+        hop carries a candidate list (faster modes, fastest first), so a budget-tight query that
+        rejects taxi can still fall back to metro. Lowers innercity_transport_time -> lifts ATT
+        and never changes attraction/meal counts, so DAV/DDR/FPR/C-LPR cannot regress."""
+        try:
+            if not self._accepted(*check(plan)):
+                return plan
+        except Exception:
+            return plan
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+
+        def _legs_minutes(legs):
+            tot = 0
+            for leg in legs or []:
+                try:
+                    tot += time_to_minutes(str(leg["end_time"])) - time_to_minutes(str(leg["start_time"]))
+                except Exception:
+                    pass
+            return tot
+
+        hops = []  # (day_idx, act_idx, old_min, [candidate_transports, fastest first])
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            activities = day.get("activities", []) or []
+            for act_idx, activity in enumerate(activities):
+                transports = activity.get("transports", []) or []
+                if not transports:
+                    continue
+                modes_present = {self._norm_text(t.get("mode", "")) for t in transports}
+                if not modes_present or (modes_present - {"walk", "metro", "taxi"}):
+                    continue
+                old_min = self._inner_activity_minutes(activity)
+                from_pos = str(transports[0].get("start", "") or "")
+                to_pos = str(transports[-1].get("end", "") or "")
+                start_time = str(transports[0].get("start_time", "") or "")
+                cur_start = str(activity.get("start_time", "") or "")
+                if not from_pos or not to_pos or not start_time or from_pos == to_pos:
+                    continue
+                cands = []
+                for mode in ("taxi", "metro"):
+                    cand, dur = self._rebuild_hop(city, from_pos, to_pos, start_time, people, mode)
+                    if cand is None or dur >= old_min:
+                        continue
+                    try:
+                        if cur_start and time_to_minutes(str(cand[-1]["end_time"])) > time_to_minutes(cur_start):
+                            continue
+                    except Exception:
+                        continue
+                    cands.append((dur, cand))
+                if cands:
+                    cands.sort(key=lambda c: c[0])
+                    hops.append((day_idx, act_idx, old_min, [c[1] for c in cands]))
+        if not hops:
+            return plan
+
+        originals = [
+            deepcopy(plan["itinerary"][d]["activities"][a]["transports"])
+            for d, a, _o, _cl in hops
+        ]
+        # Fast path: apply each hop's fastest candidate, check once.
+        for d, a, _o, cl in hops:
+            plan["itinerary"][d]["activities"][a]["transports"] = cl[0]
+        try:
+            if self._accepted(*check(plan)):
+                return plan
+        except Exception:
+            pass
+        # Fallback: revert, then greedily upgrade by potential saving; per hop try fastest->slowest.
+        for (d, a, _o, _cl), orig in zip(hops, originals):
+            plan["itinerary"][d]["activities"][a]["transports"] = orig
+        order = sorted(
+            range(len(hops)),
+            key=lambda i: hops[i][2] - _legs_minutes(hops[i][3][0]),
+            reverse=True,
+        )
+        for i in order:
+            d, a, _old_min, cl = hops[i]
+            orig = plan["itinerary"][d]["activities"][a]["transports"]
+            for cand in cl:
+                plan["itinerary"][d]["activities"][a]["transports"] = cand
+                try:
+                    if self._accepted(*check(plan)):
+                        break
+                except Exception:
+                    pass
+                plan["itinerary"][d]["activities"][a]["transports"] = orig
+        return plan
 
     def _room_type_to_numbed(self, room_type):
         if room_type is None:
