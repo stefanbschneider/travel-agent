@@ -190,6 +190,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Assembly",
+          "start_time": "15:13",
+          "end_time": "16:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Huayi Brothers Movie World",
+              "end": "Assembly",
+              "mode": "walk",
+              "start_time": "15:10",
+              "end_time": "15:13",
+              "distance": 0.2982232925442413,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Suyan Chinese Restaurant at W Suzhou",
           "start_time": "17:00",
@@ -199,15 +220,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Huayi Brothers Movie World",
+              "start": "Assembly",
+              "end": "Straw Sandal Mountain-Metro Station",
+              "mode": "walk",
+              "start_time": "16:13",
+              "end_time": "16:20",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Straw Sandal Mountain-Metro Station",
+              "end": "Oriental Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "16:20",
+              "end_time": "16:46",
+              "distance": 13.27,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Oriental Gate-Metro Station",
               "end": "Suyan Chinese Restaurant at W Suzhou",
-              "mode": "taxi",
-              "start_time": "15:10",
-              "end_time": "15:29",
-              "distance": 13.14,
-              "price": 53.81,
-              "cost": 53.81,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:46",
+              "end_time": "16:50",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -742,5 +783,5 @@
     }
   ],
   "elapsed_time(sec)": 0.02930283546447754,
-  "_eval_score": 96.11571428571429
+  "_eval_score": 96.3919413919414
 }

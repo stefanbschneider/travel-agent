@@ -234,6 +234,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Park",
+          "start_time": "09:11",
+          "end_time": "10:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Yingchun Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:03",
+              "distance": 14.53,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Yingchun Road-Metro Station",
+              "end": "Century Park",
+              "mode": "walk",
+              "start_time": "09:03",
+              "end_time": "09:11",
+              "distance": 0.69,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Peacock Sichuan Cuisine (Changning Raffles City Branch)",
           "start_time": "11:00",
@@ -243,15 +285,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Park",
+              "end": "Yingchun Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:11",
+              "end_time": "10:19",
+              "distance": 0.69,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yingchun Road-Metro Station",
+              "end": "Zhongshan Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:19",
+              "end_time": "10:44",
+              "distance": 12.89,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Zhongshan Park-Metro Station",
               "end": "Peacock Sichuan Cuisine (Changning Raffles City Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:11",
-              "distance": 27.5,
-              "price": 118.46,
-              "cost": 118.46,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:44",
+              "end_time": "10:47",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -298,13 +360,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "type": "attraction",
+          "position": "Juliet's Balcony",
+          "start_time": "13:57",
+          "end_time": "14:57",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -319,11 +380,54 @@
             },
             {
               "start": "Jiangsu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Changshu Road-Metro Station",
               "mode": "metro",
               "start_time": "13:51",
-              "end_time": "15:04",
-              "distance": 36.56,
+              "end_time": "13:54",
+              "distance": 1.92,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Juliet's Balcony",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "13:57",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "16:36",
+          "end_time": "18:07",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 576.24,
+          "cost": 576.24,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Juliet's Balcony",
+              "end": "Changshu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:57",
+              "end_time": "15:00",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:00",
+              "end_time": "16:09",
+              "distance": 34.68,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -332,8 +436,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "15:04",
-              "end_time": "15:19",
+              "start_time": "16:09",
+              "end_time": "16:24",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -345,5 +449,5 @@
     }
   ],
   "elapsed_time(sec)": 68.64345502853394,
-  "_eval_score": 97.45833333333334
+  "_eval_score": 98.08163265306123
 }

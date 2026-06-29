@@ -641,13 +641,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "15:53",
+          "end_time": "16:53",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -662,11 +661,54 @@
             },
             {
               "start": "Donggualing-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Gangxia North-Metro Station",
               "mode": "metro",
               "start_time": "15:49",
-              "end_time": "16:42",
-              "distance": 26.95,
+              "end_time": "15:53",
+              "distance": 2.45,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "walk",
+              "start_time": "15:53",
+              "end_time": "15:53",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:56",
+          "end_time": "20:21",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1008.34,
+          "cost": 1008.34,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Gangxia North-Metro Station",
+              "mode": "walk",
+              "start_time": "16:53",
+              "end_time": "16:53",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "16:53",
+              "end_time": "17:48",
+              "distance": 27.95,
               "price": 6,
               "cost": 6,
               "tickets": 1
@@ -675,8 +717,8 @@
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "16:42",
-              "end_time": "16:47",
+              "start_time": "17:48",
+              "end_time": "17:53",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -688,5 +730,5 @@
     }
   ],
   "elapsed_time(sec)": 212.0128607749939,
-  "_eval_score": 95.13174603174602
+  "_eval_score": 95.65376984126985
 }

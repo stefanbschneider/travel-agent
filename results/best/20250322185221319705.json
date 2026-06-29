@@ -107,6 +107,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Bai Causeway",
+          "start_time": "15:30",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Lake Cultural Plaza",
+              "end": "West Lake Cultural Plaza-Metro Station",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:18",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Lake Cultural Plaza-Metro Station",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:18",
+              "end_time": "15:21",
+              "distance": 1.77,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Bai Causeway",
+              "mode": "walk",
+              "start_time": "15:21",
+              "end_time": "15:30",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
           "start_time": "17:00",
@@ -116,15 +158,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "West Lake Cultural Plaza",
+              "start": "Bai Causeway",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:39",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Dongyue-Metro Station",
+              "mode": "metro",
+              "start_time": "16:39",
+              "end_time": "16:53",
+              "distance": 7.06,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Dongyue-Metro Station",
               "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "15:13",
-              "end_time": "15:24",
-              "distance": 7.95,
-              "price": 32.52,
-              "cost": 32.52,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:53",
+              "end_time": "17:00",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -663,5 +725,5 @@
     }
   ],
   "elapsed_time(sec)": 191.92321181297302,
-  "_eval_score": 98.02083333333334
+  "_eval_score": 98.33333333333334
 }

@@ -414,12 +414,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 16.0,
+          "type": "attraction",
+          "position": "Juliet's Balcony",
+          "start_time": "15:10",
+          "end_time": "16:10",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -434,11 +434,53 @@
             },
             {
               "start": "Jiangsu Road-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
+              "end": "Changshu Road-Metro Station",
               "mode": "metro",
               "start_time": "15:04",
-              "end_time": "15:28",
-              "distance": 12.48,
+              "end_time": "15:07",
+              "distance": 1.92,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Juliet's Balcony",
+              "mode": "walk",
+              "start_time": "15:07",
+              "end_time": "15:10",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Juliet's Balcony",
+              "end": "Changshu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:10",
+              "end_time": "16:13",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:13",
+              "end_time": "16:36",
+              "distance": 11.66,
               "price": 4,
               "cost": 4,
               "tickets": 1
@@ -447,8 +489,8 @@
               "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "15:28",
-              "end_time": "15:38",
+              "start_time": "16:36",
+              "end_time": "16:46",
               "distance": 0.86,
               "price": 0,
               "cost": 0
@@ -503,5 +545,5 @@
     }
   ],
   "elapsed_time(sec)": 186.24362683296204,
-  "_eval_score": 95.98430735930737
+  "_eval_score": 96.74603174603175
 }

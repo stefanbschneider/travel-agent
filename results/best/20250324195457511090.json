@@ -19,6 +19,48 @@
           "TrainID": "G1866"
         },
         {
+          "type": "attraction",
+          "position": "Arhat Hall",
+          "start_time": "09:43",
+          "end_time": "10:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou North Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "09:09",
+              "end_time": "09:10",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "Shantang Street-Metro Station",
+              "mode": "metro",
+              "start_time": "09:10",
+              "end_time": "09:34",
+              "distance": 12.03,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Arhat Hall",
+              "mode": "walk",
+              "start_time": "09:34",
+              "end_time": "09:43",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
           "start_time": "11:00",
@@ -28,15 +70,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Suzhou North Station",
+              "start": "Arhat Hall",
               "end": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
-              "mode": "taxi",
-              "start_time": "09:09",
-              "end_time": "09:27",
-              "distance": 12.43,
-              "price": 50.65,
-              "cost": 50.65,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:43",
+              "end_time": "10:56",
+              "distance": 1.1534892001068417,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -531,5 +572,5 @@
     }
   ],
   "elapsed_time(sec)": 183.82534098625183,
-  "_eval_score": 97.44117647058823
+  "_eval_score": 97.82407407407408
 }

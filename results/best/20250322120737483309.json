@@ -414,12 +414,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 233.0,
-          "cost": 466.0,
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "15:12",
+          "end_time": "16:42",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -434,11 +434,53 @@
             },
             {
               "start": "Tonghuimen-Metro Station",
-              "end": "Taisheng South Road-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
               "start_time": "15:10",
-              "end_time": "15:15",
-              "distance": 2.71,
+              "end_time": "15:10",
+              "distance": 0.42,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu Cultural Park",
+              "mode": "walk",
+              "start_time": "15:10",
+              "end_time": "15:12",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 233.0,
+          "cost": 466.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Cultural Park",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "16:42",
+              "end_time": "16:44",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Taisheng South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:44",
+              "end_time": "16:48",
+              "distance": 2.48,
               "price": 2,
               "cost": 4,
               "tickets": 2
@@ -447,8 +489,8 @@
               "start": "Taisheng South Road-Metro Station",
               "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "mode": "walk",
-              "start_time": "15:15",
-              "end_time": "15:20",
+              "start_time": "16:48",
+              "end_time": "16:53",
               "distance": 0.46,
               "price": 0,
               "cost": 0
@@ -952,13 +994,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "20:38",
-          "end_time": "16:48",
-          "start": "Chengdu West Railway Station",
-          "end": "Guangzhou North Railway Station",
-          "price": 615.47,
-          "cost": 1230.94,
+          "type": "attraction",
+          "position": "Chengdu Painting Academy",
+          "start_time": "18:22",
+          "end_time": "19:52",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -973,11 +1014,54 @@
             },
             {
               "start": "Kuanzhai Alley-Metro Station",
-              "end": "Chengdu West Railway Station-Metro Station",
+              "end": "Luomashi-Metro Station",
               "mode": "metro",
               "start_time": "18:10",
-              "end_time": "18:24",
-              "distance": 7.38,
+              "end_time": "18:12",
+              "distance": 1.44,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Painting Academy",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:22",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:38",
+          "end_time": "16:48",
+          "start": "Chengdu West Railway Station",
+          "end": "Guangzhou North Railway Station",
+          "price": 615.47,
+          "cost": 1230.94,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Painting Academy",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "19:52",
+              "end_time": "20:02",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu West Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "20:02",
+              "end_time": "20:19",
+              "distance": 8.73,
               "price": 3,
               "cost": 6,
               "tickets": 2
@@ -986,8 +1070,8 @@
               "start": "Chengdu West Railway Station-Metro Station",
               "end": "Chengdu West Railway Station",
               "mode": "walk",
-              "start_time": "18:24",
-              "end_time": "18:27",
+              "start_time": "20:19",
+              "end_time": "20:22",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -999,5 +1083,5 @@
     }
   ],
   "elapsed_time(sec)": 214.5754919052124,
-  "_eval_score": 96.95508658008657
+  "_eval_score": 97.64682539682539
 }

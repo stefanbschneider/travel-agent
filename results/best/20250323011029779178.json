@@ -145,12 +145,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Mawangzi (Taikoo Li Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 140.0,
-          "cost": 560.0,
+          "type": "attraction",
+          "position": "Baihua Tan Park",
+          "start_time": "15:10",
+          "end_time": "16:40",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -165,11 +165,53 @@
             },
             {
               "start": "Liangjia Lane-Metro Station",
-              "end": "Chunxi Road-Metro Station",
+              "end": "Tonghuimen-Metro Station",
               "mode": "metro",
               "start_time": "15:01",
-              "end_time": "15:07",
-              "distance": 3.23,
+              "end_time": "15:09",
+              "distance": 4.02,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Tonghuimen-Metro Station",
+              "end": "Baihua Tan Park",
+              "mode": "walk",
+              "start_time": "15:09",
+              "end_time": "15:10",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mawangzi (Taikoo Li Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 140.0,
+          "cost": 560.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Baihua Tan Park",
+              "end": "Tonghuimen-Metro Station",
+              "mode": "walk",
+              "start_time": "16:40",
+              "end_time": "16:41",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tonghuimen-Metro Station",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:41",
+              "end_time": "16:47",
+              "distance": 3.17,
               "price": 2,
               "cost": 8,
               "tickets": 4
@@ -178,8 +220,8 @@
               "start": "Chunxi Road-Metro Station",
               "end": "Mawangzi (Taikoo Li Branch)",
               "mode": "walk",
-              "start_time": "15:07",
-              "end_time": "15:12",
+              "start_time": "16:47",
+              "end_time": "16:52",
               "distance": 0.44,
               "price": 0,
               "cost": 0
@@ -587,5 +629,5 @@
     }
   ],
   "elapsed_time(sec)": 195.73148369789124,
-  "_eval_score": 98.00686813186813
+  "_eval_score": 98.68707482993197
 }

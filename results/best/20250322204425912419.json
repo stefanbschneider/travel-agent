@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Bank of China",
+          "start_time": "15:34",
+          "end_time": "16:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huangpu River",
+              "end": "Bank of China",
+              "mode": "walk",
+              "start_time": "15:31",
+              "end_time": "15:34",
+              "distance": 0.3275296223485583,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Kurogi",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Huangpu River",
+              "start": "Bank of China",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "16:40",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:40",
+              "end_time": "16:43",
+              "distance": 1.66,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Tiantong Road-Metro Station",
               "end": "Kurogi",
-              "mode": "taxi",
-              "start_time": "15:31",
-              "end_time": "15:32",
-              "distance": 1.18,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:43",
+              "end_time": "16:48",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -345,5 +386,5 @@
     }
   ],
   "elapsed_time(sec)": 193.59015560150146,
-  "_eval_score": 97.70833333333334
+  "_eval_score": 98.33333333333334
 }

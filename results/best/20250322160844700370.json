@@ -107,6 +107,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Cave Exploration Factory (Happy Coast Branch)",
+          "start_time": "15:42",
+          "end_time": "16:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Bay Park",
+              "end": "Hongshu Bay-Metro Station",
+              "mode": "walk",
+              "start_time": "15:34",
+              "end_time": "15:35",
+              "distance": 0.11,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongshu Bay-Metro Station",
+              "end": "Qiaocheng East-Metro Station",
+              "mode": "metro",
+              "start_time": "15:35",
+              "end_time": "15:41",
+              "distance": 3.01,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Cave Exploration Factory (Happy Coast Branch)",
+              "mode": "walk",
+              "start_time": "15:41",
+              "end_time": "15:42",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
           "start_time": "17:00",
@@ -116,15 +158,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Bay Park",
+              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "end": "Qiaocheng East-Metro Station",
+              "mode": "walk",
+              "start_time": "16:42",
+              "end_time": "16:43",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Window of the World-Metro Station",
+              "mode": "metro",
+              "start_time": "16:43",
+              "end_time": "16:47",
+              "distance": 2.36,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Window of the World-Metro Station",
               "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "mode": "taxi",
-              "start_time": "15:34",
-              "end_time": "15:36",
-              "distance": 1.58,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:47",
+              "end_time": "16:49",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -489,13 +551,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "20:58",
-          "end_time": "18:44",
-          "start": "Shenzhen East Station",
-          "end": "Chengdu West Railway Station",
-          "price": 667.34,
-          "cost": 1334.68,
+          "type": "attraction",
+          "position": "Futian District Sports Park",
+          "start_time": "18:22",
+          "end_time": "19:52",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -510,11 +571,54 @@
             },
             {
               "start": "Shangsha-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "Honey Lake-Metro Station",
               "mode": "metro",
               "start_time": "18:09",
-              "end_time": "18:33",
-              "distance": 12.32,
+              "end_time": "18:12",
+              "distance": 1.61,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Honey Lake-Metro Station",
+              "end": "Futian District Sports Park",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:22",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:58",
+          "end_time": "18:44",
+          "start": "Shenzhen East Station",
+          "end": "Chengdu West Railway Station",
+          "price": 667.34,
+          "cost": 1334.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Futian District Sports Park",
+              "end": "Honey Lake-Metro Station",
+              "mode": "walk",
+              "start_time": "19:52",
+              "end_time": "20:02",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Honey Lake-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "20:02",
+              "end_time": "20:24",
+              "distance": 11.02,
               "price": 4,
               "cost": 8,
               "tickets": 2
@@ -523,8 +627,8 @@
               "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
               "mode": "walk",
-              "start_time": "18:33",
-              "end_time": "18:36",
+              "start_time": "20:24",
+              "end_time": "20:27",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -536,5 +640,5 @@
     }
   ],
   "elapsed_time(sec)": 181.47102284431458,
-  "_eval_score": 97.68379281537176
+  "_eval_score": 98.59637188208617
 }

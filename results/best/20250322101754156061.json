@@ -107,6 +107,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Garden Bridge",
+          "start_time": "15:35",
+          "end_time": "16:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "North Bund International Cruise Terminal",
+              "end": "Tilanqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "15:30",
+              "end_time": "15:33",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tilanqiao-Metro Station",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "metro",
+              "start_time": "15:33",
+              "end_time": "15:34",
+              "distance": 0.9,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Garden Bridge",
+              "mode": "walk",
+              "start_time": "15:34",
+              "end_time": "15:35",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Fu He Hui",
           "start_time": "17:00",
@@ -116,15 +158,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "North Bund International Cruise Terminal",
+              "start": "Garden Bridge",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "16:35",
+              "end_time": "16:36",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:36",
+              "end_time": "16:50",
+              "distance": 7.23,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "taxi",
-              "start_time": "15:30",
-              "end_time": "15:42",
-              "distance": 8.01,
-              "price": 32.73,
-              "cost": 32.73,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:50",
+              "end_time": "16:52",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -516,5 +578,5 @@
     }
   ],
   "elapsed_time(sec)": 191.90396118164062,
-  "_eval_score": 98.19653299916457
+  "_eval_score": 98.63888888888889
 }

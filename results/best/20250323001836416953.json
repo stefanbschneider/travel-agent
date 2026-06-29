@@ -103,12 +103,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Chongqing Regent Hotel · Robbins Steakhouse",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 665.0,
-          "cost": 3325.0,
+          "type": "attraction",
+          "position": "1941 Teahouse and Theater",
+          "start_time": "15:38",
+          "end_time": "16:38",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -123,11 +123,53 @@
             },
             {
               "start": "Chaotianmen-Metro Station",
-              "end": "Jiangbeicheng-Metro Station",
+              "end": "Xiaoshizi-Metro Station",
               "mode": "metro",
               "start_time": "15:34",
-              "end_time": "15:37",
-              "distance": 1.82,
+              "end_time": "15:35",
+              "distance": 0.79,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Xiaoshizi-Metro Station",
+              "end": "1941 Teahouse and Theater",
+              "mode": "walk",
+              "start_time": "15:35",
+              "end_time": "15:38",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Chongqing Regent Hotel · Robbins Steakhouse",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 665.0,
+          "cost": 3325.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "1941 Teahouse and Theater",
+              "end": "Xiaoshizi-Metro Station",
+              "mode": "walk",
+              "start_time": "16:38",
+              "end_time": "16:41",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshizi-Metro Station",
+              "end": "Jiangbeicheng-Metro Station",
+              "mode": "metro",
+              "start_time": "16:41",
+              "end_time": "16:45",
+              "distance": 2.08,
               "price": 2,
               "cost": 10,
               "tickets": 5
@@ -136,8 +178,8 @@
               "start": "Jiangbeicheng-Metro Station",
               "end": "Chongqing Regent Hotel · Robbins Steakhouse",
               "mode": "walk",
-              "start_time": "15:37",
-              "end_time": "15:43",
+              "start_time": "16:45",
+              "end_time": "16:51",
               "distance": 0.52,
               "price": 0,
               "cost": 0
@@ -1125,5 +1167,5 @@
     }
   ],
   "elapsed_time(sec)": 191.4764745235443,
-  "_eval_score": 97.86166666666666
+  "_eval_score": 98.21314102564102
 }

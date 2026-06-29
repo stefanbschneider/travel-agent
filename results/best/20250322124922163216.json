@@ -234,6 +234,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:03",
+              "distance": 14.95,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
+              "mode": "walk",
+              "start_time": "09:03",
+              "end_time": "09:04",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "11:00",
@@ -243,15 +285,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:04",
+              "end_time": "10:05",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:05",
+              "end_time": "10:46",
+              "distance": 20.63,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Qibao-Metro Station",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:19",
-              "distance": 33.16,
-              "price": 143.92,
-              "cost": 143.92,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:46",
+              "end_time": "10:54",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -298,13 +360,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "type": "attraction",
+          "position": "Longhua Temple",
+          "start_time": "14:10",
+          "end_time": "15:10",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -319,21 +380,64 @@
             },
             {
               "start": "Wisteria Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Longhua Middle Road-Metro Station",
               "mode": "metro",
               "start_time": "13:50",
-              "end_time": "15:14",
-              "distance": 42.08,
-              "price": 8,
-              "cost": 8,
+              "end_time": "14:07",
+              "distance": 8.94,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Longhua Middle Road-Metro Station",
+              "end": "Longhua Temple",
+              "mode": "walk",
+              "start_time": "14:07",
+              "end_time": "14:10",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "16:36",
+          "end_time": "18:07",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 576.24,
+          "cost": 576.24,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Longhua Temple",
+              "end": "Longhua Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:10",
+              "end_time": "15:13",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longhua Middle Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:13",
+              "end_time": "16:19",
+              "distance": 33.43,
+              "price": 7,
+              "cost": 7,
               "tickets": 1
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "15:14",
-              "end_time": "15:29",
+              "start_time": "16:19",
+              "end_time": "16:34",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -345,5 +449,5 @@
     }
   ],
   "elapsed_time(sec)": 198.35871601104736,
-  "_eval_score": 97.31150793650794
+  "_eval_score": 97.9591836734694
 }

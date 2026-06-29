@@ -107,6 +107,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Beihai Park",
+          "start_time": "15:30",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "National Museum of China",
+              "end": "Wangfujing-Metro Station",
+              "mode": "walk",
+              "start_time": "15:14",
+              "end_time": "15:19",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangfujing-Metro Station",
+              "end": "Shichahai-Metro Station",
+              "mode": "metro",
+              "start_time": "15:19",
+              "end_time": "15:26",
+              "distance": 3.53,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Beihai Park",
+              "mode": "walk",
+              "start_time": "15:26",
+              "end_time": "15:30",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Jumbo Seafood (Beijing SKP Branch)",
           "start_time": "17:00",
@@ -116,15 +158,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "National Museum of China",
+              "start": "Beihai Park",
+              "end": "Shichahai-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:34",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Dawanglu-Metro Station",
+              "mode": "metro",
+              "start_time": "16:34",
+              "end_time": "16:49",
+              "distance": 7.54,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Dawanglu-Metro Station",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
-              "mode": "taxi",
-              "start_time": "15:14",
-              "end_time": "15:23",
-              "distance": 6.04,
-              "price": 25.84,
-              "cost": 51.68,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "16:49",
+              "end_time": "16:53",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +449,5 @@
     }
   ],
   "elapsed_time(sec)": 124.79958939552307,
-  "_eval_score": 98.25595238095238
+  "_eval_score": 98.85034013605443
 }

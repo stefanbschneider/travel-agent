@@ -234,6 +234,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "CITIC Securities Tower",
+          "start_time": "15:30",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chaoyang Park",
+              "end": "CITIC Securities Tower",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:30",
+              "distance": 1.4177629612076093,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Summer Palace at China World Hotel, Beijing",
           "start_time": "17:00",
@@ -243,15 +264,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chaoyang Park",
+              "start": "CITIC Securities Tower",
+              "end": "Dongfeng Beiqiao-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:42",
+              "distance": 1.01,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongfeng Beiqiao-Metro Station",
+              "end": "Guomao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:42",
+              "end_time": "16:53",
+              "distance": 5.85,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Guomao-Metro Station",
               "end": "Summer Palace at China World Hotel, Beijing",
-              "mode": "taxi",
-              "start_time": "15:13",
-              "end_time": "15:20",
-              "distance": 5.09,
-              "price": 22.52,
-              "cost": 22.52,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:53",
+              "end_time": "16:56",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -552,12 +593,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Helude Candied Hawthorn Sticks",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 7.0,
-          "cost": 28.0,
+          "type": "attraction",
+          "position": "Dashilar",
+          "start_time": "15:41",
+          "end_time": "16:41",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -572,21 +613,63 @@
             },
             {
               "start": "Changchun Street-Metro Station",
-              "end": "Dongsi-Metro Station",
+              "end": "Qianmen-Metro Station",
               "mode": "metro",
               "start_time": "15:35",
-              "end_time": "15:45",
-              "distance": 5.39,
-              "price": 3,
-              "cost": 12,
+              "end_time": "15:40",
+              "distance": 2.96,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Qianmen-Metro Station",
+              "end": "Dashilar",
+              "mode": "walk",
+              "start_time": "15:40",
+              "end_time": "15:41",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 28.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dashilar",
+              "end": "Qianmen-Metro Station",
+              "mode": "walk",
+              "start_time": "16:41",
+              "end_time": "16:42",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qianmen-Metro Station",
+              "end": "Dongsi-Metro Station",
+              "mode": "metro",
+              "start_time": "16:42",
+              "end_time": "16:48",
+              "distance": 3.16,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Dongsi-Metro Station",
               "end": "Helude Candied Hawthorn Sticks",
               "mode": "walk",
-              "start_time": "15:45",
-              "end_time": "15:45",
+              "start_time": "16:48",
+              "end_time": "16:48",
               "distance": 0.04,
               "price": 0,
               "cost": 0
@@ -641,5 +724,5 @@
     }
   ],
   "elapsed_time(sec)": 182.4408347606659,
-  "_eval_score": 98.02083333333334
+  "_eval_score": 98.64583333333334
 }

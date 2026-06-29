@@ -19,6 +19,48 @@
           "FlightID": "FL011"
         },
         {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:59",
+              "end_time": "09:04",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "09:04",
+              "end_time": "09:28",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "09:28",
+              "end_time": "09:30",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Garden Restaurant No. 6",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "10:32",
+              "end_time": "10:50",
+              "distance": 9.01,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Shekou Port-Metro Station",
               "end": "Garden Restaurant No. 6",
-              "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:29",
-              "distance": 20.5,
-              "price": 86.97,
-              "cost": 86.97,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:50",
+              "end_time": "10:54",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -660,13 +722,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "20:05",
-          "end_time": "06:50",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2183.88,
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "18:16",
+          "end_time": "19:46",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -681,21 +742,64 @@
             },
             {
               "start": "Shangsha-Metro Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
+              "end": "Gangxia North-Metro Station",
               "mode": "metro",
               "start_time": "18:09",
-              "end_time": "18:28",
-              "distance": 9.53,
-              "price": 4,
-              "cost": 12,
+              "end_time": "18:16",
+              "distance": 3.67,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "walk",
+              "start_time": "18:16",
+              "end_time": "18:16",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:05",
+          "end_time": "06:50",
+          "start": "Shenzhen North Railway Station",
+          "end": "Shanghai Hongqiao Station",
+          "price": 727.96,
+          "cost": 2183.88,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Gangxia North-Metro Station",
+              "mode": "walk",
+              "start_time": "19:46",
+              "end_time": "19:46",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "19:46",
+              "end_time": "20:03",
+              "distance": 8.88,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Shenzhen North Railway Station",
               "mode": "walk",
-              "start_time": "18:28",
-              "end_time": "18:29",
+              "start_time": "20:03",
+              "end_time": "20:04",
               "distance": 0.15,
               "price": 0,
               "cost": 0
@@ -707,5 +811,5 @@
     }
   ],
   "elapsed_time(sec)": 181.04891753196716,
-  "_eval_score": 97.70924908424908
+  "_eval_score": 98.4234693877551
 }

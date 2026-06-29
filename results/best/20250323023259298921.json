@@ -19,6 +19,48 @@
           "TrainID": "K507"
         },
         {
+          "type": "attraction",
+          "position": "Arhat Temple",
+          "start_time": "09:32",
+          "end_time": "10:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Chongqing West Railway Station",
+              "end": "Chongqing West Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:58",
+              "end_time": "08:59",
+              "distance": 0.1,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chongqing West Railway Station-Metro Station",
+              "end": "Chaotianmen-Metro Station",
+              "mode": "metro",
+              "start_time": "08:59",
+              "end_time": "09:31",
+              "distance": 16.14,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Chaotianmen-Metro Station",
+              "end": "Arhat Temple",
+              "mode": "walk",
+              "start_time": "09:31",
+              "end_time": "09:32",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Chongqing West Railway Station",
+              "start": "Arhat Temple",
+              "end": "Chaotianmen-Metro Station",
+              "mode": "walk",
+              "start_time": "10:32",
+              "end_time": "10:33",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chaotianmen-Metro Station",
+              "end": "Linjiangmen-Metro Station",
+              "mode": "metro",
+              "start_time": "10:33",
+              "end_time": "10:36",
+              "distance": 1.55,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Linjiangmen-Metro Station",
               "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "mode": "taxi",
-              "start_time": "08:58",
-              "end_time": "09:20",
-              "distance": 15.17,
-              "price": 62.95,
-              "cost": 62.95,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:36",
+              "end_time": "10:41",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -558,5 +620,5 @@
     }
   ],
   "elapsed_time(sec)": 182.6731264591217,
-  "_eval_score": 99.02777777777777
+  "_eval_score": 99.44444444444444
 }

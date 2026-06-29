@@ -313,12 +313,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 64.0,
+          "type": "attraction",
+          "position": "Duoyun Bookstore · Flagship Store",
+          "start_time": "15:28",
+          "end_time": "16:28",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -333,11 +333,53 @@
             },
             {
               "start": "Pudong Avenue-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
               "mode": "metro",
               "start_time": "15:27",
-              "end_time": "15:38",
-              "distance": 5.55,
+              "end_time": "15:28",
+              "distance": 0.69,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Duoyun Bookstore · Flagship Store",
+              "mode": "walk",
+              "start_time": "15:28",
+              "end_time": "15:28",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Duoyun Bookstore · Flagship Store",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:28",
+              "end_time": "16:28",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:28",
+              "end_time": "16:39",
+              "distance": 5.95,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -346,8 +388,8 @@
               "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "15:38",
-              "end_time": "15:48",
+              "start_time": "16:39",
+              "end_time": "16:49",
               "distance": 0.86,
               "price": 0,
               "cost": 0
@@ -402,5 +444,5 @@
     }
   ],
   "elapsed_time(sec)": 196.67111659049988,
-  "_eval_score": 95.23809523809524
+  "_eval_score": 95.71978021978023
 }

@@ -19,12 +19,12 @@
           "FlightID": "FL011"
         },
         {
-          "type": "lunch",
-          "position": "Sheraton Shenzhen Nanshan Hotel - Xili Shangshan",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 345.0,
-          "cost": 1035.0,
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -39,21 +39,63 @@
             },
             {
               "start": "Airport East-Metro Station",
-              "end": "University Town-Metro Station",
+              "end": "Bao'an Center-Metro Station",
               "mode": "metro",
               "start_time": "09:04",
-              "end_time": "09:36",
-              "distance": 16.34,
-              "price": 5,
-              "cost": 15,
+              "end_time": "09:28",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "09:28",
+              "end_time": "09:30",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Sheraton Shenzhen Nanshan Hotel - Xili Shangshan",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 345.0,
+          "cost": 1035.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "University Town-Metro Station",
+              "mode": "metro",
+              "start_time": "10:32",
+              "end_time": "10:49",
+              "distance": 8.58,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "University Town-Metro Station",
               "end": "Sheraton Shenzhen Nanshan Hotel - Xili Shangshan",
               "mode": "walk",
-              "start_time": "09:36",
-              "end_time": "09:44",
+              "start_time": "10:49",
+              "end_time": "10:57",
               "distance": 0.67,
               "price": 0,
               "cost": 0
@@ -1167,5 +1209,5 @@
     }
   ],
   "elapsed_time(sec)": 193.91735744476318,
-  "_eval_score": 98.07554945054946
+  "_eval_score": 98.42427248677248
 }

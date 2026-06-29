@@ -19,12 +19,12 @@
           "FlightID": "FL483"
         },
         {
-          "type": "lunch",
-          "position": "Huì Tíng · Jīng Cuì (LaLaport Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 187.0,
-          "cost": 374.0,
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "09:40",
+          "end_time": "10:40",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -39,21 +39,63 @@
             },
             {
               "start": "Hongqiao Terminal 1-Metro Station",
-              "end": "Madang Road-Metro Station",
+              "end": "Jing'an Temple-Metro Station",
               "mode": "metro",
               "start_time": "09:15",
-              "end_time": "09:40",
-              "distance": 12.54,
+              "end_time": "09:35",
+              "distance": 10.09,
               "price": 4,
               "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Anfu Road",
+              "mode": "walk",
+              "start_time": "09:35",
+              "end_time": "09:40",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Huì Tíng · Jīng Cuì (LaLaport Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 187.0,
+          "cost": 374.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Anfu Road",
+              "end": "Jing'an Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "10:40",
+              "end_time": "10:45",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Madang Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:45",
+              "end_time": "10:51",
+              "distance": 3.3,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Madang Road-Metro Station",
               "end": "Huì Tíng · Jīng Cuì (LaLaport Store)",
               "mode": "walk",
-              "start_time": "09:40",
-              "end_time": "09:41",
+              "start_time": "10:51",
+              "end_time": "10:52",
               "distance": 0.13,
               "price": 0,
               "cost": 0
@@ -889,12 +931,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 498.0,
-          "cost": 996.0,
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:18",
+          "end_time": "10:18",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -909,21 +951,63 @@
             },
             {
               "start": "Hongqiao Terminal 1-Metro Station",
-              "end": "Pudong South Road-Metro Station",
+              "end": "Liping Road-Metro Station",
               "mode": "metro",
               "start_time": "08:43",
               "end_time": "09:16",
-              "distance": 16.57,
+              "distance": 16.52,
               "price": 5,
               "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "09:16",
+              "end_time": "09:18",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 498.0,
+          "cost": 996.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:18",
+              "end_time": "10:20",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:20",
+              "end_time": "10:25",
+              "distance": 2.72,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Pudong South Road-Metro Station",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "walk",
-              "start_time": "09:16",
-              "end_time": "09:24",
+              "start_time": "10:25",
+              "end_time": "10:33",
               "distance": 0.69,
               "price": 0,
               "cost": 0
@@ -1104,5 +1188,5 @@
     }
   ],
   "elapsed_time(sec)": 197.07187914848328,
-  "_eval_score": 98.11059523809524
+  "_eval_score": 98.79287918871253
 }

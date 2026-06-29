@@ -19,6 +19,48 @@
           "TrainID": "G1866"
         },
         {
+          "type": "attraction",
+          "position": "Chang Garden",
+          "start_time": "09:36",
+          "end_time": "10:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou North Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "09:09",
+              "end_time": "09:10",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "metro",
+              "start_time": "09:10",
+              "end_time": "09:34",
+              "distance": 12.45,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Chang Garden",
+              "mode": "walk",
+              "start_time": "09:34",
+              "end_time": "09:36",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Farm Paradise Charcoal Grill (Xinghai Street Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Suzhou North Station",
+              "start": "Chang Garden",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:36",
+              "end_time": "10:38",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Qiutangbang-Metro Station",
+              "mode": "metro",
+              "start_time": "10:38",
+              "end_time": "10:47",
+              "distance": 4.86,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Qiutangbang-Metro Station",
               "end": "Farm Paradise Charcoal Grill (Xinghai Street Branch)",
-              "mode": "taxi",
-              "start_time": "09:09",
-              "end_time": "09:28",
-              "distance": 12.81,
-              "price": 52.36,
-              "cost": 52.36,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:47",
+              "end_time": "10:50",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -343,5 +405,5 @@
     }
   ],
   "elapsed_time(sec)": 183.34748196601868,
-  "_eval_score": 96.875
+  "_eval_score": 97.5
 }

@@ -910,12 +910,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Xia's Clay Pot (Wansongyuan Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 107.0,
-          "cost": 535.0,
+          "type": "attraction",
+          "position": "5D Starry Sky Illusion Art Museum",
+          "start_time": "09:02",
+          "end_time": "10:32",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
@@ -930,21 +930,63 @@
             },
             {
               "start": "Wuhan Station East Square-Metro Station",
-              "end": "Wangjiadun East-Metro Station",
+              "end": "Dazhi Road-Metro Station",
               "mode": "metro",
               "start_time": "08:31",
+              "end_time": "08:56",
+              "distance": 12.74,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "5D Starry Sky Illusion Art Museum",
+              "mode": "walk",
+              "start_time": "08:56",
               "end_time": "09:02",
-              "distance": 15.75,
-              "price": 5,
-              "cost": 25,
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Xia's Clay Pot (Wansongyuan Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 107.0,
+          "cost": 535.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "5D Starry Sky Illusion Art Museum",
+              "end": "Dazhi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:32",
+              "end_time": "10:38",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dazhi Road-Metro Station",
+              "end": "Wangjiadun East-Metro Station",
+              "mode": "metro",
+              "start_time": "10:38",
+              "end_time": "10:44",
+              "distance": 3.05,
+              "price": 2,
+              "cost": 10,
               "tickets": 5
             },
             {
               "start": "Wangjiadun East-Metro Station",
               "end": "Xia's Clay Pot (Wansongyuan Branch)",
               "mode": "walk",
-              "start_time": "09:02",
-              "end_time": "09:09",
+              "start_time": "10:44",
+              "end_time": "10:51",
               "distance": 0.59,
               "price": 0,
               "cost": 0
@@ -1083,5 +1125,5 @@
     }
   ],
   "elapsed_time(sec)": 187.9438934326172,
-  "_eval_score": 97.00694444444444
+  "_eval_score": 97.37404761904762
 }

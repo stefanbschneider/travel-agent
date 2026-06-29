@@ -425,12 +425,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 16.0,
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "15:52",
+          "end_time": "16:52",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -445,21 +445,63 @@
             },
             {
               "start": "Baishilong-Metro Station",
-              "end": "Huangbeiling-Metro Station",
+              "end": "Shaibu-Metro Station",
               "mode": "metro",
               "start_time": "15:31",
-              "end_time": "15:53",
-              "distance": 11.44,
+              "end_time": "15:51",
+              "distance": 10.08,
               "price": 4,
               "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "East Gate Old Street",
+              "mode": "walk",
+              "start_time": "15:51",
+              "end_time": "15:52",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "Shaibu-Metro Station",
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:53",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "16:53",
+              "end_time": "16:55",
+              "distance": 1.45,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "mode": "walk",
-              "start_time": "15:53",
-              "end_time": "15:55",
+              "start_time": "16:55",
+              "end_time": "16:57",
               "distance": 0.2,
               "price": 0,
               "cost": 0
@@ -514,5 +556,5 @@
     }
   ],
   "elapsed_time(sec)": 188.1160569190979,
-  "_eval_score": 97.15343915343915
+  "_eval_score": 97.65016708437761
 }

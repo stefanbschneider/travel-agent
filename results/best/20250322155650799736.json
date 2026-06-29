@@ -234,12 +234,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Le Caisa Pizza (Jing'an Joy City Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 76.0,
-          "cost": 76.0,
+          "type": "attraction",
+          "position": "Dongchang Road Ferry",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -254,21 +254,63 @@
             },
             {
               "start": "Tai'erzhuang Road-Metro Station",
-              "end": "Qufu Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
               "mode": "metro",
               "start_time": "08:33",
-              "end_time": "08:57",
-              "distance": 12.05,
-              "price": 4,
-              "cost": 4,
+              "end_time": "08:49",
+              "distance": 8.25,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Dongchang Road Ferry",
+              "mode": "walk",
+              "start_time": "08:49",
+              "end_time": "08:53",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Le Caisa Pizza (Jing'an Joy City Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 76.0,
+          "cost": 76.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dongchang Road Ferry",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:34",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:34",
+              "end_time": "10:41",
+              "distance": 3.92,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Qufu Road-Metro Station",
               "end": "Le Caisa Pizza (Jing'an Joy City Branch)",
               "mode": "walk",
-              "start_time": "08:57",
-              "end_time": "08:59",
+              "start_time": "10:41",
+              "end_time": "10:43",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -386,5 +428,5 @@
     }
   ],
   "elapsed_time(sec)": 23.621931791305542,
-  "_eval_score": 98.16849816849816
+  "_eval_score": 98.20748299319729
 }

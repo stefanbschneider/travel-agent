@@ -319,12 +319,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 10.0,
-          "cost": 30.0,
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "15:21",
+          "end_time": "16:51",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -339,11 +339,53 @@
             },
             {
               "start": "Luomashi-Metro Station",
-              "end": "Manjushri Temple-Metro Station",
+              "end": "Tianfu Square-Metro Station",
               "mode": "metro",
               "start_time": "15:17",
-              "end_time": "15:18",
-              "distance": 0.71,
+              "end_time": "15:19",
+              "distance": 1.0,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Chengdu Library",
+              "mode": "walk",
+              "start_time": "15:19",
+              "end_time": "15:21",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 30.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Library",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "16:51",
+              "end_time": "16:53",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "16:53",
+              "end_time": "16:56",
+              "distance": 1.69,
               "price": 2,
               "cost": 6,
               "tickets": 3
@@ -352,8 +394,8 @@
               "start": "Manjushri Temple-Metro Station",
               "end": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
               "mode": "walk",
-              "start_time": "15:18",
-              "end_time": "15:20",
+              "start_time": "16:56",
+              "end_time": "16:58",
               "distance": 0.18,
               "price": 0,
               "cost": 0
@@ -449,5 +491,5 @@
     }
   ],
   "elapsed_time(sec)": 25.83297848701477,
-  "_eval_score": 97.22222222222223
+  "_eval_score": 97.63888888888889
 }

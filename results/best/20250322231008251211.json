@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Beijing Confucius Temple",
+          "start_time": "15:36",
+          "end_time": "16:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Yonghe Temple",
+              "end": "Beijing Confucius Temple",
+              "mode": "walk",
+              "start_time": "15:33",
+              "end_time": "15:36",
+              "distance": 0.256841590341126,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Yonghe Temple",
+              "start": "Beijing Confucius Temple",
+              "end": "Yonghe Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:36",
+              "end_time": "16:42",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yonghe Temple-Metro Station",
+              "end": "Tuanjiehu-Metro Station",
+              "mode": "metro",
+              "start_time": "16:42",
+              "end_time": "16:50",
+              "distance": 4.2,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Tuanjiehu-Metro Station",
               "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
-              "mode": "taxi",
-              "start_time": "15:33",
-              "end_time": "15:38",
-              "distance": 3.78,
-              "price": 17.93,
-              "cost": 35.86,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "16:50",
+              "end_time": "16:54",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +428,5 @@
     }
   ],
   "elapsed_time(sec)": 183.91303539276123,
-  "_eval_score": 97.81272893772893
+  "_eval_score": 98.48639455782313
 }

@@ -267,13 +267,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "15:46",
+          "end_time": "16:46",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -288,11 +287,54 @@
             },
             {
               "start": "Jiangsu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Jing'an Temple-Metro Station",
               "mode": "metro",
               "start_time": "15:38",
+              "end_time": "15:41",
+              "distance": 1.55,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Anfu Road",
+              "mode": "walk",
+              "start_time": "15:41",
+              "end_time": "15:46",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Anfu Road",
+              "end": "Jing'an Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:46",
               "end_time": "16:51",
-              "distance": 36.56,
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jing'an Temple-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "16:51",
+              "end_time": "18:01",
+              "distance": 35.15,
               "price": 7,
               "cost": 7,
               "tickets": 1
@@ -301,8 +343,8 @@
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "16:51",
-              "end_time": "17:06",
+              "start_time": "18:01",
+              "end_time": "18:16",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -314,5 +356,5 @@
     }
   ],
   "elapsed_time(sec)": 0.0351557731628418,
-  "_eval_score": 93.01700680272108
+  "_eval_score": 93.81547619047619
 }

@@ -805,13 +805,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 314.6,
+          "type": "attraction",
+          "position": "Deshou Palace Ruins",
+          "start_time": "15:12",
+          "end_time": "16:42",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -826,11 +825,54 @@
             },
             {
               "start": "Ding'an Road-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "City Station-Metro Station",
               "mode": "metro",
               "start_time": "15:09",
-              "end_time": "15:23",
-              "distance": 7.06,
+              "end_time": "15:11",
+              "distance": 1.26,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Deshou Palace Ruins",
+              "mode": "walk",
+              "start_time": "15:11",
+              "end_time": "15:12",
+              "distance": 0.11,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:27",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Deshou Palace Ruins",
+              "end": "City Station-Metro Station",
+              "mode": "walk",
+              "start_time": "16:42",
+              "end_time": "16:43",
+              "distance": 0.11,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "16:43",
+              "end_time": "16:55",
+              "distance": 6.44,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -839,8 +881,8 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "15:23",
-              "end_time": "15:28",
+              "start_time": "16:55",
+              "end_time": "17:00",
               "distance": 0.48,
               "price": 0,
               "cost": 0
@@ -852,5 +894,5 @@
     }
   ],
   "elapsed_time(sec)": 198.3188989162445,
-  "_eval_score": 97.01542207792207
+  "_eval_score": 97.38043478260869
 }

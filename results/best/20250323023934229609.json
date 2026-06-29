@@ -19,6 +19,48 @@
           "FlightID": "FL011"
         },
         {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:59",
+              "end_time": "09:04",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "09:04",
+              "end_time": "09:28",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "09:28",
+              "end_time": "09:30",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Chiang Rai Bay (Vientiane Qianhai Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Guì Wān-Metro Station",
+              "mode": "metro",
+              "start_time": "10:32",
+              "end_time": "10:37",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Guì Wān-Metro Station",
               "end": "Chiang Rai Bay (Vientiane Qianhai Branch)",
-              "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:21",
-              "distance": 14.88,
-              "price": 61.67,
-              "cost": 61.67,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:37",
+              "end_time": "10:39",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -510,6 +572,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "09:42",
+          "end_time": "10:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mehood Lestie Hotel (Shenzhen Bao'an Airport Huaide Metro Station Branch)",
+              "end": "Huaide-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:41",
+              "distance": 0.97,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huaide-Metro Station",
+              "end": "Futian Port-Metro Station",
+              "mode": "metro",
+              "start_time": "08:41",
+              "end_time": "09:41",
+              "distance": 30.46,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "walk",
+              "start_time": "09:41",
+              "end_time": "09:42",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
           "start_time": "11:00",
@@ -519,15 +623,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Mehood Lestie Hotel (Shenzhen Bao'an Airport Huaide Metro Station Branch)",
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
+              "mode": "walk",
+              "start_time": "10:42",
+              "end_time": "10:43",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Donggualing-Metro Station",
+              "mode": "metro",
+              "start_time": "10:43",
+              "end_time": "10:52",
+              "distance": 4.82,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Donggualing-Metro Station",
               "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:12",
-              "distance": 28.25,
-              "price": 121.84,
-              "cost": 121.84,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:52",
+              "end_time": "10:58",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -705,5 +829,5 @@
     }
   ],
   "elapsed_time(sec)": 182.3408453464508,
-  "_eval_score": 97.89154761904763
+  "_eval_score": 98.51245590828924
 }

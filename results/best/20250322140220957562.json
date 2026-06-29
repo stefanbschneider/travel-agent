@@ -397,12 +397,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Hongxin Tower · Exquisite Suzhou Cuisine · Squirrel Mandarin Fish (Guanqian Street Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 40.0,
-          "cost": 160.0,
+          "type": "attraction",
+          "position": "Fengmen Hengjie",
+          "start_time": "09:18",
+          "end_time": "10:48",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -417,21 +417,63 @@
             },
             {
               "start": "Jiangxing West Road-Metro Station",
-              "end": "Chayuanchang-Metro Station",
+              "end": "Xujiabang-Metro Station",
               "mode": "metro",
               "start_time": "08:47",
-              "end_time": "09:18",
-              "distance": 15.76,
+              "end_time": "09:17",
+              "distance": 15.22,
               "price": 5,
               "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Xujiabang-Metro Station",
+              "end": "Fengmen Hengjie",
+              "mode": "walk",
+              "start_time": "09:17",
+              "end_time": "09:18",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hongxin Tower · Exquisite Suzhou Cuisine · Squirrel Mandarin Fish (Guanqian Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 40.0,
+          "cost": 160.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Fengmen Hengjie",
+              "end": "Xujiabang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:48",
+              "end_time": "10:49",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xujiabang-Metro Station",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "metro",
+              "start_time": "10:49",
+              "end_time": "10:54",
+              "distance": 2.99,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Chayuanchang-Metro Station",
               "end": "Hongxin Tower · Exquisite Suzhou Cuisine · Squirrel Mandarin Fish (Guanqian Street Branch)",
               "mode": "walk",
-              "start_time": "09:18",
-              "end_time": "09:21",
+              "start_time": "10:54",
+              "end_time": "10:57",
               "distance": 0.31,
               "price": 0,
               "cost": 0
@@ -502,6 +544,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Guanqian Street",
+          "start_time": "15:20",
+          "end_time": "16:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "City God Temple",
+              "end": "Guanqian Street",
+              "mode": "walk",
+              "start_time": "15:11",
+              "end_time": "15:20",
+              "distance": 0.8061978975255183,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Pingjiang Peach Blossom Spring (Pingjiang Branch 1)",
           "start_time": "17:00",
@@ -511,12 +574,12 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "City God Temple",
+              "start": "Guanqian Street",
               "end": "Pingjiang Peach Blossom Spring (Pingjiang Branch 1)",
               "mode": "walk",
-              "start_time": "15:11",
-              "end_time": "15:21",
-              "distance": 0.8735226118333781,
+              "start_time": "16:50",
+              "end_time": "16:53",
+              "distance": 0.31053075917911466,
               "price": 0,
               "cost": 0
             }
@@ -570,5 +633,5 @@
     }
   ],
   "elapsed_time(sec)": 5.1290552616119385,
-  "_eval_score": 96.88655462184875
+  "_eval_score": 97.83959899749374
 }

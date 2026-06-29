@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Bank of China",
+          "start_time": "15:32",
+          "end_time": "16:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huangpu River",
+              "end": "Bank of China",
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:32",
+              "distance": 0.3275296223485583,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Huangpu River",
+              "start": "Bank of China",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "16:32",
+              "end_time": "16:38",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "People's Square-Metro Station",
+              "mode": "metro",
+              "start_time": "16:38",
+              "end_time": "16:43",
+              "distance": 2.93,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "People's Square-Metro Station",
               "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
-              "mode": "taxi",
-              "start_time": "15:29",
-              "end_time": "15:32",
-              "distance": 2.11,
-              "price": 12.07,
-              "cost": 12.07,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:43",
+              "end_time": "16:49",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +428,5 @@
     }
   ],
   "elapsed_time(sec)": 182.90495419502258,
-  "_eval_score": 98.20833333333333
+  "_eval_score": 98.85034013605443
 }

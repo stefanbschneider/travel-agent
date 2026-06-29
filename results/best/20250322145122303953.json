@@ -19,6 +19,48 @@
           "FlightID": "FL342"
         },
         {
+          "type": "attraction",
+          "position": "Bao'an Xibay Mangrove Park",
+          "start_time": "09:17",
+          "end_time": "10:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:50",
+              "end_time": "08:55",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Gushu-Metro Station",
+              "mode": "metro",
+              "start_time": "08:55",
+              "end_time": "09:06",
+              "distance": 5.63,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Gushu-Metro Station",
+              "end": "Bao'an Xibay Mangrove Park",
+              "mode": "walk",
+              "start_time": "09:06",
+              "end_time": "09:17",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Grand East Sea Seafood Restaurant (Fuyong Main Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Bao'an Xibay Mangrove Park",
+              "end": "Gushu-Metro Station",
+              "mode": "walk",
+              "start_time": "10:17",
+              "end_time": "10:28",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gushu-Metro Station",
+              "end": "Huaide-Metro Station",
+              "mode": "metro",
+              "start_time": "10:28",
+              "end_time": "10:43",
+              "distance": 7.78,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Huaide-Metro Station",
               "end": "Grand East Sea Seafood Restaurant (Fuyong Main Branch)",
-              "mode": "taxi",
-              "start_time": "08:50",
-              "end_time": "08:53",
-              "distance": 2.6,
-              "price": 13.79,
-              "cost": 13.79,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:43",
+              "end_time": "10:55",
+              "distance": 1.07,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -707,5 +769,5 @@
     }
   ],
   "elapsed_time(sec)": 181.31930208206177,
-  "_eval_score": 97.96932234432234
+  "_eval_score": 98.23555996472663
 }

@@ -234,12 +234,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Hoping Fat Tea Cafe (People's Square Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 84.0,
-          "cost": 84.0,
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "09:11",
+          "end_time": "10:41",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -254,21 +254,63 @@
             },
             {
               "start": "Chuansha-Metro Station",
-              "end": "People's Square-Metro Station",
+              "end": "Pudong Avenue-Metro Station",
               "mode": "metro",
               "start_time": "08:34",
-              "end_time": "09:17",
-              "distance": 21.86,
-              "price": 6,
-              "cost": 6,
+              "end_time": "09:10",
+              "distance": 18.05,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "walk",
+              "start_time": "09:10",
+              "end_time": "09:11",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hoping Fat Tea Cafe (People's Square Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 84.0,
+          "cost": 84.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "10:41",
+              "end_time": "10:42",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "People's Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:42",
+              "end_time": "10:50",
+              "distance": 4.29,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
               "start": "People's Square-Metro Station",
               "end": "Hoping Fat Tea Cafe (People's Square Branch)",
               "mode": "walk",
-              "start_time": "09:17",
-              "end_time": "09:20",
+              "start_time": "10:50",
+              "end_time": "10:53",
               "distance": 0.3,
               "price": 0,
               "cost": 0
@@ -386,5 +428,5 @@
     }
   ],
   "elapsed_time(sec)": 55.20682454109192,
-  "_eval_score": 98.13186813186813
+  "_eval_score": 98.18707482993197
 }

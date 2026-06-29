@@ -361,6 +361,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Gankeng-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Baishilong-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "08:54",
+              "distance": 8.29,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "08:54",
+              "end_time": "08:57",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "11:08",
           "end_time": "16:36",
@@ -371,15 +413,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:33",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "10:33",
+              "end_time": "10:49",
+              "distance": 8.1,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 6.21,
-              "price": 26.45,
-              "cost": 26.45,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:49",
+              "end_time": "10:52",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "K106"
@@ -388,5 +450,5 @@
     }
   ],
   "elapsed_time(sec)": 23.30805206298828,
-  "_eval_score": 96.66666666666667
+  "_eval_score": 97.08333333333334
 }

@@ -19,12 +19,12 @@
           "TrainID": "G2"
         },
         {
-          "type": "lunch",
-          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 74.0,
-          "cost": 222.0,
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -39,21 +39,63 @@
             },
             {
               "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Confucius Temple-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
               "mode": "metro",
               "start_time": "08:14",
-              "end_time": "08:25",
-              "distance": 5.92,
-              "price": 3,
-              "cost": 9,
+              "end_time": "08:33",
+              "distance": 9.57,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "08:33",
+              "end_time": "08:46",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 74.0,
+          "cost": 222.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:43",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "10:43",
+              "end_time": "10:50",
+              "distance": 3.74,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Confucius Temple-Metro Station",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "walk",
-              "start_time": "08:25",
-              "end_time": "08:29",
+              "start_time": "10:50",
+              "end_time": "10:54",
               "distance": 0.39,
               "price": 0,
               "cost": 0
@@ -793,5 +835,5 @@
     }
   ],
   "elapsed_time(sec)": 182.8269979953766,
-  "_eval_score": 97.06746031746033
+  "_eval_score": 97.46365914786968
 }
