@@ -27,6 +27,8 @@ REST_CAP="${REST_CAP:-}"
 HOTEL_CAP="${HOTEL_CAP:-}"
 CP_TIME_LIMIT="${CP_TIME_LIMIT:-}"
 CP_FORCE="${CP_FORCE:-}"
+LATE_RETURN="${LATE_RETURN:-}"
+EARLY_ARRIVAL="${EARLY_ARRIVAL:-}"
 SPLIT_SOURCE="${SPLIT_SOURCE:-tpc_phase1}"
 SPLIT_PREFIX="${SPLIT_PREFIX:-_cluster_full}"
 CLEAN="${CLEAN:-1}"
@@ -77,6 +79,8 @@ if [[ -n "$REST_CAP" ]]; then EXPORTS="${EXPORTS},TPC_FULL_REST_CAP=${REST_CAP}"
 if [[ -n "$HOTEL_CAP" ]]; then EXPORTS="${EXPORTS},TPC_FULL_HOTEL_CAP=${HOTEL_CAP}"; fi
 if [[ -n "$CP_TIME_LIMIT" ]]; then EXPORTS="${EXPORTS},TPC_FULL_CP_TIME_LIMIT=${CP_TIME_LIMIT}"; fi
 if [[ -n "$CP_FORCE" ]]; then EXPORTS="${EXPORTS},TPC_FULL_CP_FORCE=${CP_FORCE}"; fi
+if [[ -n "$LATE_RETURN" ]]; then EXPORTS="${EXPORTS},TPC_INTERCITY_LATE_RETURN=${LATE_RETURN}"; fi
+if [[ -n "$EARLY_ARRIVAL" ]]; then EXPORTS="${EXPORTS},TPC_INTERCITY_EARLY_ARRIVAL=${EARLY_ARRIVAL}"; fi
 
 echo "Submitting full-suite array: partition=$PARTITION array=$ARRAY_SPEC workers=$WORKERS mem=$MEM time=$TIME restarts=$RESTARTS budget=$BUDGET attr_cap=${ATTR_CAP:-default} rest_cap=${REST_CAP:-default} hotel_cap=${HOTEL_CAP:-default} cp_time_limit=${CP_TIME_LIMIT:-default} cp_force=${CP_FORCE:-unset}"
 JOB=$(sbatch --parsable \

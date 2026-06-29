@@ -121,11 +121,11 @@ Why this split helps:
 
 ## 5) Full-Set Densify Array (SLURM)
 
-Use this when the hard metrics are saturated and the remaining ROI is preference score, especially DAV. The array shards `tpc_phase1` across compute nodes; the login node only submits and monitors jobs.
+Use this when the hard metrics are saturated and the remaining ROI is preference score. The array shards `tpc_phase1` across compute nodes; the login node only submits and monitors jobs. The window-meal knobs preserve existing routing, swap only a bounding intercity when it unlocks a meal slot, and keep the change only when the full checker accepts the denser plan.
 
 ```bash
 array_job=$(sbatch --parsable \
-  --export=ALL,TPC_DENSIFY_ATTR_GAP_MIN=75,TPC_DENSIFY_ATTR_DWELL=60,TPC_DENSIFY_ATTR_CANDIDATES=24 \
+  --export=ALL,TPC_DENSIFY_ATTR_GAP_MIN=75,TPC_DENSIFY_ATTR_DWELL=60,TPC_DENSIFY_ATTR_CANDIDATES=24,TPC_DENSIFY_LATE_DINNER=1,TPC_DENSIFY_EARLY_BREAKFAST=1 \
   slurm/densify_array.sbatch)
 sbatch --dependency=afterok:${array_job} slurm/merge_score.sbatch
 ```
