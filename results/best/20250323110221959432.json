@@ -596,13 +596,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:34",
-          "end_time": "20:04",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 603.53,
-          "cost": 2414.12,
+          "type": "attraction",
+          "position": "Jiangsu Grand Theatre",
+          "start_time": "16:09",
+          "end_time": "17:09",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -617,21 +616,64 @@
             },
             {
               "start": "Longhua Road-Metro Station",
-              "end": "Lukou Airport-Metro Station",
+              "end": "Mengdu Street-Metro Station",
               "mode": "metro",
               "start_time": "15:47",
-              "end_time": "17:13",
-              "distance": 43.4,
-              "price": 8,
-              "cost": 32,
+              "end_time": "16:06",
+              "distance": 9.83,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Mengdu Street-Metro Station",
+              "end": "Jiangsu Grand Theatre",
+              "mode": "walk",
+              "start_time": "16:06",
+              "end_time": "16:09",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:34",
+          "end_time": "20:04",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 603.53,
+          "cost": 2414.12,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jiangsu Grand Theatre",
+              "end": "Mengdu Street-Metro Station",
+              "mode": "walk",
+              "start_time": "17:09",
+              "end_time": "17:12",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Mengdu Street-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "17:12",
+              "end_time": "18:21",
+              "distance": 34.74,
+              "price": 7,
+              "cost": 28,
               "tickets": 4
             },
             {
               "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
               "mode": "walk",
-              "start_time": "17:13",
-              "end_time": "17:16",
+              "start_time": "18:21",
+              "end_time": "18:24",
               "distance": 0.27,
               "price": 0,
               "cost": 0
@@ -643,5 +685,5 @@
     }
   ],
   "elapsed_time(sec)": 195.12181186676025,
-  "_eval_score": 97.88888888888889
+  "_eval_score": 98.22416666666666
 }

@@ -19,6 +19,48 @@
           "TrainID": "G1509"
         },
         {
+          "type": "attraction",
+          "position": "Arhat Hall",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Suzhou North Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:10",
+              "end_time": "08:11",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "Shantang Street-Metro Station",
+              "mode": "metro",
+              "start_time": "08:11",
+              "end_time": "08:35",
+              "distance": 12.03,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Arhat Hall",
+              "mode": "walk",
+              "start_time": "08:35",
+              "end_time": "08:44",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Yumiantang Premium Suzhou-Style Noodle House (Shilu Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Suzhou North Station",
+              "start": "Arhat Hall",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:39",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Shilu-Metro Station",
+              "mode": "metro",
+              "start_time": "10:39",
+              "end_time": "10:40",
+              "distance": 0.96,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Shilu-Metro Station",
               "end": "Yumiantang Premium Suzhou-Style Noodle House (Shilu Branch)",
-              "mode": "taxi",
-              "start_time": "08:10",
-              "end_time": "08:28",
-              "distance": 12.62,
-              "price": 51.49,
-              "cost": 102.98,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:40",
+              "end_time": "10:46",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -410,5 +472,5 @@
     }
   ],
   "elapsed_time(sec)": 182.05608320236206,
-  "_eval_score": 96.62896825396825
+  "_eval_score": 97.01657329598507
 }

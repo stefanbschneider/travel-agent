@@ -19,12 +19,12 @@
           "FlightID": "FL533"
         },
         {
-          "type": "lunch",
-          "position": "Crane's Call Tea House (People's Park Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 45.0,
-          "cost": 135.0,
+          "type": "attraction",
+          "position": "Baihua Tan Park",
+          "start_time": "09:47",
+          "end_time": "10:47",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -39,21 +39,63 @@
             },
             {
               "start": "Shuangliu Airport Terminal 2 East-Metro Station",
-              "end": "People's Park-Metro Station",
+              "end": "Tonghuimen-Metro Station",
               "mode": "metro",
               "start_time": "09:19",
               "end_time": "09:46",
-              "distance": 13.8,
+              "distance": 13.5,
               "price": 4,
               "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Tonghuimen-Metro Station",
+              "end": "Baihua Tan Park",
+              "mode": "walk",
+              "start_time": "09:46",
+              "end_time": "09:47",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Crane's Call Tea House (People's Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 45.0,
+          "cost": 135.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Baihua Tan Park",
+              "end": "Tonghuimen-Metro Station",
+              "mode": "walk",
+              "start_time": "10:47",
+              "end_time": "10:48",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tonghuimen-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:48",
+              "end_time": "10:49",
+              "distance": 0.85,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "People's Park-Metro Station",
               "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "walk",
-              "start_time": "09:46",
-              "end_time": "09:49",
+              "start_time": "10:49",
+              "end_time": "10:52",
               "distance": 0.32,
               "price": 0,
               "cost": 0
@@ -545,5 +587,5 @@
     }
   ],
   "elapsed_time(sec)": 188.60455203056335,
-  "_eval_score": 97.33134920634922
+  "_eval_score": 98.02930402930403
 }

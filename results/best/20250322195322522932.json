@@ -19,6 +19,48 @@
           "FlightID": "FL071"
         },
         {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "09:40",
+          "end_time": "10:40",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "08:18",
+              "end_time": "08:21",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Changfu Street-Metro Station",
+              "mode": "metro",
+              "start_time": "08:21",
+              "end_time": "09:29",
+              "distance": 34.48,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "walk",
+              "start_time": "09:29",
+              "end_time": "09:40",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Li's Halal Restaurant (Dading Lane Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Ancient Peach Leaf Ferry",
+              "end": "Changfu Street-Metro Station",
+              "mode": "walk",
+              "start_time": "10:40",
+              "end_time": "10:51",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Zhangfuyuan-Metro Station",
+              "mode": "metro",
+              "start_time": "10:51",
+              "end_time": "10:52",
+              "distance": 0.84,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Zhangfuyuan-Metro Station",
               "end": "Li's Halal Restaurant (Dading Lane Branch)",
-              "mode": "taxi",
-              "start_time": "08:18",
-              "end_time": "09:09",
-              "distance": 34.12,
-              "price": 148.26,
-              "cost": 148.26,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:52",
+              "end_time": "10:57",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -516,5 +578,5 @@
     }
   ],
   "elapsed_time(sec)": 186.7239909172058,
-  "_eval_score": 98.04866332497912
+  "_eval_score": 98.40793650793651
 }

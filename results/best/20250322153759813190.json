@@ -330,12 +330,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 75.0,
-          "cost": 75.0,
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:04",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -350,21 +350,63 @@
             },
             {
               "start": "Chuansha-Metro Station",
-              "end": "Huajing West-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
               "mode": "metro",
               "start_time": "08:34",
-              "end_time": "09:25",
-              "distance": 25.92,
-              "price": 6,
-              "cost": 6,
+              "end_time": "09:03",
+              "distance": 14.95,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
+              "mode": "walk",
+              "start_time": "09:03",
+              "end_time": "09:04",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 75.0,
+          "cost": 75.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:04",
+              "end_time": "10:05",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Huajing West-Metro Station",
+              "mode": "metro",
+              "start_time": "10:05",
+              "end_time": "10:37",
+              "distance": 16.34,
+              "price": 5,
+              "cost": 5,
               "tickets": 1
             },
             {
               "start": "Huajing West-Metro Station",
               "end": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
               "mode": "walk",
-              "start_time": "09:25",
-              "end_time": "09:38",
+              "start_time": "10:37",
+              "end_time": "10:50",
               "distance": 1.16,
               "price": 0,
               "cost": 0
@@ -461,5 +503,5 @@
     }
   ],
   "elapsed_time(sec)": 8.029937028884888,
-  "_eval_score": 94.5297619047619
+  "_eval_score": 95.3430735930736
 }

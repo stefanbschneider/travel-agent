@@ -19,6 +19,48 @@
           "FlightID": "FL563"
         },
         {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "08:05",
+              "end_time": "08:14",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "Liping Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:14",
+              "end_time": "08:47",
+              "distance": 16.52,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "08:47",
+              "end_time": "08:49",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "930 Private Kitchen (Yichuan Road Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "Zhongtan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:32",
+              "end_time": "10:43",
+              "distance": 5.73,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Zhongtan Road-Metro Station",
               "end": "930 Private Kitchen (Yichuan Road Branch)",
-              "mode": "taxi",
-              "start_time": "08:05",
-              "end_time": "08:22",
-              "distance": 11.84,
-              "price": 47.96,
-              "cost": 47.96,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:43",
+              "end_time": "10:57",
+              "distance": 1.22,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -665,5 +727,5 @@
     }
   ],
   "elapsed_time(sec)": 195.524395942688,
-  "_eval_score": 97.9232142857143
+  "_eval_score": 98.18406593406593
 }

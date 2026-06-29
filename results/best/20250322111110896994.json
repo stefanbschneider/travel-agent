@@ -19,6 +19,48 @@
           "FlightID": "FL650"
         },
         {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:43",
+          "end_time": "10:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "08:23",
+              "end_time": "08:38",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Liping Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "09:41",
+              "distance": 31.51,
+              "price": 7,
+              "cost": 35,
+              "tickets": 5
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "09:41",
+              "end_time": "09:43",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:43",
+              "end_time": "10:45",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "Middle Huaihai Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:45",
+              "end_time": "10:56",
+              "distance": 5.7,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Middle Huaihai Road-Metro Station",
               "end": "Yong Fu (Huangpu Branch)",
-              "mode": "taxi",
-              "start_time": "08:23",
-              "end_time": "09:15",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 301.46,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:56",
+              "end_time": "10:59",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -536,5 +598,5 @@
     }
   ],
   "elapsed_time(sec)": 152.4945456981659,
-  "_eval_score": 98.13888888888889
+  "_eval_score": 98.5031746031746
 }

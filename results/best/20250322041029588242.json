@@ -599,13 +599,12 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "attraction",
+          "position": "Pinghu Ecological Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -620,11 +619,54 @@
             },
             {
               "start": "Gankeng-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "South China City-Metro Station",
               "mode": "metro",
               "start_time": "08:38",
-              "end_time": "08:48",
-              "distance": 5.28,
+              "end_time": "08:45",
+              "distance": 3.54,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "South China City-Metro Station",
+              "end": "Pinghu Ecological Park",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:53",
+              "distance": 0.7,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 777.26,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Pinghu Ecological Park",
+              "end": "South China City-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 0.7,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "South China City-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "10:38",
+              "end_time": "10:54",
+              "distance": 8.16,
               "price": 3,
               "cost": 3,
               "tickets": 1
@@ -633,8 +675,8 @@
               "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
               "mode": "walk",
-              "start_time": "08:48",
-              "end_time": "08:51",
+              "start_time": "10:54",
+              "end_time": "10:57",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -646,5 +688,5 @@
     }
   ],
   "elapsed_time(sec)": 7.350685119628906,
-  "_eval_score": 95.01927437641723
+  "_eval_score": 95.46428571428572
 }

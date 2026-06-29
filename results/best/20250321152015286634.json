@@ -85,6 +85,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Cave Exploration Factory (Happy Coast Branch)",
+          "start_time": "15:41",
+          "end_time": "16:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen OCT Harbour",
+              "end": "Cave Exploration Factory (Happy Coast Branch)",
+              "mode": "walk",
+              "start_time": "15:38",
+              "end_time": "15:41",
+              "distance": 0.2882598013768936,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
           "start_time": "17:00",
@@ -94,15 +115,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen OCT Harbour",
+              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "end": "Qiaocheng East-Metro Station",
+              "mode": "walk",
+              "start_time": "16:41",
+              "end_time": "16:42",
+              "distance": 0.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qiaocheng East-Metro Station",
+              "end": "Chegongmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:42",
+              "end_time": "16:48",
+              "distance": 3.03,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Chegongmiao-Metro Station",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "15:38",
-              "end_time": "15:43",
-              "distance": 3.97,
-              "price": 18.61,
-              "cost": 18.61,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:48",
+              "end_time": "16:55",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -680,13 +721,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "20:58",
-          "end_time": "18:44",
-          "start": "Shenzhen East Station",
-          "end": "Chengdu West Railway Station",
-          "price": 667.34,
-          "cost": 2002.02,
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "18:06",
+          "end_time": "19:36",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -701,11 +741,54 @@
             },
             {
               "start": "Huangbeiling-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "Shaibu-Metro Station",
               "mode": "metro",
               "start_time": "18:02",
-              "end_time": "18:14",
-              "distance": 6.42,
+              "end_time": "18:04",
+              "distance": 1.45,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "walk",
+              "start_time": "18:04",
+              "end_time": "18:06",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:58",
+          "end_time": "18:44",
+          "start": "Shenzhen East Station",
+          "end": "Chengdu West Railway Station",
+          "price": 667.34,
+          "cost": 2002.02,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Shaibu-Metro Station",
+              "mode": "walk",
+              "start_time": "19:36",
+              "end_time": "19:38",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shaibu-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "19:38",
+              "end_time": "19:49",
+              "distance": 5.88,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -714,8 +797,8 @@
               "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
               "mode": "walk",
-              "start_time": "18:14",
-              "end_time": "18:17",
+              "start_time": "19:49",
+              "end_time": "19:52",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -727,5 +810,5 @@
     }
   ],
   "elapsed_time(sec)": 180.87527680397034,
-  "_eval_score": 98.27701465201466
+  "_eval_score": 98.97278911564626
 }

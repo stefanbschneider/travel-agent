@@ -212,6 +212,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Chuansha-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chuansha-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "09:03",
+              "distance": 14.95,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
+              "mode": "walk",
+              "start_time": "09:03",
+              "end_time": "09:04",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
           "start_time": "11:00",
@@ -221,15 +263,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:34",
+              "end_time": "10:35",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:35",
+              "end_time": "10:51",
+              "distance": 8.45,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
               "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:05",
-              "distance": 23.76,
-              "price": 101.62,
-              "cost": 101.62,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:58",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -323,5 +385,5 @@
     }
   ],
   "elapsed_time(sec)": 6.3439202308654785,
-  "_eval_score": 97.4265873015873
+  "_eval_score": 98.04395604395604
 }

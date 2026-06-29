@@ -641,12 +641,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 16.0,
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "15:22",
+          "end_time": "16:22",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -661,21 +661,63 @@
             },
             {
               "start": "Baishilong-Metro Station",
-              "end": "Huangbeiling-Metro Station",
+              "end": "Donggualing-Metro Station",
               "mode": "metro",
               "start_time": "15:04",
-              "end_time": "15:26",
-              "distance": 11.44,
-              "price": 4,
-              "cost": 4,
+              "end_time": "15:14",
+              "distance": 5.23,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "walk",
+              "start_time": "15:14",
+              "end_time": "15:22",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Donggualing-Metro Station",
+              "mode": "walk",
+              "start_time": "16:22",
+              "end_time": "16:30",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "16:30",
+              "end_time": "16:44",
+              "distance": 7.25,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
               "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "mode": "walk",
-              "start_time": "15:26",
-              "end_time": "15:28",
+              "start_time": "16:44",
+              "end_time": "16:46",
               "distance": 0.2,
               "price": 0,
               "cost": 0
@@ -730,5 +772,5 @@
     }
   ],
   "elapsed_time(sec)": 182.38673305511475,
-  "_eval_score": 96.05257936507937
+  "_eval_score": 96.5296451914099
 }

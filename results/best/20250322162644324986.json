@@ -234,6 +234,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Coral Island Water Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Yuan Cinema Hotel (Tianfu New District Xibo City Branch)",
+              "end": "Hangzhou Road-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hangzhou Road-Metro Station",
+              "end": "Wugensong-Metro Station",
+              "mode": "metro",
+              "start_time": "08:35",
+              "end_time": "08:49",
+              "distance": 7.04,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Wugensong-Metro Station",
+              "end": "Coral Island Water Park",
+              "mode": "walk",
+              "start_time": "08:49",
+              "end_time": "08:51",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
           "start_time": "11:00",
@@ -243,15 +285,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Yuan Cinema Hotel (Tianfu New District Xibo City Branch)",
+              "start": "Coral Island Water Park",
+              "end": "Wugensong-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wugensong-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "10:02",
+              "end_time": "10:38",
+              "distance": 18.35,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
               "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:08",
-              "distance": 25.92,
-              "price": 111.36,
-              "cost": 111.36,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "10:48",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -319,12 +381,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Grandpa and Grandma Chen's Egg Pancakes",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 9.0,
-          "cost": 18.0,
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "15:41",
+          "end_time": "16:41",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -339,11 +401,53 @@
             },
             {
               "start": "Luomashi-Metro Station",
-              "end": "Provincial Gymnasium-Metro Station",
+              "end": "Tianfu Square-Metro Station",
               "mode": "metro",
               "start_time": "15:37",
-              "end_time": "15:44",
-              "distance": 3.68,
+              "end_time": "15:39",
+              "distance": 1.0,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Chengdu Library",
+              "mode": "walk",
+              "start_time": "15:39",
+              "end_time": "15:41",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandpa and Grandma Chen's Egg Pancakes",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Library",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "16:41",
+              "end_time": "16:43",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Provincial Gymnasium-Metro Station",
+              "mode": "metro",
+              "start_time": "16:43",
+              "end_time": "16:48",
+              "distance": 2.67,
               "price": 2,
               "cost": 4,
               "tickets": 2
@@ -352,8 +456,8 @@
               "start": "Provincial Gymnasium-Metro Station",
               "end": "Grandpa and Grandma Chen's Egg Pancakes",
               "mode": "walk",
-              "start_time": "15:44",
-              "end_time": "15:51",
+              "start_time": "16:48",
+              "end_time": "16:55",
               "distance": 0.67,
               "price": 0,
               "cost": 0
@@ -388,5 +492,5 @@
     }
   ],
   "elapsed_time(sec)": 26.941344022750854,
-  "_eval_score": 98.43877551020408
+  "_eval_score": 98.51488095238095
 }

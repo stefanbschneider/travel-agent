@@ -107,6 +107,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Beijing Central Axis Tour by Ding-Ding Tram",
+          "start_time": "15:30",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Beijing Central Axis Tour by Ding-Ding Tram",
+              "mode": "taxi",
+              "start_time": "15:30",
+              "end_time": "15:30",
+              "distance": 0.59,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
           "start_time": "17:00",
@@ -116,15 +138,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Tiananmen Square",
+              "start": "Beijing Central Axis Tour by Ding-Ding Tram",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:34",
+              "distance": 0.41,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Tuanjiehu-Metro Station",
+              "mode": "metro",
+              "start_time": "16:34",
+              "end_time": "16:45",
+              "distance": 5.93,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Tuanjiehu-Metro Station",
               "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
-              "mode": "taxi",
-              "start_time": "15:30",
-              "end_time": "15:37",
-              "distance": 5.25,
-              "price": 23.09,
-              "cost": 46.18,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:49",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -387,5 +429,5 @@
     }
   ],
   "elapsed_time(sec)": 185.98026514053345,
-  "_eval_score": 98.2706043956044
+  "_eval_score": 98.9251700680272
 }

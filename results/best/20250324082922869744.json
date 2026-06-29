@@ -84,12 +84,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Fu He Hui",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 1280.0,
-          "cost": 5120.0,
+          "type": "attraction",
+          "position": "Garden Bridge",
+          "start_time": "15:43",
+          "end_time": "16:43",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -104,11 +104,53 @@
             },
             {
               "start": "Lujiazui-Metro Station",
-              "end": "Jiangsu Road-Metro Station",
+              "end": "International Passenger Transport Center-Metro Station",
               "mode": "metro",
               "start_time": "15:40",
-              "end_time": "15:54",
-              "distance": 7.09,
+              "end_time": "15:42",
+              "distance": 1.37,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Garden Bridge",
+              "mode": "walk",
+              "start_time": "15:42",
+              "end_time": "15:43",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Fu He Hui",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1280.0,
+          "cost": 5120.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Garden Bridge",
+              "end": "International Passenger Transport Center-Metro Station",
+              "mode": "walk",
+              "start_time": "16:43",
+              "end_time": "16:44",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "International Passenger Transport Center-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:44",
+              "end_time": "16:58",
+              "distance": 7.23,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -117,8 +159,8 @@
               "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
               "mode": "walk",
-              "start_time": "15:54",
-              "end_time": "15:56",
+              "start_time": "16:58",
+              "end_time": "17:00",
               "distance": 0.22,
               "price": 0,
               "cost": 0
@@ -232,9 +274,9 @@
         },
         {
           "type": "attraction",
-          "position": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
-          "start_time": "15:00",
-          "end_time": "16:30",
+          "position": "China Securities Museum",
+          "start_time": "13:52",
+          "end_time": "14:52",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -262,11 +304,32 @@
             },
             {
               "start": "International Passenger Transport Center-Metro Station",
-              "end": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
+              "end": "China Securities Museum",
               "mode": "walk",
               "start_time": "13:52",
-              "end_time": "14:00",
-              "distance": 0.67,
+              "end_time": "13:52",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
+          "start_time": "15:00",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Securities Museum",
+              "end": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
+              "mode": "walk",
+              "start_time": "14:52",
+              "end_time": "15:00",
+              "distance": 0.6951743005402665,
               "price": 0,
               "cost": 0
             }
@@ -571,5 +634,5 @@
     }
   ],
   "elapsed_time(sec)": 0.0350642204284668,
-  "_eval_score": 97.1374883286648
+  "_eval_score": 98.08876357560568
 }

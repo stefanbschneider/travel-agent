@@ -124,12 +124,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 233.0,
-          "cost": 466.0,
+          "type": "attraction",
+          "position": "Butterfly Drama Club",
+          "start_time": "15:15",
+          "end_time": "16:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -144,11 +144,53 @@
             },
             {
               "start": "Luomashi-Metro Station",
-              "end": "Taisheng South Road-Metro Station",
+              "end": "Second Municipal Hospital-Metro Station",
               "mode": "metro",
               "start_time": "15:12",
-              "end_time": "15:14",
-              "distance": 1.07,
+              "end_time": "15:15",
+              "distance": 1.86,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Butterfly Drama Club",
+              "mode": "walk",
+              "start_time": "15:15",
+              "end_time": "15:15",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 233.0,
+          "cost": 466.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Butterfly Drama Club",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:45",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Taisheng South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:45",
+              "end_time": "16:46",
+              "distance": 0.83,
               "price": 2,
               "cost": 4,
               "tickets": 2
@@ -157,8 +199,8 @@
               "start": "Taisheng South Road-Metro Station",
               "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "mode": "walk",
-              "start_time": "15:14",
-              "end_time": "15:19",
+              "start_time": "16:46",
+              "end_time": "16:51",
               "distance": 0.46,
               "price": 0,
               "cost": 0
@@ -620,12 +662,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Chengdu Diaoyutai Boutique Hotel · Pinju · Chengdu Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 216.0,
-          "cost": 432.0,
+          "type": "attraction",
+          "position": "Chengdu Night Cruise on the Jinjiang River",
+          "start_time": "15:19",
+          "end_time": "16:49",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -640,21 +682,63 @@
             },
             {
               "start": "Niuwangmiao-Metro Station",
-              "end": "Kuanzhai Alley-Metro Station",
+              "end": "Dongmen Bridge-Metro Station",
               "mode": "metro",
               "start_time": "15:16",
-              "end_time": "15:25",
-              "distance": 4.77,
-              "price": 3,
-              "cost": 6,
+              "end_time": "15:17",
+              "distance": 0.78,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Dongmen Bridge-Metro Station",
+              "end": "Chengdu Night Cruise on the Jinjiang River",
+              "mode": "walk",
+              "start_time": "15:17",
+              "end_time": "15:19",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Chengdu Diaoyutai Boutique Hotel · Pinju · Chengdu Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 216.0,
+          "cost": 432.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Night Cruise on the Jinjiang River",
+              "end": "Dongmen Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "16:49",
+              "end_time": "16:51",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongmen Bridge-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "16:51",
+              "end_time": "16:58",
+              "distance": 3.99,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Kuanzhai Alley-Metro Station",
               "end": "Chengdu Diaoyutai Boutique Hotel · Pinju · Chengdu Restaurant",
               "mode": "walk",
-              "start_time": "15:25",
-              "end_time": "15:26",
+              "start_time": "16:58",
+              "end_time": "16:59",
               "distance": 0.13,
               "price": 0,
               "cost": 0
@@ -957,5 +1041,5 @@
     }
   ],
   "elapsed_time(sec)": 227.90354347229004,
-  "_eval_score": 96.97213203463204
+  "_eval_score": 97.69940476190476
 }

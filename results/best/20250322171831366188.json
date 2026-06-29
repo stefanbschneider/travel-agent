@@ -190,6 +190,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "15:20",
+          "end_time": "16:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Tiantong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:03",
+              "end_time": "15:12",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiantong Road-Metro Station",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "15:12",
+              "end_time": "15:19",
+              "distance": 3.54,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "walk",
+              "start_time": "15:19",
+              "end_time": "15:20",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shanghai Pudong Regent Hotel - Shang Xi Chinese Restaurant - Cantonese Cuisine",
           "start_time": "17:00",
@@ -199,15 +241,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing Road Pedestrian Street",
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Pudong Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "16:50",
+              "end_time": "16:51",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong Avenue-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:51",
+              "end_time": "16:52",
+              "distance": 0.69,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
               "end": "Shanghai Pudong Regent Hotel - Shang Xi Chinese Restaurant - Cantonese Cuisine",
-              "mode": "taxi",
-              "start_time": "15:03",
-              "end_time": "15:06",
-              "distance": 2.1,
-              "price": 12.05,
-              "cost": 12.05,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:58",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -406,5 +468,5 @@
     }
   ],
   "elapsed_time(sec)": 243.25434803962708,
-  "_eval_score": 96.60317460317461
+  "_eval_score": 97.0029761904762
 }

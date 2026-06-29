@@ -330,12 +330,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Suyang Xu's Mung Bean Soup (Canglang New Town Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 11.0,
-          "cost": 33.0,
+          "type": "attraction",
+          "position": "Dushu Lake",
+          "start_time": "09:21",
+          "end_time": "10:21",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -350,11 +350,53 @@
             },
             {
               "start": "Jiangxing West Road-Metro Station",
-              "end": "Youlian-Metro Station",
+              "end": "Dushu Lake Neighborhood Center-Metro Station",
               "mode": "metro",
               "start_time": "08:47",
-              "end_time": "09:10",
-              "distance": 11.53,
+              "end_time": "09:12",
+              "distance": 12.67,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Dushu Lake Neighborhood Center-Metro Station",
+              "end": "Dushu Lake",
+              "mode": "walk",
+              "start_time": "09:12",
+              "end_time": "09:21",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Suyang Xu's Mung Bean Soup (Canglang New Town Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 11.0,
+          "cost": 33.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Dushu Lake",
+              "end": "Dushu Lake Neighborhood Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:21",
+              "end_time": "10:30",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dushu Lake Neighborhood Center-Metro Station",
+              "end": "Youlian-Metro Station",
+              "mode": "metro",
+              "start_time": "10:30",
+              "end_time": "10:52",
+              "distance": 11.06,
               "price": 4,
               "cost": 12,
               "tickets": 3
@@ -363,8 +405,8 @@
               "start": "Youlian-Metro Station",
               "end": "Suyang Xu's Mung Bean Soup (Canglang New Town Branch)",
               "mode": "walk",
-              "start_time": "09:10",
-              "end_time": "09:14",
+              "start_time": "10:52",
+              "end_time": "10:56",
               "distance": 0.4,
               "price": 0,
               "cost": 0
@@ -646,5 +688,5 @@
     }
   ],
   "elapsed_time(sec)": 56.759230613708496,
-  "_eval_score": 95.41666666666666
+  "_eval_score": 95.8031746031746
 }

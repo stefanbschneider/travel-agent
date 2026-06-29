@@ -599,12 +599,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 498.0,
-          "cost": 1992.0,
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -619,21 +619,63 @@
             },
             {
               "start": "Deping Road-Metro Station",
-              "end": "Pudong South Road-Metro Station",
+              "end": "Yanggao Middle Road-Metro Station",
               "mode": "metro",
               "start_time": "08:31",
-              "end_time": "08:40",
-              "distance": 5.0,
-              "price": 3,
-              "cost": 12,
+              "end_time": "08:35",
+              "distance": 2.48,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Century Square",
+              "mode": "walk",
+              "start_time": "08:35",
+              "end_time": "08:36",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 498.0,
+          "cost": 1992.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Century Square",
+              "end": "Yanggao Middle Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:31",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yanggao Middle Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:31",
+              "end_time": "10:38",
+              "distance": 3.66,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Pudong South Road-Metro Station",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "walk",
-              "start_time": "08:40",
-              "end_time": "08:48",
+              "start_time": "10:38",
+              "end_time": "10:46",
               "distance": 0.69,
               "price": 0,
               "cost": 0
@@ -814,5 +856,5 @@
     }
   ],
   "elapsed_time(sec)": 196.36566519737244,
-  "_eval_score": 97.60846560846561
+  "_eval_score": 98.07623224728488
 }

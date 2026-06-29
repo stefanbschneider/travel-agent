@@ -309,6 +309,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "18:23",
+          "end_time": "19:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
+              "end": "Changfu Street-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:12",
+              "distance": 5.22,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:23",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Qingmu • Shang Hotel NanjingNan Sation",
           "start_time": "20:33",
@@ -320,12 +362,33 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+              "start": "Ancient Peach Leaf Ferry",
+              "end": "Changfu Street-Metro Station",
+              "mode": "walk",
+              "start_time": "19:53",
+              "end_time": "20:04",
+              "distance": 0.92,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changfu Street-Metro Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "20:04",
+              "end_time": "20:20",
+              "distance": 8.26,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
               "end": "Qingmu • Shang Hotel NanjingNan Sation",
               "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "20:33",
-              "distance": 12.757658596409536,
+              "start_time": "20:20",
+              "end_time": "20:28",
+              "distance": 0.74,
               "price": 0,
               "cost": 0
             }
@@ -347,12 +410,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 6.0,
-          "cost": 12.0,
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -367,21 +430,63 @@
             },
             {
               "start": "Hongyun Avenue-Metro Station",
-              "end": "Xuanwu Gate-Metro Station",
+              "end": "Confucius Temple-Metro Station",
               "mode": "metro",
               "start_time": "08:38",
-              "end_time": "09:02",
-              "distance": 12.39,
-              "price": 4,
-              "cost": 8,
+              "end_time": "08:52",
+              "distance": 7.26,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Black Clothes Lane",
+              "mode": "walk",
+              "start_time": "08:52",
+              "end_time": "08:58",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Black Clothes Lane",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:36",
+              "distance": 0.51,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Xuanwu Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "10:36",
+              "end_time": "10:46",
+              "distance": 5.13,
+              "price": 3,
+              "cost": 6,
               "tickets": 2
             },
             {
               "start": "Xuanwu Gate-Metro Station",
               "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "mode": "walk",
-              "start_time": "09:02",
-              "end_time": "09:11",
+              "start_time": "10:46",
+              "end_time": "10:55",
               "distance": 0.79,
               "price": 0,
               "cost": 0
@@ -499,5 +604,5 @@
     }
   ],
   "elapsed_time(sec)": 186.47278547286987,
-  "_eval_score": 96.7063492063492
+  "_eval_score": 97.94365079365079
 }

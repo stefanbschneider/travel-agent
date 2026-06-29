@@ -212,6 +212,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Drum Tower",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhongshan West Lake Hotel Hangzhou",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:36",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "City Station-Metro Station",
+              "mode": "metro",
+              "start_time": "08:36",
+              "end_time": "08:39",
+              "distance": 1.96,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Drum Tower",
+              "mode": "walk",
+              "start_time": "08:39",
+              "end_time": "08:42",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Southern Eclectic Buns (Lakeside Branch)",
           "start_time": "11:00",
@@ -221,15 +263,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhongshan West Lake Hotel Hangzhou",
+              "start": "Drum Tower",
+              "end": "City Station-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:33",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "10:33",
+              "end_time": "10:36",
+              "distance": 1.96,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
               "end": "Southern Eclectic Buns (Lakeside Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:30",
-              "distance": 0.62,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:36",
+              "end_time": "10:39",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -366,5 +428,5 @@
     }
   ],
   "elapsed_time(sec)": 4.776892185211182,
-  "_eval_score": 98.54166666666666
+  "_eval_score": 99.16666666666666
 }

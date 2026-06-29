@@ -107,6 +107,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Han Street",
+          "start_time": "15:22",
+          "end_time": "16:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Chu River Han Street",
+              "end": "Han Street",
+              "mode": "walk",
+              "start_time": "15:22",
+              "end_time": "15:22",
+              "distance": 0.01879824759047627,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Five Percent Villa Restaurant",
           "start_time": "17:00",
@@ -116,15 +137,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Chu River Han Street",
+              "start": "Han Street",
+              "end": "Qingyuzui-Metro Station",
+              "mode": "walk",
+              "start_time": "16:22",
+              "end_time": "16:26",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qingyuzui-Metro Station",
+              "end": "Jianghan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:26",
+              "end_time": "16:37",
+              "distance": 5.8,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Jianghan Road-Metro Station",
               "end": "Five Percent Villa Restaurant",
-              "mode": "taxi",
-              "start_time": "15:22",
-              "end_time": "15:29",
-              "distance": 4.85,
-              "price": 21.66,
-              "cost": 21.66,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:37",
+              "end_time": "16:46",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -687,5 +728,5 @@
     }
   ],
   "elapsed_time(sec)": 180.58234000205994,
-  "_eval_score": 98.72046703296704
+  "_eval_score": 99.03439153439153
 }
