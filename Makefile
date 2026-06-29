@@ -199,6 +199,9 @@ overnight-local:
 preference-local:
 	TPC_PREF_FAST_INNER=1 \
 	TPC_DENSIFY_TIGHTEN_TRANSPORT=1 \
+	TPC_DENSIFY_ATTR_DWELL_MIN=75 \
+	TPC_DENSIFY_MIN_ATTR_GAP=110 \
+	TPC_DENSIFY_WIDE_MEAL_WINDOWS=1 \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \
@@ -270,6 +273,9 @@ hpc-unsolved:
 hpc-preference:
 	TPC_PREF_FAST_INNER=1 \
 	TPC_DENSIFY_TIGHTEN_TRANSPORT=1 \
+	TPC_DENSIFY_ATTR_DWELL_MIN=75 \
+	TPC_DENSIFY_MIN_ATTR_GAP=110 \
+	TPC_DENSIFY_WIDE_MEAL_WINDOWS=1 \
 	$(PYTHON) scripts/iterate_tail.py \
 		--split $(SPLIT) \
 		--method $(TAIL_METHOD) \

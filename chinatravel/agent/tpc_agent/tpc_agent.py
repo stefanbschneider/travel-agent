@@ -576,7 +576,11 @@ class TPCAgent(BaseAgent):
     def _densify_dwell_minutes(self, poi, kind):
         if kind != "attraction":
             return 60
-        return 90
+        try:
+            dwell = int(os.environ.get("TPC_DENSIFY_ATTR_DWELL_MIN", "75"))
+        except Exception:
+            dwell = 75
+        return max(45, min(120, dwell))
 
     def _inner_activity_minutes(self, activity):
         total = 0
@@ -988,7 +992,10 @@ class TPCAgent(BaseAgent):
                 if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
                     meal_types.add("breakfast")
 
-            for meal_type, window in (("lunch", (11 * 60, 14 * 60)), ("dinner", (17 * 60, 20 * 60))):
+            wide_meal_windows = os.environ.get("TPC_DENSIFY_WIDE_MEAL_WINDOWS", "1") != "0"
+            lunch_window = (10 * 60 + 30, 14 * 60 + 30) if wide_meal_windows else (11 * 60, 14 * 60)
+            dinner_window = (16 * 60 + 30, 20 * 60 + 30) if wide_meal_windows else (17 * 60, 20 * 60)
+            for meal_type, window in (("lunch", lunch_window), ("dinner", dinner_window)):
                 if meal_type in meal_types:
                     continue
                 inserted = False
@@ -1016,7 +1023,12 @@ class TPCAgent(BaseAgent):
                         break
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:
-                gaps = self._day_gaps(activities, 9 * 60, 18 * 60, 130)
+                try:
+                    min_attr_gap = int(os.environ.get("TPC_DENSIFY_MIN_ATTR_GAP", "110"))
+                except Exception:
+                    min_attr_gap = 110
+                min_attr_gap = max(80, min(180, min_attr_gap))
+                gaps = self._day_gaps(activities, 9 * 60, 18 * 60, min_attr_gap)
                 if not gaps:
                     break
                 inserted = False
