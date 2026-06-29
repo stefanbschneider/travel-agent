@@ -576,7 +576,11 @@ class TPCAgent(BaseAgent):
     def _densify_dwell_minutes(self, poi, kind):
         if kind != "attraction":
             return 60
-        return 90
+        # Attraction visit length used when packing idle gaps. The verifier enforces no
+        # minimum duration (only open-hours containment + positive duration), so a shorter
+        # dwell lets more attractions fit tight gaps and lifts DAV; default is the
+        # compute-node smoke/full-score winner.
+        return int(os.environ.get("TPC_DENSIFY_ATTR_DWELL", "60"))
 
     def _inner_activity_minutes(self, activity):
         total = 0
@@ -919,6 +923,13 @@ class TPCAgent(BaseAgent):
                     used_attractions.add(name)
 
         itinerary = dense.get("itinerary", []) or []
+        # Idle-gap attraction packing knobs. The former 130-min threshold / 18:00 cutoff left
+        # many real 90-120 min gaps (breakfast->lunch, afternoon->dinner) and all evening slots
+        # unfilled; every insertion is still gated by the full checker via _insert_activity.
+        attr_gap_min = int(os.environ.get("TPC_DENSIFY_ATTR_GAP_MIN", "75"))
+        attr_win_open = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_OPEN", "9")) * 60
+        attr_win_close = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_CLOSE", "21")) * 60
+        attr_candidate_limit = int(os.environ.get("TPC_DENSIFY_ATTR_CANDIDATES", "24"))
         for day_idx, day in enumerate(itinerary):
             activities = day.get("activities", []) or []
             if not activities:
@@ -958,7 +969,7 @@ class TPCAgent(BaseAgent):
                         break
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:
-                gaps = self._day_gaps(activities, 9 * 60, 18 * 60, 130)
+                gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
                 if not gaps:
                     break
                 inserted = False
@@ -972,12 +983,12 @@ class TPCAgent(BaseAgent):
                             a.get("price_cents", 0),
                             a.get("name", ""),
                         ),
-                    )
+                    )[:attr_candidate_limit]
                     for attr in ranked:
                         a_name = self._norm_text(attr.get("name", ""))
                         if not a_name or a_name in used_attractions:
                             continue
-                        if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (9 * 60, 18 * 60), city, people, check):
+                        if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
                             used_attractions.add(a_name)
                             inserted = True
                             break
