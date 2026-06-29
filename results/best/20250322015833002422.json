@@ -405,6 +405,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Pinghu Ecological Park",
+          "start_time": "09:00",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Gankeng-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "South China City-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "08:45",
+              "distance": 3.54,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "South China City-Metro Station",
+              "end": "Pinghu Ecological Park",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:53",
+              "distance": 0.7,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "11:08",
           "end_time": "16:36",
@@ -415,15 +457,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "start": "Pinghu Ecological Park",
+              "end": "South China City-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:23",
+              "distance": 0.7,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "South China City-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "10:23",
+              "end_time": "10:39",
+              "distance": 8.16,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 6.21,
-              "price": 26.45,
-              "cost": 26.45,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:39",
+              "end_time": "10:42",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "K106"
@@ -432,5 +494,5 @@
     }
   ],
   "elapsed_time(sec)": 33.326154708862305,
-  "_eval_score": 97.312324929972
+  "_eval_score": 97.67063492063492
 }

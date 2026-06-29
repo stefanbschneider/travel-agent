@@ -425,13 +425,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "16:10",
+          "end_time": "17:25",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -446,21 +445,64 @@
             },
             {
               "start": "Baishilong-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Bao'an Center-Metro Station",
               "mode": "metro",
               "start_time": "15:35",
-              "end_time": "16:21",
-              "distance": 23.15,
-              "price": 6,
-              "cost": 6,
+              "end_time": "16:08",
+              "distance": 16.79,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "16:08",
+              "end_time": "16:10",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "17:56",
+          "end_time": "20:21",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1008.34,
+          "cost": 1008.34,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "17:25",
+              "end_time": "17:27",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "17:27",
+              "end_time": "17:51",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 4,
               "tickets": 1
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:26",
+              "start_time": "17:51",
+              "end_time": "17:56",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -472,5 +514,5 @@
     }
   ],
   "elapsed_time(sec)": 192.41991639137268,
-  "_eval_score": 96.5812324929972
+  "_eval_score": 97.0489417989418
 }

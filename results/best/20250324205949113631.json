@@ -234,6 +234,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "09:29",
+          "end_time": "10:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
+              "end": "Huangtian-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:39",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangtian-Metro Station",
+              "end": "Gangxia North-Metro Station",
+              "mode": "metro",
+              "start_time": "08:39",
+              "end_time": "09:29",
+              "distance": 25.02,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "walk",
+              "start_time": "09:29",
+              "end_time": "09:29",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "YO!Tea (Futian CITIC Plaza Branch)",
           "start_time": "11:00",
@@ -243,15 +285,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Gangxia North-Metro Station",
+              "mode": "walk",
+              "start_time": "10:44",
+              "end_time": "10:44",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Hongling South-Metro Station",
+              "mode": "metro",
+              "start_time": "10:44",
+              "end_time": "10:51",
+              "distance": 3.79,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Hongling South-Metro Station",
               "end": "YO!Tea (Futian CITIC Plaza Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:11",
-              "distance": 27.44,
-              "price": 118.17,
-              "cost": 118.17,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:56",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -448,5 +510,5 @@
     }
   ],
   "elapsed_time(sec)": 181.3448131084442,
-  "_eval_score": 96.6
+  "_eval_score": 96.97619047619048
 }

@@ -383,6 +383,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Four-Eyed Well",
+          "start_time": "14:23",
+          "end_time": "15:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Lake Scenic Area",
+              "end": "Four-Eyed Well",
+              "mode": "taxi",
+              "start_time": "14:21",
+              "end_time": "14:23",
+              "distance": 1.59,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
           "start_time": "17:00",
@@ -392,15 +414,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "West Lake Scenic Area",
+              "start": "Four-Eyed Well",
+              "end": "Shuicheng Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "15:53",
+              "end_time": "16:19",
+              "distance": 2.17,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuicheng Bridge-Metro Station",
+              "end": "Huanglong Sports Center-Metro Station",
+              "mode": "metro",
+              "start_time": "16:19",
+              "end_time": "16:33",
+              "distance": 7.42,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Huanglong Sports Center-Metro Station",
               "end": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
-              "mode": "taxi",
-              "start_time": "14:21",
-              "end_time": "14:24",
-              "distance": 2.55,
-              "price": 13.63,
-              "cost": 13.63,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:33",
+              "end_time": "16:54",
+              "distance": 1.81,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -563,12 +605,13 @@
             {
               "start": "Hangzhou Confucius Temple",
               "end": "Hangzhou Museum",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:44",
-              "end_time": "14:50",
-              "distance": 0.566632441350623,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:44",
+              "distance": 0.57,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -620,5 +663,5 @@
     }
   ],
   "elapsed_time(sec)": 193.8481559753418,
-  "_eval_score": 97.91666666666666
+  "_eval_score": 98.22916666666666
 }

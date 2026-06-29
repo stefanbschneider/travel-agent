@@ -536,12 +536,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 498.0,
-          "cost": 1992.0,
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:00",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -556,21 +556,63 @@
             },
             {
               "start": "Jinshajiang Road-Metro Station",
-              "end": "Pudong South Road-Metro Station",
+              "end": "Liping Road-Metro Station",
               "mode": "metro",
               "start_time": "08:30",
-              "end_time": "08:48",
-              "distance": 9.48,
-              "price": 4,
-              "cost": 16,
+              "end_time": "08:47",
+              "distance": 8.92,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "08:47",
+              "end_time": "08:49",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 498.0,
+          "cost": 1992.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "Liping Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:17",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:17",
+              "end_time": "10:22",
+              "distance": 2.72,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Pudong South Road-Metro Station",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "walk",
-              "start_time": "08:48",
-              "end_time": "08:56",
+              "start_time": "10:22",
+              "end_time": "10:30",
               "distance": 0.69,
               "price": 0,
               "cost": 0
@@ -709,5 +751,5 @@
     }
   ],
   "elapsed_time(sec)": 14.598622798919678,
-  "_eval_score": 96.82638888888889
+  "_eval_score": 97.2859477124183
 }

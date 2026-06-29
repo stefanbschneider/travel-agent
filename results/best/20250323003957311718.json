@@ -146,6 +146,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Guanlan River Wetland Park",
+          "start_time": "09:05",
+          "end_time": "10:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "end": "Yangtaishan East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:44",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Bamboo Village-Metro Station",
+              "mode": "metro",
+              "start_time": "08:44",
+              "end_time": "08:54",
+              "distance": 5.4,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Bamboo Village-Metro Station",
+              "end": "Guanlan River Wetland Park",
+              "mode": "walk",
+              "start_time": "08:54",
+              "end_time": "09:05",
+              "distance": 0.97,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
           "start_time": "11:00",
@@ -155,15 +197,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "start": "Guanlan River Wetland Park",
+              "end": "Bamboo Village-Metro Station",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:31",
+              "distance": 0.97,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bamboo Village-Metro Station",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "metro",
+              "start_time": "10:31",
+              "end_time": "10:57",
+              "distance": 13.02,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
               "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:48",
-              "distance": 12.41,
-              "price": 50.56,
-              "cost": 50.56,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:57",
+              "end_time": "11:00",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -333,12 +395,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 27.0,
-          "cost": 81.0,
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:05",
+          "end_time": "10:20",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -353,21 +415,63 @@
             },
             {
               "start": "Yangtaishan East-Metro Station",
-              "end": "Convention and Exhibition Center-Metro Station",
+              "end": "Baishilong-Metro Station",
               "mode": "metro",
               "start_time": "08:44",
-              "end_time": "09:16",
-              "distance": 16.39,
-              "price": 5,
-              "cost": 15,
+              "end_time": "09:02",
+              "distance": 9.03,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "09:02",
+              "end_time": "09:05",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 27.0,
+          "cost": 81.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:23",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "10:23",
+              "end_time": "10:38",
+              "distance": 7.64,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Convention and Exhibition Center-Metro Station",
               "end": "DQ (Shenzhen Liancheng Xintiandi Store)",
               "mode": "walk",
-              "start_time": "09:16",
-              "end_time": "09:18",
+              "start_time": "10:38",
+              "end_time": "10:40",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -422,5 +526,5 @@
     }
   ],
   "elapsed_time(sec)": 187.20453000068665,
-  "_eval_score": 95.3373015873016
+  "_eval_score": 96.06632653061224
 }

@@ -212,6 +212,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Bay Area Cruise",
+          "start_time": "15:04",
+          "end_time": "16:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "China Merchants Shekou Cruise Home Port Tour",
+              "end": "Bay Area Cruise",
+              "mode": "taxi",
+              "start_time": "15:04",
+              "end_time": "15:04",
+              "distance": 0.06,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
           "start_time": "17:00",
@@ -221,15 +243,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "China Merchants Shekou Cruise Home Port Tour",
+              "start": "Bay Area Cruise",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "16:19",
+              "end_time": "16:29",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Window of the World-Metro Station",
+              "mode": "metro",
+              "start_time": "16:29",
+              "end_time": "16:47",
+              "distance": 9.22,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Window of the World-Metro Station",
               "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "mode": "taxi",
-              "start_time": "15:04",
-              "end_time": "15:17",
-              "distance": 9.05,
-              "price": 36.39,
-              "cost": 36.39,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:47",
+              "end_time": "16:49",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -512,5 +554,5 @@
     }
   ],
   "elapsed_time(sec)": 188.14683723449707,
-  "_eval_score": 96.90499533146591
+  "_eval_score": 97.35714285714285
 }

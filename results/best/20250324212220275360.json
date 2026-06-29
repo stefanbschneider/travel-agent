@@ -288,12 +288,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 24.0,
-          "cost": 48.0,
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:05",
+          "end_time": "10:20",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -308,21 +308,63 @@
             },
             {
               "start": "Yangtaishan East-Metro Station",
-              "end": "Meicun-Metro Station",
+              "end": "Baishilong-Metro Station",
               "mode": "metro",
               "start_time": "08:44",
-              "end_time": "09:09",
-              "distance": 12.67,
+              "end_time": "09:02",
+              "distance": 9.03,
               "price": 4,
               "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "09:02",
+              "end_time": "09:05",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 24.0,
+          "cost": 48.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:23",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "10:23",
+              "end_time": "10:30",
+              "distance": 3.8,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Meicun-Metro Station",
               "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
               "mode": "walk",
-              "start_time": "09:09",
-              "end_time": "09:15",
+              "start_time": "10:30",
+              "end_time": "10:36",
               "distance": 0.53,
               "price": 0,
               "cost": 0
@@ -515,13 +557,12 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 1554.52,
+          "type": "attraction",
+          "position": "Guanlan River Wetland Park",
+          "start_time": "09:05",
+          "end_time": "10:20",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -536,21 +577,64 @@
             },
             {
               "start": "Yangtaishan East-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "Bamboo Village-Metro Station",
               "mode": "metro",
               "start_time": "08:44",
-              "end_time": "09:14",
-              "distance": 15.16,
-              "price": 5,
-              "cost": 10,
+              "end_time": "08:54",
+              "distance": 5.4,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Bamboo Village-Metro Station",
+              "end": "Guanlan River Wetland Park",
+              "mode": "walk",
+              "start_time": "08:54",
+              "end_time": "09:05",
+              "distance": 0.97,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 1554.52,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guanlan River Wetland Park",
+              "end": "Bamboo Village-Metro Station",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:31",
+              "distance": 0.97,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bamboo Village-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "10:31",
+              "end_time": "10:56",
+              "distance": 12.51,
+              "price": 4,
+              "cost": 8,
               "tickets": 2
             },
             {
               "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
               "mode": "walk",
-              "start_time": "09:14",
-              "end_time": "09:17",
+              "start_time": "10:56",
+              "end_time": "10:59",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -562,5 +646,5 @@
     }
   ],
   "elapsed_time(sec)": 13.993374824523926,
-  "_eval_score": 92.95238095238096
+  "_eval_score": 94.1077097505669
 }

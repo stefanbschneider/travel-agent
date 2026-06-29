@@ -19,6 +19,48 @@
           "FlightID": "FL096"
         },
         {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "15:03",
+          "end_time": "16:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "14:32",
+              "end_time": "14:37",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "14:37",
+              "end_time": "15:01",
+              "distance": 12.2,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "15:01",
+              "end_time": "15:03",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
           "start_time": "17:00",
@@ -28,15 +70,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "16:18",
+              "end_time": "16:20",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Chegongmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:20",
+              "end_time": "16:48",
+              "distance": 14.4,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Chegongmiao-Metro Station",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:09",
-              "distance": 24.78,
-              "price": 106.2,
-              "cost": 106.2,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:48",
+              "end_time": "16:55",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -492,5 +554,5 @@
     }
   ],
   "elapsed_time(sec)": 195.2995800971985,
-  "_eval_score": 97.05742296918768
+  "_eval_score": 97.45634920634922
 }

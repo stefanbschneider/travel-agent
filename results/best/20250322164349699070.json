@@ -414,12 +414,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 16.0,
+          "type": "attraction",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "15:15",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -434,21 +434,63 @@
             },
             {
               "start": "Jiangsu Road-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
               "mode": "metro",
               "start_time": "15:04",
-              "end_time": "15:28",
-              "distance": 12.48,
-              "price": 4,
-              "cost": 4,
+              "end_time": "15:13",
+              "distance": 4.59,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Jing'an Sculpture Park",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:15",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Sculpture Park",
+              "end": "Qufu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:32",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:32",
+              "end_time": "16:47",
+              "distance": 7.92,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
               "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "15:28",
-              "end_time": "15:38",
+              "start_time": "16:47",
+              "end_time": "16:57",
               "distance": 0.86,
               "price": 0,
               "cost": 0
@@ -503,5 +545,5 @@
     }
   ],
   "elapsed_time(sec)": 186.24362683296204,
-  "_eval_score": 95.98430735930737
+  "_eval_score": 96.76190476190476
 }

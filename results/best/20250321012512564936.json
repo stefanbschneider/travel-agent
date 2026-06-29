@@ -19,6 +19,48 @@
           "FlightID": "FL671"
         },
         {
+          "type": "attraction",
+          "position": "Beijing Road Pedestrian Street",
+          "start_time": "09:23",
+          "end_time": "10:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guangzhou Baiyun International Airport",
+              "end": "Airport South (Terminal 1)-Metro Station",
+              "mode": "walk",
+              "start_time": "08:25",
+              "end_time": "08:25",
+              "distance": 0.05,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport South (Terminal 1)-Metro Station",
+              "end": "Peasant Movement Institute-Metro Station",
+              "mode": "metro",
+              "start_time": "08:25",
+              "end_time": "09:22",
+              "distance": 28.93,
+              "price": 7,
+              "cost": 14,
+              "tickets": 2
+            },
+            {
+              "start": "Peasant Movement Institute-Metro Station",
+              "end": "Beijing Road Pedestrian Street",
+              "mode": "walk",
+              "start_time": "09:22",
+              "end_time": "09:23",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Guangzhou Yuehai Sheraton Hotel · Cai Yue Xuan Chinese Restaurant (Tianhe City Branch)",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Guangzhou Baiyun International Airport",
+              "start": "Beijing Road Pedestrian Street",
+              "end": "Peasant Movement Institute-Metro Station",
+              "mode": "walk",
+              "start_time": "10:38",
+              "end_time": "10:39",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Peasant Movement Institute-Metro Station",
+              "end": "Tiyu Xilu-Metro Station",
+              "mode": "metro",
+              "start_time": "10:39",
+              "end_time": "10:48",
+              "distance": 4.73,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Tiyu Xilu-Metro Station",
               "end": "Guangzhou Yuehai Sheraton Hotel · Cai Yue Xuan Chinese Restaurant (Tianhe City Branch)",
-              "mode": "taxi",
-              "start_time": "08:25",
-              "end_time": "09:07",
-              "distance": 28.18,
-              "price": 121.52,
-              "cost": 121.52,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:48",
+              "end_time": "10:50",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -345,5 +407,5 @@
     }
   ],
   "elapsed_time(sec)": 182.14856958389282,
-  "_eval_score": 97.27182539682539
+  "_eval_score": 97.88278388278388
 }

@@ -19,12 +19,12 @@
           "TrainID": "G1509"
         },
         {
-          "type": "lunch",
-          "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 168.0,
-          "cost": 336.0,
+          "type": "attraction",
+          "position": "Arhat Hall",
+          "start_time": "09:00",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -39,21 +39,63 @@
             },
             {
               "start": "Suzhou North Railway Station-Metro Station",
-              "end": "Oriental Gate-Metro Station",
+              "end": "Shantang Street-Metro Station",
               "mode": "metro",
               "start_time": "08:11",
               "end_time": "08:35",
-              "distance": 12.07,
+              "distance": 12.03,
               "price": 4,
               "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Arhat Hall",
+              "mode": "walk",
+              "start_time": "08:35",
+              "end_time": "08:44",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 168.0,
+          "cost": 336.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Arhat Hall",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:24",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Oriental Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "10:24",
+              "end_time": "10:38",
+              "distance": 7.33,
+              "price": 3,
+              "cost": 6,
               "tickets": 2
             },
             {
               "start": "Oriental Gate-Metro Station",
               "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
               "mode": "walk",
-              "start_time": "08:35",
-              "end_time": "08:41",
+              "start_time": "10:38",
+              "end_time": "10:44",
               "distance": 0.54,
               "price": 0,
               "cost": 0
@@ -814,5 +856,5 @@
     }
   ],
   "elapsed_time(sec)": 185.43273258209229,
-  "_eval_score": 96.85185185185185
+  "_eval_score": 97.28926482873851
 }

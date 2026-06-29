@@ -19,6 +19,48 @@
           "TrainID": "G1509"
         },
         {
+          "type": "attraction",
+          "position": "Beijing-Hangzhou Grand Canal",
+          "start_time": "09:00",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Suzhou North Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:10",
+              "end_time": "08:11",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "Baofeng-Metro Station",
+              "mode": "metro",
+              "start_time": "08:11",
+              "end_time": "08:35",
+              "distance": 12.14,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Baofeng-Metro Station",
+              "end": "Beijing-Hangzhou Grand Canal",
+              "mode": "walk",
+              "start_time": "08:35",
+              "end_time": "08:40",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
           "start_time": "11:00",
@@ -28,15 +70,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Suzhou North Station",
+              "start": "Beijing-Hangzhou Grand Canal",
+              "end": "Baofeng-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:20",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baofeng-Metro Station",
+              "end": "Oriental Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "10:20",
+              "end_time": "10:49",
+              "distance": 14.72,
+              "price": 5,
+              "cost": 25,
+              "tickets": 5
+            },
+            {
+              "start": "Oriental Gate-Metro Station",
               "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-              "mode": "taxi",
-              "start_time": "08:10",
-              "end_time": "08:27",
-              "distance": 11.83,
-              "price": 47.92,
-              "cost": 95.84,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:49",
+              "end_time": "10:55",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -451,12 +513,13 @@
             {
               "start": "Arhat Hall",
               "end": "Cloud-Crowned Peak",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:01",
-              "end_time": "14:07",
-              "distance": 0.5457798229039876,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:01",
+              "distance": 0.55,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
@@ -508,5 +571,5 @@
     }
   ],
   "elapsed_time(sec)": 0.030437707901000977,
-  "_eval_score": 97.01686507936508
+  "_eval_score": 97.35597572362278
 }

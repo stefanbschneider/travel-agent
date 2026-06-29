@@ -931,12 +931,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Libaoge (Kerry Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 156.0,
-          "cost": 468.0,
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "09:03",
+          "end_time": "10:18",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -951,21 +951,63 @@
             },
             {
               "start": "Huaide-Metro Station",
-              "end": "Shopping Park-Metro Station",
+              "end": "Bao'an Center-Metro Station",
               "mode": "metro",
               "start_time": "08:33",
-              "end_time": "09:29",
-              "distance": 28.3,
-              "price": 7,
-              "cost": 21,
+              "end_time": "09:01",
+              "distance": 14.26,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "09:01",
+              "end_time": "09:03",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Libaoge (Kerry Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 156.0,
+          "cost": 468.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:18",
+              "end_time": "10:20",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Shopping Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:20",
+              "end_time": "10:54",
+              "distance": 17.35,
+              "price": 5,
+              "cost": 15,
               "tickets": 3
             },
             {
               "start": "Shopping Park-Metro Station",
               "end": "Libaoge (Kerry Store)",
               "mode": "walk",
-              "start_time": "09:29",
-              "end_time": "09:31",
+              "start_time": "10:54",
+              "end_time": "10:56",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -1015,12 +1057,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Old Zhou's Shunde Double-Skin Milk",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 20.0,
-          "cost": 60.0,
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "15:34",
+          "end_time": "16:49",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -1035,21 +1077,63 @@
             },
             {
               "start": "Yangtaishan East-Metro Station",
-              "end": "Meicun-Metro Station",
+              "end": "Lianhua Village-Metro Station",
               "mode": "metro",
               "start_time": "15:00",
-              "end_time": "15:25",
-              "distance": 12.67,
-              "price": 4,
-              "cost": 12,
+              "end_time": "15:30",
+              "distance": 15.37,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "walk",
+              "start_time": "15:30",
+              "end_time": "15:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 60.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "walk",
+              "start_time": "16:49",
+              "end_time": "16:53",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "16:53",
+              "end_time": "16:58",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Meicun-Metro Station",
               "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "walk",
-              "start_time": "15:25",
-              "end_time": "15:27",
+              "start_time": "16:58",
+              "end_time": "17:00",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -1104,5 +1188,5 @@
     }
   ],
   "elapsed_time(sec)": 204.16599535942078,
-  "_eval_score": 97.1772619047619
+  "_eval_score": 97.91457231040565
 }

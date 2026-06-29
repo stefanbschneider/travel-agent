@@ -445,13 +445,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 1747.9499999999998,
+          "type": "attraction",
+          "position": "Duoyun Bookstore · Flagship Store",
+          "start_time": "16:03",
+          "end_time": "17:18",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -466,21 +465,64 @@
             },
             {
               "start": "Zhanghuabang-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Pudong South Road-Metro Station",
               "mode": "metro",
               "start_time": "15:37",
-              "end_time": "16:51",
-              "distance": 37.17,
-              "price": 8,
-              "cost": 24,
+              "end_time": "16:03",
+              "distance": 13.31,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Duoyun Bookstore · Flagship Store",
+              "mode": "walk",
+              "start_time": "16:03",
+              "end_time": "16:03",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 1747.9499999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Duoyun Bookstore · Flagship Store",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "walk",
+              "start_time": "17:18",
+              "end_time": "17:18",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "17:18",
+              "end_time": "18:17",
+              "distance": 29.58,
+              "price": 7,
+              "cost": 21,
               "tickets": 3
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "16:51",
-              "end_time": "17:06",
+              "start_time": "18:17",
+              "end_time": "18:32",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -492,5 +534,5 @@
     }
   ],
   "elapsed_time(sec)": 217.05740690231323,
-  "_eval_score": 96.72689075630251
+  "_eval_score": 97.19708994708995
 }

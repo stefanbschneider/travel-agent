@@ -330,12 +330,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Suyang Xu's Mung Bean Soup (Canglang New Town Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 11.0,
-          "cost": 33.0,
+          "type": "attraction",
+          "position": "Chang Garden",
+          "start_time": "09:20",
+          "end_time": "10:35",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -350,21 +350,63 @@
             },
             {
               "start": "Jiangxing West Road-Metro Station",
-              "end": "Youlian-Metro Station",
+              "end": "Chayuanchang-Metro Station",
               "mode": "metro",
               "start_time": "08:47",
-              "end_time": "09:10",
-              "distance": 11.53,
-              "price": 4,
-              "cost": 12,
+              "end_time": "09:18",
+              "distance": 15.76,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Chang Garden",
+              "mode": "walk",
+              "start_time": "09:18",
+              "end_time": "09:20",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Suyang Xu's Mung Bean Soup (Canglang New Town Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 11.0,
+          "cost": 33.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chang Garden",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "walk",
+              "start_time": "10:35",
+              "end_time": "10:37",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Youlian-Metro Station",
+              "mode": "metro",
+              "start_time": "10:37",
+              "end_time": "10:46",
+              "distance": 4.58,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Youlian-Metro Station",
               "end": "Suyang Xu's Mung Bean Soup (Canglang New Town Branch)",
               "mode": "walk",
-              "start_time": "09:10",
-              "end_time": "09:14",
+              "start_time": "10:46",
+              "end_time": "10:50",
               "distance": 0.4,
               "price": 0,
               "cost": 0
@@ -646,5 +688,5 @@
     }
   ],
   "elapsed_time(sec)": 56.759230613708496,
-  "_eval_score": 95.41666666666666
+  "_eval_score": 95.86984126984127
 }

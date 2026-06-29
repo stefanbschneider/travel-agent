@@ -330,12 +330,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Old Patron's Egg Pancake",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 11.0,
-          "cost": 33.0,
+          "type": "attraction",
+          "position": "Imagination Science and Technology Museum",
+          "start_time": "09:01",
+          "end_time": "10:16",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -350,21 +350,63 @@
             },
             {
               "start": "Jiangxing West Road-Metro Station",
-              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Swan Dang Road-Metro Station",
               "mode": "metro",
               "start_time": "08:47",
-              "end_time": "09:16",
-              "distance": 14.74,
-              "price": 5,
-              "cost": 15,
+              "end_time": "08:54",
+              "distance": 3.85,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Swan Dang Road-Metro Station",
+              "end": "Imagination Science and Technology Museum",
+              "mode": "walk",
+              "start_time": "08:54",
+              "end_time": "09:01",
+              "distance": 0.65,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Patron's Egg Pancake",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 11.0,
+          "cost": 33.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Imagination Science and Technology Museum",
+              "end": "Swan Dang Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:16",
+              "end_time": "10:23",
+              "distance": 0.65,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Swan Dang Road-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "metro",
+              "start_time": "10:23",
+              "end_time": "10:48",
+              "distance": 12.8,
+              "price": 4,
+              "cost": 12,
               "tickets": 3
             },
             {
               "start": "Wangxing Bridge Suzhou University-Metro Station",
               "end": "Old Patron's Egg Pancake",
               "mode": "walk",
-              "start_time": "09:16",
-              "end_time": "09:21",
+              "start_time": "10:48",
+              "end_time": "10:53",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -545,5 +587,5 @@
     }
   ],
   "elapsed_time(sec)": 35.144882678985596,
-  "_eval_score": 96.62896825396825
+  "_eval_score": 97.32967032967034
 }

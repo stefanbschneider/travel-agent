@@ -146,6 +146,48 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:05",
+          "end_time": "10:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "end": "Yangtaishan East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:44",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yangtaishan East-Metro Station",
+              "end": "Baishilong-Metro Station",
+              "mode": "metro",
+              "start_time": "08:44",
+              "end_time": "09:02",
+              "distance": 9.03,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "09:02",
+              "end_time": "09:05",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
           "start_time": "11:00",
@@ -155,15 +197,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Kyriad Marvelous Hotel Shenzhen Longhua Dalang Business Center",
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:23",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "10:23",
+              "end_time": "10:30",
+              "distance": 3.8,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Meicun-Metro Station",
               "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:48",
-              "distance": 12.59,
-              "price": 51.37,
-              "cost": 51.37,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:36",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -333,12 +395,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 27.0,
-          "cost": 108.0,
+          "type": "attraction",
+          "position": "Dashabe Park",
+          "start_time": "09:15",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -353,21 +415,63 @@
             },
             {
               "start": "Yangtaishan East-Metro Station",
-              "end": "Convention and Exhibition Center-Metro Station",
+              "end": "Longjing-Metro Station",
               "mode": "metro",
               "start_time": "08:44",
-              "end_time": "09:16",
-              "distance": 16.39,
-              "price": 5,
-              "cost": 20,
+              "end_time": "09:07",
+              "distance": 11.66,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Longjing-Metro Station",
+              "end": "Dashabe Park",
+              "mode": "walk",
+              "start_time": "09:07",
+              "end_time": "09:15",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 27.0,
+          "cost": 108.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dashabe Park",
+              "end": "Longjing-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longjing-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "metro",
+              "start_time": "10:38",
+              "end_time": "10:56",
+              "distance": 9.46,
+              "price": 4,
+              "cost": 16,
               "tickets": 4
             },
             {
               "start": "Convention and Exhibition Center-Metro Station",
               "end": "DQ (Shenzhen Liancheng Xintiandi Store)",
               "mode": "walk",
-              "start_time": "09:16",
-              "end_time": "09:18",
+              "start_time": "10:56",
+              "end_time": "10:58",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -422,5 +526,5 @@
     }
   ],
   "elapsed_time(sec)": 139.9427478313446,
-  "_eval_score": 95.32142857142858
+  "_eval_score": 96.07312925170068
 }

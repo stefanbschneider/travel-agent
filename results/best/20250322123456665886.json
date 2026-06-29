@@ -124,12 +124,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 233.0,
-          "cost": 466.0,
+          "type": "attraction",
+          "position": "Butterfly Drama Club",
+          "start_time": "15:15",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -144,11 +144,53 @@
             },
             {
               "start": "Luomashi-Metro Station",
-              "end": "Taisheng South Road-Metro Station",
+              "end": "Second Municipal Hospital-Metro Station",
               "mode": "metro",
               "start_time": "15:12",
-              "end_time": "15:14",
-              "distance": 1.07,
+              "end_time": "15:15",
+              "distance": 1.86,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Butterfly Drama Club",
+              "mode": "walk",
+              "start_time": "15:15",
+              "end_time": "15:15",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 233.0,
+          "cost": 466.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Butterfly Drama Club",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "16:30",
+              "end_time": "16:30",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Taisheng South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:30",
+              "end_time": "16:31",
+              "distance": 0.83,
               "price": 2,
               "cost": 4,
               "tickets": 2
@@ -157,8 +199,8 @@
               "start": "Taisheng South Road-Metro Station",
               "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "mode": "walk",
-              "start_time": "15:14",
-              "end_time": "15:19",
+              "start_time": "16:31",
+              "end_time": "16:36",
               "distance": 0.46,
               "price": 0,
               "cost": 0
@@ -957,5 +999,5 @@
     }
   ],
   "elapsed_time(sec)": 227.90354347229004,
-  "_eval_score": 96.97213203463204
+  "_eval_score": 97.33902691511386
 }

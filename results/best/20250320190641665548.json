@@ -276,13 +276,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:11",
-          "end_time": "19:38",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Nanjing Lukou International Airport",
-          "price": 557.67,
-          "cost": 1673.0099999999998,
+          "type": "dinner",
+          "position": "New World Restaurant (Wanda Branch)",
+          "start_time": "16:30",
+          "end_time": "17:30",
+          "price": 55.0,
+          "cost": 165.0,
           "tickets": 3,
           "transports": [
             {
@@ -297,21 +296,64 @@
             },
             {
               "start": "Baishilong-Metro Station",
-              "end": "Airport East-Metro Station",
+              "end": "Shangchuan-Metro Station",
               "mode": "metro",
               "start_time": "15:21",
-              "end_time": "16:07",
-              "distance": 23.15,
-              "price": 6,
-              "cost": 18,
+              "end_time": "15:51",
+              "distance": 15.37,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Shangchuan-Metro Station",
+              "end": "New World Restaurant (Wanda Branch)",
+              "mode": "walk",
+              "start_time": "15:51",
+              "end_time": "16:00",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:11",
+          "end_time": "19:38",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 557.67,
+          "cost": 1673.0099999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "New World Restaurant (Wanda Branch)",
+              "end": "Shangchuan-Metro Station",
+              "mode": "walk",
+              "start_time": "17:30",
+              "end_time": "17:39",
+              "distance": 0.77,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangchuan-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "17:39",
+              "end_time": "18:00",
+              "distance": 10.69,
+              "price": 4,
+              "cost": 12,
               "tickets": 3
             },
             {
               "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "16:07",
-              "end_time": "16:12",
+              "start_time": "18:00",
+              "end_time": "18:05",
               "distance": 0.45,
               "price": 0,
               "cost": 0
@@ -323,5 +365,5 @@
     }
   ],
   "elapsed_time(sec)": 193.78043818473816,
-  "_eval_score": 96.56331168831169
+  "_eval_score": 97.39087301587301
 }

@@ -414,12 +414,12 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 233.0,
-          "cost": 466.0,
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "15:12",
+          "end_time": "16:27",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
@@ -434,11 +434,53 @@
             },
             {
               "start": "Tonghuimen-Metro Station",
-              "end": "Taisheng South Road-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
               "mode": "metro",
               "start_time": "15:10",
-              "end_time": "15:15",
-              "distance": 2.71,
+              "end_time": "15:10",
+              "distance": 0.42,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu Cultural Park",
+              "mode": "walk",
+              "start_time": "15:10",
+              "end_time": "15:12",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 233.0,
+          "cost": 466.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Cultural Park",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "16:27",
+              "end_time": "16:29",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Taisheng South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "16:29",
+              "end_time": "16:33",
+              "distance": 2.48,
               "price": 2,
               "cost": 4,
               "tickets": 2
@@ -447,8 +489,8 @@
               "start": "Taisheng South Road-Metro Station",
               "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "mode": "walk",
-              "start_time": "15:15",
-              "end_time": "15:20",
+              "start_time": "16:33",
+              "end_time": "16:38",
               "distance": 0.46,
               "price": 0,
               "cost": 0
@@ -999,5 +1041,5 @@
     }
   ],
   "elapsed_time(sec)": 214.5754919052124,
-  "_eval_score": 96.95508658008657
+  "_eval_score": 97.32518115942028
 }
