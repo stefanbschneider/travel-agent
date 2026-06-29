@@ -639,12 +639,20 @@ class TPCAgent(BaseAgent):
         if day_idx == 0 and activities[0].get("type") in ("airplane", "train"):
             return False
         try:
-            if time_to_minutes(str(activities[0].get("start_time", "00:00"))) < time_to_minutes("08:30"):
+            first_act = activities[0]
+            first_transports = first_act.get("transports", []) or []
+            if first_transports:
+                anchor_raw = first_transports[0].get("start_time", "")
+            else:
+                anchor_raw = first_act.get("start_time", "00:00")
+            end_min = min(time_to_minutes(str(anchor_raw)), time_to_minutes("08:30"))
+            start_min = end_min - 60
+            if start_min < time_to_minutes("06:00"):
                 return False
         except Exception:
             return False
         before = self._activity_counts(plan)
-        activity = self._make_hotel_breakfast(hotel_name, "07:30", "08:30")
+        activity = self._make_hotel_breakfast(hotel_name, minutes_to_time(start_min), minutes_to_time(end_min))
         activities.insert(0, activity)
         try:
             if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
@@ -653,6 +661,24 @@ class TPCAgent(BaseAgent):
             pass
         del activities[0]
         return False
+
+    def _insert_restaurant_breakfast(self, plan, day_idx, restaurants, city, people, check, used_restaurants=None):
+        activities = plan["itinerary"][day_idx].get("activities", [])
+        if not activities:
+            return None
+        window = (6 * 60, 9 * 60)
+        for restaurant in restaurants:
+            r_name = self._norm_text(restaurant.get("name", ""))
+            if not r_name or (used_restaurants is not None and r_name in used_restaurants):
+                continue
+            if self._insert_activity_before_first(plan, day_idx, restaurant, "breakfast", window, city, people, check):
+                return r_name
+            for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
+                if self._insert_activity(plan, day_idx, prev_idx, restaurant, "breakfast", window, city, people, check):
+                    return r_name
+            if self._insert_activity_after_last(plan, day_idx, restaurant, "breakfast", window, city, people, check):
+                return r_name
+        return None
 
     def _insert_activity_before_first(self, plan, day_idx, poi, kind, window, city, people, check):
         activities = plan["itinerary"][day_idx].get("activities", [])
@@ -1043,6 +1069,17 @@ class TPCAgent(BaseAgent):
         attr_win_open = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_OPEN", "9")) * 60
         attr_win_close = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_CLOSE", "21")) * 60
         attr_candidate_limit = int(os.environ.get("TPC_DENSIFY_ATTR_CANDIDATES", "24"))
+        def _ranked_attractions(anchor_row=None, next_row=None):
+            return sorted(
+                attractions,
+                key=lambda a: (
+                    (self._haversine_km(anchor_row, a) if anchor_row is not None else 0.0)
+                    + (self._haversine_km(a, next_row) if next_row is not None else 0.0),
+                    a.get("price_cents", 0),
+                    a.get("name", ""),
+                ),
+            )[:attr_candidate_limit]
+
         for day_idx, day in enumerate(itinerary):
             activities = day.get("activities", []) or []
             if not activities:
@@ -1053,6 +1090,12 @@ class TPCAgent(BaseAgent):
                 hotel = self._find_hotel_for_day(dense, day_idx)
                 if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
                     meal_types.add("breakfast")
+                elif os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "0") == "1":
+                    r_name = self._insert_restaurant_breakfast(
+                        dense, day_idx, restaurants, city, people, check, used_restaurants)
+                    if r_name:
+                        used_restaurants.add(r_name)
+                        meal_types.add("breakfast")
 
             for meal_type, window in (("lunch", (11 * 60, 14 * 60)), ("dinner", (17 * 60, 20 * 60))):
                 if meal_type in meal_types:
@@ -1083,21 +1126,11 @@ class TPCAgent(BaseAgent):
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:
                 gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
-                if not gaps:
-                    break
                 inserted = False
                 for prev_idx, _gap_start, _gap_end in gaps:
                     prev_name = self._norm_text(self._activity_end_position(activities[prev_idx]))
-                    prev_coords = coords.get(prev_name)
-                    ranked = sorted(
-                        attractions,
-                        key=lambda a: (
-                            self._haversine_km(prev_coords, a) if prev_coords is not None else float("inf"),
-                            a.get("price_cents", 0),
-                            a.get("name", ""),
-                        ),
-                    )[:attr_candidate_limit]
-                    for attr in ranked:
+                    next_name = self._norm_text(self._activity_start_position(activities[prev_idx + 1]))
+                    for attr in _ranked_attractions(coords.get(prev_name), coords.get(next_name)):
                         a_name = self._norm_text(attr.get("name", ""))
                         if not a_name or a_name in used_attractions:
                             continue
@@ -1107,6 +1140,27 @@ class TPCAgent(BaseAgent):
                             break
                     if inserted:
                         break
+                if not inserted:
+                    first_name = self._norm_text(self._activity_start_position(activities[0]))
+                    first_coords = coords.get(first_name)
+                    for attr in _ranked_attractions(first_coords, first_coords):
+                        a_name = self._norm_text(attr.get("name", ""))
+                        if not a_name or a_name in used_attractions:
+                            continue
+                        if self._insert_activity_before_first(dense, day_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
+                            used_attractions.add(a_name)
+                            inserted = True
+                            break
+                if not inserted:
+                    last_name = self._norm_text(self._activity_end_position(activities[-1]))
+                    for attr in _ranked_attractions(coords.get(last_name)):
+                        a_name = self._norm_text(attr.get("name", ""))
+                        if not a_name or a_name in used_attractions:
+                            continue
+                        if self._insert_activity_after_last(dense, day_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
+                            used_attractions.add(a_name)
+                            inserted = True
+                            break
                 if not inserted:
                     break
 

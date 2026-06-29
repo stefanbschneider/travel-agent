@@ -35,7 +35,7 @@ BASE_SIF="${TPC_BASE_SIF:-$HOME/sif/python-312-slim.sif}"
 VENV_TAR="${TPC_VENV_TAR:-$HOME/sif/tpc-venv.tar}"
 PROJECT="${TPC_PROJECT_DIR:-/beegfs/home/users/f/fabimi/china-travel-agent}"
 SPLIT="${TPC_SMOKE_SPLIT:-smoke_att}"
-METHOD="TPCAgent_TPCLLM_en_oracletranslation"
+METHOD="${TPC_DENSIFY_METHOD:-TPCAgent_TPCLLM_en_oracletranslation}"
 
 if [[ ! -f "$BASE_SIF" ]]; then echo "missing base SIF: $BASE_SIF" >&2; exit 2; fi
 if [[ ! -f "$VENV_TAR" ]]; then echo "missing venv tar: $VENV_TAR" >&2; exit 2; fi
@@ -74,7 +74,7 @@ done < "chinatravel/evaluation/default_splits/${SPLIT}.txt"
 start_epoch=$(date +%s)
 echo "[smoke-att] job=$SLURM_JOB_ID host=$(hostname) start=$(date -Is) split=$SPLIT"
 echo "[smoke-att] === densify (with gated mode upgrade) ==="
-PY scripts/densify.py --split "$SPLIT" --workers 4
+PY scripts/densify.py --split "$SPLIT" --workers 4 --method "$METHOD"
 
 echo "[smoke-att] === eval CANDIDATE (method dir, no update_best) ==="
 PY eval_tpc.py --splits "$SPLIT" --method "$METHOD" --lang en
