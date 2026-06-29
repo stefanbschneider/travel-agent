@@ -130,13 +130,6 @@ def _process(args):
             skipped += 1
             continue
         plan = _load_json(best_path)
-        try:
-            score = float(plan.get("_eval_score", 0.0))
-        except Exception:
-            score = 0.0
-        if score < 85.0:
-            skipped += 1
-            continue
         query = query_data.get(uid)
         if query is None:
             skipped += 1
