@@ -577,9 +577,14 @@ class TPCAgent(BaseAgent):
         if kind != "attraction":
             return 60
         try:
-            dwell = int(os.environ.get("TPC_DENSIFY_ATTR_DWELL_MIN", "75"))
+            dwell = int(
+                os.environ.get(
+                    "TPC_DENSIFY_ATTR_DWELL",
+                    os.environ.get("TPC_DENSIFY_ATTR_DWELL_MIN", "60"),
+                )
+            )
         except Exception:
-            dwell = 75
+            dwell = 60
         return max(45, min(120, dwell))
 
     def _inner_activity_minutes(self, activity):
@@ -981,6 +986,37 @@ class TPCAgent(BaseAgent):
                     used_attractions.add(name)
 
         itinerary = dense.get("itinerary", []) or []
+        try:
+            attr_gap_min = int(
+                os.environ.get(
+                    "TPC_DENSIFY_ATTR_GAP_MIN",
+                    os.environ.get("TPC_DENSIFY_MIN_ATTR_GAP", "75"),
+                )
+            )
+        except Exception:
+            attr_gap_min = 75
+        attr_gap_min = max(60, min(240, attr_gap_min))
+
+        try:
+            attr_win_open_h = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_OPEN", "9"))
+        except Exception:
+            attr_win_open_h = 9
+        attr_win_open_h = max(0, min(23, attr_win_open_h))
+
+        try:
+            attr_win_close_h = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_CLOSE", "21"))
+        except Exception:
+            attr_win_close_h = 21
+        attr_win_close_h = max(attr_win_open_h + 1, min(24, attr_win_close_h))
+        attr_win_open = attr_win_open_h * 60
+        attr_win_close = attr_win_close_h * 60
+
+        try:
+            attr_candidate_limit = int(os.environ.get("TPC_DENSIFY_ATTR_CANDIDATES", "24"))
+        except Exception:
+            attr_candidate_limit = 24
+        attr_candidate_limit = max(1, min(200, attr_candidate_limit))
+
         for day_idx, day in enumerate(itinerary):
             activities = day.get("activities", []) or []
             if not activities:
@@ -1023,12 +1059,7 @@ class TPCAgent(BaseAgent):
                         break
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:
-                try:
-                    min_attr_gap = int(os.environ.get("TPC_DENSIFY_MIN_ATTR_GAP", "110"))
-                except Exception:
-                    min_attr_gap = 110
-                min_attr_gap = max(80, min(180, min_attr_gap))
-                gaps = self._day_gaps(activities, 9 * 60, 18 * 60, min_attr_gap)
+                gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
                 if not gaps:
                     break
                 inserted = False
@@ -1042,12 +1073,22 @@ class TPCAgent(BaseAgent):
                             a.get("price_cents", 0),
                             a.get("name", ""),
                         ),
-                    )
+                    )[:attr_candidate_limit]
                     for attr in ranked:
                         a_name = self._norm_text(attr.get("name", ""))
                         if not a_name or a_name in used_attractions:
                             continue
-                        if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (9 * 60, 18 * 60), city, people, check):
+                        if self._insert_activity(
+                            dense,
+                            day_idx,
+                            prev_idx,
+                            attr,
+                            "attraction",
+                            (attr_win_open, attr_win_close),
+                            city,
+                            people,
+                            check,
+                        ):
                             used_attractions.add(a_name)
                             inserted = True
                             break
