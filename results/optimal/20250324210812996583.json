@@ -1,0 +1,1326 @@
+{
+  "people_number": 4,
+  "start_city": "Shanghai",
+  "target_city": "Chengdu",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "00:14",
+          "end_time": "02:18",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 800.01,
+          "cost": 3200.04,
+          "tickets": 4,
+          "transports": [],
+          "FlightID": "FL041"
+        },
+        {
+          "type": "breakfast",
+          "position": "Chunyang Guan Fish-Flavored Pork Rib Noodles (Jixiang Street Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 19.0,
+          "cost": 76.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:18",
+              "end_time": "02:33",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "02:33",
+              "end_time": "03:00",
+              "distance": 13.91,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chunyang Guan Fish-Flavored Pork Rib Noodles (Jixiang Street Branch)",
+              "mode": "walk",
+              "start_time": "03:00",
+              "end_time": "03:06",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cat Museum",
+          "start_time": "10:00",
+          "end_time": "11:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chunyang Guan Fish-Flavored Pork Rib Noodles (Jixiang Street Branch)",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:06",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu West Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "09:06",
+              "end_time": "09:20",
+              "distance": 7.38,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Chengdu West Railway Station-Metro Station",
+              "end": "Cat Museum",
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:23",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+          "start_time": "11:42",
+          "end_time": "12:42",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Cat Museum",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "mode": "taxi",
+              "start_time": "11:30",
+              "end_time": "11:42",
+              "distance": 8.52,
+              "price": 34.53,
+              "cost": 34.53,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "12:44",
+          "end_time": "14:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Chengdu Cultural Park",
+              "mode": "taxi",
+              "start_time": "12:42",
+              "end_time": "12:44",
+              "distance": 1.74,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baihua Tan Park",
+          "start_time": "14:14",
+          "end_time": "15:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Cultural Park",
+              "end": "Baihua Tan Park",
+              "mode": "taxi",
+              "start_time": "14:14",
+              "end_time": "14:14",
+              "distance": 0.49,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liu Bei's Tomb",
+          "start_time": "15:45",
+          "end_time": "17:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Baihua Tan Park",
+              "end": "Liu Bei's Tomb",
+              "mode": "taxi",
+              "start_time": "15:44",
+              "end_time": "15:45",
+              "distance": 0.94,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Rongrong Peking University Bedspread Noodles (Main Store)",
+          "start_time": "17:20",
+          "end_time": "18:20",
+          "price": 17.0,
+          "cost": 68.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Liu Bei's Tomb",
+              "end": "Rongrong Peking University Bedspread Noodles (Main Store)",
+              "mode": "taxi",
+              "start_time": "17:15",
+              "end_time": "17:20",
+              "distance": 3.45,
+              "price": 16.76,
+              "cost": 16.76,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liu Xiang's Tomb",
+          "start_time": "18:25",
+          "end_time": "19:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Rongrong Peking University Bedspread Noodles (Main Store)",
+              "end": "Liu Xiang's Tomb",
+              "mode": "taxi",
+              "start_time": "18:20",
+              "end_time": "18:25",
+              "distance": 3.47,
+              "price": 16.84,
+              "cost": 16.84,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Butterfly Drama Club",
+          "start_time": "19:59",
+          "end_time": "21:29",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Liu Xiang's Tomb",
+              "end": "Butterfly Drama Club",
+              "mode": "taxi",
+              "start_time": "19:55",
+              "end_time": "19:59",
+              "distance": 2.97,
+              "price": 15.09,
+              "cost": 15.09,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "21:32",
+          "end_time": "24:00",
+          "price": 158.0,
+          "cost": 632.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Butterfly Drama Club",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
+              "start_time": "21:29",
+              "end_time": "21:32",
+              "distance": 2.13,
+              "price": 12.16,
+              "cost": 12.16,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu People's Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "08:35",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu People's Park",
+              "mode": "walk",
+              "start_time": "08:35",
+              "end_time": "08:39",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shen Tang Sweet Noodles",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu People's Park",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Yiguanmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:34",
+              "end_time": "10:41",
+              "distance": 3.78,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Yiguanmiao-Metro Station",
+              "end": "Shen Tang Sweet Noodles",
+              "mode": "walk",
+              "start_time": "10:41",
+              "end_time": "10:45",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu City Tour Sightseeing Bus",
+          "start_time": "12:19",
+          "end_time": "13:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shen Tang Sweet Noodles",
+              "end": "Yiguanmiao-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yiguanmiao-Metro Station",
+              "end": "Jinjiang Hotel-Metro Station",
+              "mode": "metro",
+              "start_time": "12:04",
+              "end_time": "12:08",
+              "distance": 2.18,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Jinjiang Hotel-Metro Station",
+              "end": "Chengdu City Tour Sightseeing Bus",
+              "mode": "walk",
+              "start_time": "12:08",
+              "end_time": "12:19",
+              "distance": 0.94,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "14:03",
+          "end_time": "15:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu City Tour Sightseeing Bus",
+              "end": "Jinjiang Hotel-Metro Station",
+              "mode": "walk",
+              "start_time": "13:49",
+              "end_time": "14:00",
+              "distance": 0.94,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jinjiang Hotel-Metro Station",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "14:00",
+              "end_time": "14:01",
+              "distance": 0.82,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Chengdu Library",
+              "mode": "walk",
+              "start_time": "14:01",
+              "end_time": "14:03",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 20.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Library",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "15:33",
+              "end_time": "15:35",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "15:35",
+              "end_time": "15:38",
+              "distance": 1.69,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "walk",
+              "start_time": "15:38",
+              "end_time": "15:48",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "18:01",
+          "end_time": "24:00",
+          "price": 158.0,
+          "cost": 632.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:01",
+              "distance": 1.3,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Great Mercy Temple",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "08:38",
+              "distance": 2.0,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Great Mercy Temple",
+              "mode": "walk",
+              "start_time": "08:38",
+              "end_time": "08:46",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Crispy and Fragrant Family's Guokui and Liangfen (Gengjia Alley Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 11.0,
+          "cost": 44.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Great Mercy Temple",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Xinnanmen-Metro Station",
+              "mode": "metro",
+              "start_time": "10:38",
+              "end_time": "10:42",
+              "distance": 2.01,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Xinnanmen-Metro Station",
+              "end": "Crispy and Fragrant Family's Guokui and Liangfen (Gengjia Alley Branch)",
+              "mode": "walk",
+              "start_time": "10:42",
+              "end_time": "10:48",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anshun Covered Bridge",
+          "start_time": "12:13",
+          "end_time": "13:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Crispy and Fragrant Family's Guokui and Liangfen (Gengjia Alley Branch)",
+              "end": "Xinnanmen-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:06",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinnanmen-Metro Station",
+              "end": "Niuwangmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "12:06",
+              "end_time": "12:09",
+              "distance": 1.86,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Niuwangmiao-Metro Station",
+              "end": "Anshun Covered Bridge",
+              "mode": "walk",
+              "start_time": "12:09",
+              "end_time": "12:13",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Night Cruise on the Jinjiang River",
+          "start_time": "14:00",
+          "end_time": "15:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Anshun Covered Bridge",
+              "end": "Niuwangmiao-Metro Station",
+              "mode": "walk",
+              "start_time": "13:43",
+              "end_time": "13:47",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niuwangmiao-Metro Station",
+              "end": "Dongmen Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "13:47",
+              "end_time": "13:48",
+              "distance": 0.78,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Dongmen Bridge-Metro Station",
+              "end": "Chengdu Night Cruise on the Jinjiang River",
+              "mode": "walk",
+              "start_time": "13:48",
+              "end_time": "13:50",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Painting Academy",
+          "start_time": "15:47",
+          "end_time": "16:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Night Cruise on the Jinjiang River",
+              "end": "Dongmen Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "15:30",
+              "end_time": "15:32",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongmen Bridge-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "15:32",
+              "end_time": "15:37",
+              "distance": 2.91,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Painting Academy",
+              "mode": "walk",
+              "start_time": "15:37",
+              "end_time": "15:47",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 40.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Painting Academy",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "16:47",
+              "end_time": "16:57",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "16:57",
+              "end_time": "16:58",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+              "mode": "walk",
+              "start_time": "16:58",
+              "end_time": "17:00",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "18:00",
+          "end_time": "24:00",
+          "price": 158.0,
+          "cost": 632.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:00",
+              "distance": 0.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Shu Brocade and Embroidery Museum",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "08:39",
+              "distance": 2.72,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+              "end": "Chengdu Shu Brocade and Embroidery Museum",
+              "mode": "walk",
+              "start_time": "08:39",
+              "end_time": "08:43",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shu Brocade and Embroidery Museum",
+              "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:34",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "10:34",
+              "end_time": "10:39",
+              "distance": 2.72,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "walk",
+              "start_time": "10:39",
+              "end_time": "10:42",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Museum",
+          "start_time": "12:10",
+          "end_time": "13:40",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:04",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chengdu Museum",
+              "mode": "walk",
+              "start_time": "12:04",
+              "end_time": "12:10",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "13:40",
+          "end_time": "15:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Museum",
+              "end": "China Shadow Puppet Museum",
+              "mode": "walk",
+              "start_time": "13:40",
+              "end_time": "13:40",
+              "distance": 0.07916972935558433,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake Park",
+          "start_time": "15:34",
+          "end_time": "16:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Shadow Puppet Museum",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "15:10",
+              "end_time": "15:17",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Dongguang-Metro Station",
+              "mode": "metro",
+              "start_time": "15:17",
+              "end_time": "15:29",
+              "distance": 6.08,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Dongguang-Metro Station",
+              "end": "East Lake Park",
+              "mode": "walk",
+              "start_time": "15:29",
+              "end_time": "15:34",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandpa and Grandma Chen's Egg Pancakes",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "East Lake Park",
+              "end": "Dongguang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "16:39",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongguang-Metro Station",
+              "end": "Provincial Gymnasium-Metro Station",
+              "mode": "metro",
+              "start_time": "16:39",
+              "end_time": "16:45",
+              "distance": 3.42,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Provincial Gymnasium-Metro Station",
+              "end": "Grandpa and Grandma Chen's Egg Pancakes",
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "16:52",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "18:07",
+          "end_time": "24:00",
+          "price": 158.0,
+          "cost": 632.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Grandpa and Grandma Chen's Egg Pancakes",
+              "end": "Chengdu Yuehuimei Hotel",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 5.18,
+              "price": 22.83,
+              "cost": 22.83,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Chengdu Yuehuimei Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Fragrant Alley",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Yuehuimei Hotel",
+              "end": "Manjushri Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Manjushri Temple-Metro Station",
+              "end": "Xinhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:34",
+              "end_time": "08:40",
+              "distance": 3.49,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Xinhong Road-Metro Station",
+              "end": "Fragrant Alley",
+              "mode": "walk",
+              "start_time": "08:40",
+              "end_time": "08:47",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Wang's Specialty Guokui (Ma'annan Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Fragrant Alley",
+              "end": "Xinhong Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:37",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinhong Road-Metro Station",
+              "end": "Hongxing Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "10:37",
+              "end_time": "10:40",
+              "distance": 1.52,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Hongxing Bridge-Metro Station",
+              "end": "Wang's Specialty Guokui (Ma'annan Road Branch)",
+              "mode": "walk",
+              "start_time": "10:40",
+              "end_time": "10:47",
+              "distance": 0.64,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chunxi Road",
+          "start_time": "12:11",
+          "end_time": "13:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wang's Specialty Guokui (Ma'annan Road Branch)",
+              "end": "Hongxing Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 0.64,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongxing Bridge-Metro Station",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "metro",
+              "start_time": "12:07",
+              "end_time": "12:09",
+              "distance": 1.32,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Chunxi Road",
+              "mode": "walk",
+              "start_time": "12:09",
+              "end_time": "12:11",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu IFS Sculpture Garden",
+          "start_time": "13:45",
+          "end_time": "15:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chunxi Road",
+              "end": "Chengdu IFS Sculpture Garden",
+              "mode": "walk",
+              "start_time": "13:41",
+              "end_time": "13:45",
+              "distance": 0.40316320236241066,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Pengzhen Guanyin Pavilion Old Teahouse",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 13.0,
+          "cost": 52.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu IFS Sculpture Garden",
+              "end": "Second Municipal Hospital-Metro Station",
+              "mode": "walk",
+              "start_time": "15:15",
+              "end_time": "15:19",
+              "distance": 0.4,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Second Municipal Hospital-Metro Station",
+              "end": "Shuangliu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "15:19",
+              "end_time": "15:56",
+              "distance": 19.0,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Shuangliu Square-Metro Station",
+              "end": "Pengzhen Guanyin Pavilion Old Teahouse",
+              "mode": "walk",
+              "start_time": "15:56",
+              "end_time": "16:57",
+              "distance": 5.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "18:57",
+          "end_time": "08:14",
+          "start": "Chengdu West Railway Station",
+          "end": "Shanghai South Railway Station",
+          "price": 664.28,
+          "cost": 2657.12,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Pengzhen Guanyin Pavilion Old Teahouse",
+              "end": "Chengdu West Railway Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:22",
+              "distance": 14.79,
+              "price": 61.26,
+              "cost": 61.26,
+              "cars": 1
+            }
+          ],
+          "TrainID": "K353"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 67.24982929229736,
+  "_eval_score": 100.0
+}

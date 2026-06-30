@@ -1,0 +1,717 @@
+{
+  "people_number": 5,
+  "start_city": "Beijing",
+  "target_city": "Wuhan",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "03:43",
+          "end_time": "05:02",
+          "start": "Beijing Capital International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 519.12,
+          "cost": 2595.6,
+          "tickets": 5,
+          "transports": [],
+          "FlightID": "FL150"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:08",
+          "end_time": "07:08",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "taxi",
+              "start_time": "05:02",
+              "end_time": "05:41",
+              "distance": 26.52,
+              "price": 114.03,
+              "cost": 228.06,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Hanyang Riverside Park",
+              "mode": "taxi",
+              "start_time": "07:08",
+              "end_time": "07:10",
+              "distance": 1.38,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Green Grain Restaurant (East Lake Branch)",
+          "start_time": "11:08",
+          "end_time": "12:08",
+          "price": 306.0,
+          "cost": 1530.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hanyang Riverside Park",
+              "end": "Green Grain Restaurant (East Lake Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:14",
+              "distance": 9.95,
+              "price": 39.52,
+              "cost": 79.04,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Riverside Park",
+          "start_time": "12:18",
+          "end_time": "13:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Green Grain Restaurant (East Lake Branch)",
+              "end": "Hankou Riverside Park",
+              "mode": "taxi",
+              "start_time": "12:08",
+              "end_time": "12:18",
+              "distance": 6.67,
+              "price": 28.04,
+              "cost": 56.08,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake",
+          "start_time": "13:34",
+          "end_time": "14:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hankou Riverside Park",
+              "end": "East Lake",
+              "mode": "taxi",
+              "start_time": "13:18",
+              "end_time": "13:34",
+              "distance": 11.12,
+              "price": 44.72,
+              "cost": 89.44,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Wuhan University",
+          "start_time": "14:41",
+          "end_time": "15:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "East Lake",
+              "end": "Wuhan University",
+              "mode": "taxi",
+              "start_time": "14:34",
+              "end_time": "14:41",
+              "distance": 4.84,
+              "price": 21.63,
+              "cost": 43.26,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Five Percent Villa Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 298.0,
+          "cost": 1490.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan University",
+              "end": "Five Percent Villa Restaurant",
+              "mode": "taxi",
+              "start_time": "15:41",
+              "end_time": "15:53",
+              "distance": 8.07,
+              "price": 32.96,
+              "cost": 65.92,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Magnotel Hotel (Wuhan high-speed railway station)",
+          "start_time": "18:18",
+          "end_time": "24:00",
+          "price": 195.0,
+          "cost": 975.0,
+          "rooms": 5,
+          "room_type": 1,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Five Percent Villa Restaurant",
+              "end": "Magnotel Hotel (Wuhan high-speed railway station)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:18",
+              "distance": 12.59,
+              "price": 51.34,
+              "cost": 102.68,
+              "cars": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Magnotel Hotel (Wuhan high-speed railway station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Hubu Alley",
+          "start_time": "08:49",
+          "end_time": "09:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Magnotel Hotel (Wuhan high-speed railway station)",
+              "end": "Hubu Alley",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:49",
+              "distance": 13.17,
+              "price": 53.96,
+              "cost": 107.92,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Wuhan Yangtze River Bridge",
+          "start_time": "09:50",
+          "end_time": "10:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hubu Alley",
+              "end": "Wuhan Yangtze River Bridge",
+              "mode": "taxi",
+              "start_time": "09:49",
+              "end_time": "09:50",
+              "distance": 0.97,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Good Temple",
+          "start_time": "11:01",
+          "end_time": "12:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Yangtze River Bridge",
+              "end": "Good Temple",
+              "mode": "taxi",
+              "start_time": "10:50",
+              "end_time": "11:01",
+              "distance": 7.85,
+              "price": 32.18,
+              "cost": 64.36,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+          "start_time": "12:07",
+          "end_time": "13:07",
+          "price": 297.0,
+          "cost": 1485.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Good Temple",
+              "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "mode": "taxi",
+              "start_time": "12:01",
+              "end_time": "12:07",
+              "distance": 4.36,
+              "price": 19.96,
+              "cost": 39.92,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jianghan Road Pedestrian Street",
+          "start_time": "13:10",
+          "end_time": "14:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "end": "Jianghan Road Pedestrian Street",
+              "mode": "taxi",
+              "start_time": "13:07",
+              "end_time": "13:10",
+              "distance": 2.58,
+              "price": 13.72,
+              "cost": 27.44,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 218.0,
+          "cost": 1090.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Jianghan Road Pedestrian Street",
+              "end": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+              "mode": "taxi",
+              "start_time": "14:10",
+              "end_time": "14:38",
+              "distance": 19.24,
+              "price": 81.28,
+              "cost": 162.56,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Magnotel Hotel (Wuhan high-speed railway station)",
+          "start_time": "18:12",
+          "end_time": "24:00",
+          "price": 195.0,
+          "cost": 975.0,
+          "rooms": 5,
+          "room_type": 1,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+              "end": "Magnotel Hotel (Wuhan high-speed railway station)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:12",
+              "distance": 8.4,
+              "price": 34.09,
+              "cost": 68.18,
+              "cars": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Magnotel Hotel (Wuhan high-speed railway station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake Mo Hill Scenic Area",
+          "start_time": "08:38",
+          "end_time": "09:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Magnotel Hotel (Wuhan high-speed railway station)",
+              "end": "East Lake Mo Hill Scenic Area",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 5.6,
+              "price": 24.3,
+              "cost": 48.6,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Wuchang Uprising Memorial of the 1911 Revolution",
+          "start_time": "09:53",
+          "end_time": "10:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "East Lake Mo Hill Scenic Area",
+              "end": "Wuchang Uprising Memorial of the 1911 Revolution",
+              "mode": "taxi",
+              "start_time": "09:38",
+              "end_time": "09:53",
+              "distance": 10.27,
+              "price": 40.93,
+              "cost": 81.86,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Tanhualin",
+          "start_time": "10:54",
+          "end_time": "11:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuchang Uprising Memorial of the 1911 Revolution",
+              "end": "Tanhualin",
+              "mode": "taxi",
+              "start_time": "10:53",
+              "end_time": "10:54",
+              "distance": 1.1,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shrimp King (Huquan Branch)",
+          "start_time": "12:05",
+          "end_time": "13:05",
+          "price": 129.0,
+          "cost": 645.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tanhualin",
+              "end": "Shrimp King (Huquan Branch)",
+              "mode": "taxi",
+              "start_time": "11:54",
+              "end_time": "12:05",
+              "distance": 7.79,
+              "price": 31.98,
+              "cost": 63.96,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lihuangpi Road",
+          "start_time": "13:21",
+          "end_time": "14:21",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shrimp King (Huquan Branch)",
+              "end": "Lihuangpi Road",
+              "mode": "taxi",
+              "start_time": "13:05",
+              "end_time": "13:21",
+              "distance": 11.2,
+              "price": 45.08,
+              "cost": 90.16,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 322.0,
+          "cost": 1610.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Lihuangpi Road",
+              "end": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
+              "mode": "taxi",
+              "start_time": "14:21",
+              "end_time": "14:42",
+              "distance": 14.53,
+              "price": 60.07,
+              "cost": 120.14,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Magnotel Hotel (Wuhan high-speed railway station)",
+          "start_time": "18:16",
+          "end_time": "24:00",
+          "price": 195.0,
+          "cost": 975.0,
+          "rooms": 5,
+          "room_type": 1,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
+              "end": "Magnotel Hotel (Wuhan high-speed railway station)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:16",
+              "distance": 10.79,
+              "price": 43.25,
+              "cost": 86.5,
+              "cars": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Magnotel Hotel (Wuhan high-speed railway station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Chu River Han Street",
+          "start_time": "08:43",
+          "end_time": "09:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Magnotel Hotel (Wuhan high-speed railway station)",
+              "end": "Chu River Han Street",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:43",
+              "distance": 9.1,
+              "price": 36.56,
+              "cost": 73.12,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiufeng National Forest Park",
+          "start_time": "10:07",
+          "end_time": "11:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chu River Han Street",
+              "end": "Jiufeng National Forest Park",
+              "mode": "taxi",
+              "start_time": "09:43",
+              "end_time": "10:07",
+              "distance": 16.23,
+              "price": 67.74,
+              "cost": 135.48,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Wuhan Museum",
+          "start_time": "11:45",
+          "end_time": "12:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Jiufeng National Forest Park",
+              "end": "Wuhan Museum",
+              "mode": "taxi",
+              "start_time": "11:07",
+              "end_time": "11:45",
+              "distance": 25.96,
+              "price": 111.53,
+              "cost": 223.06,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Xia's Clay Pot (Wansongyuan Branch)",
+          "start_time": "12:49",
+          "end_time": "13:49",
+          "price": 107.0,
+          "cost": 535.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Museum",
+              "end": "Xia's Clay Pot (Wansongyuan Branch)",
+              "mode": "taxi",
+              "start_time": "12:45",
+              "end_time": "12:49",
+              "distance": 2.81,
+              "price": 14.53,
+              "cost": 29.06,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "5D Starry Sky Illusion Art Museum",
+          "start_time": "14:08",
+          "end_time": "15:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Xia's Clay Pot (Wansongyuan Branch)",
+              "end": "5D Starry Sky Illusion Art Museum",
+              "mode": "taxi",
+              "start_time": "13:49",
+              "end_time": "13:52",
+              "distance": 2.64,
+              "price": 13.93,
+              "cost": 27.86,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 25.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "5D Starry Sky Illusion Art Museum",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "15:38",
+              "end_time": "15:39",
+              "distance": 0.84,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:07",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 521.9,
+          "cost": 2609.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:32",
+              "distance": 21.53,
+              "price": 91.56,
+              "cost": 183.12,
+              "cars": 2
+            }
+          ],
+          "FlightID": "FL580"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 180.9762668609619,
+  "_eval_score": 100.0
+}

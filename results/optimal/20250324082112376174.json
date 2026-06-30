@@ -1,0 +1,375 @@
+{
+  "people_number": 3,
+  "start_city": "Suzhou",
+  "target_city": "Nanjing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "00:02",
+          "end_time": "02:15",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 94.54,
+          "cost": 283.62,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "T136"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "02:15",
+              "end_time": "02:21",
+              "distance": 4.23,
+              "price": 19.51,
+              "cost": 19.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "09:13",
+          "end_time": "10:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 3.77,
+              "price": 17.9,
+              "cost": 17.9,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 74.0,
+          "cost": 222.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Peach Leaf Ferry",
+              "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "mode": "taxi",
+              "start_time": "10:43",
+              "end_time": "10:44",
+              "distance": 1.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+          "start_time": "12:01",
+          "end_time": "13:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "end": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 0.94,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
+          "start_time": "13:01",
+          "end_time": "14:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
+              "mode": "taxi",
+              "start_time": "13:01",
+              "end_time": "13:01",
+              "distance": 0.61,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhongshan Scenic Area",
+          "start_time": "14:12",
+          "end_time": "15:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Zhongshan Scenic Area",
+              "mode": "taxi",
+              "start_time": "14:01",
+              "end_time": "14:12",
+              "distance": 7.66,
+              "price": 31.52,
+              "cost": 31.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Nanjing Jinling Hotel - Plum Garden",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 423.0,
+          "cost": 1269.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhongshan Scenic Area",
+              "end": "Nanjing Jinling Hotel - Plum Garden",
+              "mode": "taxi",
+              "start_time": "15:12",
+              "end_time": "15:23",
+              "distance": 7.82,
+              "price": 32.06,
+              "cost": 32.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "start_time": "18:13",
+          "end_time": "24:00",
+          "price": 379.0,
+          "cost": 758.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Jinling Hotel - Plum Garden",
+              "end": "UrCove by HYATT Nanjing South Railway Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:13",
+              "distance": 8.7,
+              "price": 35.16,
+              "cost": 35.16,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Presidential Palace",
+          "start_time": "08:44",
+          "end_time": "09:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "UrCove by HYATT Nanjing South Railway Station",
+              "end": "Nanjing Presidential Palace",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:44",
+              "distance": 9.4,
+              "price": 37.6,
+              "cost": 37.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Sun Yat-sen Mausoleum Scenic Area",
+          "start_time": "09:52",
+          "end_time": "10:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Presidential Palace",
+              "end": "Sun Yat-sen Mausoleum Scenic Area",
+              "mode": "taxi",
+              "start_time": "09:44",
+              "end_time": "09:52",
+              "distance": 5.51,
+              "price": 23.98,
+              "cost": 23.98,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing City Wall",
+          "start_time": "11:23",
+          "end_time": "12:23",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Sun Yat-sen Mausoleum Scenic Area",
+              "end": "Nanjing City Wall",
+              "mode": "taxi",
+              "start_time": "10:52",
+              "end_time": "11:23",
+              "distance": 21.02,
+              "price": 89.29,
+              "cost": 89.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Li's Halal Restaurant (Dading Lane Branch)",
+          "start_time": "12:48",
+          "end_time": "13:48",
+          "price": 29.0,
+          "cost": 87.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing City Wall",
+              "end": "Li's Halal Restaurant (Dading Lane Branch)",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:48",
+              "distance": 16.7,
+              "price": 69.86,
+              "cost": 69.86,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "14:12",
+          "end_time": "15:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Li's Halal Restaurant (Dading Lane Branch)",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "taxi",
+              "start_time": "13:48",
+              "end_time": "13:54",
+              "distance": 4.63,
+              "price": 20.91,
+              "cost": 20.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "15:42",
+              "end_time": "15:45",
+              "distance": 2.46,
+              "price": 13.29,
+              "cost": 13.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "22:24",
+          "end_time": "02:26",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 75.63,
+          "cost": 226.89,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Nanjing Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 2.77,
+              "price": 14.38,
+              "cost": 14.38,
+              "cars": 1
+            }
+          ],
+          "TrainID": "K1805"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 181.09740734100342,
+  "_eval_score": 100.0
+}
