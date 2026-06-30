@@ -46,7 +46,7 @@ def score_plan(plan):
 
     dav_raw = n_attr / (4 * days)
     ddr_raw = n_meal / (3 * days)
-    att_raw = (-1.0 / 105.0) * avg_time + 8.0 / 7.0 if trans_count > 0 else 0.0
+    att_raw = (-1.0 / 105.0) * avg_time + 8.0 / 7.0
     return {
         "days": days,
         "n_attr": n_attr,
