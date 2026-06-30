@@ -21,9 +21,11 @@ def main():
     ap.add_argument("--split", default="tpc_phase1", help="split to evaluate/merge from")
     ap.add_argument("--no-oracle", dest="no_oracle", action="store_true",
                     help="merge from the no-oracle results dir")
+    ap.add_argument("--method", default=None,
+                    help="merge from this specific results subdir; overrides --no-oracle")
     args = ap.parse_args()
 
-    method = METHOD_NOORACLE if args.no_oracle else METHOD_ORACLE
+    method = args.method or (METHOD_NOORACLE if args.no_oracle else METHOD_ORACLE)
     cmd = [sys.executable, "eval_tpc.py", "--splits", args.split,
            "--method", method, "--lang", "en", "--update_best"]
     print("merge:", " ".join(cmd))

@@ -34,6 +34,8 @@ METHOD="${TPC_GHOST_METHOD:-TPCAgent_TPCLLM_en_oracletranslation_ghost_densify}"
 MAX_CANDIDATES="${TPC_GHOST_MAX_CANDIDATES:-12}"
 ATTR_CAP="${TPC_GHOST_ATTR_CAP:-4}"
 ATTR_SLOTS="${TPC_GHOST_ATTR_SLOTS:-09:00-10:00,10:15-11:15,14:00-15:00,15:15-16:15,16:30-17:30,19:30-20:30}"
+UPGRADE_TRANSPORT="${TPC_GHOST_UPGRADE_TRANSPORT:-0}"
+FLEX_MEALS="${TPC_GHOST_FLEX_MEALS:-1}"
 TASKS="${SLURM_ARRAY_TASK_COUNT:-64}"
 TASK_ID="${SLURM_ARRAY_TASK_ID:?missing task id}"
 SHARD_SPLIT="_ghost_array_${SLURM_ARRAY_JOB_ID}_${TASK_ID}_${BASE_SPLIT}"
@@ -61,10 +63,14 @@ flock -u 9
 awk -v n="$TASKS" -v i="$TASK_ID" 'NF && ((NR-1) % n == i) {print}' "chinatravel/evaluation/default_splits/${BASE_SPLIT}.txt" > "$SHARD_FILE"
 COUNT=$(wc -l < "$SHARD_FILE")
 start_epoch=$(date +%s)
-echo "[ghost-array] job=$SLURM_JOB_ID array=$SLURM_ARRAY_JOB_ID task=$TASK_ID host=$(hostname) start=$(date -Is) split=$BASE_SPLIT shard=$SHARD_SPLIT count=$COUNT method=$METHOD max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP attr_slots=$ATTR_SLOTS"
+echo "[ghost-array] job=$SLURM_JOB_ID array=$SLURM_ARRAY_JOB_ID task=$TASK_ID host=$(hostname) start=$(date -Is) split=$BASE_SPLIT shard=$SHARD_SPLIT count=$COUNT method=$METHOD max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP attr_slots=$ATTR_SLOTS flex_meals=$FLEX_MEALS upgrade_transport=$UPGRADE_TRANSPORT"
+
+EXTRA_FLAGS=""
+if [[ "$FLEX_MEALS" == "0" ]]; then EXTRA_FLAGS="$EXTRA_FLAGS --no-flex-meals"; fi
+if [[ "$UPGRADE_TRANSPORT" == "1" ]]; then EXTRA_FLAGS="$EXTRA_FLAGS --upgrade-transport"; fi
 
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/ghost_densify.py \
-    --split "$SHARD_SPLIT" --method "$METHOD" --workers 1 --max-candidates "$MAX_CANDIDATES" --attr-cap "$ATTR_CAP" --attr-slots "$ATTR_SLOTS"
+    --split "$SHARD_SPLIT" --method "$METHOD" --workers 1 --max-candidates "$MAX_CANDIDATES" --attr-cap "$ATTR_CAP" --attr-slots "$ATTR_SLOTS" $EXTRA_FLAGS
 
 rm -f "$SHARD_FILE"
 end_epoch=$(date +%s)
