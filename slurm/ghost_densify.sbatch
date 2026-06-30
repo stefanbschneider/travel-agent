@@ -33,6 +33,8 @@ METHOD="${TPC_GHOST_METHOD:-TPCAgent_TPCLLM_en_oracletranslation_ghost_densify}"
 WORKERS="${TPC_GHOST_WORKERS:-4}"
 MAX_CANDIDATES="${TPC_GHOST_MAX_CANDIDATES:-24}"
 
+ATTR_CAP="${TPC_GHOST_ATTR_CAP:-4}"
+ATTR_SLOTS="${TPC_GHOST_ATTR_SLOTS:-09:00-10:00,10:15-11:15,14:00-15:00,15:15-16:15,16:30-17:30,19:30-20:30}"
 cd "$PROJECT"
 mkdir -p "$PROJECT/cache/solve_logs"
 
@@ -50,8 +52,8 @@ fi
 flock -u 9
 
 start_epoch=$(date +%s)
-echo "[ghost-df] job=$SLURM_JOB_ID host=$(hostname) split=$SPLIT method=$METHOD workers=$WORKERS max_candidates=$MAX_CANDIDATES start=$(date -Is)"
+echo "[ghost-df] job=$SLURM_JOB_ID host=$(hostname) split=$SPLIT method=$METHOD workers=$WORKERS max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP attr_slots=$ATTR_SLOTS start=$(date -Is)"
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/ghost_densify.py \
-    --split "$SPLIT" --method "$METHOD" --workers "$WORKERS" --max-candidates "$MAX_CANDIDATES"
+    --split "$SPLIT" --method "$METHOD" --workers "$WORKERS" --max-candidates "$MAX_CANDIDATES" --attr-cap "$ATTR_CAP" --attr-slots "$ATTR_SLOTS"
 end_epoch=$(date +%s)
 echo "[ghost-df] done elapsed_sec=$((end_epoch - start_epoch)) end=$(date -Is)"
