@@ -164,9 +164,13 @@ def _fmt(total_min):
     return "{:02d}:{:02d}".format(total_min // 60, total_min % 60)
 
 
-def _free_windows(day_activities, band_lo, band_hi, duration=MEAL_DURATION):
-    """Candidate (start_min, end_min) windows of length `duration` that fit inside a free
-    gap overlapping [band_lo, band_hi]. Earliest start first."""
+def _free_windows(day_activities, band_lo, band_hi, duration=MEAL_DURATION, step=60):
+    """Candidate (start_min, end_min) windows that fit inside a free gap overlapping
+    [band_lo, band_hi].
+
+    Include both gap edges and hourly starts so late-opening POIs are not missed when a
+    long free evening gap starts before the POI opens.
+    """
     spans = []
     for activity in day_activities:
         try:
@@ -186,11 +190,23 @@ def _free_windows(day_activities, band_lo, band_hi, duration=MEAL_DURATION):
     if cur < 24 * 60:
         gaps.append((cur, 24 * 60))
     windows = []
+    seen = set()
     for gs, ge in gaps:
         lo = max(gs, band_lo)
         hi = min(ge, band_hi)
-        if hi - lo >= duration:
-            windows.append((lo, lo + duration))
+        latest = hi - duration
+        if latest < lo:
+            continue
+        starts = {lo, latest}
+        aligned = ((lo + step - 1) // step) * step
+        while aligned <= latest:
+            starts.add(aligned)
+            aligned += step
+        for start in sorted(starts):
+            item = (start, start + duration)
+            if item not in seen:
+                seen.add(item)
+                windows.append(item)
     return windows
 
 
@@ -311,7 +327,7 @@ def _try_insert(plan, day_idx, activity, uid, serial, agent, check):
     return trial, True
 
 
-def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False, meal_duration=MEAL_DURATION, force_meals=False):
+def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False, meal_duration=MEAL_DURATION, force_meals=False, attr_window_open="09:00", attr_window_close="21:00"):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
     people = int(query.get("people_number", 1) or 1)
@@ -335,7 +351,7 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
         if flex_meals:
             while counts.get("attraction", 0) < attr_cap:
                 day_acts_now = plan.get("itinerary", [])[day_idx].get("activities", []) or []
-                windows = _free_windows(day_acts_now, _minutes("09:00"), _minutes("21:00"))
+                windows = _free_windows(day_acts_now, _minutes(attr_window_open), _minutes(attr_window_close))
                 if not windows:
                     break
                 inserted_round = False
@@ -486,6 +502,8 @@ def _process(args):
             upgrade_transport=args.upgrade_transport,
             meal_duration=args.meal_duration,
             force_meals=args.force_meals,
+            attr_window_open=args.attr_window_open,
+            attr_window_close=args.attr_window_close,
         )
         if dense is None:
             skipped += 1
@@ -542,6 +560,10 @@ def _run_parallel(args):
                 args.attr_slots,
                 "--meal-duration",
                 str(args.meal_duration),
+                "--attr-window-open",
+                args.attr_window_open,
+                "--attr-window-close",
+                args.attr_window_close,
             ]
             if not args.flex_meals:
                 cmd.append("--no-flex-meals")
@@ -584,6 +606,10 @@ def main():
     ap.add_argument("--force-meals", dest="force_meals", action="store_true",
                     default=bool(int(os.environ.get("TPC_GHOST_FORCE_MEALS", "0"))),
                     help="when no free meal window exists, try fixed slots (e.g. during intercity transport)")
+    ap.add_argument("--attr-window-open", default=os.environ.get("TPC_GHOST_ATTR_WINDOW_OPEN", "09:00"),
+                    help="earliest time considered for flexible attraction insertion")
+    ap.add_argument("--attr-window-close", default=os.environ.get("TPC_GHOST_ATTR_WINDOW_CLOSE", "21:00"),
+                    help="latest time considered for flexible attraction insertion")
     args = ap.parse_args()
     if args.meal_duration <= 0:
         ap.error("--meal-duration must be positive")
