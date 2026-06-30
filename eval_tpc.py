@@ -447,6 +447,42 @@ if __name__ == "__main__":
             )
 
         # ------------------------------------------------------------------ #
+        # Always update results/optimal for queries scoring 100.0             #
+        # ------------------------------------------------------------------ #
+        optimal_dir = os.path.join(project_root_path, "results", "optimal")
+        os.makedirs(optimal_dir, exist_ok=True)
+
+        _all_pass_set = set(all_pass_id)
+        _per_query_pr = cal_per_query_pr_scores(query_index, result_data[method], _all_pass_set)
+        newly_optimal = 0
+        for query_id in query_index:
+            if query_id not in _all_pass_set:
+                continue
+            pr = _per_query_pr.get(query_id, np.zeros(len(DEFAULT_PR)))
+            dav_score = pr[0] * 100
+            att_score = pr[1] * 100
+            ddr_score = pr[2] * 100
+            current_score = (
+                0.1 * 100.0 + 0.1 * 100.0 + 0.25 * 100.0
+                + 0.05 * dav_score + 0.05 * att_score + 0.05 * ddr_score
+                + 0.4 * 100.0
+            )
+            if current_score < (100.0 - 1e-9):
+                continue
+            dest_file = os.path.join(optimal_dir, "{}.json".format(query_id))
+            if os.path.exists(dest_file):
+                continue
+            src_file = os.path.join(results_dir, "{}.json".format(query_id))
+            if os.path.exists(src_file):
+                shutil.copy2(src_file, dest_file)
+                newly_optimal += 1
+
+        total_optimal = len([f for f in os.listdir(optimal_dir) if f.endswith('.json')])
+        if newly_optimal > 0:
+            print("optimal: {} newly copied to {}".format(newly_optimal, optimal_dir))
+        print("Optimal: {}/1000".format(total_optimal))
+
+        # ------------------------------------------------------------------ #
         # Auto-update results/constraints_solved and results/best             #
         # ------------------------------------------------------------------ #
         if not args.update_best:
