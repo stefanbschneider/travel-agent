@@ -8,15 +8,263 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:05",
-          "end_time": "16:50",
+          "start_time": "07:58",
+          "end_time": "12:40",
           "start": "Chengdu West Railway Station",
           "end": "Beijing West Railway Station",
-          "price": 609.81,
-          "cost": 1219.62,
+          "price": 762.26,
+          "cost": 1524.52,
           "tickets": 2,
           "transports": [],
-          "TrainID": "K547"
+          "TrainID": "T8"
+        },
+        {
+          "type": "attraction",
+          "position": "Yonghe Temple",
+          "start_time": "14:50",
+          "end_time": "16:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beijing West Railway Station",
+              "end": "Beijing West Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "12:40",
+              "end_time": "12:40",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Beijing West Railway Station-Metro Station",
+              "end": "Yonghe Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "12:40",
+              "end_time": "13:00",
+              "distance": 10.2,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Yonghe Temple-Metro Station",
+              "end": "Yonghe Temple",
+              "mode": "walk",
+              "start_time": "13:00",
+              "end_time": "13:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Summer Palace at China World Hotel, Beijing",
+          "start_time": "17:42",
+          "end_time": "18:42",
+          "price": 454.0,
+          "cost": 908.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Yonghe Temple",
+              "end": "Summer Palace at China World Hotel, Beijing",
+              "mode": "walk",
+              "start_time": "16:35",
+              "end_time": "17:42",
+              "distance": 5.623208352115729,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shichahai",
+          "start_time": "20:07",
+          "end_time": "21:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Summer Palace at China World Hotel, Beijing",
+              "end": "Guomao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:42",
+              "end_time": "18:45",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Guomao-Metro Station",
+              "end": "Gulou Street-Metro Station",
+              "mode": "metro",
+              "start_time": "18:45",
+              "end_time": "18:59",
+              "distance": 7.31,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Gulou Street-Metro Station",
+              "end": "Shichahai",
+              "mode": "walk",
+              "start_time": "18:59",
+              "end_time": "19:01",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
+          "start_time": "23:40",
+          "end_time": "24:00",
+          "price": 596.0,
+          "cost": 596.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shichahai",
+              "end": "Gulou Street-Metro Station",
+              "mode": "walk",
+              "start_time": "21:52",
+              "end_time": "21:54",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gulou Street-Metro Station",
+              "end": "Liuliqiao East-Metro Station",
+              "mode": "metro",
+              "start_time": "21:54",
+              "end_time": "22:13",
+              "distance": 9.63,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Liuliqiao East-Metro Station",
+              "end": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
+              "mode": "walk",
+              "start_time": "22:13",
+              "end_time": "22:18",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "National Museum of Natural History",
+          "start_time": "09:58",
+          "end_time": "11:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
+              "end": "Liuliqiao East-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liuliqiao East-Metro Station",
+              "end": "Qiaowan-Metro Station",
+              "mode": "metro",
+              "start_time": "08:35",
+              "end_time": "08:51",
+              "distance": 8.01,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Qiaowan-Metro Station",
+              "end": "National Museum of Natural History",
+              "mode": "walk",
+              "start_time": "08:51",
+              "end_time": "08:55",
+              "distance": 0.4,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Mei·DaDong Sea Cucumber Restaurant (Nancang Store)",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "price": 980.0,
+          "cost": 1960.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "National Museum of Natural History",
+              "end": "Mei·DaDong Sea Cucumber Restaurant (Nancang Store)",
+              "mode": "walk",
+              "start_time": "11:43",
+              "end_time": "12:45",
+              "distance": 5.203158181283678,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jingshan Park",
+          "start_time": "14:13",
+          "end_time": "15:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Mei·DaDong Sea Cucumber Restaurant (Nancang Store)",
+              "end": "Jingshan Park",
+              "mode": "walk",
+              "start_time": "13:45",
+              "end_time": "14:13",
+              "distance": 2.400588642047635,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,32 +276,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
-              "end": "Beijing West Railway Station-Metro Station",
+              "start": "Jingshan Park",
+              "end": "Nanluoguxiang-Metro Station",
               "mode": "walk",
-              "start_time": "16:50",
-              "end_time": "16:50",
-              "distance": 0.08,
+              "start_time": "15:58",
+              "end_time": "16:00",
+              "distance": 0.22,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Beijing West Railway Station-Metro Station",
+              "start": "Nanluoguxiang-Metro Station",
               "end": "Dawanglu-Metro Station",
               "mode": "metro",
-              "start_time": "16:50",
-              "end_time": "17:16",
-              "distance": 13.3,
-              "price": 4,
-              "cost": 8,
+              "start_time": "16:00",
+              "end_time": "16:13",
+              "distance": 6.75,
+              "price": 3,
+              "cost": 6,
               "tickets": 2
             },
             {
               "start": "Dawanglu-Metro Station",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
               "mode": "walk",
-              "start_time": "17:16",
-              "end_time": "17:20",
+              "start_time": "16:13",
+              "end_time": "16:17",
               "distance": 0.34,
               "price": 0,
               "cost": 0
@@ -62,14 +310,14 @@
         },
         {
           "type": "accommodation",
-          "position": "Grand Kingtown Hotel Beijing",
-          "start_time": "18:54",
+          "position": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
+          "start_time": "21:05",
           "end_time": "24:00",
-          "price": 563.0,
-          "cost": 1126.0,
-          "rooms": 2,
-          "room_type": 1,
-          "tickets": 2,
+          "price": 596.0,
+          "cost": 596.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
           "transports": [
             {
               "start": "Jumbo Seafood (Beijing SKP Branch)",
@@ -83,228 +331,22 @@
             },
             {
               "start": "Dawanglu-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
+              "end": "Liuliqiao East-Metro Station",
               "mode": "metro",
               "start_time": "18:24",
-              "end_time": "18:50",
-              "distance": 13.3,
+              "end_time": "18:51",
+              "distance": 13.94,
               "price": 4,
               "cost": 8,
               "tickets": 2
             },
             {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Grand Kingtown Hotel Beijing",
+              "start": "Liuliqiao East-Metro Station",
+              "end": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
               "mode": "walk",
-              "start_time": "18:50",
-              "end_time": "18:54",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Grand Kingtown Hotel Beijing",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "The Palace Museum",
-          "start_time": "08:57",
-          "end_time": "10:27",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Grand Kingtown Hotel Beijing",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "08:50",
-              "distance": 8.31,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "The Palace Museum",
-              "mode": "walk",
-              "start_time": "08:50",
-              "end_time": "08:57",
-              "distance": 0.63,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "11:03",
-          "end_time": "12:00",
-          "price": 337.0,
-          "cost": 674.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "The Palace Museum",
-              "end": "Tidu (Beijing Fang Branch)",
-              "mode": "walk",
-              "start_time": "10:27",
-              "end_time": "11:03",
-              "distance": 3.0340270447818423,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "National Museum of China",
-          "start_time": "12:22",
-          "end_time": "13:52",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Tidu (Beijing Fang Branch)",
-              "end": "National Museum of China",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:22",
-              "distance": 1.9054240406530962,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beihai Park",
-          "start_time": "14:25",
-          "end_time": "15:55",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "National Museum of China",
-              "end": "Beihai Park",
-              "mode": "walk",
-              "start_time": "13:52",
-              "end_time": "14:25",
-              "distance": 2.7568427891433704,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 1100.0,
-          "cost": 2200.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Beihai Park",
-              "end": "Shichahai-Metro Station",
-              "mode": "walk",
-              "start_time": "15:55",
-              "end_time": "15:59",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shichahai-Metro Station",
-              "end": "Tuanjiehu-Metro Station",
-              "mode": "metro",
-              "start_time": "15:59",
-              "end_time": "16:10",
-              "distance": 5.62,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Tuanjiehu-Metro Station",
-              "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
-              "mode": "walk",
-              "start_time": "16:10",
-              "end_time": "16:14",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Grand Kingtown Hotel Beijing",
-          "start_time": "18:33",
-          "end_time": "24:00",
-          "price": 563.0,
-          "cost": 1126.0,
-          "rooms": 2,
-          "room_type": 1,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
-              "end": "Tuanjiehu-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:04",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tuanjiehu-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:04",
-              "end_time": "18:29",
-              "distance": 12.78,
-              "price": 4,
-              "cost": 8,
-              "tickets": 2
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Grand Kingtown Hotel Beijing",
-              "mode": "walk",
-              "start_time": "18:29",
-              "end_time": "18:33",
-              "distance": 0.36,
+              "start_time": "18:51",
+              "end_time": "18:56",
+              "distance": 0.47,
               "price": 0,
               "cost": 0
             }
@@ -317,7 +359,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Grand Kingtown Hotel Beijing",
+          "position": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -327,20 +369,41 @@
         },
         {
           "type": "attraction",
-          "position": "Bao Guo Temple",
-          "start_time": "09:12",
-          "end_time": "09:42",
+          "position": "Tiananmen Square",
+          "start_time": "10:00",
+          "end_time": "11:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Grand Kingtown Hotel Beijing",
-              "end": "Bao Guo Temple",
+              "start": "Beijing West Station South Road Liuliqiao East Yaduo Hotel",
+              "end": "Liuliqiao East-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:12",
-              "distance": 3.5730091124235424,
+              "end_time": "08:35",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liuliqiao East-Metro Station",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "metro",
+              "start_time": "08:35",
+              "end_time": "08:50",
+              "distance": 7.72,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Tiananmen Square",
+              "mode": "walk",
+              "start_time": "08:50",
+              "end_time": "08:54",
+              "distance": 0.36,
               "price": 0,
               "cost": 0
             }
@@ -348,41 +411,62 @@
         },
         {
           "type": "lunch",
-          "position": "Beijing Puxuan Hotel · Left Bank",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 733.0,
-          "cost": 1466.0,
+          "position": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+          "start_time": "11:51",
+          "end_time": "12:51",
+          "price": 180.0,
+          "cost": 360.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+              "mode": "walk",
+              "start_time": "11:45",
+              "end_time": "11:51",
+              "distance": 0.5027726008961342,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao Guo Temple",
+          "start_time": "13:35",
+          "end_time": "14:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+              "end": "Bao Guo Temple",
+              "mode": "walk",
+              "start_time": "12:51",
+              "end_time": "13:35",
+              "distance": 3.7060764786150115,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Capital Museum",
+          "start_time": "15:01",
+          "end_time": "16:01",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Bao Guo Temple",
-              "end": "Changchun Street-Metro Station",
+              "end": "Capital Museum",
               "mode": "walk",
-              "start_time": "09:42",
-              "end_time": "09:46",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Changchun Street-Metro Station",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "metro",
-              "start_time": "09:46",
-              "end_time": "09:55",
-              "distance": 4.87,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "Beijing Puxuan Hotel · Left Bank",
-              "mode": "walk",
-              "start_time": "09:55",
-              "end_time": "09:55",
-              "distance": 0.05,
+              "start_time": "14:35",
+              "end_time": "15:01",
+              "distance": 2.2450720864674887,
               "price": 0,
               "cost": 0
             }
@@ -390,51 +474,30 @@
         },
         {
           "type": "train",
-          "start_time": "13:40",
-          "end_time": "22:21",
+          "start_time": "16:43",
+          "end_time": "20:57",
           "start": "Beijing West Railway Station",
           "end": "Chengdu West Railway Station",
-          "price": 609.81,
-          "cost": 1219.62,
+          "price": 762.26,
+          "cost": 1524.52,
           "tickets": 2,
           "transports": [
             {
-              "start": "Beijing Puxuan Hotel · Left Bank",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:00",
-              "distance": 0.05,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "12:00",
-              "end_time": "12:16",
-              "distance": 8.31,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
+              "start": "Capital Museum",
               "end": "Beijing West Railway Station",
               "mode": "walk",
-              "start_time": "12:16",
-              "end_time": "12:16",
-              "distance": 0.08,
+              "start_time": "16:01",
+              "end_time": "16:37",
+              "distance": 3.0168816353208694,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "K545"
+          "TrainID": "T7"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.5823259353637695,
-  "_eval_score": 94.39393939393939
+  "elapsed_time(sec)": 239.5165238380432,
+  "_eval_score": 95.44727891156462
 }

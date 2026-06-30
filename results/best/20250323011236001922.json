@@ -8,20 +8,146 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "09:39",
-          "end_time": "21:53",
-          "start": "Shenzhen North Railway Station",
+          "start_time": "12:16",
+          "end_time": "12:53",
+          "start": "Shenzhen Station",
           "end": "Suzhou Station",
-          "price": 700.94,
-          "cost": 2102.82,
+          "price": 467.29,
+          "cost": 1401.8700000000001,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D2282"
+          "TrainID": "K34"
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Museum",
+          "start_time": "13:06",
+          "end_time": "14:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "12:53",
+              "end_time": "12:54",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Meixiang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:54",
+              "end_time": "12:57",
+              "distance": 1.99,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Meixiang-Metro Station",
+              "end": "Suzhou Museum",
+              "mode": "walk",
+              "start_time": "12:57",
+              "end_time": "13:06",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shantang Street",
+          "start_time": "15:15",
+          "end_time": "17:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Museum",
+              "end": "Meixiang-Metro Station",
+              "mode": "walk",
+              "start_time": "14:51",
+              "end_time": "15:00",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meixiang-Metro Station",
+              "end": "Shantang Street-Metro Station",
+              "mode": "metro",
+              "start_time": "15:00",
+              "end_time": "15:06",
+              "distance": 3.25,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Shantang Street",
+              "mode": "walk",
+              "start_time": "15:06",
+              "end_time": "15:15",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shangri-La Hotel Suzhou · Shang Palace",
+          "start_time": "17:20",
+          "end_time": "18:20",
+          "price": 231.0,
+          "cost": 693.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shantang Street",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "17:09",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Lion Mountain Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:09",
+              "end_time": "17:19",
+              "distance": 5.0,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Lion Mountain Road-Metro Station",
+              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "mode": "walk",
+              "start_time": "17:19",
+              "end_time": "17:20",
+              "distance": 0.1,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
           "position": "Atour Hotel Suzhou Beisita Taohuawu Street",
-          "start_time": "22:04",
+          "start_time": "18:41",
           "end_time": "24:00",
           "price": 464.0,
           "cost": 1392.0,
@@ -30,32 +156,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Suzhou Station",
-              "end": "Suzhou Railway Station-Metro Station",
+              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Lion Mountain Road-Metro Station",
               "mode": "walk",
-              "start_time": "21:53",
-              "end_time": "21:54",
-              "distance": 0.13,
+              "start_time": "18:20",
+              "end_time": "18:21",
+              "distance": 0.1,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Suzhou Railway Station-Metro Station",
+              "start": "Lion Mountain Road-Metro Station",
               "end": "North Temple Pagoda-Metro Station",
               "mode": "metro",
-              "start_time": "21:54",
-              "end_time": "21:56",
-              "distance": 1.46,
-              "price": 2,
-              "cost": 6,
+              "start_time": "18:21",
+              "end_time": "18:33",
+              "distance": 6.49,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "North Temple Pagoda-Metro Station",
               "end": "Atour Hotel Suzhou Beisita Taohuawu Street",
               "mode": "walk",
-              "start_time": "21:56",
-              "end_time": "22:04",
+              "start_time": "18:33",
+              "end_time": "18:41",
               "distance": 0.7,
               "price": 0,
               "cost": 0
@@ -79,95 +205,30 @@
         },
         {
           "type": "attraction",
-          "position": "Maple Bridge Scenic Area",
-          "start_time": "09:06",
-          "end_time": "10:51",
+          "position": "Pingjiang Road Historic District",
+          "start_time": "08:55",
+          "end_time": "10:40",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Atour Hotel Suzhou Beisita Taohuawu Street",
-              "end": "Maple Bridge Scenic Area",
-              "mode": "taxi",
+              "end": "North Temple Pagoda-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:35",
-              "distance": 3.82,
-              "price": 18.06,
-              "cost": 18.06,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
-          "start_time": "11:22",
-          "end_time": "12:22",
-          "price": 57.0,
-          "cost": 171.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Maple Bridge Scenic Area",
-              "end": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
-              "mode": "taxi",
-              "start_time": "10:51",
-              "end_time": "10:55",
-              "distance": 2.89,
-              "price": 14.8,
-              "cost": 14.8,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shantang Street",
-          "start_time": "12:34",
-          "end_time": "14:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
-              "end": "Shantang Street",
-              "mode": "walk",
-              "start_time": "12:22",
-              "end_time": "12:34",
-              "distance": 1.0522905913530842,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Pingjiang Road Historic District",
-          "start_time": "14:48",
-          "end_time": "16:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shantang Street",
-              "end": "Shantang Street-Metro Station",
-              "mode": "walk",
-              "start_time": "14:19",
-              "end_time": "14:28",
-              "distance": 0.82,
+              "end_time": "08:38",
+              "distance": 0.7,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shantang Street-Metro Station",
+              "start": "North Temple Pagoda-Metro Station",
               "end": "Xiangmen-Metro Station",
               "mode": "metro",
-              "start_time": "14:28",
-              "end_time": "14:35",
-              "distance": 3.68,
+              "start_time": "08:38",
+              "end_time": "08:42",
+              "distance": 2.17,
               "price": 2,
               "cost": 6,
               "tickets": 3
@@ -176,8 +237,8 @@
               "start": "Xiangmen-Metro Station",
               "end": "Pingjiang Road Historic District",
               "mode": "walk",
-              "start_time": "14:35",
-              "end_time": "14:48",
+              "start_time": "08:42",
+              "end_time": "08:55",
               "distance": 1.14,
               "price": 0,
               "cost": 0
@@ -185,53 +246,31 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 255.0,
-          "cost": 765.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Pingjiang Road Historic District",
-              "end": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
-              "mode": "taxi",
-              "start_time": "16:33",
-              "end_time": "16:34",
-              "distance": 0.77,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "attraction",
           "position": "Golden Rooster Lake",
-          "start_time": "18:30",
-          "end_time": "20:15",
+          "start_time": "11:13",
+          "end_time": "12:58",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
-              "end": "Humble Administrator's Garden Suzhou Museum-Metro Station",
+              "start": "Pingjiang Road Historic District",
+              "end": "Xiangmen-Metro Station",
               "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:08",
-              "distance": 0.69,
+              "start_time": "10:40",
+              "end_time": "10:53",
+              "distance": 1.14,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Humble Administrator's Garden Suzhou Museum-Metro Station",
+              "start": "Xiangmen-Metro Station",
               "end": "Cultural Expo Center-Metro Station",
               "mode": "metro",
-              "start_time": "18:08",
-              "end_time": "18:22",
-              "distance": 7.39,
+              "start_time": "10:53",
+              "end_time": "11:05",
+              "distance": 6.41,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -240,9 +279,135 @@
               "start": "Cultural Expo Center-Metro Station",
               "end": "Golden Rooster Lake",
               "mode": "walk",
-              "start_time": "18:22",
-              "end_time": "18:30",
+              "start_time": "11:05",
+              "end_time": "11:13",
               "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Water Tour",
+          "start_time": "13:28",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Golden Rooster Lake",
+              "end": "Cultural Expo Center-Metro Station",
+              "mode": "walk",
+              "start_time": "12:58",
+              "end_time": "13:06",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Cultural Expo Center-Metro Station",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "metro",
+              "start_time": "13:06",
+              "end_time": "13:22",
+              "distance": 8.17,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Suzhou Water Tour",
+              "mode": "walk",
+              "start_time": "13:22",
+              "end_time": "13:28",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chang Garden",
+          "start_time": "15:23",
+          "end_time": "16:23",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Water Tour",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "walk",
+              "start_time": "15:13",
+              "end_time": "15:19",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "metro",
+              "start_time": "15:19",
+              "end_time": "15:21",
+              "distance": 1.49,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Chang Garden",
+              "mode": "walk",
+              "start_time": "15:21",
+              "end_time": "15:23",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Suyan Chinese Restaurant at W Suzhou",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 450.0,
+          "cost": 1350.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chang Garden",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:23",
+              "end_time": "16:25",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Oriental Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "16:25",
+              "end_time": "16:36",
+              "distance": 5.51,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Oriental Gate-Metro Station",
+              "end": "Suyan Chinese Restaurant at W Suzhou",
+              "mode": "walk",
+              "start_time": "16:36",
+              "end_time": "16:40",
+              "distance": 0.34,
               "price": 0,
               "cost": 0
             }
@@ -251,7 +416,7 @@
         {
           "type": "accommodation",
           "position": "Atour Hotel Suzhou Beisita Taohuawu Street",
-          "start_time": "20:47",
+          "start_time": "18:23",
           "end_time": "24:00",
           "price": 464.0,
           "cost": 1392.0,
@@ -260,22 +425,22 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Golden Rooster Lake",
-              "end": "Cultural Expo Center-Metro Station",
+              "start": "Suyan Chinese Restaurant at W Suzhou",
+              "end": "Oriental Gate-Metro Station",
               "mode": "walk",
-              "start_time": "20:15",
-              "end_time": "20:23",
-              "distance": 0.74,
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 0.34,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Cultural Expo Center-Metro Station",
+              "start": "Oriental Gate-Metro Station",
               "end": "North Temple Pagoda-Metro Station",
               "mode": "metro",
-              "start_time": "20:23",
-              "end_time": "20:39",
-              "distance": 8.06,
+              "start_time": "18:04",
+              "end_time": "18:15",
+              "distance": 5.65,
               "price": 3,
               "cost": 9,
               "tickets": 3
@@ -284,8 +449,8 @@
               "start": "North Temple Pagoda-Metro Station",
               "end": "Atour Hotel Suzhou Beisita Taohuawu Street",
               "mode": "walk",
-              "start_time": "20:39",
-              "end_time": "20:47",
+              "start_time": "18:15",
+              "end_time": "18:23",
               "distance": 0.7,
               "price": 0,
               "cost": 0
@@ -351,11 +516,11 @@
         },
         {
           "type": "lunch",
-          "position": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+          "position": "Moon Pavilion (Guanqian Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 192.0,
-          "cost": 576.0,
+          "price": 153.0,
+          "cost": 459.0,
           "tickets": 3,
           "transports": [
             {
@@ -370,64 +535,22 @@
             },
             {
               "start": "Shantang Street-Metro Station",
-              "end": "Lindun Road-Metro Station",
+              "end": "Chayuanchang-Metro Station",
               "mode": "metro",
               "start_time": "10:44",
-              "end_time": "10:49",
-              "distance": 2.93,
+              "end_time": "10:48",
+              "distance": 2.07,
               "price": 2,
               "cost": 6,
               "tickets": 3
             },
             {
-              "start": "Lindun Road-Metro Station",
-              "end": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+              "start": "Chayuanchang-Metro Station",
+              "end": "Moon Pavilion (Guanqian Branch)",
               "mode": "walk",
-              "start_time": "10:49",
-              "end_time": "10:53",
+              "start_time": "10:48",
+              "end_time": "10:52",
               "distance": 0.41,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Arhat Hall",
-          "start_time": "12:18",
-          "end_time": "13:18",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
-              "end": "Lindun Road-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:04",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lindun Road-Metro Station",
-              "end": "Shantang Street-Metro Station",
-              "mode": "metro",
-              "start_time": "12:04",
-              "end_time": "12:09",
-              "distance": 2.93,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Shantang Street-Metro Station",
-              "end": "Arhat Hall",
-              "mode": "walk",
-              "start_time": "12:09",
-              "end_time": "12:18",
-              "distance": 0.78,
               "price": 0,
               "cost": 0
             }
@@ -444,22 +567,22 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Arhat Hall",
-              "end": "Shantang Street-Metro Station",
+              "start": "Moon Pavilion (Guanqian Branch)",
+              "end": "Chayuanchang-Metro Station",
               "mode": "walk",
-              "start_time": "13:18",
-              "end_time": "13:27",
-              "distance": 0.78,
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 0.41,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shantang Street-Metro Station",
+              "start": "Chayuanchang-Metro Station",
               "end": "Suzhou Railway Station-Metro Station",
               "mode": "metro",
-              "start_time": "13:27",
-              "end_time": "13:29",
-              "distance": 1.48,
+              "start_time": "12:04",
+              "end_time": "12:08",
+              "distance": 2.4,
               "price": 2,
               "cost": 6,
               "tickets": 3
@@ -468,8 +591,8 @@
               "start": "Suzhou Railway Station-Metro Station",
               "end": "Suzhou Station",
               "mode": "walk",
-              "start_time": "13:29",
-              "end_time": "13:30",
+              "start_time": "12:08",
+              "end_time": "12:09",
               "distance": 0.13,
               "price": 0,
               "cost": 0
@@ -480,6 +603,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 183.69767236709595,
-  "_eval_score": 95.23015873015873
+  "elapsed_time(sec)": 256.725182056427,
+  "_eval_score": 95.4490231990232
 }
