@@ -168,6 +168,26 @@
           "transports": []
         },
         {
+          "type": "breakfast",
+          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
+          "start_time": "08:31",
+          "end_time": "08:41",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "breakfast",
+          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
+          "start_time": "08:42",
+          "end_time": "08:52",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
           "type": "attraction",
           "position": "Fengmen Hengjie",
           "start_time": "09:18",
@@ -294,6 +314,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Garden of Cultivation",
+          "start_time": "13:38",
+          "end_time": "13:48",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chang Garden",
+              "end": "Garden of Cultivation",
+              "mode": "taxi",
+              "start_time": "13:37",
+              "end_time": "13:38",
+              "distance": 1.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "13:58",
           "end_time": "14:52",
@@ -304,35 +346,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chang Garden",
-              "end": "Chayuanchang-Metro Station",
-              "mode": "walk",
-              "start_time": "13:37",
-              "end_time": "13:39",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chayuanchang-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "13:39",
-              "end_time": "13:43",
-              "distance": 2.4,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Suzhou Railway Station-Metro Station",
+              "start": "Garden of Cultivation",
               "end": "Suzhou Station",
-              "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "13:44",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:48",
+              "end_time": "13:49",
+              "distance": 1.24,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ],
           "TrainID": "K36"
@@ -341,5 +363,5 @@
     }
   ],
   "elapsed_time(sec)": 1.4980950355529785,
-  "_eval_score": 96.45833333333334
+  "_eval_score": 98.75
 }
