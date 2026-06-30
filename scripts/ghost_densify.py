@@ -31,12 +31,44 @@ from chinatravel.data.load_datasets import NpEncoder, load_query
 from chinatravel.environment.world_env import WorldEnv
 
 
-ATTR_SLOTS = [("09:00", "10:00"), ("10:15", "11:15"), ("14:00", "15:00"), ("15:15", "16:15")]
+ATTR_SLOTS = [
+    ("09:00", "10:00"),
+    ("10:15", "11:15"),
+    ("14:00", "15:00"),
+    ("15:15", "16:15"),
+    ("16:30", "17:30"),
+    ("19:30", "20:30"),
+]
 MEAL_SLOTS = {
     "breakfast": ("07:00", "08:00"),
     "lunch": ("12:00", "13:00"),
     "dinner": ("18:00", "19:00"),
 }
+DEFAULT_ATTR_CAP = 4
+DEFAULT_ATTR_SLOTS = ",".join("{}-{}".format(start, end) for start, end in ATTR_SLOTS)
+
+
+def _parse_attr_slots(value):
+    slots = []
+    for item in str(value or "").split(","):
+        item = item.strip()
+        if not item:
+            continue
+        try:
+            start, end = item.split("-", 1)
+        except ValueError as exc:
+            raise argparse.ArgumentTypeError("bad attraction slot {!r}; expected HH:MM-HH:MM".format(item)) from exc
+        start = start.strip()
+        end = end.strip()
+        try:
+            if _minutes(start) >= _minutes(end):
+                raise ValueError
+        except Exception as exc:
+            raise argparse.ArgumentTypeError("bad attraction slot {!r}; expected increasing HH:MM-HH:MM".format(item)) from exc
+        slots.append((start, end))
+    if not slots:
+        raise argparse.ArgumentTypeError("at least one attraction slot is required")
+    return slots
 
 
 def _split_path(name):
@@ -238,7 +270,7 @@ def _try_insert(plan, day_idx, activity, uid, serial, agent, check):
     return trial, True
 
 
-def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates):
+def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
     constraints = agent._collect_constraints(query)
@@ -258,8 +290,8 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
     for day_idx in range(len(itinerary)):
         counts = _counts_for_day(itinerary[day_idx])
 
-        for slot in ATTR_SLOTS:
-            if counts.get("attraction", 0) >= 4:
+        for slot in attr_slots:
+            if counts.get("attraction", 0) >= attr_cap:
                 break
             start, end = slot
             for row in _candidate_rows(attr_df, used_attrs, start, end, max_candidates, prefer_free=True):
@@ -347,7 +379,7 @@ def _process(args):
             continue
         considered += 1
         plan = _load_json(best_path)
-        dense, added = _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, args.max_candidates)
+        dense, added = _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, args.max_candidates, _parse_attr_slots(args.attr_slots), args.attr_cap)
         if dense is None:
             skipped += 1
             continue
@@ -364,7 +396,9 @@ def _run_parallel(args):
     uids = _read_uids(args.split)
     workers = max(1, min(args.workers, len(uids)))
     shards = [uids[i::workers] for i in range(workers)]
-    prefix = "_tmp_{}_ghost_shard".format(args.split)
+    label_source = "{}_{}".format(args.split, args.method or DEFAULT_METHOD)
+    label = "".join(ch if ch.isalnum() else "_" for ch in label_source)[-48:]
+    prefix = "_tmp_{}_{}_ghost_shard".format(os.getpid(), label)
     for stale in glob.glob(os.path.join(SPLIT_DIR, prefix + "*.txt")):
         os.remove(stale)
     log_dir = os.path.join(ROOT, "cache", "ghost_densify_logs")
@@ -381,10 +415,25 @@ def _run_parallel(args):
             with open(path, "w", encoding="utf-8") as f:
                 f.write("\n".join(shard) + "\n")
             tmp_splits.append(path)
-            log_path = os.path.join(log_dir, "{}_shard{}.log".format(args.split, k))
+            log_path = os.path.join(log_dir, "{}_{}_shard{}.log".format(os.getpid(), label, k))
             logf = open(log_path, "w", encoding="utf-8")
             logs.append(logf)
-            cmd = [sys.executable, "scripts/ghost_densify.py", "--split", name, "--workers", "1", "--method", args.method or DEFAULT_METHOD, "--max-candidates", str(args.max_candidates)]
+            cmd = [
+                sys.executable,
+                "scripts/ghost_densify.py",
+                "--split",
+                name,
+                "--workers",
+                "1",
+                "--method",
+                args.method or DEFAULT_METHOD,
+                "--max-candidates",
+                str(args.max_candidates),
+                "--attr-cap",
+                str(args.attr_cap),
+                "--attr-slots",
+                str(args.attr_slots),
+            ]
             procs.append((k, len(shard), subprocess.Popen(cmd, cwd=ROOT, stdout=logf, stderr=subprocess.STDOUT)))
         rc = 0
         for k, n, proc in procs:
@@ -408,6 +457,9 @@ def main():
     ap.add_argument("--method", default=DEFAULT_METHOD)
     ap.add_argument("--workers", type=int, default=1)
     ap.add_argument("--max-candidates", type=int, default=24)
+    ap.add_argument("--attr-cap", type=int, default=int(os.environ.get("TPC_GHOST_ATTR_CAP", DEFAULT_ATTR_CAP)))
+    ap.add_argument("--attr-slots", default=os.environ.get("TPC_GHOST_ATTR_SLOTS", DEFAULT_ATTR_SLOTS),
+                    help="comma-separated HH:MM-HH:MM attraction slots")
     args = ap.parse_args()
     if args.workers > 1:
         return _run_parallel(args)
