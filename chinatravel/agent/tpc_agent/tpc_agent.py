@@ -527,7 +527,7 @@ class TPCAgent(BaseAgent):
         if not self._accepted(*check(plan)):
             return plan
         best_plan = plan
-        best_attrs, best_meals = self._activity_counts(plan)
+        best_key = self._accepted_eval_key(plan)
         for extra in (3, 4):
             if time.time() - self.start_clock > self.solve_budget_sec:
                 break
@@ -539,10 +539,10 @@ class TPCAgent(BaseAgent):
                 continue
             if not self._accepted(*check(cand)):
                 continue
-            c_attrs, c_meals = self._activity_counts(cand)
-            if (c_attrs + c_meals) > (best_attrs + best_meals):
+            cand_key = self._accepted_eval_key(cand)
+            if cand_key > best_key:
                 best_plan = cand
-                best_attrs, best_meals = c_attrs, c_meals
+                best_key = cand_key
         return self._densify_plan(best_plan, query, constraints, check)
 
     def _activity_start_position(self, activity):
@@ -706,11 +706,11 @@ class TPCAgent(BaseAgent):
                 return False
         except Exception:
             return False
-        before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         activity = self._make_hotel_breakfast(hotel_name, "07:30", "08:30")
         activities.insert(0, activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if self._accepted(*check(plan)) and self._accepted_eval_key(plan) > before_key:
                 return True
         except Exception:
             pass
@@ -792,12 +792,12 @@ class TPCAgent(BaseAgent):
         else:
             activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
 
-        before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         old_first_transports = deepcopy(first_act.get("transports", []))
         first_act["transports"] = transports_to_next
         activities.insert(0, activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if self._accepted(*check(plan)) and self._accepted_eval_key(plan) > before_key:
                 return True
         except Exception:
             pass
@@ -854,10 +854,10 @@ class TPCAgent(BaseAgent):
         else:
             activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
 
-        before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         activities.append(activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if self._accepted(*check(plan)) and self._accepted_eval_key(plan) > before_key:
                 return True
         except Exception:
             pass
@@ -922,12 +922,12 @@ class TPCAgent(BaseAgent):
         else:
             activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_in)
 
-        before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         old_next_transports = deepcopy(next_act.get("transports", []))
         next_act["transports"] = transports_out
         activities.insert(prev_idx + 1, activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if self._accepted(*check(plan)) and self._accepted_eval_key(plan) > before_key:
                 return True
         except Exception:
             pass

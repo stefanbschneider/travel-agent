@@ -269,6 +269,22 @@ def write_suboptimal_split_file(source_split_path, suboptimal_split_path, solved
     return len(kept_lines), removed_count
 
 
+def read_split_query_ids(split_file_path):
+    """Return ordered non-empty query IDs from a split file."""
+    if not os.path.exists(split_file_path):
+        return []
+    with open(split_file_path, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f.readlines() if line.strip()]
+
+
+def canonical_base_split_name(split_name):
+    """Map derived split names (e.g. *_suboptimal) back to the base split."""
+    suffix = "_suboptimal"
+    if split_name.endswith(suffix) and len(split_name) > len(suffix):
+        return split_name[: -len(suffix)]
+    return split_name
+
+
 def _resolve_method_dir(method, lang):
     """Pick the results directory name for a method under a locale.
 
@@ -439,19 +455,27 @@ if __name__ == "__main__":
         constraints_solved_dir = os.path.join(project_root_path, "results", "constraints_solved")
         best_dir = os.path.join(project_root_path, "results", "best")
         optimal_dir = os.path.join(project_root_path, "results", "optimal")
+        base_split = canonical_base_split_name(args.splits)
+        base_split_file = os.path.join(
+            project_root_path,
+            "chinatravel",
+            "evaluation",
+            "default_splits",
+            "{}.txt".format(base_split),
+        )
         unsolved_split_file = os.path.join(
             project_root_path,
             "chinatravel",
             "evaluation",
             "default_splits",
-            "tpc_phase1_constraints_unsolved.txt",
+            "{}_constraints_unsolved.txt".format(base_split),
         )
         suboptimal_split_file = os.path.join(
             project_root_path,
             "chinatravel",
             "evaluation",
             "default_splits",
-            "{}_suboptimal.txt".format(args.splits),
+            "{}_suboptimal.txt".format(base_split),
         )
         os.makedirs(constraints_solved_dir, exist_ok=True)
         os.makedirs(best_dir, exist_ok=True)
@@ -554,9 +578,13 @@ if __name__ == "__main__":
             shutil.copy2(best_file, dest_file)
             optimal_copied += 1
 
-        # Scan results/best for ALL optimal queries (not just newly updated ones)
-        # to maintain complete optimal folder and suboptimal split across runs
+        # Scan results/best for ALL optimal queries in the base split (not just newly
+        # updated ones) to maintain complete optimal folder and suboptimal split across runs.
         all_optimal_query_ids = set()
+        scan_ids = read_split_query_ids(base_split_file)
+        if not scan_ids:
+            scan_ids = list(query_index)
+
         def _check_best_optimal(query_id):
             best_file = os.path.join(best_dir, "{}.json".format(query_id))
             if not os.path.exists(best_file):
@@ -570,19 +598,24 @@ if __name__ == "__main__":
                 return query_id, False
 
         with ThreadPoolExecutor(max_workers=min(32, (os.cpu_count() or 4) * 4)) as pool:
-            for query_id, is_opt in pool.map(_check_best_optimal, query_index):
+            for query_id, is_opt in pool.map(_check_best_optimal, scan_ids):
                 if is_opt:
                     all_optimal_query_ids.add(query_id)
 
+        # Backfill missing files in results/optimal for all currently optimal IDs.
+        optimal_backfilled = 0
+        for query_id in all_optimal_query_ids:
+            dest_file = os.path.join(optimal_dir, "{}.json".format(query_id))
+            if os.path.exists(dest_file):
+                continue
+            best_file = os.path.join(best_dir, "{}.json".format(query_id))
+            if os.path.exists(best_file):
+                shutil.copy2(best_file, dest_file)
+                optimal_backfilled += 1
+
         remaining_suboptimal = -1
         removed_suboptimal = 0
-        source_split_file = os.path.join(
-            project_root_path,
-            "chinatravel",
-            "evaluation",
-            "default_splits",
-            "{}.txt".format(args.splits),
-        )
+        source_split_file = base_split_file
         if os.path.exists(source_split_file):
             remaining_suboptimal, removed_suboptimal = write_suboptimal_split_file(
                 source_split_file,
@@ -597,8 +630,8 @@ if __name__ == "__main__":
         print("constraints_unsolved: {} query IDs removed from {}".format(
             removed_unsolved, unsolved_split_file))
         print("best: {} results updated in {}".format(updated_best, best_dir))
-        print("optimal: {} newly copied, {} already present; {} total optimal in split in {}".format(
-            optimal_copied, optimal_already_present, len(all_optimal_query_ids), optimal_dir))
+        print("optimal: {} newly copied, {} already present, {} backfilled; {} total optimal in split in {}".format(
+            optimal_copied, optimal_already_present, optimal_backfilled, len(all_optimal_query_ids), optimal_dir))
         if remaining_suboptimal >= 0:
             print("suboptimal split: {} ids remaining in {} ({} removed this run)".format(
                 remaining_suboptimal, suboptimal_split_file, removed_suboptimal))
