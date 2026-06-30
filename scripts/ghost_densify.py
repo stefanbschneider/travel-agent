@@ -226,7 +226,7 @@ def _candidate_rows(df, used, start, end, limit, prefer_free=False):
     return rows[:limit]
 
 
-def _make_attraction(row, start, end):
+def _make_attraction(row, start, end, people=1):
     price = float(row.get("price", 0.0) or 0.0)
     return {
         "type": "attraction",
@@ -234,13 +234,13 @@ def _make_attraction(row, start, end):
         "start_time": start,
         "end_time": end,
         "price": price,
-        "cost": price,
-        "tickets": 1,
+        "cost": price * people,
+        "tickets": people,
         "transports": [],
     }
 
 
-def _make_meal(kind, row, start, end):
+def _make_meal(kind, row, start, end, people=1):
     price = float(row.get("price", 0.0) or 0.0)
     return {
         "type": kind,
@@ -248,8 +248,8 @@ def _make_meal(kind, row, start, end):
         "start_time": start,
         "end_time": end,
         "price": price,
-        "cost": price,
-        "tickets": 1,
+        "cost": price * people,
+        "tickets": people,
         "transports": [],
     }
 
@@ -314,6 +314,7 @@ def _try_insert(plan, day_idx, activity, uid, serial, agent, check):
 def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
+    people = int(query.get("people_number", 1) or 1)
     constraints = agent._collect_constraints(query)
     check = agent._make_checker(query, constraints)
     try:
@@ -342,7 +343,7 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
                     start, end = _fmt(ws), _fmt(we)
                     for row in _candidate_rows(attr_df, used_attrs, start, end, max_candidates, prefer_free=True):
                         serial += 1
-                        activity = _make_attraction(row, start, end)
+                        activity = _make_attraction(row, start, end, people)
                         next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
                         if ok:
                             plan = next_plan
@@ -362,7 +363,7 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
                 start, end = slot
                 for row in _candidate_rows(attr_df, used_attrs, start, end, max_candidates, prefer_free=True):
                     serial += 1
-                    activity = _make_attraction(row, start, end)
+                    activity = _make_attraction(row, start, end, people)
                     next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
                     if ok:
                         plan = next_plan
@@ -402,7 +403,7 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
                     break
                 for row in _candidate_rows(rest_df, used_restaurants, start, end, max_candidates, prefer_free=False):
                     serial += 1
-                    activity = _make_meal(kind, row, start, end)
+                    activity = _make_meal(kind, row, start, end, people)
                     next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
                     if ok:
                         plan = next_plan
