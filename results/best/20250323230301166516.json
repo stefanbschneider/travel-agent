@@ -8,15 +8,58 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +71,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "10:00",
+              "end_time": "10:01",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -245,12 +288,13 @@
             {
               "start": "Huangpu River Cruise (Shiliupu Wharf)",
               "end": "Huangpu River Cruise",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:48",
-              "end_time": "14:50",
-              "distance": 0.1962009977894697,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:48",
+              "distance": 0.2,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -265,34 +309,14 @@
           "transports": [
             {
               "start": "Huangpu River Cruise",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
-              "start_time": "16:20",
-              "end_time": "16:24",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:24",
-              "end_time": "16:36",
-              "distance": 6.39,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "16:36",
-              "end_time": "16:46",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:20",
+              "end_time": "16:30",
+              "distance": 6.91,
+              "price": 28.9,
+              "cost": 28.9,
+              "cars": 1
             }
           ]
         },
@@ -308,34 +332,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:56",
-              "distance": 23.09,
-              "price": 6,
-              "cost": 6,
-              "tickets": 1
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "18:56",
-              "end_time": "18:57",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.64,
+              "price": 101.08,
+              "cost": 101.08,
+              "cars": 1
             }
           ],
           "TrainID": "D941"
@@ -344,5 +348,5 @@
     }
   ],
   "elapsed_time(sec)": 188.95780491828918,
-  "_eval_score": 96.30357142857143
+  "_eval_score": 98.31632653061224
 }

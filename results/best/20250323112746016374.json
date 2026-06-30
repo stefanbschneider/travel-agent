@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinghua Lou (Fuzhou Road Main Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 260.0,
+          "cost": 260.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Xinghua Lou (Fuzhou Road Main Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:09",
+              "distance": 14.25,
+              "price": 58.82,
+              "cost": 58.82,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eaglewood Pavilion",
+          "start_time": "09:17",
+          "end_time": "10:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinghua Lou (Fuzhou Road Main Branch)",
+              "end": "Eaglewood Pavilion",
+              "mode": "taxi",
+              "start_time": "09:00",
+              "end_time": "09:01",
+              "distance": 1.22,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Eaglewood Pavilion",
               "end": "Jing Xi Hui (The Bund Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:18",
-              "distance": 31.43,
-              "price": 136.13,
-              "cost": 136.13,
+              "start_time": "10:17",
+              "end_time": "10:18",
+              "distance": 0.75,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -267,62 +311,65 @@
             {
               "start": "Cheng Long Hang Crab Palace (Jiujiang Road Branch)",
               "end": "Holy Trinity Church",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:27",
-              "end_time": "13:37",
-              "distance": 0.8862310360631916,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:28",
+              "distance": 0.89,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hoping Fat Tea Cafe (People's Square Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 84.0,
+          "cost": 84.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Holy Trinity Church",
+              "end": "Hoping Fat Tea Cafe (People's Square Branch)",
+              "mode": "taxi",
+              "start_time": "15:07",
+              "end_time": "15:09",
+              "distance": 1.7,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Holy Trinity Church",
-              "end": "East Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:07",
-              "end_time": "15:17",
-              "distance": 0.91,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "East Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:17",
-              "end_time": "16:21",
-              "distance": 32.08,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Hoping Fat Tea Cafe (People's Square Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:36",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:50",
+              "distance": 33.54,
+              "price": 145.64,
+              "cost": 145.64,
+              "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 198.09140872955322,
-  "_eval_score": 97.69246031746033
+  "_eval_score": 100.0
 }

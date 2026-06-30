@@ -7,16 +7,104 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "04:14",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 11.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.89,
+              "price": 11.3,
+              "cost": 11.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "12:12",
+          "end_time": "13:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.59,
+              "price": 13.78,
+              "cost": 13.78,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,14 +116,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
               "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
               "mode": "taxi",
-              "start_time": "17:56",
-              "end_time": "18:10",
-              "distance": 9.67,
-              "price": 38.53,
-              "cost": 38.53,
+              "start_time": "13:12",
+              "end_time": "13:26",
+              "distance": 9.86,
+              "price": 39.22,
+              "cost": 39.22,
               "cars": 1
             }
           ]
@@ -327,34 +415,14 @@
           "transports": [
             {
               "start": "Shenzhen Bay Park",
-              "end": "Hongshu Bay-Metro Station",
-              "mode": "walk",
-              "start_time": "12:09",
-              "end_time": "12:10",
-              "distance": 0.11,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongshu Bay-Metro Station",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "metro",
-              "start_time": "12:10",
-              "end_time": "12:44",
-              "distance": 17.43,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "walk",
-              "start_time": "12:44",
-              "end_time": "12:46",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:09",
+              "end_time": "12:35",
+              "distance": 17.4,
+              "price": 73.01,
+              "cost": 73.01,
+              "cars": 1
             }
           ]
         },
@@ -369,84 +437,66 @@
           "transports": [
             {
               "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "walk",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "taxi",
               "start_time": "14:00",
               "end_time": "14:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
+              "distance": 1.35,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Huangbeiling-Metro Station",
-              "end": "Shaibu-Metro Station",
-              "mode": "metro",
-              "start_time": "14:02",
-              "end_time": "14:04",
-              "distance": 1.45,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "East River Guerrilla Force Command Post Memorial Hall",
-              "mode": "walk",
-              "start_time": "14:04",
-              "end_time": "14:06",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "15:36",
+              "end_time": "15:47",
+              "distance": 7.47,
+              "price": 30.85,
+              "cost": 30.85,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
+          "start_time": "23:24",
+          "end_time": "01:49",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "price": 1006.35,
+          "cost": 1006.35,
           "tickets": 1,
           "transports": [
             {
-              "start": "East River Guerrilla Force Command Post Memorial Hall",
-              "end": "Shaibu-Metro Station",
-              "mode": "walk",
-              "start_time": "15:36",
-              "end_time": "15:38",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "15:38",
-              "end_time": "16:43",
-              "distance": 32.69,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Airport East-Metro Station",
+              "start": "Old Zhou's Shunde Double-Skin Milk",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "16:43",
-              "end_time": "16:48",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:38",
+              "distance": 25.4,
+              "price": 109.01,
+              "cost": 109.01,
+              "cars": 1
             }
           ],
-          "FlightID": "FL179"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.63873529434204,
-  "_eval_score": 95.58571428571429
+  "_eval_score": 98.4484126984127
 }

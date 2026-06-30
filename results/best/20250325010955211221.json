@@ -7,16 +7,104 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "04:14",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 11.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:03",
+              "distance": 2.19,
+              "price": 12.38,
+              "cost": 12.38,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "12:11",
+          "end_time": "13:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 2.78,
+              "price": 14.43,
+              "cost": 14.43,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,14 +116,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "17:56",
-              "end_time": "18:08",
-              "distance": 8.11,
-              "price": 33.1,
-              "cost": 33.1,
+              "start_time": "13:11",
+              "end_time": "13:17",
+              "distance": 4.2,
+              "price": 19.38,
+              "cost": 19.38,
               "cars": 1
             }
           ]
@@ -371,34 +459,14 @@
           "transports": [
             {
               "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "end": "Donggualing-Metro Station",
-              "mode": "walk",
-              "start_time": "13:25",
-              "end_time": "13:31",
-              "distance": 0.55,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Donggualing-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "13:31",
-              "end_time": "13:41",
-              "distance": 5.23,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "13:41",
-              "end_time": "13:44",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:25",
+              "end_time": "13:33",
+              "distance": 5.73,
+              "price": 24.75,
+              "cost": 24.75,
+              "cars": 1
             }
           ]
         },
@@ -413,34 +481,14 @@
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
-              "mode": "walk",
-              "start_time": "15:14",
-              "end_time": "15:17",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "metro",
-              "start_time": "15:17",
-              "end_time": "15:39",
-              "distance": 11.44,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:39",
-              "end_time": "15:41",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:14",
+              "end_time": "15:30",
+              "distance": 11.23,
+              "price": 45.23,
+              "cost": 45.23,
+              "cars": 1
             }
           ]
         },
@@ -456,34 +504,14 @@
           "transports": [
             {
               "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:28",
-              "distance": 13.03,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Shenzhen North Railway Station",
-              "mode": "walk",
-              "start_time": "18:28",
-              "end_time": "18:29",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:19",
+              "distance": 13.01,
+              "price": 53.26,
+              "cost": 53.26,
+              "cars": 1
             }
           ],
           "TrainID": "D902"
@@ -492,5 +520,5 @@
     }
   ],
   "elapsed_time(sec)": 188.72006464004517,
-  "_eval_score": 96.95098039215686
+  "_eval_score": 99.1156462585034
 }

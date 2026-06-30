@@ -8,15 +8,78 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:38",
-          "end_time": "09:23",
+          "start_time": "03:37",
+          "end_time": "05:22",
           "start": "Chengdu Tianfu International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 676.89,
-          "cost": 2707.56,
+          "price": 673.02,
+          "cost": 2692.08,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL478"
+          "FlightID": "FL479"
+        },
+        {
+          "type": "breakfast",
+          "position": "Lu's Soup Dumpling King (Changbai Street Branch)",
+          "start_time": "06:37",
+          "end_time": "07:37",
+          "price": 24.0,
+          "cost": 96.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "05:22",
+              "end_time": "05:25",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "05:25",
+              "end_time": "06:32",
+              "distance": 33.51,
+              "price": 7,
+              "cost": 28,
+              "tickets": 4
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Lu's Soup Dumpling King (Changbai Street Branch)",
+              "mode": "walk",
+              "start_time": "06:32",
+              "end_time": "06:37",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lu's Soup Dumpling King (Changbai Street Branch)",
+              "end": "Black Clothes Lane",
+              "mode": "walk",
+              "start_time": "07:37",
+              "end_time": "07:41",
+              "distance": 0.3777303291421131,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,33 +91,12 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "walk",
-              "start_time": "09:23",
-              "end_time": "09:26",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "09:26",
-              "end_time": "10:33",
-              "distance": 33.51,
-              "price": 7,
-              "cost": 28,
-              "tickets": 4
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
+              "start": "Black Clothes Lane",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "walk",
-              "start_time": "10:33",
-              "end_time": "10:37",
-              "distance": 0.39,
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.5727338756491355,
               "price": 0,
               "cost": 0
             }
@@ -134,34 +176,14 @@
           "transports": [
             {
               "start": "Confucius Temple Yuhua Stone Museum",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "16:40",
-              "end_time": "16:47",
-              "distance": 0.64,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
-              "end": "Xinjiekou-Metro Station",
-              "mode": "metro",
-              "start_time": "16:47",
-              "end_time": "16:51",
-              "distance": 2.06,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Xinjiekou-Metro Station",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "walk",
-              "start_time": "16:51",
-              "end_time": "16:52",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:40",
+              "end_time": "16:43",
+              "distance": 2.16,
+              "price": 12.26,
+              "cost": 12.26,
+              "cars": 1
             }
           ]
         },
@@ -278,5 +300,5 @@
     }
   ],
   "elapsed_time(sec)": 0.3112480640411377,
-  "_eval_score": 93.02324263038548
+  "_eval_score": 94.24338624338624
 }

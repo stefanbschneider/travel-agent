@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:04",
-          "end_time": "08:50",
-          "start": "Chongqing West Railway Station",
-          "end": "Chengdu East Railway Station",
-          "price": 171.7,
-          "cost": 858.5,
+          "type": "airplane",
+          "start_time": "04:39",
+          "end_time": "04:58",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 299.27,
+          "cost": 1496.35,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G8512"
+          "FlightID": "FL363"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "04:58",
+              "end_time": "05:23",
+              "distance": 17.05,
+              "price": 71.43,
+              "cost": 142.86,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +50,15 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu East Railway Station",
-              "end": "Chengdu East Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:50",
-              "end_time": "08:50",
-              "distance": 0.0,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chengdu East Railway Station-Metro Station",
-              "end": "Kuanzhai Alley-Metro Station",
-              "mode": "metro",
-              "start_time": "08:50",
-              "end_time": "09:08",
-              "distance": 9.44,
-              "price": 4,
-              "cost": 20,
-              "tickets": 5
-            },
-            {
-              "start": "Kuanzhai Alley-Metro Station",
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
               "end": "Chengdu Cultural Park",
-              "mode": "walk",
-              "start_time": "09:08",
-              "end_time": "09:10",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 2.21,
+              "price": 12.42,
+              "cost": 24.84,
+              "cars": 2
             }
           ]
         },
@@ -71,34 +73,14 @@
           "transports": [
             {
               "start": "Chengdu Cultural Park",
-              "end": "Kuanzhai Alley-Metro Station",
-              "mode": "walk",
+              "end": "Crane's Call Tea House (People's Park Branch)",
+              "mode": "taxi",
               "start_time": "10:40",
               "end_time": "10:42",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Kuanzhai Alley-Metro Station",
-              "end": "People's Park-Metro Station",
-              "mode": "metro",
-              "start_time": "10:42",
-              "end_time": "10:43",
-              "distance": 0.89,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "People's Park-Metro Station",
-              "end": "Crane's Call Tea House (People's Park Branch)",
-              "mode": "walk",
-              "start_time": "10:43",
-              "end_time": "10:46",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
+              "distance": 1.4,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
@@ -157,34 +139,14 @@
           "transports": [
             {
               "start": "Sichuan Museum",
-              "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
-              "mode": "walk",
-              "start_time": "14:03",
-              "end_time": "14:03",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
-              "end": "Niuwangmiao-Metro Station",
-              "mode": "metro",
-              "start_time": "14:03",
-              "end_time": "14:14",
-              "distance": 5.67,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Niuwangmiao-Metro Station",
               "end": "Anshun Covered Bridge",
-              "mode": "walk",
-              "start_time": "14:14",
-              "end_time": "14:18",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:03",
+              "end_time": "14:11",
+              "distance": 5.45,
+              "price": 23.78,
+              "cost": 47.56,
+              "cars": 2
             }
           ]
         },
@@ -199,34 +161,14 @@
           "transports": [
             {
               "start": "Anshun Covered Bridge",
-              "end": "Niuwangmiao-Metro Station",
-              "mode": "walk",
-              "start_time": "15:48",
-              "end_time": "15:52",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Niuwangmiao-Metro Station",
-              "end": "Chunxi Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:52",
-              "end_time": "15:55",
-              "distance": 1.67,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Chunxi Road-Metro Station",
               "end": "Mawangzi (Taikoo Li Branch)",
-              "mode": "walk",
-              "start_time": "15:55",
-              "end_time": "16:00",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:48",
+              "end_time": "15:49",
+              "distance": 0.92,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
@@ -368,34 +310,14 @@
           "transports": [
             {
               "start": "East Suburb Memory",
-              "end": "East Suburb Memory-Metro Station",
-              "mode": "walk",
-              "start_time": "13:33",
-              "end_time": "13:41",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "East Suburb Memory-Metro Station",
-              "end": "Shilidian-Metro Station",
-              "mode": "metro",
-              "start_time": "13:41",
-              "end_time": "13:44",
-              "distance": 1.89,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Shilidian-Metro Station",
               "end": "East Suburb Memory Art District",
-              "mode": "walk",
-              "start_time": "13:44",
-              "end_time": "14:02",
-              "distance": 1.56,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:33",
+              "end_time": "13:36",
+              "distance": 2.33,
+              "price": 12.85,
+              "cost": 25.7,
+              "cars": 2
             }
           ]
         },
@@ -410,34 +332,14 @@
           "transports": [
             {
               "start": "East Suburb Memory Art District",
-              "end": "Shilidian-Metro Station",
-              "mode": "walk",
-              "start_time": "15:32",
-              "end_time": "15:50",
-              "distance": 1.56,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shilidian-Metro Station",
-              "end": "Taisheng South Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:50",
-              "end_time": "16:03",
-              "distance": 6.68,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Taisheng South Road-Metro Station",
               "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-              "mode": "walk",
-              "start_time": "16:03",
-              "end_time": "16:08",
-              "distance": 0.46,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:32",
+              "end_time": "15:42",
+              "distance": 7.29,
+              "price": 30.21,
+              "cost": 60.42,
+              "cars": 2
             }
           ]
         },
@@ -557,34 +459,14 @@
           "transports": [
             {
               "start": "Sichuan Science and Technology Museum",
-              "end": "Taisheng South Road-Metro Station",
-              "mode": "walk",
-              "start_time": "14:16",
-              "end_time": "14:21",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Taisheng South Road-Metro Station",
-              "end": "Tonghuimen-Metro Station",
-              "mode": "metro",
-              "start_time": "14:21",
-              "end_time": "14:26",
-              "distance": 2.71,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Tonghuimen-Metro Station",
               "end": "Baihua Tan Park",
-              "mode": "walk",
-              "start_time": "14:26",
-              "end_time": "14:27",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:16",
+              "end_time": "14:19",
+              "distance": 2.16,
+              "price": 12.28,
+              "cost": 24.56,
+              "cars": 2
             }
           ]
         },
@@ -599,34 +481,14 @@
           "transports": [
             {
               "start": "Baihua Tan Park",
-              "end": "Tonghuimen-Metro Station",
-              "mode": "walk",
-              "start_time": "15:57",
-              "end_time": "15:58",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tonghuimen-Metro Station",
-              "end": "Financial City-Metro Station",
-              "mode": "metro",
-              "start_time": "15:58",
-              "end_time": "16:15",
-              "distance": 8.94,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Financial City-Metro Station",
               "end": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-              "mode": "walk",
-              "start_time": "16:15",
-              "end_time": "16:20",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:57",
+              "end_time": "16:10",
+              "distance": 8.86,
+              "price": 35.71,
+              "cost": 71.42,
+              "cars": 2
             }
           ]
         },
@@ -895,84 +757,88 @@
           "transports": [
             {
               "start": "Chengdu Kempinski Hotel · Yi Shi German Western Restaurant",
-              "end": "Tongzilin-Metro Station",
-              "mode": "walk",
-              "start_time": "13:17",
-              "end_time": "13:21",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tongzilin-Metro Station",
-              "end": "Second Municipal Hospital-Metro Station",
-              "mode": "metro",
-              "start_time": "13:21",
-              "end_time": "13:31",
-              "distance": 5.3,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Second Municipal Hospital-Metro Station",
               "end": "Butterfly Drama Club",
-              "mode": "walk",
-              "start_time": "13:31",
-              "end_time": "13:31",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:17",
+              "end_time": "13:24",
+              "distance": 5.04,
+              "price": 22.35,
+              "cost": 44.7,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu IFS Sculpture Garden",
+          "start_time": "15:05",
+          "end_time": "16:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Butterfly Drama Club",
+              "end": "Chengdu IFS Sculpture Garden",
+              "mode": "taxi",
+              "start_time": "15:01",
+              "end_time": "15:01",
+              "distance": 0.38,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 25.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu IFS Sculpture Garden",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "taxi",
+              "start_time": "16:05",
+              "end_time": "16:09",
+              "distance": 3.22,
+              "price": 15.99,
+              "cost": 31.98,
+              "cars": 2
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:07",
-          "end_time": "18:26",
-          "start": "Chengdu Tianfu International Airport",
+          "start_time": "22:20",
+          "end_time": "22:39",
+          "start": "Chengdu Shuangliu International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 259.16,
-          "cost": 1295.8000000000002,
+          "price": 279.92,
+          "cost": 1399.6000000000001,
           "tickets": 5,
           "transports": [
             {
-              "start": "Butterfly Drama Club",
-              "end": "Second Municipal Hospital-Metro Station",
-              "mode": "walk",
-              "start_time": "15:01",
-              "end_time": "15:01",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Second Municipal Hospital-Metro Station",
-              "end": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "mode": "metro",
-              "start_time": "15:01",
-              "end_time": "16:44",
-              "distance": 51.96,
-              "price": 9,
-              "cost": 45,
-              "tickets": 5
-            },
-            {
-              "start": "Tianfu Airport Terminal 1 and 2-Metro Station",
-              "end": "Chengdu Tianfu International Airport",
-              "mode": "walk",
-              "start_time": "16:44",
-              "end_time": "17:28",
-              "distance": 3.72,
-              "price": 0,
-              "cost": 0
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:24",
+              "distance": 16.04,
+              "price": 66.86,
+              "cost": 133.72,
+              "cars": 2
             }
           ],
-          "FlightID": "FL448"
+          "FlightID": "FL444"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 217.2710621356964,
-  "_eval_score": 97.91167434715823
+  "_eval_score": 99.23739495798318
 }

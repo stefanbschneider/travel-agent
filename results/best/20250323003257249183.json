@@ -8,15 +8,80 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "13:39",
-          "end_time": "15:27",
+          "start_time": "00:09",
+          "end_time": "01:57",
           "start": "Chongqing Jiangbei International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 736.71,
-          "cost": 2210.13,
+          "end": "Shanghai Pudong International Airport",
+          "price": 709.87,
+          "cost": 2129.61,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL322"
+          "FlightID": "FL328"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "01:57",
+              "end_time": "02:49",
+              "distance": 35.27,
+              "price": 153.41,
+              "cost": 153.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 18.0,
+          "cost": 54.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:19",
+              "distance": 12.68,
+              "price": 51.74,
+              "cost": 51.74,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +93,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
               "mode": "walk",
-              "start_time": "15:27",
-              "end_time": "15:36",
-              "distance": 0.78,
+              "start_time": "12:00",
+              "end_time": "12:08",
+              "distance": 0.72,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Hongqiao Terminal 1-Metro Station",
+              "start": "Qibao-Metro Station",
               "end": "Qufu Road-Metro Station",
               "mode": "metro",
-              "start_time": "15:36",
-              "end_time": "16:02",
-              "distance": 13.11,
-              "price": 4,
-              "cost": 12,
+              "start_time": "12:08",
+              "end_time": "12:38",
+              "distance": 15.13,
+              "price": 5,
+              "cost": 15,
               "tickets": 3
             },
             {
               "start": "Qufu Road-Metro Station",
               "end": "Jing'an Sculpture Park",
               "mode": "walk",
-              "start_time": "16:02",
-              "end_time": "16:04",
+              "start_time": "12:38",
+              "end_time": "12:40",
               "distance": 0.18,
               "price": 0,
               "cost": 0
@@ -113,34 +178,14 @@
           "transports": [
             {
               "start": "Fu He Hui",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:17",
-              "end_time": "18:19",
-              "distance": 0.22,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
-              "end": "Disney-Metro Station",
-              "mode": "metro",
-              "start_time": "18:19",
-              "end_time": "19:07",
-              "distance": 24.26,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Disney-Metro Station",
               "end": "Shanghai Lavender Park",
-              "mode": "walk",
-              "start_time": "19:07",
-              "end_time": "19:25",
-              "distance": 1.51,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:17",
+              "end_time": "18:54",
+              "distance": 25.3,
+              "price": 108.54,
+              "cost": 108.54,
+              "cars": 1
             }
           ]
         },
@@ -155,34 +200,14 @@
           "transports": [
             {
               "start": "Shanghai Lavender Park",
-              "end": "Disney-Metro Station",
-              "mode": "walk",
-              "start_time": "20:25",
-              "end_time": "20:43",
-              "distance": 1.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Disney-Metro Station",
-              "end": "Zhenbei Road-Metro Station",
-              "mode": "metro",
-              "start_time": "20:43",
-              "end_time": "21:41",
-              "distance": 29.07,
-              "price": 7,
-              "cost": 21,
-              "tickets": 3
-            },
-            {
-              "start": "Zhenbei Road-Metro Station",
               "end": "Venice Town",
-              "mode": "walk",
-              "start_time": "21:41",
-              "end_time": "21:47",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "20:25",
+              "end_time": "21:10",
+              "distance": 30.05,
+              "price": 129.92,
+              "cost": 129.92,
+              "cars": 1
             }
           ]
         },
@@ -340,34 +365,14 @@
           "transports": [
             {
               "start": "Jing'an Temple",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "11:15",
-              "end_time": "11:24",
-              "distance": 0.8,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
-              "end": "Changshu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "11:24",
-              "end_time": "11:28",
-              "distance": 2.08,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Changshu Road-Metro Station",
               "end": "Wukang Road",
-              "mode": "walk",
-              "start_time": "11:28",
-              "end_time": "11:31",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "11:15",
+              "end_time": "11:17",
+              "distance": 1.88,
+              "price": 11.27,
+              "cost": 11.27,
+              "cars": 1
             }
           ]
         },
@@ -1368,13 +1373,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:47",
-          "end_time": "19:35",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 686.44,
-          "cost": 2059.32,
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 48.0,
           "tickets": 3,
           "transports": [
             {
@@ -1389,31 +1393,54 @@
             },
             {
               "start": "Pudong South Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
               "start_time": "16:26",
-              "end_time": "17:25",
-              "distance": 29.58,
-              "price": 7,
-              "cost": 21,
+              "end_time": "16:37",
+              "distance": 5.95,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "17:25",
-              "end_time": "17:40",
-              "distance": 1.27,
+              "start_time": "16:37",
+              "end_time": "16:47",
+              "distance": 0.86,
               "price": 0,
               "cost": 0
             }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:23",
+          "end_time": "01:11",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 764.48,
+          "cost": 2293.44,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Hongqiao International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:32",
+              "distance": 21.76,
+              "price": 92.63,
+              "cost": 92.63,
+              "cars": 1
+            }
           ],
-          "FlightID": "FL037"
+          "FlightID": "FL034"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 215.82692909240723,
-  "_eval_score": 98.0327380952381
+  "_eval_score": 99.48015873015873
 }

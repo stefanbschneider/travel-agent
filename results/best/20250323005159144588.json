@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "02:29",
+              "end_time": "03:41",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 422.54,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Corner Tower",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 36.52,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.64,
+              "price": 17.43,
+              "cost": 34.86,
               "cars": 2
             }
           ]
@@ -327,5 +371,5 @@
     }
   ],
   "elapsed_time(sec)": 168.83468389511108,
-  "_eval_score": 98.54166666666666
+  "_eval_score": 99.96507936507936
 }

@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:10",
-          "start": "Nanjing South Railway Station",
-          "end": "Suzhou North Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "start_time": "00:03",
+          "end_time": "02:32",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 94.54,
+          "cost": 189.08,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G1509"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Chen's Wonton (Wuqufang Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 11.0,
+          "cost": 22.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "02:32",
+              "end_time": "02:33",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Yangyu Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "02:33",
+              "end_time": "02:38",
+              "distance": 2.87,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Yangyu Lane-Metro Station",
+              "end": "Chen's Wonton (Wuqufang Branch)",
+              "mode": "walk",
+              "start_time": "02:38",
+              "end_time": "02:47",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Suzhou North Station",
-              "end": "Suzhou North Railway Station-Metro Station",
+              "start": "Chen's Wonton (Wuqufang Branch)",
+              "end": "Yangyu Lane-Metro Station",
               "mode": "walk",
-              "start_time": "08:10",
-              "end_time": "08:11",
-              "distance": 0.14,
+              "start_time": "07:30",
+              "end_time": "07:39",
+              "distance": 0.79,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Suzhou North Railway Station-Metro Station",
+              "start": "Yangyu Lane-Metro Station",
               "end": "Shantang Street-Metro Station",
               "mode": "metro",
-              "start_time": "08:11",
-              "end_time": "08:35",
-              "distance": 12.03,
-              "price": 4,
-              "cost": 8,
+              "start_time": "07:39",
+              "end_time": "07:42",
+              "distance": 1.99,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
               "start": "Shantang Street-Metro Station",
               "end": "Arhat Hall",
               "mode": "walk",
-              "start_time": "08:35",
-              "end_time": "08:44",
+              "start_time": "07:42",
+              "end_time": "07:51",
               "distance": 0.78,
               "price": 0,
               "cost": 0
@@ -570,13 +612,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:31",
-          "start": "Suzhou Park Station",
-          "end": "Nanjing South Railway Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "type": "dinner",
+          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
           "tickets": 2,
           "transports": [
             {
@@ -591,31 +632,74 @@
             },
             {
               "start": "Xuanqiao Lane-Metro Station",
-              "end": "Suzhou Industrial Park Railway Station-Metro Station",
+              "end": "Sanyuanfang-Metro Station",
               "mode": "metro",
               "start_time": "16:40",
-              "end_time": "16:56",
-              "distance": 8.48,
-              "price": 3,
-              "cost": 6,
+              "end_time": "16:43",
+              "distance": 1.84,
+              "price": 2,
+              "cost": 4,
               "tickets": 2
             },
             {
-              "start": "Suzhou Industrial Park Railway Station-Metro Station",
-              "end": "Suzhou Park Station",
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
               "mode": "walk",
-              "start_time": "16:56",
-              "end_time": "16:59",
-              "distance": 0.32,
+              "start_time": "16:43",
+              "end_time": "16:46",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:39",
+          "end_time": "02:23",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 75.63,
+          "cost": 151.26,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 0.3,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "18:10",
+              "distance": 3.85,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Suzhou Station",
+              "mode": "walk",
+              "start_time": "18:10",
+              "end_time": "18:11",
+              "distance": 0.13,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7376"
+          "TrainID": "K8366"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.44906902313232,
-  "_eval_score": 98.88888888888889
+  "_eval_score": 100.0
 }

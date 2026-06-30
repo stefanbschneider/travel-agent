@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:38",
-          "end_time": "09:23",
+          "start_time": "03:37",
+          "end_time": "05:22",
           "start": "Chengdu Tianfu International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 676.89,
-          "cost": 1353.78,
+          "price": 673.02,
+          "cost": 1346.04,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL478"
+          "FlightID": "FL479"
+        },
+        {
+          "type": "breakfast",
+          "position": "Pizza Hut (Central Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 79.0,
+          "cost": 158.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Pizza Hut (Central Branch)",
+              "mode": "taxi",
+              "start_time": "05:22",
+              "end_time": "06:14",
+              "distance": 35.11,
+              "price": 152.68,
+              "cost": 152.68,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Pizza Hut (Central Branch)",
               "end": "Wine Thieves Neo-Bistro",
               "mode": "taxi",
-              "start_time": "09:23",
-              "end_time": "10:15",
-              "distance": 35.09,
-              "price": 152.59,
-              "cost": 152.59,
+              "start_time": "08:30",
+              "end_time": "08:31",
+              "distance": 0.72,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -117,34 +139,14 @@
           "transports": [
             {
               "start": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
-              "end": "Yunjin Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:17",
-              "end_time": "15:25",
-              "distance": 0.71,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yunjin Road-Metro Station",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "15:25",
-              "end_time": "15:33",
-              "distance": 4.29,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
               "end": "Black Clothes Lane",
-              "mode": "walk",
-              "start_time": "15:33",
-              "end_time": "15:39",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:17",
+              "end_time": "15:24",
+              "distance": 4.72,
+              "price": 21.23,
+              "cost": 21.23,
+              "cars": 1
             }
           ]
         },
@@ -159,34 +161,14 @@
           "transports": [
             {
               "start": "Black Clothes Lane",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "16:39",
-              "end_time": "16:45",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
-              "end": "Wuding Gate-Metro Station",
-              "mode": "metro",
-              "start_time": "16:45",
-              "end_time": "16:47",
-              "distance": 1.2,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Wuding Gate-Metro Station",
               "end": "Yakiniku Screening Room 3.0 Wagyu Skewers",
-              "mode": "walk",
-              "start_time": "16:47",
-              "end_time": "16:55",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:39",
+              "end_time": "16:41",
+              "distance": 1.62,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -499,84 +481,66 @@
           "transports": [
             {
               "start": "Meat Master House (Xinjiekou Branch)",
-              "end": "Xinjiekou-Metro Station",
-              "mode": "walk",
-              "start_time": "13:39",
-              "end_time": "13:42",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinjiekou-Metro Station",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "metro",
-              "start_time": "13:42",
-              "end_time": "13:44",
-              "distance": 1.2,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
               "end": "Jiangnan Silk Culture Museum",
-              "mode": "walk",
-              "start_time": "13:44",
-              "end_time": "13:51",
-              "distance": 0.6,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:39",
+              "end_time": "13:40",
+              "distance": 1.2,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mushroom Restaurant (Xiaohuowaxiang Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 44.0,
+          "cost": 88.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiangnan Silk Culture Museum",
+              "end": "Mushroom Restaurant (Xiaohuowaxiang Branch)",
+              "mode": "taxi",
+              "start_time": "15:21",
+              "end_time": "15:22",
+              "distance": 0.99,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "17:30",
-          "end_time": "19:15",
+          "start_time": "23:46",
+          "end_time": "01:31",
           "start": "Nanjing Lukou International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 662.51,
-          "cost": 1325.02,
+          "end": "Chengdu Tianfu International Airport",
+          "price": 729.58,
+          "cost": 1459.16,
           "tickets": 2,
           "transports": [
             {
-              "start": "Jiangnan Silk Culture Museum",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "walk",
-              "start_time": "15:21",
-              "end_time": "15:28",
-              "distance": 0.6,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:28",
-              "end_time": "16:36",
-              "distance": 34.4,
-              "price": 7,
-              "cost": 14,
-              "tickets": 2
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
+              "start": "Mushroom Restaurant (Xiaohuowaxiang Branch)",
               "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
-              "start_time": "16:36",
-              "end_time": "16:39",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:51",
+              "distance": 34.38,
+              "price": 149.39,
+              "cost": 149.39,
+              "cars": 1
             }
           ],
-          "FlightID": "FL692"
+          "FlightID": "FL694"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.48803091049194,
-  "_eval_score": 98.42460317460318
+  "_eval_score": 99.78354978354977
 }

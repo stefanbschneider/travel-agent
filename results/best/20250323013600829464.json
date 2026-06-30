@@ -7,16 +7,100 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:12",
-          "end_time": "08:58",
-          "start": "Beijing West Railway Station",
-          "end": "Chongqing West Railway Station",
-          "price": 583.42,
-          "cost": 2333.68,
+          "type": "airplane",
+          "start_time": "00:20",
+          "end_time": "02:09",
+          "start": "Beijing Capital International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 747.95,
+          "cost": 2991.8,
           "tickets": 4,
           "transports": [],
-          "TrainID": "K507"
+          "FlightID": "FL119"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:18",
+          "end_time": "07:18",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Jiangbei Airport Terminal 3-Metro Station",
+              "mode": "walk",
+              "start_time": "02:09",
+              "end_time": "02:23",
+              "distance": 1.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangbei Airport Terminal 3-Metro Station",
+              "end": "Dalongshan-Metro Station",
+              "mode": "metro",
+              "start_time": "02:23",
+              "end_time": "03:03",
+              "distance": 20.08,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Dalongshan-Metro Station",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "walk",
+              "start_time": "03:03",
+              "end_time": "03:10",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing Geleshan Revolutionary Memorial Hall",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Chongqing Geleshan Revolutionary Memorial Hall",
+              "mode": "walk",
+              "start_time": "07:18",
+              "end_time": "08:22",
+              "distance": 5.405238024538709,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Baolun Temple",
+          "start_time": "10:17",
+          "end_time": "10:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chongqing Geleshan Revolutionary Memorial Hall",
+              "end": "Baolun Temple",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:17",
+              "distance": 1.4822750025037892,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,12 +112,12 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chongqing West Railway Station",
+              "start": "Baolun Temple",
               "end": "Ci Qi Kou Ancient Town",
               "mode": "walk",
-              "start_time": "08:58",
-              "end_time": "10:56",
-              "distance": 9.86331332081825,
+              "start_time": "10:47",
+              "end_time": "10:50",
+              "distance": 0.2511061283457837,
               "price": 0,
               "cost": 0
             }
@@ -257,11 +341,32 @@
           "transports": [
             {
               "start": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
-              "end": "Chongqing West Railway Station",
+              "end": "Jiaochangkou-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "20:56",
-              "distance": 14.72115311435148,
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiaochangkou-Metro Station",
+              "end": "Chongqing West Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:30",
+              "distance": 14.39,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
+            {
+              "start": "Chongqing West Railway Station-Metro Station",
+              "end": "Chongqing West Railway Station",
+              "mode": "walk",
+              "start_time": "18:30",
+              "end_time": "18:31",
+              "distance": 0.1,
               "price": 0,
               "cost": 0
             }
@@ -272,5 +377,5 @@
     }
   ],
   "elapsed_time(sec)": 0.5430278778076172,
-  "_eval_score": 95.53354978354979
+  "_eval_score": 98.50340136054422
 }

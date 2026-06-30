@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:57",
-          "end_time": "11:10",
+          "start_time": "04:31",
+          "end_time": "05:44",
           "start": "Chengdu Shuangliu International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 493.19,
-          "cost": 1479.57,
+          "price": 471.1,
+          "cost": 1413.3000000000002,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL468"
+          "FlightID": "FL465"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:50",
+          "end_time": "07:50",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "taxi",
+              "start_time": "05:44",
+              "end_time": "06:23",
+              "distance": 26.52,
+              "price": 114.03,
+              "cost": 114.03,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Hanyang Riverside Park",
+              "mode": "taxi",
+              "start_time": "07:50",
+              "end_time": "07:52",
+              "distance": 1.38,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Tianhe International Airport",
+              "start": "Hanyang Riverside Park",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "11:10",
-              "end_time": "11:49",
-              "distance": 26.18,
-              "price": 112.5,
-              "cost": 112.5,
+              "start_time": "10:00",
+              "end_time": "10:14",
+              "distance": 9.95,
+              "price": 39.52,
+              "cost": 39.52,
               "cars": 1
             }
           ]
@@ -576,6 +620,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Bagong House",
+          "start_time": "16:13",
+          "end_time": "16:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East Lake Mo Hill Scenic Area",
+              "end": "Bagong House",
+              "mode": "taxi",
+              "start_time": "14:40",
+              "end_time": "14:57",
+              "distance": 11.62,
+              "price": 47.0,
+              "cost": 47.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
           "start_time": "17:00",
@@ -585,35 +651,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "East Lake Mo Hill Scenic Area",
-              "end": "Wudong-Metro Station",
-              "mode": "walk",
-              "start_time": "14:40",
-              "end_time": "15:33",
-              "distance": 4.47,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wudong-Metro Station",
-              "end": "Sanyang Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:33",
-              "end_time": "16:03",
-              "distance": 15.11,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Sanyang Road-Metro Station",
+              "start": "Bagong House",
               "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-              "mode": "walk",
-              "start_time": "16:03",
-              "end_time": "16:11",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:43",
+              "end_time": "16:43",
+              "distance": 0.39,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -629,34 +675,14 @@
           "transports": [
             {
               "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-              "end": "Sanyang Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:08",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Sanyang Road-Metro Station",
-              "end": "Tianhe Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "18:08",
-              "end_time": "18:49",
-              "distance": 20.72,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Tianhe Airport-Metro Station",
               "end": "Wuhan Tianhe International Airport",
-              "mode": "walk",
-              "start_time": "18:49",
-              "end_time": "18:55",
-              "distance": 0.55,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:32",
+              "distance": 21.53,
+              "price": 91.56,
+              "cost": 91.56,
+              "cars": 1
             }
           ],
           "FlightID": "FL614"
@@ -665,5 +691,5 @@
     }
   ],
   "elapsed_time(sec)": 188.06259489059448,
-  "_eval_score": 98.11309523809524
+  "_eval_score": 99.41496598639456
 }

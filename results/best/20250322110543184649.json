@@ -7,16 +7,142 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "06:47",
+              "distance": 15.989463545918232,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dashabe Ecological Corridor",
+          "start_time": "08:50",
+          "end_time": "09:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Dashabe Ecological Corridor",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:50",
+              "distance": 4.190100107410137,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "13:00",
+          "end_time": "14:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dashabe Ecological Corridor",
+              "end": "Baishizhou-Metro Station",
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:30",
+              "distance": 0.91,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishizhou-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "09:30",
+              "end_time": "10:04",
+              "distance": 17.43,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "10:04",
+              "end_time": "10:06",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "People's Park",
+          "start_time": "14:22",
+          "end_time": "14:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "People's Park",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:22",
+              "distance": 1.8583614448721892,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Honghu Park",
+          "start_time": "15:09",
+          "end_time": "15:39",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "People's Park",
+              "end": "Honghu Park",
+              "mode": "walk",
+              "start_time": "14:52",
+              "end_time": "15:09",
+              "distance": 1.446582724240433,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
@@ -30,12 +156,33 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Honghu Park",
+              "end": "Shuibei-Metro Station",
+              "mode": "walk",
+              "start_time": "15:39",
+              "end_time": "15:42",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuibei-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:42",
+              "end_time": "16:03",
+              "distance": 10.54,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Vienna International Hotel (Shenzhen North Railway Station)",
               "mode": "walk",
-              "start_time": "17:56",
-              "end_time": "18:00",
-              "distance": 0.37054308325132795,
+              "start_time": "16:03",
+              "end_time": "16:09",
+              "distance": 0.5,
               "price": 0,
               "cost": 0
             }
@@ -67,11 +214,32 @@
           "transports": [
             {
               "start": "Vienna International Hotel (Shenzhen North Railway Station)",
-              "end": "Shenzhen Bay Park",
+              "end": "Shenzhen North Railway Station-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "10:40",
-              "distance": 10.866877845978982,
+              "end_time": "08:36",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Hongshu Bay-Metro Station",
+              "mode": "metro",
+              "start_time": "08:36",
+              "end_time": "08:58",
+              "distance": 11.39,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Hongshu Bay-Metro Station",
+              "end": "Shenzhen Bay Park",
+              "mode": "walk",
+              "start_time": "08:58",
+              "end_time": "08:59",
+              "distance": 0.11,
               "price": 0,
               "cost": 0
             }
@@ -88,11 +256,32 @@
           "transports": [
             {
               "start": "Shenzhen Bay Park",
-              "end": "Mangrove Seaside Ecological Park",
+              "end": "Hongshu Bay-Metro Station",
               "mode": "walk",
               "start_time": "11:55",
-              "end_time": "12:42",
-              "distance": 3.976674351265904,
+              "end_time": "11:56",
+              "distance": 0.11,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongshu Bay-Metro Station",
+              "end": "Bamboo Forest-Metro Station",
+              "mode": "metro",
+              "start_time": "11:56",
+              "end_time": "12:05",
+              "distance": 4.77,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Bamboo Forest-Metro Station",
+              "end": "Mangrove Seaside Ecological Park",
+              "mode": "walk",
+              "start_time": "12:05",
+              "end_time": "12:14",
+              "distance": 0.76,
               "price": 0,
               "cost": 0
             }
@@ -111,11 +300,32 @@
           "transports": [
             {
               "start": "Mangrove Seaside Ecological Park",
-              "end": "Vienna International Hotel (Shenzhen North Railway Station)",
+              "end": "Bamboo Forest-Metro Station",
               "mode": "walk",
               "start_time": "13:57",
-              "end_time": "15:42",
-              "distance": 8.775627997472961,
+              "end_time": "14:06",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bamboo Forest-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "14:06",
+              "end_time": "14:23",
+              "distance": 8.71,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Vienna International Hotel (Shenzhen North Railway Station)",
+              "mode": "walk",
+              "start_time": "14:23",
+              "end_time": "14:29",
+              "distance": 0.5,
               "price": 0,
               "cost": 0
             }
@@ -147,11 +357,32 @@
           "transports": [
             {
               "start": "Vienna International Hotel (Shenzhen North Railway Station)",
-              "end": "Lotus Hill Park",
+              "end": "Shenzhen North Railway Station-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:48",
-              "distance": 6.507877215743905,
+              "end_time": "08:36",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Donggualing-Metro Station",
+              "mode": "metro",
+              "start_time": "08:36",
+              "end_time": "08:49",
+              "distance": 6.74,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Lotus Hill Park",
+              "mode": "walk",
+              "start_time": "08:49",
+              "end_time": "08:52",
+              "distance": 0.28,
               "price": 0,
               "cost": 0
             }
@@ -189,11 +420,32 @@
           "transports": [
             {
               "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
-              "end": "Baishilong Music Theme Park",
+              "end": "Donggualing-Metro Station",
               "mode": "walk",
               "start_time": "12:11",
-              "end_time": "13:19",
-              "distance": 5.727467000817791,
+              "end_time": "12:17",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Baishilong-Metro Station",
+              "mode": "metro",
+              "start_time": "12:17",
+              "end_time": "12:27",
+              "distance": 5.23,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "12:27",
+              "end_time": "12:30",
+              "distance": 0.28,
               "price": 0,
               "cost": 0
             }
@@ -231,11 +483,32 @@
           "transports": [
             {
               "start": "Jade Dragon Park",
-              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Baishilong-Metro Station",
               "mode": "walk",
               "start_time": "15:55",
-              "end_time": "16:49",
-              "distance": 4.518880957329646,
+              "end_time": "16:00",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:07",
+              "distance": 3.8,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "16:07",
+              "end_time": "16:09",
+              "distance": 0.24,
               "price": 0,
               "cost": 0
             }
@@ -253,11 +526,32 @@
           "transports": [
             {
               "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Shenzhen North Railway Station",
+              "end": "Meicun-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "19:04",
-              "distance": 5.405402035319584,
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:12",
+              "distance": 5.18,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Shenzhen North Railway Station",
+              "mode": "walk",
+              "start_time": "18:12",
+              "end_time": "18:13",
+              "distance": 0.15,
               "price": 0,
               "cost": 0
             }
@@ -268,5 +562,5 @@
     }
   ],
   "elapsed_time(sec)": 30.886959314346313,
-  "_eval_score": 92.33412698412698
+  "_eval_score": 95.73650793650793
 }

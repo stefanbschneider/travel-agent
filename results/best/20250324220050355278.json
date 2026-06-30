@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:48",
-          "end_time": "12:20",
-          "start": "Hangzhou East Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 730.27,
-          "cost": 2921.08,
+          "type": "airplane",
+          "start_time": "00:05",
+          "end_time": "01:29",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G32"
+          "FlightID": "FL499"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "01:29",
+              "end_time": "02:41",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 211.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Corner Tower",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "12:20",
-              "end_time": "12:25",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 18.26,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.64,
+              "price": 17.43,
+              "cost": 17.43,
               "cars": 1
             }
           ]
@@ -266,84 +310,66 @@
           "transports": [
             {
               "start": "Beijing Puxuan Hotel · Left Bank",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "walk",
-              "start_time": "13:18",
-              "end_time": "13:18",
-              "distance": 0.05,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "Changchun Street-Metro Station",
-              "mode": "metro",
-              "start_time": "13:18",
-              "end_time": "13:27",
-              "distance": 4.87,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Changchun Street-Metro Station",
               "end": "Bao Guo Temple",
-              "mode": "walk",
-              "start_time": "13:27",
-              "end_time": "13:31",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:18",
+              "end_time": "13:25",
+              "distance": 4.81,
+              "price": 21.54,
+              "cost": 21.54,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 28.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Bao Guo Temple",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "taxi",
+              "start_time": "15:01",
+              "end_time": "15:09",
+              "distance": 5.39,
+              "price": 23.58,
+              "cost": 23.58,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "17:18",
-          "end_time": "18:42",
+          "start_time": "22:57",
+          "end_time": "00:21",
           "start": "Beijing Daxing International Airport",
           "end": "Hangzhou Xiaoshan International Airport",
-          "price": 516.02,
-          "cost": 2064.08,
+          "price": 529.77,
+          "cost": 2119.08,
           "tickets": 4,
           "transports": [
             {
-              "start": "Bao Guo Temple",
-              "end": "Changchun Street-Metro Station",
-              "mode": "walk",
-              "start_time": "15:01",
-              "end_time": "15:05",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Changchun Street-Metro Station",
-              "end": "Daxing Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:05",
-              "end_time": "16:31",
-              "distance": 43.33,
-              "price": 8,
-              "cost": 32,
-              "tickets": 4
-            },
-            {
-              "start": "Daxing Airport-Metro Station",
+              "start": "Helude Candied Hawthorn Sticks",
               "end": "Beijing Daxing International Airport",
-              "mode": "walk",
-              "start_time": "16:31",
-              "end_time": "16:42",
-              "distance": 0.93,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:10",
+              "distance": 46.77,
+              "price": 205.16,
+              "cost": 205.16,
+              "cars": 1
             }
           ],
-          "FlightID": "FL139"
+          "FlightID": "FL140"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.93862748146057,
-  "_eval_score": 97.63690476190476
+  "_eval_score": 99.94603174603175
 }

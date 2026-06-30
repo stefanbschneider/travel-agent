@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "18:23",
-          "end_time": "06:53",
-          "start": "Chengdu West Railway Station",
-          "end": "Shanghai Station",
-          "price": 664.28,
-          "cost": 1328.56,
+          "type": "airplane",
+          "start_time": "03:11",
+          "end_time": "05:15",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 813.51,
+          "cost": 1627.02,
           "tickets": 2,
           "transports": [],
-          "TrainID": "K284"
+          "FlightID": "FL402"
+        },
+        {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 60.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "05:15",
+              "end_time": "05:36",
+              "distance": 14.04,
+              "price": 57.9,
+              "cost": 57.9,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Station",
+              "start": "Valley Sand Noodle Shop",
               "end": "People's Square",
               "mode": "taxi",
-              "start_time": "06:53",
-              "end_time": "06:57",
-              "distance": 2.89,
-              "price": 14.82,
-              "cost": 14.82,
+              "start_time": "07:00",
+              "end_time": "07:02",
+              "distance": 2.0,
+              "price": 11.68,
+              "cost": 11.68,
               "cars": 1
             }
           ]
@@ -212,6 +234,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Jinling East Road Ferry",
+          "start_time": "09:15",
+          "end_time": "10:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Jinling East Road Ferry",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:00",
+              "distance": 20.07,
+              "price": 85.01,
+              "cost": 85.01,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "11:00",
@@ -221,14 +265,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Jinling East Road Ferry",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:19",
-              "distance": 33.16,
-              "price": 143.92,
-              "cost": 143.92,
+              "start_time": "10:15",
+              "end_time": "10:40",
+              "distance": 16.8,
+              "price": 70.29,
+              "cost": 70.29,
               "cars": 1
             }
           ]
@@ -244,34 +288,14 @@
           "transports": [
             {
               "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "end": "Qibao-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qibao-Metro Station",
-              "end": "Xinzhuang-Metro Station",
-              "mode": "metro",
-              "start_time": "12:08",
-              "end_time": "12:19",
-              "distance": 5.99,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Xinzhuang-Metro Station",
               "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "mode": "walk",
-              "start_time": "12:19",
-              "end_time": "12:38",
-              "distance": 1.6,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 4.68,
+              "price": 21.1,
+              "cost": 21.1,
+              "cars": 1
             }
           ]
         },
@@ -286,34 +310,14 @@
           "transports": [
             {
               "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "end": "Xinzhuang-Metro Station",
-              "mode": "walk",
-              "start_time": "14:08",
-              "end_time": "14:27",
-              "distance": 1.6,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinzhuang-Metro Station",
-              "end": "Qufu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "14:27",
-              "end_time": "15:00",
-              "distance": 16.7,
-              "price": 5,
-              "cost": 10,
-              "tickets": 2
-            },
-            {
-              "start": "Qufu Road-Metro Station",
               "end": "Jing'an Sculpture Park",
-              "mode": "walk",
-              "start_time": "15:00",
-              "end_time": "15:02",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:08",
+              "end_time": "14:34",
+              "distance": 17.39,
+              "price": 72.97,
+              "cost": 72.97,
+              "cars": 1
             }
           ]
         },
@@ -328,34 +332,14 @@
           "transports": [
             {
               "start": "Jing'an Sculpture Park",
-              "end": "Qufu Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:32",
-              "end_time": "16:34",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qufu Road-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:34",
-              "end_time": "16:49",
-              "distance": 7.92,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "16:49",
-              "end_time": "16:59",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:32",
+              "end_time": "16:44",
+              "distance": 8.62,
+              "price": 34.86,
+              "cost": 34.86,
+              "cars": 1
             }
           ]
         },
@@ -370,34 +354,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Liping Road-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:18",
-              "distance": 4.48,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Liping Road-Metro Station",
               "end": "1933 Old Millfun",
-              "mode": "walk",
-              "start_time": "18:18",
-              "end_time": "18:20",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 5.22,
+              "price": 22.98,
+              "cost": 22.98,
+              "cars": 1
             }
           ]
         },
@@ -413,34 +377,14 @@
           "transports": [
             {
               "start": "1933 Old Millfun",
-              "end": "Liping Road-Metro Station",
-              "mode": "walk",
-              "start_time": "19:50",
-              "end_time": "19:52",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "Shanghai Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "19:52",
-              "end_time": "20:00",
-              "distance": 4.26,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Shanghai Railway Station-Metro Station",
               "end": "Shanghai Station",
-              "mode": "walk",
-              "start_time": "20:00",
-              "end_time": "20:02",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:50",
+              "end_time": "19:56",
+              "distance": 4.22,
+              "price": 19.48,
+              "cost": 19.48,
+              "cars": 1
             }
           ],
           "TrainID": "K283"
@@ -449,5 +393,5 @@
     }
   ],
   "elapsed_time(sec)": 48.60912251472473,
-  "_eval_score": 98.93877551020408
+  "_eval_score": 100.0
 }

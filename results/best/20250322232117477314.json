@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:37",
-          "end_time": "11:02",
+          "start_time": "01:21",
+          "end_time": "03:46",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Beijing Capital International Airport",
-          "price": 962.59,
-          "cost": 962.59,
+          "price": 949.31,
+          "cost": 949.31,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL173"
+          "FlightID": "FL171"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 12.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Beijing Capital International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "03:46",
+              "end_time": "04:20",
+              "distance": 22.82,
+              "price": 97.38,
+              "cost": 97.38,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Beijing Capital International Airport",
+              "start": "Corner Tower",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "11:02",
-              "end_time": "11:42",
-              "distance": 26.99,
-              "price": 116.17,
-              "cost": 116.17,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.64,
+              "price": 17.43,
+              "cost": 17.43,
               "cars": 1
             }
           ]
@@ -437,84 +481,66 @@
           "transports": [
             {
               "start": "South Gate Hot Pot (Temple of Heaven Branch)",
-              "end": "Jingtai-Metro Station",
-              "mode": "walk",
-              "start_time": "13:51",
-              "end_time": "14:02",
-              "distance": 0.97,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jingtai-Metro Station",
-              "end": "Wangjing South-Metro Station",
-              "mode": "metro",
-              "start_time": "14:02",
-              "end_time": "14:31",
-              "distance": 14.58,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Wangjing South-Metro Station",
               "end": "798 Art District",
-              "mode": "walk",
-              "start_time": "14:31",
-              "end_time": "14:52",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:51",
+              "end_time": "14:13",
+              "distance": 15.02,
+              "price": 62.28,
+              "cost": 62.28,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 7.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "798 Art District",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "taxi",
+              "start_time": "16:22",
+              "end_time": "16:37",
+              "distance": 10.25,
+              "price": 40.81,
+              "cost": 40.81,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:19",
-          "end_time": "20:44",
-          "start": "Beijing Capital International Airport",
+          "start_time": "21:35",
+          "end_time": "00:00",
+          "start": "Beijing Daxing International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 929.69,
-          "cost": 929.69,
+          "price": 944.96,
+          "cost": 944.96,
           "tickets": 1,
           "transports": [
             {
-              "start": "798 Art District",
-              "end": "Wangjing South-Metro Station",
-              "mode": "walk",
-              "start_time": "16:22",
-              "end_time": "16:43",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wangjing South-Metro Station",
-              "end": "Terminal 2-Metro Station",
-              "mode": "metro",
-              "start_time": "16:43",
-              "end_time": "17:11",
-              "distance": 14.14,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Terminal 2-Metro Station",
-              "end": "Beijing Capital International Airport",
-              "mode": "walk",
-              "start_time": "17:11",
-              "end_time": "17:21",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:10",
+              "distance": 46.77,
+              "price": 205.16,
+              "cost": 205.16,
+              "cars": 1
             }
           ],
-          "FlightID": "FL100"
+          "FlightID": "FL099"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 190.85485816001892,
-  "_eval_score": 98.17397660818713
+  "_eval_score": 99.86796536796537
 }

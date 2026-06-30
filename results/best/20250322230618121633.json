@@ -7,16 +7,142 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:05",
-          "end_time": "16:50",
-          "start": "Chengdu West Railway Station",
-          "end": "Beijing West Railway Station",
-          "price": 609.81,
-          "cost": 2439.24,
+          "type": "airplane",
+          "start_time": "01:44",
+          "end_time": "03:38",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Beijing Capital International Airport",
+          "price": 753.45,
+          "cost": 3013.8,
           "tickets": 4,
           "transports": [],
-          "TrainID": "K547"
+          "FlightID": "FL412"
+        },
+        {
+          "type": "breakfast",
+          "position": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Capital International Airport",
+              "end": "Terminal 2-Metro Station",
+              "mode": "walk",
+              "start_time": "03:38",
+              "end_time": "03:48",
+              "distance": 0.88,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Terminal 2-Metro Station",
+              "end": "Shichahai-Metro Station",
+              "mode": "metro",
+              "start_time": "03:48",
+              "end_time": "04:34",
+              "distance": 23.01,
+              "price": 6,
+              "cost": 24,
+              "tickets": 4
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+              "mode": "walk",
+              "start_time": "04:34",
+              "end_time": "04:41",
+              "distance": 0.66,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Fire Virtue Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+              "end": "Beijing Fire Virtue Temple",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:33",
+              "distance": 0.269179166342352,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beihai Park Boat Ride",
+          "start_time": "10:13",
+          "end_time": "10:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Fire Virtue Temple",
+              "end": "Beihai Park Boat Ride",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:13",
+              "distance": 1.130073198455819,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Zengshengkui Snack Shop",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beihai Park Boat Ride",
+              "end": "Shichahai-Metro Station",
+              "mode": "walk",
+              "start_time": "10:43",
+              "end_time": "10:48",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "National Art Museum of China-Metro Station",
+              "mode": "metro",
+              "start_time": "10:48",
+              "end_time": "10:51",
+              "distance": 1.98,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "National Art Museum of China-Metro Station",
+              "end": "Zengshengkui Snack Shop",
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:56",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,32 +154,32 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
-              "end": "Beijing West Railway Station-Metro Station",
+              "start": "Zengshengkui Snack Shop",
+              "end": "National Art Museum of China-Metro Station",
               "mode": "walk",
-              "start_time": "16:50",
-              "end_time": "16:50",
-              "distance": 0.08,
+              "start_time": "12:00",
+              "end_time": "12:05",
+              "distance": 0.44,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Beijing West Railway Station-Metro Station",
+              "start": "National Art Museum of China-Metro Station",
               "end": "Dongsi-Metro Station",
               "mode": "metro",
-              "start_time": "16:50",
-              "end_time": "17:07",
-              "distance": 8.87,
-              "price": 3,
-              "cost": 12,
+              "start_time": "12:05",
+              "end_time": "12:06",
+              "distance": 0.58,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
               "start": "Dongsi-Metro Station",
               "end": "Helude Candied Hawthorn Sticks",
               "mode": "walk",
-              "start_time": "17:07",
-              "end_time": "17:07",
+              "start_time": "12:06",
+              "end_time": "12:06",
               "distance": 0.04,
               "price": 0,
               "cost": 0
@@ -115,32 +241,11 @@
           "transports": [
             {
               "start": "Olympic Park",
-              "end": "Olympic Park-Metro Station",
-              "mode": "walk",
-              "start_time": "20:29",
-              "end_time": "20:37",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Olympic Park-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "20:37",
-              "end_time": "21:03",
-              "distance": 13.37,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
               "end": "Grand Kingtown Hotel Beijing",
               "mode": "walk",
-              "start_time": "21:03",
-              "end_time": "21:07",
-              "distance": 0.36,
+              "start_time": "20:29",
+              "end_time": "23:10",
+              "distance": 13.417361733293026,
               "price": 0,
               "cost": 0
             }
@@ -172,32 +277,11 @@
           "transports": [
             {
               "start": "Grand Kingtown Hotel Beijing",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Gulou Street-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "08:51",
-              "distance": 8.65,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Gulou Street-Metro Station",
               "end": "Shichahai",
               "mode": "walk",
-              "start_time": "08:51",
-              "end_time": "08:53",
-              "distance": 0.23,
+              "start_time": "08:30",
+              "end_time": "10:10",
+              "distance": 8.38732465516322,
               "price": 0,
               "cost": 0
             }
@@ -214,32 +298,11 @@
           "transports": [
             {
               "start": "Shichahai",
-              "end": "Gulou Street-Metro Station",
-              "mode": "walk",
-              "start_time": "11:10",
-              "end_time": "11:12",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Gulou Street-Metro Station",
-              "end": "Qianmen-Metro Station",
-              "mode": "metro",
-              "start_time": "11:12",
-              "end_time": "11:22",
-              "distance": 5.43,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Qianmen-Metro Station",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "walk",
-              "start_time": "11:22",
-              "end_time": "11:26",
-              "distance": 0.39,
+              "start_time": "11:10",
+              "end_time": "12:17",
+              "distance": 5.651098719607195,
               "price": 0,
               "cost": 0
             }
@@ -619,7 +682,7 @@
           "type": "attraction",
           "position": "Bao Guo Temple",
           "start_time": "09:00",
-          "end_time": "10:15",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -670,8 +733,8 @@
               "start": "Bao Guo Temple",
               "end": "Changchun Street-Metro Station",
               "mode": "walk",
-              "start_time": "10:15",
-              "end_time": "10:19",
+              "start_time": "10:30",
+              "end_time": "10:34",
               "distance": 0.37,
               "price": 0,
               "cost": 0
@@ -680,8 +743,8 @@
               "start": "Changchun Street-Metro Station",
               "end": "Zhang Zizhong Road-Metro Station",
               "mode": "metro",
-              "start_time": "10:19",
-              "end_time": "10:30",
+              "start_time": "10:34",
+              "end_time": "10:45",
               "distance": 5.96,
               "price": 3,
               "cost": 12,
@@ -691,8 +754,8 @@
               "start": "Zhang Zizhong Road-Metro Station",
               "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
               "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:36",
+              "start_time": "10:45",
+              "end_time": "10:51",
               "distance": 0.57,
               "price": 0,
               "cost": 0
@@ -784,13 +847,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:29",
-          "end_time": "20:23",
-          "start": "Beijing Daxing International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 766.7,
-          "cost": 3066.8,
+          "type": "attraction",
+          "position": "China Numismatic Museum",
+          "start_time": "15:48",
+          "end_time": "16:48",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
@@ -805,31 +867,116 @@
             },
             {
               "start": "National Art Museum of China-Metro Station",
-              "end": "Daxing Airport-Metro Station",
+              "end": "Tiananmen East-Metro Station",
               "mode": "metro",
               "start_time": "15:44",
-              "end_time": "17:15",
-              "distance": 45.78,
-              "price": 8,
-              "cost": 32,
+              "end_time": "15:47",
+              "distance": 1.95,
+              "price": 2,
+              "cost": 8,
               "tickets": 4
             },
             {
-              "start": "Daxing Airport-Metro Station",
-              "end": "Beijing Daxing International Airport",
+              "start": "Tiananmen East-Metro Station",
+              "end": "China Numismatic Museum",
               "mode": "walk",
-              "start_time": "17:15",
-              "end_time": "17:26",
-              "distance": 0.93,
+              "start_time": "15:47",
+              "end_time": "15:48",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 14.0,
+          "cost": 56.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Numismatic Museum",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "walk",
+              "start_time": "16:48",
+              "end_time": "16:49",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Niujie-Metro Station",
+              "mode": "metro",
+              "start_time": "16:49",
+              "end_time": "16:56",
+              "distance": 3.81,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "mode": "walk",
+              "start_time": "16:56",
+              "end_time": "16:59",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:26",
+          "end_time": "00:20",
+          "start": "Beijing Capital International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 809.5,
+          "cost": 3238.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "end": "Niujie-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Terminal 2-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "19:00",
+              "distance": 28.76,
+              "price": 7,
+              "cost": 28,
+              "tickets": 4
+            },
+            {
+              "start": "Terminal 2-Metro Station",
+              "end": "Beijing Capital International Airport",
+              "mode": "walk",
+              "start_time": "19:00",
+              "end_time": "19:10",
+              "distance": 0.88,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL121"
+          "FlightID": "FL122"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 212.79274129867554,
-  "_eval_score": 96.19480519480518
+  "_eval_score": 98.27933673469389
 }

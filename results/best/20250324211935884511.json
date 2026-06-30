@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "03:59",
+              "distance": 15.99,
+              "price": 66.65,
+              "cost": 66.65,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
               "end": "Bao'an Xibay Mangrove Park",
               "mode": "taxi",
-              "start_time": "04:40",
-              "end_time": "05:22",
-              "distance": 28.46,
-              "price": 122.77,
-              "cost": 122.77,
+              "start_time": "08:00",
+              "end_time": "08:15",
+              "distance": 10.42,
+              "price": 41.59,
+              "cost": 41.59,
               "cars": 1
             }
           ]
@@ -222,34 +244,14 @@
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Gankeng-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 0.75,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Gankeng-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "08:38",
-              "end_time": "08:54",
-              "distance": 8.29,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "08:54",
-              "end_time": "08:57",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:42",
+              "distance": 8.52,
+              "price": 34.52,
+              "cost": 34.52,
+              "cars": 1
             }
           ]
         },
@@ -264,34 +266,14 @@
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
-              "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:33",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Meicun-Metro Station",
-              "mode": "metro",
-              "start_time": "10:33",
-              "end_time": "10:40",
-              "distance": 3.8,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Meicun-Metro Station",
               "end": "Old Zhou's Shunde Double-Skin Milk",
-              "mode": "walk",
-              "start_time": "10:40",
-              "end_time": "10:42",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:36",
+              "distance": 4.11,
+              "price": 19.08,
+              "cost": 19.08,
+              "cars": 1
             }
           ]
         },
@@ -306,34 +288,14 @@
           "transports": [
             {
               "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Meicun-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Meicun-Metro Station",
-              "end": "Donggualing-Metro Station",
-              "mode": "metro",
-              "start_time": "12:02",
-              "end_time": "12:05",
-              "distance": 1.79,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Donggualing-Metro Station",
               "end": "Guan Shanyue Art Museum",
-              "mode": "walk",
-              "start_time": "12:05",
-              "end_time": "12:13",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.19,
+              "price": 12.38,
+              "cost": 12.38,
+              "cars": 1
             }
           ]
         },
@@ -348,34 +310,14 @@
           "transports": [
             {
               "start": "Guan Shanyue Art Museum",
-              "end": "Donggualing-Metro Station",
-              "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "13:51",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Donggualing-Metro Station",
-              "end": "Gangxia North-Metro Station",
-              "mode": "metro",
-              "start_time": "13:51",
-              "end_time": "13:55",
-              "distance": 2.45,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Gangxia North-Metro Station",
               "end": "Galaxy Development Center Building - Fitness Center",
-              "mode": "walk",
-              "start_time": "13:55",
-              "end_time": "13:55",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:43",
+              "end_time": "13:45",
+              "distance": 1.8,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -390,34 +332,14 @@
           "transports": [
             {
               "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "Gangxia North-Metro Station",
-              "mode": "walk",
-              "start_time": "15:25",
-              "end_time": "15:25",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Gangxia North-Metro Station",
-              "end": "Futian Port-Metro Station",
-              "mode": "metro",
-              "start_time": "15:25",
-              "end_time": "15:29",
-              "distance": 2.37,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Futian Port-Metro Station",
               "end": "Bauhinia Lane Hong Kong International Style Street",
-              "mode": "walk",
-              "start_time": "15:29",
-              "end_time": "15:30",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:25",
+              "end_time": "15:28",
+              "distance": 2.59,
+              "price": 13.78,
+              "cost": 13.78,
+              "cars": 1
             }
           ]
         },
@@ -432,34 +354,14 @@
           "transports": [
             {
               "start": "Bauhinia Lane Hong Kong International Style Street",
-              "end": "Futian Port-Metro Station",
-              "mode": "walk",
-              "start_time": "16:30",
-              "end_time": "16:31",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Futian Port-Metro Station",
-              "end": "Meicun-Metro Station",
-              "mode": "metro",
-              "start_time": "16:31",
-              "end_time": "16:42",
-              "distance": 5.91,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Meicun-Metro Station",
               "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-              "mode": "walk",
-              "start_time": "16:42",
-              "end_time": "16:48",
-              "distance": 0.53,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:30",
+              "end_time": "16:38",
+              "distance": 5.58,
+              "price": 24.21,
+              "cost": 24.21,
+              "cars": 1
             }
           ]
         },
@@ -513,84 +415,154 @@
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Gankeng-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 0.75,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Gankeng-Metro Station",
-              "end": "Shaibu-Metro Station",
-              "mode": "metro",
-              "start_time": "08:38",
-              "end_time": "09:00",
-              "distance": 11.05,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Shaibu-Metro Station",
               "end": "East Gate Old Street",
-              "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:01",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:47",
+              "distance": 11.66,
+              "price": 47.15,
+              "cost": 47.15,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "lunch",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
               "start": "East Gate Old Street",
-              "end": "Shaibu-Metro Station",
-              "mode": "walk",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "taxi",
               "start_time": "10:31",
-              "end_time": "10:32",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "10:34",
+              "distance": 2.63,
+              "price": 13.92,
+              "cost": 13.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "12:13",
+          "end_time": "13:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Shaibu-Metro Station",
-              "end": "Buji-Metro Station",
-              "mode": "metro",
-              "start_time": "10:32",
-              "end_time": "10:43",
-              "distance": 5.88,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.41,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "13:25",
+          "end_time": "14:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Buji-Metro Station",
-              "end": "Shenzhen East Station",
-              "mode": "walk",
-              "start_time": "10:43",
-              "end_time": "10:46",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "taxi",
+              "start_time": "13:13",
+              "end_time": "13:15",
+              "distance": 1.43,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake Park",
+          "start_time": "14:51",
+          "end_time": "15:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "East Lake Park",
+              "mode": "taxi",
+              "start_time": "14:25",
+              "end_time": "14:30",
+              "distance": 3.85,
+              "price": 18.16,
+              "cost": 18.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Lake Park",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:51",
+              "end_time": "15:55",
+              "distance": 3.1,
+              "price": 15.55,
+              "cost": 15.55,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:51",
+              "distance": 34.18,
+              "price": 148.51,
+              "cost": 148.51,
+              "cars": 1
             }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 185.56646943092346,
-  "_eval_score": 97.33870214752568
+  "_eval_score": 99.44444444444444
 }

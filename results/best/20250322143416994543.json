@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:59",
+              "distance": 34.63,
+              "price": 150.52,
+              "cost": 150.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Gucun Park",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "Gucun Park",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "02:19",
-              "distance": 47.42,
-              "price": 208.09,
-              "cost": 208.09,
+              "start_time": "07:00",
+              "end_time": "07:20",
+              "distance": 13.88,
+              "price": 57.14,
+              "cost": 57.14,
               "cars": 1
             }
           ]
@@ -222,34 +244,14 @@
           "transports": [
             {
               "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "end": "Chuansha-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chuansha-Metro Station",
-              "end": "Yanggao Middle Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "09:03",
-              "distance": 14.95,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Yanggao Middle Road-Metro Station",
               "end": "Century Square",
-              "mode": "walk",
-              "start_time": "09:03",
-              "end_time": "09:04",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 15.24,
+              "price": 63.3,
+              "cost": 63.3,
+              "cars": 1
             }
           ]
         },
@@ -264,34 +266,14 @@
           "transports": [
             {
               "start": "Century Square",
-              "end": "Yanggao Middle Road-Metro Station",
-              "mode": "walk",
-              "start_time": "10:34",
-              "end_time": "10:35",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yanggao Middle Road-Metro Station",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:35",
-              "end_time": "10:51",
-              "distance": 8.45,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
               "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-              "mode": "walk",
-              "start_time": "10:51",
-              "end_time": "10:58",
-              "distance": 0.59,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:34",
+              "end_time": "10:47",
+              "distance": 8.8,
+              "price": 35.49,
+              "cost": 35.49,
+              "cars": 1
             }
           ]
         },
@@ -328,62 +310,87 @@
             {
               "start": "Jululu Road",
               "end": "Jing'an Park",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:30",
-              "end_time": "13:35",
-              "distance": 0.4434750434069161,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:30",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Temple",
+          "start_time": "15:07",
+          "end_time": "16:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Park",
+              "end": "Jing'an Temple",
+              "mode": "taxi",
+              "start_time": "15:05",
+              "end_time": "15:05",
+              "distance": 0.22,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 18.0,
+          "cost": 18.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Temple",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "16:07",
+              "end_time": "16:25",
+              "distance": 12.65,
+              "price": 51.62,
+              "cost": 51.62,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Jing'an Park",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:05",
-              "end_time": "15:13",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:13",
-              "end_time": "16:21",
-              "distance": 34.08,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:36",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:05",
+              "distance": 43.67,
+              "price": 191.22,
+              "cost": 191.22,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 6.16659688949585,
-  "_eval_score": 97.91941391941393
+  "_eval_score": 99.9047619047619
 }

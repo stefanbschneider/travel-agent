@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:01",
-          "end_time": "08:57",
+          "start_time": "03:11",
+          "end_time": "04:07",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 330.37,
-          "cost": 991.11,
+          "price": 426.14,
+          "cost": 1278.42,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL383"
+          "FlightID": "FL390"
+        },
+        {
+          "type": "breakfast",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 5.0,
+          "cost": 15.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "04:07",
+              "end_time": "04:39",
+              "distance": 21.53,
+              "price": 91.56,
+              "cost": 91.56,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Tianhe International Airport",
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "08:57",
-              "end_time": "09:36",
-              "distance": 26.18,
-              "price": 112.5,
-              "cost": 112.5,
+              "start_time": "07:30",
+              "end_time": "07:41",
+              "distance": 7.88,
+              "price": 32.27,
+              "cost": 32.27,
               "cars": 1
             }
           ]
@@ -118,12 +140,13 @@
             {
               "start": "Jianghan Road Pedestrian Street",
               "end": "5D Starry Sky Illusion Art Museum",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "15:30",
-              "end_time": "15:32",
-              "distance": 0.17896711099556029,
-              "price": 0,
-              "cost": 0
+              "end_time": "15:30",
+              "distance": 0.18,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -138,34 +161,14 @@
           "transports": [
             {
               "start": "5D Starry Sky Illusion Art Museum",
-              "end": "Dazhi Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:32",
-              "end_time": "16:38",
-              "distance": 0.54,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dazhi Road-Metro Station",
-              "end": "Jianghan Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:38",
-              "end_time": "16:40",
-              "distance": 1.46,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Jianghan Road-Metro Station",
               "end": "Five Percent Villa Restaurant",
-              "mode": "walk",
-              "start_time": "16:40",
-              "end_time": "16:49",
-              "distance": 0.76,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:32",
+              "end_time": "16:33",
+              "distance": 0.78,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -837,5 +840,5 @@
     }
   ],
   "elapsed_time(sec)": 183.0371606349945,
-  "_eval_score": 98.82936507936509
+  "_eval_score": 99.2107843137255
 }

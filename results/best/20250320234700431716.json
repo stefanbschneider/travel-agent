@@ -8,55 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:31",
-          "end_time": "08:27",
+          "start_time": "01:48",
+          "end_time": "02:44",
           "start": "Wuhan Tianhe International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 358.71,
-          "cost": 1434.84,
+          "price": 372.34,
+          "cost": 1489.36,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL608"
+          "FlightID": "FL606"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "taxi",
+              "start_time": "02:44",
+              "end_time": "03:15",
+              "distance": 20.76,
+              "price": 88.11,
+              "cost": 88.11,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
           "position": "Arhat Temple",
           "start_time": "09:16",
-          "end_time": "10:16",
+          "end_time": "10:46",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
-              "mode": "walk",
-              "start_time": "08:27",
-              "end_time": "08:41",
-              "distance": 1.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
-              "end": "Chaotianmen-Metro Station",
-              "mode": "metro",
-              "start_time": "08:41",
-              "end_time": "09:15",
-              "distance": 17.07,
-              "price": 5,
-              "cost": 20,
-              "tickets": 4
-            },
-            {
-              "start": "Chaotianmen-Metro Station",
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
               "end": "Arhat Temple",
-              "mode": "walk",
-              "start_time": "09:15",
-              "end_time": "09:16",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:12",
+              "distance": 8.47,
+              "price": 34.33,
+              "cost": 34.33,
+              "cars": 1
             }
           ]
         },
@@ -71,53 +73,11 @@
           "transports": [
             {
               "start": "Arhat Temple",
-              "end": "Chaotianmen-Metro Station",
-              "mode": "walk",
-              "start_time": "10:16",
-              "end_time": "10:17",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chaotianmen-Metro Station",
-              "end": "Linjiangmen-Metro Station",
-              "mode": "metro",
-              "start_time": "10:17",
-              "end_time": "10:20",
-              "distance": 1.55,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Linjiangmen-Metro Station",
               "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "mode": "walk",
-              "start_time": "10:20",
-              "end_time": "10:25",
-              "distance": 0.49,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Hongya Cave",
-          "start_time": "12:01",
-          "end_time": "13:01",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "end": "Hongya Cave",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 1.02,
+              "start_time": "10:46",
+              "end_time": "10:47",
+              "distance": 1.1,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -126,9 +86,53 @@
         },
         {
           "type": "attraction",
+          "position": "White Mansion",
+          "start_time": "12:20",
+          "end_time": "13:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "end": "White Mansion",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:20",
+              "distance": 13.75,
+              "price": 56.56,
+              "cost": 56.56,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hongya Cave",
+          "start_time": "13:41",
+          "end_time": "14:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "White Mansion",
+              "end": "Hongya Cave",
+              "mode": "taxi",
+              "start_time": "13:20",
+              "end_time": "13:41",
+              "distance": 14.26,
+              "price": 58.89,
+              "cost": 58.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
           "position": "Ci Qi Kou Ancient Town",
-          "start_time": "13:19",
-          "end_time": "14:19",
+          "start_time": "14:59",
+          "end_time": "15:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -137,8 +141,8 @@
               "start": "Hongya Cave",
               "end": "Ci Qi Kou Ancient Town",
               "mode": "taxi",
-              "start_time": "13:01",
-              "end_time": "13:19",
+              "start_time": "14:41",
+              "end_time": "14:59",
               "distance": 12.63,
               "price": 51.52,
               "cost": 51.52,
@@ -147,45 +151,23 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Chongqing Happy Valley",
-          "start_time": "14:35",
-          "end_time": "15:35",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "dinner",
+          "position": "Chongqing Regent Hotel · Robbins Steakhouse",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 665.0,
+          "cost": 2660.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Ci Qi Kou Ancient Town",
-              "end": "Chongqing Happy Valley",
+              "end": "Chongqing Regent Hotel · Robbins Steakhouse",
               "mode": "taxi",
-              "start_time": "14:19",
-              "end_time": "14:35",
-              "distance": 11.32,
-              "price": 45.66,
-              "cost": 45.66,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Yan She Hot Pot Cuisine (Nanbin Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 488.0,
-          "cost": 1952.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Happy Valley",
-              "end": "Yan She Hot Pot Cuisine (Nanbin Road Branch)",
-              "mode": "taxi",
-              "start_time": "15:35",
-              "end_time": "15:54",
-              "distance": 12.91,
-              "price": 52.78,
-              "cost": 52.78,
+              "start_time": "15:59",
+              "end_time": "16:15",
+              "distance": 11.23,
+              "price": 45.21,
+              "cost": 45.21,
               "cars": 1
             }
           ]
@@ -202,14 +184,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Yan She Hot Pot Cuisine (Nanbin Road Branch)",
+              "start": "Chongqing Regent Hotel · Robbins Steakhouse",
               "end": "Liangjiang Shengjin Hotel (Chongqing Garden Expo Park)",
               "mode": "taxi",
               "start_time": "18:00",
               "end_time": "18:17",
-              "distance": 11.58,
-              "price": 46.81,
-              "cost": 46.81,
+              "distance": 11.59,
+              "price": 46.87,
+              "cost": 46.87,
               "cars": 1
             }
           ]
@@ -341,22 +323,22 @@
         },
         {
           "type": "dinner",
-          "position": "Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang",
+          "position": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 264.0,
-          "cost": 1056.0,
+          "price": 210.0,
+          "cost": 840.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Nanshan Scenic Area",
-              "end": "Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang",
+              "end": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
               "mode": "taxi",
               "start_time": "14:46",
-              "end_time": "14:53",
-              "distance": 4.72,
-              "price": 21.2,
-              "cost": 21.2,
+              "end_time": "14:54",
+              "distance": 5.36,
+              "price": 23.46,
+              "cost": 23.46,
               "cars": 1
             }
           ]
@@ -373,14 +355,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang",
+              "start": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
               "end": "Liangjiang Shengjin Hotel (Chongqing Garden Expo Park)",
               "mode": "taxi",
               "start_time": "18:00",
               "end_time": "18:19",
-              "distance": 13.27,
-              "price": 54.43,
-              "cost": 54.43,
+              "distance": 13.28,
+              "price": 54.46,
+              "cost": 54.46,
               "cars": 1
             }
           ]
@@ -492,83 +474,43 @@
           "type": "attraction",
           "position": "1941 Teahouse and Theater",
           "start_time": "13:02",
-          "end_time": "14:02",
+          "end_time": "14:32",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
-              "end": "Linjiangmen-Metro Station",
-              "mode": "walk",
-              "start_time": "12:54",
-              "end_time": "12:58",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Linjiangmen-Metro Station",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "metro",
-              "start_time": "12:58",
-              "end_time": "12:59",
-              "distance": 0.93,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
               "end": "1941 Teahouse and Theater",
-              "mode": "walk",
-              "start_time": "12:59",
-              "end_time": "13:02",
-              "distance": 0.3,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:54",
+              "end_time": "12:55",
+              "distance": 1.05,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
           "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
-          "start_time": "16:30",
-          "end_time": "17:30",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 7.0,
           "cost": 28.0,
           "tickets": 4,
           "transports": [
             {
               "start": "1941 Teahouse and Theater",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "walk",
-              "start_time": "14:02",
-              "end_time": "14:05",
-              "distance": 0.3,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
-              "end": "Guanyinqiao-Metro Station",
-              "mode": "metro",
-              "start_time": "14:05",
-              "end_time": "14:15",
-              "distance": 5.17,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Guanyinqiao-Metro Station",
               "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
-              "mode": "walk",
-              "start_time": "14:15",
-              "end_time": "14:19",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:32",
+              "end_time": "14:39",
+              "distance": 5.14,
+              "price": 22.69,
+              "cost": 22.69,
+              "cars": 1
             }
           ]
         },
@@ -584,34 +526,14 @@
           "transports": [
             {
               "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
-              "end": "Guanyinqiao-Metro Station",
-              "mode": "walk",
-              "start_time": "17:30",
-              "end_time": "17:34",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Guanyinqiao-Metro Station",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
-              "mode": "metro",
-              "start_time": "17:34",
-              "end_time": "18:12",
-              "distance": 19.11,
-              "price": 5,
-              "cost": 20,
-              "tickets": 4
-            },
-            {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
               "end": "Chongqing Jiangbei International Airport",
-              "mode": "walk",
-              "start_time": "18:12",
-              "end_time": "18:26",
-              "distance": 1.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:29",
+              "distance": 19.71,
+              "price": 83.37,
+              "cost": 83.37,
+              "cars": 1
             }
           ],
           "FlightID": "FL388"
@@ -619,6 +541,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 91.85102796554565,
-  "_eval_score": 99.41950113378684
+  "elapsed_time(sec)": 182.3869171142578,
+  "_eval_score": 100.0
 }

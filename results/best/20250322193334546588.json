@@ -7,16 +7,125 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2911.84,
+          "type": "airplane",
+          "start_time": "03:17",
+          "end_time": "04:48",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 18.0,
+          "cost": 72.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:19",
+              "distance": 12.68,
+              "price": 51.74,
+              "cost": 51.74,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+          "start_time": "12:38",
+          "end_time": "13:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 4.68,
+              "price": 21.1,
+              "cost": 21.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 29.0,
+          "cost": 116.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "13:38",
+              "end_time": "14:04",
+              "distance": 17.92,
+              "price": 75.35,
+              "cost": 75.35,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +137,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "Shanghai Lavender Park",
               "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "19:34",
-              "distance": 34.86,
-              "price": 151.59,
-              "cost": 151.59,
+              "start_time": "18:00",
+              "end_time": "18:31",
+              "distance": 20.74,
+              "price": 88.05,
+              "cost": 88.05,
               "cars": 1
             }
           ]
@@ -371,34 +480,14 @@
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Jiashan Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:09",
-              "end_time": "13:12",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiashan Road-Metro Station",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "metro",
-              "start_time": "13:12",
-              "end_time": "13:27",
-              "distance": 7.8,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "mode": "walk",
-              "start_time": "13:27",
-              "end_time": "13:29",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:09",
+              "end_time": "13:20",
+              "distance": 7.97,
+              "price": 32.6,
+              "cost": 32.6,
+              "cars": 1
             }
           ]
         },
@@ -413,34 +502,14 @@
           "transports": [
             {
               "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "14:59",
-              "end_time": "15:01",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:01",
-              "end_time": "15:13",
-              "distance": 6.16,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:13",
-              "end_time": "15:23",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:59",
+              "end_time": "15:07",
+              "distance": 5.92,
+              "price": 25.41,
+              "cost": 25.41,
+              "cars": 1
             }
           ]
         },
@@ -456,34 +525,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:56",
-              "distance": 23.09,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "18:56",
-              "end_time": "18:57",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.64,
+              "price": 101.08,
+              "cost": 101.08,
+              "cars": 1
             }
           ],
           "TrainID": "D941"
@@ -492,5 +541,5 @@
     }
   ],
   "elapsed_time(sec)": 194.14548516273499,
-  "_eval_score": 97.35714285714286
+  "_eval_score": 100.0
 }

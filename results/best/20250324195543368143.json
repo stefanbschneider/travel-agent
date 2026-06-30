@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:39",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 525.84,
+          "type": "airplane",
+          "start_time": "02:33",
+          "end_time": "02:53",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 312.9,
+          "cost": 938.6999999999999,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G7001"
+          "FlightID": "FL643"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 87.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "02:53",
+              "end_time": "03:02",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "East Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "03:02",
+              "end_time": "03:30",
+              "distance": 14.07,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "walk",
+              "start_time": "03:30",
+              "end_time": "03:36",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +70,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Station",
-              "end": "Shanghai Railway Station-Metro Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "East Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "08:39",
-              "end_time": "08:41",
-              "distance": 0.21,
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.58,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shanghai Railway Station-Metro Station",
+              "start": "East Nanjing Road-Metro Station",
               "end": "Liping Road-Metro Station",
               "mode": "metro",
-              "start_time": "08:41",
-              "end_time": "08:49",
-              "distance": 4.26,
-              "price": 3,
-              "cost": 9,
+              "start_time": "08:06",
+              "end_time": "08:11",
+              "distance": 2.95,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Liping Road-Metro Station",
               "end": "1933 Old Millfun",
               "mode": "walk",
-              "start_time": "08:49",
-              "end_time": "08:51",
+              "start_time": "08:11",
+              "end_time": "08:13",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -449,5 +491,5 @@
     }
   ],
   "elapsed_time(sec)": 183.532461643219,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 100.0
 }

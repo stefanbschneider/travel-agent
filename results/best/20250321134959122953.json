@@ -7,16 +7,104 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:09",
-          "end_time": "16:53",
-          "start": "Chongqing North Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 720.72,
-          "cost": 2162.16,
+          "type": "airplane",
+          "start_time": "01:00",
+          "end_time": "02:30",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 647.51,
+          "cost": 1942.53,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D2214"
+          "FlightID": "FL392"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "02:30",
+              "end_time": "03:25",
+              "distance": 36.99,
+              "price": 161.16,
+              "cost": 161.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiangsu Wutai Mountain Sports Center",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Jiangsu Wutai Mountain Sports Center",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:00",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Lu's Plum Blossom Cake (Laomendong Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jiangsu Wutai Mountain Sports Center",
+              "end": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 4.84,
+              "price": 21.66,
+              "cost": 21.66,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Laomendong Historical Block",
+          "start_time": "12:12",
+          "end_time": "13:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "end": "Laomendong Historical Block",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 1.0,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,14 +116,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Laomendong Historical Block",
               "end": "Nanjing Jinling Hotel - Plum Garden",
               "mode": "taxi",
-              "start_time": "16:53",
-              "end_time": "17:05",
-              "distance": 8.32,
-              "price": 33.81,
-              "cost": 33.81,
+              "start_time": "13:12",
+              "end_time": "13:16",
+              "distance": 2.92,
+              "price": 14.94,
+              "cost": 14.94,
               "cars": 1
             }
           ]
@@ -393,84 +481,66 @@
           "transports": [
             {
               "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "13:54",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "13:54",
-              "end_time": "14:00",
-              "distance": 3.21,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
               "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "mode": "walk",
-              "start_time": "14:00",
-              "end_time": "14:13",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:49",
+              "end_time": "13:55",
+              "distance": 4.63,
+              "price": 20.91,
+              "cost": 20.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "15:43",
+              "end_time": "15:46",
+              "distance": 2.46,
+              "price": 13.29,
+              "cost": 13.29,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:34",
-          "end_time": "20:04",
+          "start_time": "20:34",
+          "end_time": "22:04",
           "start": "Nanjing Lukou International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 603.53,
-          "cost": 1810.59,
+          "price": 577.68,
+          "cost": 1733.04,
           "tickets": 3,
           "transports": [
             {
-              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "15:43",
-              "end_time": "15:56",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:56",
-              "end_time": "17:09",
-              "distance": 36.96,
-              "price": 7,
-              "cost": 21,
-              "tickets": 3
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
-              "start_time": "17:09",
-              "end_time": "17:12",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:57",
+              "distance": 38.65,
+              "price": 168.64,
+              "cost": 168.64,
+              "cars": 1
             }
           ],
-          "FlightID": "FL685"
+          "FlightID": "FL686"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 187.14166378974915,
-  "_eval_score": 97.46918767507003
+  "_eval_score": 100.0
 }

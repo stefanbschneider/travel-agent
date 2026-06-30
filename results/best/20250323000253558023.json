@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:30",
-          "end_time": "09:10",
-          "start": "Chengdu Shuangliu International Airport",
+          "start_time": "01:04",
+          "end_time": "02:44",
+          "start": "Chengdu Tianfu International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 633.07,
-          "cost": 1899.21,
+          "price": 639.2,
+          "cost": 1917.6000000000001,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL425"
+          "FlightID": "FL424"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 72.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "02:44",
+              "end_time": "03:22",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "08:08",
+          "end_time": "08:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:08",
+              "distance": 5.95,
+              "price": 25.54,
+              "cost": 25.54,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Deng Xiaoping Portrait Square",
               "end": "East Gate Old Street",
               "mode": "taxi",
-              "start_time": "09:10",
-              "end_time": "09:59",
-              "distance": 32.72,
-              "price": 141.93,
-              "cost": 141.93,
+              "start_time": "08:38",
+              "end_time": "08:39",
+              "distance": 1.28,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -283,5 +327,5 @@
     }
   ],
   "elapsed_time(sec)": 71.6220018863678,
-  "_eval_score": 96.3771645021645
+  "_eval_score": 98.02930402930403
 }

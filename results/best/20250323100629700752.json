@@ -7,16 +7,82 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:15",
-          "end_time": "14:05",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Shenzhen Station",
-          "price": 788.63,
-          "cost": 2365.89,
+          "type": "airplane",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G997"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 72.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "03:09",
+              "end_time": "03:47",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 11.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 66.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.89,
+              "price": 11.3,
+              "cost": 11.3,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +94,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Station",
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
               "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
               "mode": "taxi",
-              "start_time": "14:05",
-              "end_time": "14:36",
-              "distance": 21.24,
-              "price": 90.28,
-              "cost": 90.28,
+              "start_time": "12:00",
+              "end_time": "12:26",
+              "distance": 17.65,
+              "price": 74.13,
+              "cost": 74.13,
               "cars": 1
             }
           ]
@@ -564,34 +630,36 @@
           "transports": [
             {
               "start": "Libaoge (Kerry Store)",
-              "end": "Shopping Park-Metro Station",
-              "mode": "walk",
-              "start_time": "13:59",
-              "end_time": "14:01",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shopping Park-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "14:01",
-              "end_time": "14:16",
-              "distance": 7.51,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "14:16",
-              "end_time": "14:19",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:59",
+              "end_time": "14:10",
+              "distance": 7.56,
+              "price": 31.15,
+              "cost": 31.15,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "16:08",
+          "end_time": "16:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "taxi",
+              "start_time": "15:49",
+              "end_time": "15:59",
+              "distance": 6.67,
+              "price": 28.06,
+              "cost": 28.06,
+              "cars": 1
             }
           ]
         },
@@ -605,35 +673,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
-              "mode": "walk",
-              "start_time": "15:49",
-              "end_time": "15:52",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Meicun-Metro Station",
-              "mode": "metro",
-              "start_time": "15:52",
-              "end_time": "15:59",
-              "distance": 3.8,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Meicun-Metro Station",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
               "end": "Old Zhou's Shunde Double-Skin Milk",
-              "mode": "walk",
-              "start_time": "15:59",
-              "end_time": "16:01",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:38",
+              "end_time": "16:42",
+              "distance": 2.78,
+              "price": 14.43,
+              "cost": 14.43,
+              "cars": 1
             }
           ]
         },
@@ -649,34 +697,14 @@
           "transports": [
             {
               "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Meicun-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Meicun-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:52",
-              "distance": 25.18,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "18:52",
-              "end_time": "18:57",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:38",
+              "distance": 25.4,
+              "price": 109.01,
+              "cost": 109.01,
+              "cars": 1
             }
           ],
           "FlightID": "FL168"
@@ -685,5 +713,5 @@
     }
   ],
   "elapsed_time(sec)": 181.466126203537,
-  "_eval_score": 97.79690476190476
+  "_eval_score": 99.4384236453202
 }

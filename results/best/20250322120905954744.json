@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "09:00",
+              "end_time": "09:01",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -117,34 +139,14 @@
           "transports": [
             {
               "start": "Lujiazui",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "walk",
+              "end": "1933 Old Millfun",
+              "mode": "taxi",
               "start_time": "15:30",
               "end_time": "15:33",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Liping Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:33",
-              "end_time": "15:38",
-              "distance": 2.72,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "1933 Old Millfun",
-              "mode": "walk",
-              "start_time": "15:38",
-              "end_time": "15:40",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "distance": 2.51,
+              "price": 13.48,
+              "cost": 13.48,
+              "cars": 1
             }
           ]
         },
@@ -159,34 +161,14 @@
           "transports": [
             {
               "start": "1933 Old Millfun",
-              "end": "Liping Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:40",
-              "end_time": "16:42",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:42",
-              "end_time": "16:58",
-              "distance": 8.04,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
               "end": "Fu He Hui",
-              "mode": "walk",
-              "start_time": "16:58",
-              "end_time": "17:00",
-              "distance": 0.22,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:40",
+              "end_time": "16:51",
+              "distance": 8.0,
+              "price": 32.68,
+              "cost": 32.68,
+              "cars": 1
             }
           ]
         },
@@ -499,84 +481,66 @@
           "transports": [
             {
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:56",
-              "end_time": "14:04",
-              "distance": 0.69,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "metro",
-              "start_time": "14:04",
-              "end_time": "14:08",
-              "distance": 2.2,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "mode": "walk",
-              "start_time": "14:08",
-              "end_time": "14:10",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:56",
+              "end_time": "13:59",
+              "distance": 2.14,
+              "price": 12.19,
+              "cost": 12.19,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:40",
+              "end_time": "15:48",
+              "distance": 5.92,
+              "price": 25.41,
+              "cost": 25.41,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "price": 640.93,
+          "cost": 2563.72,
           "tickets": 4,
           "transports": [
             {
-              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:40",
-              "end_time": "15:42",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:42",
-              "end_time": "16:36",
-              "distance": 27.38,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:36",
-              "end_time": "16:51",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:45",
+              "distance": 30.3,
+              "price": 131.05,
+              "cost": 131.05,
+              "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 194.04430866241455,
-  "_eval_score": 98.1126984126984
+  "_eval_score": 99.53030303030303
 }

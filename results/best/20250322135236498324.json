@@ -8,15 +8,58 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +71,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jululu Road",
               "end": "Golden Era Shunfeng Harbor (Aegean Shopping Center Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:34",
-              "distance": 42.21,
-              "price": 184.63,
-              "cost": 184.63,
+              "start_time": "10:00",
+              "end_time": "10:14",
+              "distance": 9.79,
+              "price": 38.95,
+              "cost": 38.95,
               "cars": 1
             }
           ]
@@ -394,12 +437,13 @@
             {
               "start": "Huangpu River",
               "end": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "12:54",
-              "end_time": "13:00",
-              "distance": 0.5217742901492546,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:54",
+              "distance": 0.52,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -415,12 +459,13 @@
             {
               "start": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
               "end": "Garden Bridge",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:00",
-              "end_time": "14:01",
-              "distance": 0.13201038139056887,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:00",
+              "distance": 0.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -435,34 +480,14 @@
           "transports": [
             {
               "start": "Garden Bridge",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:31",
-              "end_time": "15:32",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:32",
-              "end_time": "15:43",
-              "distance": 5.51,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:43",
-              "end_time": "15:53",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:31",
+              "end_time": "15:40",
+              "distance": 6.06,
+              "price": 25.89,
+              "cost": 25.89,
+              "cars": 1
             }
           ]
         },
@@ -478,34 +503,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:56",
-              "distance": 23.09,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "18:56",
-              "end_time": "18:57",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.64,
+              "price": 101.08,
+              "cost": 101.08,
+              "cars": 1
             }
           ],
           "TrainID": "D941"
@@ -514,5 +519,5 @@
     }
   ],
   "elapsed_time(sec)": 203.37525367736816,
-  "_eval_score": 97.63763575605681
+  "_eval_score": 98.9251700680272
 }

@@ -7,16 +7,104 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "04:14",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lotus Hill Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Lotus Hill Park",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:01",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lotus Hill Park",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.45,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Honey Lake 1979 Cultural and Creative Park",
+          "start_time": "12:08",
+          "end_time": "13:08",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Honey Lake 1979 Cultural and Creative Park",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.85,
+              "price": 11.19,
+              "cost": 11.19,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,14 +116,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
+              "start": "Honey Lake 1979 Cultural and Creative Park",
               "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "17:56",
-              "end_time": "18:08",
-              "distance": 8.11,
-              "price": 33.1,
-              "cost": 33.1,
+              "start_time": "13:08",
+              "end_time": "13:11",
+              "distance": 2.47,
+              "price": 13.33,
+              "cost": 13.33,
               "cars": 1
             }
           ]
@@ -372,12 +460,13 @@
             {
               "start": "Chung Ying Street",
               "end": "Chung Ying Street History Museum",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:43",
-              "end_time": "13:47",
-              "distance": 0.38539170973000725,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:43",
+              "distance": 0.39,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -392,34 +481,14 @@
           "transports": [
             {
               "start": "Chung Ying Street History Museum",
-              "end": "Haishan-Metro Station",
-              "mode": "walk",
-              "start_time": "15:17",
-              "end_time": "15:27",
-              "distance": 0.84,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Haishan-Metro Station",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "metro",
-              "start_time": "15:27",
-              "end_time": "15:47",
-              "distance": 10.48,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:47",
-              "end_time": "15:49",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:17",
+              "end_time": "15:32",
+              "distance": 10.37,
+              "price": 41.36,
+              "cost": 41.36,
+              "cars": 1
             }
           ]
         },
@@ -435,34 +504,14 @@
           "transports": [
             {
               "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
-              "end": "Shenzhen North Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:28",
-              "distance": 13.03,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Shenzhen North Railway Station",
-              "mode": "walk",
-              "start_time": "18:28",
-              "end_time": "18:29",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:19",
+              "distance": 13.01,
+              "price": 53.26,
+              "cost": 53.26,
+              "cars": 1
             }
           ],
           "TrainID": "D902"
@@ -471,5 +520,5 @@
     }
   ],
   "elapsed_time(sec)": 187.17465138435364,
-  "_eval_score": 96.57563025210084
+  "_eval_score": 98.82539682539682
 }

@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:02",
-          "end_time": "07:37",
-          "start": "Shanghai Hongqiao Station",
+          "start_time": "05:46",
+          "end_time": "06:11",
+          "start": "Shanghai Station",
           "end": "Suzhou Station",
-          "price": 50.99,
-          "cost": 152.97,
+          "price": 55.23,
+          "cost": 165.69,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D3072"
+          "TrainID": "G7032"
+        },
+        {
+          "type": "breakfast",
+          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+          "start_time": "06:22",
+          "end_time": "07:22",
+          "price": 10.0,
+          "cost": 30.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "mode": "taxi",
+              "start_time": "06:11",
+              "end_time": "06:16",
+              "distance": 3.69,
+              "price": 17.6,
+              "cost": 17.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Fan Zhongyan Memorial Hall",
+          "start_time": "08:09",
+          "end_time": "08:39",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "end": "Fan Zhongyan Memorial Hall",
+              "mode": "taxi",
+              "start_time": "07:22",
+              "end_time": "07:38",
+              "distance": 10.69,
+              "price": 42.8,
+              "cost": 42.8,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Suzhou Station",
+              "start": "Fan Zhongyan Memorial Hall",
               "end": "Floral Mountain Retreat · Pure Vegetarian Lodge",
               "mode": "taxi",
-              "start_time": "07:37",
-              "end_time": "07:55",
-              "distance": 12.3,
-              "price": 50.04,
-              "cost": 50.04,
+              "start_time": "08:39",
+              "end_time": "08:42",
+              "distance": 2.19,
+              "price": 12.37,
+              "cost": 12.37,
               "cars": 1
             }
           ]
@@ -415,34 +459,14 @@
           "transports": [
             {
               "start": "Moon Pavilion (Guanqian Branch)",
-              "end": "Chayuanchang-Metro Station",
-              "mode": "walk",
-              "start_time": "12:15",
-              "end_time": "12:19",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chayuanchang-Metro Station",
-              "end": "Fuyuan Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:19",
-              "end_time": "12:39",
-              "distance": 10.23,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Fuyuan Road-Metro Station",
               "end": "A Hidden Wonderland",
-              "mode": "walk",
-              "start_time": "12:39",
-              "end_time": "12:51",
-              "distance": 1.03,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:15",
+              "end_time": "12:29",
+              "distance": 9.55,
+              "price": 38.14,
+              "cost": 38.14,
+              "cars": 1
             }
           ]
         },
@@ -457,84 +481,66 @@
           "transports": [
             {
               "start": "A Hidden Wonderland",
-              "end": "Fuyuan Road-Metro Station",
-              "mode": "walk",
-              "start_time": "14:21",
-              "end_time": "14:33",
-              "distance": 1.03,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Fuyuan Road-Metro Station",
-              "end": "Meixiang-Metro Station",
-              "mode": "metro",
-              "start_time": "14:33",
-              "end_time": "14:48",
-              "distance": 7.57,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Meixiang-Metro Station",
               "end": "Jingu Li Art Gallery",
-              "mode": "walk",
-              "start_time": "14:48",
-              "end_time": "14:57",
-              "distance": 0.79,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:21",
+              "end_time": "14:32",
+              "distance": 7.48,
+              "price": 30.86,
+              "cost": 30.86,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jingu Li Art Gallery",
+              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "mode": "taxi",
+              "start_time": "16:27",
+              "end_time": "16:30",
+              "distance": 2.52,
+              "price": 13.53,
+              "cost": 13.53,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:03",
-          "end_time": "17:27",
-          "start": "Suzhou North Station",
+          "start_time": "22:55",
+          "end_time": "23:20",
+          "start": "Suzhou Station",
           "end": "Shanghai Hongqiao Station",
           "price": 55.23,
           "cost": 165.69,
           "tickets": 3,
           "transports": [
             {
-              "start": "Jingu Li Art Gallery",
-              "end": "Meixiang-Metro Station",
-              "mode": "walk",
-              "start_time": "16:27",
-              "end_time": "16:36",
-              "distance": 0.79,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Meixiang-Metro Station",
-              "end": "Suzhou North Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "16:36",
-              "end_time": "16:55",
-              "distance": 9.67,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Suzhou North Railway Station-Metro Station",
-              "end": "Suzhou North Station",
-              "mode": "walk",
-              "start_time": "16:55",
-              "end_time": "16:56",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
+              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "end": "Suzhou Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 3.49,
+              "price": 16.9,
+              "cost": 16.9,
+              "cars": 1
             }
           ],
-          "TrainID": "G3251"
+          "TrainID": "G7167"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.95910382270813,
-  "_eval_score": 98.07873851294904
+  "_eval_score": 99.8917748917749
 }

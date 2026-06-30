@@ -7,16 +7,59 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "08:00",
-          "end_time": "11:30",
-          "start": "Wuhan Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 446.81,
-          "cost": 1340.43,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "01:24",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 303.66,
+          "cost": 910.98,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G1722"
+          "FlightID": "FL566"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "01:24",
+              "end_time": "02:16",
+              "distance": 35.27,
+              "price": 153.41,
+              "cost": 153.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +71,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "11:30",
-              "end_time": "11:50",
-              "distance": 13.78,
-              "price": 56.71,
-              "cost": 56.71,
+              "start_time": "10:00",
+              "end_time": "10:01",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -565,12 +608,13 @@
             {
               "start": "Huangpu River",
               "end": "Bank of China",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:18",
-              "end_time": "14:21",
-              "distance": 0.3275296223485583,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:18",
+              "distance": 0.33,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -586,34 +630,14 @@
           "transports": [
             {
               "start": "Bank of China",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:51",
-              "end_time": "15:57",
-              "distance": 0.58,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:57",
-              "end_time": "16:59",
-              "distance": 31.3,
-              "price": 7,
-              "cost": 21,
-              "tickets": 3
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:59",
-              "end_time": "17:14",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:51",
+              "end_time": "16:39",
+              "distance": 32.3,
+              "price": 140.06,
+              "cost": 140.06,
+              "cars": 1
             }
           ],
           "FlightID": "FL063"
@@ -622,5 +646,5 @@
     }
   ],
   "elapsed_time(sec)": 188.77230286598206,
-  "_eval_score": 97.7827380952381
+  "_eval_score": 98.59432234432234
 }

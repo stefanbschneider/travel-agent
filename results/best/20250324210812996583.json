@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "20:45",
-          "end_time": "08:44",
-          "start": "Shanghai Station",
-          "end": "Chengdu West Railway Station",
-          "price": 664.28,
-          "cost": 2657.12,
+          "type": "airplane",
+          "start_time": "00:14",
+          "end_time": "02:18",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 800.01,
+          "cost": 3200.04,
           "tickets": 4,
           "transports": [],
-          "TrainID": "K283"
+          "FlightID": "FL041"
+        },
+        {
+          "type": "breakfast",
+          "position": "Chunyang Guan Fish-Flavored Pork Rib Noodles (Jixiang Street Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 19.0,
+          "cost": 76.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "mode": "walk",
+              "start_time": "02:18",
+              "end_time": "02:33",
+              "distance": 1.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "metro",
+              "start_time": "02:33",
+              "end_time": "03:00",
+              "distance": 13.91,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chunyang Guan Fish-Flavored Pork Rib Noodles (Jixiang Street Branch)",
+              "mode": "walk",
+              "start_time": "03:00",
+              "end_time": "03:06",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +70,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu West Railway Station",
+              "start": "Chunyang Guan Fish-Flavored Pork Rib Noodles (Jixiang Street Branch)",
+              "end": "Kuanzhai Alley-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:06",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Kuanzhai Alley-Metro Station",
+              "end": "Chengdu West Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "09:06",
+              "end_time": "09:20",
+              "distance": 7.38,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Chengdu West Railway Station-Metro Station",
               "end": "Cat Museum",
-              "mode": "taxi",
-              "start_time": "08:44",
-              "end_time": "08:44",
-              "distance": 0.31,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "09:20",
+              "end_time": "09:23",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -1260,5 +1322,5 @@
     }
   ],
   "elapsed_time(sec)": 67.24982929229736,
-  "_eval_score": 99.66666666666666
+  "_eval_score": 100.0
 }

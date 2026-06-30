@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:10",
-          "start": "Nanjing South Railway Station",
-          "end": "Suzhou North Station",
-          "price": 122.9,
-          "cost": 491.6,
+          "start_time": "00:03",
+          "end_time": "02:32",
+          "start": "Nanjing Station",
+          "end": "Suzhou Station",
+          "price": 94.54,
+          "cost": 378.16,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G1509"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 10.0,
+          "cost": 40.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "mode": "taxi",
+              "start_time": "02:32",
+              "end_time": "02:37",
+              "distance": 3.69,
+              "price": 17.6,
+              "cost": 17.6,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +50,15 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Suzhou North Station",
-              "end": "Suzhou North Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:10",
-              "end_time": "08:11",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Suzhou North Railway Station-Metro Station",
-              "end": "Shantang Street-Metro Station",
-              "mode": "metro",
-              "start_time": "08:11",
-              "end_time": "08:35",
-              "distance": 12.03,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Shantang Street-Metro Station",
+              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
               "end": "Arhat Hall",
-              "mode": "walk",
-              "start_time": "08:35",
-              "end_time": "08:44",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:05",
+              "distance": 3.63,
+              "price": 17.42,
+              "cost": 17.42,
+              "cars": 1
             }
           ]
         },
@@ -71,34 +73,14 @@
           "transports": [
             {
               "start": "Arhat Hall",
-              "end": "Shantang Street-Metro Station",
-              "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:39",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shantang Street-Metro Station",
-              "end": "Oriental Gate-Metro Station",
-              "mode": "metro",
-              "start_time": "10:39",
-              "end_time": "10:53",
-              "distance": 7.33,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Oriental Gate-Metro Station",
               "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
-              "mode": "walk",
-              "start_time": "10:53",
-              "end_time": "10:59",
-              "distance": 0.54,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:42",
+              "distance": 8.43,
+              "price": 34.21,
+              "cost": 34.21,
+              "cars": 1
             }
           ]
         },
@@ -499,41 +481,43 @@
           "transports": [
             {
               "start": "Suzhou Hyatt Hotel · Huachi 88 Chinese Restaurant",
-              "end": "Times Square-Metro Station",
-              "mode": "walk",
-              "start_time": "13:53",
-              "end_time": "13:54",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Times Square-Metro Station",
-              "end": "Fuyuan Road-Metro Station",
-              "mode": "metro",
-              "start_time": "13:54",
-              "end_time": "14:18",
-              "distance": 12.3,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Fuyuan Road-Metro Station",
               "end": "A Hidden Wonderland",
-              "mode": "walk",
-              "start_time": "14:18",
-              "end_time": "14:30",
-              "distance": 1.03,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:53",
+              "end_time": "14:09",
+              "distance": 11.19,
+              "price": 45.04,
+              "cost": 45.04,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "A Hidden Wonderland",
+              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "mode": "taxi",
+              "start_time": "16:00",
+              "end_time": "16:14",
+              "distance": 10.0,
+              "price": 39.69,
+              "cost": 39.69,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:07",
-          "end_time": "20:06",
+          "start_time": "23:39",
+          "end_time": "02:23",
           "start": "Suzhou Station",
           "end": "Nanjing Station",
           "price": 75.63,
@@ -541,42 +525,22 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "A Hidden Wonderland",
-              "end": "Fuyuan Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:00",
-              "end_time": "16:12",
-              "distance": 1.03,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Fuyuan Road-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "16:12",
-              "end_time": "16:28",
-              "distance": 8.17,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Suzhou Railway Station-Metro Station",
+              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
               "end": "Suzhou Station",
-              "mode": "walk",
-              "start_time": "16:28",
-              "end_time": "16:29",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 3.49,
+              "price": 16.9,
+              "cost": 16.9,
+              "cars": 1
             }
           ],
-          "TrainID": "K372"
+          "TrainID": "K8366"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 121.49113774299622,
-  "_eval_score": 98.49603174603175
+  "_eval_score": 99.86363636363636
 }

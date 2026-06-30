@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "11:16",
-          "end_time": "12:29",
+          "start_time": "01:56",
+          "end_time": "03:09",
           "start": "Wuhan Tianhe International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 532.42,
-          "cost": 1064.84,
+          "end": "Chengdu Tianfu International Airport",
+          "price": 522.72,
+          "cost": 1045.44,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL618"
+          "FlightID": "FL620"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Tianfu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "03:09",
+              "end_time": "04:32",
+              "distance": 55.75,
+              "price": 245.57,
+              "cost": 245.57,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "China Shadow Puppet Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:01",
+              "distance": 1.11,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "China Shadow Puppet Museum",
               "end": "Chengdu Kempinski Hotel · Yi Shi German Western Restaurant",
               "mode": "taxi",
-              "start_time": "12:29",
-              "end_time": "12:48",
-              "distance": 12.81,
-              "price": 52.37,
-              "cost": 52.37,
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 4.94,
+              "price": 21.99,
+              "cost": 21.99,
               "cars": 1
             }
           ]
@@ -245,12 +289,13 @@
             {
               "start": "Chunxi Road",
               "end": "Butterfly Drama Club",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:27",
-              "end_time": "13:29",
-              "distance": 0.1835258297913043,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:27",
+              "distance": 0.18,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -265,34 +310,14 @@
           "transports": [
             {
               "start": "Butterfly Drama Club",
-              "end": "Second Municipal Hospital-Metro Station",
-              "mode": "walk",
-              "start_time": "14:59",
-              "end_time": "14:59",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Second Municipal Hospital-Metro Station",
-              "end": "Kuanzhai Alley-Metro Station",
-              "mode": "metro",
-              "start_time": "14:59",
-              "end_time": "15:05",
-              "distance": 3.22,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Kuanzhai Alley-Metro Station",
               "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-              "mode": "walk",
-              "start_time": "15:05",
-              "end_time": "15:15",
-              "distance": 0.9,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:59",
+              "end_time": "15:03",
+              "distance": 2.86,
+              "price": 14.71,
+              "cost": 14.71,
+              "cars": 1
             }
           ]
         },
@@ -308,34 +333,14 @@
           "transports": [
             {
               "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-              "end": "Kuanzhai Alley-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.9,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Kuanzhai Alley-Metro Station",
-              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:37",
-              "distance": 13.91,
-              "price": 4,
-              "cost": 8,
-              "tickets": 2
-            },
-            {
-              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
               "end": "Chengdu Shuangliu International Airport",
-              "mode": "walk",
-              "start_time": "18:37",
-              "end_time": "18:52",
-              "distance": 1.25,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:24",
+              "distance": 16.04,
+              "price": 66.86,
+              "cost": 66.86,
+              "cars": 1
             }
           ],
           "FlightID": "FL467"
@@ -344,5 +349,5 @@
     }
   ],
   "elapsed_time(sec)": 4.327902793884277,
-  "_eval_score": 97.70833333333334
+  "_eval_score": 99.16666666666666
 }

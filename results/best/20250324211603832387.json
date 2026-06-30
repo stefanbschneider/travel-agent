@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:03",
-          "end_time": "11:16",
-          "start": "Guangzhou South Railway Station",
-          "end": "Wuhan Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "airplane",
+          "start_time": "01:45",
+          "end_time": "02:48",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 388.13,
+          "cost": 388.13,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G835"
+          "FlightID": "FL309"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 6.0,
+          "cost": 6.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "taxi",
+              "start_time": "02:48",
+              "end_time": "03:27",
+              "distance": 26.52,
+              "price": 114.03,
+              "cost": 114.03,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Hanyang Riverside Park",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:02",
+              "distance": 1.38,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Wuhan Station",
+              "start": "Hanyang Riverside Park",
               "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
               "mode": "taxi",
-              "start_time": "11:16",
-              "end_time": "11:31",
-              "distance": 10.36,
-              "price": 41.34,
-              "cost": 41.34,
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 4.88,
+              "price": 21.78,
+              "cost": 21.78,
               "cars": 1
             }
           ]
@@ -415,84 +459,66 @@
           "transports": [
             {
               "start": "Jianghan Road Pedestrian Street",
-              "end": "Dazhi Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:37",
-              "end_time": "13:41",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dazhi Road-Metro Station",
-              "end": "Guanggu Tongji Hospital-Metro Station",
-              "mode": "metro",
-              "start_time": "13:41",
-              "end_time": "14:21",
-              "distance": 20.3,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Guanggu Tongji Hospital-Metro Station",
               "end": "2024 Dongfeng Voyah Wuhan Open",
-              "mode": "walk",
-              "start_time": "14:21",
-              "end_time": "14:29",
-              "distance": 0.69,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:37",
+              "end_time": "14:07",
+              "distance": 20.59,
+              "price": 87.37,
+              "cost": 87.37,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "21:22",
-          "start": "Wuhan Station",
-          "end": "Guangzhou South Railway Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "dinner",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 5.0,
+          "cost": 5.0,
           "tickets": 1,
           "transports": [
             {
               "start": "2024 Dongfeng Voyah Wuhan Open",
-              "end": "Guanggu Tongji Hospital-Metro Station",
-              "mode": "walk",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "mode": "taxi",
               "start_time": "15:59",
-              "end_time": "16:07",
-              "distance": 0.69,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "16:29",
+              "distance": 20.25,
+              "price": 85.84,
+              "cost": 85.84,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:09",
+          "end_time": "22:12",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 453.61,
+          "cost": 453.61,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Guanggu Tongji Hospital-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
-              "mode": "metro",
-              "start_time": "16:07",
-              "end_time": "16:34",
-              "distance": 13.99,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Wuhan Station East Square-Metro Station",
-              "end": "Wuhan Station",
-              "mode": "walk",
-              "start_time": "16:34",
-              "end_time": "16:36",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:32",
+              "distance": 21.53,
+              "price": 91.56,
+              "cost": 91.56,
+              "cars": 1
             }
           ],
-          "TrainID": "G695"
+          "FlightID": "FL597"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.03253698349,
-  "_eval_score": 97.88756613756614
+  "_eval_score": 99.43990929705215
 }

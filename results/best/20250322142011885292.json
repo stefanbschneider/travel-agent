@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "03:59",
+              "distance": 15.99,
+              "price": 66.65,
+              "cost": 66.65,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
               "end": "Bauhinia Lane Hong Kong International Style Street",
               "mode": "taxi",
-              "start_time": "04:40",
-              "end_time": "04:56",
-              "distance": 10.8,
-              "price": 43.28,
-              "cost": 43.28,
+              "start_time": "08:00",
+              "end_time": "08:22",
+              "distance": 15.21,
+              "price": 63.13,
+              "cost": 63.13,
               "cars": 1
             }
           ]
@@ -237,41 +259,21 @@
           "type": "attraction",
           "position": "Guanlan River Wetland Park",
           "start_time": "09:04",
-          "end_time": "10:19",
+          "end_time": "10:04",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Gankeng-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 0.75,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Gankeng-Metro Station",
-              "end": "Bamboo Village-Metro Station",
-              "mode": "metro",
-              "start_time": "08:38",
-              "end_time": "08:53",
-              "distance": 7.99,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Bamboo Village-Metro Station",
               "end": "Guanlan River Wetland Park",
-              "mode": "walk",
-              "start_time": "08:53",
-              "end_time": "09:04",
-              "distance": 0.97,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:40",
+              "distance": 6.93,
+              "price": 28.94,
+              "cost": 28.94,
+              "cars": 1
             }
           ]
         },
@@ -286,34 +288,14 @@
           "transports": [
             {
               "start": "Guanlan River Wetland Park",
-              "end": "Bamboo Village-Metro Station",
-              "mode": "walk",
-              "start_time": "10:19",
-              "end_time": "10:30",
-              "distance": 0.97,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Bamboo Village-Metro Station",
-              "end": "Longhua-Metro Station",
-              "mode": "metro",
-              "start_time": "10:30",
-              "end_time": "10:38",
-              "distance": 4.3,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Longhua-Metro Station",
               "end": "Yude Longji Hakka Restaurant (Longhua Branch)",
-              "mode": "walk",
-              "start_time": "10:38",
-              "end_time": "10:59",
-              "distance": 1.78,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:04",
+              "end_time": "10:11",
+              "distance": 4.67,
+              "price": 21.06,
+              "cost": 21.06,
+              "cars": 1
             }
           ]
         },
@@ -328,34 +310,14 @@
           "transports": [
             {
               "start": "Yude Longji Hakka Restaurant (Longhua Branch)",
-              "end": "Longhua-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:21",
-              "distance": 1.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Longhua-Metro Station",
-              "end": "Minzhi-Metro Station",
-              "mode": "metro",
-              "start_time": "12:21",
-              "end_time": "12:29",
-              "distance": 4.22,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Minzhi-Metro Station",
               "end": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
-              "mode": "walk",
-              "start_time": "12:29",
-              "end_time": "12:46",
-              "distance": 1.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.89,
+              "price": 11.3,
+              "cost": 11.3,
+              "cars": 1
             }
           ]
         },
@@ -370,34 +332,14 @@
           "transports": [
             {
               "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
-              "end": "Minzhi-Metro Station",
-              "mode": "walk",
-              "start_time": "14:16",
-              "end_time": "14:33",
-              "distance": 1.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Minzhi-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "14:33",
-              "end_time": "14:36",
-              "distance": 1.78,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "14:36",
-              "end_time": "14:39",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:16",
+              "end_time": "14:20",
+              "distance": 3.14,
+              "price": 15.7,
+              "cost": 15.7,
+              "cars": 1
             }
           ]
         },
@@ -412,34 +354,14 @@
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
-              "mode": "walk",
-              "start_time": "16:09",
-              "end_time": "16:12",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Shangmeilin-Metro Station",
-              "mode": "metro",
-              "start_time": "16:12",
-              "end_time": "16:19",
-              "distance": 3.86,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Shangmeilin-Metro Station",
               "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
-              "mode": "walk",
-              "start_time": "16:19",
-              "end_time": "16:22",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:09",
+              "end_time": "16:15",
+              "distance": 4.1,
+              "price": 19.04,
+              "cost": 19.04,
+              "cars": 1
             }
           ]
         },
@@ -484,93 +406,163 @@
         },
         {
           "type": "attraction",
-          "position": "Dafen Oil Painting Village",
-          "start_time": "09:30",
-          "end_time": "10:45",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:06",
+          "end_time": "10:36",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Gankeng-Metro Station",
-              "mode": "walk",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 0.75,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Gankeng-Metro Station",
-              "end": "Dafen-Metro Station",
-              "mode": "metro",
-              "start_time": "08:38",
-              "end_time": "08:48",
-              "distance": 5.01,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Dafen-Metro Station",
-              "end": "Dafen Oil Painting Village",
-              "mode": "walk",
-              "start_time": "08:48",
-              "end_time": "08:53",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
+              "end_time": "08:47",
+              "distance": 11.6,
+              "price": 46.89,
+              "cost": 46.89,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dafen Oil Painting Village",
-              "end": "Dafen-Metro Station",
-              "mode": "walk",
-              "start_time": "10:45",
-              "end_time": "10:50",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Guan Shanyue Art Museum",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:36",
+              "end_time": "10:39",
+              "distance": 2.19,
+              "price": 12.38,
+              "cost": 12.38,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "12:09",
+          "end_time": "13:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Dafen-Metro Station",
-              "end": "Buji-Metro Station",
-              "mode": "metro",
-              "start_time": "10:50",
-              "end_time": "10:54",
-              "distance": 2.2,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:05",
+              "distance": 3.38,
+              "price": 16.54,
+              "cost": 16.54,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Futian District Sports Park",
+          "start_time": "13:25",
+          "end_time": "14:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Buji-Metro Station",
-              "end": "Shenzhen East Station",
-              "mode": "walk",
-              "start_time": "10:54",
-              "end_time": "10:57",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Futian District Sports Park",
+              "mode": "taxi",
+              "start_time": "13:09",
+              "end_time": "13:13",
+              "distance": 2.74,
+              "price": 14.3,
+              "cost": 14.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Futian Mangrove Ecological Park",
+          "start_time": "14:42",
+          "end_time": "15:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Futian District Sports Park",
+              "end": "Futian Mangrove Ecological Park",
+              "mode": "taxi",
+              "start_time": "14:25",
+              "end_time": "14:27",
+              "distance": 1.78,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Futian Mangrove Ecological Park",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:42",
+              "end_time": "15:56",
+              "distance": 9.61,
+              "price": 38.32,
+              "cost": 38.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:51",
+              "distance": 34.18,
+              "price": 148.51,
+              "cost": 148.51,
+              "cars": 1
             }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 183.39102816581726,
-  "_eval_score": 97.16946778711485
+  "_eval_score": 100.0
 }

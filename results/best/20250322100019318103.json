@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:14",
-          "end_time": "08:05",
+          "start_time": "00:33",
+          "end_time": "01:24",
           "start": "Wuhan Tianhe International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 359.89,
-          "cost": 1079.67,
+          "end": "Shanghai Pudong International Airport",
+          "price": 303.66,
+          "cost": 910.98,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL563"
+          "FlightID": "FL566"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 87.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "01:24",
+              "end_time": "02:12",
+              "distance": 32.55,
+              "price": 141.18,
+              "cost": 141.18,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +50,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
-              "mode": "walk",
-              "start_time": "08:05",
-              "end_time": "08:14",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongqiao Terminal 1-Metro Station",
-              "end": "Liping Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:14",
-              "end_time": "08:47",
-              "distance": 16.52,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Liping Road-Metro Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "1933 Old Millfun",
-              "mode": "walk",
-              "start_time": "08:47",
-              "end_time": "08:49",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:04",
+              "distance": 2.94,
+              "price": 15.01,
+              "cost": 15.01,
+              "cars": 1
             }
           ]
         },
@@ -71,34 +73,14 @@
           "transports": [
             {
               "start": "1933 Old Millfun",
-              "end": "Liping Road-Metro Station",
-              "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:32",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "Middle Huaihai Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:32",
-              "end_time": "10:43",
-              "distance": 5.7,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Middle Huaihai Road-Metro Station",
               "end": "Yong Fu (Huangpu Branch)",
-              "mode": "walk",
-              "start_time": "10:43",
-              "end_time": "10:46",
-              "distance": 0.31,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 5.59,
+              "price": 24.27,
+              "cost": 24.27,
+              "cars": 1
             }
           ]
         },
@@ -649,12 +631,13 @@
             {
               "start": "Huangpu River",
               "end": "Bank of China",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:33",
-              "end_time": "13:36",
-              "distance": 0.3275296223485583,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:33",
+              "distance": 0.33,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -670,34 +653,14 @@
           "transports": [
             {
               "start": "Bank of China",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:06",
-              "end_time": "15:12",
-              "distance": 0.58,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:12",
-              "end_time": "16:14",
-              "distance": 31.3,
-              "price": 7,
-              "cost": 21,
-              "tickets": 3
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:14",
-              "end_time": "16:29",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:06",
+              "end_time": "15:54",
+              "distance": 32.3,
+              "price": 140.06,
+              "cost": 140.06,
+              "cars": 1
             }
           ],
           "FlightID": "FL063"
@@ -706,5 +669,5 @@
     }
   ],
   "elapsed_time(sec)": 186.03882718086243,
-  "_eval_score": 98.41117216117216
+  "_eval_score": 98.93386243386243
 }

@@ -8,15 +8,79 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "10:05",
+          "end_time": "11:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Jing'an Park",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 0.4434750434069161,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,32 +92,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Pudong International Airport-Metro Station",
+              "start": "Jing'an Park",
+              "end": "West Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "10:46",
-              "distance": 1.27,
+              "start_time": "11:05",
+              "end_time": "11:13",
+              "distance": 0.67,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "West Nanjing Road-Metro Station",
               "end": "Qibao-Metro Station",
               "mode": "metro",
-              "start_time": "10:46",
-              "end_time": "12:13",
-              "distance": 43.52,
-              "price": 8,
-              "cost": 8,
+              "start_time": "11:13",
+              "end_time": "11:39",
+              "distance": 13.41,
+              "price": 4,
+              "cost": 4,
               "tickets": 1
             },
             {
               "start": "Qibao-Metro Station",
               "end": "Tasteless Comfort Food (Qibao Branch)",
               "mode": "walk",
-              "start_time": "12:13",
-              "end_time": "12:19",
+              "start_time": "11:39",
+              "end_time": "11:45",
               "distance": 0.56,
               "price": 0,
               "cost": 0
@@ -155,34 +219,14 @@
           "transports": [
             {
               "start": "Nanjing Road Pedestrian Street",
-              "end": "Tiantong Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:16",
-              "end_time": "16:25",
-              "distance": 0.8,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tiantong Road-Metro Station",
-              "end": "Lujiazui-Metro Station",
-              "mode": "metro",
-              "start_time": "16:25",
-              "end_time": "16:28",
-              "distance": 1.98,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Lujiazui-Metro Station",
               "end": "Shanghai Center J Hotel · Jin Yan",
-              "mode": "walk",
-              "start_time": "16:28",
-              "end_time": "16:35",
-              "distance": 0.66,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:16",
+              "end_time": "16:18",
+              "distance": 1.85,
+              "price": 11.16,
+              "cost": 11.16,
+              "cars": 1
             }
           ]
         },
@@ -199,34 +243,14 @@
           "transports": [
             {
               "start": "Shanghai Center J Hotel · Jin Yan",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:07",
-              "distance": 0.66,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "18:07",
-              "end_time": "19:07",
-              "distance": 30.5,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
               "end": "Da Zhong Airport Hotel",
-              "mode": "walk",
-              "start_time": "19:07",
-              "end_time": "19:08",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:45",
+              "distance": 30.03,
+              "price": 129.82,
+              "cost": 129.82,
+              "cars": 1
             }
           ]
         }
@@ -340,34 +364,14 @@
           "transports": [
             {
               "start": "Shanghai Natural History Museum",
-              "end": "Qufu Road-Metro Station",
-              "mode": "walk",
-              "start_time": "11:46",
-              "end_time": "11:49",
-              "distance": 0.26,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qufu Road-Metro Station",
-              "end": "Zhongshan Park-Metro Station",
-              "mode": "metro",
-              "start_time": "11:49",
-              "end_time": "12:00",
-              "distance": 5.96,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Zhongshan Park-Metro Station",
               "end": "Money Shops (Yuyuan Road Branch)",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 0.7,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "11:46",
+              "end_time": "11:53",
+              "distance": 5.05,
+              "price": 22.39,
+              "cost": 22.39,
+              "cars": 1
             }
           ]
         },
@@ -382,42 +386,22 @@
           "transports": [
             {
               "start": "Money Shops (Yuyuan Road Branch)",
-              "end": "Zhongshan Park-Metro Station",
-              "mode": "walk",
-              "start_time": "13:08",
-              "end_time": "13:16",
-              "distance": 0.7,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhongshan Park-Metro Station",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "13:16",
-              "end_time": "13:18",
-              "distance": 1.44,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
               "end": "Columbia Circle",
-              "mode": "walk",
-              "start_time": "13:18",
-              "end_time": "13:26",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:08",
+              "end_time": "13:09",
+              "distance": 1.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Jing'an Sculpture Park",
-          "start_time": "15:15",
-          "end_time": "16:30",
+          "position": "Juliet's Balcony",
+          "start_time": "15:10",
+          "end_time": "16:10",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -434,22 +418,22 @@
             },
             {
               "start": "Jiangsu Road-Metro Station",
-              "end": "Qufu Road-Metro Station",
+              "end": "Changshu Road-Metro Station",
               "mode": "metro",
               "start_time": "15:04",
-              "end_time": "15:13",
-              "distance": 4.59,
-              "price": 3,
-              "cost": 3,
+              "end_time": "15:07",
+              "distance": 1.92,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Qufu Road-Metro Station",
-              "end": "Jing'an Sculpture Park",
+              "start": "Changshu Road-Metro Station",
+              "end": "Juliet's Balcony",
               "mode": "walk",
-              "start_time": "15:13",
-              "end_time": "15:15",
-              "distance": 0.18,
+              "start_time": "15:07",
+              "end_time": "15:10",
+              "distance": 0.32,
               "price": 0,
               "cost": 0
             }
@@ -465,32 +449,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jing'an Sculpture Park",
-              "end": "Qufu Road-Metro Station",
+              "start": "Juliet's Balcony",
+              "end": "Changshu Road-Metro Station",
               "mode": "walk",
-              "start_time": "16:30",
-              "end_time": "16:32",
-              "distance": 0.18,
+              "start_time": "16:10",
+              "end_time": "16:13",
+              "distance": 0.32,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Qufu Road-Metro Station",
+              "start": "Changshu Road-Metro Station",
               "end": "Middle Yanji Road-Metro Station",
               "mode": "metro",
-              "start_time": "16:32",
-              "end_time": "16:47",
-              "distance": 7.92,
-              "price": 3,
-              "cost": 3,
+              "start_time": "16:13",
+              "end_time": "16:36",
+              "distance": 11.66,
+              "price": 4,
+              "cost": 4,
               "tickets": 1
             },
             {
               "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "walk",
-              "start_time": "16:47",
-              "end_time": "16:57",
+              "start_time": "16:36",
+              "end_time": "16:46",
               "distance": 0.86,
               "price": 0,
               "cost": 0
@@ -545,5 +529,5 @@
     }
   ],
   "elapsed_time(sec)": 186.24362683296204,
-  "_eval_score": 96.76190476190476
+  "_eval_score": 99.58095238095238
 }

@@ -62,9 +62,9 @@
         },
         {
           "type": "attraction",
-          "position": "West Garden Temple",
-          "start_time": "14:54",
-          "end_time": "15:54",
+          "position": "Cloud-Crowned Peak",
+          "start_time": "14:13",
+          "end_time": "14:43",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -92,11 +92,32 @@
             },
             {
               "start": "Shantang Street-Metro Station",
-              "end": "West Garden Temple",
+              "end": "Cloud-Crowned Peak",
               "mode": "walk",
               "start_time": "14:09",
-              "end_time": "14:18",
-              "distance": 0.8,
+              "end_time": "14:13",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "West Garden Temple",
+          "start_time": "14:54",
+          "end_time": "15:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Cloud-Crowned Peak",
+              "end": "West Garden Temple",
+              "mode": "walk",
+              "start_time": "14:43",
+              "end_time": "14:49",
+              "distance": 0.5607994941855643,
               "price": 0,
               "cost": 0
             }
@@ -588,11 +609,32 @@
           "transports": [
             {
               "start": "Suzhou Water Tour",
-              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Sanyuanfang-Metro Station",
               "mode": "walk",
               "start_time": "15:02",
-              "end_time": "16:09",
-              "distance": 5.664812339139693,
+              "end_time": "15:08",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Lion Mountain Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:08",
+              "end_time": "15:20",
+              "distance": 6.15,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Lion Mountain Road-Metro Station",
+              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "mode": "walk",
+              "start_time": "15:20",
+              "end_time": "15:21",
+              "distance": 0.1,
               "price": 0,
               "cost": 0
             }
@@ -852,5 +894,5 @@
     }
   ],
   "elapsed_time(sec)": 185.68990850448608,
-  "_eval_score": 96.70928571428571
+  "_eval_score": 97.20581501831501
 }

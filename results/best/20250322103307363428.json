@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:01",
-          "end_time": "08:57",
+          "start_time": "03:11",
+          "end_time": "04:07",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 330.37,
-          "cost": 991.11,
+          "price": 426.14,
+          "cost": 1278.42,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL383"
+          "FlightID": "FL390"
+        },
+        {
+          "type": "breakfast",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 5.0,
+          "cost": 15.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "04:07",
+              "end_time": "04:39",
+              "distance": 21.53,
+              "price": 91.56,
+              "cost": 91.56,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Historical and Cultural District",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Hankou Historical and Cultural District",
+              "mode": "taxi",
+              "start_time": "07:30",
+              "end_time": "07:30",
+              "distance": 0.25,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Tianhe International Airport",
+              "start": "Hankou Historical and Cultural District",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "08:57",
-              "end_time": "09:36",
-              "distance": 26.18,
-              "price": 112.5,
-              "cost": 112.5,
+              "start_time": "10:00",
+              "end_time": "10:12",
+              "distance": 8.07,
+              "price": 32.96,
+              "cost": 32.96,
               "cars": 1
             }
           ]
@@ -796,5 +840,5 @@
     }
   ],
   "elapsed_time(sec)": 181.08417439460754,
-  "_eval_score": 98.5014880952381
+  "_eval_score": 99.13935574229691
 }

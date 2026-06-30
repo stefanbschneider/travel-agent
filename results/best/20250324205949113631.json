@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:36",
+              "end_time": "03:41",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "03:41",
+              "end_time": "04:31",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "walk",
+              "start_time": "04:31",
+              "end_time": "04:37",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,15 +70,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:06",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Baishilong-Metro Station",
+              "mode": "metro",
+              "start_time": "08:06",
+              "end_time": "08:13",
+              "distance": 3.8,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "taxi",
-              "start_time": "04:40",
-              "end_time": "04:51",
-              "distance": 7.74,
-              "price": 31.78,
-              "cost": 31.78,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:13",
+              "end_time": "08:16",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -244,34 +306,14 @@
           "transports": [
             {
               "start": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
-              "end": "Huangtian-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huangtian-Metro Station",
-              "end": "Baohua-Metro Station",
-              "mode": "metro",
-              "start_time": "08:39",
-              "end_time": "08:58",
-              "distance": 9.8,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Baohua-Metro Station",
               "end": "Binhai Cultural Park",
-              "mode": "walk",
-              "start_time": "08:58",
-              "end_time": "09:04",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:43",
+              "distance": 9.16,
+              "price": 36.77,
+              "cost": 36.77,
+              "cars": 1
             }
           ]
         },
@@ -286,34 +328,14 @@
           "transports": [
             {
               "start": "Binhai Cultural Park",
-              "end": "Baohua-Metro Station",
-              "mode": "walk",
-              "start_time": "10:04",
-              "end_time": "10:10",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baohua-Metro Station",
-              "end": "Hongling South-Metro Station",
-              "mode": "metro",
-              "start_time": "10:10",
-              "end_time": "10:55",
-              "distance": 22.62,
-              "price": 6,
-              "cost": 6,
-              "tickets": 1
-            },
-            {
-              "start": "Hongling South-Metro Station",
               "end": "YO!Tea (Futian CITIC Plaza Branch)",
-              "mode": "walk",
-              "start_time": "10:55",
-              "end_time": "11:00",
-              "distance": 0.49,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:04",
+              "end_time": "10:36",
+              "distance": 21.64,
+              "price": 92.09,
+              "cost": 92.09,
+              "cars": 1
             }
           ]
         },
@@ -514,45 +536,24 @@
           "transports": [
             {
               "start": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
-              "end": "Huangtian-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huangtian-Metro Station",
-              "end": "Xingdong-Metro Station",
-              "mode": "metro",
-              "start_time": "08:39",
-              "end_time": "08:57",
-              "distance": 9.25,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Xingdong-Metro Station",
               "end": "Bao'an Jesus the King Church",
-              "mode": "walk",
-              "start_time": "08:57",
-              "end_time": "09:08",
-              "distance": 0.95,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:41",
+              "distance": 7.95,
+              "price": 32.51,
+              "cost": 32.51,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "lunch",
+          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 27.0,
+          "cost": 27.0,
           "tickets": 1,
           "transports": [
             {
@@ -567,31 +568,242 @@
             },
             {
               "start": "Xingdong-Metro Station",
-              "end": "Buji-Metro Station",
+              "end": "Convention and Exhibition Center-Metro Station",
               "mode": "metro",
               "start_time": "10:19",
-              "end_time": "11:00",
-              "distance": 20.91,
+              "end_time": "10:50",
+              "distance": 15.52,
               "price": 5,
               "cost": 5,
               "tickets": 1
             },
             {
-              "start": "Buji-Metro Station",
-              "end": "Shenzhen East Station",
+              "start": "Convention and Exhibition Center-Metro Station",
+              "end": "DQ (Shenzhen Liancheng Xintiandi Store)",
               "mode": "walk",
-              "start_time": "11:00",
-              "end_time": "11:03",
-              "distance": 0.28,
+              "start_time": "10:50",
+              "end_time": "10:52",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "12:03",
+          "end_time": "13:03",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "DQ (Shenzhen Liancheng Xintiandi Store)",
+              "end": "Convention and Exhibition Center-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Convention and Exhibition Center-Metro Station",
+              "end": "Gangxia North-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "12:03",
+              "distance": 0.81,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "walk",
+              "start_time": "12:03",
+              "end_time": "12:03",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "13:15",
+          "end_time": "14:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Gangxia North-Metro Station",
+              "mode": "walk",
+              "start_time": "13:03",
+              "end_time": "13:03",
+              "distance": 0.08,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gangxia North-Metro Station",
+              "end": "Donggualing-Metro Station",
+              "mode": "metro",
+              "start_time": "13:03",
+              "end_time": "13:07",
+              "distance": 2.45,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "walk",
+              "start_time": "13:07",
+              "end_time": "13:15",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Futian District Sports Park",
+          "start_time": "14:40",
+          "end_time": "15:40",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Donggualing-Metro Station",
+              "mode": "walk",
+              "start_time": "14:15",
+              "end_time": "14:23",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Donggualing-Metro Station",
+              "end": "Honey Lake-Metro Station",
+              "mode": "metro",
+              "start_time": "14:23",
+              "end_time": "14:30",
+              "distance": 3.82,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Honey Lake-Metro Station",
+              "end": "Futian District Sports Park",
+              "mode": "walk",
+              "start_time": "14:30",
+              "end_time": "14:40",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Futian District Sports Park",
+              "end": "Honey Lake-Metro Station",
+              "mode": "walk",
+              "start_time": "15:40",
+              "end_time": "15:50",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Honey Lake-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "15:50",
+              "end_time": "16:10",
+              "distance": 10.08,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "walk",
+              "start_time": "16:10",
+              "end_time": "16:12",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "19:10",
+              "distance": 34.14,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "walk",
+              "start_time": "19:10",
+              "end_time": "19:15",
+              "distance": 0.45,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 181.3448131084442,
-  "_eval_score": 97.70767195767196
+  "_eval_score": 99.76388888888889
 }

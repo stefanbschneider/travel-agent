@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:07",
-          "end_time": "10:57",
+          "start_time": "02:36",
+          "end_time": "05:50",
           "start": "Suzhou Station",
           "end": "Hangzhou Railway Station",
           "price": 60.5,
           "cost": 121.0,
           "tickets": 2,
           "transports": [],
-          "TrainID": "Z281"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 16.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "taxi",
+              "start_time": "05:50",
+              "end_time": "05:53",
+              "distance": 2.02,
+              "price": 11.77,
+              "cost": 11.77,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hangzhou Confucius Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Hangzhou Confucius Temple",
+              "mode": "taxi",
+              "start_time": "07:30",
+              "end_time": "07:30",
+              "distance": 0.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Railway Station",
+              "start": "Hangzhou Confucius Temple",
               "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
               "mode": "taxi",
-              "start_time": "10:57",
-              "end_time": "11:04",
-              "distance": 4.88,
-              "price": 21.76,
-              "cost": 21.76,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.68,
+              "price": 17.57,
+              "cost": 17.57,
               "cars": 1
             }
           ]
@@ -266,84 +310,66 @@
           "transports": [
             {
               "start": "Tea Village: The Essence of Jiangnan",
-              "end": "Shuicheng Bridge-Metro Station",
-              "mode": "walk",
-              "start_time": "13:30",
-              "end_time": "14:18",
-              "distance": 4.07,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shuicheng Bridge-Metro Station",
-              "end": "Qianjiang Century City-Metro Station",
-              "mode": "metro",
-              "start_time": "14:18",
-              "end_time": "14:37",
-              "distance": 9.77,
-              "price": 4,
-              "cost": 8,
-              "tickets": 2
-            },
-            {
-              "start": "Qianjiang Century City-Metro Station",
               "end": "Asian Games Theme Park",
-              "mode": "walk",
-              "start_time": "14:37",
-              "end_time": "14:43",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:30",
+              "end_time": "13:47",
+              "distance": 11.71,
+              "price": 47.41,
+              "cost": 47.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Asian Games Theme Park",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "taxi",
+              "start_time": "16:13",
+              "end_time": "16:23",
+              "distance": 6.82,
+              "price": 28.58,
+              "cost": 28.58,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
+          "start_time": "20:43",
+          "end_time": "22:07",
           "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
+          "end": "Suzhou Station",
           "price": 78.65,
           "cost": 157.3,
           "tickets": 2,
           "transports": [
             {
-              "start": "Asian Games Theme Park",
-              "end": "Qianjiang Century City-Metro Station",
-              "mode": "walk",
-              "start_time": "16:13",
-              "end_time": "16:19",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qianjiang Century City-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
-              "mode": "metro",
-              "start_time": "16:19",
-              "end_time": "16:32",
-              "distance": 6.55,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "East Railway Station (East Square)-Metro Station",
+              "start": "Grandma Sun's Scallion Pancake Rolls",
               "end": "Hangzhou East Railway Station",
-              "mode": "walk",
-              "start_time": "16:32",
-              "end_time": "16:37",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:12",
+              "distance": 8.38,
+              "price": 34.04,
+              "cost": 34.04,
+              "cars": 1
             }
           ],
-          "TrainID": "G7192"
+          "TrainID": "G7350"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 122.2226972579956,
-  "_eval_score": 97.69642857142858
+  "_eval_score": 100.0
 }

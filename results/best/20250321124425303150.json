@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:40",
-          "end_time": "11:35",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "type": "airplane",
+          "start_time": "03:07",
+          "end_time": "04:26",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 532.46,
+          "cost": 2129.84,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G66"
+          "FlightID": "FL574"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:16",
+          "end_time": "07:16",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "04:26",
+              "end_time": "05:38",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 211.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:16",
+              "end_time": "07:17",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
+              "start": "Corner Tower",
               "end": "Beijing Puxuan Hotel · Left Bank",
               "mode": "taxi",
-              "start_time": "11:35",
-              "end_time": "11:47",
-              "distance": 8.19,
-              "price": 33.36,
-              "cost": 33.36,
+              "start_time": "10:00",
+              "end_time": "10:00",
+              "distance": 0.61,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -608,34 +652,14 @@
           "transports": [
             {
               "start": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
-              "end": "Goldfish Alley-Metro Station",
-              "mode": "walk",
-              "start_time": "13:51",
-              "end_time": "13:59",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Goldfish Alley-Metro Station",
-              "end": "Wangjing South-Metro Station",
-              "mode": "metro",
-              "start_time": "13:59",
-              "end_time": "14:18",
-              "distance": 9.78,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Wangjing South-Metro Station",
               "end": "798 Art District",
-              "mode": "walk",
-              "start_time": "14:18",
-              "end_time": "14:39",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:51",
+              "end_time": "14:08",
+              "distance": 11.94,
+              "price": 48.45,
+              "cost": 48.45,
+              "cars": 1
             }
           ]
         },
@@ -650,34 +674,14 @@
           "transports": [
             {
               "start": "798 Art District",
-              "end": "Wangjing South-Metro Station",
-              "mode": "walk",
-              "start_time": "16:09",
-              "end_time": "16:30",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wangjing South-Metro Station",
-              "end": "Dongsi-Metro Station",
-              "mode": "metro",
-              "start_time": "16:30",
-              "end_time": "16:47",
-              "distance": 8.67,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Dongsi-Metro Station",
               "end": "Helude Candied Hawthorn Sticks",
-              "mode": "walk",
-              "start_time": "16:47",
-              "end_time": "16:47",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:09",
+              "end_time": "16:24",
+              "distance": 10.25,
+              "price": 40.81,
+              "cost": 40.81,
+              "cars": 1
             }
           ]
         },
@@ -693,34 +697,14 @@
           "transports": [
             {
               "start": "Helude Candied Hawthorn Sticks",
-              "end": "Dongsi-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:00",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dongsi-Metro Station",
-              "end": "Terminal 2-Metro Station",
-              "mode": "metro",
-              "start_time": "18:00",
-              "end_time": "18:45",
-              "distance": 22.81,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Terminal 2-Metro Station",
               "end": "Beijing Capital International Airport",
-              "mode": "walk",
-              "start_time": "18:45",
-              "end_time": "18:55",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.44,
+              "price": 100.2,
+              "cost": 100.2,
+              "cars": 1
             }
           ],
           "FlightID": "FL144"
@@ -729,5 +713,5 @@
     }
   ],
   "elapsed_time(sec)": 184.81671571731567,
-  "_eval_score": 99.21086860670195
+  "_eval_score": 100.0
 }

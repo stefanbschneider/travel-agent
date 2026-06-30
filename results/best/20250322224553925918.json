@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:22",
-          "end_time": "08:54",
+          "start_time": "01:47",
+          "end_time": "03:19",
           "start": "Guangzhou Baiyun International Airport",
-          "end": "Chengdu Tianfu International Airport",
-          "price": 608.76,
-          "cost": 1217.52,
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 598.06,
+          "cost": 1196.12,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL288"
+          "FlightID": "FL289"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "03:19",
+              "end_time": "03:44",
+              "distance": 17.05,
+              "price": 71.43,
+              "cost": 71.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Chengdu Cultural Park",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 2.21,
+              "price": 12.42,
+              "cost": 12.42,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Tianfu International Airport",
+              "start": "Chengdu Cultural Park",
               "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "taxi",
-              "start_time": "08:54",
-              "end_time": "10:16",
-              "distance": 55.18,
-              "price": 243.03,
-              "cost": 243.03,
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.4,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -585,84 +629,66 @@
           "transports": [
             {
               "start": "China Shadow Puppet Museum",
-              "end": "Luomashi-Metro Station",
-              "mode": "walk",
-              "start_time": "15:10",
-              "end_time": "15:17",
-              "distance": 0.61,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Luomashi-Metro Station",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "metro",
-              "start_time": "15:17",
-              "end_time": "15:19",
-              "distance": 1.0,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
               "end": "Chengdu Library",
-              "mode": "walk",
-              "start_time": "15:19",
-              "end_time": "15:21",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:10",
+              "end_time": "15:10",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:06",
+          "end_time": "18:06",
+          "price": 5.0,
+          "cost": 10.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Library",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "taxi",
+              "start_time": "16:51",
+              "end_time": "16:53",
+              "distance": 1.72,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:06",
-          "end_time": "19:38",
+          "start_time": "23:50",
+          "end_time": "01:22",
           "start": "Chengdu Shuangliu International Airport",
           "end": "Guangzhou Baiyun International Airport",
-          "price": 601.51,
-          "cost": 1203.02,
+          "price": 652.14,
+          "cost": 1304.28,
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Library",
-              "end": "Tianfu Square-Metro Station",
-              "mode": "walk",
-              "start_time": "16:51",
-              "end_time": "16:53",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tianfu Square-Metro Station",
-              "end": "Shuangliu Airport Terminal 2 East-Metro Station",
-              "mode": "metro",
-              "start_time": "16:53",
-              "end_time": "17:21",
-              "distance": 14.27,
-              "price": 5,
-              "cost": 10,
-              "tickets": 2
-            },
-            {
-              "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
               "end": "Chengdu Shuangliu International Airport",
-              "mode": "walk",
-              "start_time": "17:21",
-              "end_time": "17:36",
-              "distance": 1.25,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:06",
+              "end_time": "18:30",
+              "distance": 16.04,
+              "price": 66.86,
+              "cost": 66.86,
+              "cars": 1
             }
           ],
-          "FlightID": "FL433"
+          "FlightID": "FL439"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 196.98993158340454,
-  "_eval_score": 97.99559523809523
+  "_eval_score": 99.4047619047619
 }

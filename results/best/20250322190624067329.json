@@ -7,16 +7,147 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2911.84,
+          "type": "airplane",
+          "start_time": "03:17",
+          "end_time": "04:48",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 18.0,
+          "cost": 72.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:19",
+              "distance": 12.68,
+              "price": 51.74,
+              "cost": 51.74,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+          "start_time": "12:38",
+          "end_time": "13:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 4.68,
+              "price": 21.1,
+              "cost": 21.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deqiu Cultural and Creative Valley",
+          "start_time": "14:17",
+          "end_time": "15:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "end": "Deqiu Cultural and Creative Valley",
+              "mode": "taxi",
+              "start_time": "13:38",
+              "end_time": "13:42",
+              "distance": 3.17,
+              "price": 15.8,
+              "cost": 15.8,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Korea Street",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Deqiu Cultural and Creative Valley",
+              "end": "Korea Street",
+              "mode": "taxi",
+              "start_time": "15:17",
+              "end_time": "15:32",
+              "distance": 10.15,
+              "price": 40.37,
+              "cost": 40.37,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "dinner",
@@ -28,14 +159,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
+              "start": "Korea Street",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "18:58",
-              "distance": 10.79,
-              "price": 43.25,
-              "cost": 43.25,
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 6.79,
+              "price": 28.46,
+              "cost": 28.46,
               "cars": 1
             }
           ]
@@ -239,34 +370,14 @@
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Jiashan Road-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:03",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiashan Road-Metro Station",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "metro",
-              "start_time": "12:03",
-              "end_time": "12:18",
-              "distance": 7.8,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "mode": "walk",
-              "start_time": "12:18",
-              "end_time": "12:20",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:11",
+              "distance": 7.97,
+              "price": 32.6,
+              "cost": 32.6,
+              "cars": 1
             }
           ]
         },
@@ -281,34 +392,14 @@
           "transports": [
             {
               "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "13:50",
-              "end_time": "13:52",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Pudong Avenue-Metro Station",
-              "mode": "metro",
-              "start_time": "13:52",
-              "end_time": "13:55",
-              "distance": 1.67,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Pudong Avenue-Metro Station",
               "end": "Century Avenue Cherry Orchard",
-              "mode": "walk",
-              "start_time": "13:55",
-              "end_time": "13:56",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:50",
+              "end_time": "13:51",
+              "distance": 1.31,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -323,34 +414,14 @@
           "transports": [
             {
               "start": "Century Avenue Cherry Orchard",
-              "end": "Pudong Avenue-Metro Station",
-              "mode": "walk",
+              "end": "Duoyun Bookstore · Flagship Store",
+              "mode": "taxi",
               "start_time": "15:26",
               "end_time": "15:27",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Pudong Avenue-Metro Station",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:27",
-              "end_time": "15:28",
-              "distance": 0.69,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Duoyun Bookstore · Flagship Store",
-              "mode": "walk",
-              "start_time": "15:28",
-              "end_time": "15:28",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
+              "distance": 0.83,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -365,34 +436,14 @@
           "transports": [
             {
               "start": "Duoyun Bookstore · Flagship Store",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:28",
-              "end_time": "16:28",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:28",
-              "end_time": "16:39",
-              "distance": 5.95,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "16:39",
-              "end_time": "16:49",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:28",
+              "end_time": "16:37",
+              "distance": 6.06,
+              "price": 25.92,
+              "cost": 25.92,
+              "cars": 1
             }
           ]
         },
@@ -408,34 +459,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:56",
-              "distance": 23.09,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "18:56",
-              "end_time": "18:57",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.64,
+              "price": 101.08,
+              "cost": 101.08,
+              "cars": 1
             }
           ],
           "TrainID": "D941"
@@ -444,5 +475,5 @@
     }
   ],
   "elapsed_time(sec)": 196.67111659049988,
-  "_eval_score": 95.71978021978023
+  "_eval_score": 98.61111111111111
 }

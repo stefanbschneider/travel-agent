@@ -8,15 +8,81 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:37",
-          "end_time": "14:07",
+          "start_time": "01:00",
+          "end_time": "02:30",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 556.94,
-          "cost": 2227.76,
+          "price": 647.51,
+          "cost": 2590.04,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL395"
+          "FlightID": "FL392"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "02:30",
+              "end_time": "03:25",
+              "distance": 36.99,
+              "price": 161.16,
+              "cost": 161.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiangsu Wutai Mountain Sports Center",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Jiangsu Wutai Mountain Sports Center",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:00",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Lu's Plum Blossom Cake (Laomendong Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jiangsu Wutai Mountain Sports Center",
+              "end": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 4.84,
+              "price": 21.66,
+              "cost": 21.66,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +94,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Lu's Plum Blossom Cake (Laomendong Branch)",
               "end": "Zhongshan Scenic Area",
               "mode": "taxi",
-              "start_time": "14:07",
-              "end_time": "15:03",
-              "distance": 37.47,
-              "price": 163.34,
-              "cost": 163.34,
+              "start_time": "12:00",
+              "end_time": "12:14",
+              "distance": 9.39,
+              "price": 37.58,
+              "cost": 37.58,
               "cars": 1
             }
           ]
@@ -564,34 +630,14 @@
           "transports": [
             {
               "start": "Bamboo Pavilion · Huaiyang Cuisine (Laomendong Branch)",
-              "end": "Wuding Gate-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:07",
-              "distance": 0.63,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wuding Gate-Metro Station",
-              "end": "Longhua Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:07",
-              "end_time": "12:39",
-              "distance": 16.08,
-              "price": 5,
-              "cost": 20,
-              "tickets": 4
-            },
-            {
-              "start": "Longhua Road-Metro Station",
               "end": "Ageless Village",
-              "mode": "walk",
-              "start_time": "12:39",
-              "end_time": "13:28",
-              "distance": 4.09,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:28",
+              "distance": 18.81,
+              "price": 79.35,
+              "cost": 79.35,
+              "cars": 1
             }
           ]
         },
@@ -606,84 +652,66 @@
           "transports": [
             {
               "start": "Ageless Village",
-              "end": "Longhua Road-Metro Station",
-              "mode": "walk",
-              "start_time": "14:58",
-              "end_time": "15:47",
-              "distance": 4.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Longhua Road-Metro Station",
-              "end": "Mengdu Street-Metro Station",
-              "mode": "metro",
-              "start_time": "15:47",
-              "end_time": "16:06",
-              "distance": 9.83,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Mengdu Street-Metro Station",
               "end": "Jiangsu Grand Theatre",
-              "mode": "walk",
-              "start_time": "16:06",
-              "end_time": "16:09",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:58",
+              "end_time": "15:17",
+              "distance": 13.22,
+              "price": 54.2,
+              "cost": 54.2,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:37",
+          "end_time": "18:37",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jiangsu Grand Theatre",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "17:09",
+              "end_time": "17:20",
+              "distance": 7.81,
+              "price": 32.05,
+              "cost": 32.05,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:34",
-          "end_time": "20:04",
+          "start_time": "20:34",
+          "end_time": "22:04",
           "start": "Nanjing Lukou International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 603.53,
-          "cost": 2414.12,
+          "price": 577.68,
+          "cost": 2310.72,
           "tickets": 4,
           "transports": [
             {
-              "start": "Jiangsu Grand Theatre",
-              "end": "Mengdu Street-Metro Station",
-              "mode": "walk",
-              "start_time": "17:09",
-              "end_time": "17:12",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Mengdu Street-Metro Station",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "17:12",
-              "end_time": "18:21",
-              "distance": 34.74,
-              "price": 7,
-              "cost": 28,
-              "tickets": 4
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
-              "start_time": "18:21",
-              "end_time": "18:24",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:37",
+              "end_time": "19:34",
+              "distance": 38.65,
+              "price": 168.64,
+              "cost": 168.64,
+              "cars": 1
             }
           ],
-          "FlightID": "FL685"
+          "FlightID": "FL686"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 195.12181186676025,
-  "_eval_score": 98.22416666666666
+  "_eval_score": 100.0
 }

@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:48",
-          "end_time": "12:20",
-          "start": "Hangzhou East Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 730.27,
-          "cost": 2921.08,
+          "type": "airplane",
+          "start_time": "00:05",
+          "end_time": "01:29",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G32"
+          "FlightID": "FL499"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 48.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "01:29",
+              "end_time": "02:41",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 211.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Corner Tower",
               "end": "Cool Xiang · Jiangnan Courtyard Restaurant · Scholar-Official Hunan Cuisine (Guomao Branch)",
               "mode": "taxi",
-              "start_time": "12:20",
-              "end_time": "12:33",
-              "distance": 9.17,
-              "price": 36.81,
-              "cost": 36.81,
+              "start_time": "10:00",
+              "end_time": "10:09",
+              "distance": 6.61,
+              "price": 27.83,
+              "cost": 27.83,
               "cars": 1
             }
           ]
@@ -266,34 +310,14 @@
           "transports": [
             {
               "start": "Tidu (Beijing Fang Branch)",
-              "end": "Qianmen-Metro Station",
-              "mode": "walk",
-              "start_time": "12:58",
-              "end_time": "13:02",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qianmen-Metro Station",
-              "end": "Wangjing South-Metro Station",
-              "mode": "metro",
-              "start_time": "13:02",
-              "end_time": "13:25",
-              "distance": 11.81,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Wangjing South-Metro Station",
               "end": "798 Art District",
-              "mode": "walk",
-              "start_time": "13:25",
-              "end_time": "13:46",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:58",
+              "end_time": "13:18",
+              "distance": 13.79,
+              "price": 56.75,
+              "cost": 56.75,
+              "cars": 1
             }
           ]
         },
@@ -308,34 +332,14 @@
           "transports": [
             {
               "start": "798 Art District",
-              "end": "Wangjing South-Metro Station",
-              "mode": "walk",
-              "start_time": "15:16",
-              "end_time": "15:37",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wangjing South-Metro Station",
-              "end": "Dongsi-Metro Station",
-              "mode": "metro",
-              "start_time": "15:37",
-              "end_time": "15:54",
-              "distance": 8.67,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Dongsi-Metro Station",
               "end": "Helude Candied Hawthorn Sticks",
-              "mode": "walk",
-              "start_time": "15:54",
-              "end_time": "15:54",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:16",
+              "end_time": "15:31",
+              "distance": 10.25,
+              "price": 40.81,
+              "cost": 40.81,
+              "cars": 1
             }
           ]
         },
@@ -351,34 +355,14 @@
           "transports": [
             {
               "start": "Helude Candied Hawthorn Sticks",
-              "end": "Dongsi-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:00",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dongsi-Metro Station",
-              "end": "Beijing South Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:00",
-              "end_time": "18:14",
-              "distance": 7.37,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Beijing South Railway Station-Metro Station",
               "end": "Beijing South Railway Station",
-              "mode": "walk",
-              "start_time": "18:14",
-              "end_time": "18:14",
-              "distance": 0.02,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:11",
+              "distance": 7.42,
+              "price": 30.66,
+              "cost": 30.66,
+              "cars": 1
             }
           ],
           "TrainID": "G39"
@@ -387,5 +371,5 @@
     }
   ],
   "elapsed_time(sec)": 182.34744429588318,
-  "_eval_score": 98.4684065934066
+  "_eval_score": 99.98412698412699
 }

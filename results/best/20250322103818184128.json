@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:30",
-          "end_time": "09:10",
-          "start": "Chengdu Shuangliu International Airport",
+          "start_time": "01:04",
+          "end_time": "02:44",
+          "start": "Chengdu Tianfu International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 633.07,
-          "cost": 1266.14,
+          "price": 639.2,
+          "cost": 1278.4,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL425"
+          "FlightID": "FL424"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 48.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "02:44",
+              "end_time": "03:22",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 11.29,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Guan Shanyue Art Museum",
               "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
               "mode": "taxi",
-              "start_time": "09:10",
-              "end_time": "09:51",
-              "distance": 27.53,
-              "price": 118.59,
-              "cost": 118.59,
+              "start_time": "10:00",
+              "end_time": "10:00",
+              "distance": 0.29,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -245,12 +289,13 @@
             {
               "start": "He Xiangning Art Museum",
               "end": "Hua Art Museum",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:30",
-              "end_time": "14:31",
-              "distance": 0.13481388464139646,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:30",
+              "distance": 0.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -265,34 +310,14 @@
           "transports": [
             {
               "start": "Hua Art Museum",
-              "end": "Qiaocheng North-Metro Station",
-              "mode": "walk",
-              "start_time": "16:01",
-              "end_time": "16:07",
-              "distance": 0.54,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "metro",
-              "start_time": "16:07",
-              "end_time": "16:37",
-              "distance": 15.14,
-              "price": 5,
-              "cost": 10,
-              "tickets": 2
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "walk",
-              "start_time": "16:37",
-              "end_time": "16:39",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:01",
+              "end_time": "16:23",
+              "distance": 15.19,
+              "price": 63.05,
+              "cost": 63.05,
+              "cars": 1
             }
           ]
         },
@@ -308,34 +333,14 @@
           "transports": [
             {
               "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
-              "end": "Buji-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:14",
-              "distance": 6.42,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Buji-Metro Station",
               "end": "Shenzhen East Station",
-              "mode": "walk",
-              "start_time": "18:14",
-              "end_time": "18:17",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:09",
+              "distance": 6.02,
+              "price": 25.77,
+              "cost": 25.77,
+              "cars": 1
             }
           ],
           "TrainID": "Z586"
@@ -344,5 +349,5 @@
     }
   ],
   "elapsed_time(sec)": 8.525428295135498,
-  "_eval_score": 97.12896825396825
+  "_eval_score": 98.86054421768708
 }

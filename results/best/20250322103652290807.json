@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:11",
-          "end_time": "08:46",
-          "start": "Suzhou New District Station",
-          "end": "Nanjing South Railway Station",
-          "price": 113.45,
-          "cost": 340.35,
+          "start_time": "00:02",
+          "end_time": "02:15",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 94.54,
+          "cost": 283.62,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D636"
+          "TrainID": "T136"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "02:15",
+              "end_time": "02:21",
+              "distance": 4.23,
+              "price": 19.51,
+              "cost": 19.51,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +50,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:46",
-              "end_time": "08:49",
-              "distance": 0.29,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Changfu Street-Metro Station",
-              "mode": "metro",
-              "start_time": "08:49",
-              "end_time": "09:02",
-              "distance": 6.94,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Changfu Street-Metro Station",
+              "start": "Zhu's Plum Blossom Cake",
               "end": "Ancient Peach Leaf Ferry",
-              "mode": "walk",
-              "start_time": "09:02",
-              "end_time": "09:13",
-              "distance": 0.92,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 3.77,
+              "price": 17.9,
+              "cost": 17.9,
+              "cars": 1
             }
           ]
         },
@@ -71,34 +73,14 @@
           "transports": [
             {
               "start": "Ancient Peach Leaf Ferry",
-              "end": "Changfu Street-Metro Station",
-              "mode": "walk",
-              "start_time": "10:43",
-              "end_time": "10:54",
-              "distance": 0.92,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Changfu Street-Metro Station",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "10:54",
-              "end_time": "10:56",
-              "distance": 1.04,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "mode": "walk",
-              "start_time": "10:56",
-              "end_time": "11:00",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:43",
+              "end_time": "10:44",
+              "distance": 1.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -306,84 +288,66 @@
           "transports": [
             {
               "start": "Nanjing Olympic Sports Center",
-              "end": "Xinglong Avenue-Metro Station",
-              "mode": "walk",
-              "start_time": "13:46",
-              "end_time": "13:51",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinglong Avenue-Metro Station",
-              "end": "Olympic Sports Center East-Metro Station",
-              "mode": "metro",
-              "start_time": "13:51",
-              "end_time": "13:53",
-              "distance": 1.35,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Olympic Sports Center East-Metro Station",
               "end": "Live Fire Shooting Club",
-              "mode": "walk",
-              "start_time": "13:53",
-              "end_time": "13:59",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:46",
+              "end_time": "13:47",
+              "distance": 1.03,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Live Fire Shooting Club",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "15:29",
+              "end_time": "15:41",
+              "distance": 8.14,
+              "price": 33.21,
+              "cost": 33.21,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:00",
-          "end_time": "18:12",
+          "start_time": "22:24",
+          "end_time": "02:26",
           "start": "Nanjing Station",
           "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 368.70000000000005,
+          "price": 75.63,
+          "cost": 226.89,
           "tickets": 3,
           "transports": [
             {
-              "start": "Live Fire Shooting Club",
-              "end": "Olympic Sports Center East-Metro Station",
-              "mode": "walk",
-              "start_time": "15:29",
-              "end_time": "15:35",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Olympic Sports Center East-Metro Station",
-              "end": "Nanjing Station-Metro Station",
-              "mode": "metro",
-              "start_time": "15:35",
-              "end_time": "15:57",
-              "distance": 11.34,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Nanjing Station-Metro Station",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "end": "Nanjing Station",
-              "mode": "walk",
-              "start_time": "15:57",
-              "end_time": "15:59",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 2.77,
+              "price": 14.38,
+              "cost": 14.38,
+              "cars": 1
             }
           ],
-          "TrainID": "G7021"
+          "TrainID": "K1805"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.57497596740723,
-  "_eval_score": 96.95634920634922
+  "_eval_score": 99.0
 }

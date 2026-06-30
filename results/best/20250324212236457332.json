@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:56",
-          "end_time": "09:34",
+          "start_time": "00:36",
+          "end_time": "02:14",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Hangzhou Xiaoshan International Airport",
-          "price": 628.14,
-          "cost": 1256.28,
+          "price": 703.38,
+          "cost": 1406.76,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL374"
+          "FlightID": "FL377"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 16.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "taxi",
+              "start_time": "02:14",
+              "end_time": "02:52",
+              "distance": 25.92,
+              "price": 111.33,
+              "cost": 111.33,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hangzhou Confucius Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
+              "end": "Hangzhou Confucius Temple",
+              "mode": "taxi",
+              "start_time": "07:30",
+              "end_time": "07:30",
+              "distance": 0.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Xiaoshan International Airport",
+              "start": "Hangzhou Confucius Temple",
               "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
               "mode": "taxi",
-              "start_time": "09:34",
-              "end_time": "10:17",
-              "distance": 28.82,
-              "price": 124.38,
-              "cost": 124.38,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.68,
+              "price": 17.57,
+              "cost": 17.57,
               "cars": 1
             }
           ]
@@ -437,34 +481,14 @@
           "transports": [
             {
               "start": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
-              "end": "Huanglong Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "13:25",
-              "end_time": "13:47",
-              "distance": 1.91,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huanglong Sports Center-Metro Station",
-              "end": "Yellow Dragon Cave-Metro Station",
-              "mode": "metro",
-              "start_time": "13:47",
-              "end_time": "13:49",
-              "distance": 1.06,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Yellow Dragon Cave-Metro Station",
               "end": "704 Project (Lin Biao's Hangzhou Villa)",
-              "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "14:25",
-              "distance": 3.0,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:25",
+              "end_time": "13:27",
+              "distance": 1.35,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -479,34 +503,14 @@
           "transports": [
             {
               "start": "704 Project (Lin Biao's Hangzhou Villa)",
-              "end": "Yellow Dragon Cave-Metro Station",
-              "mode": "walk",
-              "start_time": "15:55",
-              "end_time": "16:31",
-              "distance": 3.0,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yellow Dragon Cave-Metro Station",
-              "end": "Jiangcheng Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:31",
-              "end_time": "16:40",
-              "distance": 4.7,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Jiangcheng Road-Metro Station",
               "end": "Grandma Sun's Scallion Pancake Rolls",
-              "mode": "walk",
-              "start_time": "16:40",
-              "end_time": "16:50",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:55",
+              "end_time": "16:00",
+              "distance": 3.78,
+              "price": 17.95,
+              "cost": 17.95,
+              "cars": 1
             }
           ]
         },
@@ -522,34 +526,14 @@
           "transports": [
             {
               "start": "Grandma Sun's Scallion Pancake Rolls",
-              "end": "Jiangcheng Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangcheng Road-Metro Station",
-              "end": "Xiaoshan International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:59",
-              "distance": 24.54,
-              "price": 6,
-              "cost": 12,
-              "tickets": 2
-            },
-            {
-              "start": "Xiaoshan International Airport-Metro Station",
               "end": "Hangzhou Xiaoshan International Airport",
-              "mode": "walk",
-              "start_time": "18:59",
-              "end_time": "19:00",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:37",
+              "distance": 25.21,
+              "price": 108.14,
+              "cost": 108.14,
+              "cars": 1
             }
           ],
           "FlightID": "FL526"
@@ -558,5 +542,5 @@
     }
   ],
   "elapsed_time(sec)": 181.69824314117432,
-  "_eval_score": 98.9515873015873
+  "_eval_score": 100.0
 }

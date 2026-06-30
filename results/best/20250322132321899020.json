@@ -19,6 +19,48 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "01:08",
+              "end_time": "01:23",
+              "distance": 1.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong International Airport-Metro Station",
+              "end": "Baoshan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "01:23",
+              "end_time": "02:29",
+              "distance": 33.3,
+              "price": 7,
+              "cost": 7,
+              "tickets": 1
+            },
+            {
+              "start": "Baoshan Road-Metro Station",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "walk",
+              "start_time": "02:29",
+              "end_time": "02:32",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
           "start_time": "10:00",
@@ -28,14 +70,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:50",
-              "distance": 28.62,
-              "price": 123.5,
-              "cost": 123.5,
+              "start_time": "07:00",
+              "end_time": "07:09",
+              "distance": 6.01,
+              "price": 25.72,
+              "cost": 25.72,
               "cars": 1
             }
           ]
@@ -222,34 +264,14 @@
           "transports": [
             {
               "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "end": "Chuansha-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chuansha-Metro Station",
-              "end": "Yanggao Middle Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "09:03",
-              "distance": 14.95,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Yanggao Middle Road-Metro Station",
               "end": "Century Square",
-              "mode": "walk",
-              "start_time": "09:03",
-              "end_time": "09:04",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 15.24,
+              "price": 63.3,
+              "cost": 63.3,
+              "cars": 1
             }
           ]
         },
@@ -264,34 +286,14 @@
           "transports": [
             {
               "start": "Century Square",
-              "end": "Yanggao Middle Road-Metro Station",
-              "mode": "walk",
-              "start_time": "10:04",
-              "end_time": "10:05",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yanggao Middle Road-Metro Station",
-              "end": "Qibao-Metro Station",
-              "mode": "metro",
-              "start_time": "10:05",
-              "end_time": "10:46",
-              "distance": 20.63,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Qibao-Metro Station",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "mode": "walk",
-              "start_time": "10:46",
-              "end_time": "10:54",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:04",
+              "end_time": "10:34",
+              "distance": 20.21,
+              "price": 85.65,
+              "cost": 85.65,
+              "cars": 1
             }
           ]
         },
@@ -306,84 +308,110 @@
           "transports": [
             {
               "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "end": "Qibao-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qibao-Metro Station",
-              "end": "Xinzhuang-Metro Station",
-              "mode": "metro",
-              "start_time": "12:08",
-              "end_time": "12:19",
-              "distance": 5.99,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Xinzhuang-Metro Station",
               "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "mode": "walk",
-              "start_time": "12:19",
-              "end_time": "12:38",
-              "distance": 1.6,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 4.68,
+              "price": 21.1,
+              "cost": 21.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Foreigner Street 101",
+          "start_time": "14:49",
+          "end_time": "15:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
+              "end": "Foreigner Street 101",
+              "mode": "taxi",
+              "start_time": "14:08",
+              "end_time": "14:22",
+              "distance": 9.79,
+              "price": 38.97,
+              "cost": 38.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Foreigner Street 101",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:49",
+              "end_time": "16:15",
+              "distance": 17.54,
+              "price": 73.62,
+              "cost": 73.62,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Duolun Road Cultural Celebrities Street",
+          "start_time": "18:24",
+          "end_time": "19:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Duolun Road Cultural Celebrities Street",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:08",
+              "distance": 5.66,
+              "price": 24.5,
+              "cost": 24.5,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "end": "Xinzhuang-Metro Station",
-              "mode": "walk",
-              "start_time": "14:08",
-              "end_time": "14:27",
-              "distance": 1.6,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinzhuang-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "14:27",
-              "end_time": "15:47",
-              "distance": 40.32,
-              "price": 8,
-              "cost": 8,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Duolun Road Cultural Celebrities Street",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "15:47",
-              "end_time": "16:02",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:24",
+              "end_time": "20:14",
+              "distance": 33.98,
+              "price": 147.63,
+              "cost": 147.63,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 45.406898498535156,
-  "_eval_score": 97.10119047619048
+  "_eval_score": 99.80654761904762
 }

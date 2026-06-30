@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:48",
+              "distance": 36.99,
+              "price": 161.16,
+              "cost": 161.16,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +50,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:11",
-              "end_time": "08:14",
-              "distance": 0.29,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Changfu Street-Metro Station",
-              "mode": "metro",
-              "start_time": "08:14",
-              "end_time": "08:27",
-              "distance": 6.94,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Changfu Street-Metro Station",
+              "start": "Zhu's Plum Blossom Cake",
               "end": "Ancient Peach Leaf Ferry",
-              "mode": "walk",
-              "start_time": "08:27",
-              "end_time": "08:38",
-              "distance": 0.92,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 3.77,
+              "price": 17.9,
+              "cost": 17.9,
+              "cars": 1
             }
           ]
         },
@@ -71,34 +73,14 @@
           "transports": [
             {
               "start": "Ancient Peach Leaf Ferry",
-              "end": "Changfu Street-Metro Station",
-              "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:41",
-              "distance": 0.92,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Changfu Street-Metro Station",
-              "end": "Wuding Gate-Metro Station",
-              "mode": "metro",
-              "start_time": "10:41",
-              "end_time": "10:45",
-              "distance": 2.19,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Wuding Gate-Metro Station",
               "end": "Republic Red Mansion (Laomendong Branch)",
-              "mode": "walk",
-              "start_time": "10:45",
-              "end_time": "10:52",
-              "distance": 0.61,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:33",
+              "distance": 2.17,
+              "price": 12.31,
+              "cost": 12.31,
+              "cars": 1
             }
           ]
         },
@@ -499,84 +481,66 @@
           "transports": [
             {
               "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "walk",
-              "start_time": "13:46",
-              "end_time": "13:51",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "13:51",
-              "end_time": "13:57",
-              "distance": 3.21,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
               "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "mode": "walk",
-              "start_time": "13:57",
-              "end_time": "14:10",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:46",
+              "end_time": "13:52",
+              "distance": 4.63,
+              "price": 20.91,
+              "cost": 20.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "15:40",
+              "end_time": "15:43",
+              "distance": 2.46,
+              "price": 13.29,
+              "cost": 13.29,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
+          "start_time": "22:30",
+          "end_time": "22:50",
           "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
           "tickets": 2,
           "transports": [
             {
-              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "15:40",
-              "end_time": "15:53",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:53",
-              "end_time": "17:06",
-              "distance": 36.96,
-              "price": 7,
-              "cost": 14,
-              "tickets": 2
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
-              "start_time": "17:06",
-              "end_time": "17:09",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:57",
+              "distance": 38.65,
+              "price": 168.64,
+              "cost": 168.64,
+              "cars": 1
             }
           ],
-          "FlightID": "FL645"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 182.68500304222107,
-  "_eval_score": 98.83174603174604
+  "_eval_score": 100.0
 }

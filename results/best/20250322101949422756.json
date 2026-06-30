@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 78.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Taoyuan-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "03:47",
+              "distance": 16.55,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Taoyuan-Metro Station",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "walk",
+              "start_time": "03:47",
+              "end_time": "03:52",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "accommodation",
@@ -30,15 +72,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Taoyuan-Metro Station",
+              "mode": "walk",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Taoyuan-Metro Station",
+              "end": "Huaide-Metro Station",
+              "mode": "metro",
+              "start_time": "08:05",
+              "end_time": "08:42",
+              "distance": 18.51,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Huaide-Metro Station",
               "end": "JI Hotel (Shenzhen Bao'an Airport Huaide Subway Station)",
-              "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:03",
-              "distance": 2.82,
-              "price": 14.56,
-              "cost": 14.56,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:42",
+              "end_time": "08:45",
+              "distance": 0.26,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -390,5 +452,5 @@
     }
   ],
   "elapsed_time(sec)": 209.47105407714844,
-  "_eval_score": 93.01785714285714
+  "_eval_score": 93.10449735449735
 }

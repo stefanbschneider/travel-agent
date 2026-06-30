@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "08:22",
-          "end_time": "08:10",
-          "start": "Hangzhou Railway Station",
-          "end": "Beijing Fengtai Station",
-          "price": 449.4,
-          "cost": 1797.6,
+          "type": "airplane",
+          "start_time": "00:05",
+          "end_time": "01:29",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "TrainID": "K1277"
+          "FlightID": "FL499"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zengshengkui Snack Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Zengshengkui Snack Shop",
+              "mode": "taxi",
+              "start_time": "01:29",
+              "end_time": "02:39",
+              "distance": 47.11,
+              "price": 206.71,
+              "cost": 206.71,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing Fengtai Station",
+              "start": "Zengshengkui Snack Shop",
               "end": "Beijing Exhibition Center",
               "mode": "taxi",
-              "start_time": "08:10",
-              "end_time": "08:28",
-              "distance": 12.05,
-              "price": 48.94,
-              "cost": 48.94,
+              "start_time": "07:00",
+              "end_time": "07:08",
+              "distance": 5.55,
+              "price": 24.13,
+              "cost": 24.13,
               "cars": 1
             }
           ]
@@ -234,6 +256,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Central Academy of Fine Arts Art Museum",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qiuguo S Hotel (Beijing Capital Airport Second Branch)",
+              "end": "Central Academy of Fine Arts Art Museum",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:48",
+              "distance": 12.58,
+              "price": 51.32,
+              "cost": 51.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
           "start_time": "11:00",
@@ -243,14 +287,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Qiuguo S Hotel (Beijing Capital Airport Second Branch)",
+              "start": "Central Academy of Fine Arts Art Museum",
               "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:00",
-              "distance": 20.33,
-              "price": 86.18,
-              "cost": 86.18,
+              "start_time": "10:30",
+              "end_time": "10:41",
+              "distance": 7.8,
+              "price": 32.01,
+              "cost": 32.01,
               "cars": 1
             }
           ]
@@ -266,34 +310,14 @@
           "transports": [
             {
               "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-              "end": "Zhang Zizhong Road-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:06",
-              "distance": 0.57,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhang Zizhong Road-Metro Station",
-              "end": "Shichahai-Metro Station",
-              "mode": "metro",
-              "start_time": "12:06",
-              "end_time": "12:09",
-              "distance": 1.84,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Shichahai-Metro Station",
               "end": "Beijing Fire Virtue Temple",
-              "mode": "walk",
-              "start_time": "12:09",
-              "end_time": "12:18",
-              "distance": 0.81,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 1.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -308,34 +332,14 @@
           "transports": [
             {
               "start": "Beijing Fire Virtue Temple",
-              "end": "Shichahai-Metro Station",
-              "mode": "walk",
-              "start_time": "13:48",
-              "end_time": "13:57",
-              "distance": 0.81,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shichahai-Metro Station",
-              "end": "Andingmen-Metro Station",
-              "mode": "metro",
-              "start_time": "13:57",
-              "end_time": "14:00",
-              "distance": 1.65,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Andingmen-Metro Station",
               "end": "Drum Tower",
-              "mode": "walk",
-              "start_time": "14:00",
-              "end_time": "14:06",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:48",
+              "end_time": "13:48",
+              "distance": 0.39,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -350,34 +354,36 @@
           "transports": [
             {
               "start": "Drum Tower",
-              "end": "Andingmen-Metro Station",
-              "mode": "walk",
-              "start_time": "15:36",
-              "end_time": "15:42",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Andingmen-Metro Station",
-              "end": "Niujie-Metro Station",
-              "mode": "metro",
-              "start_time": "15:42",
-              "end_time": "15:57",
-              "distance": 7.64,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Niujie-Metro Station",
               "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
-              "mode": "walk",
-              "start_time": "15:57",
-              "end_time": "16:00",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:36",
+              "end_time": "15:47",
+              "distance": 7.44,
+              "price": 30.74,
+              "cost": 30.74,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eight Great Lanes",
+          "start_time": "18:11",
+          "end_time": "19:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "end": "Eight Great Lanes",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 3.29,
+              "price": 16.21,
+              "cost": 16.21,
+              "cars": 1
             }
           ]
         },
@@ -392,14 +398,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "start": "Eight Great Lanes",
               "end": "Beijing Fengtai Station",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:11",
-              "distance": 7.65,
-              "price": 31.47,
-              "cost": 31.47,
+              "start_time": "19:11",
+              "end_time": "19:27",
+              "distance": 10.9,
+              "price": 43.77,
+              "cost": 43.77,
               "cars": 1
             }
           ],
@@ -409,5 +415,5 @@
     }
   ],
   "elapsed_time(sec)": 14.846501111984253,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 100.0
 }

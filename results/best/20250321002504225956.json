@@ -7,16 +7,82 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:31",
-          "end_time": "15:31",
-          "start": "Nanjing South Railway Station",
-          "end": "Shenzhen Station",
-          "price": 751.94,
-          "cost": 3759.7000000000003,
+          "type": "airplane",
+          "start_time": "00:12",
+          "end_time": "01:39",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 562.24,
+          "cost": 2811.2,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2781"
+          "FlightID": "FL664"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 120.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "01:39",
+              "end_time": "02:17",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 220.7,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 22.58,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 100.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:03",
+              "distance": 2.19,
+              "price": 12.38,
+              "cost": 24.76,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +94,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Shenzhen Station",
+              "start": "Old Zhou's Shunde Double-Skin Milk",
               "end": "East Gate Old Street",
               "mode": "taxi",
-              "start_time": "15:31",
-              "end_time": "15:34",
-              "distance": 2.13,
-              "price": 12.17,
-              "cost": 24.34,
+              "start_time": "12:00",
+              "end_time": "12:11",
+              "distance": 7.35,
+              "price": 30.41,
+              "cost": 60.82,
               "cars": 2
             }
           ]
@@ -713,34 +779,14 @@
           "transports": [
             {
               "start": "Libaoge (Kerry Store)",
-              "end": "Shopping Park-Metro Station",
-              "mode": "walk",
-              "start_time": "12:49",
-              "end_time": "12:51",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shopping Park-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "12:51",
-              "end_time": "13:06",
-              "distance": 7.51,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "13:06",
-              "end_time": "13:09",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:49",
+              "end_time": "13:00",
+              "distance": 7.56,
+              "price": 31.15,
+              "cost": 62.3,
+              "cars": 2
             }
           ]
         },
@@ -755,84 +801,88 @@
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
-              "mode": "walk",
-              "start_time": "14:39",
-              "end_time": "14:42",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Minzhi-Metro Station",
-              "mode": "metro",
-              "start_time": "14:42",
-              "end_time": "14:45",
-              "distance": 1.78,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Minzhi-Metro Station",
               "end": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
-              "mode": "walk",
-              "start_time": "14:45",
-              "end_time": "15:02",
-              "distance": 1.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:39",
+              "end_time": "14:43",
+              "distance": 3.14,
+              "price": 15.7,
+              "cost": 31.4,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:16",
+          "end_time": "18:16",
+          "price": 16.0,
+          "cost": 80.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:32",
+              "end_time": "16:52",
+              "distance": 13.54,
+              "price": 55.62,
+              "cost": 111.24,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "18:22",
+          "end_time": "19:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "taxi",
+              "start_time": "18:16",
+              "end_time": "18:18",
+              "distance": 1.35,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:11",
-          "end_time": "19:38",
+          "start_time": "23:20",
+          "end_time": "00:47",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 557.67,
-          "cost": 2788.35,
+          "price": 576.88,
+          "cost": 2884.4,
           "tickets": 5,
           "transports": [
             {
-              "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
-              "end": "Minzhi-Metro Station",
-              "mode": "walk",
-              "start_time": "16:32",
-              "end_time": "16:49",
-              "distance": 1.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Minzhi-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "16:49",
-              "end_time": "17:34",
-              "distance": 22.67,
-              "price": 6,
-              "cost": 30,
-              "tickets": 5
-            },
-            {
-              "start": "Airport East-Metro Station",
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "17:34",
-              "end_time": "17:39",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:22",
+              "end_time": "20:11",
+              "distance": 32.84,
+              "price": 142.46,
+              "cost": 284.92,
+              "cars": 2
             }
           ],
-          "FlightID": "FL238"
+          "FlightID": "FL232"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 185.0086441040039,
-  "_eval_score": 97.80568356374808
+  "_eval_score": 99.46560846560847
 }

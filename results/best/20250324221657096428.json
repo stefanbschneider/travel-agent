@@ -7,16 +7,80 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:29",
+              "end_time": "02:40",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
+              "end": "Zhang Zizhong Road-Metro Station",
+              "mode": "metro",
+              "start_time": "02:40",
+              "end_time": "04:13",
+              "distance": 46.88,
+              "price": 8,
+              "cost": 40,
+              "tickets": 5
+            },
+            {
+              "start": "Zhang Zizhong Road-Metro Station",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "walk",
+              "start_time": "04:13",
+              "end_time": "04:19",
+              "distance": 0.57,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +92,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Corner Tower",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 36.52,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.64,
+              "price": 17.43,
+              "cost": 34.86,
               "cars": 2
             }
           ]
@@ -266,34 +330,14 @@
           "transports": [
             {
               "start": "Beijing Puxuan Hotel · Left Bank",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "walk",
-              "start_time": "13:18",
-              "end_time": "13:18",
-              "distance": 0.05,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "Wangjing South-Metro Station",
-              "mode": "metro",
-              "start_time": "13:18",
-              "end_time": "13:36",
-              "distance": 9.09,
-              "price": 4,
-              "cost": 20,
-              "tickets": 5
-            },
-            {
-              "start": "Wangjing South-Metro Station",
               "end": "798 Art District",
-              "mode": "walk",
-              "start_time": "13:36",
-              "end_time": "13:57",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:18",
+              "end_time": "13:34",
+              "distance": 10.78,
+              "price": 43.2,
+              "cost": 86.4,
+              "cars": 2
             }
           ]
         },
@@ -308,34 +352,14 @@
           "transports": [
             {
               "start": "798 Art District",
-              "end": "Wangjing South-Metro Station",
-              "mode": "walk",
-              "start_time": "15:27",
-              "end_time": "15:48",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wangjing South-Metro Station",
-              "end": "Dongsi-Metro Station",
-              "mode": "metro",
-              "start_time": "15:48",
-              "end_time": "16:05",
-              "distance": 8.67,
-              "price": 3,
-              "cost": 15,
-              "tickets": 5
-            },
-            {
-              "start": "Dongsi-Metro Station",
               "end": "Helude Candied Hawthorn Sticks",
-              "mode": "walk",
-              "start_time": "16:05",
-              "end_time": "16:05",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:27",
+              "end_time": "15:42",
+              "distance": 10.25,
+              "price": 40.81,
+              "cost": 81.62,
+              "cars": 2
             }
           ]
         },
@@ -387,5 +411,5 @@
     }
   ],
   "elapsed_time(sec)": 180.5908510684967,
-  "_eval_score": 98.38782051282051
+  "_eval_score": 99.75555555555556
 }

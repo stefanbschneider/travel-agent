@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:03",
-          "end_time": "07:30",
+          "start_time": "02:29",
+          "end_time": "04:00",
           "start": "Suzhou Station",
-          "end": "Shanghai Station",
-          "price": 55.23,
-          "cost": 110.46,
+          "end": "Shanghai South Railway Station",
+          "price": 33.99,
+          "cost": 67.98,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G7029"
+          "TrainID": "K1808"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 58.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai South Railway Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:00",
+              "end_time": "04:16",
+              "distance": 10.71,
+              "price": 42.88,
+              "cost": 42.88,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +50,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Station",
-              "end": "Shanghai Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "07:32",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shanghai Railway Station-Metro Station",
-              "end": "Liping Road-Metro Station",
-              "mode": "metro",
-              "start_time": "07:32",
-              "end_time": "07:40",
-              "distance": 4.26,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Liping Road-Metro Station",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "1933 Old Millfun",
-              "mode": "walk",
-              "start_time": "07:40",
-              "end_time": "07:42",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:04",
+              "distance": 2.94,
+              "price": 15.01,
+              "cost": 15.01,
+              "cars": 1
             }
           ]
         },
@@ -71,34 +73,14 @@
           "transports": [
             {
               "start": "1933 Old Millfun",
-              "end": "Liping Road-Metro Station",
-              "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:32",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "Jiashan Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:32",
-              "end_time": "10:46",
-              "distance": 7.48,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Jiashan Road-Metro Station",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
-              "mode": "walk",
-              "start_time": "10:46",
-              "end_time": "10:49",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:41",
+              "distance": 7.52,
+              "price": 31.04,
+              "cost": 31.04,
+              "cars": 1
             }
           ]
         },
@@ -477,84 +459,66 @@
           "transports": [
             {
               "start": "Zhujiajiao Ancient Town Scenic Area",
-              "end": "Zhujiajiao-Metro Station",
-              "mode": "walk",
-              "start_time": "13:35",
-              "end_time": "13:59",
-              "distance": 2.02,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhujiajiao-Metro Station",
-              "end": "Shanghai Automobile City-Metro Station",
-              "mode": "metro",
-              "start_time": "13:59",
-              "end_time": "14:47",
-              "distance": 24.03,
-              "price": 6,
-              "cost": 12,
-              "tickets": 2
-            },
-            {
-              "start": "Shanghai Automobile City-Metro Station",
               "end": "Automobile Expo Park",
-              "mode": "walk",
-              "start_time": "14:47",
-              "end_time": "14:48",
-              "distance": 0.09,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:35",
+              "end_time": "14:07",
+              "distance": 21.92,
+              "price": 93.35,
+              "cost": 93.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:36",
+          "end_time": "18:36",
+          "price": 16.0,
+          "cost": 32.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Automobile Expo Park",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:18",
+              "end_time": "17:09",
+              "distance": 34.61,
+              "price": 150.44,
+              "cost": 150.44,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 110.46,
+          "start_time": "23:39",
+          "end_time": "00:40",
+          "start": "Shanghai Station",
+          "end": "Suzhou Station",
+          "price": 33.99,
+          "cost": 67.98,
           "tickets": 2,
           "transports": [
             {
-              "start": "Automobile Expo Park",
-              "end": "Shanghai Automobile City-Metro Station",
-              "mode": "walk",
-              "start_time": "16:18",
-              "end_time": "16:19",
-              "distance": 0.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shanghai Automobile City-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "16:19",
-              "end_time": "16:52",
-              "distance": 16.61,
-              "price": 5,
-              "cost": 10,
-              "tickets": 2
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
-              "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "16:52",
-              "end_time": "16:53",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Station",
+              "mode": "taxi",
+              "start_time": "18:36",
+              "end_time": "18:49",
+              "distance": 9.33,
+              "price": 37.35,
+              "cost": 37.35,
+              "cars": 1
             }
           ],
-          "TrainID": "G24"
+          "TrainID": "K1506"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 183.12798690795898,
-  "_eval_score": 98.2280701754386
+  "_eval_score": 99.44444444444444
 }

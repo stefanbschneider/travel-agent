@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:40",
-          "end_time": "11:35",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "type": "airplane",
+          "start_time": "03:07",
+          "end_time": "04:26",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 532.46,
+          "cost": 2129.84,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G66"
+          "FlightID": "FL574"
+        },
+        {
+          "type": "breakfast",
+          "position": "Apricot Garden Restaurant (Xisi North Street Branch)",
+          "start_time": "06:14",
+          "end_time": "07:14",
+          "price": 59.0,
+          "cost": 236.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Apricot Garden Restaurant (Xisi North Street Branch)",
+              "mode": "taxi",
+              "start_time": "04:26",
+              "end_time": "05:37",
+              "distance": 47.7,
+              "price": 209.37,
+              "cost": 209.37,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Lu Xun Museum (Beijing New Culture Movement Memorial Hall)",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Apricot Garden Restaurant (Xisi North Street Branch)",
+              "end": "Beijing Lu Xun Museum (Beijing New Culture Movement Memorial Hall)",
+              "mode": "taxi",
+              "start_time": "07:14",
+              "end_time": "07:15",
+              "distance": 0.71,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
+              "start": "Beijing Lu Xun Museum (Beijing New Culture Movement Memorial Hall)",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "11:35",
-              "end_time": "11:44",
-              "distance": 6.24,
-              "price": 26.54,
-              "cost": 26.54,
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 4.53,
+              "price": 20.56,
+              "cost": 20.56,
               "cars": 1
             }
           ]
@@ -609,62 +653,65 @@
             {
               "start": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
               "end": "Beijing Working People's Cultural Palace",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:00",
-              "end_time": "13:06",
-              "distance": 0.5470846821666202,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:00",
+              "distance": 0.55,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Halal Bai Ji Rice Cake (North Entrance of Niujie Store)",
           "start_time": "17:00",
-          "end_time": "21:11",
-          "start": "Beijing West Railway Station",
-          "end": "Wuhan Station",
-          "price": 684.27,
-          "cost": 2737.08,
+          "end_time": "18:00",
+          "price": 33.0,
+          "cost": 132.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Beijing Working People's Cultural Palace",
-              "end": "Goldfish Alley-Metro Station",
-              "mode": "walk",
+              "end": "Halal Bai Ji Rice Cake (North Entrance of Niujie Store)",
+              "mode": "taxi",
               "start_time": "14:36",
-              "end_time": "14:42",
-              "distance": 0.57,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "14:43",
+              "distance": 5.09,
+              "price": 22.53,
+              "cost": 22.53,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:32",
+          "end_time": "23:51",
+          "start": "Beijing Daxing International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 534.69,
+          "cost": 2138.76,
+          "tickets": 4,
+          "transports": [
             {
-              "start": "Goldfish Alley-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "14:42",
-              "end_time": "14:58",
-              "distance": 8.03,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Beijing West Railway Station",
-              "mode": "walk",
-              "start_time": "14:58",
-              "end_time": "14:58",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
+              "start": "Halal Bai Ji Rice Cake (North Entrance of Niujie Store)",
+              "end": "Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:04",
+              "distance": 42.86,
+              "price": 187.55,
+              "cost": 187.55,
+              "cars": 1
             }
           ],
-          "TrainID": "G83"
+          "FlightID": "FL147"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.9665298461914,
-  "_eval_score": 98.85416666666666
+  "_eval_score": 100.0
 }

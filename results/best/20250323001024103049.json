@@ -7,16 +7,58 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "18:57",
-          "end_time": "05:24",
-          "start": "Chengdu West Railway Station",
-          "end": "Hangzhou South Railway Station",
-          "price": 616.66,
-          "cost": 1233.32,
+          "type": "airplane",
+          "start_time": "00:24",
+          "end_time": "02:19",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 730.91,
+          "cost": 1461.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "K353"
+          "FlightID": "FL458"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 8.0,
+          "cost": 16.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Xiaoshan International Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:19",
+              "end_time": "02:20",
+              "distance": 0.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaoshan International Airport-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "02:20",
+              "end_time": "03:11",
+              "distance": 25.98,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "03:11",
+              "end_time": "03:14",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,12 +70,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou South Railway Station",
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
               "end": "Grand View of Wu Hill",
               "mode": "walk",
-              "start_time": "05:24",
-              "end_time": "08:12",
-              "distance": 14.077088321578502,
+              "start_time": "08:30",
+              "end_time": "08:45",
+              "distance": 1.279276648246567,
               "price": 0,
               "cost": 0
             }
@@ -136,11 +178,32 @@
           "transports": [
             {
               "start": "Grandma Sun's Scallion Pancake Rolls",
-              "end": "Larvae Holiday Inn (Hangzhou East Railway Station)",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "19:27",
-              "distance": 7.286299231094397,
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "East Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:23",
+              "distance": 6.72,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "East Railway Station-Metro Station",
+              "end": "Larvae Holiday Inn (Hangzhou East Railway Station)",
+              "mode": "walk",
+              "start_time": "18:23",
+              "end_time": "18:28",
+              "distance": 0.49,
               "price": 0,
               "cost": 0
             }
@@ -162,6 +225,27 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Hangzhou Grand Theatre",
+          "start_time": "09:27",
+          "end_time": "09:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Larvae Holiday Inn (Hangzhou East Railway Station)",
+              "end": "Hangzhou Grand Theatre",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "09:27",
+              "distance": 4.756544939277228,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "12:29",
           "end_time": "19:56",
@@ -172,12 +256,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Larvae Holiday Inn (Hangzhou East Railway Station)",
+              "start": "Hangzhou Grand Theatre",
               "end": "Hangzhou South Railway Station",
               "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "11:36",
-              "distance": 15.582117699361685,
+              "start_time": "09:57",
+              "end_time": "12:09",
+              "distance": 11.079588331263425,
               "price": 0,
               "cost": 0
             }
@@ -188,5 +272,5 @@
     }
   ],
   "elapsed_time(sec)": 0.4826028347015381,
-  "_eval_score": 90.99659863945578
+  "_eval_score": 94.1329365079365
 }

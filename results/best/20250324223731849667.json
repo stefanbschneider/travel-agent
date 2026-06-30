@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:03",
-          "end_time": "11:16",
-          "start": "Guangzhou South Railway Station",
-          "end": "Wuhan Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "airplane",
+          "start_time": "01:45",
+          "end_time": "02:48",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 388.13,
+          "cost": 388.13,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G835"
+          "FlightID": "FL309"
+        },
+        {
+          "type": "breakfast",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 6.0,
+          "cost": 6.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "taxi",
+              "start_time": "02:48",
+              "end_time": "03:27",
+              "distance": 26.52,
+              "price": 114.03,
+              "cost": 114.03,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Great Yu Mythological Garden",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Great Yu Mythological Garden",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:02",
+              "distance": 1.93,
+              "price": 11.47,
+              "cost": 11.47,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Wuhan Station",
+              "start": "Great Yu Mythological Garden",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "11:16",
-              "end_time": "11:23",
-              "distance": 4.84,
-              "price": 21.64,
-              "cost": 21.64,
+              "start_time": "10:00",
+              "end_time": "10:14",
+              "distance": 9.36,
+              "price": 37.45,
+              "cost": 37.45,
               "cars": 1
             }
           ]
@@ -393,34 +437,14 @@
           "transports": [
             {
               "start": "Wuhan Sightseeing Bus",
-              "end": "Jianghan Road-Metro Station",
-              "mode": "walk",
-              "start_time": "11:53",
-              "end_time": "12:07",
-              "distance": 1.18,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jianghan Road-Metro Station",
-              "end": "Sanyang Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:07",
-              "end_time": "12:11",
-              "distance": 2.29,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Sanyang Road-Metro Station",
               "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-              "mode": "walk",
-              "start_time": "12:11",
-              "end_time": "12:19",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "11:53",
+              "end_time": "11:54",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -435,84 +459,66 @@
           "transports": [
             {
               "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-              "end": "Sanyang Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:19",
-              "end_time": "13:27",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Sanyang Road-Metro Station",
-              "end": "Jianghan Road-Metro Station",
-              "mode": "metro",
-              "start_time": "13:27",
-              "end_time": "13:31",
-              "distance": 2.29,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Jianghan Road-Metro Station",
               "end": "Illusion Space Super Metaverse Theater",
-              "mode": "walk",
-              "start_time": "13:31",
-              "end_time": "13:41",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:19",
+              "end_time": "13:20",
+              "distance": 0.92,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 6.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Illusion Space Super Metaverse Theater",
+              "end": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:11",
+              "end_time": "15:12",
+              "distance": 0.98,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "17:00",
-          "end_time": "18:03",
+          "start_time": "21:09",
+          "end_time": "22:12",
           "start": "Wuhan Tianhe International Airport",
           "end": "Guangzhou Baiyun International Airport",
-          "price": 457.03,
-          "cost": 457.03,
+          "price": 453.61,
+          "cost": 453.61,
           "tickets": 1,
           "transports": [
             {
-              "start": "Illusion Space Super Metaverse Theater",
-              "end": "Jianghan Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:11",
-              "end_time": "15:21",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jianghan Road-Metro Station",
-              "end": "Tianhe Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:21",
-              "end_time": "16:05",
-              "distance": 22.39,
-              "price": 6,
-              "cost": 6,
-              "tickets": 1
-            },
-            {
-              "start": "Tianhe Airport-Metro Station",
+              "start": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
               "end": "Wuhan Tianhe International Airport",
-              "mode": "walk",
-              "start_time": "16:05",
-              "end_time": "16:11",
-              "distance": 0.55,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:33",
+              "distance": 22.15,
+              "price": 94.39,
+              "cost": 94.39,
+              "cars": 1
             }
           ],
-          "FlightID": "FL591"
+          "FlightID": "FL597"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 184.7180416584015,
-  "_eval_score": 97.91666666666667
+  "_eval_score": 99.44444444444444
 }

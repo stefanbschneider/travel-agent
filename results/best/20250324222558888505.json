@@ -8,15 +8,81 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
+          "start_time": "01:11",
+          "end_time": "03:36",
           "start": "Beijing Capital International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "04:14",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 11.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:03",
+              "distance": 2.19,
+              "price": 12.38,
+              "cost": 12.38,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +94,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Old Zhou's Shunde Double-Skin Milk",
               "end": "Shenzhen OCT Harbour",
               "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:04",
-              "distance": 21.86,
-              "price": 93.06,
-              "cost": 93.06,
+              "start_time": "12:00",
+              "end_time": "12:10",
+              "distance": 7.3,
+              "price": 30.26,
+              "cost": 30.26,
               "cars": 1
             }
           ]
@@ -393,34 +459,14 @@
           "transports": [
             {
               "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-              "end": "Convention and Exhibition Center-Metro Station",
-              "mode": "walk",
-              "start_time": "13:20",
-              "end_time": "13:22",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Convention and Exhibition Center-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "13:22",
-              "end_time": "13:37",
-              "distance": 7.64,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Baishilong-Metro Station",
               "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "13:37",
-              "end_time": "13:40",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:20",
+              "end_time": "13:31",
+              "distance": 7.89,
+              "price": 32.31,
+              "cost": 32.31,
+              "cars": 1
             }
           ]
         },
@@ -435,84 +481,66 @@
           "transports": [
             {
               "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
-              "mode": "walk",
-              "start_time": "15:10",
-              "end_time": "15:13",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Longjing-Metro Station",
-              "mode": "metro",
-              "start_time": "15:13",
-              "end_time": "15:29",
-              "distance": 8.11,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Longjing-Metro Station",
               "end": "Dashabe Park",
-              "mode": "walk",
-              "start_time": "15:29",
-              "end_time": "15:37",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:10",
+              "end_time": "15:23",
+              "distance": 9.03,
+              "price": 36.31,
+              "cost": 36.31,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:50",
+          "end_time": "18:50",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dashabe Park",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "17:07",
+              "end_time": "17:33",
+              "distance": 17.41,
+              "price": 73.03,
+              "cost": 73.03,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
+          "start_time": "23:24",
+          "end_time": "01:49",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "price": 1006.35,
+          "cost": 1006.35,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dashabe Park",
-              "end": "Longjing-Metro Station",
-              "mode": "walk",
-              "start_time": "17:07",
-              "end_time": "17:15",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Longjing-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "17:15",
-              "end_time": "17:51",
-              "distance": 18.13,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Airport East-Metro Station",
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "17:51",
-              "end_time": "17:56",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:50",
+              "end_time": "19:41",
+              "distance": 34.18,
+              "price": 148.51,
+              "cost": 148.51,
+              "cars": 1
             }
           ],
-          "FlightID": "FL179"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 188.34655261039734,
-  "_eval_score": 96.8373015873016
+  "_eval_score": 99.19047619047619
 }

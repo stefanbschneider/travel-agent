@@ -7,16 +7,104 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:31",
-          "end_time": "15:31",
-          "start": "Nanjing South Railway Station",
-          "end": "Shenzhen Station",
-          "price": 751.94,
-          "cost": 751.94,
+          "type": "airplane",
+          "start_time": "00:12",
+          "end_time": "01:39",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 562.24,
+          "cost": 562.24,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G2781"
+          "FlightID": "FL664"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "01:39",
+              "end_time": "02:17",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lotus Hill Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Lotus Hill Park",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:01",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lotus Hill Park",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.45,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Honey Lake Park",
+          "start_time": "12:12",
+          "end_time": "13:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Honey Lake Park",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 2.96,
+              "price": 15.07,
+              "cost": 15.07,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +116,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Station",
+              "start": "Honey Lake Park",
               "end": "Dameisha Seaside Park",
               "mode": "taxi",
-              "start_time": "15:31",
-              "end_time": "16:03",
-              "distance": 21.54,
-              "price": 91.65,
-              "cost": 91.65,
+              "start_time": "13:12",
+              "end_time": "13:56",
+              "distance": 29.78,
+              "price": 128.7,
+              "cost": 128.7,
               "cars": 1
             }
           ]
@@ -713,84 +801,66 @@
           "transports": [
             {
               "start": "Pen Rack Mountain Park",
-              "end": "Silver Lake-Metro Station",
-              "mode": "walk",
-              "start_time": "14:53",
-              "end_time": "14:57",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Silver Lake-Metro Station",
-              "end": "Huaqiang Road-Metro Station",
-              "mode": "metro",
-              "start_time": "14:57",
-              "end_time": "15:03",
-              "distance": 3.12,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Huaqiang Road-Metro Station",
               "end": "Shenzhen Central Park",
-              "mode": "walk",
-              "start_time": "15:03",
-              "end_time": "15:07",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:53",
+              "end_time": "14:58",
+              "distance": 3.35,
+              "price": 16.43,
+              "cost": 16.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Central Park",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:37",
+              "end_time": "16:45",
+              "distance": 5.73,
+              "price": 24.75,
+              "cost": 24.75,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:11",
-          "end_time": "19:38",
+          "start_time": "23:20",
+          "end_time": "00:47",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 557.67,
-          "cost": 557.67,
+          "price": 576.88,
+          "cost": 576.88,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Central Park",
-              "end": "Huaqiang Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:37",
-              "end_time": "16:41",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huaqiang Road-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "16:41",
-              "end_time": "17:39",
-              "distance": 29.46,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Airport East-Metro Station",
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "17:39",
-              "end_time": "17:44",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:51",
+              "distance": 34.18,
+              "price": 148.51,
+              "cost": 148.51,
+              "cars": 1
             }
           ],
-          "FlightID": "FL238"
+          "FlightID": "FL232"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 184.73234486579895,
-  "_eval_score": 97.84126984126985
+  "_eval_score": 99.43537414965985
 }
