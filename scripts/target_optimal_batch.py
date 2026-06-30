@@ -12,6 +12,7 @@ This script is resumable through append-only JSONL logs under cache/densify_logs
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import time
@@ -20,6 +21,34 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BEST_DIR = os.path.join(ROOT, "results", "best")
 LOG_DIR = os.path.join(ROOT, "cache", "densify_logs")
+
+
+def _historical_timed_out_uids(mode):
+    timed_out = set()
+    prefix = "target_optimal_{}_".format(mode)
+    if not os.path.isdir(LOG_DIR):
+        return timed_out
+    for name in os.listdir(LOG_DIR):
+        if not (name.startswith(prefix) and name.endswith(".jsonl")):
+            continue
+        path = os.path.join(LOG_DIR, name)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        rec = json.loads(line)
+                    except Exception:
+                        continue
+                    if rec.get("timed_out"):
+                        uid = str(rec.get("uid", "")).strip()
+                        if uid:
+                            timed_out.add(uid)
+        except Exception:
+            continue
+    return timed_out
 
 
 def _score(uid):
@@ -71,18 +100,37 @@ def _append_jsonl(path, payload):
         f.write(json.dumps(payload, ensure_ascii=False) + "\n")
 
 
+def _cleanup_stale_workers():
+    subprocess.run(
+        ["pkill", "-f", "run_tpc.py --splits tpc_phase1 --index"],
+        cwd=ROOT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+
+
 def _run_with_timeout(cmd, env, timeout_sec):
+    proc = subprocess.Popen(
+        cmd,
+        cwd=ROOT,
+        env=env,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        start_new_session=True,
+    )
     try:
-        rc = subprocess.run(
-            cmd,
-            cwd=ROOT,
-            env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT,
-            timeout=timeout_sec,
-        ).returncode
+        rc = proc.wait(timeout=timeout_sec)
         return rc, False
     except subprocess.TimeoutExpired:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except Exception:
+            try:
+                proc.kill()
+            except Exception:
+                pass
+        _cleanup_stale_workers()
         return 124, True
 
 
@@ -119,12 +167,16 @@ def main():
     run_id = time.strftime("%Y%m%d_%H%M%S")
     log_path = os.path.join(LOG_DIR, "target_optimal_{}_{}.jsonl".format(args.mode, run_id))
 
-    targets = _load_candidates(args.mode, args.top_k)
+    timed_out_uids = _historical_timed_out_uids(args.mode)
+    targets = [uid for uid in _load_candidates(args.mode, args.top_k + len(timed_out_uids)) if uid not in timed_out_uids]
+    targets = targets[: args.top_k]
     print("[target-opt] mode={} targets={}".format(args.mode, len(targets)))
     if targets:
         print("[target-opt] first_targets={}".format(targets[:10]))
     else:
         return 0
+    if timed_out_uids:
+        print("[target-opt] skipping {} historically timed-out uid(s)".format(len(timed_out_uids)))
 
     hits = 0
     improved = 0
@@ -132,6 +184,7 @@ def main():
     hard_timeouts = 0
 
     for uid in targets:
+        _cleanup_stale_workers()
         before = _score(uid)
         best_after = before
         became_100 = False
@@ -221,6 +274,10 @@ def main():
                     "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
                 },
             )
+
+            # Move on quickly once a UID proves timeout-prone in this run.
+            if did_timeout:
+                break
 
         if best_after > before + 1e-9:
             improved += 1
