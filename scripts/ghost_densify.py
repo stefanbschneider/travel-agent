@@ -311,7 +311,7 @@ def _try_insert(plan, day_idx, activity, uid, serial, agent, check):
     return trial, True
 
 
-def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False):
+def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False, meal_duration=MEAL_DURATION):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
     people = int(query.get("people_number", 1) or 1)
@@ -380,7 +380,7 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
             band_hi = _minutes(MEAL_BANDS[kind][1])
             day_acts_now = plan.get("itinerary", [])[day_idx].get("activities", []) or []
             if flex_meals:
-                windows = _free_windows(day_acts_now, band_lo, band_hi)
+                windows = _free_windows(day_acts_now, band_lo, band_hi, duration=meal_duration)
             else:
                 fixed = MEAL_SLOTS[kind]
                 windows = [(_minutes(fixed[0]), _minutes(fixed[1]))]
@@ -389,16 +389,14 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
                 start, end = _fmt(ws), _fmt(we)
                 if kind == "breakfast" and hotels:
                     hotel = hotels[min(day_idx, len(hotels) - 1)]
-                    if hotel not in used_restaurants:
-                        serial += 1
-                        activity = _make_hotel_breakfast(hotel, start, end)
-                        next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
-                        if ok:
-                            plan = next_plan
-                            used_restaurants.add(hotel)
-                            added += 1
-                            placed = True
-                            break
+                    serial += 1
+                    activity = _make_hotel_breakfast(hotel, start, end)
+                    next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
+                    if ok:
+                        plan = next_plan
+                        added += 1
+                        placed = True
+                        break
                 if placed:
                     break
                 for row in _candidate_rows(rest_df, used_restaurants, start, end, max_candidates, prefer_free=False):
@@ -468,7 +466,20 @@ def _process(args):
             continue
         considered += 1
         plan = _load_json(best_path)
-        dense, added = _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, args.max_candidates, _parse_attr_slots(args.attr_slots), args.attr_cap, flex_meals=args.flex_meals, upgrade_transport=args.upgrade_transport)
+        dense, added = _ghost_densify_one(
+            uid,
+            plan,
+            query,
+            agent,
+            attr_df,
+            rest_df,
+            args.max_candidates,
+            _parse_attr_slots(args.attr_slots),
+            args.attr_cap,
+            flex_meals=args.flex_meals,
+            upgrade_transport=args.upgrade_transport,
+            meal_duration=args.meal_duration,
+        )
         if dense is None:
             skipped += 1
             continue
@@ -522,6 +533,8 @@ def _run_parallel(args):
                 str(args.attr_cap),
                 "--attr-slots",
                 args.attr_slots,
+                "--meal-duration",
+                str(args.meal_duration),
             ]
             if not args.flex_meals:
                 cmd.append("--no-flex-meals")
@@ -553,11 +566,15 @@ def main():
     ap.add_argument("--attr-cap", type=int, default=int(os.environ.get("TPC_GHOST_ATTR_CAP", DEFAULT_ATTR_CAP)))
     ap.add_argument("--attr-slots", default=os.environ.get("TPC_GHOST_ATTR_SLOTS", DEFAULT_ATTR_SLOTS),
                     help="comma-separated HH:MM-HH:MM attraction slots")
+    ap.add_argument("--meal-duration", type=int, default=int(os.environ.get("TPC_GHOST_MEAL_DURATION", MEAL_DURATION)),
+                    help="minutes reserved for inserted meals")
     ap.add_argument("--no-flex-meals", dest="flex_meals", action="store_false", default=True,
                     help="use fixed meal slots instead of flexible gap scanning")
     ap.add_argument("--upgrade-transport", action="store_true", default=False,
                     help="also run the gated transport-mode upgrade (ATT lever)")
     args = ap.parse_args()
+    if args.meal_duration <= 0:
+        ap.error("--meal-duration must be positive")
     if args.workers > 1:
         return _run_parallel(args)
     return _process(args)
