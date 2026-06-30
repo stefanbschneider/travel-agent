@@ -36,6 +36,8 @@ MAX_CANDIDATES="${TPC_GHOST_MAX_CANDIDATES:-24}"
 ATTR_CAP="${TPC_GHOST_ATTR_CAP:-4}"
 ATTR_SLOTS="${TPC_GHOST_ATTR_SLOTS:-09:00-10:00,10:15-11:15,14:00-15:00,15:15-16:15,16:30-17:30,19:30-20:30}"
 MEAL_DURATION="${TPC_GHOST_MEAL_DURATION:-60}"
+ATTR_WINDOW_OPEN="${TPC_GHOST_ATTR_WINDOW_OPEN:-09:00}"
+ATTR_WINDOW_CLOSE="${TPC_GHOST_ATTR_WINDOW_CLOSE:-21:00}"
 cd "$PROJECT"
 mkdir -p "$PROJECT/cache/solve_logs"
 
@@ -53,8 +55,8 @@ fi
 flock -u 9
 
 start_epoch=$(date +%s)
-echo "[ghost-df] job=$SLURM_JOB_ID host=$(hostname) split=$SPLIT method=$METHOD workers=$WORKERS max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP meal_duration=$MEAL_DURATION attr_slots=$ATTR_SLOTS start=$(date -Is)"
+echo "[ghost-df] job=$SLURM_JOB_ID host=$(hostname) split=$SPLIT method=$METHOD workers=$WORKERS max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP meal_duration=$MEAL_DURATION attr_slots=$ATTR_SLOTS attr_window=$ATTR_WINDOW_OPEN-$ATTR_WINDOW_CLOSE start=$(date -Is)"
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/ghost_densify.py \
-    --split "$SPLIT" --method "$METHOD" --workers "$WORKERS" --max-candidates "$MAX_CANDIDATES" --attr-cap "$ATTR_CAP" --attr-slots "$ATTR_SLOTS" --meal-duration "$MEAL_DURATION"
+    --split "$SPLIT" --method "$METHOD" --workers "$WORKERS" --max-candidates "$MAX_CANDIDATES" --attr-cap "$ATTR_CAP" --attr-slots "$ATTR_SLOTS" --meal-duration "$MEAL_DURATION" --attr-window-open "$ATTR_WINDOW_OPEN" --attr-window-close "$ATTR_WINDOW_CLOSE"
 end_epoch=$(date +%s)
 echo "[ghost-df] done elapsed_sec=$((end_epoch - start_epoch)) end=$(date -Is)"
