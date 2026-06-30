@@ -8,20 +8,174 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "09:39",
-          "end_time": "21:53",
-          "start": "Shenzhen North Railway Station",
+          "start_time": "12:16",
+          "end_time": "12:53",
+          "start": "Shenzhen Station",
           "end": "Suzhou Station",
-          "price": 700.94,
-          "cost": 1401.88,
+          "price": 467.29,
+          "cost": 934.58,
           "tickets": 2,
           "transports": [],
-          "TrainID": "D2282"
+          "TrainID": "K34"
+        },
+        {
+          "type": "lunch",
+          "position": "Tile House Teahouse (Suzhou Renmin Road Branch)",
+          "start_time": "13:00",
+          "end_time": "13:30",
+          "price": 110.0,
+          "cost": 220.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Tile House Teahouse (Suzhou Renmin Road Branch)",
+              "mode": "taxi",
+              "start_time": "12:53",
+              "end_time": "12:55",
+              "distance": 1.46,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Kunqu Opera Museum",
+          "start_time": "13:45",
+          "end_time": "14:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Tile House Teahouse (Suzhou Renmin Road Branch)",
+              "end": "China Kunqu Opera Museum",
+              "mode": "taxi",
+              "start_time": "13:30",
+              "end_time": "13:35",
+              "distance": 3.85,
+              "price": 18.18,
+              "cost": 18.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+          "start_time": "14:50",
+          "end_time": "15:40",
+          "price": 95.0,
+          "cost": 190.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "China Kunqu Opera Museum",
+              "end": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+              "mode": "taxi",
+              "start_time": "14:35",
+              "end_time": "14:39",
+              "distance": 2.99,
+              "price": 15.16,
+              "cost": 15.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jingu Li Art Gallery",
+          "start_time": "15:55",
+          "end_time": "16:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+              "end": "Jingu Li Art Gallery",
+              "mode": "taxi",
+              "start_time": "15:40",
+              "end_time": "15:43",
+              "distance": 2.38,
+              "price": 13.01,
+              "cost": 13.01,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
+          "start_time": "17:10",
+          "end_time": "17:40",
+          "price": 255.0,
+          "cost": 510.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jingu Li Art Gallery",
+              "end": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
+              "mode": "taxi",
+              "start_time": "16:45",
+              "end_time": "16:46",
+              "distance": 0.91,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Family Restaurant (Pingjiang Road Branch)",
+          "start_time": "18:10",
+          "end_time": "18:40",
+          "price": 79.0,
+          "cost": 158.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
+              "end": "Old Family Restaurant (Pingjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "17:40",
+              "end_time": "17:40",
+              "distance": 0.54,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cloud-Crowned Peak",
+          "start_time": "18:55",
+          "end_time": "19:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Old Family Restaurant (Pingjiang Road Branch)",
+              "end": "Cloud-Crowned Peak",
+              "mode": "taxi",
+              "start_time": "18:40",
+              "end_time": "18:45",
+              "distance": 3.35,
+              "price": 16.41,
+              "cost": 16.41,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "accommodation",
           "position": "Lichengbieyuan (Suzhou Shantang Street Gardens Culture Shop)",
-          "start_time": "22:01",
+          "start_time": "20:00",
           "end_time": "24:00",
           "price": 412.0,
           "cost": 824.0,
@@ -30,35 +184,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Suzhou Station",
-              "end": "Suzhou Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "21:53",
-              "end_time": "21:54",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Suzhou Railway Station-Metro Station",
-              "end": "Shantang Street-Metro Station",
-              "mode": "metro",
-              "start_time": "21:54",
-              "end_time": "21:56",
-              "distance": 1.48,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Shantang Street-Metro Station",
+              "start": "Cloud-Crowned Peak",
               "end": "Lichengbieyuan (Suzhou Shantang Street Gardens Culture Shop)",
-              "mode": "walk",
-              "start_time": "21:56",
-              "end_time": "22:01",
-              "distance": 0.47,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:45",
+              "end_time": "19:46",
+              "distance": 0.84,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         }
@@ -70,8 +204,8 @@
         {
           "type": "breakfast",
           "position": "Lichengbieyuan (Suzhou Shantang Street Gardens Culture Shop)",
-          "start_time": "07:30",
-          "end_time": "08:30",
+          "start_time": "07:00",
+          "end_time": "07:30",
           "price": 0,
           "cost": 0,
           "tickets": 0,
@@ -79,156 +213,163 @@
         },
         {
           "type": "attraction",
-          "position": "Shantang Street",
-          "start_time": "08:37",
-          "end_time": "09:52",
+          "position": "Sword Pond at Tiger Hill",
+          "start_time": "08:00",
+          "end_time": "08:40",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Lichengbieyuan (Suzhou Shantang Street Gardens Culture Shop)",
-              "end": "Shantang Street",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:37",
-              "distance": 0.6645892429669971,
-              "price": 0,
-              "cost": 0
+              "end": "Sword Pond at Tiger Hill",
+              "mode": "taxi",
+              "start_time": "07:30",
+              "end_time": "07:34",
+              "distance": 3.21,
+              "price": 15.95,
+              "cost": 15.95,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Pingjiang Road Historic District",
-          "start_time": "10:21",
-          "end_time": "11:36",
+          "position": "Guanqian Street",
+          "start_time": "08:55",
+          "end_time": "09:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Shantang Street",
-              "end": "Shantang Street-Metro Station",
-              "mode": "walk",
-              "start_time": "09:52",
-              "end_time": "10:01",
-              "distance": 0.82,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shantang Street-Metro Station",
-              "end": "Xiangmen-Metro Station",
-              "mode": "metro",
-              "start_time": "10:01",
-              "end_time": "10:08",
-              "distance": 3.68,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Xiangmen-Metro Station",
-              "end": "Pingjiang Road Historic District",
-              "mode": "walk",
-              "start_time": "10:08",
-              "end_time": "10:21",
-              "distance": 1.14,
-              "price": 0,
-              "cost": 0
+              "start": "Sword Pond at Tiger Hill",
+              "end": "Guanqian Street",
+              "mode": "taxi",
+              "start_time": "08:40",
+              "end_time": "08:47",
+              "distance": 5.21,
+              "price": 22.92,
+              "cost": 22.92,
+              "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Moon Pavilion (Guanqian Branch)",
-          "start_time": "11:56",
-          "end_time": "12:56",
-          "price": 153.0,
-          "cost": 306.0,
+          "position": "Finland House Western Restaurant (Pingjiang Road Branch)",
+          "start_time": "11:20",
+          "end_time": "11:40",
+          "price": 83.0,
+          "cost": 166.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Pingjiang Road Historic District",
-              "end": "Xiangmen-Metro Station",
-              "mode": "walk",
-              "start_time": "11:36",
-              "end_time": "11:49",
-              "distance": 1.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xiangmen-Metro Station",
-              "end": "Chayuanchang-Metro Station",
-              "mode": "metro",
-              "start_time": "11:49",
-              "end_time": "11:52",
-              "distance": 1.68,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Chayuanchang-Metro Station",
-              "end": "Moon Pavilion (Guanqian Branch)",
-              "mode": "walk",
-              "start_time": "11:52",
-              "end_time": "11:56",
+              "start": "Guanqian Street",
+              "end": "Finland House Western Restaurant (Pingjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "09:35",
+              "end_time": "09:35",
               "distance": 0.41,
-              "price": 0,
-              "cost": 0
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Chicken Feet Corner Pingjiang Road Branch",
+          "start_time": "11:50",
+          "end_time": "12:10",
+          "price": 23.0,
+          "cost": 46.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Finland House Western Restaurant (Pingjiang Road Branch)",
+              "end": "Chicken Feet Corner Pingjiang Road Branch",
+              "mode": "taxi",
+              "start_time": "11:40",
+              "end_time": "11:41",
+              "distance": 1.03,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Ancient Canal Cruise (Shiquan River Pier)",
+          "start_time": "12:20",
+          "end_time": "12:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chicken Feet Corner Pingjiang Road Branch",
+              "end": "Suzhou Ancient Canal Cruise (Shiquan River Pier)",
+              "mode": "taxi",
+              "start_time": "12:10",
+              "end_time": "12:11",
+              "distance": 1.27,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ruiguang Pagoda",
+          "start_time": "12:55",
+          "end_time": "13:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Suzhou Ancient Canal Cruise (Shiquan River Pier)",
+              "end": "Ruiguang Pagoda",
+              "mode": "taxi",
+              "start_time": "12:50",
+              "end_time": "12:53",
+              "distance": 2.27,
+              "price": 12.65,
+              "cost": 12.65,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "13:18",
-          "end_time": "22:33",
+          "start_time": "13:58",
+          "end_time": "14:52",
           "start": "Suzhou Station",
           "end": "Shenzhen Station",
-          "price": 759.35,
-          "cost": 1518.7,
+          "price": 467.29,
+          "cost": 934.58,
           "tickets": 2,
+          "TrainID": "K33",
           "transports": [
             {
-              "start": "Moon Pavilion (Guanqian Branch)",
-              "end": "Chayuanchang-Metro Station",
-              "mode": "walk",
-              "start_time": "12:56",
-              "end_time": "13:00",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chayuanchang-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "13:00",
-              "end_time": "13:04",
-              "distance": 2.4,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Suzhou Railway Station-Metro Station",
+              "start": "Ruiguang Pagoda",
               "end": "Suzhou Station",
-              "mode": "walk",
-              "start_time": "13:04",
-              "end_time": "13:05",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:25",
+              "end_time": "13:31",
+              "distance": 4.04,
+              "price": 18.85,
+              "cost": 18.85,
+              "cars": 1
             }
-          ],
-          "TrainID": "G2788"
+          ]
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 180.40505695343018,
-  "_eval_score": 92.91666666666666
+  "elapsed_time(sec)": 0.0,
+  "_eval_score": 100.0
 }
