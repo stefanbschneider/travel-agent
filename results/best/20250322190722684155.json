@@ -107,40 +107,6 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "09:00",
-          "end_time": "09:00",
-          "start": "Old Summer Palace",
-          "end": "798 Art District",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-684155-D1-1-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "798 Art District",
-          "start_time": "09:00",
-          "end_time": "10:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "10:00",
-          "start": "798 Art District",
-          "end": "Beijing Hongqiqu Jinglong Hotel",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-684155-D1-1-OUT"
-        },
-        {
           "type": "accommodation",
           "position": "Beijing Hongqiqu Jinglong Hotel",
           "start_time": "16:44",
@@ -479,13 +445,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "18:04",
-          "end_time": "22:32",
-          "start": "Beijing South Railway Station",
-          "end": "Suzhou North Station",
-          "price": 668.44,
-          "cost": 2005.3200000000002,
+          "type": "dinner",
+          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+          "start_time": "16:30",
+          "end_time": "17:30",
+          "price": 14.0,
+          "cost": 42.0,
           "tickets": 3,
           "transports": [
             {
@@ -500,21 +465,64 @@
             },
             {
               "start": "Nanluoguxiang-Metro Station",
-              "end": "Beijing South Railway Station-Metro Station",
+              "end": "Niujie-Metro Station",
               "mode": "metro",
               "start_time": "14:57",
-              "end_time": "15:12",
-              "distance": 7.94,
+              "end_time": "15:09",
+              "distance": 6.02,
               "price": 3,
               "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "mode": "walk",
+              "start_time": "15:09",
+              "end_time": "15:12",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "18:04",
+          "end_time": "22:32",
+          "start": "Beijing South Railway Station",
+          "end": "Suzhou North Station",
+          "price": 668.44,
+          "cost": 2005.3200000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "end": "Niujie-Metro Station",
+              "mode": "walk",
+              "start_time": "17:30",
+              "end_time": "17:33",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "17:33",
+              "end_time": "17:39",
+              "distance": 3.03,
+              "price": 2,
+              "cost": 6,
               "tickets": 3
             },
             {
               "start": "Beijing South Railway Station-Metro Station",
               "end": "Beijing South Railway Station",
               "mode": "walk",
-              "start_time": "15:12",
-              "end_time": "15:12",
+              "start_time": "17:39",
+              "end_time": "17:39",
               "distance": 0.02,
               "price": 0,
               "cost": 0
@@ -526,5 +534,5 @@
     }
   ],
   "elapsed_time(sec)": 184.41447520256042,
-  "_eval_score": 97.77777777777777
+  "_eval_score": 97.91666666666667
 }
