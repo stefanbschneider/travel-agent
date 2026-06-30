@@ -37,6 +37,7 @@ ATTR_SLOTS="${TPC_GHOST_ATTR_SLOTS:-09:00-10:00,10:15-11:15,14:00-15:00,15:15-16
 MEAL_DURATION="${TPC_GHOST_MEAL_DURATION:-60}"
 UPGRADE_TRANSPORT="${TPC_GHOST_UPGRADE_TRANSPORT:-0}"
 FLEX_MEALS="${TPC_GHOST_FLEX_MEALS:-1}"
+FORCE_MEALS="${TPC_GHOST_FORCE_MEALS:-0}"
 TASKS="${SLURM_ARRAY_TASK_COUNT:-64}"
 TASK_ID="${SLURM_ARRAY_TASK_ID:?missing task id}"
 SHARD_SPLIT="_ghost_array_${SLURM_ARRAY_JOB_ID}_${TASK_ID}_${BASE_SPLIT}"
@@ -64,11 +65,12 @@ flock -u 9
 awk -v n="$TASKS" -v i="$TASK_ID" 'NF && ((NR-1) % n == i) {print}' "chinatravel/evaluation/default_splits/${BASE_SPLIT}.txt" > "$SHARD_FILE"
 COUNT=$(wc -l < "$SHARD_FILE")
 start_epoch=$(date +%s)
-echo "[ghost-array] job=$SLURM_JOB_ID array=$SLURM_ARRAY_JOB_ID task=$TASK_ID host=$(hostname) start=$(date -Is) split=$BASE_SPLIT shard=$SHARD_SPLIT count=$COUNT method=$METHOD max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP meal_duration=$MEAL_DURATION attr_slots=$ATTR_SLOTS flex_meals=$FLEX_MEALS upgrade_transport=$UPGRADE_TRANSPORT"
+echo "[ghost-array] job=$SLURM_JOB_ID array=$SLURM_ARRAY_JOB_ID task=$TASK_ID host=$(hostname) start=$(date -Is) split=$BASE_SPLIT shard=$SHARD_SPLIT count=$COUNT method=$METHOD max_candidates=$MAX_CANDIDATES attr_cap=$ATTR_CAP meal_duration=$MEAL_DURATION attr_slots=$ATTR_SLOTS flex_meals=$FLEX_MEALS force_meals=$FORCE_MEALS upgrade_transport=$UPGRADE_TRANSPORT"
 
 EXTRA_FLAGS=""
 if [[ "$FLEX_MEALS" == "0" ]]; then EXTRA_FLAGS="$EXTRA_FLAGS --no-flex-meals"; fi
 if [[ "$UPGRADE_TRANSPORT" == "1" ]]; then EXTRA_FLAGS="$EXTRA_FLAGS --upgrade-transport"; fi
+if [[ "$FORCE_MEALS" == "1" ]]; then EXTRA_FLAGS="$EXTRA_FLAGS --force-meals"; fi
 
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/ghost_densify.py \
     --split "$SHARD_SPLIT" --method "$METHOD" --workers 1 --max-candidates "$MAX_CANDIDATES" \

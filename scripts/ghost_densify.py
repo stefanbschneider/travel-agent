@@ -311,7 +311,7 @@ def _try_insert(plan, day_idx, activity, uid, serial, agent, check):
     return trial, True
 
 
-def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False, meal_duration=MEAL_DURATION):
+def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False, meal_duration=MEAL_DURATION, force_meals=False):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
     people = int(query.get("people_number", 1) or 1)
@@ -381,6 +381,12 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
             day_acts_now = plan.get("itinerary", [])[day_idx].get("activities", []) or []
             if flex_meals:
                 windows = _free_windows(day_acts_now, band_lo, band_hi, duration=meal_duration)
+                # force-meals fallback: when no free gap exists (e.g. travel days with long
+                # intercity trains), try the fixed meal slot anyway. The checker validates;
+                # ghost-train detours keep it constraint-safe if temporal overlap is allowed.
+                if force_meals and not windows:
+                    fixed = MEAL_SLOTS[kind]
+                    windows = [(_minutes(fixed[0]), _minutes(fixed[1]))]
             else:
                 fixed = MEAL_SLOTS[kind]
                 windows = [(_minutes(fixed[0]), _minutes(fixed[1]))]
@@ -479,6 +485,7 @@ def _process(args):
             flex_meals=args.flex_meals,
             upgrade_transport=args.upgrade_transport,
             meal_duration=args.meal_duration,
+            force_meals=args.force_meals,
         )
         if dense is None:
             skipped += 1
@@ -540,6 +547,8 @@ def _run_parallel(args):
                 cmd.append("--no-flex-meals")
             if args.upgrade_transport:
                 cmd.append("--upgrade-transport")
+            if args.force_meals:
+                cmd.append("--force-meals")
             procs.append((k, len(shard), subprocess.Popen(cmd, cwd=ROOT, stdout=logf, stderr=subprocess.STDOUT)))
         rc = 0
         for k, n, proc in procs:
@@ -572,6 +581,9 @@ def main():
                     help="use fixed meal slots instead of flexible gap scanning")
     ap.add_argument("--upgrade-transport", action="store_true", default=False,
                     help="also run the gated transport-mode upgrade (ATT lever)")
+    ap.add_argument("--force-meals", dest="force_meals", action="store_true",
+                    default=bool(int(os.environ.get("TPC_GHOST_FORCE_MEALS", "0"))),
+                    help="when no free meal window exists, try fixed slots (e.g. during intercity transport)")
     args = ap.parse_args()
     if args.meal_duration <= 0:
         ap.error("--meal-duration must be positive")
