@@ -1,6 +1,6 @@
 ---
 name: solve-queries-manually
-description: "Use when repeatedly selecting the first N suboptimal queries and solving each query to exact optimal score 100.0 with manual/API-driven itinerary edits, strict constraint validation, default sequential solving, optional user-requested subagent parallelization, automatic repeat across batches, and checkpoint updates to results/best, results/optimal, and the suboptimal split. Triggers: suboptimal batch solving, manual optimization loop, eval_tpc per-UID repair, tail query fixing, optimize next N queries."
+description: "Use when selecting the next N suboptimal queries and solving each query to exact optimal score 100.0 with manual/API-driven itinerary edits, strict constraint validation, default sequential solving, optional user-requested subagent parallelization, optional repeat across N-query windows, and checkpoint updates to results/best, results/optimal, and the suboptimal split. Triggers: suboptimal N-query runs, manual optimization loop, eval_tpc per-UID repair, tail query fixing, optimize next N queries."
 ---
 
 # Solve Queries Manually
@@ -8,7 +8,7 @@ description: "Use when repeatedly selecting the first N suboptimal queries and s
 ## Outcome
 
 Run a repeatable workflow that:
-- Selects a configurable batch from the suboptimal split (default batch size: 10)
+- Selects the next N unresolved queries from the suboptimal split and runs them sequentially (default N: 10)
 - Solves each selected query individually toward overall score 100
 - Uses API-driven edits and manual itinerary changes as needed
 - Validates each UID after changes with official evaluation
@@ -24,10 +24,10 @@ Run a repeatable workflow that:
 
 - Default split source: `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` (first N policy)
 - Default scoring split: `tpc_phase1`
-- Default batch size: `10`
+- Default run length (`N`): `10`
 - Default language: `en`
-- Default behavior: keep iterating automatically across batches
-- No hard cap on repeat runs; continue until explicitly stopped or no meaningful progress remains
+- Default behavior: run exactly N queries in order, once
+- Optional repeat mode: continue with the next N after completion when explicitly requested
 - Default execution mode: sequential query-by-query solving
 - Parallelization: disabled by default; only enable when the user explicitly requests `parallelize=true`
 - Default stuck handling: enabled with temporary skip + mandatory revisit
@@ -35,8 +35,9 @@ Run a repeatable workflow that:
 
 ## Inputs
 
-- `batch_size` (int, optional, default `10`)
-- `repeat` (bool/int, optional, default automatic repeat)
+- `n` (int, optional, default `10`) - number of consecutive queries to process in this run
+- `batch_size` (int, optional, alias of `n`)
+- `repeat` (bool/int, optional, default `false`; when true, continue with subsequent N-sized windows)
 - `split_name` (optional, default `tpc_phase1`)
 - `index_source` (optional, default suboptimal split file)
 - `parallelize` (bool, optional, default `false`; only used when user explicitly requests subagent parallelization across independent UIDs)
@@ -50,11 +51,13 @@ Run a repeatable workflow that:
 1. Select Batch
 - Read the suboptimal split file.
 - Load stuck tracker state (or initialize if missing).
-- Select batch in this order unless user requested another policy:
+- Select the next N UIDs in order (first-N policy) unless user requested another policy.
+- If stuck handling is active, selection priority is:
   1) force-insert up to `forced_revisit_per_batch` eligible cooled/stuck UIDs,
   2) fill remaining slots from first-N unresolved UIDs that are not in cooldown.
 - If all top candidates are in cooldown, select cooled/stuck UIDs anyway (never stall the loop).
-- If file is empty or too short, report and stop.
+- If fewer than N remain, process all remaining UIDs and stop.
+- If file is empty, report and stop.
 
 2. Baseline Snapshot
 - For each UID in batch, run per-UID evaluation using existing tpc eval: `eval_tpc.py --splits tpc_phase1 --index <uid> --method best --lang en`.
@@ -107,13 +110,13 @@ Run a repeatable workflow that:
 
 8. Report
 - Return a concise summary including:
-  - Batch UIDs processed
+  - UIDs processed in this N-query run
   - Solved-to-100 count and list
   - Remaining unresolved list with latest scores
   - Hard-tail tracker delta (newly cooled UIDs, forced revisits, recovered-from-stuck UIDs)
   - Overall score snapshot for the batch on `best`
   - Running count of optimally solved queries based on verified score-100 files in `results/optimal`
-  - Whether workflow continues automatically to next batch
+  - Whether workflow continues automatically to the next N-query window
 
 9. End-of-Run Global Evaluation (Required)
 - At the end of the workflow (including auto-repeat), always run tpc eval on `best` results using the configured split (default `tpc_phase1`).
@@ -127,11 +130,12 @@ Run a repeatable workflow that:
 - Include these values in the final run summary, even if no new queries were solved in the last batch.
 
 10. Repeat Loop
-- After reporting one batch, automatically select the next first-N batch from the updated suboptimal split and continue.
-- Continue until one of the following:
+- If `repeat=true`, after reporting one run, automatically select the next first-N window from the updated suboptimal split and continue.
+- If `repeat=false` (default), stop after one N-query run.
+- In repeat mode, continue until one of the following:
   - User explicitly asks to stop
   - Suboptimal split has no remaining UIDs
-  - Multiple consecutive batches show no meaningful progress
+  - Multiple consecutive windows show no meaningful progress
 - Never permanently skip a UID: any temporarily cooled UID must be revisited by forced insertion until solved.
 
 ## Operational Guardrails
@@ -152,18 +156,18 @@ Run a repeatable workflow that:
 
 ## Completion Criteria
 
-A batch run is complete when all selected UIDs have:
+An N-query run is complete when all selected UIDs have:
 - A final validated `best` evaluation result
 - Either solved checkpointed to `optimal` + pruned from suboptimal split, or unresolved with explicit reason
 - Stuck tracker updated and persisted for all unresolved UIDs
-- A final batch summary with solved count and score deltas
+- A final run summary with solved count and score deltas
 
 ## Example Prompts
 
-- "Run solve-queries-manually for the next batch from suboptimal with defaults."
-- "Run solve-queries-manually sequentially for the next batch from suboptimal (default behavior)."
+- "Run solve-queries-manually for the next 10 queries from suboptimal."
+- "Run solve-queries-manually sequentially for the next N queries (default N=10)."
 - "Run solve-queries-manually with batch_size=20 and parallelize=true."
-- "Repeat solve-queries-manually until no more 100s are found or 3 batches are done."
+- "Repeat solve-queries-manually with n=10 until no more 100s are found or 3 windows are done."
 - "Run solve-queries-manually only for ATT-deficit UIDs in the next batch."
 - "Run solve-queries-manually continuously in sequential mode; stop only when I say stop."
 - "Run solve-queries-manually with stuck_threshold=2, cooldown_batches=3, and forced_revisit_per_batch=2."
