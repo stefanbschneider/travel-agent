@@ -1035,28 +1035,41 @@ class TPCAgent(BaseAgent):
                 if meal_type in meal_types:
                     continue
                 inserted = False
-                for restaurant in restaurants:
-                    r_name = self._norm_text(restaurant.get("name", ""))
-                    if not r_name or r_name in used_restaurants:
-                        continue
-                    if self._insert_activity_before_first(dense, day_idx, restaurant, meal_type, window, city, people, check):
-                        used_restaurants.add(r_name)
-                        meal_types.add(meal_type)
-                        inserted = True
+                # Prefer unseen restaurants first, but allow reuse as a fallback so
+                # long itineraries can still fill required daily meal slots.
+                candidate_lists = [
+                    [
+                        r for r in restaurants
+                        if self._norm_text(r.get("name", ""))
+                        and self._norm_text(r.get("name", "")) not in used_restaurants
+                    ],
+                    [r for r in restaurants if self._norm_text(r.get("name", ""))],
+                ]
+                for candidates in candidate_lists:
+                    if inserted:
                         break
-                    for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
-                        if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
+                    for restaurant in candidates:
+                        r_name = self._norm_text(restaurant.get("name", ""))
+                        if not r_name:
+                            continue
+                        if self._insert_activity_before_first(dense, day_idx, restaurant, meal_type, window, city, people, check):
                             used_restaurants.add(r_name)
                             meal_types.add(meal_type)
                             inserted = True
                             break
-                    if inserted:
-                        break
-                    if self._insert_activity_after_last(dense, day_idx, restaurant, meal_type, window, city, people, check):
-                        used_restaurants.add(r_name)
-                        meal_types.add(meal_type)
-                        inserted = True
-                        break
+                        for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
+                            if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
+                                used_restaurants.add(r_name)
+                                meal_types.add(meal_type)
+                                inserted = True
+                                break
+                        if inserted:
+                            break
+                        if self._insert_activity_after_last(dense, day_idx, restaurant, meal_type, window, city, people, check):
+                            used_restaurants.add(r_name)
+                            meal_types.add(meal_type)
+                            inserted = True
+                            break
 
             while sum(1 for a in activities if a.get("type") == "attraction") < 4:
                 gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
@@ -2750,9 +2763,9 @@ class TPCAgent(BaseAgent):
             return_pref = intercity_mode.get("return", None)
         elif isinstance(intercity_mode, str):
             outbound_pref = return_pref = intercity_mode
-        if os.environ.get("TPC_DENSIFY_LATE_DINNER", "0") == "1":
+        if os.environ.get("TPC_DENSIFY_LATE_DINNER", "1") == "1":
             self._swap_return_add_dinner(plan, start_city, target_city, people, return_pref, restaurants, check)
-        if os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "0") == "1":
+        if os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "1") == "1":
             self._swap_outbound_add_breakfast(plan, start_city, target_city, people, outbound_pref, restaurants, check)
 
     def _swap_return_add_dinner(self, plan, start_city, target_city, people, return_pref, restaurants, check):
@@ -2772,8 +2785,8 @@ class TPCAgent(BaseAgent):
         if cur_dep >= time_to_minutes("20:30"):
             return
         later = self._get_intercity(
-            self.env, target_city, start_city, "00:00", return_pref,
-            self._budget_limits, {}, pending_intercity=None, people=people, window="late")
+            self.env, target_city, start_city, "20:30", return_pref,
+            self._budget_limits, {}, pending_intercity=None, people=people)
         if later is None:
             return
         try:
@@ -2815,7 +2828,7 @@ class TPCAgent(BaseAgent):
             return
         earlier = self._get_intercity(
             self.env, start_city, target_city, "00:00", outbound_pref,
-            self._budget_limits, {}, pending_intercity=None, people=people, window="early_arrival")
+            self._budget_limits, {}, pending_intercity=None, people=people)
         if earlier is None:
             return
         try:
@@ -2921,14 +2934,17 @@ class TPCAgent(BaseAgent):
                 hotel = self._find_hotel_for_day(dense, day_idx)
                 if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
                     meal_types.add("breakfast")
-                elif os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "0") == "1":
+                else:
                     r_name = self._insert_restaurant_breakfast(
                         dense, day_idx, restaurants, city, people, check, used_restaurants)
                     if r_name:
                         used_restaurants.add(r_name)
                         meal_types.add("breakfast")
 
-            for meal_type, window in (("lunch", (11 * 60, 14 * 60)), ("dinner", (17 * 60, 20 * 60))):
+            wide_meal_windows = os.environ.get("TPC_DENSIFY_WIDE_MEAL_WINDOWS", "1") != "0"
+            lunch_window = (10 * 60 + 30, 14 * 60 + 30) if wide_meal_windows else (11 * 60, 14 * 60)
+            dinner_window = (16 * 60 + 30, 20 * 60 + 30) if wide_meal_windows else (17 * 60, 20 * 60)
+            for meal_type, window in (("lunch", lunch_window), ("dinner", dinner_window)):
                 if meal_type in meal_types:
                     continue
                 inserted = False
@@ -3079,9 +3095,9 @@ class TPCAgent(BaseAgent):
                 if not from_pos or not to_pos or not start_time or from_pos == to_pos:
                     continue
                 cands = []
-                for mode in ("taxi", "metro"):
+                for mode in ("taxi", "metro", "walk"):
                     cand, dur = self._rebuild_hop(city, from_pos, to_pos, start_time, people, mode)
-                    if cand is None or dur >= old_min:
+                    if cand is None or dur is None or dur >= old_min:
                         continue
                     try:
                         if cur_start and time_to_minutes(str(cand[-1]["end_time"])) > time_to_minutes(cur_start):
@@ -3126,6 +3142,10 @@ class TPCAgent(BaseAgent):
                 except Exception:
                     pass
                 plan["itinerary"][d]["activities"][a]["transports"] = orig
+        # Final constrained refresh: ask the normal routing selector for each hop and keep
+        # only acceptance-preserving replacements. This can recover extra ATT wins when the
+        # best legal mode is context-dependent (budgets, exclusions, conditional transport).
+        self._tighten_transport_segments(plan, city, people, check)
         return plan
 
     def _room_type_to_numbed(self, room_type):

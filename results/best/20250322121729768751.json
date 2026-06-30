@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "06:45",
-          "end_time": "08:16",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Shanghai Hongqiao International Airport",
-          "price": 636.61,
-          "cost": 636.61,
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL165"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jing'an Park",
+              "mode": "taxi",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
+              "start": "Jing'an Park",
               "end": "Shanghai Club (Hong Kong Metropolis Branch)",
               "mode": "taxi",
-              "start_time": "08:16",
-              "end_time": "08:37",
-              "distance": 14.49,
-              "price": 59.9,
-              "cost": 59.9,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.57,
+              "price": 17.19,
+              "cost": 17.19,
               "cars": 1
             }
           ]
@@ -168,32 +212,120 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "Maden Warehouse Historic Site",
+          "start_time": "12:25",
+          "end_time": "13:25",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Pudong International Airport",
+              "end": "Maden Warehouse Historic Site",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:51",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "end_time": "12:12",
+              "distance": 8.52,
+              "price": 34.51,
+              "cost": 34.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Shipyard Riverside Green Space",
+          "start_time": "13:26",
+          "end_time": "14:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Maden Warehouse Historic Site",
+              "end": "Shanghai Shipyard Riverside Green Space",
+              "mode": "taxi",
+              "start_time": "13:25",
+              "end_time": "13:26",
+              "distance": 1.01,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "North Bund Riverside Green Space",
+          "start_time": "14:32",
+          "end_time": "15:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Shipyard Riverside Green Space",
+              "end": "North Bund Riverside Green Space",
+              "mode": "taxi",
+              "start_time": "14:26",
+              "end_time": "14:27",
+              "distance": 0.69,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "North Bund Riverside Green Space",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:32",
+              "end_time": "15:39",
+              "distance": 5.03,
+              "price": 22.3,
+              "cost": 22.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:30",
+          "end_time": "22:01",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 645.96,
+          "cost": 645.96,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Hongqiao International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:32",
+              "distance": 21.76,
+              "price": 92.63,
+              "cost": 92.63,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL015"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.03342795372009277,
-  "_eval_score": 93.80357142857143
+  "_eval_score": 98.54166666666666
 }
