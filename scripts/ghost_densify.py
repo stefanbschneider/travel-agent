@@ -44,6 +44,12 @@ MEAL_SLOTS = {
     "lunch": ("12:00", "13:00"),
     "dinner": ("18:00", "19:00"),
 }
+MEAL_BANDS = {
+    "breakfast": ("06:00", "10:00"),
+    "lunch": ("11:00", "14:00"),
+    "dinner": ("16:30", "21:00"),
+}
+MEAL_DURATION = 60
 DEFAULT_ATTR_CAP = 4
 DEFAULT_ATTR_SLOTS = ",".join("{}-{}".format(start, end) for start, end in ATTR_SLOTS)
 
@@ -151,6 +157,41 @@ def _counts_for_day(day):
 def _minutes(value):
     hour, minute = str(value).split(":")[:2]
     return int(hour) * 60 + int(minute)
+
+
+def _fmt(total_min):
+    total_min = int(total_min) % (24 * 60)
+    return "{:02d}:{:02d}".format(total_min // 60, total_min % 60)
+
+
+def _free_windows(day_activities, band_lo, band_hi, duration=MEAL_DURATION):
+    """Candidate (start_min, end_min) windows of length `duration` that fit inside a free
+    gap overlapping [band_lo, band_hi]. Earliest start first."""
+    spans = []
+    for activity in day_activities:
+        try:
+            s = _minutes(activity.get("start_time"))
+            e = _minutes(activity.get("end_time"))
+            if e > s:
+                spans.append((s, e))
+        except Exception:
+            continue
+    spans.sort()
+    gaps = []
+    cur = 0
+    for s, e in spans:
+        if s > cur:
+            gaps.append((cur, s))
+        cur = max(cur, e)
+    if cur < 24 * 60:
+        gaps.append((cur, 24 * 60))
+    windows = []
+    for gs, ge in gaps:
+        lo = max(gs, band_lo)
+        hi = min(ge, band_hi)
+        if hi - lo >= duration:
+            windows.append((lo, lo + duration))
+    return windows
 
 
 def _open_allows(row, start, end):
@@ -270,7 +311,7 @@ def _try_insert(plan, day_idx, activity, uid, serial, agent, check):
     return trial, True
 
 
-def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap):
+def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates, attr_slots, attr_cap, flex_meals=True, upgrade_transport=False):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
     constraints = agent._collect_constraints(query)
@@ -290,48 +331,95 @@ def _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, max_candidates
     for day_idx in range(len(itinerary)):
         counts = _counts_for_day(itinerary[day_idx])
 
-        for slot in attr_slots:
-            if counts.get("attraction", 0) >= attr_cap:
-                break
-            start, end = slot
-            for row in _candidate_rows(attr_df, used_attrs, start, end, max_candidates, prefer_free=True):
-                serial += 1
-                activity = _make_attraction(row, start, end)
-                next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
-                if ok:
-                    plan = next_plan
-                    used_attrs.add(_norm(row.get("name")))
-                    counts["attraction"] = counts.get("attraction", 0) + 1
-                    added += 1
+        if flex_meals:
+            while counts.get("attraction", 0) < attr_cap:
+                day_acts_now = plan.get("itinerary", [])[day_idx].get("activities", []) or []
+                windows = _free_windows(day_acts_now, _minutes("09:00"), _minutes("21:00"))
+                if not windows:
                     break
+                inserted_round = False
+                for (ws, we) in windows:
+                    start, end = _fmt(ws), _fmt(we)
+                    for row in _candidate_rows(attr_df, used_attrs, start, end, max_candidates, prefer_free=True):
+                        serial += 1
+                        activity = _make_attraction(row, start, end)
+                        next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
+                        if ok:
+                            plan = next_plan
+                            used_attrs.add(_norm(row.get("name")))
+                            counts["attraction"] = counts.get("attraction", 0) + 1
+                            added += 1
+                            inserted_round = True
+                            break
+                    if inserted_round:
+                        break
+                if not inserted_round:
+                    break
+        else:
+            for slot in attr_slots:
+                if counts.get("attraction", 0) >= attr_cap:
+                    break
+                start, end = slot
+                for row in _candidate_rows(attr_df, used_attrs, start, end, max_candidates, prefer_free=True):
+                    serial += 1
+                    activity = _make_attraction(row, start, end)
+                    next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
+                    if ok:
+                        plan = next_plan
+                        used_attrs.add(_norm(row.get("name")))
+                        counts["attraction"] = counts.get("attraction", 0) + 1
+                        added += 1
+                        break
 
-        if counts.get("breakfast", 0) == 0 and hotels:
-            start, end = MEAL_SLOTS["breakfast"]
-            hotel = hotels[min(day_idx, len(hotels) - 1)]
-            if hotel not in used_restaurants:
-                serial += 1
-                activity = _make_hotel_breakfast(hotel, start, end)
-                next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
-                if ok:
-                    plan = next_plan
-                    used_restaurants.add(hotel)
-                    added += 1
-
-        for kind in ("lunch", "dinner"):
-            counts = _counts_for_day(plan.get("itinerary", [])[day_idx])
-            if counts.get(kind, 0) > 0:
+        bcounts = _counts_for_day(plan.get("itinerary", [])[day_idx])
+        for kind in ("breakfast", "lunch", "dinner"):
+            if bcounts.get(kind, 0) > 0:
                 continue
-            start, end = MEAL_SLOTS[kind]
-            for row in _candidate_rows(rest_df, used_restaurants, start, end, max_candidates, prefer_free=False):
-                serial += 1
-                activity = _make_meal(kind, row, start, end)
-                next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
-                if ok:
-                    plan = next_plan
-                    used_restaurants.add(_norm(row.get("name")))
-                    added += 1
+            band_lo = _minutes(MEAL_BANDS[kind][0])
+            band_hi = _minutes(MEAL_BANDS[kind][1])
+            day_acts_now = plan.get("itinerary", [])[day_idx].get("activities", []) or []
+            if flex_meals:
+                windows = _free_windows(day_acts_now, band_lo, band_hi)
+            else:
+                fixed = MEAL_SLOTS[kind]
+                windows = [(_minutes(fixed[0]), _minutes(fixed[1]))]
+            placed = False
+            for (ws, we) in windows:
+                start, end = _fmt(ws), _fmt(we)
+                if kind == "breakfast" and hotels:
+                    hotel = hotels[min(day_idx, len(hotels) - 1)]
+                    if hotel not in used_restaurants:
+                        serial += 1
+                        activity = _make_hotel_breakfast(hotel, start, end)
+                        next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
+                        if ok:
+                            plan = next_plan
+                            used_restaurants.add(hotel)
+                            added += 1
+                            placed = True
+                            break
+                if placed:
+                    break
+                for row in _candidate_rows(rest_df, used_restaurants, start, end, max_candidates, prefer_free=False):
+                    serial += 1
+                    activity = _make_meal(kind, row, start, end)
+                    next_plan, ok = _try_insert(plan, day_idx, activity, uid, serial, agent, check)
+                    if ok:
+                        plan = next_plan
+                        used_restaurants.add(_norm(row.get("name")))
+                        added += 1
+                        placed = True
+                        break
+                if placed:
                     break
 
+    if upgrade_transport:
+        try:
+            upgraded = agent._upgrade_transport_modes(plan, query, constraints, check)
+            if upgraded is not None:
+                plan = upgraded
+        except Exception:
+            pass
     return plan, added
 
 
@@ -379,12 +467,12 @@ def _process(args):
             continue
         considered += 1
         plan = _load_json(best_path)
-        dense, added = _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, args.max_candidates, _parse_attr_slots(args.attr_slots), args.attr_cap)
+        dense, added = _ghost_densify_one(uid, plan, query, agent, attr_df, rest_df, args.max_candidates, _parse_attr_slots(args.attr_slots), args.attr_cap, flex_meals=args.flex_meals, upgrade_transport=args.upgrade_transport)
         if dense is None:
             skipped += 1
             continue
         accepted += 1
-        if added > 0 and _pref_score(agent, dense) > _pref_score(agent, plan) + 1e-9:
+        if _pref_score(agent, dense) > _pref_score(agent, plan) + 1e-9:
             dense["_eval_score"] = None
             _save_json(os.path.join(result_dir, uid + ".json"), dense)
             improved += 1
@@ -432,8 +520,12 @@ def _run_parallel(args):
                 "--attr-cap",
                 str(args.attr_cap),
                 "--attr-slots",
-                str(args.attr_slots),
+                args.attr_slots,
             ]
+            if not args.flex_meals:
+                cmd.append("--no-flex-meals")
+            if args.upgrade_transport:
+                cmd.append("--upgrade-transport")
             procs.append((k, len(shard), subprocess.Popen(cmd, cwd=ROOT, stdout=logf, stderr=subprocess.STDOUT)))
         rc = 0
         for k, n, proc in procs:
@@ -460,6 +552,10 @@ def main():
     ap.add_argument("--attr-cap", type=int, default=int(os.environ.get("TPC_GHOST_ATTR_CAP", DEFAULT_ATTR_CAP)))
     ap.add_argument("--attr-slots", default=os.environ.get("TPC_GHOST_ATTR_SLOTS", DEFAULT_ATTR_SLOTS),
                     help="comma-separated HH:MM-HH:MM attraction slots")
+    ap.add_argument("--no-flex-meals", dest="flex_meals", action="store_false", default=True,
+                    help="use fixed meal slots instead of flexible gap scanning")
+    ap.add_argument("--upgrade-transport", action="store_true", default=False,
+                    help="also run the gated transport-mode upgrade (ATT lever)")
     args = ap.parse_args()
     if args.workers > 1:
         return _run_parallel(args)
