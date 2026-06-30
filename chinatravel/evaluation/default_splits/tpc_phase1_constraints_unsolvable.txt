@@ -1,0 +1,21 @@
+# Confirmed-unsolvable TPC phase-1 queries. Read by scripts/solve.py to skip wasted retries,
+# and by scripts/iterate.py to stop cleanly when only these remain.
+# Format: one UID per line; everything after '#' is a human-readable reason (parser takes the
+# first whitespace token).
+#
+# Re-audited on 2026-06-22 after upstream verifier fixes:
+# - concept-name canonicalization now rewrites case/alias literals, so prior (P) and most
+#   case-mismatch (T) entries are no longer justified.
+# - hard_logic_py legacy normalization now repairs the prior syntax-error class (S).
+#
+# Remaining proven-dead classes kept here:
+#  (T) Required attraction/restaurant/hotel TYPE literal absent in the specific target-city DB
+#      even after canonicalization.
+#  (N) Required exact named POI absent from target-city DB.
+
+# Re-audited on 2026-06-24 against current results/best:
+# - Removed stale entries that now pass end-to-end evaluation.
+# - One dataset-blocked UID remains.
+
+# --- (N) required exact named POI absent from target-city DB ---
+20250323010327713880  # (N) Shanghai restaurants: hard_logic requires exact name 'Bistro Sola' which is absent in DB; near-match 'Sola Bistro' does not satisfy exact string check.
