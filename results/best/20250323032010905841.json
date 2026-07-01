@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "03:09",
+              "end_time": "03:14",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Baishilong-Metro Station",
+              "mode": "metro",
+              "start_time": "03:14",
+              "end_time": "04:00",
+              "distance": 23.15,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Baishilong-Metro Station",
+              "end": "Baishilong Music Theme Park",
+              "mode": "walk",
+              "start_time": "04:00",
+              "end_time": "04:03",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,22 +70,22 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Airport East-Metro Station",
+              "start": "Baishilong Music Theme Park",
+              "end": "Baishilong-Metro Station",
               "mode": "walk",
-              "start_time": "08:59",
-              "end_time": "09:04",
-              "distance": 0.45,
+              "start_time": "10:00",
+              "end_time": "10:03",
+              "distance": 0.28,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Airport East-Metro Station",
+              "start": "Baishilong-Metro Station",
               "end": "Sea World-Metro Station",
               "mode": "metro",
-              "start_time": "09:04",
-              "end_time": "09:44",
-              "distance": 20.3,
+              "start_time": "10:03",
+              "end_time": "10:39",
+              "distance": 18.38,
               "price": 5,
               "cost": 15,
               "tickets": 3
@@ -52,8 +94,8 @@
               "start": "Sea World-Metro Station",
               "end": "2046 Hunan Flavor Kitchen (Shekou Huigang Branch)",
               "mode": "walk",
-              "start_time": "09:44",
-              "end_time": "09:45",
+              "start_time": "10:39",
+              "end_time": "10:40",
               "distance": 0.09,
               "price": 0,
               "cost": 0
@@ -62,65 +104,87 @@
         },
         {
           "type": "attraction",
-          "position": "Baishilong Music Theme Park",
-          "start_time": "12:40",
-          "end_time": "14:10",
+          "position": "East Gate Old Street",
+          "start_time": "12:33",
+          "end_time": "13:33",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "2046 Hunan Flavor Kitchen (Shekou Huigang Branch)",
-              "end": "Sea World-Metro Station",
-              "mode": "walk",
+              "end": "East Gate Old Street",
+              "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 0.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Sea World-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "12:01",
-              "end_time": "12:37",
-              "distance": 18.38,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "12:37",
-              "end_time": "12:40",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:33",
+              "distance": 22.47,
+              "price": 95.83,
+              "cost": 95.83,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
-          "start_time": "14:33",
-          "end_time": "16:03",
+          "position": "Shenzhen OCT Tourism Resort",
+          "start_time": "13:53",
+          "end_time": "14:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Baishilong Music Theme Park",
-              "end": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "start": "East Gate Old Street",
+              "end": "Shenzhen OCT Tourism Resort",
               "mode": "taxi",
-              "start_time": "14:10",
-              "end_time": "14:14",
-              "distance": 3.14,
-              "price": 15.7,
-              "cost": 15.7,
+              "start_time": "13:33",
+              "end_time": "13:53",
+              "distance": 13.54,
+              "price": 55.64,
+              "cost": 55.64,
               "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bao'an Library",
+          "start_time": "15:18",
+          "end_time": "16:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen OCT Tourism Resort",
+              "end": "Qiaocheng North-Metro Station",
+              "mode": "walk",
+              "start_time": "14:53",
+              "end_time": "14:55",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qiaocheng North-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "14:55",
+              "end_time": "15:16",
+              "distance": 10.55,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "15:16",
+              "end_time": "15:18",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -134,97 +198,33 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
-              "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "16:03",
-              "end_time": "16:18",
-              "distance": 10.45,
-              "price": 41.74,
-              "cost": 41.74,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "East Gate Old Street",
-          "start_time": "18:28",
-          "end_time": "19:28",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
-              "end": "Chegongmiao-Metro Station",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
               "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:07",
-              "distance": 0.67,
+              "start_time": "16:18",
+              "end_time": "16:20",
+              "distance": 0.2,
               "price": 0,
               "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Chegongmiao-Metro Station",
+              "mode": "metro",
+              "start_time": "16:20",
+              "end_time": "16:48",
+              "distance": 14.4,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
             },
             {
               "start": "Chegongmiao-Metro Station",
-              "end": "Shaibu-Metro Station",
-              "mode": "metro",
-              "start_time": "18:07",
-              "end_time": "18:27",
-              "distance": 10.06,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "East Gate Old Street",
+              "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
               "mode": "walk",
-              "start_time": "18:27",
-              "end_time": "18:28",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "19:58",
-          "end_time": "20:58",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "East Gate Old Street",
-              "end": "Shaibu-Metro Station",
-              "mode": "walk",
-              "start_time": "19:28",
-              "end_time": "19:29",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "Qiaocheng North-Metro Station",
-              "mode": "metro",
-              "start_time": "19:29",
-              "end_time": "19:56",
-              "distance": 13.75,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Shenzhen OCT Tourism Resort",
-              "mode": "walk",
-              "start_time": "19:56",
-              "end_time": "19:58",
-              "distance": 0.21,
+              "start_time": "16:48",
+              "end_time": "16:55",
+              "distance": 0.67,
               "price": 0,
               "cost": 0
             }
@@ -232,45 +232,25 @@
         },
         {
           "type": "accommodation",
-          "position": "Hyatt Regency Shenzhen Airport",
-          "start_time": "21:42",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "18:33",
           "end_time": "24:00",
-          "price": 793.0,
-          "cost": 1586.0,
+          "price": 288.0,
+          "cost": 576.0,
           "rooms": 2,
           "room_type": 2,
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen OCT Tourism Resort",
-              "end": "Qiaocheng North-Metro Station",
-              "mode": "walk",
-              "start_time": "20:58",
-              "end_time": "21:00",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "21:00",
-              "end_time": "21:40",
-              "distance": 20.1,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Hyatt Regency Shenzhen Airport",
-              "mode": "walk",
-              "start_time": "21:40",
-              "end_time": "21:42",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
+              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:33",
+              "distance": 22.29,
+              "price": 94.99,
+              "cost": 94.99,
+              "cars": 1
             }
           ]
         }
@@ -281,7 +261,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Hyatt Regency Shenzhen Airport",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -292,126 +272,256 @@
         {
           "type": "attraction",
           "position": "Shenzhen OCT Harbour",
-          "start_time": "09:18",
-          "end_time": "10:18",
+          "start_time": "08:58",
+          "end_time": "09:58",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Hyatt Regency Shenzhen Airport",
-              "end": "Airport-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Qiaocheng East-Metro Station",
-              "mode": "metro",
-              "start_time": "08:32",
-              "end_time": "09:14",
-              "distance": 21.38,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Qiaocheng East-Metro Station",
+              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
               "end": "Shenzhen OCT Harbour",
-              "mode": "walk",
-              "start_time": "09:14",
-              "end_time": "09:18",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:58",
+              "distance": 19.23,
+              "price": 81.24,
+              "cost": 81.24,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Chung Ying Street",
-          "start_time": "11:16",
-          "end_time": "12:16",
+          "position": "Xichong",
+          "start_time": "11:25",
+          "end_time": "12:25",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen OCT Harbour",
-              "end": "Qiaocheng East-Metro Station",
-              "mode": "walk",
-              "start_time": "10:18",
-              "end_time": "10:22",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qiaocheng East-Metro Station",
-              "end": "Haishan-Metro Station",
-              "mode": "metro",
-              "start_time": "10:22",
-              "end_time": "11:11",
-              "distance": 24.93,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Haishan-Metro Station",
-              "end": "Chung Ying Street",
-              "mode": "walk",
-              "start_time": "11:11",
-              "end_time": "11:16",
-              "distance": 0.47,
-              "price": 0,
-              "cost": 0
+              "end": "Xichong",
+              "mode": "taxi",
+              "start_time": "09:58",
+              "end_time": "11:25",
+              "distance": 58.08,
+              "price": 256.06,
+              "cost": 256.06,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shekou Industrial Zone",
-          "start_time": "13:31",
-          "end_time": "14:31",
+          "position": "Chung Ying Street",
+          "start_time": "13:15",
+          "end_time": "14:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Xichong",
+              "end": "Chung Ying Street",
+              "mode": "taxi",
+              "start_time": "12:25",
+              "end_time": "13:15",
+              "distance": 33.51,
+              "price": 145.5,
+              "cost": 145.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chung Ying Street History Museum",
+          "start_time": "14:19",
+          "end_time": "15:19",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Chung Ying Street",
+              "end": "Chung Ying Street History Museum",
+              "mode": "walk",
+              "start_time": "14:15",
+              "end_time": "14:19",
+              "distance": 0.38539170973000725,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 519.0,
+          "cost": 1557.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chung Ying Street History Museum",
               "end": "Haishan-Metro Station",
               "mode": "walk",
-              "start_time": "12:16",
-              "end_time": "12:21",
-              "distance": 0.47,
+              "start_time": "15:19",
+              "end_time": "15:29",
+              "distance": 0.84,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Haishan-Metro Station",
-              "end": "Shui Wan-Metro Station",
+              "end": "Dameisha-Metro Station",
               "mode": "metro",
-              "start_time": "12:21",
-              "end_time": "13:28",
-              "distance": 33.55,
-              "price": 7,
-              "cost": 21,
+              "start_time": "15:29",
+              "end_time": "15:45",
+              "distance": 8.38,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
-              "start": "Shui Wan-Metro Station",
-              "end": "Shekou Industrial Zone",
+              "start": "Dameisha-Metro Station",
+              "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
               "mode": "walk",
-              "start_time": "13:28",
-              "end_time": "13:31",
-              "distance": 0.33,
+              "start_time": "15:45",
+              "end_time": "15:56",
+              "distance": 0.93,
               "price": 0,
               "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "19:14",
+          "end_time": "24:00",
+          "price": 288.0,
+          "cost": 576.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:14",
+              "distance": 49.34,
+              "price": 216.72,
+              "cost": 216.72,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Shekou Industrial Zone",
+          "start_time": "08:55",
+          "end_time": "09:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "end": "Shekou Industrial Zone",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:55",
+              "distance": 17.24,
+              "price": 72.26,
+              "cost": 72.26,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bayberry Pit",
+          "start_time": "11:36",
+          "end_time": "12:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shekou Industrial Zone",
+              "end": "Bayberry Pit",
+              "mode": "taxi",
+              "start_time": "09:55",
+              "end_time": "11:36",
+              "distance": 67.79,
+              "price": 299.75,
+              "cost": 299.75,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Mangrove Seaside Ecological Park",
+          "start_time": "14:04",
+          "end_time": "15:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bayberry Pit",
+              "end": "Mangrove Seaside Ecological Park",
+              "mode": "taxi",
+              "start_time": "12:36",
+              "end_time": "14:04",
+              "distance": 58.74,
+              "price": 259.02,
+              "cost": 259.02,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "15:25",
+          "end_time": "16:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mangrove Seaside Ecological Park",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "taxi",
+              "start_time": "15:04",
+              "end_time": "15:13",
+              "distance": 6.34,
+              "price": 26.87,
+              "cost": 26.87,
+              "cars": 1
             }
           ]
         },
@@ -425,32 +535,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shekou Industrial Zone",
-              "end": "Shui Wan-Metro Station",
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
               "mode": "walk",
-              "start_time": "14:31",
-              "end_time": "14:34",
-              "distance": 0.33,
+              "start_time": "16:25",
+              "end_time": "16:26",
+              "distance": 0.14,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Shui Wan-Metro Station",
+              "start": "Futian Port-Metro Station",
               "end": "Window of the World-Metro Station",
               "mode": "metro",
-              "start_time": "14:34",
-              "end_time": "14:49",
-              "distance": 7.77,
-              "price": 3,
-              "cost": 9,
+              "start_time": "16:26",
+              "end_time": "16:45",
+              "distance": 9.83,
+              "price": 4,
+              "cost": 12,
               "tickets": 3
             },
             {
               "start": "Window of the World-Metro Station",
               "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
               "mode": "walk",
-              "start_time": "14:49",
-              "end_time": "14:51",
+              "start_time": "16:45",
+              "end_time": "16:47",
               "distance": 0.2,
               "price": 0,
               "cost": 0
@@ -458,273 +568,26 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Shenzhen Civic Center",
-          "start_time": "18:23",
-          "end_time": "19:23",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
+          "type": "accommodation",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "18:25",
+          "end_time": "24:00",
+          "price": 288.0,
+          "cost": 576.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
               "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "end": "Window of the World-Metro Station",
-              "mode": "walk",
+              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Window of the World-Metro Station",
-              "end": "Lianhua Village-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:21",
-              "distance": 9.72,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Lianhua Village-Metro Station",
-              "end": "Shenzhen Civic Center",
-              "mode": "walk",
-              "start_time": "18:21",
-              "end_time": "18:23",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Hyatt Regency Shenzhen Airport",
-          "start_time": "20:21",
-          "end_time": "24:00",
-          "price": 793.0,
-          "cost": 1586.0,
-          "rooms": 2,
-          "room_type": 2,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Shenzhen Civic Center",
-              "end": "Lianhua Village-Metro Station",
-              "mode": "walk",
-              "start_time": "19:23",
-              "end_time": "19:25",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lianhua Village-Metro Station",
-              "end": "Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "19:25",
-              "end_time": "20:19",
-              "distance": 27.44,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Hyatt Regency Shenzhen Airport",
-              "mode": "walk",
-              "start_time": "20:19",
-              "end_time": "20:21",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "day": 3,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Hyatt Regency Shenzhen Airport",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Shekou Port Zhuhai Cruise",
-          "start_time": "09:19",
-          "end_time": "10:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Hyatt Regency Shenzhen Airport",
-              "end": "Airport-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Shekou Port-Metro Station",
-              "mode": "metro",
-              "start_time": "08:32",
-              "end_time": "09:10",
-              "distance": 19.22,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Shekou Port-Metro Station",
-              "end": "Shekou Port Zhuhai Cruise",
-              "mode": "walk",
-              "start_time": "09:10",
-              "end_time": "09:19",
-              "distance": 0.81,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "China Merchants Shekou Cruise Home Port Tour",
-          "start_time": "10:19",
-          "end_time": "11:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shekou Port Zhuhai Cruise",
-              "end": "China Merchants Shekou Cruise Home Port Tour",
-              "mode": "walk",
-              "start_time": "10:19",
-              "end_time": "10:19",
-              "distance": 0.0037216251123269924,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-          "start_time": "11:19",
-          "end_time": "12:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "China Merchants Shekou Cruise Home Port Tour",
-              "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "mode": "walk",
-              "start_time": "11:19",
-              "end_time": "11:19",
-              "distance": 0.0,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen Bay Park",
-          "start_time": "12:44",
-          "end_time": "13:44",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "end": "Shekou Port-Metro Station",
-              "mode": "walk",
-              "start_time": "12:19",
-              "end_time": "12:28",
-              "distance": 0.82,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shekou Port-Metro Station",
-              "end": "Hongshu Bay-Metro Station",
-              "mode": "metro",
-              "start_time": "12:28",
-              "end_time": "12:43",
-              "distance": 7.89,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Hongshu Bay-Metro Station",
-              "end": "Shenzhen Bay Park",
-              "mode": "walk",
-              "start_time": "12:43",
-              "end_time": "12:44",
-              "distance": 0.11,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Hyatt Regency Shenzhen Airport",
-          "start_time": "14:25",
-          "end_time": "24:00",
-          "price": 793.0,
-          "cost": 1586.0,
-          "rooms": 2,
-          "room_type": 2,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Shenzhen Bay Park",
-              "end": "Hongshu Bay-Metro Station",
-              "mode": "walk",
-              "start_time": "13:44",
-              "end_time": "13:45",
-              "distance": 0.11,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongshu Bay-Metro Station",
-              "end": "Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "13:45",
-              "end_time": "14:23",
-              "distance": 19.32,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Hyatt Regency Shenzhen Airport",
-              "mode": "walk",
-              "start_time": "14:23",
-              "end_time": "14:25",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
+              "end_time": "18:25",
+              "distance": 17.16,
+              "price": 71.93,
+              "cost": 71.93,
+              "cars": 1
             }
           ]
         }
@@ -735,7 +598,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Hyatt Regency Shenzhen Airport",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -745,43 +608,45 @@
         },
         {
           "type": "attraction",
-          "position": "Balcony Mountain Forest Park",
-          "start_time": "09:37",
-          "end_time": "11:07",
+          "position": "Shenzhen Civic Center",
+          "start_time": "09:07",
+          "end_time": "10:07",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Hyatt Regency Shenzhen Airport",
-              "end": "Airport-Metro Station",
-              "mode": "walk",
+              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "end": "Shenzhen Civic Center",
+              "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "09:07",
+              "distance": 24.98,
+              "price": 107.1,
+              "cost": 107.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shekou Port Zhuhai Cruise",
+          "start_time": "10:32",
+          "end_time": "11:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
             {
-              "start": "Airport-Metro Station",
-              "end": "Yangtaishan East-Metro Station",
-              "mode": "metro",
-              "start_time": "08:32",
-              "end_time": "09:09",
-              "distance": 18.95,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Yangtaishan East-Metro Station",
-              "end": "Balcony Mountain Forest Park",
-              "mode": "walk",
-              "start_time": "09:09",
-              "end_time": "09:37",
-              "distance": 2.41,
-              "price": 0,
-              "cost": 0
+              "start": "Shenzhen Civic Center",
+              "end": "Shekou Port Zhuhai Cruise",
+              "mode": "taxi",
+              "start_time": "10:07",
+              "end_time": "10:32",
+              "distance": 17.17,
+              "price": 71.95,
+              "cost": 71.95,
+              "cars": 1
             }
           ]
         },
@@ -795,32 +660,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Balcony Mountain Forest Park",
-              "end": "Yangtaishan East-Metro Station",
+              "start": "Shekou Port Zhuhai Cruise",
+              "end": "Shekou Port-Metro Station",
               "mode": "walk",
-              "start_time": "11:07",
-              "end_time": "11:35",
-              "distance": 2.41,
+              "start_time": "11:32",
+              "end_time": "11:41",
+              "distance": 0.81,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Yangtaishan East-Metro Station",
+              "start": "Shekou Port-Metro Station",
               "end": "Huangbeiling-Metro Station",
               "mode": "metro",
-              "start_time": "11:35",
-              "end_time": "12:15",
-              "distance": 20.08,
-              "price": 5,
-              "cost": 15,
+              "start_time": "11:41",
+              "end_time": "12:29",
+              "distance": 24.3,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
               "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "mode": "walk",
-              "start_time": "12:15",
-              "end_time": "12:17",
+              "start_time": "12:29",
+              "end_time": "12:31",
               "distance": 0.2,
               "price": 0,
               "cost": 0
@@ -831,7 +696,7 @@
           "type": "attraction",
           "position": "East River Guerrilla Force Command Post Memorial Hall",
           "start_time": "14:06",
-          "end_time": "15:36",
+          "end_time": "15:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -871,43 +736,23 @@
         },
         {
           "type": "attraction",
-          "position": "Galaxy Development Center Building - Fitness Center",
-          "start_time": "15:49",
-          "end_time": "16:49",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "15:18",
+          "end_time": "16:18",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "East River Guerrilla Force Command Post Memorial Hall",
-              "end": "Shaibu-Metro Station",
-              "mode": "walk",
-              "start_time": "15:36",
-              "end_time": "15:38",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "Gangxia North-Metro Station",
-              "mode": "metro",
-              "start_time": "15:38",
-              "end_time": "15:49",
-              "distance": 5.76,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Gangxia North-Metro Station",
-              "end": "Galaxy Development Center Building - Fitness Center",
-              "mode": "walk",
-              "start_time": "15:49",
-              "end_time": "15:49",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "taxi",
+              "start_time": "15:06",
+              "end_time": "15:08",
+              "distance": 1.43,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -921,32 +766,32 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "Gangxia North-Metro Station",
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "Hongling-Metro Station",
               "mode": "walk",
-              "start_time": "16:49",
-              "end_time": "16:49",
-              "distance": 0.08,
+              "start_time": "16:18",
+              "end_time": "16:25",
+              "distance": 0.63,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Gangxia North-Metro Station",
+              "start": "Hongling-Metro Station",
               "end": "Meicun-Metro Station",
               "mode": "metro",
-              "start_time": "16:49",
-              "end_time": "16:56",
-              "distance": 3.7,
-              "price": 2,
-              "cost": 6,
+              "start_time": "16:25",
+              "end_time": "16:36",
+              "distance": 5.81,
+              "price": 3,
+              "cost": 9,
               "tickets": 3
             },
             {
               "start": "Meicun-Metro Station",
               "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "walk",
-              "start_time": "16:56",
-              "end_time": "16:58",
+              "start_time": "16:36",
+              "end_time": "16:38",
               "distance": 0.24,
               "price": 0,
               "cost": 0
@@ -955,12 +800,12 @@
         },
         {
           "type": "airplane",
-          "start_time": "19:08",
-          "end_time": "20:39",
+          "start_time": "23:37",
+          "end_time": "01:08",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 624.58,
-          "cost": 1873.7400000000002,
+          "end": "Shanghai Pudong International Airport",
+          "price": 572.8,
+          "cost": 1718.3999999999999,
           "tickets": 3,
           "transports": [
             {
@@ -995,11 +840,11 @@
               "cost": 0
             }
           ],
-          "FlightID": "FL168"
+          "FlightID": "FL166"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 211.77618670463562,
-  "_eval_score": 97.09623015873015
+  "elapsed_time(sec)": 339.14305901527405,
+  "_eval_score": 97.63644688644689
 }
