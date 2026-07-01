@@ -54,6 +54,7 @@ PREFERENCE_LOCAL_MIN_SCORE ?= 100
 PREFERENCE_LOCAL_STOP ?= 3
 PREFERENCE_LOCAL_METRIC ?= overall
 PREFERENCE_LOCAL_RUN_ID ?=
+PREFERENCE_SUBOPT_SPLIT ?= $(SPLIT)_suboptimal
 
 HPC_PARTITION ?= standard
 HPC_WORKERS ?= 8
@@ -85,7 +86,7 @@ HPC_PREFERENCE_STOP ?= 3
 HPC_PREFERENCE_METRIC ?= overall
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-solve preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
 # Default: preference optimization on already-solved plans.
 all: preference-local score submission
@@ -250,8 +251,37 @@ preference-solve:
 		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
 		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
 		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
-		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,) \
 		$(if $(PREFERENCE_LOCAL_RUN_ID),--run-id $(PREFERENCE_LOCAL_RUN_ID),--run-id preference_solve_$(shell date +%Y%m%d_%H%M%S))
+
+# Focused overnight preference optimization:
+# 1) refresh the current suboptimal split from results/best
+# 2) run aggressive ATT densify on only the currently suboptimal queries
+# 3) re-solve the hardest remaining ATT cases without --skip, with CP reconstruction shuffles
+# 4) score the full base split again
+preference-overnight:
+	$(PYTHON) scripts/score.py --split $(SPLIT)
+	TPC_DENSIFY_SWAP_MEALS=1 \
+	TPC_DENSIFY_MEAL_SWAP_MAX=16 \
+	TPC_DENSIFY_MEAL_SWAP_CANDIDATES=32 \
+	TPC_DENSIFY_SWAP_MAX=16 \
+	TPC_DENSIFY_SWAP_CANDIDATES=32 \
+	TPC_DENSIFY_ATTR_CANDIDATES=40 \
+	$(MAKE) preference-local \
+		SPLIT=$(PREFERENCE_SUBOPT_SPLIT) \
+		PREFERENCE_LOCAL_METRIC=att \
+		PREFERENCE_LOCAL_TOPK=400 \
+		PREFERENCE_LOCAL_ROUNDS=8 \
+		PREFERENCE_LOCAL_STOP=2
+	TPC_CP_RECON_SHUFFLES=8 \
+	$(MAKE) preference-solve \
+		SPLIT=$(PREFERENCE_SUBOPT_SPLIT) \
+		PREFERENCE_LOCAL_METRIC=att \
+		PREFERENCE_LOCAL_TOPK=96 \
+		PREFERENCE_LOCAL_ROUNDS=3 \
+		PREFERENCE_LOCAL_STOP=1 \
+		OVERNIGHT_LOCAL_RESTARTS=1400 \
+		OVERNIGHT_LOCAL_BUDGET=240
+	$(PYTHON) scripts/score.py --split $(SPLIT)
 
 # Submit one 7h tail-iterate run to SLURM (single controller job orchestrating multi-round solve/merge/score).
 hpc-tail-submit:
@@ -367,6 +397,7 @@ help:
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
 	  'make preference-local - local preference optimization on already-solved plans (densify only)' \
 	  'make preference-solve - re-solve worst-preference queries from scratch (~7 h overnight)' \
+	  'make preference-overnight - refresh suboptimal split, then ATT-focused densify + re-solve overnight' \
 	  'make preference-quick - one-round quick local preference pass' \
 	  'make hpc-tail-submit - submit 7h tail iterate controller job to SLURM' \
 	  'make hpc-unsolved   - HPC phase A: solve unresolved tail with CP + heavy search' \
