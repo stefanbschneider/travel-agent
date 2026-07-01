@@ -1231,8 +1231,165 @@ class TPCAgent(BaseAgent):
                 if not inserted:
                     break
 
+        dense = self._swap_attractions_for_att(dense, query, constraints, check, attractions, coords)
         dense = self._upgrade_transport_modes(dense, query, constraints, check)
         return dense
+
+    def _swap_attractions_for_att(self, plan, query, constraints, check, attractions, coords):
+        """Replace high-transit-time attractions with geographically closer alternatives.
+
+        Targets ATT by reducing average innercity_transport_time. Each swap is gated by the
+        full checker so hard constraints, budget, and activity counts never regress. Only
+        non-required attractions are considered for replacement.
+        """
+        if os.environ.get("TPC_DENSIFY_SWAP_ATT", "1") == "0":
+            return plan
+        try:
+            if not self._accepted(*check(plan)):
+                return plan
+        except Exception:
+            return plan
+
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        constraints = constraints or {}
+        required_attractions = set()
+        for req in constraints.get("required_attractions", []) or []:
+            required_attractions.add(self._norm_text(req))
+        for req in constraints.get("required_attraction_types", []) or []:
+            required_attractions.add(self._norm_text(req))
+        # Also protect attractions named in time windows or stay duration constraints.
+        for w in constraints.get("activity_time_windows", []) or []:
+            if isinstance(w, dict) and w.get("location"):
+                required_attractions.add(self._norm_text(w["location"]))
+        for d in constraints.get("stay_duration", []) or []:
+            if isinstance(d, dict) and d.get("location"):
+                required_attractions.add(self._norm_text(d["location"]))
+
+        max_swaps = int(os.environ.get("TPC_DENSIFY_SWAP_MAX", "8"))
+        swap_candidate_limit = int(os.environ.get("TPC_DENSIFY_SWAP_CANDIDATES", "12"))
+        swaps_done = 0
+
+        # Collect all current attraction names in the plan to avoid duplicates.
+        used_names = set()
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                if activity.get("type") == "attraction":
+                    used_names.add(self._norm_text(activity.get("position", "")))
+
+        # Build ranked list of swappable attractions by transit duration (longest first).
+        swappable = []
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            activities = day.get("activities", []) or []
+            for act_idx, activity in enumerate(activities):
+                if activity.get("type") != "attraction":
+                    continue
+                pos_name = self._norm_text(activity.get("position", ""))
+                if not pos_name:
+                    continue
+                # Don't swap required attractions.
+                if any(self._match_constraint_text(pos_name, r) for r in required_attractions):
+                    continue
+                transit_min = self._inner_activity_minutes(activity)
+                swappable.append((transit_min, day_idx, act_idx, pos_name))
+        swappable.sort(reverse=True)
+
+        for transit_min, day_idx, act_idx, old_name in swappable:
+            if swaps_done >= max_swaps:
+                break
+            if transit_min <= 10:
+                break  # Not worth swapping short transits.
+
+            activities = plan["itinerary"][day_idx]["activities"]
+            activity = activities[act_idx]
+            # Get raw (non-normalized) position names for transport API.
+            prev_raw_pos = None
+            next_raw_pos = None
+            if act_idx > 0:
+                prev_raw_pos = self._activity_end_position(activities[act_idx - 1])
+            if act_idx + 1 < len(activities):
+                next_raw_pos = self._activity_start_position(activities[act_idx + 1])
+            prev_coord = coords.get(self._norm_text(prev_raw_pos or ""))
+            next_coord = coords.get(self._norm_text(next_raw_pos or ""))
+
+            # Rank candidate attractions by combined distance to prev + next.
+            candidates = sorted(
+                attractions,
+                key=lambda a: (
+                    (self._haversine_km(prev_coord, a) if prev_coord is not None else 0.0)
+                    + (self._haversine_km(a, next_coord) if next_coord is not None else 0.0)
+                ),
+            )[:swap_candidate_limit]
+
+            old_activity = deepcopy(activity)
+            old_start_time = str(activity.get("start_time", ""))
+            old_end_time = str(activity.get("end_time", ""))
+            visit_len = time_to_minutes(old_end_time) - time_to_minutes(old_start_time) if old_start_time and old_end_time else 60
+
+            # Departure point and time for reaching the candidate.
+            from_pos = prev_raw_pos or str(activity.get("position", ""))
+            if prev_raw_pos and act_idx > 0:
+                depart_time = str(activities[act_idx - 1].get("end_time", "08:00"))
+            else:
+                depart_time = old_start_time
+
+            for cand in candidates:
+                cand_name = self._norm_text(cand.get("name", ""))
+                cand_actual_name = str(cand.get("name", ""))
+                if not cand_name or cand_name == old_name or cand_name in used_names:
+                    continue
+                # Check open hours.
+                cand_open, cand_close = self._poi_open_bounds(cand)
+                # Build transport from prev to candidate.
+                transports_in, arrival = self._get_transport(
+                    self.env, city, from_pos, cand_actual_name, depart_time, people)
+                if transports_in is None or arrival is None:
+                    continue
+                start_min = max(time_to_minutes(arrival), cand_open)
+                end_min = start_min + visit_len
+                if end_min > cand_close or end_min > 22 * 60:
+                    continue
+                # Check we can reach the next activity in time.
+                transports_out = None
+                if next_raw_pos and act_idx + 1 < len(activities):
+                    next_start = str(activities[act_idx + 1].get("start_time", ""))
+                    transports_out, next_arrival = self._get_transport(
+                        self.env, city, cand_actual_name, next_raw_pos, minutes_to_time(end_min), people)
+                    if transports_out is None or next_arrival is None:
+                        continue
+                    if next_start and time_to_minutes(next_arrival) > time_to_minutes(next_start):
+                        continue
+
+                # Build replacement activity.
+                new_activity = self._make_attraction_activity(
+                    cand, people, minutes_to_time(start_min), minutes_to_time(end_min), transports_in)
+
+                # Check new transit is actually shorter.
+                new_transit = self._inner_activity_minutes(new_activity)
+                if new_transit >= transit_min:
+                    continue
+
+                # Try the swap.
+                before_key = self._accepted_eval_key(plan)
+                old_next_transports = None
+                if transports_out is not None and act_idx + 1 < len(activities):
+                    old_next_transports = deepcopy(activities[act_idx + 1].get("transports", []))
+                    activities[act_idx + 1]["transports"] = transports_out
+                activities[act_idx] = new_activity
+                try:
+                    if self._accepted(*check(plan)) and self._accepted_eval_key(plan) >= before_key:
+                        used_names.discard(old_name)
+                        used_names.add(cand_name)
+                        swaps_done += 1
+                        break
+                except Exception:
+                    pass
+                # Revert.
+                activities[act_idx] = old_activity
+                if old_next_transports is not None:
+                    activities[act_idx + 1]["transports"] = old_next_transports
+
+        return plan
 
     def _rebuild_hop(self, city, from_pos, to_pos, start_time, people, mode):
         """Build one inner-city hop in `mode`, mirroring _get_transport's segment dicts.

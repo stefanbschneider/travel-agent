@@ -49,9 +49,9 @@ OVERNIGHT_LOCAL_STOP ?= 2
 
 PREFERENCE_LOCAL_WORKERS ?= $(OVERNIGHT_LOCAL_WORKERS)
 PREFERENCE_LOCAL_ROUNDS ?= 6
-PREFERENCE_LOCAL_TOPK ?= 240
-PREFERENCE_LOCAL_MIN_SCORE ?= 99.5
-PREFERENCE_LOCAL_STOP ?= 2
+PREFERENCE_LOCAL_TOPK ?= 400
+PREFERENCE_LOCAL_MIN_SCORE ?= 100
+PREFERENCE_LOCAL_STOP ?= 3
 PREFERENCE_LOCAL_METRIC ?= overall
 PREFERENCE_LOCAL_RUN_ID ?=
 
@@ -85,7 +85,7 @@ HPC_PREFERENCE_STOP ?= 3
 HPC_PREFERENCE_METRIC ?= overall
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-solve preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
 # Default: preference optimization on already-solved plans.
 all: preference-local score submission
@@ -222,6 +222,37 @@ preference-quick:
 		PREFERENCE_LOCAL_WORKERS=$(SHORT_LOCAL_WORKERS) \
 		PREFERENCE_LOCAL_STOP=1
 
+# Re-solve worst-preference queries from scratch with multi-start search (~7h overnight).
+# Unlike preference-local (densify only), this re-runs the full solver with different
+# random seeds and attraction orderings, then densifies. Effective for ATT improvement
+# when plans are stuck at local optima that densification cannot escape.
+preference-solve:
+	TPC_USE_CP_SOLVER=$(TPC_USE_CP_SOLVER) \
+	TPC_CP_AFTER_PASS=$(TPC_CP_AFTER_PASS) \
+	TPC_CP_FOUR_SLOT_SHARE=$(TPC_CP_FOUR_SLOT_SHARE) \
+	TPC_CP_FOUR_SLOT_ROUNDS=$(TPC_CP_FOUR_SLOT_ROUNDS) \
+	TPC_CP_RECON_SHUFFLES=$(TPC_CP_RECON_SHUFFLES) \
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rank-mode preference \
+		--pref-metric $(PREFERENCE_LOCAL_METRIC) \
+		--runner solve \
+		--rounds $(PREFERENCE_LOCAL_ROUNDS) \
+		--top-k $(PREFERENCE_LOCAL_TOPK) \
+		--min-score $(PREFERENCE_LOCAL_MIN_SCORE) \
+		--restarts $(OVERNIGHT_LOCAL_RESTARTS) \
+		--budget $(OVERNIGHT_LOCAL_BUDGET) \
+		--workers $(PREFERENCE_LOCAL_WORKERS) \
+		--stop-no-improve-rounds $(PREFERENCE_LOCAL_STOP) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix preference_solve \
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,) \
+		$(if $(PREFERENCE_LOCAL_RUN_ID),--run-id $(PREFERENCE_LOCAL_RUN_ID),--run-id preference_solve_$(shell date +%Y%m%d_%H%M%S))
+
 # Submit one 7h tail-iterate run to SLURM (single controller job orchestrating multi-round solve/merge/score).
 hpc-tail-submit:
 	bash slurm/submit_tail_overnight.sh \
@@ -335,6 +366,7 @@ help:
 	  'make short-local    - short local profile (~10 min) using iterate_tail' \
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
 	  'make preference-local - local preference optimization on already-solved plans (densify only)' \
+	  'make preference-solve - re-solve worst-preference queries from scratch (~7 h overnight)' \
 	  'make preference-quick - one-round quick local preference pass' \
 	  'make hpc-tail-submit - submit 7h tail iterate controller job to SLURM' \
 	  'make hpc-unsolved   - HPC phase A: solve unresolved tail with CP + heavy search' \
