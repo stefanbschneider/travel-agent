@@ -1231,9 +1231,171 @@ class TPCAgent(BaseAgent):
                 if not inserted:
                     break
 
+        dense = self._swap_restaurants_for_att(dense, query, constraints, check, restaurants, coords)
         dense = self._swap_attractions_for_att(dense, query, constraints, check, attractions, coords)
         dense = self._upgrade_transport_modes(dense, query, constraints, check)
         return dense
+
+    def _swap_restaurants_for_att(self, plan, query, constraints, check, restaurants, coords):
+        """Replace high-transit meal venues with nearer alternatives.
+
+        This complements `_swap_attractions_for_att`: many remaining low-ATT plans
+        are dominated by long walks to lunch/dinner while the attraction set is
+        already near-optimal. Every swap is acceptance-gated and keeps meal count
+        unchanged, so DDR/FPR/C-LPR do not regress.
+        """
+        if os.environ.get("TPC_DENSIFY_SWAP_MEALS", "1") == "0":
+            return plan
+        try:
+            if not self._accepted(*check(plan)):
+                return plan
+        except Exception:
+            return plan
+
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        constraints = constraints or {}
+
+        protected_locations = set()
+        for req in constraints.get("required_restaurants", []) or []:
+            protected_locations.add(self._norm_text(req))
+        for window in constraints.get("activity_time_windows", []) or []:
+            if isinstance(window, dict) and window.get("location"):
+                protected_locations.add(self._norm_text(window["location"]))
+        for stay in constraints.get("stay_duration", []) or []:
+            if isinstance(stay, dict) and stay.get("location"):
+                protected_locations.add(self._norm_text(stay["location"]))
+        for name in constraints.get("position_presence", []) or []:
+            if name:
+                protected_locations.add(self._norm_text(name))
+
+        cuisine_pref = constraints.get("cuisine_preference", None)
+        meal_windows = {
+            "breakfast": (6 * 60, self._env_time_minutes("TPC_DENSIFY_BREAKFAST_WIN_CLOSE", "09:00")),
+            "lunch": (11 * 60, self._env_time_minutes("TPC_DENSIFY_LUNCH_WIN_CLOSE", "14:00")),
+            "dinner": (17 * 60, self._env_time_minutes("TPC_DENSIFY_DINNER_WIN_CLOSE", "20:00")),
+        }
+        max_swaps = int(os.environ.get("TPC_DENSIFY_MEAL_SWAP_MAX", "8"))
+        swap_candidate_limit = int(os.environ.get("TPC_DENSIFY_MEAL_SWAP_CANDIDATES", "16"))
+        swaps_done = 0
+
+        used_names = set()
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                if activity.get("type") in ("breakfast", "lunch", "dinner"):
+                    used_names.add(self._norm_text(activity.get("position", "")))
+
+        swappable = []
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            activities = day.get("activities", []) or []
+            for act_idx, activity in enumerate(activities):
+                meal_type = activity.get("type")
+                if meal_type not in meal_windows:
+                    continue
+                if self._safe_float(activity.get("price", 0.0), 0.0) <= 0.0:
+                    continue
+                pos_name = self._norm_text(activity.get("position", ""))
+                if not pos_name:
+                    continue
+                if any(self._match_constraint_text(pos_name, p) for p in protected_locations):
+                    continue
+                transit_min = self._inner_activity_minutes(activity)
+                swappable.append((transit_min, day_idx, act_idx, pos_name))
+        swappable.sort(reverse=True)
+
+        for transit_min, day_idx, act_idx, old_name in swappable:
+            if swaps_done >= max_swaps:
+                break
+            if transit_min <= 10:
+                break
+
+            activities = plan["itinerary"][day_idx]["activities"]
+            activity = activities[act_idx]
+            meal_type = activity.get("type")
+            window_open, window_close = meal_windows[meal_type]
+
+            prev_raw_pos = None
+            next_raw_pos = None
+            if act_idx > 0:
+                prev_raw_pos = self._activity_end_position(activities[act_idx - 1])
+            if act_idx + 1 < len(activities):
+                next_raw_pos = self._activity_start_position(activities[act_idx + 1])
+            prev_coord = coords.get(self._norm_text(prev_raw_pos or ""))
+            next_coord = coords.get(self._norm_text(next_raw_pos or ""))
+
+            candidates = sorted(
+                restaurants,
+                key=lambda r: (
+                    (self._haversine_km(prev_coord, r) if prev_coord is not None else 0.0)
+                    + (self._haversine_km(r, next_coord) if next_coord is not None else 0.0),
+                    r.get("price_cents", 0),
+                    r.get("name", ""),
+                ),
+            )[:swap_candidate_limit]
+
+            old_activity = deepcopy(activity)
+            old_start_time = str(activity.get("start_time", ""))
+            old_end_time = str(activity.get("end_time", ""))
+            meal_len = time_to_minutes(old_end_time) - time_to_minutes(old_start_time) if old_start_time and old_end_time else 60
+            from_pos = prev_raw_pos or str(activity.get("position", ""))
+            if prev_raw_pos and act_idx > 0:
+                depart_time = str(activities[act_idx - 1].get("end_time", "08:00"))
+            else:
+                depart_time = old_start_time
+
+            for cand in candidates:
+                cand_name = self._norm_text(cand.get("name", ""))
+                cand_actual_name = str(cand.get("name", ""))
+                if not cand_name or cand_name == old_name or cand_name in used_names:
+                    continue
+                if cuisine_pref and not self._match_constraint_text(cand.get("cuisine", ""), cuisine_pref):
+                    continue
+
+                cand_open, cand_close = self._poi_open_bounds(cand)
+                transports_in, arrival = self._get_transport(
+                    self.env, city, from_pos, cand_actual_name, depart_time, people)
+                if transports_in is None or arrival is None:
+                    continue
+                start_min = max(time_to_minutes(arrival), window_open, cand_open)
+                end_min = start_min + meal_len
+                if end_min > min(window_close, cand_close):
+                    continue
+
+                transports_out = None
+                if next_raw_pos and act_idx + 1 < len(activities):
+                    next_start = str(activities[act_idx + 1].get("start_time", ""))
+                    transports_out, next_arrival = self._get_transport(
+                        self.env, city, cand_actual_name, next_raw_pos, minutes_to_time(end_min), people)
+                    if transports_out is None or next_arrival is None:
+                        continue
+                    if next_start and time_to_minutes(next_arrival) > time_to_minutes(next_start):
+                        continue
+
+                new_activity = self._make_meal_activity(
+                    meal_type, cand, people, minutes_to_time(start_min), minutes_to_time(end_min), transports_in)
+                new_transit = self._inner_activity_minutes(new_activity)
+                if new_transit >= transit_min:
+                    continue
+
+                before_key = self._accepted_eval_key(plan)
+                old_next_transports = None
+                if transports_out is not None and act_idx + 1 < len(activities):
+                    old_next_transports = deepcopy(activities[act_idx + 1].get("transports", []))
+                    activities[act_idx + 1]["transports"] = transports_out
+                activities[act_idx] = new_activity
+                try:
+                    if self._accepted(*check(plan)) and self._accepted_eval_key(plan) >= before_key:
+                        used_names.discard(old_name)
+                        used_names.add(cand_name)
+                        swaps_done += 1
+                        break
+                except Exception:
+                    pass
+                activities[act_idx] = old_activity
+                if old_next_transports is not None:
+                    activities[act_idx + 1]["transports"] = old_next_transports
+
+        return plan
 
     def _swap_attractions_for_att(self, plan, query, constraints, check, attractions, coords):
         """Replace high-transit-time attractions with geographically closer alternatives.
