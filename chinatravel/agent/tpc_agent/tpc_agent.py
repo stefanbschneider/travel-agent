@@ -646,7 +646,11 @@ class TPCAgent(BaseAgent):
             else:
                 anchor_raw = first_act.get("start_time", "00:00")
             end_min = min(time_to_minutes(str(anchor_raw)), time_to_minutes("08:30"))
-            start_min = end_min - 60
+            dwell = max(1, int(os.environ.get(
+                "TPC_DENSIFY_HOTEL_BREAKFAST_DWELL",
+                os.environ.get("TPC_DENSIFY_MEAL_DWELL", "60"),
+            )))
+            start_min = end_min - dwell
             if start_min < time_to_minutes("06:00"):
                 return False
         except Exception:
@@ -667,13 +671,14 @@ class TPCAgent(BaseAgent):
         if not activities:
             return None
         window = (6 * 60, 9 * 60)
+        meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", "60")))
         for restaurant in restaurants:
             r_name = self._norm_text(restaurant.get("name", ""))
             if not r_name or (used_restaurants is not None and r_name in used_restaurants):
                 continue
             if self._insert_activity_before_first(plan, day_idx, restaurant, "breakfast", window, city, people, check):
                 return r_name
-            for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
+            for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], meal_gap_min):
                 if self._insert_activity(plan, day_idx, prev_idx, restaurant, "breakfast", window, city, people, check):
                     return r_name
             if self._insert_activity_after_last(plan, day_idx, restaurant, "breakfast", window, city, people, check):
@@ -1085,6 +1090,7 @@ class TPCAgent(BaseAgent):
             if not activities:
                 continue
             meal_types = {a.get("type") for a in activities if a.get("type") in ("breakfast", "lunch", "dinner")}
+            meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", "60")))
 
             if "breakfast" not in meal_types:
                 hotel = self._find_hotel_for_day(dense, day_idx)
@@ -1110,7 +1116,7 @@ class TPCAgent(BaseAgent):
                         meal_types.add(meal_type)
                         inserted = True
                         break
-                    for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], 60):
+                    for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], meal_gap_min):
                         if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
                             used_restaurants.add(r_name)
                             meal_types.add(meal_type)
