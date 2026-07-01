@@ -710,11 +710,11 @@ class TPCAgent(BaseAgent):
                 return False
         except Exception:
             return False
-        before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         activity = self._make_hotel_breakfast(hotel_name, minutes_to_time(start_min), minutes_to_time(end_min))
         activities.insert(0, activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if self._accepted(*check(plan)) and self._accepted_eval_key(plan) > before_key:
                 return True
         except Exception:
             pass
