@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:59",
+              "distance": 34.63,
+              "price": 150.52,
+              "cost": 150.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Shanghai Disney Resort",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "Shanghai Disney Resort",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:28",
-              "distance": 13.48,
-              "price": 55.37,
-              "cost": 55.37,
+              "start_time": "07:00",
+              "end_time": "07:33",
+              "distance": 22.15,
+              "price": 94.39,
+              "cost": 94.39,
               "cars": 1
             }
           ]
@@ -245,62 +267,109 @@
             {
               "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "People's Square",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "12:05",
-              "end_time": "12:14",
-              "distance": 0.7794360930286902,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:06",
+              "distance": 0.78,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "People's Park",
+          "start_time": "13:48",
+          "end_time": "14:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "People's Square",
+              "end": "People's Park",
+              "mode": "taxi",
+              "start_time": "13:44",
+              "end_time": "13:44",
+              "distance": 0.36,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "14:57",
+          "end_time": "15:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "People's Park",
+              "end": "Jing'an Sculpture Park",
+              "mode": "taxi",
+              "start_time": "14:48",
+              "end_time": "14:49",
+              "distance": 0.93,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Sculpture Park",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:57",
+              "end_time": "16:00",
+              "distance": 2.18,
+              "price": 12.33,
+              "cost": 12.33,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "People's Square",
-              "end": "East Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:44",
-              "end_time": "13:49",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "East Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "13:49",
-              "end_time": "14:53",
-              "distance": 32.08,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "14:53",
-              "end_time": "15:08",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:52",
+              "distance": 35.27,
+              "price": 153.41,
+              "cost": 153.41,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 60.480263471603394,
-  "_eval_score": 96.42532467532467
+  "_eval_score": 99.61904761904762
 }

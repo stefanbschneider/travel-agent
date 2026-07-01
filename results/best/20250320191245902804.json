@@ -7,16 +7,280 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:31",
-          "end_time": "15:31",
-          "start": "Nanjing South Railway Station",
-          "end": "Shenzhen Station",
-          "price": 751.94,
-          "cost": 751.94,
+          "type": "airplane",
+          "start_time": "00:12",
+          "end_time": "01:39",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 562.24,
+          "cost": 562.24,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G2781"
+          "FlightID": "FL664"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 24.0,
+          "cost": 24.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "mode": "taxi",
+              "start_time": "01:39",
+              "end_time": "02:17",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lotus Hill Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Lotus Hill Park",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:01",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shenzhen Women and Children's Building - Children's Discovery Museum",
+          "start_time": "10:02",
+          "end_time": "10:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lotus Hill Park",
+              "end": "Shenzhen Women and Children's Building - Children's Discovery Museum",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.45,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Women and Children's Building - Children's Discovery Museum",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "10:12",
+              "end_time": "10:13",
+              "distance": 0.95,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Honey Lake Park",
+          "start_time": "12:12",
+          "end_time": "13:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Honey Lake Park",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 2.96,
+              "price": 15.07,
+              "cost": 15.07,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shenzhen Book City (Central City Branch)",
+          "start_time": "13:17",
+          "end_time": "13:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Honey Lake Park",
+              "end": "Shenzhen Book City (Central City Branch)",
+              "mode": "taxi",
+              "start_time": "13:12",
+              "end_time": "13:17",
+              "distance": 3.88,
+              "price": 18.29,
+              "cost": 18.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ten Thousand Buddhas Zen Temple",
+          "start_time": "13:40",
+          "end_time": "13:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Book City (Central City Branch)",
+              "end": "Ten Thousand Buddhas Zen Temple",
+              "mode": "taxi",
+              "start_time": "13:27",
+              "end_time": "13:40",
+              "distance": 9.13,
+              "price": 36.66,
+              "cost": 36.66,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hongfa Temple",
+          "start_time": "13:56",
+          "end_time": "14:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Ten Thousand Buddhas Zen Temple",
+              "end": "Hongfa Temple",
+              "mode": "taxi",
+              "start_time": "13:50",
+              "end_time": "13:56",
+              "distance": 4.23,
+              "price": 19.51,
+              "cost": 19.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Wutong Mountain Art Town",
+          "start_time": "14:08",
+          "end_time": "14:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Hongfa Temple",
+              "end": "Wutong Mountain Art Town",
+              "mode": "taxi",
+              "start_time": "14:06",
+              "end_time": "14:08",
+              "distance": 1.89,
+              "price": 11.32,
+              "cost": 11.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Yantian Branch)",
+          "start_time": "14:32",
+          "end_time": "14:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Wutong Mountain Art Town",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Yantian Branch)",
+              "mode": "taxi",
+              "start_time": "14:18",
+              "end_time": "14:32",
+              "distance": 9.81,
+              "price": 39.02,
+              "cost": 39.02,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dameisha Yacht Rental Center",
+          "start_time": "14:45",
+          "end_time": "14:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Yantian Branch)",
+              "end": "Dameisha Yacht Rental Center",
+              "mode": "taxi",
+              "start_time": "14:42",
+              "end_time": "14:45",
+              "distance": 2.63,
+              "price": 13.91,
+              "cost": 13.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Meisha Bay Park",
+          "start_time": "14:55",
+          "end_time": "15:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dameisha Yacht Rental Center",
+              "end": "Meisha Bay Park",
+              "mode": "taxi",
+              "start_time": "14:55",
+              "end_time": "14:55",
+              "distance": 0.22,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +292,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Station",
+              "start": "Meisha Bay Park",
               "end": "Dameisha Seaside Park",
               "mode": "taxi",
-              "start_time": "15:31",
-              "end_time": "16:03",
-              "distance": 21.54,
-              "price": 91.65,
-              "cost": 91.65,
+              "start_time": "15:05",
+              "end_time": "15:06",
+              "distance": 1.04,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -118,6 +382,16 @@
           "position": "Grand Hyatt Shenzhen",
           "start_time": "07:30",
           "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "breakfast",
+          "position": "Grand Hyatt Shenzhen",
+          "start_time": "08:31",
+          "end_time": "08:41",
           "price": 0,
           "cost": 0,
           "tickets": 0,
@@ -212,6 +486,72 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Dameisha Beach Water Park",
+          "start_time": "16:22",
+          "end_time": "16:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guangdong Wutong Mountain National Forest Park",
+              "end": "Dameisha Beach Water Park",
+              "mode": "taxi",
+              "start_time": "15:59",
+              "end_time": "16:13",
+              "distance": 9.82,
+              "price": 39.06,
+              "cost": 39.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dameisha Sailing and Yacht Club",
+          "start_time": "16:32",
+          "end_time": "16:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dameisha Beach Water Park",
+              "end": "Dameisha Sailing and Yacht Club",
+              "mode": "taxi",
+              "start_time": "16:32",
+              "end_time": "16:32",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dameisha Beach",
+          "start_time": "16:42",
+          "end_time": "16:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dameisha Sailing and Yacht Club",
+              "end": "Dameisha Beach",
+              "mode": "taxi",
+              "start_time": "16:42",
+              "end_time": "16:42",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
           "start_time": "17:00",
@@ -221,14 +561,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Guangdong Wutong Mountain National Forest Park",
+              "start": "Dameisha Beach",
               "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
               "mode": "taxi",
-              "start_time": "15:59",
-              "end_time": "16:13",
-              "distance": 9.8,
-              "price": 39.0,
-              "cost": 39.0,
+              "start_time": "16:52",
+              "end_time": "16:52",
+              "distance": 0.05,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -713,84 +1053,88 @@
           "transports": [
             {
               "start": "Pen Rack Mountain Park",
-              "end": "Silver Lake-Metro Station",
-              "mode": "walk",
-              "start_time": "14:53",
-              "end_time": "14:57",
-              "distance": 0.34,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Silver Lake-Metro Station",
-              "end": "Huaqiang Road-Metro Station",
-              "mode": "metro",
-              "start_time": "14:57",
-              "end_time": "15:03",
-              "distance": 3.12,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Huaqiang Road-Metro Station",
               "end": "Shenzhen Central Park",
-              "mode": "walk",
-              "start_time": "15:03",
-              "end_time": "15:07",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:53",
+              "end_time": "14:58",
+              "distance": 3.35,
+              "price": 16.43,
+              "cost": 16.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suspended Glass Art Museum",
+          "start_time": "16:43",
+          "end_time": "16:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Central Park",
+              "end": "Suspended Glass Art Museum",
+              "mode": "taxi",
+              "start_time": "16:37",
+              "end_time": "16:43",
+              "distance": 4.66,
+              "price": 21.0,
+              "cost": 21.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Suspended Glass Art Museum",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:53",
+              "end_time": "16:54",
+              "distance": 1.29,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:11",
-          "end_time": "19:38",
+          "start_time": "23:20",
+          "end_time": "00:47",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 557.67,
-          "cost": 557.67,
+          "price": 576.88,
+          "cost": 576.88,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Central Park",
-              "end": "Huaqiang Road-Metro Station",
-              "mode": "walk",
-              "start_time": "16:37",
-              "end_time": "16:41",
-              "distance": 0.41,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huaqiang Road-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "16:41",
-              "end_time": "17:39",
-              "distance": 29.46,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Airport East-Metro Station",
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "17:39",
-              "end_time": "17:44",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:51",
+              "distance": 34.18,
+              "price": 148.51,
+              "cost": 148.51,
+              "cars": 1
             }
           ],
-          "FlightID": "FL238"
+          "FlightID": "FL232"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 184.73234486579895,
-  "_eval_score": 97.84126984126985
+  "_eval_score": 100.0
 }

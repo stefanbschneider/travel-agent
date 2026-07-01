@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 1841.88,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 1713.54,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "X-META: Luoyang Rising Wind - Immersive Full-Sensory VR Metaverse Theme Park",
+          "start_time": "10:00",
+          "end_time": "11:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "X-META: Luoyang Rising Wind - Immersive Full-Sensory VR Metaverse Theme Park",
+              "mode": "taxi",
+              "start_time": "09:00",
+              "end_time": "09:03",
+              "distance": 2.25,
+              "price": 12.57,
+              "cost": 12.57,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "X-META: Luoyang Rising Wind - Immersive Full-Sensory VR Metaverse Theme Park",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "11:00",
+              "end_time": "11:03",
+              "distance": 2.23,
+              "price": 12.5,
+              "cost": 12.5,
               "cars": 1
             }
           ]
@@ -44,7 +88,7 @@
           "type": "attraction",
           "position": "Shanghai Disney Resort",
           "start_time": "12:55",
-          "end_time": "13:55",
+          "end_time": "14:10",
           "price": 399.0,
           "cost": 1197.0,
           "tickets": 3,
@@ -65,8 +109,8 @@
         {
           "type": "attraction",
           "position": "Shanghai Haichang Ocean Park",
-          "start_time": "14:45",
-          "end_time": "15:45",
+          "start_time": "15:00",
+          "end_time": "16:15",
           "price": 149.0,
           "cost": 447.0,
           "tickets": 3,
@@ -75,8 +119,8 @@
               "start": "Shanghai Disney Resort",
               "end": "Shanghai Haichang Ocean Park",
               "mode": "taxi",
-              "start_time": "13:55",
-              "end_time": "14:45",
+              "start_time": "14:10",
+              "end_time": "15:00",
               "distance": 33.99,
               "price": 147.64,
               "cost": 147.64,
@@ -85,45 +129,45 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Shanghai Wild Animal Park",
-          "start_time": "16:20",
-          "end_time": "17:20",
-          "price": 165.0,
-          "cost": 495.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shanghai Haichang Ocean Park",
-              "end": "Shanghai Wild Animal Park",
-              "mode": "taxi",
-              "start_time": "15:45",
-              "end_time": "16:20",
-              "distance": 23.39,
-              "price": 99.97,
-              "cost": 99.97,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "dinner",
           "position": "Fu He Hui",
-          "start_time": "18:10",
-          "end_time": "19:10",
+          "start_time": "17:39",
+          "end_time": "18:39",
           "price": 1280.0,
           "cost": 3840.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Wild Animal Park",
+              "start": "Shanghai Haichang Ocean Park",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "17:20",
-              "end_time": "18:10",
-              "distance": 33.37,
-              "price": 144.84,
-              "cost": 144.84,
+              "start_time": "16:15",
+              "end_time": "17:39",
+              "distance": 56.54,
+              "price": 249.15,
+              "cost": 249.15,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River Cruise (Shiliupu Wharf)",
+          "start_time": "18:50",
+          "end_time": "20:05",
+          "price": 108.0,
+          "cost": 324.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Fu He Hui",
+              "end": "Huangpu River Cruise (Shiliupu Wharf)",
+              "mode": "taxi",
+              "start_time": "18:39",
+              "end_time": "18:50",
+              "distance": 7.34,
+              "price": 30.39,
+              "cost": 30.39,
               "cars": 1
             }
           ]
@@ -131,7 +175,7 @@
         {
           "type": "accommodation",
           "position": "Orange Hotel (Shanghai Pudong Airport)",
-          "start_time": "19:59",
+          "start_time": "20:44",
           "end_time": "24:00",
           "price": 351.0,
           "cost": 702.0,
@@ -140,14 +184,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Fu He Hui",
+              "start": "Huangpu River Cruise (Shiliupu Wharf)",
               "end": "Orange Hotel (Shanghai Pudong Airport)",
               "mode": "taxi",
-              "start_time": "19:10",
-              "end_time": "19:59",
-              "distance": 32.83,
-              "price": 142.44,
-              "cost": 142.44,
+              "start_time": "20:05",
+              "end_time": "20:44",
+              "distance": 26.55,
+              "price": 114.19,
+              "cost": 114.19,
               "cars": 1
             }
           ]
@@ -171,7 +215,7 @@
           "type": "attraction",
           "position": "Shanghai Zoo",
           "start_time": "09:27",
-          "end_time": "10:27",
+          "end_time": "10:42",
           "price": 40.0,
           "cost": 120.0,
           "tickets": 3,
@@ -192,8 +236,8 @@
         {
           "type": "attraction",
           "position": "Shanghai Ocean Aquarium",
-          "start_time": "10:48",
-          "end_time": "11:48",
+          "start_time": "11:03",
+          "end_time": "12:18",
           "price": 155.0,
           "cost": 465.0,
           "tickets": 3,
@@ -202,8 +246,8 @@
               "start": "Shanghai Zoo",
               "end": "Shanghai Ocean Aquarium",
               "mode": "taxi",
-              "start_time": "10:27",
-              "end_time": "10:48",
+              "start_time": "10:42",
+              "end_time": "11:03",
               "distance": 14.29,
               "price": 59.01,
               "cost": 59.01,
@@ -214,8 +258,8 @@
         {
           "type": "lunch",
           "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "11:58",
-          "end_time": "12:58",
+          "start_time": "12:28",
+          "end_time": "13:28",
           "price": 203.0,
           "cost": 609.0,
           "tickets": 3,
@@ -224,8 +268,8 @@
               "start": "Shanghai Ocean Aquarium",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "11:48",
-              "end_time": "11:58",
+              "start_time": "12:18",
+              "end_time": "12:28",
               "distance": 6.93,
               "price": 28.96,
               "cost": 28.96,
@@ -235,44 +279,44 @@
         },
         {
           "type": "attraction",
-          "position": "Huangpu River Cruise (Shiliupu Wharf)",
-          "start_time": "13:06",
-          "end_time": "14:06",
-          "price": 108.0,
-          "cost": 324.0,
+          "position": "Disney Town",
+          "start_time": "13:59",
+          "end_time": "15:14",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Huangpu River Cruise (Shiliupu Wharf)",
+              "end": "Disney Town",
               "mode": "taxi",
-              "start_time": "12:58",
-              "end_time": "13:06",
-              "distance": 5.68,
-              "price": 24.6,
-              "cost": 24.6,
+              "start_time": "13:28",
+              "end_time": "13:59",
+              "distance": 20.98,
+              "price": 89.12,
+              "cost": 89.12,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Disney Town",
-          "start_time": "14:33",
-          "end_time": "15:33",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "Shanghai Eternal Love",
+          "start_time": "15:40",
+          "end_time": "16:55",
+          "price": 298.0,
+          "cost": 894.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Huangpu River Cruise (Shiliupu Wharf)",
-              "end": "Disney Town",
+              "start": "Disney Town",
+              "end": "Shanghai Eternal Love",
               "mode": "taxi",
-              "start_time": "14:06",
-              "end_time": "14:33",
-              "distance": 18.38,
-              "price": 77.43,
-              "cost": 77.43,
+              "start_time": "15:14",
+              "end_time": "15:40",
+              "distance": 17.67,
+              "price": 74.24,
+              "cost": 74.24,
               "cars": 1
             }
           ]
@@ -280,21 +324,21 @@
         {
           "type": "dinner",
           "position": "Kurogi",
-          "start_time": "17:00",
-          "end_time": "18:00",
+          "start_time": "17:03",
+          "end_time": "18:03",
           "price": 3312.0,
           "cost": 9936.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Disney Town",
+              "start": "Shanghai Eternal Love",
               "end": "Kurogi",
               "mode": "taxi",
-              "start_time": "15:33",
-              "end_time": "16:03",
-              "distance": 20.46,
-              "price": 86.78,
-              "cost": 86.78,
+              "start_time": "16:55",
+              "end_time": "17:03",
+              "distance": 5.79,
+              "price": 24.98,
+              "cost": 24.98,
               "cars": 1
             }
           ]
@@ -302,7 +346,7 @@
         {
           "type": "accommodation",
           "position": "Orange Hotel (Shanghai Pudong Airport)",
-          "start_time": "18:42",
+          "start_time": "18:45",
           "end_time": "24:00",
           "price": 351.0,
           "cost": 702.0,
@@ -314,8 +358,8 @@
               "start": "Kurogi",
               "end": "Orange Hotel (Shanghai Pudong Airport)",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:42",
+              "start_time": "18:03",
+              "end_time": "18:45",
               "distance": 28.57,
               "price": 123.28,
               "cost": 123.28,
@@ -342,7 +386,7 @@
           "type": "attraction",
           "position": "Shanghai Film Park",
           "start_time": "09:36",
-          "end_time": "10:36",
+          "end_time": "10:51",
           "price": 69.0,
           "cost": 207.0,
           "tickets": 3,
@@ -362,64 +406,64 @@
         },
         {
           "type": "attraction",
-          "position": "Shanghai Eternal Love",
-          "start_time": "11:14",
-          "end_time": "12:14",
-          "price": 298.0,
-          "cost": 894.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shanghai Film Park",
-              "end": "Shanghai Eternal Love",
-              "mode": "taxi",
-              "start_time": "10:36",
-              "end_time": "11:14",
-              "distance": 25.53,
-              "price": 109.61,
-              "cost": 109.61,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
           "position": "Shanghai Happy Valley",
-          "start_time": "12:54",
-          "end_time": "13:54",
+          "start_time": "11:10",
+          "end_time": "12:25",
           "price": 150.0,
           "cost": 450.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Eternal Love",
+              "start": "Shanghai Film Park",
               "end": "Shanghai Happy Valley",
               "mode": "taxi",
-              "start_time": "12:14",
-              "end_time": "12:54",
-              "distance": 27.25,
-              "price": 117.31,
-              "cost": 117.31,
+              "start_time": "10:51",
+              "end_time": "11:10",
+              "distance": 12.97,
+              "price": 53.08,
+              "cost": 53.08,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shanghai Happy Valley Bungee Jumping and Zip Line",
-          "start_time": "13:55",
-          "end_time": "15:25",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "Madame Tussauds Shanghai",
+          "start_time": "13:08",
+          "end_time": "14:23",
+          "price": 165.0,
+          "cost": 495.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shanghai Happy Valley",
-              "end": "Shanghai Happy Valley Bungee Jumping and Zip Line",
+              "end": "Madame Tussauds Shanghai",
+              "mode": "taxi",
+              "start_time": "12:25",
+              "end_time": "13:08",
+              "distance": 28.77,
+              "price": 124.17,
+              "cost": 124.17,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Sightseeing Bus Tour",
+          "start_time": "14:23",
+          "end_time": "15:53",
+          "price": 60.0,
+          "cost": 180.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Madame Tussauds Shanghai",
+              "end": "Shanghai Sightseeing Bus Tour",
               "mode": "walk",
-              "start_time": "13:54",
-              "end_time": "13:55",
-              "distance": 0.1209079401549386,
+              "start_time": "14:23",
+              "end_time": "14:23",
+              "distance": 0.032059503655538495,
               "price": 0,
               "cost": 0
             }
@@ -435,37 +479,51 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Happy Valley Bungee Jumping and Zip Line",
-              "end": "Sheshan-Metro Station",
-              "mode": "walk",
-              "start_time": "15:25",
-              "end_time": "15:31",
-              "distance": 0.55,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Sheshan-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:31",
-              "end_time": "16:42",
-              "distance": 35.56,
-              "price": 7,
-              "cost": 21,
-              "tickets": 3
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
+              "start": "Shanghai Sightseeing Bus Tour",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "16:42",
-              "end_time": "16:52",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:53",
+              "end_time": "16:04",
+              "distance": 7.87,
+              "price": 32.26,
+              "cost": 32.26,
+              "cars": 1
             }
           ]
+        },
+        {
+          "type": "train",
+          "start_time": "12:25",
+          "end_time": "12:25",
+          "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-780235-D3-1-IN"
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "12:25",
+          "end_time": "12:40",
+          "price": 18.0,
+          "cost": 54.0,
+          "tickets": 3,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "12:40",
+          "end_time": "12:40",
+          "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "end": "Shanghai Hongqiao Station",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-780235-D3-1-OUT"
         },
         {
           "type": "train",
@@ -479,34 +537,14 @@
           "transports": [
             {
               "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:10",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "18:10",
-              "end_time": "18:56",
-              "distance": 23.09,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
               "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "18:56",
-              "end_time": "18:57",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.64,
+              "price": 101.08,
+              "cost": 101.08,
+              "cars": 1
             }
           ],
           "TrainID": "D941"
@@ -514,6 +552,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 181.5908079147339,
-  "_eval_score": 97.30179615705931
+  "elapsed_time(sec)": 183.14581322669983,
+  "_eval_score": 99.33560090702949
 }

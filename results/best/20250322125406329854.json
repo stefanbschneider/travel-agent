@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:11",
-          "end_time": "08:46",
-          "start": "Suzhou New District Station",
-          "end": "Nanjing South Railway Station",
-          "price": 113.45,
-          "cost": 340.35,
+          "start_time": "00:02",
+          "end_time": "02:15",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 94.54,
+          "cost": 283.62,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D636"
+          "TrainID": "T136"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "02:15",
+              "end_time": "02:21",
+              "distance": 4.23,
+              "price": 19.51,
+              "cost": 19.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "09:13",
+          "end_time": "10:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "distance": 3.77,
+              "price": 17.9,
+              "cost": 17.9,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Ancient Peach Leaf Ferry",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "08:46",
-              "end_time": "08:54",
-              "distance": 5.8,
-              "price": 25.02,
-              "cost": 25.02,
+              "start_time": "10:43",
+              "end_time": "10:44",
+              "distance": 1.21,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -266,84 +310,66 @@
           "transports": [
             {
               "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "walk",
-              "start_time": "13:33",
-              "end_time": "13:38",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "13:38",
-              "end_time": "13:44",
-              "distance": 3.21,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
               "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "mode": "walk",
-              "start_time": "13:44",
-              "end_time": "13:57",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:33",
+              "end_time": "13:39",
+              "distance": 4.63,
+              "price": 20.91,
+              "cost": 20.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "15:27",
+              "end_time": "15:30",
+              "distance": 2.46,
+              "price": 13.29,
+              "cost": 13.29,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:00",
-          "end_time": "18:12",
+          "start_time": "22:24",
+          "end_time": "02:26",
           "start": "Nanjing Station",
           "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 368.70000000000005,
+          "price": 75.63,
+          "cost": 226.89,
           "tickets": 3,
           "transports": [
             {
-              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "15:27",
-              "end_time": "15:40",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Nanjing Station-Metro Station",
-              "mode": "metro",
-              "start_time": "15:40",
-              "end_time": "15:47",
-              "distance": 3.56,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Nanjing Station-Metro Station",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "end": "Nanjing Station",
-              "mode": "walk",
-              "start_time": "15:47",
-              "end_time": "15:49",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 2.77,
+              "price": 14.38,
+              "cost": 14.38,
+              "cars": 1
             }
           ],
-          "TrainID": "G7021"
+          "TrainID": "K1805"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.22151803970337,
-  "_eval_score": 97.70833333333334
+  "_eval_score": 100.0
 }

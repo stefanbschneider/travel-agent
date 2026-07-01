@@ -1,6 +1,6 @@
 # Tail Optimization Workflows
 
-This repository now supports four deterministic workflows targeting different runtimes.
+This repository now supports five deterministic workflows targeting different runtimes.
 
 ## 1) Short Local Run (~10 min, M1 MacBook)
 
@@ -109,12 +109,28 @@ make hpc-preference \
   HPC_PREFERENCE_ROUNDS=10 \
   HPC_PREFERENCE_TOPK=400 \
   HPC_PREFERENCE_MIN_SCORE=99.5 \
+  HPC_PREFERENCE_METRIC=ddr \
   HPC_PREFERENCE_STOP=3
 ```
 
 Why this split helps:
 - unresolved-tail rounds are dominated by hard-logic feasibility search
 - preference rounds avoid those cases and spend budget on improving DAV/ATT/DDR of already-valid plans
+- focus a single preference component with `HPC_PREFERENCE_METRIC` (`ddr` has the most headroom): each round ranks its focus split by that component's per-query gap instead of the blended total; `overall` (default) keeps the blended remaining-score behavior
+
+
+## 5) Full-Set Densify Array (SLURM)
+
+Use this when the hard metrics are saturated and the remaining ROI is preference score. The array shards `tpc_phase1` across compute nodes; the login node only submits and monitors jobs. The window-meal knobs preserve existing routing, swap only a bounding intercity when it unlocks a meal slot, and keep the change only when the full checker accepts the denser plan.
+
+```bash
+array_job=$(sbatch --parsable \
+  --export=ALL,TPC_DENSIFY_ATTR_GAP_MIN=75,TPC_DENSIFY_ATTR_DWELL=60,TPC_DENSIFY_ATTR_CANDIDATES=24,TPC_DENSIFY_LATE_DINNER=1,TPC_DENSIFY_EARLY_BREAKFAST=1 \
+  slurm/densify_array.sbatch)
+sbatch --dependency=afterok:${array_job} slurm/merge_score.sbatch
+```
+
+`slurm/densify_array.sbatch` writes shard logs to `cache/solve_logs/densify_array_<job>_<task>.log`. `slurm/merge_score.sbatch` performs the serialized monotonic merge and full-set score on a compute node. Do not run densify, merge, score, or solver loops on the login/frontend node.
 
 ## Determinism Guidance
 
@@ -133,7 +149,7 @@ All profile runs write to `cache/hpc_tail_runs/<run-id>/`:
 - `logs/rXX_rank.log`: rank output for round `XX`.
 - `logs/rXX_solve.log`: solve output for round `XX`.
 - `logs/rXX_merge.log`: merge output for round `XX`.
-- `logs/rXX_score.log`: score output for round `XX`.
-- `rounds/rXX/summary.json`: per-round summary.
+- `logs/final_score.log`: final full-set score, run once after the loop.
+- `rounds/rXX/summary.json`: per-round summary. Its `metrics` are the focus-subset evaluation from the merge stage; the true full-set `overall` is in top-level `summary.json` under `final_metrics`.
 
 These files are intended for reproducibility and auditability of overnight runs.

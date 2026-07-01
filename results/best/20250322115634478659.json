@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:59",
+              "distance": 34.63,
+              "price": 150.52,
+              "cost": 150.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Huangpu River",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "Huangpu River",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:55",
-              "distance": 31.97,
-              "price": 138.59,
-              "cost": 138.59,
+              "start_time": "07:00",
+              "end_time": "07:03",
+              "distance": 2.65,
+              "price": 13.99,
+              "cost": 13.99,
               "cars": 1
             }
           ]
@@ -174,24 +196,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "position": "WOW HOTELS",
           "start_time": "19:43",
           "end_time": "24:00",
-          "price": 303.0,
-          "cost": 303.0,
+          "price": 568.0,
+          "cost": 568.0,
           "rooms": 1,
-          "room_type": 2,
+          "room_type": 1,
           "tickets": 1,
           "transports": [
             {
               "start": "Dahuchun (Sichuan Middle Road Branch)",
-              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "WOW HOTELS",
               "mode": "taxi",
               "start_time": "19:12",
-              "end_time": "19:43",
-              "distance": 20.93,
-              "price": 88.87,
-              "cost": 88.87,
+              "end_time": "19:13",
+              "distance": 1.03,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -203,13 +225,35 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "position": "WOW HOTELS",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
           "cost": 0,
           "tickets": 0,
           "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "WOW HOTELS",
+              "end": "Century Square",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:40",
+              "distance": 6.74,
+              "price": 28.29,
+              "cost": 28.29,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -221,14 +265,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Square",
               "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:05",
-              "distance": 23.76,
-              "price": 101.62,
-              "cost": 101.62,
+              "start_time": "10:34",
+              "end_time": "10:47",
+              "distance": 8.8,
+              "price": 35.49,
+              "cost": 35.49,
               "cars": 1
             }
           ]
@@ -266,62 +310,87 @@
             {
               "start": "Jululu Road",
               "end": "Eileen Chang's Former Residence",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:30",
-              "end_time": "13:37",
-              "distance": 0.6424224074639432,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:30",
+              "distance": 0.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Temple",
+          "start_time": "15:10",
+          "end_time": "16:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eileen Chang's Former Residence",
+              "end": "Jing'an Temple",
+              "mode": "taxi",
+              "start_time": "15:07",
+              "end_time": "15:07",
+              "distance": 0.27,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 18.0,
+          "cost": 18.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Temple",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "16:10",
+              "end_time": "16:28",
+              "distance": 12.65,
+              "price": 51.62,
+              "cost": 51.62,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Eileen Chang's Former Residence",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:07",
-              "end_time": "15:13",
-              "distance": 0.58,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:13",
-              "end_time": "16:21",
-              "distance": 34.08,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:36",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:05",
+              "distance": 43.67,
+              "price": 191.22,
+              "cost": 191.22,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 6.3439202308654785,
-  "_eval_score": 97.4265873015873
+  "_eval_score": 100.0
 }

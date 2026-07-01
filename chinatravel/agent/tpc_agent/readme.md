@@ -64,6 +64,8 @@ All knobs are environment variables read at construction; defaults reproduce the
 | `TPC_CP_AFTER_PASS` | `1` | Keep running CP-SAT even when the greedy base plan already passes acceptance (`0` keeps the old skip-CP-after-pass behavior). |
 | `TPC_CP_FOUR_SLOT_SHARE` | `0.75` | Fraction of per-query CP time reserved for dense 4-attractions/day template attempts before fallback templates are tried. |
 | `TPC_CP_FOUR_SLOT_ROUNDS` | `2` | Number of rounds over visit-duration candidates spent on the 4-attractions/day template before trying 3/2 templates. |
+| `TPC_CP_ATTR_CAP` | `60` | Maximum attraction candidates (price-ranked) handed to CP-SAT per query. |
+| `TPC_CP_RECON_SHUFFLES` | `0` | Number of extra seeded attraction orderings the reconstructor tries per CP solve (beyond as-is + 2 nearest-neighbour orders). `0` (default) = legacy behavior; raising it adds candidate diversity but showed no single-round gain beyond noise on `tpc_phase1`. |
 | `TPC_CP_TIME_LIMIT_SEC` | auto | Per-query CP-SAT time cap (bounded by remaining solve budget). |
 
 ## Tail-focused optimization workflow (`scripts/rank_tail.py`)

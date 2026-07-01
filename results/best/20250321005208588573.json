@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "05:22",
-          "end_time": "06:52",
+          "start_time": "01:46",
+          "end_time": "03:16",
           "start": "Guangzhou Baiyun International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 558.37,
-          "cost": 1116.74,
+          "end": "Shanghai Pudong International Airport",
+          "price": 589.3,
+          "cost": 1178.6,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL242"
+          "FlightID": "FL247"
+        },
+        {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 60.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "03:16",
+              "end_time": "04:07",
+              "distance": 34.63,
+              "price": 150.52,
+              "cost": 150.52,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "Anfu Road",
               "mode": "taxi",
-              "start_time": "06:52",
-              "end_time": "07:08",
-              "distance": 10.71,
-              "price": 42.89,
-              "cost": 42.89,
+              "start_time": "07:00",
+              "end_time": "07:06",
+              "distance": 4.16,
+              "price": 19.27,
+              "cost": 19.27,
               "cars": 1
             }
           ]
@@ -234,6 +256,50 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Century Square",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 15.24,
+              "price": 63.3,
+              "cost": 63.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Xujiahui Park",
+          "start_time": "10:18",
+          "end_time": "10:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Century Square",
+              "end": "Xujiahui Park",
+              "mode": "taxi",
+              "start_time": "10:04",
+              "end_time": "10:18",
+              "distance": 9.83,
+              "price": 39.1,
+              "cost": 39.1,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "11:00",
@@ -243,14 +309,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Xujiahui Park",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:19",
-              "distance": 33.16,
-              "price": 143.92,
-              "cost": 143.92,
+              "start_time": "10:28",
+              "end_time": "10:43",
+              "distance": 10.64,
+              "price": 42.57,
+              "cost": 42.57,
               "cars": 1
             }
           ]
@@ -266,34 +332,14 @@
           "transports": [
             {
               "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "end": "Qibao-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qibao-Metro Station",
-              "end": "Xinzhuang-Metro Station",
-              "mode": "metro",
-              "start_time": "12:08",
-              "end_time": "12:19",
-              "distance": 5.99,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Xinzhuang-Metro Station",
               "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "mode": "walk",
-              "start_time": "12:19",
-              "end_time": "12:38",
-              "distance": 1.6,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 4.68,
+              "price": 21.1,
+              "cost": 21.1,
+              "cars": 1
             }
           ]
         },
@@ -308,84 +354,198 @@
           "transports": [
             {
               "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "end": "Xinzhuang-Metro Station",
-              "mode": "walk",
-              "start_time": "14:08",
-              "end_time": "14:27",
-              "distance": 1.6,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinzhuang-Metro Station",
-              "end": "Yindu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "14:27",
-              "end_time": "14:31",
-              "distance": 2.46,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Yindu Road-Metro Station",
               "end": "Deqiu Cultural and Creative Valley",
-              "mode": "walk",
-              "start_time": "14:31",
-              "end_time": "14:47",
-              "distance": 1.33,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:08",
+              "end_time": "14:12",
+              "distance": 3.17,
+              "price": 15.8,
+              "cost": 15.8,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "16:55",
-          "end_time": "15:04",
-          "start": "Shanghai South Railway Station",
-          "end": "Guangzhou Station",
-          "price": 484.76,
-          "cost": 969.52,
+          "type": "attraction",
+          "position": "Shanghai Botanical Garden",
+          "start_time": "16:32",
+          "end_time": "16:42",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Deqiu Cultural and Creative Valley",
-              "end": "Yindu Road-Metro Station",
-              "mode": "walk",
+              "end": "Shanghai Botanical Garden",
+              "mode": "taxi",
               "start_time": "16:17",
-              "end_time": "16:33",
-              "distance": 1.33,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "16:32",
+              "distance": 10.46,
+              "price": 41.76,
+              "cost": 41.76,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lujiazui Skywalk",
+          "start_time": "16:58",
+          "end_time": "17:08",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
             {
-              "start": "Yindu Road-Metro Station",
-              "end": "Shanghai South Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "16:33",
-              "end_time": "16:49",
-              "distance": 8.17,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
+              "start": "Shanghai Botanical Garden",
+              "end": "Lujiazui Skywalk",
+              "mode": "taxi",
+              "start_time": "16:42",
+              "end_time": "16:58",
+              "distance": 11.26,
+              "price": 45.39,
+              "cost": 45.39,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Maden Warehouse Historic Site",
+          "start_time": "17:10",
+          "end_time": "17:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
             {
-              "start": "Shanghai South Railway Station-Metro Station",
-              "end": "Shanghai South Railway Station",
-              "mode": "walk",
-              "start_time": "16:49",
-              "end_time": "16:51",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
+              "start": "Lujiazui Skywalk",
+              "end": "Maden Warehouse Historic Site",
+              "mode": "taxi",
+              "start_time": "17:08",
+              "end_time": "17:10",
+              "distance": 1.97,
+              "price": 11.6,
+              "cost": 11.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:35",
+          "end_time": "18:35",
+          "price": 16.0,
+          "cost": 32.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Maden Warehouse Historic Site",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "17:20",
+              "end_time": "17:25",
+              "distance": 3.97,
+              "price": 18.61,
+              "cost": 18.61,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Duolun Road Cultural Celebrities Street",
+          "start_time": "18:59",
+          "end_time": "19:59",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Duolun Road Cultural Celebrities Street",
+              "mode": "taxi",
+              "start_time": "18:35",
+              "end_time": "18:43",
+              "distance": 5.66,
+              "price": 24.5,
+              "cost": 24.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai International Cruise Festival",
+          "start_time": "20:09",
+          "end_time": "20:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Duolun Road Cultural Celebrities Street",
+              "end": "Shanghai International Cruise Festival",
+              "mode": "taxi",
+              "start_time": "19:59",
+              "end_time": "20:09",
+              "distance": 7.31,
+              "price": 30.29,
+              "cost": 30.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Sightseeing Night Market (Venice Water City Night)",
+          "start_time": "20:23",
+          "end_time": "20:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai International Cruise Festival",
+              "end": "Sightseeing Night Market (Venice Water City Night)",
+              "mode": "taxi",
+              "start_time": "20:19",
+              "end_time": "20:23",
+              "distance": 3.33,
+              "price": 16.36,
+              "cost": 16.36,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:32",
+          "end_time": "23:02",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 602.14,
+          "cost": 1204.28,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Sightseeing Night Market (Venice Water City Night)",
+              "end": "Shanghai Hongqiao International Airport",
+              "mode": "taxi",
+              "start_time": "20:33",
+              "end_time": "20:42",
+              "distance": 6.15,
+              "price": 26.22,
+              "cost": 26.22,
+              "cars": 1
             }
           ],
-          "TrainID": "K511"
+          "FlightID": "FL027"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 6.400451898574829,
-  "_eval_score": 97.87545787545787
+  "_eval_score": 100.0
 }

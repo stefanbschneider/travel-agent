@@ -8,15 +8,99 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "10:05",
+          "end_time": "11:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Jing'an Park",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 0.4434750434069161,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,32 +112,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Pudong International Airport-Metro Station",
+              "start": "Jing'an Park",
+              "end": "West Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "10:46",
-              "distance": 1.27,
+              "start_time": "11:05",
+              "end_time": "11:13",
+              "distance": 0.67,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "West Nanjing Road-Metro Station",
               "end": "Jiashan Road-Metro Station",
               "mode": "metro",
-              "start_time": "10:46",
-              "end_time": "11:52",
-              "distance": 33.38,
-              "price": 7,
-              "cost": 7,
+              "start_time": "11:13",
+              "end_time": "11:18",
+              "distance": 3.0,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Jiashan Road-Metro Station",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "walk",
-              "start_time": "11:52",
-              "end_time": "11:55",
+              "start_time": "11:18",
+              "end_time": "11:21",
               "distance": 0.28,
               "price": 0,
               "cost": 0
@@ -113,11 +197,32 @@
           "transports": [
             {
               "start": "Shanghai Museum",
-              "end": "1933 Old Millfun",
+              "end": "East Nanjing Road-Metro Station",
               "mode": "walk",
               "start_time": "14:12",
-              "end_time": "14:51",
-              "distance": 3.259480623752398,
+              "end_time": "14:17",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Liping Road-Metro Station",
+              "mode": "metro",
+              "start_time": "14:17",
+              "end_time": "14:22",
+              "distance": 2.95,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Liping Road-Metro Station",
+              "end": "1933 Old Millfun",
+              "mode": "walk",
+              "start_time": "14:22",
+              "end_time": "14:24",
+              "distance": 0.24,
               "price": 0,
               "cost": 0
             }
@@ -309,6 +414,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Juliet's Balcony",
+          "start_time": "13:49",
+          "end_time": "14:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Anfu Road",
+              "end": "Juliet's Balcony",
+              "mode": "walk",
+              "start_time": "13:43",
+              "end_time": "13:49",
+              "distance": 0.5740108939075523,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "17:00",
@@ -318,16 +444,71 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Anfu Road",
+              "start": "Juliet's Balcony",
+              "end": "Changshu Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:19",
+              "end_time": "14:22",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Changshu Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "14:22",
+              "end_time": "14:45",
+              "distance": 11.51,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Qibao-Metro Station",
               "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "16:04",
-              "distance": 11.81185825268118,
+              "start_time": "14:45",
+              "end_time": "14:53",
+              "distance": 0.72,
               "price": 0,
               "cost": 0
             }
           ]
+        },
+        {
+          "type": "train",
+          "start_time": "09:00",
+          "end_time": "09:00",
+          "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "end": "263-meter Main Observation Deck",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-447269-D2-1-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "263-meter Main Observation Deck",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "10:00",
+          "start": "263-meter Main Observation Deck",
+          "end": "Shanghai Hongqiao Station",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-447269-D2-1-OUT"
         },
         {
           "type": "train",
@@ -341,11 +522,32 @@
           "transports": [
             {
               "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-              "end": "Shanghai Hongqiao Station",
+              "end": "Qibao-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "19:09",
-              "distance": 5.7782239914486535,
+              "end_time": "18:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:08",
+              "end_time": "18:18",
+              "distance": 5.17,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Hongqiao Railway Station-Metro Station",
+              "end": "Shanghai Hongqiao Station",
+              "mode": "walk",
+              "start_time": "18:18",
+              "end_time": "18:19",
+              "distance": 0.12,
               "price": 0,
               "cost": 0
             }
@@ -356,5 +558,5 @@
     }
   ],
   "elapsed_time(sec)": 182.16488099098206,
-  "_eval_score": 95.00952380952381
+  "_eval_score": 99.70748299319729
 }

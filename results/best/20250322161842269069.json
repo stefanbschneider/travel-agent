@@ -7,16 +7,163 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 727.96,
+          "type": "airplane",
+          "start_time": "03:17",
+          "end_time": "04:48",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "TrainID": "D3126"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+          "start_time": "07:17",
+          "end_time": "08:17",
+          "price": 108.0,
+          "cost": 108.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "Natural History Museum-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:21",
+              "distance": 12.04,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Natural History Museum-Metro Station",
+              "end": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+              "mode": "walk",
+              "start_time": "05:21",
+              "end_time": "05:27",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eileen Chang's Former Residence",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+              "end": "Eileen Chang's Former Residence",
+              "mode": "walk",
+              "start_time": "08:17",
+              "end_time": "08:29",
+              "distance": 1.0602721999112275,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Le Caisa Pizza (Jing'an Joy City Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 76.0,
+          "cost": 76.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eileen Chang's Former Residence",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "10:06",
+              "end_time": "10:09",
+              "distance": 1.77,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Le Caisa Pizza (Jing'an Joy City Branch)",
+              "mode": "walk",
+              "start_time": "10:09",
+              "end_time": "10:11",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Holy Trinity Church",
+          "start_time": "12:24",
+          "end_time": "13:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Le Caisa Pizza (Jing'an Joy City Branch)",
+              "end": "Holy Trinity Church",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:24",
+              "distance": 2.015249098893861,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hoping Fat Tea Cafe (People's Square Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 84.0,
+          "cost": 84.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Holy Trinity Church",
+              "end": "Hoping Fat Tea Cafe (People's Square Branch)",
+              "mode": "walk",
+              "start_time": "13:24",
+              "end_time": "13:44",
+              "distance": 1.7011332649927464,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,32 +175,32 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
-              "end": "Hongqiao Railway Station-Metro Station",
+              "start": "Hoping Fat Tea Cafe (People's Square Branch)",
+              "end": "People's Square-Metro Station",
               "mode": "walk",
-              "start_time": "18:42",
-              "end_time": "18:43",
-              "distance": 0.12,
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 0.3,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Hongqiao Railway Station-Metro Station",
+              "start": "People's Square-Metro Station",
               "end": "Tiantong Road-Metro Station",
               "mode": "metro",
-              "start_time": "18:43",
-              "end_time": "19:16",
-              "distance": 16.52,
-              "price": 5,
-              "cost": 5,
+              "start_time": "18:03",
+              "end_time": "18:05",
+              "distance": 1.41,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Tiantong Road-Metro Station",
               "end": "Nanjing Road Pedestrian Street",
               "mode": "walk",
-              "start_time": "19:16",
-              "end_time": "19:25",
+              "start_time": "18:05",
+              "end_time": "18:14",
               "distance": 0.8,
               "price": 0,
               "cost": 0
@@ -256,32 +403,11 @@
           "transports": [
             {
               "start": "The Bund",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
-              "start_time": "11:20",
-              "end_time": "11:28",
-              "distance": 0.74,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "metro",
-              "start_time": "11:28",
-              "end_time": "11:30",
-              "distance": 1.37,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
               "end": "Huangpu River",
               "mode": "walk",
-              "start_time": "11:30",
-              "end_time": "11:38",
-              "distance": 0.68,
+              "start_time": "11:20",
+              "end_time": "11:22",
+              "distance": 0.24037883824900896,
               "price": 0,
               "cost": 0
             }
@@ -298,32 +424,32 @@
           "transports": [
             {
               "start": "Huangpu River",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "walk",
-              "start_time": "12:38",
-              "end_time": "12:46",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:46",
-              "end_time": "12:49",
-              "distance": 1.87,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "walk",
-              "start_time": "12:49",
-              "end_time": "12:57",
-              "distance": 0.69,
+              "start_time": "12:38",
+              "end_time": "12:54",
+              "distance": 1.3675323673244102,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Temple",
+          "start_time": "15:10",
+          "end_time": "15:40",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "end": "Jing'an Temple",
+              "mode": "walk",
+              "start_time": "13:57",
+              "end_time": "15:10",
+              "distance": 6.157734750650105,
               "price": 0,
               "cost": 0
             }
@@ -339,12 +465,33 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "start": "Jing'an Temple",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:40",
+              "end_time": "15:49",
+              "distance": 0.8,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Weining Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:49",
+              "end_time": "16:03",
+              "distance": 7.12,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Weining Road-Metro Station",
               "end": "Happy Square Alla Torre Italian Handmade Pizza (Bingu Branch)",
               "mode": "walk",
-              "start_time": "13:57",
-              "end_time": "16:25",
-              "distance": 12.408907796997225,
+              "start_time": "16:03",
+              "end_time": "16:04",
+              "distance": 0.15,
               "price": 0,
               "cost": 0
             }
@@ -362,11 +509,32 @@
           "transports": [
             {
               "start": "Happy Square Alla Torre Italian Handmade Pizza (Bingu Branch)",
-              "end": "Shanghai Hongqiao Station",
+              "end": "Weining Road-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "19:22",
-              "distance": 6.893689739212138,
+              "end_time": "18:01",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Weining Road-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:01",
+              "end_time": "18:14",
+              "distance": 6.91,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Hongqiao Railway Station-Metro Station",
+              "end": "Shanghai Hongqiao Station",
+              "mode": "walk",
+              "start_time": "18:14",
+              "end_time": "18:15",
+              "distance": 0.12,
               "price": 0,
               "cost": 0
             }
@@ -377,5 +545,5 @@
     }
   ],
   "elapsed_time(sec)": 181.40230512619019,
-  "_eval_score": 94.11177248677248
+  "_eval_score": 99.56825396825397
 }

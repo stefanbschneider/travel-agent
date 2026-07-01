@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:58",
-          "end_time": "08:18",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 277.83,
-          "cost": 555.66,
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL071"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "07:17",
+          "end_time": "08:17",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:41",
+              "distance": 32.08,
+              "price": 139.06,
+              "cost": 139.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Laomendong Historical Block",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "end": "Laomendong Historical Block",
+              "mode": "taxi",
+              "start_time": "08:17",
+              "end_time": "08:18",
+              "distance": 0.97,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Laomendong Historical Block",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "08:18",
-              "end_time": "09:07",
-              "distance": 32.94,
-              "price": 142.93,
-              "cost": 142.93,
+              "start_time": "10:00",
+              "end_time": "10:00",
+              "distance": 0.35,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -74,12 +118,35 @@
             {
               "start": "Confucius Temple",
               "end": "Confucius Temple Yuhua Stone Museum",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:31",
-              "end_time": "13:32",
-              "distance": 0.14000629410462556,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:31",
+              "distance": 0.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple Snack Square (East Archway Branch)",
+          "start_time": "15:35",
+          "end_time": "16:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple Yuhua Stone Museum",
+              "end": "Confucius Temple Snack Square (East Archway Branch)",
+              "mode": "taxi",
+              "start_time": "15:32",
+              "end_time": "15:32",
+              "distance": 0.25,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -93,14 +160,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple Yuhua Stone Museum",
+              "start": "Confucius Temple Snack Square (East Archway Branch)",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "walk",
-              "start_time": "15:32",
-              "end_time": "15:57",
-              "distance": 2.159526350664383,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:35",
+              "end_time": "16:37",
+              "distance": 1.91,
+              "price": 11.37,
+              "cost": 11.37,
+              "cars": 1
             }
           ]
         },
@@ -221,12 +289,13 @@
             {
               "start": "Zhongshan Scenic Area",
               "end": "Beiqiu Museum of Contemporary Art",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:43",
-              "end_time": "14:55",
-              "distance": 6.055901378122074,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:52",
+              "distance": 6.06,
+              "price": 25.9,
+              "cost": 25.9,
+              "cars": 1
             }
           ]
         },
@@ -242,14 +311,49 @@
             {
               "start": "Beiqiu Museum of Contemporary Art",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "16:25",
-              "end_time": "16:46",
-              "distance": 1.8080321628524065,
-              "price": 0,
-              "cost": 0
+              "end_time": "16:27",
+              "distance": 1.81,
+              "price": 11.03,
+              "cost": 11.03,
+              "cars": 1
             }
           ]
+        },
+        {
+          "type": "train",
+          "start_time": "09:00",
+          "end_time": "09:00",
+          "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+          "end": "Ageless Village",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D2-1-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "Ageless Village",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "10:00",
+          "start": "Ageless Village",
+          "end": "Manxin Hotel(Nanjing Jinlingyin)",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D2-1-OUT"
         },
         {
           "type": "accommodation",
@@ -335,6 +439,142 @@
           ]
         },
         {
+          "type": "train",
+          "start_time": "09:00",
+          "end_time": "09:00",
+          "start": "Republic Red Mansion (Laomendong Branch)",
+          "end": "Ancient Huiji Temple",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-2-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Huiji Temple",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "10:00",
+          "start": "Ancient Huiji Temple",
+          "end": "Nanjing Lukou International Airport",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-2-OUT"
+        },
+        {
+          "type": "train",
+          "start_time": "10:15",
+          "end_time": "10:15",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-3-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "11:15",
+          "end_time": "11:15",
+          "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "end": "Nanjing Lukou International Airport",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-3-OUT"
+        },
+        {
+          "type": "train",
+          "start_time": "14:00",
+          "end_time": "14:00",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Ancient Peach Leaf Ferry",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-4-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "15:00",
+          "end_time": "15:00",
+          "start": "Ancient Peach Leaf Ferry",
+          "end": "Nanjing Lukou International Airport",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-4-OUT"
+        },
+        {
+          "type": "train",
+          "start_time": "16:30",
+          "end_time": "16:30",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-1-IN"
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "16:30",
+          "end_time": "17:30",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "17:30",
+          "end_time": "17:30",
+          "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "end": "Nanjing Lukou International Airport",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-637961-D3-1-OUT"
+        },
+        {
           "type": "airplane",
           "start_time": "18:22",
           "end_time": "18:42",
@@ -362,5 +602,5 @@
     }
   ],
   "elapsed_time(sec)": 0.030341148376464844,
-  "_eval_score": 96.10997732426304
+  "_eval_score": 100.0
 }

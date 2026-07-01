@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "04:12",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
+              "start": "Joyful Gathering (Jingtian Branch)",
               "end": "Shenzhen Museum of Contemporary Art and Urban Planning",
               "mode": "taxi",
-              "start_time": "04:40",
-              "end_time": "04:51",
-              "distance": 7.57,
-              "price": 31.2,
-              "cost": 31.2,
+              "start_time": "08:00",
+              "end_time": "08:04",
+              "distance": 3.24,
+              "price": 16.05,
+              "cost": 16.05,
               "cars": 1
             }
           ]
@@ -361,32 +383,184 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "attraction",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Shenzhen East Station",
+              "end": "Baishilong Music Theme Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 6.21,
-              "price": 26.45,
-              "cost": 26.45,
+              "end_time": "08:42",
+              "distance": 8.52,
+              "price": 34.52,
+              "cost": 34.52,
               "cars": 1
             }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:43",
+              "distance": 9.02,
+              "price": 36.28,
+              "cost": 36.28,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "12:10",
+          "end_time": "13:10",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "East Gate Old Street",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.63,
+              "price": 13.92,
+              "cost": 13.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "13:11",
+          "end_time": "14:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "taxi",
+              "start_time": "13:10",
+              "end_time": "13:10",
+              "distance": 0.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake Park",
+          "start_time": "14:37",
+          "end_time": "15:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "East Lake Park",
+              "mode": "taxi",
+              "start_time": "14:11",
+              "end_time": "14:16",
+              "distance": 3.85,
+              "price": 18.16,
+              "cost": 18.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "East Lake Park",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "taxi",
+              "start_time": "15:37",
+              "end_time": "15:51",
+              "distance": 9.91,
+              "price": 39.4,
+              "cost": 39.4,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "18:03",
+              "end_time": "18:54",
+              "distance": 25.78,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "walk",
+              "start_time": "18:54",
+              "end_time": "18:59",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 23.30805206298828,
-  "_eval_score": 96.66666666666667
+  "_eval_score": 100.0
 }

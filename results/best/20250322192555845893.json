@@ -8,15 +8,81 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "taxi",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.02,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jinling East Road Ferry",
+          "start_time": "10:16",
+          "end_time": "11:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Jinling East Road Ferry",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:06",
+              "distance": 4.36,
+              "price": 19.96,
+              "cost": 19.96,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +94,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jinling East Road Ferry",
               "end": "Oriental Pearl Tower Revolving Restaurant",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:18",
-              "distance": 31.79,
-              "price": 137.75,
-              "cost": 137.75,
+              "start_time": "11:16",
+              "end_time": "11:16",
+              "distance": 0.19,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -63,6 +129,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "14:13",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Peppa Pig's World of Fun",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "14:00",
+              "end_time": "14:06",
+              "distance": 4.07,
+              "price": 18.95,
+              "cost": 18.95,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shanghai Pudong Shangri-La Yi Cafe Seafood Buffet Restaurant",
           "start_time": "17:00",
@@ -72,14 +160,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Peppa Pig's World of Fun",
+              "start": "Century Avenue Cherry Orchard",
               "end": "Shanghai Pudong Shangri-La Yi Cafe Seafood Buffet Restaurant",
               "mode": "taxi",
-              "start_time": "14:00",
-              "end_time": "14:09",
-              "distance": 6.11,
-              "price": 26.09,
-              "cost": 26.09,
+              "start_time": "15:13",
+              "end_time": "15:16",
+              "distance": 2.04,
+              "price": 11.84,
+              "cost": 11.84,
               "cars": 1
             }
           ]
@@ -190,6 +278,50 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Holy Trinity Church",
+          "start_time": "13:53",
+          "end_time": "14:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Huangpu River",
+              "end": "Holy Trinity Church",
+              "mode": "taxi",
+              "start_time": "13:32",
+              "end_time": "13:33",
+              "distance": 0.68,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "15:07",
+          "end_time": "16:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Holy Trinity Church",
+              "end": "Jing'an Sculpture Park",
+              "mode": "taxi",
+              "start_time": "14:53",
+              "end_time": "14:56",
+              "distance": 2.13,
+              "price": 12.16,
+              "cost": 12.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Radisson Blu Hotel Shanghai New World - Revolving Restaurant",
           "start_time": "17:00",
@@ -199,14 +331,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Huangpu River",
+              "start": "Jing'an Sculpture Park",
               "end": "Radisson Blu Hotel Shanghai New World - Revolving Restaurant",
               "mode": "taxi",
-              "start_time": "13:32",
-              "end_time": "13:36",
-              "distance": 2.74,
-              "price": 14.29,
-              "cost": 14.29,
+              "start_time": "16:07",
+              "end_time": "16:08",
+              "distance": 0.76,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -295,32 +427,120 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "attraction",
+          "position": "China Modern and Contemporary Press and Publication Museum",
+          "start_time": "13:50",
+          "end_time": "14:50",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Shanghai Disneyland Hotel · Lumiere's Kitchen",
-              "end": "Shanghai Pudong International Airport",
+              "end": "China Modern and Contemporary Press and Publication Museum",
               "mode": "taxi",
               "start_time": "12:17",
-              "end_time": "12:38",
-              "distance": 14.03,
-              "price": 57.85,
-              "cost": 57.85,
+              "end_time": "13:01",
+              "distance": 29.95,
+              "price": 129.47,
+              "cost": 129.47,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Duolun Road Cultural Celebrities Street",
+          "start_time": "15:44",
+          "end_time": "16:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Modern and Contemporary Press and Publication Museum",
+              "end": "Duolun Road Cultural Celebrities Street",
+              "mode": "taxi",
+              "start_time": "14:50",
+              "end_time": "15:03",
+              "distance": 9.13,
+              "price": 36.65,
+              "cost": 36.65,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Duolun Road Cultural Celebrities Street",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:14",
+              "end_time": "16:22",
+              "distance": 5.66,
+              "price": 24.5,
+              "cost": 24.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "18:20",
+          "end_time": "19:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "1933 Old Millfun",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 5.22,
+              "price": 22.98,
+              "cost": 22.98,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "20:30",
+          "end_time": "22:01",
+          "start": "Shanghai Hongqiao International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 645.96,
+          "cost": 2583.84,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "Shanghai Hongqiao International Airport",
+              "mode": "taxi",
+              "start_time": "19:20",
+              "end_time": "19:44",
+              "distance": 16.59,
+              "price": 69.33,
+              "cost": 69.33,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL015"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.033202171325683594,
-  "_eval_score": 20.0
+  "_eval_score": 99.92640692640693
 }

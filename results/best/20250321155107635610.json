@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 30.0,
+          "cost": 120.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:59",
+              "distance": 34.63,
+              "price": 150.52,
+              "cost": 150.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Adventure Island",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Valley Sand Noodle Shop",
               "end": "Adventure Island",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:28",
-              "distance": 13.73,
-              "price": 56.46,
-              "cost": 56.46,
+              "start_time": "07:00",
+              "end_time": "07:32",
+              "distance": 21.88,
+              "price": 93.16,
+              "cost": 93.16,
               "cars": 1
             }
           ]
@@ -174,24 +196,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "position": "Harbour Plaza Metropolitan",
           "start_time": "20:39",
           "end_time": "24:00",
-          "price": 303.0,
-          "cost": 606.0,
+          "price": 449.0,
+          "cost": 898.0,
           "rooms": 2,
-          "room_type": 2,
+          "room_type": 1,
           "tickets": 2,
           "transports": [
             {
               "start": "Sightseeing Night Market (Venice Water City Night)",
-              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Harbour Plaza Metropolitan",
               "mode": "taxi",
               "start_time": "19:53",
-              "end_time": "20:39",
-              "distance": 30.73,
-              "price": 133.01,
-              "cost": 133.01,
+              "end_time": "19:57",
+              "distance": 2.87,
+              "price": 14.76,
+              "cost": 14.76,
               "cars": 1
             }
           ]
@@ -203,13 +225,35 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "position": "Harbour Plaza Metropolitan",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
           "cost": 0,
           "tickets": 0,
           "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Harbour Plaza Metropolitan",
+              "end": "Century Square",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:50",
+              "distance": 13.71,
+              "price": 56.4,
+              "cost": 56.4,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -221,35 +265,15 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "end": "Chuansha-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chuansha-Metro Station",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "09:20",
-              "distance": 23.2,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
+              "start": "Century Square",
               "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-              "mode": "walk",
-              "start_time": "09:20",
-              "end_time": "09:27",
-              "distance": 0.59,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:34",
+              "end_time": "10:47",
+              "distance": 8.8,
+              "price": 35.49,
+              "cost": 35.49,
+              "cars": 1
             }
           ]
         },
@@ -265,12 +289,13 @@
             {
               "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "end": "Jing'an Park",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:05",
-              "distance": 0.4437023611480386,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:00",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -285,34 +310,36 @@
           "transports": [
             {
               "start": "Jing'an Park",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:35",
-              "end_time": "13:43",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
-              "end": "Jing'an Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "13:43",
-              "end_time": "13:45",
-              "distance": 1.48,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Jing'an Temple-Metro Station",
               "end": "Changle Road",
-              "mode": "walk",
-              "start_time": "13:45",
-              "end_time": "13:50",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:35",
+              "end_time": "13:36",
+              "distance": 0.74,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "15:22",
+          "end_time": "16:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Changle Road",
+              "end": "Anfu Road",
+              "mode": "taxi",
+              "start_time": "15:20",
+              "end_time": "15:20",
+              "distance": 0.23,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -326,35 +353,15 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Changle Road",
-              "end": "Jing'an Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "15:20",
-              "end_time": "15:25",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jing'an Temple-Metro Station",
-              "end": "Middle Yanji Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:25",
-              "end_time": "15:47",
-              "distance": 11.11,
-              "price": 4,
-              "cost": 16,
-              "tickets": 4
-            },
-            {
-              "start": "Middle Yanji Road-Metro Station",
+              "start": "Anfu Road",
               "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:47",
-              "end_time": "15:57",
-              "distance": 0.86,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:22",
+              "end_time": "16:39",
+              "distance": 11.57,
+              "price": 46.79,
+              "cost": 46.79,
+              "cars": 1
             }
           ]
         },
@@ -398,6 +405,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "09:11",
+          "end_time": "10:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:57",
+              "distance": 18.24,
+              "price": 76.77,
+              "cost": 76.77,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Dahuchun (Sichuan Middle Road Branch)",
           "start_time": "11:00",
@@ -407,35 +436,15 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "end": "Chuansha-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chuansha-Metro Station",
-              "end": "East Nanjing Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "09:16",
-              "distance": 21.13,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "East Nanjing Road-Metro Station",
+              "start": "Century Avenue Cherry Orchard",
               "end": "Dahuchun (Sichuan Middle Road Branch)",
-              "mode": "walk",
-              "start_time": "09:16",
-              "end_time": "09:22",
-              "distance": 0.58,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:41",
+              "end_time": "10:45",
+              "distance": 3.04,
+              "price": 15.35,
+              "cost": 15.35,
+              "cars": 1
             }
           ]
         },
@@ -451,12 +460,13 @@
             {
               "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "People's Square",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:09",
-              "distance": 0.7794360930286902,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:01",
+              "distance": 0.78,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -472,12 +482,13 @@
             {
               "start": "People's Square",
               "end": "People's Park",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:39",
-              "end_time": "13:43",
-              "distance": 0.3569840496479139,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:39",
+              "distance": 0.36,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -492,34 +503,36 @@
           "transports": [
             {
               "start": "People's Park",
-              "end": "East Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:13",
-              "end_time": "15:18",
-              "distance": 0.47,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "East Nanjing Road-Metro Station",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:18",
-              "end_time": "15:29",
-              "distance": 5.5,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
               "end": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:29",
-              "end_time": "15:32",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:13",
+              "end_time": "15:20",
+              "distance": 4.94,
+              "price": 22.0,
+              "cost": 22.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Columbia Circle",
+          "start_time": "18:04",
+          "end_time": "19:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
+              "end": "Columbia Circle",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:00",
+              "distance": 0.39,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -534,35 +547,15 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:03",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "18:03",
-              "end_time": "19:16",
-              "distance": 36.56,
-              "price": 7,
-              "cost": 28,
-              "tickets": 4
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Columbia Circle",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "19:16",
-              "end_time": "19:31",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:34",
+              "end_time": "20:29",
+              "distance": 37.05,
+              "price": 161.41,
+              "cost": 161.41,
+              "cars": 1
             }
           ],
           "FlightID": "FL014"
@@ -571,5 +564,5 @@
     }
   ],
   "elapsed_time(sec)": 49.38054370880127,
-  "_eval_score": 97.67592592592592
+  "_eval_score": 100.0
 }

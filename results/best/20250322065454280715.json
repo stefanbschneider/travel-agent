@@ -125,6 +125,28 @@
         },
         {
           "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "12:36",
+          "end_time": "13:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Yong Fu (Huangpu Branch)",
+              "end": "Jing'an Park",
+              "mode": "taxi",
+              "start_time": "12:23",
+              "end_time": "12:24",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
           "position": "West Nanjing Road",
           "start_time": "13:44",
           "end_time": "15:14",
@@ -133,12 +155,34 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Yong Fu (Huangpu Branch)",
+              "start": "Jing'an Park",
               "end": "West Nanjing Road",
               "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:25",
-              "distance": 1.35,
+              "start_time": "13:06",
+              "end_time": "13:07",
+              "distance": 0.82,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhang Garden",
+          "start_time": "15:25",
+          "end_time": "16:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Nanjing Road",
+              "end": "Zhang Garden",
+              "mode": "taxi",
+              "start_time": "15:14",
+              "end_time": "15:15",
+              "distance": 0.73,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -155,14 +199,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "West Nanjing Road",
+              "start": "Zhang Garden",
               "end": "Kurogi",
               "mode": "taxi",
-              "start_time": "15:14",
-              "end_time": "15:18",
-              "distance": 2.93,
-              "price": 14.95,
-              "cost": 14.95,
+              "start_time": "16:25",
+              "end_time": "16:28",
+              "distance": 2.22,
+              "price": 12.48,
+              "cost": 12.48,
               "cars": 1
             }
           ]
@@ -251,32 +295,120 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "12:20",
+          "end_time": "13:50",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Pudong International Airport",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:51",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "end_time": "12:11",
+              "distance": 7.97,
+              "price": 32.6,
+              "cost": 32.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "13:56",
+          "end_time": "15:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "13:50",
+              "end_time": "13:51",
+              "distance": 1.31,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lujiazui Central Green Space",
+          "start_time": "15:34",
+          "end_time": "17:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Lujiazui Central Green Space",
+              "mode": "taxi",
+              "start_time": "15:26",
+              "end_time": "15:27",
+              "distance": 0.88,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:31",
+          "end_time": "18:31",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lujiazui Central Green Space",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "17:04",
+              "end_time": "17:12",
+              "distance": 5.63,
+              "price": 24.39,
+              "cost": 24.39,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "18:31",
+              "end_time": "19:16",
+              "distance": 30.3,
+              "price": 131.05,
+              "cost": 131.05,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.0329442024230957,
-  "_eval_score": 94.47380952380954
+  "_eval_score": 97.22222222222223
 }

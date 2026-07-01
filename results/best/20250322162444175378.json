@@ -8,34 +8,78 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:09",
-          "end_time": "18:39",
-          "start": "Chongqing North Railway Station",
+          "start_time": "07:28",
+          "end_time": "09:41",
+          "start": "Chongqing West Railway Station",
           "end": "Suzhou Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "price": 679.06,
+          "cost": 2037.1799999999998,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D2214"
+          "TrainID": "T238"
         },
         {
-          "type": "dinner",
-          "position": "Shangri-La Hotel Suzhou · Shang Palace",
-          "start_time": "18:48",
-          "end_time": "19:48",
-          "price": 231.0,
-          "cost": 693.0,
+          "type": "attraction",
+          "position": "Chang Garden",
+          "start_time": "09:48",
+          "end_time": "10:08",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Suzhou Station",
-              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Chang Garden",
               "mode": "taxi",
-              "start_time": "18:39",
-              "end_time": "18:48",
-              "distance": 6.44,
-              "price": 27.25,
-              "cost": 27.25,
+              "start_time": "09:41",
+              "end_time": "09:44",
+              "distance": 2.44,
+              "price": 13.25,
+              "cost": 13.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Moon Pavilion (Guanqian Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 153.0,
+          "cost": 459.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chang Garden",
+              "end": "Moon Pavilion (Guanqian Branch)",
+              "mode": "taxi",
+              "start_time": "10:08",
+              "end_time": "10:08",
+              "distance": 0.43,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Museum",
+          "start_time": "12:03",
+          "end_time": "13:03",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Moon Pavilion (Guanqian Branch)",
+              "end": "Suzhou Museum",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.24,
+              "price": 12.53,
+              "cost": 12.53,
               "cars": 1
             }
           ]
@@ -43,21 +87,21 @@
         {
           "type": "attraction",
           "position": "Shantang Street",
-          "start_time": "19:56",
-          "end_time": "20:56",
+          "start_time": "13:06",
+          "end_time": "14:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "start": "Suzhou Museum",
               "end": "Shantang Street",
               "mode": "taxi",
-              "start_time": "19:48",
-              "end_time": "19:56",
-              "distance": 5.91,
-              "price": 25.37,
-              "cost": 25.37,
+              "start_time": "13:03",
+              "end_time": "13:06",
+              "distance": 2.44,
+              "price": 13.26,
+              "cost": 13.26,
               "cars": 1
             }
           ]
@@ -65,8 +109,8 @@
         {
           "type": "attraction",
           "position": "Pingjiang Road Historic District",
-          "start_time": "21:00",
-          "end_time": "22:00",
+          "start_time": "14:10",
+          "end_time": "15:10",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -75,8 +119,8 @@
               "start": "Shantang Street",
               "end": "Pingjiang Road Historic District",
               "mode": "taxi",
-              "start_time": "20:56",
-              "end_time": "21:00",
+              "start_time": "14:06",
+              "end_time": "14:10",
               "distance": 3.04,
               "price": 15.34,
               "cost": 15.34,
@@ -85,9 +129,31 @@
           ]
         },
         {
+          "type": "dinner",
+          "position": "Shangri-La Hotel Suzhou · Shang Palace",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 231.0,
+          "cost": 693.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Pingjiang Road Historic District",
+              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "mode": "taxi",
+              "start_time": "15:10",
+              "end_time": "15:22",
+              "distance": 8.42,
+              "price": 34.17,
+              "cost": 34.17,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Suzhou Humble View Sijitang (Humble Administrator's Garden)",
-          "start_time": "22:02",
+          "start_time": "18:11",
           "end_time": "24:00",
           "price": 378.0,
           "cost": 1134.0,
@@ -96,14 +162,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Pingjiang Road Historic District",
+              "start": "Shangri-La Hotel Suzhou · Shang Palace",
               "end": "Suzhou Humble View Sijitang (Humble Administrator's Garden)",
               "mode": "taxi",
-              "start_time": "22:00",
-              "end_time": "22:02",
-              "distance": 1.52,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "18:00",
+              "end_time": "18:11",
+              "distance": 7.39,
+              "price": 30.57,
+              "cost": 30.57,
               "cars": 1
             }
           ]
@@ -146,32 +212,76 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "20:05",
-          "start": "Suzhou Station",
-          "end": "Chongqing North Railway Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "type": "attraction",
+          "position": "Suzhou Water Tour",
+          "start_time": "09:54",
+          "end_time": "10:54",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Golden Rooster Lake",
-              "end": "Suzhou Station",
+              "end": "Suzhou Water Tour",
               "mode": "taxi",
               "start_time": "09:41",
-              "end_time": "09:55",
-              "distance": 9.34,
-              "price": 37.39,
-              "cost": 37.39,
+              "end_time": "09:54",
+              "distance": 8.84,
+              "price": 35.63,
+              "cost": 35.63,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Five Virtues Residence",
+          "start_time": "11:14",
+          "end_time": "11:29",
+          "price": 33.0,
+          "cost": 99.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Suzhou Water Tour",
+              "end": "Five Virtues Residence",
+              "mode": "taxi",
+              "start_time": "10:54",
+              "end_time": "10:57",
+              "distance": 2.26,
+              "price": 12.59,
+              "cost": 12.59,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:40",
+          "end_time": "14:08",
+          "start": "Suzhou Station",
+          "end": "Chongqing West Railway Station",
+          "price": 679.06,
+          "cost": 2037.1799999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Five Virtues Residence",
+              "end": "Suzhou Station",
+              "mode": "taxi",
+              "start_time": "11:29",
+              "end_time": "11:31",
+              "distance": 1.67,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ],
-          "TrainID": "D956"
+          "TrainID": "T237"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 30.010340690612793,
-  "_eval_score": 93.54166666666666
+  "elapsed_time(sec)": 198.92846965789795,
+  "_eval_score": 97.08333333333334
 }

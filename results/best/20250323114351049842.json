@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:03",
-          "end_time": "07:30",
+          "start_time": "02:29",
+          "end_time": "04:00",
           "start": "Suzhou Station",
-          "end": "Shanghai Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "end": "Shanghai South Railway Station",
+          "price": 33.99,
+          "cost": 33.99,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G7029"
+          "TrainID": "K1808"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 29.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai South Railway Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:00",
+              "end_time": "04:16",
+              "distance": 10.71,
+              "price": 42.88,
+              "cost": 42.88,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "263-meter Main Observation Deck",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "263-meter Main Observation Deck",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 2.01,
+              "price": 11.73,
+              "cost": 11.73,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Station",
+              "start": "263-meter Main Observation Deck",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:34",
-              "distance": 3.21,
-              "price": 15.94,
-              "cost": 15.94,
+              "start_time": "10:30",
+              "end_time": "10:37",
+              "distance": 5.07,
+              "price": 22.45,
+              "cost": 22.45,
               "cars": 1
             }
           ]
@@ -63,6 +107,50 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "13:52",
+          "end_time": "15:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "13:36",
+              "end_time": "13:41",
+              "distance": 3.55,
+              "price": 17.11,
+              "cost": 17.11,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "15:28",
+          "end_time": "16:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "15:22",
+              "end_time": "15:23",
+              "distance": 1.31,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Fu He Hui",
           "start_time": "17:00",
@@ -72,14 +160,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "The Bund",
+              "start": "Century Avenue Cherry Orchard",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "13:36",
-              "end_time": "13:46",
-              "distance": 7.0,
-              "price": 29.18,
-              "cost": 29.18,
+              "start_time": "16:28",
+              "end_time": "16:41",
+              "distance": 8.98,
+              "price": 36.14,
+              "cost": 36.14,
               "cars": 1
             }
           ]
@@ -212,6 +300,74 @@
           ]
         },
         {
+          "type": "train",
+          "start_time": "09:00",
+          "end_time": "09:00",
+          "start": "Kurogi",
+          "end": "Adventure Island",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-049842-D2-1-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "Adventure Island",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "10:00",
+          "start": "Adventure Island",
+          "end": "CitiGO Hotel Xujiahui Shanghai",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-049842-D2-1-OUT"
+        },
+        {
+          "type": "train",
+          "start_time": "10:15",
+          "end_time": "10:15",
+          "start": "CitiGO Hotel Xujiahui Shanghai",
+          "end": "Anfu Road",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-049842-D2-2-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "11:15",
+          "end_time": "11:15",
+          "start": "Anfu Road",
+          "end": "CitiGO Hotel Xujiahui Shanghai",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-049842-D2-2-OUT"
+        },
+        {
           "type": "accommodation",
           "position": "CitiGO Hotel Xujiahui Shanghai",
           "start_time": "18:32",
@@ -295,32 +451,119 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "12:15",
+          "end_time": "13:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "end": "Shanghai Hongqiao Station",
+              "end": "1933 Old Millfun",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:28",
-              "distance": 19.3,
-              "price": 81.53,
-              "cost": 81.53,
+              "end_time": "12:03",
+              "distance": 2.28,
+              "price": 12.68,
+              "cost": 12.68,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Securities Museum",
+          "start_time": "13:49",
+          "end_time": "15:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "China Securities Museum",
+              "mode": "taxi",
+              "start_time": "13:45",
+              "end_time": "13:46",
+              "distance": 1.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Garden Bridge",
+          "start_time": "15:19",
+          "end_time": "16:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "China Securities Museum",
+              "end": "Garden Bridge",
+              "mode": "walk",
+              "start_time": "15:19",
+              "end_time": "15:19",
+              "distance": 0.05138947717624654,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Garden Bridge",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:19",
+              "end_time": "16:28",
+              "distance": 6.06,
+              "price": 25.89,
+              "cost": 25.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:39",
+          "end_time": "00:40",
+          "start": "Shanghai Station",
+          "end": "Suzhou Station",
+          "price": 33.99,
+          "cost": 33.99,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:13",
+              "distance": 9.33,
+              "price": 37.35,
+              "cost": 37.35,
               "cars": 1
             }
           ],
-          "TrainID": "G24"
+          "TrainID": "K1506"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.06301307678222656,
-  "_eval_score": 95.23809523809524
+  "_eval_score": 100.0
 }

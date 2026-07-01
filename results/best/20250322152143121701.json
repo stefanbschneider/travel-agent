@@ -19,6 +19,28 @@
           "FlightID": "FL533"
         },
         {
+          "type": "attraction",
+          "position": "Cat Museum",
+          "start_time": "10:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Cat Museum",
+              "mode": "taxi",
+              "start_time": "09:04",
+              "end_time": "09:24",
+              "distance": 13.83,
+              "price": 56.92,
+              "cost": 56.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Big Pear Roast Duck (Longhu Xingyuehui Branch)",
           "start_time": "11:00",
@@ -28,80 +50,58 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Cat Museum",
               "end": "Big Pear Roast Duck (Longhu Xingyuehui Branch)",
               "mode": "taxi",
-              "start_time": "09:04",
-              "end_time": "09:15",
-              "distance": 7.53,
-              "price": 31.04,
-              "cost": 31.04,
+              "start_time": "10:30",
+              "end_time": "10:40",
+              "distance": 6.72,
+              "price": 28.22,
+              "cost": 28.22,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Manjushri Temple",
-          "start_time": "12:16",
-          "end_time": "13:46",
+          "position": "Chengdu Museum",
+          "start_time": "12:14",
+          "end_time": "13:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Big Pear Roast Duck (Longhu Xingyuehui Branch)",
-              "end": "Manjushri Temple",
+              "end": "Chengdu Museum",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:16",
-              "distance": 11.32,
-              "price": 45.63,
-              "cost": 45.63,
+              "end_time": "12:14",
+              "distance": 9.53,
+              "price": 38.07,
+              "cost": 38.07,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Kuanzhai Alley",
-          "start_time": "13:49",
-          "end_time": "15:19",
+          "position": "Manjushri Lane",
+          "start_time": "14:01",
+          "end_time": "15:46",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Manjushri Temple",
-              "end": "Kuanzhai Alley",
+              "start": "Chengdu Museum",
+              "end": "Manjushri Lane",
               "mode": "taxi",
-              "start_time": "13:46",
-              "end_time": "13:49",
-              "distance": 2.23,
-              "price": 12.52,
-              "cost": 12.52,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Jinli Ancient Street",
-          "start_time": "15:22",
-          "end_time": "16:52",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Kuanzhai Alley",
-              "end": "Jinli Ancient Street",
-              "mode": "taxi",
-              "start_time": "15:19",
-              "end_time": "15:22",
-              "distance": 2.03,
-              "price": 11.79,
-              "cost": 11.79,
+              "start_time": "13:59",
+              "end_time": "14:01",
+              "distance": 1.95,
+              "price": 11.51,
+              "cost": 11.51,
               "cars": 1
             }
           ]
@@ -116,38 +116,60 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Jinli Ancient Street",
+              "start": "Manjushri Lane",
               "end": "Mawangzi (Taikoo Li Branch)",
               "mode": "taxi",
-              "start_time": "16:52",
-              "end_time": "16:55",
-              "distance": 2.66,
-              "price": 13.99,
-              "cost": 13.99,
+              "start_time": "15:46",
+              "end_time": "15:50",
+              "distance": 3.08,
+              "price": 15.48,
+              "cost": 15.48,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Kuanzhai Alley",
+          "start_time": "18:04",
+          "end_time": "19:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Mawangzi (Taikoo Li Branch)",
+              "end": "Kuanzhai Alley",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:04",
+              "distance": 3.1,
+              "price": 15.55,
+              "cost": 15.55,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Ziyun haojia Hotel",
-          "start_time": "18:19",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+          "start_time": "20:10",
           "end_time": "24:00",
-          "price": 209.0,
-          "cost": 627.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 427.0,
+          "cost": 854.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Mawangzi (Taikoo Li Branch)",
-              "end": "Ziyun haojia Hotel",
+              "start": "Kuanzhai Alley",
+              "end": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:19",
-              "distance": 13.16,
-              "price": 53.93,
-              "cost": 53.93,
+              "start_time": "19:49",
+              "end_time": "20:10",
+              "distance": 14.39,
+              "price": 59.46,
+              "cost": 59.46,
               "cars": 1
             }
           ]
@@ -159,7 +181,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Ziyun haojia Hotel",
+          "position": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -169,42 +191,86 @@
         },
         {
           "type": "attraction",
-          "position": "Chunxi Road",
-          "start_time": "08:51",
-          "end_time": "10:21",
+          "position": "Jinli Ancient Street",
+          "start_time": "08:48",
+          "end_time": "10:33",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Ziyun haojia Hotel",
-              "end": "Chunxi Road",
+              "start": "Holiday Inn Chengdu Airport (Shuangliu International Airport)",
+              "end": "Jinli Ancient Street",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:51",
-              "distance": 14.07,
-              "price": 58.01,
-              "cost": 58.01,
+              "end_time": "08:48",
+              "distance": 12.65,
+              "price": 51.6,
+              "cost": 51.6,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Chengdu Museum",
-          "start_time": "10:23",
-          "end_time": "11:53",
+          "position": "Sichuan Museum",
+          "start_time": "10:36",
+          "end_time": "12:21",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jinli Ancient Street",
+              "end": "Sichuan Museum",
+              "mode": "taxi",
+              "start_time": "10:33",
+              "end_time": "10:36",
+              "distance": 2.26,
+              "price": 12.59,
+              "cost": 12.59,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chunxi Road",
+          "start_time": "12:27",
+          "end_time": "14:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Sichuan Museum",
+              "end": "Chunxi Road",
+              "mode": "taxi",
+              "start_time": "12:21",
+              "end_time": "12:27",
+              "distance": 4.27,
+              "price": 19.66,
+              "cost": 19.66,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Butterfly Drama Club",
+          "start_time": "14:14",
+          "end_time": "15:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Chunxi Road",
-              "end": "Chengdu Museum",
+              "end": "Butterfly Drama Club",
               "mode": "taxi",
-              "start_time": "10:21",
-              "end_time": "10:23",
-              "distance": 1.37,
+              "start_time": "14:12",
+              "end_time": "14:12",
+              "distance": 0.18,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -212,54 +278,32 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Manjushri Lane",
-          "start_time": "11:55",
-          "end_time": "13:25",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "train",
+          "start_time": "18:27",
+          "end_time": "22:13",
+          "start": "Chengdu East Railway Station",
+          "end": "Hangzhou Railway Station",
+          "price": 616.66,
+          "cost": 1849.98,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu Museum",
-              "end": "Manjushri Lane",
+              "start": "Butterfly Drama Club",
+              "end": "Chengdu East Railway Station",
               "mode": "taxi",
-              "start_time": "11:53",
-              "end_time": "11:55",
-              "distance": 1.95,
-              "price": 11.51,
-              "cost": 11.51,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "17:13",
-          "end_time": "19:08",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 819.12,
-          "cost": 2457.36,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Manjushri Lane",
-              "end": "Chengdu Tianfu International Airport",
-              "mode": "taxi",
-              "start_time": "13:25",
-              "end_time": "14:48",
-              "distance": 55.8,
-              "price": 245.8,
-              "cost": 245.8,
+              "start_time": "15:44",
+              "end_time": "15:53",
+              "distance": 6.41,
+              "price": 27.13,
+              "cost": 27.13,
               "cars": 1
             }
           ],
-          "FlightID": "FL452"
+          "TrainID": "K530"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 186.68129181861877,
-  "_eval_score": 96.18809523809523
+  "elapsed_time(sec)": 188.59845733642578,
+  "_eval_score": 97.5
 }

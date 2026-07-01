@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import math
 import os
+import random
 import time
 from typing import Any
 
@@ -557,6 +558,14 @@ def _attraction_orderings(agent, attrs: list[dict], constraints: dict, hotel: di
     add(list(attrs))
     add(_nn_order(attrs, _centroid(attrs)))
     add(_nn_order(attrs, (hotel.get("lat"), hotel.get("lon"))))
+    try:
+        n_shuffles = int(os.environ.get("TPC_CP_RECON_SHUFFLES", "0"))
+    except Exception:
+        n_shuffles = 0
+    for seed in range(1, max(0, n_shuffles) + 1):
+        shuffled = list(attrs)
+        random.Random(seed).shuffle(shuffled)
+        add(shuffled)
     return orders
 
 

@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 29.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:56",
+              "distance": 32.55,
+              "price": 141.18,
+              "cost": 141.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Century Square",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
               "end": "Century Square",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:48",
-              "distance": 26.91,
-              "price": 115.8,
-              "cost": 115.8,
+              "start_time": "08:00",
+              "end_time": "08:08",
+              "distance": 5.73,
+              "price": 24.74,
+              "cost": 24.74,
               "cars": 1
             }
           ]
@@ -234,6 +256,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Howard Johnson Huaihai Hotel Shanghai",
+              "end": "Anfu Road",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:31",
+              "distance": 0.81,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Large Intestine Noodles",
           "start_time": "11:00",
@@ -243,14 +287,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Howard Johnson Huaihai Hotel Shanghai",
+              "start": "Anfu Road",
               "end": "Large Intestine Noodles",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 2.56,
-              "price": 13.68,
-              "cost": 13.68,
+              "start_time": "10:00",
+              "end_time": "10:04",
+              "distance": 3.19,
+              "price": 15.87,
+              "cost": 15.87,
               "cars": 1
             }
           ]
@@ -266,34 +310,14 @@
           "transports": [
             {
               "start": "Large Intestine Noodles",
-              "end": "Laoximen-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 0.22,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Laoximen-Metro Station",
-              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:02",
-              "end_time": "12:04",
-              "distance": 1.17,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
               "end": "Fuxing Park",
-              "mode": "walk",
-              "start_time": "12:04",
-              "end_time": "12:07",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -309,62 +333,87 @@
             {
               "start": "Fuxing Park",
               "end": "Huaihai Road",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:37",
-              "end_time": "13:39",
-              "distance": 0.20968168861696815,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:37",
+              "distance": 0.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "15:18",
+          "end_time": "16:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huaihai Road",
+              "end": "Jing'an Sculpture Park",
+              "mode": "taxi",
+              "start_time": "15:09",
+              "end_time": "15:11",
+              "distance": 1.88,
+              "price": 11.27,
+              "cost": 11.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Sculpture Park",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:18",
+              "end_time": "16:30",
+              "distance": 8.62,
+              "price": 34.86,
+              "cost": 34.86,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Huaihai Road",
-              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:09",
-              "end_time": "15:12",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:12",
-              "end_time": "16:17",
-              "distance": 32.73,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:17",
-              "end_time": "16:32",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:45",
+              "distance": 30.3,
+              "price": 131.05,
+              "cost": 131.05,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 25.970897912979126,
-  "_eval_score": 98.33333333333334
+  "_eval_score": 100.0
 }

@@ -8,15 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:07",
-          "end_time": "10:57",
+          "start_time": "02:36",
+          "end_time": "05:50",
           "start": "Suzhou Station",
           "end": "Hangzhou Railway Station",
           "price": 60.5,
           "cost": 242.0,
           "tickets": 4,
           "transports": [],
-          "TrainID": "Z281"
+          "TrainID": "Z175"
+        },
+        {
+          "type": "breakfast",
+          "position": "Southern Eclectic Buns (Lakeside Branch)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 8.0,
+          "cost": 32.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "City Station-Metro Station",
+              "mode": "walk",
+              "start_time": "05:50",
+              "end_time": "05:52",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Longxiang Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "05:52",
+              "end_time": "05:55",
+              "distance": 1.96,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Longxiang Bridge-Metro Station",
+              "end": "Southern Eclectic Buns (Lakeside Branch)",
+              "mode": "walk",
+              "start_time": "05:55",
+              "end_time": "05:58",
+              "distance": 0.33,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,15 +70,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Hangzhou Railway Station",
+              "start": "Southern Eclectic Buns (Lakeside Branch)",
               "end": "Jiangzhe Hui (West Lake Lakeside in77 Zone B Store)",
-              "mode": "taxi",
-              "start_time": "10:57",
-              "end_time": "11:00",
-              "distance": 2.2,
-              "price": 12.41,
-              "cost": 12.41,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:30",
+              "end_time": "07:34",
+              "distance": 0.34932628028466306,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -107,6 +148,48 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Autumn Moon over the Calm Lake",
+          "start_time": "15:25",
+          "end_time": "16:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Lake Cultural Plaza",
+              "end": "West Lake Cultural Plaza-Metro Station",
+              "mode": "walk",
+              "start_time": "15:04",
+              "end_time": "15:09",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "West Lake Cultural Plaza-Metro Station",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:09",
+              "end_time": "15:12",
+              "distance": 1.77,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Autumn Moon over the Calm Lake",
+              "mode": "walk",
+              "start_time": "15:12",
+              "end_time": "15:25",
+              "distance": 1.16,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
           "start_time": "17:00",
@@ -116,15 +199,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "West Lake Cultural Plaza",
+              "start": "Autumn Moon over the Calm Lake",
+              "end": "Fengqi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "16:25",
+              "end_time": "16:38",
+              "distance": 1.16,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fengqi Road-Metro Station",
+              "end": "Dongyue-Metro Station",
+              "mode": "metro",
+              "start_time": "16:38",
+              "end_time": "16:52",
+              "distance": 7.06,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Dongyue-Metro Station",
               "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "15:04",
-              "end_time": "15:15",
-              "distance": 7.95,
-              "price": 32.52,
-              "cost": 32.52,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:59",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -449,6 +552,40 @@
           ]
         },
         {
+          "type": "train",
+          "start_time": "18:00",
+          "end_time": "18:00",
+          "start": "Leifeng Pagoda",
+          "end": "Jiande Steamed Buns (Fengqi Road Branch)",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-995048-D3-1-IN"
+        },
+        {
+          "type": "dinner",
+          "position": "Jiande Steamed Buns (Fengqi Road Branch)",
+          "start_time": "18:00",
+          "end_time": "19:00",
+          "price": 10.0,
+          "cost": 40.0,
+          "tickets": 4,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "19:00",
+          "end_time": "19:00",
+          "start": "Jiande Steamed Buns (Fengqi Road Branch)",
+          "end": "Hangzhou West Lake Zhongwei Xiangyi Hotel",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-995048-D3-1-OUT"
+        },
+        {
           "type": "accommodation",
           "position": "Hangzhou West Lake Zhongwei Xiangyi Hotel",
           "start_time": "13:48",
@@ -618,13 +755,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:02",
-          "end_time": "18:27",
-          "start": "Hangzhou East Railway Station",
-          "end": "Suzhou North Station",
-          "price": 78.65,
-          "cost": 314.6,
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 40.0,
           "tickets": 4,
           "transports": [
             {
@@ -639,11 +775,54 @@
             },
             {
               "start": "Qianjiang Century City-Metro Station",
-              "end": "East Railway Station (East Square)-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
               "mode": "metro",
               "start_time": "16:22",
-              "end_time": "16:35",
-              "distance": 6.55,
+              "end_time": "16:34",
+              "distance": 6.38,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "16:44",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "20:43",
+          "end_time": "22:07",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "East Railway Station (East Square)-Metro Station",
+              "mode": "metro",
+              "start_time": "18:10",
+              "end_time": "18:24",
+              "distance": 7.14,
               "price": 3,
               "cost": 12,
               "tickets": 4
@@ -652,18 +831,18 @@
               "start": "East Railway Station (East Square)-Metro Station",
               "end": "Hangzhou East Railway Station",
               "mode": "walk",
-              "start_time": "16:35",
-              "end_time": "16:40",
+              "start_time": "18:24",
+              "end_time": "18:29",
               "distance": 0.48,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G7192"
+          "TrainID": "G7350"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 180.38732171058655,
-  "_eval_score": 98.4375
+  "_eval_score": 100.0
 }

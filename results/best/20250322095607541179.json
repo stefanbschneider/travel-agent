@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:03",
-          "end_time": "07:30",
+          "start_time": "02:29",
+          "end_time": "04:00",
           "start": "Suzhou Station",
-          "end": "Shanghai Station",
-          "price": 55.23,
-          "cost": 110.46,
+          "end": "Shanghai South Railway Station",
+          "price": 33.99,
+          "cost": 67.98,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G7029"
+          "TrainID": "K1808"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 58.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai South Railway Station",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:00",
+              "end_time": "04:16",
+              "distance": 10.71,
+              "price": 42.88,
+              "cost": 42.88,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "1933 Old Millfun",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:04",
+              "distance": 2.94,
+              "price": 15.01,
+              "cost": 15.01,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,36 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Station",
+              "start": "1933 Old Millfun",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:37",
-              "distance": 5.31,
-              "price": 23.27,
-              "cost": 23.27,
+              "start_time": "10:30",
+              "end_time": "10:41",
+              "distance": 7.52,
+              "price": 31.04,
+              "cost": 31.04,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Venice Town",
+          "start_time": "12:12",
+          "end_time": "13:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Venice Town",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:12",
+              "distance": 8.03,
+              "price": 32.81,
+              "cost": 32.81,
               "cars": 1
             }
           ]
@@ -43,21 +109,21 @@
         {
           "type": "attraction",
           "position": "The Bund",
-          "start_time": "12:08",
-          "end_time": "13:53",
+          "start_time": "13:28",
+          "end_time": "14:28",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "Venice Town",
               "end": "The Bund",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 5.94,
-              "price": 25.49,
-              "cost": 25.49,
+              "start_time": "13:12",
+              "end_time": "13:28",
+              "distance": 10.81,
+              "price": 43.33,
+              "cost": 43.33,
               "cars": 1
             }
           ]
@@ -65,8 +131,8 @@
         {
           "type": "attraction",
           "position": "Huangpu River",
-          "start_time": "13:53",
-          "end_time": "15:38",
+          "start_time": "14:28",
+          "end_time": "15:28",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -75,31 +141,9 @@
               "start": "The Bund",
               "end": "Huangpu River",
               "mode": "taxi",
-              "start_time": "13:53",
-              "end_time": "13:53",
+              "start_time": "14:28",
+              "end_time": "14:28",
               "distance": 0.24,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanjing Road Pedestrian Street",
-          "start_time": "15:39",
-          "end_time": "17:24",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Huangpu River",
-              "end": "Nanjing Road Pedestrian Street",
-              "mode": "taxi",
-              "start_time": "15:38",
-              "end_time": "15:39",
-              "distance": 0.85,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -109,19 +153,19 @@
         {
           "type": "dinner",
           "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
-          "start_time": "17:25",
-          "end_time": "18:25",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 1026.0,
           "cost": 2052.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Road Pedestrian Street",
+              "start": "Huangpu River",
               "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
               "mode": "taxi",
-              "start_time": "17:24",
-              "end_time": "17:25",
-              "distance": 1.26,
+              "start_time": "15:28",
+              "end_time": "15:29",
+              "distance": 0.87,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -130,24 +174,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Pullman Shanghai Jing An",
-          "start_time": "18:31",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+          "start_time": "18:05",
           "end_time": "24:00",
-          "price": 952.0,
-          "cost": 952.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "price": 501.0,
+          "cost": 1002.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
           "transports": [
             {
               "start": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
-              "end": "Pullman Shanghai Jing An",
+              "end": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
               "mode": "taxi",
-              "start_time": "18:25",
-              "end_time": "18:31",
-              "distance": 4.38,
-              "price": 20.02,
-              "cost": 20.02,
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 3.92,
+              "price": 18.44,
+              "cost": 18.44,
               "cars": 1
             }
           ]
@@ -159,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Pullman Shanghai Jing An",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -169,22 +213,44 @@
         },
         {
           "type": "attraction",
-          "position": "Lujiazui",
-          "start_time": "08:37",
-          "end_time": "10:22",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "08:34",
+          "end_time": "09:34",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Pullman Shanghai Jing An",
-              "end": "Lujiazui",
+              "start": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+              "end": "Nanjing Road Pedestrian Street",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:37",
-              "distance": 5.32,
-              "price": 23.32,
-              "cost": 23.32,
+              "end_time": "08:34",
+              "distance": 2.89,
+              "price": 14.8,
+              "cost": 14.8,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lujiazui",
+          "start_time": "09:37",
+          "end_time": "10:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Lujiazui",
+              "mode": "taxi",
+              "start_time": "09:34",
+              "end_time": "09:37",
+              "distance": 2.07,
+              "price": 11.95,
+              "cost": 11.95,
               "cars": 1
             }
           ]
@@ -192,8 +258,8 @@
         {
           "type": "attraction",
           "position": "Shanghai Natural History Museum",
-          "start_time": "10:28",
-          "end_time": "12:13",
+          "start_time": "10:43",
+          "end_time": "11:43",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -202,8 +268,8 @@
               "start": "Lujiazui",
               "end": "Shanghai Natural History Museum",
               "mode": "taxi",
-              "start_time": "10:22",
-              "end_time": "10:28",
+              "start_time": "10:37",
+              "end_time": "10:43",
               "distance": 4.11,
               "price": 19.08,
               "cost": 19.08,
@@ -214,8 +280,8 @@
         {
           "type": "lunch",
           "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "12:19",
-          "end_time": "13:19",
+          "start_time": "11:49",
+          "end_time": "12:49",
           "price": 498.0,
           "cost": 996.0,
           "tickets": 2,
@@ -224,8 +290,8 @@
               "start": "Shanghai Natural History Museum",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "taxi",
-              "start_time": "12:13",
-              "end_time": "12:19",
+              "start_time": "11:43",
+              "end_time": "11:49",
               "distance": 4.28,
               "price": 19.7,
               "cost": 19.7,
@@ -236,8 +302,8 @@
         {
           "type": "attraction",
           "position": "Jing'an Sculpture Park",
-          "start_time": "13:25",
-          "end_time": "15:10",
+          "start_time": "12:55",
+          "end_time": "13:55",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -246,8 +312,8 @@
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "end": "Jing'an Sculpture Park",
               "mode": "taxi",
-              "start_time": "13:19",
-              "end_time": "13:25",
+              "start_time": "12:49",
+              "end_time": "12:55",
               "distance": 4.16,
               "price": 19.27,
               "cost": 19.27,
@@ -256,69 +322,47 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Shanghai Lavender Park",
-          "start_time": "15:43",
-          "end_time": "17:28",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Jing'an Sculpture Park",
-              "end": "Shanghai Lavender Park",
-              "mode": "taxi",
-              "start_time": "15:10",
-              "end_time": "15:43",
-              "distance": 22.65,
-              "price": 96.64,
-              "cost": 96.64,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "dinner",
           "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
-          "start_time": "18:00",
-          "end_time": "19:00",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 290.0,
           "cost": 580.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Lavender Park",
+              "start": "Jing'an Sculpture Park",
               "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
               "mode": "taxi",
-              "start_time": "17:28",
-              "end_time": "18:00",
-              "distance": 21.49,
-              "price": 91.41,
-              "cost": 91.41,
+              "start_time": "13:55",
+              "end_time": "13:56",
+              "distance": 1.18,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Pullman Shanghai Jing An",
-          "start_time": "19:03",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+          "start_time": "18:03",
           "end_time": "24:00",
-          "price": 952.0,
-          "cost": 952.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "price": 501.0,
+          "cost": 1002.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
           "transports": [
             {
               "start": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
-              "end": "Pullman Shanghai Jing An",
+              "end": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
               "mode": "taxi",
-              "start_time": "19:00",
-              "end_time": "19:03",
-              "distance": 2.61,
-              "price": 13.82,
-              "cost": 13.82,
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 2.05,
+              "price": 11.87,
+              "cost": 11.87,
               "cars": 1
             }
           ]
@@ -330,7 +374,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Pullman Shanghai Jing An",
+          "position": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -340,137 +384,141 @@
         },
         {
           "type": "attraction",
-          "position": "Zhujiajiao Ancient Town Scenic Area",
-          "start_time": "09:30",
-          "end_time": "11:15",
+          "position": "Shanghai Lavender Park",
+          "start_time": "09:05",
+          "end_time": "10:05",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Pullman Shanghai Jing An",
-              "end": "Zhujiajiao Ancient Town Scenic Area",
+              "start": "Nostalgia S Hotel (Shanghai Railway Station Suzhou River)",
+              "end": "Shanghai Lavender Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:30",
-              "distance": 40.47,
-              "price": 176.8,
-              "cost": 176.8,
+              "end_time": "09:05",
+              "distance": 23.53,
+              "price": 100.59,
+              "cost": 100.59,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Venice Town",
-          "start_time": "12:05",
-          "end_time": "13:50",
+          "position": "Guangfulin Cultural Site",
+          "start_time": "11:14",
+          "end_time": "12:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shanghai Lavender Park",
+              "end": "Guangfulin Cultural Site",
+              "mode": "taxi",
+              "start_time": "10:05",
+              "end_time": "11:14",
+              "distance": 46.45,
+              "price": 203.71,
+              "cost": 203.71,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhujiajiao Ancient Town Scenic Area",
+          "start_time": "12:35",
+          "end_time": "13:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guangfulin Cultural Site",
+              "end": "Zhujiajiao Ancient Town Scenic Area",
+              "mode": "taxi",
+              "start_time": "12:14",
+              "end_time": "12:35",
+              "distance": 14.64,
+              "price": 60.57,
+              "cost": 60.57,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Automobile Expo Park",
+          "start_time": "14:48",
+          "end_time": "16:18",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Zhujiajiao Ancient Town Scenic Area",
-              "end": "Venice Town",
+              "end": "Automobile Expo Park",
               "mode": "taxi",
-              "start_time": "11:15",
-              "end_time": "12:05",
-              "distance": 33.63,
-              "price": 146.01,
-              "cost": 146.01,
+              "start_time": "13:35",
+              "end_time": "14:07",
+              "distance": 21.92,
+              "price": 93.35,
+              "cost": 93.35,
               "cars": 1
             }
           ]
         },
         {
-          "type": "attraction",
-          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "14:27",
-          "end_time": "15:57",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:36",
+          "end_time": "18:36",
+          "price": 16.0,
+          "cost": 32.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Venice Town",
-              "end": "Zhenbei Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:50",
-              "end_time": "13:56",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhenbei Road-Metro Station",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "metro",
-              "start_time": "13:56",
-              "end_time": "14:25",
-              "distance": 14.55,
-              "price": 5,
-              "cost": 10,
-              "tickets": 2
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "mode": "walk",
-              "start_time": "14:25",
-              "end_time": "14:27",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "start": "Automobile Expo Park",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:18",
+              "end_time": "17:09",
+              "distance": 34.61,
+              "price": 150.44,
+              "cost": 150.44,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 110.46,
+          "start_time": "23:39",
+          "end_time": "00:40",
+          "start": "Shanghai Station",
+          "end": "Suzhou Station",
+          "price": 33.99,
+          "cost": 67.98,
           "tickets": 2,
           "transports": [
             {
-              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:57",
-              "end_time": "15:59",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "15:59",
-              "end_time": "16:41",
-              "distance": 21.0,
-              "price": 6,
-              "cost": 12,
-              "tickets": 2
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
-              "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "16:41",
-              "end_time": "16:42",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Station",
+              "mode": "taxi",
+              "start_time": "18:36",
+              "end_time": "18:49",
+              "distance": 9.33,
+              "price": 37.35,
+              "cost": 37.35,
+              "cars": 1
             }
           ],
-          "TrainID": "G24"
+          "TrainID": "K1506"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 180.5864541530609,
-  "_eval_score": 97.3515406162465
+  "elapsed_time(sec)": 183.12798690795898,
+  "_eval_score": 99.44444444444444
 }

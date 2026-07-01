@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:35",
-          "end_time": "14:40",
-          "start": "Wuhan Station",
-          "end": "Chongqing North Railway Station",
-          "price": 452.8,
-          "cost": 1358.4,
+          "type": "airplane",
+          "start_time": "01:48",
+          "end_time": "02:44",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 372.34,
+          "cost": 1117.02,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D367"
+          "FlightID": "FL606"
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "taxi",
+              "start_time": "02:44",
+              "end_time": "03:15",
+              "distance": 20.76,
+              "price": 88.11,
+              "cost": 88.11,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cave Ship No. 1",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Cave Ship No. 1",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:04",
+              "distance": 3.16,
+              "price": 15.75,
+              "cost": 15.75,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing North Railway Station",
+              "start": "Cave Ship No. 1",
               "end": "Two Rivers Ferry",
               "mode": "taxi",
-              "start_time": "14:40",
-              "end_time": "14:48",
-              "distance": 5.4,
-              "price": 23.62,
-              "cost": 23.62,
+              "start_time": "10:30",
+              "end_time": "10:43",
+              "distance": 9.29,
+              "price": 37.2,
+              "cost": 37.2,
               "cars": 1
             }
           ]
@@ -124,6 +168,26 @@
           "transports": []
         },
         {
+          "type": "breakfast",
+          "position": "JinyuJinzhi Hotel",
+          "start_time": "08:31",
+          "end_time": "08:41",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "breakfast",
+          "position": "JinyuJinzhi Hotel",
+          "start_time": "08:42",
+          "end_time": "08:43",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
           "type": "attraction",
           "position": "Ci Qi Kou Ancient Town",
           "start_time": "08:44",
@@ -200,34 +264,14 @@
           "transports": [
             {
               "start": "Liberation Monument Pedestrian Street",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "walk",
-              "start_time": "12:20",
-              "end_time": "12:24",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
-              "end": "Guanyinqiao-Metro Station",
-              "mode": "metro",
-              "start_time": "12:24",
-              "end_time": "12:34",
-              "distance": 5.17,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Guanyinqiao-Metro Station",
               "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
-              "mode": "walk",
-              "start_time": "12:34",
-              "end_time": "12:38",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:20",
+              "end_time": "12:27",
+              "distance": 5.02,
+              "price": 22.26,
+              "cost": 22.26,
+              "cars": 1
             }
           ]
         },
@@ -242,34 +286,14 @@
           "transports": [
             {
               "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
-              "end": "Guanyinqiao-Metro Station",
-              "mode": "walk",
-              "start_time": "13:38",
-              "end_time": "13:42",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Guanyinqiao-Metro Station",
-              "end": "Hongtudi-Metro Station",
-              "mode": "metro",
-              "start_time": "13:42",
-              "end_time": "13:46",
-              "distance": 2.16,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Hongtudi-Metro Station",
               "end": "Beicang Cultural and Creative Block",
-              "mode": "walk",
-              "start_time": "13:46",
-              "end_time": "13:53",
-              "distance": 0.62,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:38",
+              "end_time": "13:40",
+              "distance": 1.43,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -284,34 +308,14 @@
           "transports": [
             {
               "start": "Beicang Cultural and Creative Block",
-              "end": "Hongtudi-Metro Station",
-              "mode": "walk",
-              "start_time": "15:23",
-              "end_time": "15:30",
-              "distance": 0.62,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongtudi-Metro Station",
-              "end": "Jiaochangkou-Metro Station",
-              "mode": "metro",
-              "start_time": "15:30",
-              "end_time": "15:38",
-              "distance": 4.05,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Jiaochangkou-Metro Station",
               "end": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
-              "mode": "walk",
-              "start_time": "15:38",
-              "end_time": "15:40",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:23",
+              "end_time": "15:29",
+              "distance": 4.58,
+              "price": 20.74,
+              "cost": 20.74,
+              "cars": 1
             }
           ]
         },
@@ -327,34 +331,14 @@
           "transports": [
             {
               "start": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
-              "end": "Jiaochangkou-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiaochangkou-Metro Station",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:39",
-              "distance": 18.87,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
               "end": "Chongqing Jiangbei International Airport",
-              "mode": "walk",
-              "start_time": "18:39",
-              "end_time": "18:53",
-              "distance": 1.21,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:29",
+              "distance": 19.79,
+              "price": 83.75,
+              "cost": 83.75,
+              "cars": 1
             }
           ],
           "FlightID": "FL388"
@@ -363,5 +347,5 @@
     }
   ],
   "elapsed_time(sec)": 181.08115196228027,
-  "_eval_score": 96.81006493506493
+  "_eval_score": 100.0
 }

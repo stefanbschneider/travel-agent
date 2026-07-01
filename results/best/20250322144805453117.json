@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:58",
-          "end_time": "08:18",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 277.83,
-          "cost": 555.66,
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL071"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Xia's Morning Delights",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 11.0,
+          "cost": 22.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Xia's Morning Delights",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:42",
+              "distance": 32.84,
+              "price": 142.49,
+              "cost": 142.49,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Xia's Morning Delights",
+              "end": "Black Clothes Lane",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:02",
+              "distance": 1.57,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,80 +72,58 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Black Clothes Lane",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "08:18",
-              "end_time": "09:07",
-              "distance": 32.94,
-              "price": 142.93,
-              "cost": 142.93,
+              "start_time": "10:30",
+              "end_time": "10:30",
+              "distance": 0.57,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple",
-          "start_time": "12:01",
-          "end_time": "13:31",
+          "position": "Sun Yat-sen Mausoleum Scenic Area",
+          "start_time": "12:48",
+          "end_time": "14:03",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "end": "Confucius Temple",
+              "end": "Sun Yat-sen Mausoleum Scenic Area",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 0.71,
-              "price": 11.0,
-              "cost": 11.0,
+              "end_time": "12:11",
+              "distance": 7.8,
+              "price": 31.98,
+              "cost": 31.98,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "13:31",
-          "end_time": "15:01",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "14:57",
+          "end_time": "16:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple",
-              "end": "Confucius Temple and Qinhuai River Scenic Area",
+              "start": "Sun Yat-sen Mausoleum Scenic Area",
+              "end": "Ancient Peach Leaf Ferry",
               "mode": "taxi",
-              "start_time": "13:31",
-              "end_time": "13:31",
-              "distance": 0.1,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Zhongshan Scenic Area",
-          "start_time": "15:12",
-          "end_time": "16:42",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Confucius Temple and Qinhuai River Scenic Area",
-              "end": "Zhongshan Scenic Area",
-              "mode": "taxi",
-              "start_time": "15:01",
-              "end_time": "15:12",
-              "distance": 7.66,
-              "price": 31.52,
-              "cost": 31.52,
+              "start_time": "14:03",
+              "end_time": "14:12",
+              "distance": 6.65,
+              "price": 27.96,
+              "cost": 27.96,
               "cars": 1
             }
           ]
@@ -116,38 +138,60 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhongshan Scenic Area",
+              "start": "Ancient Peach Leaf Ferry",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
               "mode": "taxi",
-              "start_time": "16:42",
-              "end_time": "16:52",
-              "distance": 7.29,
-              "price": 30.23,
-              "cost": 30.23,
+              "start_time": "16:27",
+              "end_time": "16:35",
+              "distance": 5.68,
+              "price": 24.6,
+              "cost": 24.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Xuanwu Lake Scenic Area",
+          "start_time": "18:15",
+          "end_time": "19:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+              "end": "Xuanwu Lake Scenic Area",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 1.99,
+              "price": 11.66,
+              "cost": 11.66,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "18:59",
+          "position": "Ji Hotel (Nanjing South Railway Station Square Store)",
+          "start_time": "20:11",
           "end_time": "24:00",
-          "price": 786.0,
-          "cost": 1572.0,
+          "price": 508.0,
+          "cost": 1016.0,
           "rooms": 2,
           "room_type": 1,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "end": "Pullman Nanjing Lukou Airport",
+              "start": "Xuanwu Lake Scenic Area",
+              "end": "Ji Hotel (Nanjing South Railway Station Square Store)",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:59",
-              "distance": 39.44,
-              "price": 172.17,
-              "cost": 172.17,
+              "start_time": "19:30",
+              "end_time": "19:48",
+              "distance": 12.6,
+              "price": 51.39,
+              "cost": 51.39,
               "cars": 1
             }
           ]
@@ -159,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Pullman Nanjing Lukou Airport",
+          "position": "Ji Hotel (Nanjing South Railway Station Square Store)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -169,44 +213,44 @@
         },
         {
           "type": "attraction",
-          "position": "Nanjing Presidential Palace",
-          "start_time": "09:24",
-          "end_time": "10:54",
+          "position": "Rooster Crowing Temple",
+          "start_time": "09:12",
+          "end_time": "10:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Pullman Nanjing Lukou Airport",
-              "end": "Nanjing Presidential Palace",
+              "start": "Ji Hotel (Nanjing South Railway Station Square Store)",
+              "end": "Rooster Crowing Temple",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:24",
-              "distance": 36.03,
-              "price": 156.85,
-              "cost": 156.85,
+              "end_time": "08:46",
+              "distance": 11.24,
+              "price": 45.27,
+              "cost": 45.27,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Sun Yat-sen Mausoleum Scenic Area",
-          "start_time": "11:02",
-          "end_time": "12:32",
+          "position": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
+          "start_time": "10:58",
+          "end_time": "12:13",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Presidential Palace",
-              "end": "Sun Yat-sen Mausoleum Scenic Area",
+              "start": "Rooster Crowing Temple",
+              "end": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
               "mode": "taxi",
-              "start_time": "10:54",
-              "end_time": "11:02",
-              "distance": 5.51,
-              "price": 23.98,
-              "cost": 23.98,
+              "start_time": "10:27",
+              "end_time": "10:35",
+              "distance": 5.69,
+              "price": 24.62,
+              "cost": 24.62,
               "cars": 1
             }
           ]
@@ -214,65 +258,65 @@
         {
           "type": "lunch",
           "position": "Li's Halal Restaurant (Dading Lane Branch)",
-          "start_time": "12:44",
-          "end_time": "13:44",
+          "start_time": "12:32",
+          "end_time": "13:32",
           "price": 29.0,
           "cost": 58.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Sun Yat-sen Mausoleum Scenic Area",
+              "start": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
               "end": "Li's Halal Restaurant (Dading Lane Branch)",
               "mode": "taxi",
-              "start_time": "12:32",
-              "end_time": "12:44",
-              "distance": 8.41,
-              "price": 34.15,
-              "cost": 34.15,
+              "start_time": "12:13",
+              "end_time": "12:17",
+              "distance": 3.11,
+              "price": 15.59,
+              "cost": 15.59,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Nanjing City Wall",
-          "start_time": "14:09",
-          "end_time": "15:39",
+          "position": "Yuhuatai",
+          "start_time": "13:48",
+          "end_time": "15:03",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Nanjing City Wall",
+              "end": "Yuhuatai",
               "mode": "taxi",
-              "start_time": "13:44",
-              "end_time": "14:09",
-              "distance": 16.7,
-              "price": 69.86,
-              "cost": 69.86,
+              "start_time": "13:32",
+              "end_time": "13:36",
+              "distance": 3.01,
+              "price": 15.24,
+              "cost": 15.24,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Xuanwu Lake Scenic Area",
-          "start_time": "16:01",
-          "end_time": "17:31",
+          "position": "Cherry Blossom Avenue",
+          "start_time": "15:33",
+          "end_time": "16:33",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing City Wall",
-              "end": "Xuanwu Lake Scenic Area",
+              "start": "Yuhuatai",
+              "end": "Cherry Blossom Avenue",
               "mode": "taxi",
-              "start_time": "15:39",
-              "end_time": "16:01",
-              "distance": 15.22,
-              "price": 63.2,
-              "cost": 63.2,
+              "start_time": "15:03",
+              "end_time": "15:13",
+              "distance": 7.22,
+              "price": 29.98,
+              "cost": 29.98,
               "cars": 1
             }
           ]
@@ -280,45 +324,45 @@
         {
           "type": "dinner",
           "position": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
-          "start_time": "17:35",
-          "end_time": "18:35",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 736.0,
           "cost": 1472.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Xuanwu Lake Scenic Area",
+              "start": "Cherry Blossom Avenue",
               "end": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
               "mode": "taxi",
-              "start_time": "17:31",
-              "end_time": "17:35",
-              "distance": 2.86,
-              "price": 14.71,
-              "cost": 14.71,
+              "start_time": "16:33",
+              "end_time": "16:35",
+              "distance": 1.94,
+              "price": 11.5,
+              "cost": 11.5,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Pullman Nanjing Lukou Airport",
-          "start_time": "19:31",
+          "position": "Ji Hotel (Nanjing South Railway Station Square Store)",
+          "start_time": "18:32",
           "end_time": "24:00",
-          "price": 786.0,
-          "cost": 1572.0,
+          "price": 508.0,
+          "cost": 1016.0,
           "rooms": 2,
           "room_type": 1,
           "tickets": 2,
           "transports": [
             {
               "start": "Nanjing Zifeng Greenland InterContinental Hotel · Cloud Nine Restaurant",
-              "end": "Pullman Nanjing Lukou Airport",
+              "end": "Ji Hotel (Nanjing South Railway Station Square Store)",
               "mode": "taxi",
-              "start_time": "18:35",
-              "end_time": "19:31",
-              "distance": 37.55,
-              "price": 163.65,
-              "cost": 163.65,
+              "start_time": "18:00",
+              "end_time": "18:15",
+              "distance": 10.66,
+              "price": 42.69,
+              "cost": 42.69,
               "cars": 1
             }
           ]
@@ -330,7 +374,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Pullman Nanjing Lukou Airport",
+          "position": "Ji Hotel (Nanjing South Railway Station Square Store)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -340,159 +384,163 @@
         },
         {
           "type": "attraction",
-          "position": "Rooster Crowing Temple",
-          "start_time": "09:26",
-          "end_time": "10:56",
+          "position": "Confucius Temple",
+          "start_time": "08:58",
+          "end_time": "10:13",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Pullman Nanjing Lukou Airport",
-              "end": "Rooster Crowing Temple",
+              "start": "Ji Hotel (Nanjing South Railway Station Square Store)",
+              "end": "Confucius Temple",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:26",
-              "distance": 37.9,
-              "price": 165.26,
-              "cost": 165.26,
+              "end_time": "08:40",
+              "distance": 6.79,
+              "price": 28.46,
+              "cost": 28.46,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
-          "start_time": "11:04",
-          "end_time": "12:34",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
+          "start_time": "10:14",
+          "end_time": "11:29",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Rooster Crowing Temple",
-              "end": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
+              "start": "Confucius Temple",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
               "mode": "taxi",
-              "start_time": "10:56",
-              "end_time": "11:04",
-              "distance": 5.69,
-              "price": 24.62,
-              "cost": 24.62,
+              "start_time": "10:13",
+              "end_time": "10:13",
+              "distance": 0.1,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
-          "type": "attraction",
-          "position": "Yuhuatai",
-          "start_time": "12:42",
-          "end_time": "14:12",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "Republic Red Mansion (Laomendong Branch)",
+          "start_time": "11:44",
+          "end_time": "12:44",
+          "price": 295.0,
+          "cost": 590.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
-              "end": "Yuhuatai",
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Republic Red Mansion (Laomendong Branch)",
               "mode": "taxi",
-              "start_time": "12:34",
-              "end_time": "12:42",
-              "distance": 5.55,
-              "price": 24.12,
-              "cost": 24.12,
+              "start_time": "11:29",
+              "end_time": "11:31",
+              "distance": 1.65,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Ancient Peach Leaf Ferry",
-          "start_time": "14:34",
-          "end_time": "16:04",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "13:13",
+          "end_time": "14:43",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Yuhuatai",
-              "end": "Yuhua Gate-Metro Station",
-              "mode": "walk",
-              "start_time": "14:12",
-              "end_time": "14:17",
-              "distance": 0.42,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Republic Red Mansion (Laomendong Branch)",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "taxi",
+              "start_time": "12:44",
+              "end_time": "12:53",
+              "distance": 6.09,
+              "price": 26.03,
+              "cost": 26.03,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beiqiu Museum of Contemporary Art",
+          "start_time": "14:49",
+          "end_time": "16:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
             {
-              "start": "Yuhua Gate-Metro Station",
-              "end": "Changfu Street-Metro Station",
-              "mode": "metro",
-              "start_time": "14:17",
-              "end_time": "14:23",
-              "distance": 3.28,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Beiqiu Museum of Contemporary Art",
+              "mode": "taxi",
+              "start_time": "14:43",
+              "end_time": "14:43",
+              "distance": 0.58,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
             {
-              "start": "Changfu Street-Metro Station",
-              "end": "Ancient Peach Leaf Ferry",
-              "mode": "walk",
-              "start_time": "14:23",
-              "end_time": "14:34",
-              "distance": 0.92,
-              "price": 0,
-              "cost": 0
+              "start": "Beiqiu Museum of Contemporary Art",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "taxi",
+              "start_time": "16:19",
+              "end_time": "16:28",
+              "distance": 6.06,
+              "price": 25.92,
+              "cost": 25.92,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
+          "start_time": "22:30",
+          "end_time": "22:50",
           "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
           "tickets": 2,
           "transports": [
             {
-              "start": "Ancient Peach Leaf Ferry",
-              "end": "Changfu Street-Metro Station",
-              "mode": "walk",
-              "start_time": "16:04",
-              "end_time": "16:15",
-              "distance": 0.92,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Changfu Street-Metro Station",
-              "end": "Lukou Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "16:15",
-              "end_time": "17:23",
-              "distance": 34.48,
-              "price": 7,
-              "cost": 14,
-              "tickets": 2
-            },
-            {
-              "start": "Lukou Airport-Metro Station",
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
               "end": "Nanjing Lukou International Airport",
-              "mode": "walk",
-              "start_time": "17:23",
-              "end_time": "17:26",
-              "distance": 0.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:48",
+              "distance": 32.08,
+              "price": 139.06,
+              "cost": 139.06,
+              "cars": 1
             }
           ],
-          "FlightID": "FL645"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 9.066027879714966,
-  "_eval_score": 97.3425925925926
+  "elapsed_time(sec)": 185.45011949539185,
+  "_eval_score": 100.0
 }

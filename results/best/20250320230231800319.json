@@ -19,6 +19,28 @@
           "TrainID": "K512"
         },
         {
+          "type": "breakfast",
+          "position": "Zhouping's Zongzi Shop",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 13.0,
+          "cost": 26.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou South Railway Station",
+              "end": "Zhouping's Zongzi Shop",
+              "mode": "taxi",
+              "start_time": "04:24",
+              "end_time": "04:44",
+              "distance": 13.79,
+              "price": 56.75,
+              "cost": 56.75,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Autumn Moon over the Calm Lake",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou South Railway Station",
+              "start": "Zhouping's Zongzi Shop",
               "end": "Autumn Moon over the Calm Lake",
               "mode": "taxi",
-              "start_time": "04:24",
-              "end_time": "04:48",
-              "distance": 16.6,
-              "price": 69.39,
-              "cost": 69.39,
+              "start_time": "07:00",
+              "end_time": "07:04",
+              "distance": 3.07,
+              "price": 15.45,
+              "cost": 15.45,
               "cars": 1
             }
           ]
@@ -212,6 +234,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Drum Tower",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhongshan West Lake Hotel Hangzhou",
+              "end": "Drum Tower",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:32",
+              "distance": 1.39,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Southern Eclectic Buns (Lakeside Branch)",
           "start_time": "11:00",
@@ -221,12 +265,12 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhongshan West Lake Hotel Hangzhou",
+              "start": "Drum Tower",
               "end": "Southern Eclectic Buns (Lakeside Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:30",
-              "distance": 0.62,
+              "start_time": "10:30",
+              "end_time": "10:32",
+              "distance": 1.62,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -244,34 +288,14 @@
           "transports": [
             {
               "start": "Southern Eclectic Buns (Lakeside Branch)",
-              "end": "Longxiang Bridge-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:03",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Longxiang Bridge-Metro Station",
-              "end": "Ding'an Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:03",
-              "end_time": "12:05",
-              "distance": 1.03,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Ding'an Road-Metro Station",
               "end": "Hangzhou Confucius Temple",
-              "mode": "walk",
-              "start_time": "12:05",
-              "end_time": "12:07",
-              "distance": 0.19,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:00",
+              "distance": 0.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -287,12 +311,35 @@
             {
               "start": "Hangzhou Confucius Temple",
               "end": "Hangzhou Museum",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:37",
-              "end_time": "13:43",
-              "distance": 0.566632441352035,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:37",
+              "distance": 0.57,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Fifteen Kui Lane",
+          "start_time": "15:26",
+          "end_time": "15:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Museum",
+              "end": "Fifteen Kui Lane",
+              "mode": "taxi",
+              "start_time": "15:13",
+              "end_time": "15:13",
+              "distance": 0.35,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -306,35 +353,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Hangzhou Museum",
-              "end": "Ding'an Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:13",
-              "end_time": "15:19",
-              "distance": 0.54,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Ding'an Road-Metro Station",
-              "end": "Fengqi Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:19",
-              "end_time": "15:23",
-              "distance": 2.03,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Fengqi Road-Metro Station",
+              "start": "Fifteen Kui Lane",
               "end": "Jiande Steamed Buns (Fengqi Road Branch)",
-              "mode": "walk",
-              "start_time": "15:23",
-              "end_time": "15:27",
-              "distance": 0.35,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:56",
+              "end_time": "15:59",
+              "distance": 2.61,
+              "price": 13.82,
+              "cost": 13.82,
+              "cars": 1
             }
           ]
         },
@@ -366,5 +393,5 @@
     }
   ],
   "elapsed_time(sec)": 4.776892185211182,
-  "_eval_score": 98.54166666666666
+  "_eval_score": 100.0
 }

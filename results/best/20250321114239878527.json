@@ -8,15 +8,499 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:33",
-          "end_time": "14:21",
+          "start_time": "00:00",
+          "end_time": "01:48",
           "start": "Shanghai Pudong International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 702.54,
-          "cost": 1405.08,
+          "price": 767.51,
+          "cost": 1535.02,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL033"
+          "FlightID": "FL036"
+        },
+        {
+          "type": "attraction",
+          "position": "Bijing Park",
+          "start_time": "01:50",
+          "end_time": "02:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chongqing Jiangbei International Airport",
+              "end": "Bijing Park",
+              "mode": "taxi",
+              "start_time": "01:48",
+              "end_time": "01:50",
+              "distance": 1.75,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing Central Park",
+          "start_time": "02:06",
+          "end_time": "02:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Bijing Park",
+              "end": "Chongqing Central Park",
+              "mode": "taxi",
+              "start_time": "02:00",
+              "end_time": "02:06",
+              "distance": 4.48,
+              "price": 20.4,
+              "cost": 20.4,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing International Expo Center",
+          "start_time": "02:22",
+          "end_time": "02:32",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chongqing Central Park",
+              "end": "Chongqing International Expo Center",
+              "mode": "taxi",
+              "start_time": "02:16",
+              "end_time": "02:22",
+              "distance": 4.09,
+              "price": 19.0,
+              "cost": 19.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "breakfast",
+          "position": "Bench Noodle House (Songshi Branch Road Store)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chongqing International Expo Center",
+              "end": "Bench Noodle House (Songshi Branch Road Store)",
+              "mode": "taxi",
+              "start_time": "02:32",
+              "end_time": "02:55",
+              "distance": 15.97,
+              "price": 66.58,
+              "cost": 66.58,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hongyan Village",
+          "start_time": "07:04",
+          "end_time": "07:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Bench Noodle House (Songshi Branch Road Store)",
+              "end": "Hongyan Village",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:04",
+              "distance": 3.27,
+              "price": 16.14,
+              "cost": 16.14,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Mid-Mountain Cliff Trail",
+          "start_time": "07:16",
+          "end_time": "07:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hongyan Village",
+              "end": "Mid-Mountain Cliff Trail",
+              "mode": "taxi",
+              "start_time": "07:14",
+              "end_time": "07:16",
+              "distance": 1.48,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jialing River",
+          "start_time": "07:28",
+          "end_time": "07:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Mid-Mountain Cliff Trail",
+              "end": "Jialing River",
+              "mode": "taxi",
+              "start_time": "07:26",
+              "end_time": "07:28",
+              "distance": 1.55,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nine Street That Never Sleeps",
+          "start_time": "07:39",
+          "end_time": "07:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jialing River",
+              "end": "Nine Street That Never Sleeps",
+              "mode": "taxi",
+              "start_time": "07:38",
+              "end_time": "07:39",
+              "distance": 1.03,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guanyinqiao Pedestrian Street",
+          "start_time": "07:51",
+          "end_time": "08:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nine Street That Never Sleeps",
+              "end": "Guanyinqiao Pedestrian Street",
+              "mode": "taxi",
+              "start_time": "07:49",
+              "end_time": "07:51",
+              "distance": 1.55,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liziba Park",
+          "start_time": "08:04",
+          "end_time": "08:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guanyinqiao Pedestrian Street",
+              "end": "Liziba Park",
+              "mode": "taxi",
+              "start_time": "08:01",
+              "end_time": "08:04",
+              "distance": 2.54,
+              "price": 13.59,
+              "cost": 13.59,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Fotuguan Park",
+          "start_time": "08:15",
+          "end_time": "08:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Liziba Park",
+              "end": "Fotuguan Park",
+              "mode": "taxi",
+              "start_time": "08:14",
+              "end_time": "08:15",
+              "distance": 1.09,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Goose Hill Park",
+          "start_time": "08:26",
+          "end_time": "08:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Fotuguan Park",
+              "end": "Goose Hill Park",
+              "mode": "taxi",
+              "start_time": "08:25",
+              "end_time": "08:26",
+              "distance": 1.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Liziba Light Rail Station",
+          "start_time": "08:36",
+          "end_time": "08:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Goose Hill Park",
+              "end": "Liziba Light Rail Station",
+              "mode": "taxi",
+              "start_time": "08:36",
+              "end_time": "08:36",
+              "distance": 0.4,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hong'en Temple Park",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Liziba Light Rail Station",
+              "end": "Hong'en Temple Park",
+              "mode": "taxi",
+              "start_time": "08:46",
+              "end_time": "08:51",
+              "distance": 3.46,
+              "price": 16.81,
+              "cost": 16.81,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hongyan Revolutionary Memorial Hall",
+          "start_time": "10:02",
+          "end_time": "10:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hong'en Temple Park",
+              "end": "Hongyan Revolutionary Memorial Hall",
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 1.96,
+              "price": 11.57,
+              "cost": 11.57,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Site of the Southern Bureau of the CPC Central Committee and the Eighth Route Army Office in Chongqing",
+          "start_time": "10:12",
+          "end_time": "10:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hongyan Revolutionary Memorial Hall",
+              "end": "Site of the Southern Bureau of the CPC Central Committee and the Eighth Route Army Office in Chongqing",
+              "mode": "taxi",
+              "start_time": "10:12",
+              "end_time": "10:12",
+              "distance": 0.29,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Yiyuan - Site of the Chongqing Negotiations",
+          "start_time": "10:28",
+          "end_time": "10:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Site of the Southern Bureau of the CPC Central Committee and the Eighth Route Army Office in Chongqing",
+              "end": "Yiyuan - Site of the Chongqing Negotiations",
+              "mode": "taxi",
+              "start_time": "10:22",
+              "end_time": "10:28",
+              "distance": 4.56,
+              "price": 20.65,
+              "cost": 20.65,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Osmanthus Garden",
+          "start_time": "10:38",
+          "end_time": "10:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Yiyuan - Site of the Chongqing Negotiations",
+              "end": "Osmanthus Garden",
+              "mode": "taxi",
+              "start_time": "10:38",
+              "end_time": "10:38",
+              "distance": 0.55,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 7.0,
+          "cost": 14.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Osmanthus Garden",
+              "end": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "mode": "taxi",
+              "start_time": "10:48",
+              "end_time": "10:51",
+              "distance": 2.05,
+              "price": 11.87,
+              "cost": 11.87,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beicang Cultural and Creative Block",
+          "start_time": "12:15",
+          "end_time": "13:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Big Face Cat's Preserved Mustard Green and Braised Pork Pancake (Guanyinqiao Delicious Street Branch)",
+              "end": "Beicang Cultural and Creative Block",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.43,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Longtousi Park in Yubei",
+          "start_time": "13:27",
+          "end_time": "14:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beicang Cultural and Creative Block",
+              "end": "Longtousi Park in Yubei",
+              "mode": "taxi",
+              "start_time": "13:15",
+              "end_time": "13:17",
+              "distance": 1.92,
+              "price": 11.42,
+              "cost": 11.42,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Local Specialty Products and Bayu Famous Snacks Street",
+          "start_time": "14:32",
+          "end_time": "14:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Longtousi Park in Yubei",
+              "end": "Local Specialty Products and Bayu Famous Snacks Street",
+              "mode": "taxi",
+              "start_time": "14:27",
+              "end_time": "14:32",
+              "distance": 3.69,
+              "price": 17.62,
+              "cost": 17.62,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +512,36 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
+              "start": "Local Specialty Products and Bayu Famous Snacks Street",
               "end": "Yangtze River Cableway",
               "mode": "taxi",
-              "start_time": "14:21",
-              "end_time": "14:48",
-              "distance": 18.36,
-              "price": 77.31,
-              "cost": 77.31,
+              "start_time": "14:42",
+              "end_time": "14:42",
+              "distance": 0.66,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Arhat Temple",
+          "start_time": "16:18",
+          "end_time": "16:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Yangtze River Cableway",
+              "end": "Arhat Temple",
+              "mode": "taxi",
+              "start_time": "16:18",
+              "end_time": "16:18",
+              "distance": 0.25,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,14 +556,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Yangtze River Cableway",
+              "start": "Arhat Temple",
               "end": "Chongqing Regent Hotel · Robbins Steakhouse",
               "mode": "taxi",
-              "start_time": "16:18",
-              "end_time": "16:20",
-              "distance": 1.97,
-              "price": 11.61,
-              "cost": 11.61,
+              "start_time": "16:28",
+              "end_time": "16:30",
+              "distance": 1.78,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -98,6 +604,26 @@
           "end_time": "08:30",
           "price": 0,
           "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "breakfast",
+          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+          "start_time": "08:31",
+          "end_time": "08:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "breakfast",
+          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+          "start_time": "08:42",
+          "end_time": "08:52",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 0,
           "transports": []
         },
@@ -178,34 +704,36 @@
           "transports": [
             {
               "start": "Chongqing Two Rivers Cruise",
-              "end": "Chaotianmen-Metro Station",
-              "mode": "walk",
-              "start_time": "13:31",
-              "end_time": "13:36",
-              "distance": 0.49,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chaotianmen-Metro Station",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "metro",
-              "start_time": "13:36",
-              "end_time": "13:37",
-              "distance": 0.79,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
               "end": "1941 Teahouse and Theater",
-              "mode": "walk",
-              "start_time": "13:37",
-              "end_time": "13:40",
-              "distance": 0.3,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:31",
+              "end_time": "13:32",
+              "distance": 0.69,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+          "start_time": "15:14",
+          "end_time": "16:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "1941 Teahouse and Theater",
+              "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+              "mode": "taxi",
+              "start_time": "15:10",
+              "end_time": "15:10",
+              "distance": 0.36,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -219,35 +747,15 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "1941 Teahouse and Theater",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "walk",
-              "start_time": "15:10",
-              "end_time": "15:13",
-              "distance": 0.3,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
-              "end": "Linjiangmen-Metro Station",
-              "mode": "metro",
-              "start_time": "15:13",
-              "end_time": "15:14",
-              "distance": 0.93,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Linjiangmen-Metro Station",
+              "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
               "end": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-              "mode": "walk",
-              "start_time": "15:14",
-              "end_time": "15:16",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:44",
+              "end_time": "16:45",
+              "distance": 0.92,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -340,5 +848,5 @@
     }
   ],
   "elapsed_time(sec)": 0.03128385543823242,
-  "_eval_score": 93.51046176046177
+  "_eval_score": 100.0
 }

@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:58",
-          "end_time": "08:18",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
           "end": "Nanjing Lukou International Airport",
-          "price": 277.83,
-          "cost": 555.66,
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL071"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:48",
+              "distance": 36.99,
+              "price": 161.16,
+              "cost": 161.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiangsu Wutai Mountain Sports Center",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Jiangsu Wutai Mountain Sports Center",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:00",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Lukou International Airport",
+              "start": "Jiangsu Wutai Mountain Sports Center",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "08:18",
-              "end_time": "09:07",
-              "distance": 32.94,
-              "price": 142.93,
-              "cost": 142.93,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.96,
+              "price": 18.55,
+              "cost": 18.55,
               "cars": 1
             }
           ]
@@ -63,6 +107,50 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Confucius Temple Yuhua Stone Museum",
+          "start_time": "13:31",
+          "end_time": "14:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple",
+              "end": "Confucius Temple Yuhua Stone Museum",
+              "mode": "taxi",
+              "start_time": "13:31",
+              "end_time": "13:31",
+              "distance": 0.14,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "14:31",
+          "end_time": "15:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple Yuhua Stone Museum",
+              "end": "Black Clothes Lane",
+              "mode": "taxi",
+              "start_time": "14:31",
+              "end_time": "14:31",
+              "distance": 0.23,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Nanjing Jinling Hotel - Plum Garden",
           "start_time": "17:00",
@@ -72,14 +160,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple",
+              "start": "Black Clothes Lane",
               "end": "Nanjing Jinling Hotel - Plum Garden",
               "mode": "taxi",
-              "start_time": "13:31",
-              "end_time": "13:34",
-              "distance": 2.1,
-              "price": 12.04,
-              "cost": 12.04,
+              "start_time": "15:31",
+              "end_time": "15:34",
+              "distance": 2.32,
+              "price": 12.82,
+              "cost": 12.82,
               "cars": 1
             }
           ]
@@ -190,6 +278,50 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "14:37",
+          "end_time": "15:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhongshan Scenic Area",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "taxi",
+              "start_time": "13:43",
+              "end_time": "13:51",
+              "distance": 5.48,
+              "price": 23.89,
+              "cost": 23.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beiqiu Museum of Contemporary Art",
+          "start_time": "15:37",
+          "end_time": "16:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Beiqiu Museum of Contemporary Art",
+              "mode": "taxi",
+              "start_time": "15:37",
+              "end_time": "15:37",
+              "distance": 0.58,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
           "start_time": "17:00",
@@ -199,14 +331,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhongshan Scenic Area",
+              "start": "Beiqiu Museum of Contemporary Art",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
               "mode": "taxi",
-              "start_time": "13:43",
-              "end_time": "13:53",
-              "distance": 7.29,
-              "price": 30.23,
-              "cost": 30.23,
+              "start_time": "16:37",
+              "end_time": "16:39",
+              "distance": 1.81,
+              "price": 11.03,
+              "cost": 11.03,
               "cars": 1
             }
           ]
@@ -295,32 +427,120 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:22",
-          "end_time": "18:42",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 221.47,
-          "cost": 442.94,
+          "type": "attraction",
+          "position": "Lion Bridge Pedestrian Food Street",
+          "start_time": "12:25",
+          "end_time": "13:25",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Republic Red Mansion (Laomendong Branch)",
-              "end": "Nanjing Lukou International Airport",
+              "end": "Lion Bridge Pedestrian Food Street",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:48",
-              "distance": 32.17,
-              "price": 139.46,
-              "cost": 139.46,
+              "end_time": "12:10",
+              "distance": 6.88,
+              "price": 28.77,
+              "cost": 28.77,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Former National Government (Ministry of Foreign Affairs) Site",
+          "start_time": "13:25",
+          "end_time": "14:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Lion Bridge Pedestrian Food Street",
+              "end": "Former National Government (Ministry of Foreign Affairs) Site",
+              "mode": "taxi",
+              "start_time": "13:25",
+              "end_time": "13:25",
+              "distance": 0.52,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Drum Tower",
+          "start_time": "14:25",
+          "end_time": "15:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Former National Government (Ministry of Foreign Affairs) Site",
+              "end": "Drum Tower",
+              "mode": "taxi",
+              "start_time": "14:25",
+              "end_time": "14:25",
+              "distance": 0.66,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Drum Tower",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "15:25",
+              "end_time": "15:27",
+              "distance": 1.35,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Nanjing Lukou International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:57",
+              "distance": 38.65,
+              "price": 168.64,
+              "cost": 168.64,
               "cars": 1
             }
           ],
-          "FlightID": "FL645"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.0319521427154541,
-  "_eval_score": 20.0
+  "_eval_score": 100.0
 }

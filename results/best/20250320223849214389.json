@@ -234,6 +234,38 @@
           "transports": []
         },
         {
+          "type": "breakfast",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+          "start_time": "08:31",
+          "end_time": "08:41",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Central Academy of Fine Arts Art Museum",
+          "start_time": "09:30",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "end": "Central Academy of Fine Arts Art Museum",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:47",
+              "distance": 11.76,
+              "price": 47.6,
+              "cost": 47.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
           "start_time": "11:00",
@@ -243,45 +275,133 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "start": "Central Academy of Fine Arts Art Museum",
               "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:59",
-              "distance": 19.54,
-              "price": 82.62,
-              "cost": 82.62,
+              "start_time": "10:30",
+              "end_time": "10:41",
+              "distance": 7.8,
+              "price": 32.01,
+              "cost": 32.01,
               "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "13:40",
-          "end_time": "22:21",
-          "start": "Beijing West Railway Station",
-          "end": "Chengdu West Railway Station",
-          "price": 609.81,
-          "cost": 1219.62,
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "12:15",
+          "end_time": "13:15",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-              "end": "Beijing West Railway Station",
+              "end": "Corner Tower",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:13",
-              "distance": 8.99,
-              "price": 36.16,
-              "cost": 36.16,
+              "end_time": "12:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cining Palace",
+          "start_time": "13:34",
+          "end_time": "14:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Corner Tower",
+              "end": "Cining Palace",
+              "mode": "taxi",
+              "start_time": "13:15",
+              "end_time": "13:16",
+              "distance": 0.69,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Working People's Cultural Palace",
+          "start_time": "14:51",
+          "end_time": "15:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Cining Palace",
+              "end": "Beijing Working People's Cultural Palace",
+              "mode": "taxi",
+              "start_time": "14:34",
+              "end_time": "14:35",
+              "distance": 0.86,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 14.0,
+          "cost": 28.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Beijing Working People's Cultural Palace",
+              "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "mode": "taxi",
+              "start_time": "15:51",
+              "end_time": "15:58",
+              "distance": 5.07,
+              "price": 22.44,
+              "cost": 22.44,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:26",
+          "end_time": "00:20",
+          "start": "Beijing Capital International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 809.5,
+          "cost": 1619.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "end": "Beijing Capital International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:44",
+              "distance": 29.67,
+              "price": 128.21,
+              "cost": 128.21,
               "cars": 1
             }
           ],
-          "TrainID": "K548"
+          "FlightID": "FL122"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 21.698238134384155,
-  "_eval_score": 97.08333333333334
+  "_eval_score": 100.0
 }

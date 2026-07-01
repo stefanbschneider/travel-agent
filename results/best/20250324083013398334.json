@@ -8,15 +8,58 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "09:05",
+          "end_time": "10:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jing'an Park",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:05",
+              "distance": 0.4437023611480386,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,35 +71,15 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "10:46",
-              "cost": 0,
-              "price": 0,
-              "distance": 1.27
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Lingkong Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:46",
-              "end_time": "11:04",
-              "cost": 4,
-              "distance": 9.05,
-              "tickets": 1,
-              "price": 4
-            },
-            {
-              "start": "Lingkong Road-Metro Station",
+              "start": "Jing'an Park",
               "end": "Chuansha Ancient Town",
-              "mode": "walk",
-              "start_time": "11:04",
-              "end_time": "11:22",
-              "cost": 0,
-              "price": 0,
-              "distance": 1.56
+              "mode": "taxi",
+              "start_time": "10:05",
+              "end_time": "10:42",
+              "distance": 24.85,
+              "price": 106.53,
+              "cost": 106.53,
+              "cars": 1
             }
           ]
         },
@@ -71,34 +94,90 @@
           "transports": [
             {
               "start": "Chuansha Ancient Town",
-              "end": "Lingkong Road-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:18",
-              "cost": 0,
-              "price": 0,
-              "distance": 1.56
-            },
-            {
-              "start": "Lingkong Road-Metro Station",
-              "end": "China Art Museum-Metro Station",
-              "mode": "metro",
-              "start_time": "12:18",
-              "end_time": "13:01",
-              "cost": 6,
-              "distance": 21.98,
-              "tickets": 1,
-              "price": 6
-            },
-            {
-              "start": "China Art Museum-Metro Station",
               "end": "Shanghai Expo Park",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:31",
+              "distance": 20.92,
+              "price": 88.82,
+              "cost": 88.82,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "09:00",
+          "end_time": "09:00",
+          "start": "Shanghai Expo Park",
+          "end": "1933 Old Millfun",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-398334-D1-1-IN"
+        },
+        {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "10:00",
+          "end_time": "10:00",
+          "start": "1933 Old Millfun",
+          "end": "Jinglai Hotel·Selection (Shanghai Xujiahui Jiaotong University)",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "GHOST-398334-D1-1-OUT"
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "11:00",
+          "end_time": "11:15",
+          "price": 18.0,
+          "cost": 18.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jinglai Hotel·Selection (Shanghai Xujiahui Jiaotong University)",
+              "end": "Yishan Road-Metro Station",
               "mode": "walk",
-              "start_time": "13:01",
-              "end_time": "13:11",
-              "cost": 0,
+              "start_time": "10:00",
+              "end_time": "10:07",
+              "distance": 0.66,
               "price": 0,
-              "distance": 0.87
+              "cost": 0
+            },
+            {
+              "start": "Yishan Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
+              "start_time": "10:07",
+              "end_time": "10:23",
+              "distance": 8.21,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "walk",
+              "start_time": "10:23",
+              "end_time": "10:31",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -114,35 +193,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Expo Park",
-              "end": "China Art Museum-Metro Station",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
               "mode": "walk",
-              "start_time": "14:30",
-              "end_time": "14:40",
-              "cost": 0,
+              "start_time": "11:15",
+              "end_time": "11:23",
+              "distance": 0.72,
               "price": 0,
-              "distance": 0.87
+              "cost": 0
             },
             {
-              "start": "China Art Museum-Metro Station",
+              "start": "Qibao-Metro Station",
               "end": "Yishan Road-Metro Station",
               "mode": "metro",
-              "start_time": "14:40",
-              "end_time": "14:52",
+              "start_time": "11:23",
+              "end_time": "11:39",
+              "distance": 8.21,
+              "price": 3,
               "cost": 3,
-              "distance": 6.33,
-              "tickets": 1,
-              "price": 3
+              "tickets": 1
             },
             {
               "start": "Yishan Road-Metro Station",
               "end": "Jinglai Hotel·Selection (Shanghai Xujiahui Jiaotong University)",
               "mode": "walk",
-              "start_time": "14:52",
-              "end_time": "14:59",
-              "cost": 0,
+              "start_time": "11:39",
+              "end_time": "11:46",
+              "distance": 0.66,
               "price": 0,
-              "distance": 0.66
+              "cost": 0
             }
           ]
         }
@@ -267,52 +346,118 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "Anfu Road",
+          "start_time": "15:46",
+          "end_time": "16:46",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Columbia Circle",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "walk",
+              "end": "Anfu Road",
+              "mode": "taxi",
               "start_time": "15:30",
-              "end_time": "15:38",
-              "distance": 0.68,
+              "end_time": "15:32",
+              "distance": 1.62,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:23",
+          "end_time": "18:23",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Anfu Road",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:46",
+              "end_time": "17:03",
+              "distance": 11.57,
+              "price": 46.79,
+              "cost": 46.79,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Shipyard Riverside Green Space",
+          "start_time": "18:45",
+          "end_time": "19:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Middle Yanji Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:23",
+              "end_time": "18:33",
+              "distance": 0.86,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Jiangsu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "start": "Middle Yanji Road-Metro Station",
+              "end": "Yangshupu Road-Metro Station",
               "mode": "metro",
-              "start_time": "15:38",
-              "end_time": "16:51",
-              "distance": 36.56,
-              "price": 7,
-              "cost": 7,
+              "start_time": "18:33",
+              "end_time": "18:41",
+              "distance": 4.4,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
+              "start": "Yangshupu Road-Metro Station",
+              "end": "Shanghai Shipyard Riverside Green Space",
               "mode": "walk",
-              "start_time": "16:51",
-              "end_time": "17:06",
-              "distance": 1.27,
+              "start_time": "18:41",
+              "end_time": "18:45",
+              "distance": 0.41,
               "price": 0,
               "cost": 0
             }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 640.93,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Shipyard Riverside Green Space",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "19:45",
+              "end_time": "20:31",
+              "distance": 30.98,
+              "price": 134.09,
+              "cost": 134.09,
+              "cars": 1
+            }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.0351557731628418,
-  "_eval_score": 93.01700680272108
+  "_eval_score": 98.9065934065934
 }

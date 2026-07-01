@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "23:54",
-          "end_time": "04:40",
-          "start": "Beijing Fengtai Station",
-          "end": "Shenzhen East Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "K105"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 26.0,
+          "cost": 26.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "03:59",
+              "distance": 15.99,
+              "price": 66.65,
+              "cost": 66.65,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen East Station",
+              "start": "Delicious Noodle House (Taoyuan Branch)",
               "end": "Honghu Park",
               "mode": "taxi",
-              "start_time": "04:40",
-              "end_time": "04:44",
-              "distance": 3.16,
-              "price": 15.75,
-              "cost": 15.75,
+              "start_time": "08:00",
+              "end_time": "08:32",
+              "distance": 21.64,
+              "price": 92.06,
+              "cost": 92.06,
               "cars": 1
             }
           ]
@@ -405,32 +427,164 @@
           "transports": []
         },
         {
-          "type": "train",
-          "start_time": "11:08",
-          "end_time": "16:36",
-          "start": "Shenzhen East Station",
-          "end": "Beijing West Railway Station",
-          "price": 777.26,
-          "cost": 777.26,
+          "type": "attraction",
+          "position": "Pinghu Ecological Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-              "end": "Shenzhen East Station",
+              "end": "Pinghu Ecological Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 6.21,
-              "price": 26.45,
-              "cost": 26.45,
+              "end_time": "08:34",
+              "distance": 3.1,
+              "price": 15.53,
+              "cost": 15.53,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
+          "start_time": "11:13",
+          "end_time": "12:13",
+          "price": 27.0,
+          "cost": 27.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Pinghu Ecological Park",
+              "end": "DQ (Shenzhen Liancheng Xintiandi Store)",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:55",
+              "distance": 17.21,
+              "price": 72.14,
+              "cost": 72.14,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Splendid Garden",
+          "start_time": "12:20",
+          "end_time": "13:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "DQ (Shenzhen Liancheng Xintiandi Store)",
+              "end": "Splendid Garden",
+              "mode": "taxi",
+              "start_time": "12:13",
+              "end_time": "12:14",
+              "distance": 0.8,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "13:28",
+          "end_time": "14:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Splendid Garden",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "taxi",
+              "start_time": "13:20",
+              "end_time": "13:22",
+              "distance": 1.86,
+              "price": 11.21,
+              "cost": 11.21,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lotus Hill Park",
+          "start_time": "14:41",
+          "end_time": "15:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Lotus Hill Park",
+              "mode": "taxi",
+              "start_time": "14:28",
+              "end_time": "14:35",
+              "distance": 4.84,
+              "price": 21.63,
+              "cost": 21.63,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lotus Hill Park",
+              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:41",
+              "end_time": "15:52",
+              "distance": 7.46,
+              "price": 30.82,
+              "cost": 30.82,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:24",
+          "end_time": "01:49",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 1006.35,
+          "cost": 1006.35,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:51",
+              "distance": 34.18,
+              "price": 148.51,
+              "cost": 148.51,
               "cars": 1
             }
           ],
-          "TrainID": "K106"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 33.326154708862305,
-  "_eval_score": 97.312324929972
+  "_eval_score": 99.79166666666666
 }

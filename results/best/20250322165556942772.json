@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:09",
-          "end_time": "09:04",
+          "start_time": "00:50",
+          "end_time": "02:45",
           "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 791.78,
-          "cost": 2375.34,
+          "end": "Chengdu Tianfu International Airport",
+          "price": 818.75,
+          "cost": 2456.25,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL533"
+          "FlightID": "FL540"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Tianfu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "02:45",
+              "end_time": "04:08",
+              "distance": 55.75,
+              "price": 245.57,
+              "cost": 245.57,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "China Shadow Puppet Museum",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:01",
+              "distance": 1.11,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "China Shadow Puppet Museum",
               "end": "Shangzuo Cuisine Restaurant (Airport Branch)",
               "mode": "taxi",
-              "start_time": "09:04",
-              "end_time": "09:10",
-              "distance": 4.15,
-              "price": 19.21,
-              "cost": 19.21,
+              "start_time": "10:00",
+              "end_time": "10:18",
+              "distance": 12.33,
+              "price": 50.18,
+              "cost": 50.18,
               "cars": 1
             }
           ]
@@ -130,24 +174,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Ziyun haojia Hotel",
-          "start_time": "18:19",
+          "position": "ECHARM Hotel (Shuangliu International Airport store)",
+          "start_time": "18:20",
           "end_time": "24:00",
-          "price": 209.0,
-          "cost": 627.0,
+          "price": 314.0,
+          "cost": 942.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
           "transports": [
             {
               "start": "Mawangzi (Taikoo Li Branch)",
-              "end": "Ziyun haojia Hotel",
+              "end": "ECHARM Hotel (Shuangliu International Airport store)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:19",
-              "distance": 13.16,
-              "price": 53.93,
-              "cost": 53.93,
+              "end_time": "18:20",
+              "distance": 13.92,
+              "price": 57.32,
+              "cost": 57.32,
               "cars": 1
             }
           ]
@@ -159,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Ziyun haojia Hotel",
+          "position": "ECHARM Hotel (Shuangliu International Airport store)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -170,21 +214,21 @@
         {
           "type": "attraction",
           "position": "Chunxi Road",
-          "start_time": "08:51",
-          "end_time": "10:06",
+          "start_time": "08:52",
+          "end_time": "10:07",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Ziyun haojia Hotel",
+              "start": "ECHARM Hotel (Shuangliu International Airport store)",
               "end": "Chunxi Road",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:51",
-              "distance": 14.07,
-              "price": 58.01,
-              "cost": 58.01,
+              "end_time": "08:52",
+              "distance": 14.84,
+              "price": 61.49,
+              "cost": 61.49,
               "cars": 1
             }
           ]
@@ -192,8 +236,8 @@
         {
           "type": "attraction",
           "position": "Chengdu Museum",
-          "start_time": "10:08",
-          "end_time": "11:23",
+          "start_time": "10:09",
+          "end_time": "11:24",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -202,8 +246,8 @@
               "start": "Chunxi Road",
               "end": "Chengdu Museum",
               "mode": "taxi",
-              "start_time": "10:06",
-              "end_time": "10:08",
+              "start_time": "10:07",
+              "end_time": "10:09",
               "distance": 1.37,
               "price": 11.0,
               "cost": 11.0,
@@ -214,8 +258,8 @@
         {
           "type": "attraction",
           "position": "Manjushri Lane",
-          "start_time": "11:25",
-          "end_time": "12:40",
+          "start_time": "11:26",
+          "end_time": "12:41",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -224,8 +268,8 @@
               "start": "Chengdu Museum",
               "end": "Manjushri Lane",
               "mode": "taxi",
-              "start_time": "11:23",
-              "end_time": "11:25",
+              "start_time": "11:24",
+              "end_time": "11:26",
               "distance": 1.95,
               "price": 11.51,
               "cost": 11.51,
@@ -236,8 +280,8 @@
         {
           "type": "lunch",
           "position": "Crane's Call Tea House (People's Park Branch)",
-          "start_time": "12:44",
-          "end_time": "13:44",
+          "start_time": "12:45",
+          "end_time": "13:45",
           "price": 45.0,
           "cost": 135.0,
           "tickets": 3,
@@ -246,8 +290,8 @@
               "start": "Manjushri Lane",
               "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "taxi",
-              "start_time": "12:40",
-              "end_time": "12:44",
+              "start_time": "12:41",
+              "end_time": "12:45",
               "distance": 3.18,
               "price": 15.83,
               "cost": 15.83,
@@ -256,32 +300,76 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:13",
-          "end_time": "19:08",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 819.12,
-          "cost": 2457.36,
+          "type": "attraction",
+          "position": "Chengdu City Tour Sightseeing Bus",
+          "start_time": "14:01",
+          "end_time": "15:31",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Crane's Call Tea House (People's Park Branch)",
-              "end": "Chengdu Tianfu International Airport",
+              "end": "Chengdu City Tour Sightseeing Bus",
               "mode": "taxi",
-              "start_time": "13:44",
-              "end_time": "15:06",
-              "distance": 55.18,
-              "price": 243.03,
-              "cost": 243.03,
+              "start_time": "13:45",
+              "end_time": "13:46",
+              "distance": 0.74,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandpa and Grandma Chen's Egg Pancakes",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu City Tour Sightseeing Bus",
+              "end": "Grandpa and Grandma Chen's Egg Pancakes",
+              "mode": "taxi",
+              "start_time": "15:31",
+              "end_time": "15:34",
+              "distance": 2.39,
+              "price": 13.06,
+              "cost": 13.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "18:27",
+          "end_time": "22:13",
+          "start": "Chengdu East Railway Station",
+          "end": "Hangzhou Railway Station",
+          "price": 616.66,
+          "cost": 1849.98,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Grandpa and Grandma Chen's Egg Pancakes",
+              "end": "Chengdu East Railway Station",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:11",
+              "distance": 7.53,
+              "price": 31.07,
+              "cost": 31.07,
               "cars": 1
             }
           ],
-          "FlightID": "FL452"
+          "TrainID": "K530"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 184.67291164398193,
-  "_eval_score": 97.07900432900433
+  "elapsed_time(sec)": 182.53380632400513,
+  "_eval_score": 100.0
 }

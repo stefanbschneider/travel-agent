@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "02:56",
-          "end_time": "04:27",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 565.32,
-          "cost": 1695.96,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL020"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "03:09",
+              "end_time": "03:45",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Joyful Gathering (Jingtian Branch)",
               "end": "Bauhinia Lane Hong Kong International Style Street",
               "mode": "taxi",
-              "start_time": "04:27",
-              "end_time": "05:10",
-              "distance": 29.06,
-              "price": 125.47,
-              "cost": 125.47,
+              "start_time": "08:00",
+              "end_time": "08:08",
+              "distance": 5.4,
+              "price": 23.62,
+              "cost": 23.62,
               "cars": 1
             }
           ]
@@ -234,6 +256,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Futian District Sports Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "JunDe holiday inn",
+              "end": "Futian District Sports Park",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:37",
+              "distance": 4.89,
+              "price": 21.81,
+              "cost": 21.81,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "YO!Tea (Futian CITIC Plaza Branch)",
           "start_time": "11:00",
@@ -243,14 +287,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "JunDe holiday inn",
+              "start": "Futian District Sports Park",
               "end": "YO!Tea (Futian CITIC Plaza Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:46",
-              "distance": 10.73,
-              "price": 42.97,
-              "cost": 42.97,
+              "start_time": "10:30",
+              "end_time": "10:38",
+              "distance": 5.98,
+              "price": 25.64,
+              "cost": 25.64,
               "cars": 1
             }
           ]
@@ -266,34 +310,14 @@
           "transports": [
             {
               "start": "YO!Tea (Futian CITIC Plaza Branch)",
-              "end": "Hongling South-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:05",
-              "distance": 0.49,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongling South-Metro Station",
-              "end": "Hongling-Metro Station",
-              "mode": "metro",
-              "start_time": "12:05",
-              "end_time": "12:06",
-              "distance": 0.93,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Hongling-Metro Station",
               "end": "Deng Xiaoping Portrait Square",
-              "mode": "walk",
-              "start_time": "12:06",
-              "end_time": "12:13",
-              "distance": 0.63,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.41,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -308,34 +332,36 @@
           "transports": [
             {
               "start": "Deng Xiaoping Portrait Square",
-              "end": "Hongling-Metro Station",
-              "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "13:50",
-              "distance": 0.63,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongling-Metro Station",
-              "end": "Shaibu-Metro Station",
-              "mode": "metro",
-              "start_time": "13:50",
-              "end_time": "13:53",
-              "distance": 1.86,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Shaibu-Metro Station",
               "end": "East Gate Old Street",
-              "mode": "walk",
-              "start_time": "13:53",
-              "end_time": "13:54",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:43",
+              "end_time": "13:44",
+              "distance": 1.28,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "15:25",
+          "end_time": "16:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "East Gate Old Street",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
+              "mode": "taxi",
+              "start_time": "15:24",
+              "end_time": "15:24",
+              "distance": 0.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -349,35 +375,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "East Gate Old Street",
-              "end": "Shaibu-Metro Station",
-              "mode": "walk",
-              "start_time": "15:24",
-              "end_time": "15:25",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shaibu-Metro Station",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "metro",
-              "start_time": "15:25",
-              "end_time": "15:27",
-              "distance": 1.45,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:27",
-              "end_time": "15:29",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:25",
+              "end_time": "16:27",
+              "distance": 1.35,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -421,6 +427,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Dashabe Ecological Corridor",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "JunDe holiday inn",
+              "end": "Dashabe Ecological Corridor",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 3.61,
+              "price": 17.32,
+              "cost": 17.32,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Old Zhou's Shunde Double-Skin Milk",
           "start_time": "11:00",
@@ -430,14 +458,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "JunDe holiday inn",
+              "start": "Dashabe Ecological Corridor",
               "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 6.59,
-              "price": 27.77,
-              "cost": 27.77,
+              "start_time": "10:30",
+              "end_time": "10:45",
+              "distance": 10.13,
+              "price": 40.3,
+              "cost": 40.3,
               "cars": 1
             }
           ]
@@ -453,34 +481,14 @@
           "transports": [
             {
               "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Meicun-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Meicun-Metro Station",
-              "end": "Donggualing-Metro Station",
-              "mode": "metro",
-              "start_time": "12:02",
-              "end_time": "12:05",
-              "distance": 1.79,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Donggualing-Metro Station",
               "end": "Guan Shanyue Art Museum",
-              "mode": "walk",
-              "start_time": "12:05",
-              "end_time": "12:13",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.19,
+              "price": 12.38,
+              "cost": 12.38,
+              "cars": 1
             }
           ]
         },
@@ -495,34 +503,36 @@
           "transports": [
             {
               "start": "Guan Shanyue Art Museum",
-              "end": "Donggualing-Metro Station",
-              "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "13:51",
-              "distance": 0.68,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Donggualing-Metro Station",
-              "end": "Lianhua Village-Metro Station",
-              "mode": "metro",
-              "start_time": "13:51",
-              "end_time": "13:53",
-              "distance": 1.31,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Lianhua Village-Metro Station",
               "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-              "mode": "walk",
-              "start_time": "13:53",
-              "end_time": "13:57",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:43",
+              "end_time": "13:44",
+              "distance": 0.82,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "15:33",
+          "end_time": "16:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "taxi",
+              "start_time": "15:27",
+              "end_time": "15:28",
+              "distance": 1.01,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -536,35 +546,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-              "end": "Lianhua Village-Metro Station",
-              "mode": "walk",
-              "start_time": "15:27",
-              "end_time": "15:31",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lianhua Village-Metro Station",
-              "end": "Meicun-Metro Station",
-              "mode": "metro",
-              "start_time": "15:31",
-              "end_time": "15:36",
-              "distance": 2.7,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Meicun-Metro Station",
+              "start": "Galaxy Development Center Building - Fitness Center",
               "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-              "mode": "walk",
-              "start_time": "15:36",
-              "end_time": "15:42",
-              "distance": 0.53,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:33",
+              "end_time": "16:37",
+              "distance": 3.12,
+              "price": 15.6,
+              "cost": 15.6,
+              "cars": 1
             }
           ]
         },
@@ -608,6 +598,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Dashabe Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "JunDe holiday inn",
+              "end": "Dashabe Park",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 3.77,
+              "price": 17.89,
+              "cost": 17.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
           "start_time": "11:00",
@@ -617,14 +629,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "JunDe holiday inn",
+              "start": "Dashabe Park",
               "end": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:43",
-              "distance": 9.04,
-              "price": 36.33,
-              "cost": 36.33,
+              "start_time": "10:30",
+              "end_time": "10:43",
+              "distance": 9.25,
+              "price": 37.08,
+              "cost": 37.08,
               "cars": 1
             }
           ]
@@ -640,34 +652,14 @@
           "transports": [
             {
               "start": "Hundred Herbs Hall Ancestral Herbal Tea Shop (Shekou Branch)",
-              "end": "Dongjiaotou-Metro Station",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:03",
-              "distance": 0.31,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dongjiaotou-Metro Station",
-              "end": "Shekou Port-Metro Station",
-              "mode": "metro",
-              "start_time": "12:03",
-              "end_time": "12:07",
-              "distance": 2.21,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Shekou Port-Metro Station",
               "end": "China Merchants Shekou Cruise Home Port Tour",
-              "mode": "walk",
-              "start_time": "12:07",
-              "end_time": "12:16",
-              "distance": 0.82,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.69,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -693,52 +685,75 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "16:16",
-          "end_time": "17:47",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 559.04,
-          "cost": 1677.12,
+          "type": "attraction",
+          "position": "Bay Area Cruise",
+          "start_time": "15:16",
+          "end_time": "16:16",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "end": "Shekou Port-Metro Station",
+              "end": "Bay Area Cruise",
               "mode": "walk",
               "start_time": "15:16",
-              "end_time": "15:25",
-              "distance": 0.82,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shekou Port-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "15:25",
-              "end_time": "16:07",
-              "distance": 21.0,
-              "price": 6,
-              "cost": 18,
-              "tickets": 3
-            },
-            {
-              "start": "Airport East-Metro Station",
-              "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "16:07",
-              "end_time": "16:12",
-              "distance": 0.45,
+              "end_time": "15:16",
+              "distance": 0.06257141119050215,
               "price": 0,
               "cost": 0
             }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 26.0,
+          "cost": 78.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bay Area Cruise",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
+              "mode": "taxi",
+              "start_time": "16:16",
+              "end_time": "16:25",
+              "distance": 6.5,
+              "price": 27.44,
+              "cost": 27.44,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:37",
+          "end_time": "01:08",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 572.8,
+          "cost": 1718.3999999999999,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "Shenzhen Bao'an International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:23",
+              "distance": 15.99,
+              "price": 66.65,
+              "cost": 66.65,
+              "cars": 1
+            }
           ],
-          "FlightID": "FL162"
+          "FlightID": "FL166"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 37.52596998214722,
-  "_eval_score": 97.8027950310559
+  "_eval_score": 100.0
 }

@@ -8,20 +8,130 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "09:39",
-          "end_time": "21:53",
-          "start": "Shenzhen North Railway Station",
+          "start_time": "12:16",
+          "end_time": "12:53",
+          "start": "Shenzhen Station",
           "end": "Suzhou Station",
-          "price": 700.94,
-          "cost": 3504.7000000000003,
+          "price": 467.29,
+          "cost": 2336.4500000000003,
           "tickets": 5,
           "transports": [],
-          "TrainID": "D2282"
+          "TrainID": "K34"
+        },
+        {
+          "type": "lunch",
+          "position": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+          "start_time": "12:56",
+          "end_time": "13:56",
+          "price": 192.0,
+          "cost": 960.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Suzhou Station",
+              "end": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+              "mode": "taxi",
+              "start_time": "12:53",
+              "end_time": "12:56",
+              "distance": 2.58,
+              "price": 13.73,
+              "cost": 27.46,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Maple Bridge Scenic Area",
+          "start_time": "14:03",
+          "end_time": "15:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+              "end": "Maple Bridge Scenic Area",
+              "mode": "taxi",
+              "start_time": "13:56",
+              "end_time": "14:03",
+              "distance": 5.04,
+              "price": 22.34,
+              "cost": 44.68,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Museum",
+          "start_time": "15:26",
+          "end_time": "16:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Maple Bridge Scenic Area",
+              "end": "Suzhou Museum",
+              "mode": "taxi",
+              "start_time": "15:18",
+              "end_time": "15:26",
+              "distance": 5.97,
+              "price": 25.61,
+              "cost": 51.22,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shangri-La Hotel Suzhou · Shang Palace",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 231.0,
+          "cost": 1155.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Suzhou Museum",
+              "end": "Shangri-La Hotel Suzhou · Shang Palace",
+              "mode": "taxi",
+              "start_time": "16:41",
+              "end_time": "16:53",
+              "distance": 8.25,
+              "price": 33.58,
+              "cost": 67.16,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shantang Street",
+          "start_time": "18:08",
+          "end_time": "19:23",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shangri-La Hotel Suzhou · Shang Palace",
+              "end": "Shantang Street",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:08",
+              "distance": 5.91,
+              "price": 25.37,
+              "cost": 50.74,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "accommodation",
           "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "22:21",
+          "start_time": "19:50",
           "end_time": "24:00",
           "price": 206.0,
           "cost": 618.0,
@@ -30,14 +140,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Suzhou Station",
+              "start": "Shantang Street",
               "end": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
               "mode": "taxi",
-              "start_time": "21:53",
-              "end_time": "22:21",
-              "distance": 18.8,
-              "price": 79.31,
-              "cost": 158.62,
+              "start_time": "19:23",
+              "end_time": "19:50",
+              "distance": 18.11,
+              "price": 76.19,
+              "cost": 152.38,
               "cars": 2
             }
           ]
@@ -59,132 +169,132 @@
         },
         {
           "type": "attraction",
-          "position": "Maple Bridge Scenic Area",
-          "start_time": "08:57",
-          "end_time": "10:27",
+          "position": "Pingjiang Road Historic District",
+          "start_time": "08:56",
+          "end_time": "10:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-              "end": "Maple Bridge Scenic Area",
+              "end": "Pingjiang Road Historic District",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:57",
-              "distance": 18.3,
-              "price": 77.03,
-              "cost": 154.06,
+              "end_time": "08:56",
+              "distance": 17.42,
+              "price": 73.11,
+              "cost": 146.22,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Suzhou Museum",
-          "start_time": "10:35",
-          "end_time": "12:05",
+          "position": "Golden Rooster Lake",
+          "start_time": "10:20",
+          "end_time": "11:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Maple Bridge Scenic Area",
-              "end": "Suzhou Museum",
+              "start": "Pingjiang Road Historic District",
+              "end": "Golden Rooster Lake",
               "mode": "taxi",
-              "start_time": "10:27",
-              "end_time": "10:35",
-              "distance": 5.97,
-              "price": 25.61,
-              "cost": 51.22,
+              "start_time": "10:11",
+              "end_time": "10:20",
+              "distance": 6.35,
+              "price": 26.91,
+              "cost": 53.82,
               "cars": 2
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
-          "start_time": "12:09",
-          "end_time": "13:09",
-          "price": 57.0,
-          "cost": 285.0,
+          "position": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+          "start_time": "11:38",
+          "end_time": "12:38",
+          "price": 168.0,
+          "cost": 840.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Suzhou Museum",
-              "end": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
+              "start": "Golden Rooster Lake",
+              "end": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
               "mode": "taxi",
-              "start_time": "12:05",
-              "end_time": "12:09",
-              "distance": 3.29,
-              "price": 16.22,
-              "cost": 32.44,
+              "start_time": "11:35",
+              "end_time": "11:38",
+              "distance": 2.45,
+              "price": 13.26,
+              "cost": 26.52,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shantang Street",
-          "start_time": "13:10",
-          "end_time": "14:40",
+          "position": "Suzhou Water Tour",
+          "start_time": "12:47",
+          "end_time": "14:02",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Sun Shengxing Aozao Noodle House (Shantang Street Branch)",
-              "end": "Shantang Street",
+              "start": "Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop",
+              "end": "Suzhou Water Tour",
               "mode": "taxi",
-              "start_time": "13:09",
-              "end_time": "13:10",
-              "distance": 1.05,
-              "price": 11.0,
-              "cost": 22.0,
+              "start_time": "12:38",
+              "end_time": "12:47",
+              "distance": 6.65,
+              "price": 27.98,
+              "cost": 55.96,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Pingjiang Road Historic District",
-          "start_time": "14:44",
-          "end_time": "16:14",
+          "position": "Yangcheng Lake",
+          "start_time": "14:35",
+          "end_time": "15:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Shantang Street",
-              "end": "Pingjiang Road Historic District",
+              "start": "Suzhou Water Tour",
+              "end": "Yangcheng Lake",
               "mode": "taxi",
-              "start_time": "14:40",
-              "end_time": "14:44",
-              "distance": 3.04,
-              "price": 15.34,
-              "cost": 30.68,
+              "start_time": "14:02",
+              "end_time": "14:35",
+              "distance": 22.34,
+              "price": 95.22,
+              "cost": 190.44,
               "cars": 2
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
+          "position": "Suyan Chinese Restaurant at W Suzhou",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 255.0,
-          "cost": 1275.0,
+          "price": 450.0,
+          "cost": 2250.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Pingjiang Road Historic District",
-              "end": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
+              "start": "Yangcheng Lake",
+              "end": "Suyan Chinese Restaurant at W Suzhou",
               "mode": "taxi",
-              "start_time": "16:14",
+              "start_time": "15:50",
               "end_time": "16:15",
-              "distance": 0.77,
-              "price": 11.0,
-              "cost": 22.0,
+              "distance": 16.92,
+              "price": 70.82,
+              "cost": 141.64,
               "cars": 2
             }
           ]
@@ -192,7 +302,7 @@
         {
           "type": "accommodation",
           "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "18:26",
+          "start_time": "18:25",
           "end_time": "24:00",
           "price": 206.0,
           "cost": 618.0,
@@ -201,14 +311,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Ban Yuan Private Kitchen (Pingjiang Road Main Store)",
+              "start": "Suyan Chinese Restaurant at W Suzhou",
               "end": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:26",
-              "distance": 17.56,
-              "price": 73.71,
-              "cost": 147.42,
+              "end_time": "18:25",
+              "distance": 17.05,
+              "price": 71.42,
+              "cost": 142.84,
               "cars": 2
             }
           ]
@@ -230,64 +340,108 @@
         },
         {
           "type": "attraction",
-          "position": "Golden Rooster Lake",
+          "position": "West Garden Temple",
           "start_time": "08:57",
-          "end_time": "10:27",
+          "end_time": "10:12",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-              "end": "Golden Rooster Lake",
+              "end": "West Garden Temple",
               "mode": "taxi",
               "start_time": "08:30",
               "end_time": "08:57",
-              "distance": 18.13,
-              "price": 76.27,
-              "cost": 152.54,
+              "distance": 18.23,
+              "price": 76.75,
+              "cost": 153.5,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Suzhou Water Tour",
-          "start_time": "10:40",
-          "end_time": "12:10",
+          "position": "Chang Garden",
+          "start_time": "10:27",
+          "end_time": "10:47",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Golden Rooster Lake",
-              "end": "Suzhou Water Tour",
+              "start": "West Garden Temple",
+              "end": "Chang Garden",
               "mode": "taxi",
-              "start_time": "10:27",
-              "end_time": "10:40",
-              "distance": 8.84,
-              "price": 35.63,
-              "cost": 71.26,
+              "start_time": "10:12",
+              "end_time": "10:16",
+              "distance": 2.9,
+              "price": 14.86,
+              "cost": 29.72,
               "cars": 2
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
-          "start_time": "12:12",
-          "end_time": "13:12",
-          "price": 192.0,
-          "cost": 960.0,
+          "position": "Moon Pavilion (Guanqian Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 153.0,
+          "cost": 765.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Suzhou Water Tour",
-              "end": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+              "start": "Chang Garden",
+              "end": "Moon Pavilion (Guanqian Branch)",
               "mode": "taxi",
-              "start_time": "12:10",
-              "end_time": "12:12",
-              "distance": 1.65,
+              "start_time": "10:47",
+              "end_time": "10:47",
+              "distance": 0.43,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Arhat Hall",
+          "start_time": "12:17",
+          "end_time": "13:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Moon Pavilion (Guanqian Branch)",
+              "end": "Arhat Hall",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 3.23,
+              "price": 16.01,
+              "cost": 32.02,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cloud-Crowned Peak",
+          "start_time": "13:23",
+          "end_time": "13:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Arhat Hall",
+              "end": "Cloud-Crowned Peak",
+              "mode": "taxi",
+              "start_time": "13:17",
+              "end_time": "13:17",
+              "distance": 0.55,
               "price": 11.0,
               "cost": 22.0,
               "cars": 2
@@ -296,31 +450,31 @@
         },
         {
           "type": "train",
-          "start_time": "13:18",
-          "end_time": "22:33",
+          "start_time": "13:58",
+          "end_time": "14:52",
           "start": "Suzhou Station",
           "end": "Shenzhen Station",
-          "price": 759.35,
-          "cost": 3796.75,
+          "price": 467.29,
+          "cost": 2336.4500000000003,
           "tickets": 5,
           "transports": [
             {
-              "start": "Xin Ju Feng Restaurant (Taijian Lane Branch)",
+              "start": "Cloud-Crowned Peak",
               "end": "Suzhou Station",
               "mode": "taxi",
-              "start_time": "13:12",
-              "end_time": "13:15",
-              "distance": 2.58,
-              "price": 13.73,
-              "cost": 27.46,
+              "start_time": "13:43",
+              "end_time": "13:45",
+              "distance": 1.35,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ],
-          "TrainID": "G2788"
+          "TrainID": "K33"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 180.53759217262268,
-  "_eval_score": 95.27777777777777
+  "elapsed_time(sec)": 243.4775731563568,
+  "_eval_score": 98.47222222222223
 }

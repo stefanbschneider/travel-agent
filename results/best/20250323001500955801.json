@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:11",
-          "end_time": "08:46",
-          "start": "Suzhou New District Station",
-          "end": "Nanjing South Railway Station",
-          "price": 113.45,
-          "cost": 226.9,
+          "start_time": "00:02",
+          "end_time": "02:15",
+          "start": "Suzhou Station",
+          "end": "Nanjing Station",
+          "price": 94.54,
+          "cost": 189.08,
           "tickets": 2,
           "transports": [],
-          "TrainID": "D636"
+          "TrainID": "T136"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 10.0,
+          "cost": 20.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Station",
+              "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "mode": "taxi",
+              "start_time": "02:15",
+              "end_time": "02:27",
+              "distance": 8.44,
+              "price": 34.22,
+              "cost": 34.22,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Laomendong Historical Block",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
+              "end": "Laomendong Historical Block",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.97,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,77 +72,59 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "Nanjing South Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:46",
-              "end_time": "08:49",
-              "distance": 0.29,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nanjing South Railway Station-Metro Station",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "08:49",
-              "end_time": "09:00",
-              "distance": 5.92,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
+              "start": "Laomendong Historical Block",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:04",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:00",
+              "end_time": "10:00",
+              "distance": 0.35,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple",
-          "start_time": "12:08",
-          "end_time": "13:38",
+          "position": "Nanjing Museum",
+          "start_time": "12:22",
+          "end_time": "14:07",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "end": "Confucius Temple",
-              "mode": "walk",
+              "end": "Nanjing Museum",
+              "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 0.7132714115812652,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:07",
+              "distance": 4.67,
+              "price": 21.03,
+              "cost": 21.03,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple Yuhua Stone Museum",
-          "start_time": "13:39",
-          "end_time": "15:39",
+          "position": "Nanjing Presidential Palace",
+          "start_time": "14:32",
+          "end_time": "16:17",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple",
-              "end": "Confucius Temple Yuhua Stone Museum",
-              "mode": "walk",
-              "start_time": "13:38",
-              "end_time": "13:39",
-              "distance": 0.14000629410462556,
-              "price": 0,
-              "cost": 0
+              "start": "Nanjing Museum",
+              "end": "Nanjing Presidential Palace",
+              "mode": "taxi",
+              "start_time": "14:07",
+              "end_time": "14:10",
+              "distance": 2.66,
+              "price": 14.0,
+              "cost": 14.0,
+              "cars": 1
             }
           ]
         },
@@ -112,58 +138,61 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple Yuhua Stone Museum",
+              "start": "Nanjing Presidential Palace",
               "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "walk",
-              "start_time": "15:39",
-              "end_time": "16:04",
-              "distance": 2.159526350664383,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:17",
+              "end_time": "16:20",
+              "distance": 2.17,
+              "price": 12.31,
+              "cost": 12.31,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple",
+          "start_time": "18:11",
+          "end_time": "19:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Jinling Hotel - Plum Garden",
+              "end": "Confucius Temple",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 2.1,
+              "price": 12.04,
+              "cost": 12.04,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "UrCove by HYATT Nanjing South Railway Station",
-          "start_time": "18:27",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+          "start_time": "20:16",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "price": 368.0,
+          "cost": 736.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Jinling Hotel - Plum Garden",
-              "end": "Xinjiekou-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:01",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinjiekou-Metro Station",
-              "end": "Hongyun Avenue-Metro Station",
-              "mode": "metro",
-              "start_time": "18:01",
-              "end_time": "18:19",
-              "distance": 9.31,
-              "price": 4,
-              "cost": 8,
-              "tickets": 2
-            },
-            {
-              "start": "Hongyun Avenue-Metro Station",
-              "end": "UrCove by HYATT Nanjing South Railway Station",
-              "mode": "walk",
-              "start_time": "18:19",
-              "end_time": "18:27",
-              "distance": 0.71,
-              "price": 0,
-              "cost": 0
+              "start": "Confucius Temple",
+              "end": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "mode": "taxi",
+              "start_time": "19:56",
+              "end_time": "20:05",
+              "distance": 6.27,
+              "price": 26.63,
+              "cost": 26.63,
+              "cars": 1
             }
           ]
         }
@@ -174,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -185,155 +214,162 @@
         {
           "type": "attraction",
           "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "08:58",
-          "end_time": "10:28",
+          "start_time": "08:50",
+          "end_time": "10:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "UrCove by HYATT Nanjing South Railway Station",
-              "end": "Hongyun Avenue-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 0.71,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongyun Avenue-Metro Station",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "08:38",
-              "end_time": "08:52",
-              "distance": 7.26,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
+              "start": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
               "end": "Confucius Temple and Qinhuai River Scenic Area",
-              "mode": "walk",
-              "start_time": "08:52",
-              "end_time": "08:58",
-              "distance": 0.53,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:39",
+              "distance": 6.19,
+              "price": 26.36,
+              "cost": 26.36,
+              "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Li's Halal Restaurant (Dading Lane Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 29.0,
-          "cost": 58.0,
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "11:38",
+          "end_time": "12:38",
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Confucius Temple and Qinhuai River Scenic Area",
-              "end": "Confucius Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "10:28",
-              "end_time": "10:34",
-              "distance": 0.53,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Confucius Temple-Metro Station",
-              "end": "Zhangfuyuan-Metro Station",
-              "mode": "metro",
-              "start_time": "10:34",
-              "end_time": "10:36",
-              "distance": 1.01,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Zhangfuyuan-Metro Station",
-              "end": "Li's Halal Restaurant (Dading Lane Branch)",
-              "mode": "walk",
-              "start_time": "10:36",
-              "end_time": "10:41",
-              "distance": 0.44,
-              "price": 0,
-              "cost": 0
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "10:35",
+              "end_time": "10:42",
+              "distance": 5.26,
+              "price": 23.12,
+              "cost": 23.12,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-          "start_time": "12:55",
-          "end_time": "14:25",
+          "position": "Lion Bridge Pedestrian Food Street",
+          "start_time": "12:49",
+          "end_time": "14:19",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Li's Halal Restaurant (Dading Lane Branch)",
-              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:55",
-              "distance": 4.630525344282477,
-              "price": 0,
-              "cost": 0
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Lion Bridge Pedestrian Food Street",
+              "mode": "taxi",
+              "start_time": "12:38",
+              "end_time": "12:39",
+              "distance": 0.92,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Cherry Blossom Avenue",
-          "start_time": "14:26",
-          "end_time": "16:26",
+          "position": "Former National Government (Ministry of Foreign Affairs) Site",
+          "start_time": "14:25",
+          "end_time": "15:55",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "end": "Cherry Blossom Avenue",
-              "mode": "walk",
-              "start_time": "14:25",
-              "end_time": "14:26",
-              "distance": 0.0974006350805857,
-              "price": 0,
-              "cost": 0
+              "start": "Lion Bridge Pedestrian Food Street",
+              "end": "Former National Government (Ministry of Foreign Affairs) Site",
+              "mode": "taxi",
+              "start_time": "14:19",
+              "end_time": "14:19",
+              "distance": 0.52,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Former National Government (Ministry of Foreign Affairs) Site",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "15:55",
+              "end_time": "15:58",
+              "distance": 2.04,
+              "price": 11.83,
+              "cost": 11.83,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hohai University Library",
+          "start_time": "18:13",
+          "end_time": "19:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Hohai University Library",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:01",
+              "distance": 1.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "17:00",
-          "end_time": "18:12",
+          "start_time": "22:24",
+          "end_time": "02:26",
           "start": "Nanjing Station",
           "end": "Suzhou Station",
-          "price": 122.9,
-          "cost": 245.8,
+          "price": 75.63,
+          "cost": 151.26,
           "tickets": 2,
           "transports": [
             {
-              "start": "Cherry Blossom Avenue",
+              "start": "Hohai University Library",
               "end": "Nanjing Station",
-              "mode": "walk",
-              "start_time": "16:26",
-              "end_time": "16:53",
-              "distance": 2.2983938134967556,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "19:13",
+              "end_time": "19:19",
+              "distance": 4.26,
+              "price": 19.62,
+              "cost": 19.62,
+              "cars": 1
             }
           ],
-          "TrainID": "G7021"
+          "TrainID": "K1805"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.22104907035827637,
-  "_eval_score": 96.20595238095238
+  "elapsed_time(sec)": 182.28577375411987,
+  "_eval_score": 100.0
 }

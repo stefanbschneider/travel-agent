@@ -7,35 +7,101 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:00",
+          "end_time": "07:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "02:29",
+              "end_time": "03:41",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 422.54,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "07:00",
+              "end_time": "07:01",
+              "distance": 0.96,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
           "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "12:13",
-          "end_time": "13:13",
+          "start_time": "11:00",
+          "end_time": "12:00",
           "price": 337.0,
           "cost": 1685.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
+              "start": "Corner Tower",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 36.52,
+              "start_time": "10:00",
+              "end_time": "10:05",
+              "distance": 3.64,
+              "price": 17.43,
+              "cost": 34.86,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Science and Technology Museum",
+          "start_time": "12:19",
+          "end_time": "13:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tidu (Beijing Fang Branch)",
+              "end": "China Science and Technology Museum",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:19",
+              "distance": 12.77,
+              "price": 52.18,
+              "cost": 104.36,
               "cars": 2
             }
           ]
@@ -43,21 +109,21 @@
         {
           "type": "attraction",
           "position": "Olympic Park",
-          "start_time": "13:29",
-          "end_time": "14:29",
+          "start_time": "13:21",
+          "end_time": "14:21",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Tidu (Beijing Fang Branch)",
+              "start": "China Science and Technology Museum",
               "end": "Olympic Park",
               "mode": "taxi",
-              "start_time": "13:13",
-              "end_time": "13:29",
-              "distance": 11.3,
-              "price": 45.54,
-              "cost": 91.08,
+              "start_time": "13:19",
+              "end_time": "13:21",
+              "distance": 1.53,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
@@ -65,8 +131,8 @@
         {
           "type": "attraction",
           "position": "Tiananmen Square",
-          "start_time": "14:43",
-          "end_time": "15:43",
+          "start_time": "14:35",
+          "end_time": "15:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
@@ -75,8 +141,8 @@
               "start": "Olympic Park",
               "end": "Tiananmen Square",
               "mode": "taxi",
-              "start_time": "14:29",
-              "end_time": "14:43",
+              "start_time": "14:21",
+              "end_time": "14:35",
               "distance": 9.91,
               "price": 39.38,
               "cost": 78.76,
@@ -85,69 +151,47 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Shichahai",
-          "start_time": "15:49",
-          "end_time": "16:49",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Tiananmen Square",
-              "end": "Shichahai",
-              "mode": "taxi",
-              "start_time": "15:43",
-              "end_time": "15:49",
-              "distance": 4.39,
-              "price": 20.06,
-              "cost": 40.12,
-              "cars": 2
-            }
-          ]
-        },
-        {
           "type": "dinner",
           "position": "Jumbo Seafood (Beijing SKP Branch)",
-          "start_time": "17:01",
-          "end_time": "18:01",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 401.0,
           "cost": 2005.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Shichahai",
+              "start": "Tiananmen Square",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
               "mode": "taxi",
-              "start_time": "16:49",
-              "end_time": "17:01",
-              "distance": 8.58,
-              "price": 34.72,
-              "cost": 69.44,
+              "start_time": "15:35",
+              "end_time": "15:44",
+              "distance": 6.37,
+              "price": 27.01,
+              "cost": 54.02,
               "cars": 2
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Beijing Hongqiqu Jinglong Hotel",
-          "start_time": "18:16",
+          "position": "Xingming Lake Jinyan Hotel",
+          "start_time": "18:49",
           "end_time": "24:00",
-          "price": 478.0,
-          "cost": 2390.0,
-          "rooms": 5,
-          "room_type": 1,
-          "tickets": 5,
+          "price": 517.0,
+          "cost": 1551.0,
+          "rooms": 3,
+          "room_type": 2,
+          "tickets": 3,
           "transports": [
             {
               "start": "Jumbo Seafood (Beijing SKP Branch)",
-              "end": "Beijing Hongqiqu Jinglong Hotel",
+              "end": "Xingming Lake Jinyan Hotel",
               "mode": "taxi",
-              "start_time": "18:01",
-              "end_time": "18:16",
-              "distance": 10.22,
-              "price": 40.67,
-              "cost": 81.34,
+              "start_time": "18:00",
+              "end_time": "18:49",
+              "distance": 33.2,
+              "price": 144.11,
+              "cost": 288.22,
               "cars": 2
             }
           ]
@@ -159,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Beijing Hongqiqu Jinglong Hotel",
+          "position": "Xingming Lake Jinyan Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -169,22 +213,44 @@
         },
         {
           "type": "attraction",
-          "position": "The Palace Museum",
-          "start_time": "08:42",
-          "end_time": "09:42",
+          "position": "Shichahai",
+          "start_time": "09:26",
+          "end_time": "10:26",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing Hongqiqu Jinglong Hotel",
-              "end": "The Palace Museum",
+              "start": "Xingming Lake Jinyan Hotel",
+              "end": "Shichahai",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:42",
-              "distance": 8.15,
-              "price": 33.23,
-              "cost": 66.46,
+              "end_time": "09:26",
+              "distance": 37.52,
+              "price": 163.52,
+              "cost": 327.04,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Palace Museum",
+          "start_time": "10:30",
+          "end_time": "11:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shichahai",
+              "end": "The Palace Museum",
+              "mode": "taxi",
+              "start_time": "10:26",
+              "end_time": "10:30",
+              "distance": 2.89,
+              "price": 14.81,
+              "cost": 29.62,
               "cars": 2
             }
           ]
@@ -192,8 +258,8 @@
         {
           "type": "attraction",
           "position": "National Museum of China",
-          "start_time": "09:44",
-          "end_time": "10:44",
+          "start_time": "11:32",
+          "end_time": "12:32",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
@@ -202,8 +268,8 @@
               "start": "The Palace Museum",
               "end": "National Museum of China",
               "mode": "taxi",
-              "start_time": "09:42",
-              "end_time": "09:44",
+              "start_time": "11:30",
+              "end_time": "11:32",
               "distance": 1.46,
               "price": 11.0,
               "cost": 22.0,
@@ -212,45 +278,23 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Old Summer Palace",
-          "start_time": "11:05",
-          "end_time": "12:05",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "National Museum of China",
-              "end": "Old Summer Palace",
-              "mode": "taxi",
-              "start_time": "10:44",
-              "end_time": "11:05",
-              "distance": 14.34,
-              "price": 59.25,
-              "cost": 118.5,
-              "cars": 2
-            }
-          ]
-        },
-        {
           "type": "lunch",
           "position": "Beijing Puxuan Hotel · Left Bank",
-          "start_time": "12:25",
-          "end_time": "13:25",
+          "start_time": "12:34",
+          "end_time": "13:34",
           "price": 733.0,
           "cost": 3665.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Old Summer Palace",
+              "start": "National Museum of China",
               "end": "Beijing Puxuan Hotel · Left Bank",
               "mode": "taxi",
-              "start_time": "12:05",
-              "end_time": "12:25",
-              "distance": 13.37,
-              "price": 54.89,
-              "cost": 109.78,
+              "start_time": "12:32",
+              "end_time": "12:34",
+              "distance": 1.38,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
@@ -258,92 +302,74 @@
         {
           "type": "attraction",
           "position": "798 Art District",
-          "start_time": "14:04",
-          "end_time": "15:34",
+          "start_time": "14:13",
+          "end_time": "15:43",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Beijing Puxuan Hotel · Left Bank",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "walk",
-              "start_time": "13:25",
-              "end_time": "13:25",
-              "distance": 0.05,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "Wangjing South-Metro Station",
-              "mode": "metro",
-              "start_time": "13:25",
-              "end_time": "13:43",
-              "distance": 9.09,
-              "price": 4,
-              "cost": 20,
-              "tickets": 5
-            },
-            {
-              "start": "Wangjing South-Metro Station",
               "end": "798 Art District",
-              "mode": "walk",
-              "start_time": "13:43",
-              "end_time": "14:04",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:34",
+              "end_time": "13:50",
+              "distance": 10.78,
+              "price": 43.2,
+              "cost": 86.4,
+              "cars": 2
             }
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
           "start_time": "17:00",
-          "end_time": "20:14",
-          "start": "Beijing South Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "end_time": "18:00",
+          "price": 7.0,
+          "cost": 35.0,
           "tickets": 5,
           "transports": [
             {
               "start": "798 Art District",
-              "end": "Wangjing South-Metro Station",
-              "mode": "walk",
-              "start_time": "15:34",
-              "end_time": "15:55",
-              "distance": 1.79,
-              "price": 0,
-              "cost": 0
-            },
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "taxi",
+              "start_time": "15:43",
+              "end_time": "15:58",
+              "distance": 10.25,
+              "price": 40.81,
+              "cost": 81.62,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "19:54",
+          "end_time": "21:01",
+          "start": "Beijing Capital International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 479.32,
+          "cost": 2396.6,
+          "tickets": 5,
+          "transports": [
             {
-              "start": "Wangjing South-Metro Station",
-              "end": "Beijing South Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "15:55",
-              "end_time": "16:26",
-              "distance": 15.93,
-              "price": 5,
-              "cost": 25,
-              "tickets": 5
-            },
-            {
-              "start": "Beijing South Railway Station-Metro Station",
-              "end": "Beijing South Railway Station",
-              "mode": "walk",
-              "start_time": "16:26",
-              "end_time": "16:26",
-              "distance": 0.02,
-              "price": 0,
-              "cost": 0
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Beijing Capital International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:35",
+              "distance": 23.44,
+              "price": 100.2,
+              "cost": 200.4,
+              "cars": 2
             }
           ],
-          "TrainID": "G21"
+          "FlightID": "FL160"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 180.27232313156128,
-  "_eval_score": 97.57341269841271
+  "elapsed_time(sec)": 125.09891247749329,
+  "_eval_score": 99.75873015873016
 }

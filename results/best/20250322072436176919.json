@@ -8,58 +8,190 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:06",
-          "end_time": "18:42",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2911.84,
+          "start_time": "15:50",
+          "end_time": "10:06",
+          "start": "Shenzhen East Station",
+          "end": "Shanghai South Railway Station",
+          "price": 606.64,
+          "cost": 2426.56,
           "tickets": 4,
           "transports": [],
-          "TrainID": "D3126"
+          "TrainID": "T212"
         },
         {
-          "type": "dinner",
-          "position": "Fu He Hui",
-          "start_time": "18:58",
-          "end_time": "19:58",
-          "price": 1280.0,
-          "cost": 5120.0,
+          "type": "attraction",
+          "position": "Xujiahui Park",
+          "start_time": "10:14",
+          "end_time": "11:59",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Hongqiao Station",
-              "end": "Fu He Hui",
+              "start": "Shanghai South Railway Station",
+              "end": "Xujiahui Park",
               "mode": "taxi",
-              "start_time": "18:42",
-              "end_time": "18:58",
-              "distance": 10.79,
-              "price": 43.25,
-              "cost": 43.25,
+              "start_time": "10:06",
+              "end_time": "10:14",
+              "distance": 5.91,
+              "price": 25.39,
+              "cost": 25.39,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "12:14",
+          "end_time": "13:14",
+          "price": 18.0,
+          "cost": 72.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Xujiahui Park",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "taxi",
+              "start_time": "11:59",
+              "end_time": "12:14",
+              "distance": 10.64,
+              "price": 42.57,
+              "cost": 42.57,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huaihai Road",
+          "start_time": "13:35",
+          "end_time": "15:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Huaihai Road",
+              "mode": "taxi",
+              "start_time": "13:14",
+              "end_time": "13:35",
+              "distance": 14.1,
+              "price": 58.17,
+              "cost": 58.17,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "People's Park",
+          "start_time": "15:22",
+          "end_time": "17:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Huaihai Road",
+              "end": "People's Park",
+              "mode": "taxi",
+              "start_time": "15:20",
+              "end_time": "15:22",
+              "distance": 1.53,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "17:08",
+          "end_time": "18:08",
+          "price": 29.0,
+          "cost": 116.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "People's Park",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "17:07",
+              "end_time": "17:08",
+              "distance": 1.0,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Old Wharf",
+          "start_time": "18:11",
+          "end_time": "19:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "Old Wharf",
+              "mode": "taxi",
+              "start_time": "18:08",
+              "end_time": "18:11",
+              "distance": 2.44,
+              "price": 13.24,
+              "cost": 13.24,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "North Sichuan Road Park",
+          "start_time": "20:02",
+          "end_time": "21:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Old Wharf",
+              "end": "North Sichuan Road Park",
+              "mode": "taxi",
+              "start_time": "19:56",
+              "end_time": "20:02",
+              "distance": 4.41,
+              "price": 20.15,
+              "cost": 20.15,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Cordis Shanghai Hongqiao",
-          "start_time": "20:14",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "start_time": "22:19",
           "end_time": "24:00",
-          "price": 799.0,
-          "cost": 3196.0,
-          "rooms": 4,
-          "room_type": 1,
-          "tickets": 4,
+          "price": 303.0,
+          "cost": 606.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Fu He Hui",
-              "end": "Cordis Shanghai Hongqiao",
+              "start": "North Sichuan Road Park",
+              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
               "mode": "taxi",
-              "start_time": "19:58",
-              "end_time": "20:14",
-              "distance": 11.13,
-              "price": 44.77,
-              "cost": 44.77,
+              "start_time": "21:47",
+              "end_time": "22:19",
+              "distance": 21.68,
+              "price": 92.26,
+              "cost": 92.26,
               "cars": 1
             }
           ]
@@ -71,7 +203,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Cordis Shanghai Hongqiao",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -81,64 +213,108 @@
         },
         {
           "type": "attraction",
-          "position": "North Sichuan Road Park",
-          "start_time": "09:21",
-          "end_time": "10:51",
+          "position": "Bank of China",
+          "start_time": "09:20",
+          "end_time": "10:20",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Cordis Shanghai Hongqiao",
-              "end": "North Sichuan Road Park",
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Bank of China",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:57",
-              "distance": 18.2,
-              "price": 76.61,
-              "cost": 76.61,
+              "end_time": "09:00",
+              "distance": 20.62,
+              "price": 87.5,
+              "cost": 87.5,
               "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:23",
-          "end_time": "12:23",
-          "price": 600.0,
-          "cost": 2400.0,
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 30.0,
+          "cost": 120.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "North Sichuan Road Park",
-              "end": "Yong Fu (Huangpu Branch)",
+              "start": "Bank of China",
+              "end": "Valley Sand Noodle Shop",
               "mode": "taxi",
-              "start_time": "10:51",
-              "end_time": "10:58",
-              "distance": 5.24,
-              "price": 23.04,
-              "cost": 23.04,
+              "start_time": "10:20",
+              "end_time": "10:23",
+              "distance": 2.33,
+              "price": 12.84,
+              "cost": 12.84,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Huaihai Road",
-          "start_time": "13:44",
-          "end_time": "15:14",
+          "position": "1933 Old Millfun",
+          "start_time": "12:10",
+          "end_time": "13:10",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Yong Fu (Huangpu Branch)",
-              "end": "Huaihai Road",
+              "start": "Valley Sand Noodle Shop",
+              "end": "1933 Old Millfun",
               "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:25",
-              "distance": 1.48,
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.55,
+              "price": 13.63,
+              "cost": 13.63,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "North Bund Riverside Green Space",
+          "start_time": "13:14",
+          "end_time": "14:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "North Bund Riverside Green Space",
+              "mode": "taxi",
+              "start_time": "13:10",
+              "end_time": "13:11",
+              "distance": 1.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Shipyard Riverside Green Space",
+          "start_time": "14:20",
+          "end_time": "15:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "North Bund Riverside Green Space",
+              "end": "Shanghai Shipyard Riverside Green Space",
+              "mode": "taxi",
+              "start_time": "14:14",
+              "end_time": "14:15",
+              "distance": 0.69,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -147,46 +323,46 @@
         },
         {
           "type": "dinner",
-          "position": "Kurogi",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 3312.0,
-          "cost": 13248.0,
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Huaihai Road",
-              "end": "Kurogi",
+              "start": "Shanghai Shipyard Riverside Green Space",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "mode": "taxi",
-              "start_time": "15:14",
-              "end_time": "15:17",
-              "distance": 2.48,
-              "price": 13.38,
-              "cost": 13.38,
+              "start_time": "15:20",
+              "end_time": "15:27",
+              "distance": 4.98,
+              "price": 22.12,
+              "cost": 22.12,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Cordis Shanghai Hongqiao",
-          "start_time": "18:25",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "start_time": "18:28",
           "end_time": "24:00",
-          "price": 799.0,
-          "cost": 3196.0,
-          "rooms": 4,
-          "room_type": 1,
-          "tickets": 4,
+          "price": 303.0,
+          "cost": 606.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Kurogi",
-              "end": "Cordis Shanghai Hongqiao",
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:25",
-              "distance": 17.21,
-              "price": 72.16,
-              "cost": 72.16,
+              "end_time": "18:28",
+              "distance": 18.78,
+              "price": 79.21,
+              "cost": 79.21,
               "cars": 1
             }
           ]
@@ -198,7 +374,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Cordis Shanghai Hongqiao",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -208,75 +384,163 @@
         },
         {
           "type": "attraction",
-          "position": "Old Wharf",
-          "start_time": "08:58",
-          "end_time": "10:07",
+          "position": "Anfu Road",
+          "start_time": "09:27",
+          "end_time": "10:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Cordis Shanghai Hongqiao",
-              "end": "Old Wharf",
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Anfu Road",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:58",
-              "distance": 18.98,
-              "price": 80.1,
-              "cost": 80.1,
+              "end_time": "09:06",
+              "distance": 24.26,
+              "price": 103.87,
+              "cost": 103.87,
               "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Renhe Hall (Zhaojiabang Road Branch)",
+          "position": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 203.0,
-          "cost": 812.0,
+          "price": 31.0,
+          "cost": 124.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Old Wharf",
-              "end": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "Anfu Road",
+              "end": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
               "mode": "taxi",
-              "start_time": "10:07",
-              "end_time": "10:15",
-              "distance": 5.78,
-              "price": 24.92,
-              "cost": 24.92,
+              "start_time": "10:27",
+              "end_time": "10:29",
+              "distance": 1.6,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Changle Road",
+          "start_time": "12:11",
+          "end_time": "13:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
+              "end": "Changle Road",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.78,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "13:26",
+          "end_time": "14:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Changle Road",
+              "end": "Jing'an Park",
+              "mode": "taxi",
+              "start_time": "13:11",
+              "end_time": "13:12",
+              "distance": 0.74,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Zhang Garden",
+          "start_time": "14:41",
+          "end_time": "15:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jing'an Park",
+              "end": "Zhang Garden",
+              "mode": "taxi",
+              "start_time": "14:26",
+              "end_time": "14:28",
+              "distance": 1.52,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Zhang Garden",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:41",
+              "end_time": "15:43",
+              "distance": 1.46,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "price": 640.93,
+          "cost": 2563.72,
           "tickets": 4,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "end": "Shanghai Pudong International Airport",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:51",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "start_time": "18:00",
+              "end_time": "18:52",
+              "distance": 35.27,
+              "price": 153.41,
+              "cost": 153.41,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.12508797645568848,
-  "_eval_score": 94.42619047619047
+  "elapsed_time(sec)": 256.51392793655396,
+  "_eval_score": 99.44444444444444
 }

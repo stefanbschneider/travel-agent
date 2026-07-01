@@ -19,6 +19,50 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Dahuchun (Sichuan Middle Road Branch)",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 29.0,
+          "cost": 29.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Dahuchun (Sichuan Middle Road Branch)",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:56",
+              "distance": 32.55,
+              "price": 141.18,
+              "cost": 141.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dongchang Road Ferry",
+          "start_time": "08:15",
+          "end_time": "08:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dahuchun (Sichuan Middle Road Branch)",
+              "end": "Dongchang Road Ferry",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:02",
+              "distance": 1.98,
+              "price": 11.64,
+              "cost": 11.64,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
           "start_time": "10:00",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Dongchang Road Ferry",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:50",
-              "distance": 28.62,
-              "price": 123.5,
-              "cost": 123.5,
+              "start_time": "08:45",
+              "end_time": "08:48",
+              "distance": 2.17,
+              "price": 12.31,
+              "cost": 12.31,
               "cars": 1
             }
           ]
@@ -168,6 +212,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Century Square",
+          "start_time": "09:04",
+          "end_time": "10:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Century Square",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 15.24,
+              "price": 63.3,
+              "cost": 63.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
           "start_time": "11:00",
@@ -177,14 +243,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "start": "Century Square",
               "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "09:05",
-              "distance": 23.76,
-              "price": 101.62,
-              "cost": 101.62,
+              "start_time": "10:34",
+              "end_time": "10:47",
+              "distance": 8.8,
+              "price": 35.49,
+              "cost": 35.49,
               "cars": 1
             }
           ]
@@ -222,62 +288,87 @@
             {
               "start": "Jululu Road",
               "end": "Jing'an Park",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "13:30",
-              "end_time": "13:35",
-              "distance": 0.4434750434069161,
-              "price": 0,
-              "cost": 0
+              "end_time": "13:30",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Temple",
+          "start_time": "15:07",
+          "end_time": "16:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Park",
+              "end": "Jing'an Temple",
+              "mode": "taxi",
+              "start_time": "15:05",
+              "end_time": "15:05",
+              "distance": 0.22,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 16.0,
+          "cost": 16.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jing'an Temple",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:07",
+              "end_time": "16:23",
+              "distance": 10.79,
+              "price": 43.26,
+              "cost": 43.26,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Jing'an Park",
-              "end": "West Nanjing Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:05",
-              "end_time": "15:13",
-              "distance": 0.67,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "West Nanjing Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:13",
-              "end_time": "16:21",
-              "distance": 34.08,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:36",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:45",
+              "distance": 30.3,
+              "price": 131.05,
+              "cost": 131.05,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 19.040377855300903,
-  "_eval_score": 95.83928571428572
+  "_eval_score": 99.9015873015873
 }

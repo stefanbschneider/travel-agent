@@ -7,16 +7,82 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:48",
+              "distance": 36.99,
+              "price": 161.16,
+              "cost": 161.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dream of the Red Chamber Immersive Exhibition and Performance",
+          "start_time": "08:10",
+          "end_time": "08:40",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Dream of the Red Chamber Immersive Exhibition and Performance",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:03",
+              "distance": 2.34,
+              "price": 12.88,
+              "cost": 12.88,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ancient Peach Leaf Ferry",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Dream of the Red Chamber Immersive Exhibition and Performance",
+              "end": "Ancient Peach Leaf Ferry",
+              "mode": "taxi",
+              "start_time": "08:40",
+              "end_time": "08:42",
+              "distance": 1.56,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +94,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Ancient Peach Leaf Ferry",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "08:11",
-              "end_time": "08:19",
-              "distance": 5.8,
-              "price": 25.02,
-              "cost": 25.02,
+              "start_time": "10:30",
+              "end_time": "10:31",
+              "distance": 1.21,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -244,34 +310,14 @@
           "transports": [
             {
               "start": "Nanjing Olympic Sports Center",
-              "end": "Xinglong Avenue-Metro Station",
-              "mode": "walk",
-              "start_time": "14:16",
-              "end_time": "14:21",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinglong Avenue-Metro Station",
-              "end": "Olympic Sports Center East-Metro Station",
-              "mode": "metro",
-              "start_time": "14:21",
-              "end_time": "14:23",
-              "distance": 1.35,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Olympic Sports Center East-Metro Station",
               "end": "Live Fire Shooting Club",
-              "mode": "walk",
-              "start_time": "14:23",
-              "end_time": "14:29",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "14:16",
+              "end_time": "14:17",
+              "distance": 1.03,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -286,34 +332,14 @@
           "transports": [
             {
               "start": "Live Fire Shooting Club",
-              "end": "Olympic Sports Center East-Metro Station",
-              "mode": "walk",
-              "start_time": "15:59",
-              "end_time": "16:05",
-              "distance": 0.56,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Olympic Sports Center East-Metro Station",
-              "end": "Xinmofan Road-Metro Station",
-              "mode": "metro",
-              "start_time": "16:05",
-              "end_time": "16:24",
-              "distance": 9.81,
-              "price": 4,
-              "cost": 8,
-              "tickets": 2
-            },
-            {
-              "start": "Xinmofan Road-Metro Station",
               "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
-              "mode": "walk",
-              "start_time": "16:24",
-              "end_time": "16:26",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "15:59",
+              "end_time": "16:12",
+              "distance": 9.22,
+              "price": 36.98,
+              "cost": 36.98,
+              "cars": 1
             }
           ]
         },
@@ -433,34 +459,14 @@
           "transports": [
             {
               "start": "Republic Red Mansion (Laomendong Branch)",
-              "end": "Wuding Gate-Metro Station",
-              "mode": "walk",
-              "start_time": "12:46",
-              "end_time": "12:53",
-              "distance": 0.61,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Wuding Gate-Metro Station",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "metro",
-              "start_time": "12:53",
-              "end_time": "13:02",
-              "distance": 4.84,
-              "price": 3,
-              "cost": 6,
-              "tickets": 2
-            },
-            {
-              "start": "Rooster Crowing Temple-Metro Station",
               "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "mode": "walk",
-              "start_time": "13:02",
-              "end_time": "13:15",
-              "distance": 1.09,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "12:46",
+              "end_time": "12:55",
+              "distance": 6.09,
+              "price": 26.03,
+              "cost": 26.03,
+              "cars": 1
             }
           ]
         },
@@ -476,62 +482,65 @@
             {
               "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
               "end": "Beiqiu Museum of Contemporary Art",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "14:45",
-              "end_time": "14:51",
-              "distance": 0.5759656668092257,
-              "price": 0,
-              "cost": 0
+              "end_time": "14:45",
+              "distance": 0.58,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
           "start_time": "17:00",
-          "end_time": "18:40",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "end_time": "18:00",
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Beiqiu Museum of Contemporary Art",
-              "end": "Rooster Crowing Temple-Metro Station",
-              "mode": "walk",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
               "start_time": "16:21",
-              "end_time": "16:32",
-              "distance": 0.99,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "16:23",
+              "distance": 1.92,
+              "price": 11.41,
+              "cost": 11.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
             {
-              "start": "Rooster Crowing Temple-Metro Station",
-              "end": "Nanjing Station-Metro Station",
-              "mode": "metro",
-              "start_time": "16:32",
-              "end_time": "16:39",
-              "distance": 3.56,
-              "price": 2,
-              "cost": 4,
-              "tickets": 2
-            },
-            {
-              "start": "Nanjing Station-Metro Station",
-              "end": "Nanjing Station",
-              "mode": "walk",
-              "start_time": "16:39",
-              "end_time": "16:41",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Nanjing Lukou International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:57",
+              "distance": 38.65,
+              "price": 168.64,
+              "cost": 168.64,
+              "cars": 1
             }
           ],
-          "TrainID": "G7021"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 183.04167008399963,
-  "_eval_score": 97.72751322751323
+  "_eval_score": 99.77489177489178
 }

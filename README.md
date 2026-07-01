@@ -103,6 +103,7 @@ python scripts/merge.py --split tpc_phase1_tail_focus
 `scripts/rank_tail.py` writes:
 - ranking report: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
 - focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
+- incremental scan cache: `cache/tail_rankings/<split>_<method>_ms<min_score>_rank_cache.json`
 
 `scripts/rank_tail.py` now supports explicit modes:
 - `--mode tail`: mixed low-score tail (legacy behavior)
@@ -113,17 +114,19 @@ python scripts/merge.py --split tpc_phase1_tail_focus
 - `--runner solve`: call `scripts/solve.py` on the focused split
 - `--runner densify`: call `scripts/densify.py` on the focused split
 
-Recommended tail-optimization loop (repeat until progress flattens):
+Recommended tail-optimization loop (repeat cached rank -> solve -> merge until progress flattens, then score the full set once):
 ```
-# 1) Refresh the lowest-score queue from current results/best
+# 1) Refresh the lowest-score queue from current results/best; unchanged plans reuse the rank cache
 python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 120 --min-score 99
 
 # 2) Run heavier search only on this focused split
 python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
 
-# 3) Monotonic merge and score
+# 3) Monotonic merge; merge evaluates the focus split and appends per-round metrics
 python scripts/merge.py --split tpc_phase1_tail_focus
-python scripts/score.py
+
+# 4) After the loop, score results/best once on the base split
+python scripts/score.py --split tpc_phase1
 ```
 
 How to read the ranking report (`cache/tail_rankings/...csv`):
@@ -163,8 +166,9 @@ Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`
 `TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
 checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
 `scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
-`scripts/rank_tail.py` (read-only) ranks low-score queries by score gap + hard-logic failure
-signature and writes a focused split for targeted reruns.
+`scripts/rank_tail.py` (does not mutate `results/best`) ranks low-score queries by score gap + hard-logic failure
+signature, writes a focused split for targeted reruns, and caches per-query scan primitives in
+`cache/tail_rankings/<split>_<method>_ms<min_score>_rank_cache.json`.
 `scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
 against budget/time constraints) to show where more attractions can be packed safely.
 `eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the current

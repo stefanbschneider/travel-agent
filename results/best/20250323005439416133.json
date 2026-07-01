@@ -7,140 +7,208 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:03",
-          "end_time": "11:16",
-          "start": "Guangzhou South Railway Station",
-          "end": "Wuhan Station",
-          "price": 543.6,
-          "cost": 1630.8000000000002,
+          "type": "airplane",
+          "start_time": "01:45",
+          "end_time": "02:48",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 388.13,
+          "cost": 1164.3899999999999,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G835"
+          "FlightID": "FL309"
+        },
+        {
+          "type": "breakfast",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "06:30",
+          "end_time": "06:35",
+          "price": 5.0,
+          "cost": 15.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "walk",
+              "start_time": "02:48",
+              "end_time": "02:54",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Sanyang Road-Metro Station",
+              "mode": "metro",
+              "start_time": "02:54",
+              "end_time": "03:35",
+              "distance": 20.72,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Sanyang Road-Metro Station",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "mode": "walk",
+              "start_time": "03:35",
+              "end_time": "03:43",
+              "distance": 0.67,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Historical and Cultural District",
+          "start_time": "07:00",
+          "end_time": "07:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Hankou Historical and Cultural District",
+              "mode": "taxi",
+              "start_time": "06:35",
+              "end_time": "06:35",
+              "distance": 0.25,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
-          "position": "Green Grain Restaurant (East Lake Branch)",
-          "start_time": "12:14",
-          "end_time": "13:14",
-          "price": 306.0,
-          "cost": 918.0,
+          "position": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 297.0,
+          "cost": 891.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan Station",
-              "end": "Green Grain Restaurant (East Lake Branch)",
-              "mode": "walk",
-              "start_time": "11:16",
-              "end_time": "12:14",
-              "distance": 4.841181938539623,
-              "price": 0,
-              "cost": 0
+              "start": "Hankou Historical and Cultural District",
+              "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "mode": "taxi",
+              "start_time": "07:20",
+              "end_time": "07:23",
+              "distance": 2.13,
+              "price": 12.17,
+              "cost": 12.17,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Wuhan Yangtze River Bridge",
-          "start_time": "15:03",
-          "end_time": "16:03",
+          "position": "Hubei Provincial Museum",
+          "start_time": "12:22",
+          "end_time": "13:22",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Green Grain Restaurant (East Lake Branch)",
-              "end": "Wuhan Yangtze River Bridge",
-              "mode": "walk",
-              "start_time": "13:14",
-              "end_time": "15:03",
-              "distance": 9.137170389447165,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Qingchuan Pavilion",
-          "start_time": "16:11",
-          "end_time": "17:11",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Wuhan Yangtze River Bridge",
-              "end": "Qingchuan Pavilion",
-              "mode": "walk",
-              "start_time": "16:03",
-              "end_time": "16:11",
-              "distance": 0.7456727820849833,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Five Percent Villa Restaurant",
-          "start_time": "17:39",
-          "end_time": "18:39",
-          "price": 298.0,
-          "cost": 894.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Qingchuan Pavilion",
-              "end": "Five Percent Villa Restaurant",
-              "mode": "walk",
-              "start_time": "17:11",
-              "end_time": "17:39",
-              "distance": 2.394965437182882,
-              "price": 0,
-              "cost": 0
+              "start": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "end": "Hubei Provincial Museum",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 5.21,
+              "price": 22.94,
+              "cost": 22.94,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Hankou Riverside Park",
-          "start_time": "19:27",
-          "end_time": "20:27",
+          "start_time": "13:57",
+          "end_time": "14:57",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Five Percent Villa Restaurant",
+              "start": "Hubei Provincial Museum",
               "end": "Hankou Riverside Park",
-              "mode": "walk",
-              "start_time": "18:39",
-              "end_time": "19:27",
-              "distance": 4.078955011196228,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:22",
+              "end_time": "13:32",
+              "distance": 6.83,
+              "price": 28.61,
+              "cost": 28.61,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake",
+          "start_time": "16:27",
+          "end_time": "17:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hankou Riverside Park",
+              "end": "East Lake",
+              "mode": "taxi",
+              "start_time": "14:57",
+              "end_time": "15:13",
+              "distance": 11.12,
+              "price": 44.72,
+              "cost": 44.72,
+              "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "All Seasons Hotel (Wuhan Railway Station)",
-          "start_time": "22:22",
+          "position": "Tianya Zhixing Hotel",
+          "start_time": "19:56",
           "end_time": "24:00",
-          "price": 388.0,
-          "cost": 1164.0,
+          "price": 97.0,
+          "cost": 291.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
           "transports": [
             {
-              "start": "Hankou Riverside Park",
-              "end": "All Seasons Hotel (Wuhan Railway Station)",
+              "start": "East Lake",
+              "end": "Wudong-Metro Station",
               "mode": "walk",
-              "start_time": "20:27",
-              "end_time": "22:22",
-              "distance": 9.643070285039204,
+              "start_time": "17:27",
+              "end_time": "18:17",
+              "distance": 4.23,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wudong-Metro Station",
+              "end": "Tianhe Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:17",
+              "end_time": "19:19",
+              "distance": 31.39,
+              "price": 7,
+              "cost": 21,
+              "tickets": 3
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Tianya Zhixing Hotel",
+              "mode": "walk",
+              "start_time": "19:19",
+              "end_time": "19:56",
+              "distance": 3.12,
               "price": 0,
               "cost": 0
             }
@@ -153,7 +221,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "All Seasons Hotel (Wuhan Railway Station)",
+          "position": "Tianya Zhixing Hotel",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -163,20 +231,41 @@
         },
         {
           "type": "attraction",
-          "position": "East Lake",
-          "start_time": "09:31",
-          "end_time": "10:31",
+          "position": "Bronze Sculpture of the Yellow Crane's Return",
+          "start_time": "10:03",
+          "end_time": "10:23",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "All Seasons Hotel (Wuhan Railway Station)",
-              "end": "East Lake",
+              "start": "Tianya Zhixing Hotel",
+              "end": "Tianhe Airport-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "09:31",
-              "distance": 5.09462133768249,
+              "end_time": "09:07",
+              "distance": 3.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Tanhualin Wushengmen-Metro Station",
+              "mode": "metro",
+              "start_time": "09:07",
+              "end_time": "09:57",
+              "distance": 25.45,
+              "price": 6,
+              "cost": 18,
+              "tickets": 3
+            },
+            {
+              "start": "Tanhualin Wushengmen-Metro Station",
+              "end": "Bronze Sculpture of the Yellow Crane's Return",
+              "mode": "walk",
+              "start_time": "09:57",
+              "end_time": "10:03",
+              "distance": 0.52,
               "price": 0,
               "cost": 0
             }
@@ -184,114 +273,160 @@
         },
         {
           "type": "attraction",
-          "position": "Wuhan University",
-          "start_time": "11:29",
-          "end_time": "12:29",
+          "position": "Ancient Alley Snack Street",
+          "start_time": "10:28",
+          "end_time": "10:48",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "East Lake",
-              "end": "Wuhan University",
+              "start": "Bronze Sculpture of the Yellow Crane's Return",
+              "end": "Ancient Alley Snack Street",
               "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "11:29",
-              "distance": 4.836387019356892,
+              "start_time": "10:23",
+              "end_time": "10:28",
+              "distance": 0.44856141955326445,
               "price": 0,
               "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Feng's Fresh Fish Paste Noodle Soup",
+          "start_time": "11:00",
+          "end_time": "11:05",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ancient Alley Snack Street",
+              "end": "Feng's Fresh Fish Paste Noodle Soup",
+              "mode": "taxi",
+              "start_time": "10:48",
+              "end_time": "10:50",
+              "distance": 1.48,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "2024 Dongfeng Voyah Wuhan Open",
-          "start_time": "13:27",
-          "end_time": "14:57",
+          "position": "Great Yu Mythological Garden",
+          "start_time": "11:33",
+          "end_time": "11:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Wuhan University",
-              "end": "Zhongnan Hospital-Metro Station",
-              "mode": "walk",
-              "start_time": "12:29",
-              "end_time": "12:53",
-              "distance": 2.01,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhongnan Hospital-Metro Station",
-              "end": "Guanggu Tongji Hospital-Metro Station",
-              "mode": "metro",
-              "start_time": "12:53",
-              "end_time": "13:19",
-              "distance": 13.15,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Guanggu Tongji Hospital-Metro Station",
-              "end": "2024 Dongfeng Voyah Wuhan Open",
-              "mode": "walk",
-              "start_time": "13:19",
-              "end_time": "13:27",
-              "distance": 0.69,
-              "price": 0,
-              "cost": 0
+              "start": "Feng's Fresh Fish Paste Noodle Soup",
+              "end": "Great Yu Mythological Garden",
+              "mode": "taxi",
+              "start_time": "11:05",
+              "end_time": "11:07",
+              "distance": 1.93,
+              "price": 11.47,
+              "cost": 11.47,
+              "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "21:22",
-          "start": "Wuhan Station",
-          "end": "Guangzhou South Railway Station",
-          "price": 543.6,
-          "cost": 1630.8000000000002,
+          "type": "attraction",
+          "position": "Former Site of the National Government in Wuhan",
+          "start_time": "12:19",
+          "end_time": "12:39",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "2024 Dongfeng Voyah Wuhan Open",
-              "end": "Guanggu Tongji Hospital-Metro Station",
+              "start": "Great Yu Mythological Garden",
+              "end": "Former Site of the National Government in Wuhan",
+              "mode": "taxi",
+              "start_time": "11:53",
+              "end_time": "11:56",
+              "distance": 2.37,
+              "price": 12.99,
+              "cost": 12.99,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+          "start_time": "17:00",
+          "end_time": "17:05",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Former Site of the National Government in Wuhan",
+              "end": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "mode": "taxi",
+              "start_time": "12:39",
+              "end_time": "12:39",
+              "distance": 0.48,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:09",
+          "end_time": "22:12",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 453.61,
+          "cost": 1360.83,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "end": "Xunlimen-Metro Station",
               "mode": "walk",
-              "start_time": "14:57",
-              "end_time": "15:05",
-              "distance": 0.69,
+              "start_time": "17:05",
+              "end_time": "17:09",
+              "distance": 0.39,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Guanggu Tongji Hospital-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "start": "Xunlimen-Metro Station",
+              "end": "Tianhe Airport-Metro Station",
               "mode": "metro",
-              "start_time": "15:05",
-              "end_time": "15:32",
-              "distance": 13.99,
-              "price": 4,
-              "cost": 12,
+              "start_time": "17:09",
+              "end_time": "17:52",
+              "distance": 21.6,
+              "price": 6,
+              "cost": 18,
               "tickets": 3
             },
             {
-              "start": "Wuhan Station East Square-Metro Station",
-              "end": "Wuhan Station",
+              "start": "Tianhe Airport-Metro Station",
+              "end": "Wuhan Tianhe International Airport",
               "mode": "walk",
-              "start_time": "15:32",
-              "end_time": "15:34",
-              "distance": 0.19,
+              "start_time": "17:52",
+              "end_time": "17:58",
+              "distance": 0.55,
               "price": 0,
               "cost": 0
             }
           ],
-          "TrainID": "G695"
+          "FlightID": "FL597"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 181.89795804023743,
-  "_eval_score": 94.20238095238095
+  "elapsed_time(sec)": 365.77323031425476,
+  "_eval_score": 98.52721088435374
 }

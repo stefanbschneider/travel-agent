@@ -19,6 +19,28 @@
           "FlightID": "FL166"
         },
         {
+          "type": "breakfast",
+          "position": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+          "start_time": "07:00",
+          "end_time": "08:00",
+          "price": 108.0,
+          "cost": 108.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "02:00",
+              "distance": 34.67,
+              "price": 150.73,
+              "cost": 150.73,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Century Square",
           "start_time": "09:00",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Shanghai Jing'an Kempinski Hotel All Suites · 1Eins Bistro & Lounge",
               "end": "Century Square",
               "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:48",
-              "distance": 26.91,
-              "price": 115.8,
-              "cost": 115.8,
+              "start_time": "08:00",
+              "end_time": "08:11",
+              "distance": 7.99,
+              "price": 32.65,
+              "cost": 32.65,
               "cars": 1
             }
           ]
@@ -234,6 +256,28 @@
           "transports": []
         },
         {
+          "type": "attraction",
+          "position": "Dongchang Road Ferry",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Howard Johnson Leonora Plaza Shanghai",
+              "end": "Dongchang Road Ferry",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:43",
+              "distance": 8.77,
+              "price": 35.41,
+              "cost": 35.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Le Caisa Pizza (Jing'an Joy City Branch)",
           "start_time": "11:00",
@@ -243,35 +287,15 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Howard Johnson Leonora Plaza Shanghai",
-              "end": "Tai'erzhuang Road-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tai'erzhuang Road-Metro Station",
-              "end": "Qufu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:33",
-              "end_time": "08:57",
-              "distance": 12.05,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Qufu Road-Metro Station",
+              "start": "Dongchang Road Ferry",
               "end": "Le Caisa Pizza (Jing'an Joy City Branch)",
-              "mode": "walk",
-              "start_time": "08:57",
-              "end_time": "08:59",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:35",
+              "distance": 3.78,
+              "price": 17.92,
+              "cost": 17.92,
+              "cars": 1
             }
           ]
         },
@@ -287,12 +311,13 @@
             {
               "start": "Le Caisa Pizza (Jing'an Joy City Branch)",
               "end": "Jing'an Sculpture Park",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:04",
-              "distance": 0.4129785714389398,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:00",
+              "distance": 0.41,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -307,84 +332,88 @@
           "transports": [
             {
               "start": "Jing'an Sculpture Park",
-              "end": "Qufu Road-Metro Station",
-              "mode": "walk",
+              "end": "Huaihai Road",
+              "mode": "taxi",
               "start_time": "13:34",
               "end_time": "13:36",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
-            },
+              "distance": 1.88,
+              "price": 11.27,
+              "cost": 11.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Fuxing Park",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Qufu Road-Metro Station",
-              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "mode": "metro",
-              "start_time": "13:36",
-              "end_time": "13:40",
-              "distance": 2.05,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
+              "start": "Huaihai Road",
+              "end": "Fuxing Park",
+              "mode": "taxi",
+              "start_time": "15:13",
+              "end_time": "15:13",
+              "distance": 0.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Crazy Ones Spanish Paella (Metro City Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 105.0,
+          "cost": 105.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "end": "Huaihai Road",
-              "mode": "walk",
-              "start_time": "13:40",
-              "end_time": "13:43",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
+              "start": "Fuxing Park",
+              "end": "Crazy Ones Spanish Paella (Metro City Branch)",
+              "mode": "taxi",
+              "start_time": "16:15",
+              "end_time": "16:22",
+              "distance": 4.83,
+              "price": 21.62,
+              "cost": 21.62,
+              "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "16:36",
-          "end_time": "18:07",
+          "start_time": "23:48",
+          "end_time": "01:19",
           "start": "Shanghai Pudong International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 576.24,
-          "cost": 576.24,
+          "price": 640.93,
+          "cost": 640.93,
           "tickets": 1,
           "transports": [
             {
-              "start": "Huaihai Road",
-              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "mode": "walk",
-              "start_time": "15:13",
-              "end_time": "15:16",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "15:16",
-              "end_time": "16:21",
-              "distance": 32.73,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
+              "start": "Crazy Ones Spanish Paella (Metro City Branch)",
               "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "16:21",
-              "end_time": "16:36",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:54",
+              "distance": 36.1,
+              "price": 157.14,
+              "cost": 157.14,
+              "cars": 1
             }
           ],
-          "FlightID": "FL016"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 23.621931791305542,
-  "_eval_score": 98.16849816849816
+  "_eval_score": 100.0
 }

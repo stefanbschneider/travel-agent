@@ -8,34 +8,56 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:09",
-          "end_time": "18:39",
-          "start": "Chongqing North Railway Station",
+          "start_time": "07:28",
+          "end_time": "09:41",
+          "start": "Chongqing West Railway Station",
           "end": "Suzhou Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "price": 679.06,
+          "cost": 2037.1799999999998,
           "tickets": 3,
           "transports": [],
-          "TrainID": "D2214"
+          "TrainID": "T238"
         },
         {
-          "type": "dinner",
-          "position": "L'Arôme Fang Fang French Restaurant (Suzhou Center Branch)",
-          "start_time": "18:49",
-          "end_time": "19:49",
-          "price": 485.0,
-          "cost": 1455.0,
+          "type": "attraction",
+          "position": "Hanshan Courtyard",
+          "start_time": "10:09",
+          "end_time": "10:29",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Suzhou Station",
-              "end": "L'Arôme Fang Fang French Restaurant (Suzhou Center Branch)",
+              "end": "Hanshan Courtyard",
               "mode": "taxi",
-              "start_time": "18:39",
-              "end_time": "18:49",
-              "distance": 6.68,
-              "price": 28.07,
-              "cost": 28.07,
+              "start_time": "09:41",
+              "end_time": "09:46",
+              "distance": 3.79,
+              "price": 17.97,
+              "cost": 17.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "PIER46 A NEIGHBORHOOD CAFÉ",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 378.0,
+          "cost": 1134.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hanshan Courtyard",
+              "end": "PIER46 A NEIGHBORHOOD CAFÉ",
+              "mode": "taxi",
+              "start_time": "10:29",
+              "end_time": "10:33",
+              "distance": 2.79,
+              "price": 14.48,
+              "cost": 14.48,
               "cars": 1
             }
           ]
@@ -43,21 +65,43 @@
         {
           "type": "attraction",
           "position": "Golden Rooster Lake",
-          "start_time": "19:53",
-          "end_time": "20:53",
+          "start_time": "12:21",
+          "end_time": "13:21",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "L'Arôme Fang Fang French Restaurant (Suzhou Center Branch)",
+              "start": "PIER46 A NEIGHBORHOOD CAFÉ",
               "end": "Golden Rooster Lake",
               "mode": "taxi",
-              "start_time": "19:49",
-              "end_time": "19:53",
-              "distance": 2.76,
-              "price": 14.36,
-              "cost": 14.36,
+              "start_time": "12:00",
+              "end_time": "12:21",
+              "distance": 14.61,
+              "price": 60.44,
+              "cost": 60.44,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Suzhou Water Tour",
+          "start_time": "13:34",
+          "end_time": "14:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Golden Rooster Lake",
+              "end": "Suzhou Water Tour",
+              "mode": "taxi",
+              "start_time": "13:21",
+              "end_time": "13:34",
+              "distance": 8.84,
+              "price": 35.63,
+              "cost": 35.63,
               "cars": 1
             }
           ]
@@ -65,21 +109,43 @@
         {
           "type": "attraction",
           "position": "Yangcheng Lake",
-          "start_time": "21:15",
-          "end_time": "22:15",
+          "start_time": "15:07",
+          "end_time": "16:07",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Golden Rooster Lake",
+              "start": "Suzhou Water Tour",
               "end": "Yangcheng Lake",
               "mode": "taxi",
-              "start_time": "20:53",
-              "end_time": "21:15",
-              "distance": 14.98,
-              "price": 62.1,
-              "cost": 62.1,
+              "start_time": "14:34",
+              "end_time": "15:07",
+              "distance": 22.34,
+              "price": 95.22,
+              "cost": 95.22,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Suzhou InterContinental Hotel · Riva Mediterranean Grill",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 958.0,
+          "cost": 2874.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yangcheng Lake",
+              "end": "Suzhou InterContinental Hotel · Riva Mediterranean Grill",
+              "mode": "taxi",
+              "start_time": "16:07",
+              "end_time": "16:28",
+              "distance": 14.66,
+              "price": 60.69,
+              "cost": 60.69,
               "cars": 1
             }
           ]
@@ -87,7 +153,7 @@
         {
           "type": "accommodation",
           "position": "Crowne Plaza Suzhou",
-          "start_time": "22:39",
+          "start_time": "18:03",
           "end_time": "24:00",
           "price": 957.0,
           "cost": 1914.0,
@@ -96,14 +162,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Yangcheng Lake",
+              "start": "Suzhou InterContinental Hotel · Riva Mediterranean Grill",
               "end": "Crowne Plaza Suzhou",
               "mode": "taxi",
-              "start_time": "22:15",
-              "end_time": "22:39",
-              "distance": 16.04,
-              "price": 66.86,
-              "cost": 66.86,
+              "start_time": "18:00",
+              "end_time": "18:03",
+              "distance": 2.63,
+              "price": 13.9,
+              "cost": 13.9,
               "cars": 1
             }
           ]
@@ -146,32 +212,76 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "20:05",
-          "start": "Suzhou Station",
-          "end": "Chongqing North Railway Station",
-          "price": 814.87,
-          "cost": 2444.61,
+          "type": "attraction",
+          "position": "Maple Bridge Scenic Area",
+          "start_time": "09:45",
+          "end_time": "10:45",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "West Garden Temple",
-              "end": "Suzhou Station",
+              "end": "Maple Bridge Scenic Area",
               "mode": "taxi",
               "start_time": "09:42",
-              "end_time": "09:44",
-              "distance": 1.89,
-              "price": 11.32,
-              "cost": 11.32,
+              "end_time": "09:45",
+              "distance": 2.01,
+              "price": 11.75,
+              "cost": 11.75,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Qi Yi Delicacies",
+          "start_time": "11:18",
+          "end_time": "11:23",
+          "price": 55.0,
+          "cost": 165.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Maple Bridge Scenic Area",
+              "end": "Qi Yi Delicacies",
+              "mode": "taxi",
+              "start_time": "10:45",
+              "end_time": "10:52",
+              "distance": 4.97,
+              "price": 22.09,
+              "cost": 22.09,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "11:40",
+          "end_time": "14:08",
+          "start": "Suzhou Station",
+          "end": "Chongqing West Railway Station",
+          "price": 679.06,
+          "cost": 2037.1799999999998,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Qi Yi Delicacies",
+              "end": "Suzhou Station",
+              "mode": "taxi",
+              "start_time": "11:23",
+              "end_time": "11:26",
+              "distance": 2.35,
+              "price": 12.92,
+              "cost": 12.92,
               "cars": 1
             }
           ],
-          "TrainID": "D956"
+          "TrainID": "T237"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 22.93620991706848,
-  "_eval_score": 93.54166666666666
+  "elapsed_time(sec)": 272.2734794616699,
+  "_eval_score": 97.08333333333334
 }

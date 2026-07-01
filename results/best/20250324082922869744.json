@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "09:00",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "09:05",
+          "end_time": "10:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jing'an Park",
+              "mode": "taxi",
+              "start_time": "09:00",
+              "end_time": "09:00",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jing'an Park",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "10:05",
+              "end_time": "10:06",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -63,6 +107,49 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "263-meter Main Observation Deck",
+          "start_time": "14:00",
+          "end_time": "15:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Oriental Pearl Tower",
+              "end": "263-meter Main Observation Deck",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:00",
+              "distance": 0.01399734160281742,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Garden Bridge",
+          "start_time": "15:43",
+          "end_time": "16:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "263-meter Main Observation Deck",
+              "end": "Garden Bridge",
+              "mode": "taxi",
+              "start_time": "15:30",
+              "end_time": "15:31",
+              "distance": 1.02,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Fu He Hui",
           "start_time": "17:00",
@@ -72,14 +159,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Oriental Pearl Tower",
+              "start": "Garden Bridge",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "14:00",
-              "end_time": "14:11",
-              "distance": 7.88,
-              "price": 32.29,
-              "cost": 32.29,
+              "start_time": "16:43",
+              "end_time": "16:53",
+              "distance": 7.27,
+              "price": 30.15,
+              "cost": 30.15,
               "cars": 1
             }
           ]
@@ -190,6 +277,50 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "China Securities Museum",
+          "start_time": "13:52",
+          "end_time": "14:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Oriental Pearl Tower 259-Meter Fully Transparent Suspended Sightseeing Corridor",
+              "end": "China Securities Museum",
+              "mode": "taxi",
+              "start_time": "13:40",
+              "end_time": "13:41",
+              "distance": 0.99,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
+          "start_time": "15:00",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "China Securities Museum",
+              "end": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
+              "mode": "taxi",
+              "start_time": "14:52",
+              "end_time": "14:53",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Jingyunhua Roast Duck & Dim Sum (New World Store)",
           "start_time": "17:00",
@@ -199,14 +330,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Oriental Pearl Tower 259-Meter Fully Transparent Suspended Sightseeing Corridor",
+              "start": "Huangpu River • Oriental Pearl Tower Shimmering Cruise on the Huangpu River",
               "end": "Jingyunhua Roast Duck & Dim Sum (New World Store)",
               "mode": "taxi",
-              "start_time": "13:40",
-              "end_time": "13:45",
-              "distance": 3.34,
-              "price": 16.4,
-              "cost": 16.4,
+              "start_time": "16:30",
+              "end_time": "16:34",
+              "distance": 3.13,
+              "price": 15.65,
+              "cost": 15.65,
               "cars": 1
             }
           ]
@@ -295,32 +426,120 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "12:14",
+          "end_time": "13:44",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "end": "Shanghai Pudong International Airport",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:46",
-              "distance": 30.72,
-              "price": 132.93,
-              "cost": 132.93,
+              "end_time": "12:03",
+              "distance": 2.14,
+              "price": 12.19,
+              "cost": 12.19,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "13:50",
+          "end_time": "15:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "13:44",
+              "end_time": "13:45",
+              "distance": 1.31,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Duoyun Bookstore · Flagship Store",
+          "start_time": "15:22",
+          "end_time": "16:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Duoyun Bookstore · Flagship Store",
+              "mode": "taxi",
+              "start_time": "15:20",
+              "end_time": "15:21",
+              "distance": 0.83,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "start_time": "17:13",
+          "end_time": "18:13",
+          "price": 16.0,
+          "cost": 64.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Duoyun Bookstore · Flagship Store",
+              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "mode": "taxi",
+              "start_time": "16:52",
+              "end_time": "17:01",
+              "distance": 6.06,
+              "price": 25.92,
+              "cost": 25.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "18:13",
+              "end_time": "18:58",
+              "distance": 30.3,
+              "price": 131.05,
+              "cost": 131.05,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.0350642204284668,
-  "_eval_score": 94.92857142857143
+  "_eval_score": 100.0
 }

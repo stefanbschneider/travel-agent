@@ -76,6 +76,8 @@ def _run_parallel(args):
             logf = open(log_path, "w", encoding="utf-8")
             logs.append(logf)
             cmd = [sys.executable, "scripts/densify.py", "--split", name, "--workers", "1"]
+            if args.method:
+                cmd.extend(["--method", args.method])
             if args.no_oracle:
                 cmd.append("--no-oracle")
             procs.append((k, len(shard), subprocess.Popen(cmd, cwd=ROOT, stdout=logf, stderr=subprocess.STDOUT)))
@@ -105,7 +107,7 @@ def _process(args):
     if args.no_oracle:
         os.environ["TPC_USE_ORACLE"] = "0"
     oracle = not args.no_oracle
-    method = METHOD_NOORACLE if args.no_oracle else METHOD_ORACLE
+    method = args.method or (METHOD_NOORACLE if args.no_oracle else METHOD_ORACLE)
     result_dir = os.path.join(ROOT, "results", method)
     best_dir = os.path.join(ROOT, "results", "best")
     os.makedirs(result_dir, exist_ok=True)
@@ -128,13 +130,6 @@ def _process(args):
             skipped += 1
             continue
         plan = _load_json(best_path)
-        try:
-            score = float(plan.get("_eval_score", 0.0))
-        except Exception:
-            score = 0.0
-        if score < 85.0:
-            skipped += 1
-            continue
         query = query_data.get(uid)
         if query is None:
             skipped += 1
@@ -150,9 +145,15 @@ def _process(args):
             dense = agent._densify_plan(plan, query, constraints, check)
             if agent._accepted(*check(dense)):
                 accepted += 1
-            if agent._activity_counts(dense) > agent._activity_counts(plan) and agent._accepted(*check(dense)):
-                _save_json(os.path.join(result_dir, uid + ".json"), dense)
-                improved += 1
+                better_counts = agent._activity_counts(dense) > agent._activity_counts(plan)
+                try:
+                    base_pref = sum(agent._default_preference_components(plan))
+                    dense_pref = sum(agent._default_preference_components(dense))
+                except Exception:
+                    base_pref = dense_pref = 0.0
+                if better_counts or dense_pref > base_pref + 1e-9:
+                    _save_json(os.path.join(result_dir, uid + ".json"), dense)
+                    improved += 1
         except Exception as exc:
             print("densify: {} failed: {}".format(uid, exc))
             skipped += 1
@@ -165,6 +166,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--split", default="tpc_phase1", help="split name under chinatravel/evaluation/default_splits")
     ap.add_argument("--no-oracle", dest="no_oracle", action="store_true", help="use the parsed-verifier/no-oracle method dir")
+    ap.add_argument("--method", default=os.environ.get("TPC_DENSIFY_METHOD"),
+                    help="results directory to write (default: canonical oracle/no-oracle method)")
     ap.add_argument("--workers", type=int, default=os.cpu_count() or 1, help="parallel densify subprocesses over disjoint shards")
     args = ap.parse_args()
     if args.workers > 1:
