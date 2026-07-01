@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "02:56",
-          "end_time": "04:27",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 565.32,
-          "cost": 1695.96,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL020"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "07:05",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "03:09",
+              "end_time": "03:45",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Joyful Gathering (Jingtian Branch)",
               "end": "Bright Joyful Countryside",
               "mode": "taxi",
-              "start_time": "04:27",
-              "end_time": "05:00",
-              "distance": 22.01,
-              "price": 93.73,
-              "cost": 93.73,
+              "start_time": "07:05",
+              "end_time": "07:45",
+              "distance": 26.9,
+              "price": 115.76,
+              "cost": 115.76,
               "cars": 1
             }
           ]
@@ -711,5 +733,5 @@
     }
   ],
   "elapsed_time(sec)": 100.92877721786499,
-  "_eval_score": 99.58333333333334
+  "_eval_score": 100.0
 }
