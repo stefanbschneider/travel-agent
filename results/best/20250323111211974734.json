@@ -8,34 +8,56 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:09",
-          "end_time": "09:04",
+          "start_time": "00:50",
+          "end_time": "02:45",
           "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 791.78,
-          "cost": 2375.34,
+          "end": "Chengdu Tianfu International Airport",
+          "price": 818.75,
+          "cost": 2456.25,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL533"
+          "FlightID": "FL540"
         },
         {
           "type": "lunch",
-          "position": "Crane's Call Tea House (People's Park Branch)",
+          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 45.0,
-          "cost": 135.0,
+          "price": 250.0,
+          "cost": 750.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
-              "end": "Crane's Call Tea House (People's Park Branch)",
+              "start": "Chengdu Tianfu International Airport",
+              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
               "mode": "taxi",
-              "start_time": "09:04",
-              "end_time": "09:26",
-              "distance": 14.93,
-              "price": 61.87,
-              "cost": 61.87,
+              "start_time": "02:45",
+              "end_time": "04:07",
+              "distance": 54.78,
+              "price": 241.22,
+              "cost": 241.22,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Temple",
+          "start_time": "12:04",
+          "end_time": "13:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Manjushri Temple",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 3.14,
+              "price": 15.68,
+              "cost": 15.68,
               "cars": 1
             }
           ]
@@ -43,21 +65,21 @@
         {
           "type": "attraction",
           "position": "Kuanzhai Alley",
-          "start_time": "12:02",
-          "end_time": "13:02",
+          "start_time": "13:07",
+          "end_time": "14:07",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Crane's Call Tea House (People's Park Branch)",
+              "start": "Manjushri Temple",
               "end": "Kuanzhai Alley",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 1.45,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "13:04",
+              "end_time": "13:07",
+              "distance": 2.23,
+              "price": 12.52,
+              "cost": 12.52,
               "cars": 1
             }
           ]
@@ -65,8 +87,8 @@
         {
           "type": "attraction",
           "position": "Jinli Ancient Street",
-          "start_time": "13:05",
-          "end_time": "14:05",
+          "start_time": "14:10",
+          "end_time": "15:10",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -75,8 +97,8 @@
               "start": "Kuanzhai Alley",
               "end": "Jinli Ancient Street",
               "mode": "taxi",
-              "start_time": "13:02",
-              "end_time": "13:05",
+              "start_time": "14:07",
+              "end_time": "14:10",
               "distance": 2.03,
               "price": 11.79,
               "cost": 11.79,
@@ -86,42 +108,20 @@
         },
         {
           "type": "attraction",
-          "position": "Sichuan Museum",
-          "start_time": "14:08",
-          "end_time": "15:08",
+          "position": "Baihua Tan Park",
+          "start_time": "15:21",
+          "end_time": "16:21",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Jinli Ancient Street",
-              "end": "Sichuan Museum",
-              "mode": "taxi",
-              "start_time": "14:05",
-              "end_time": "14:08",
-              "distance": 2.26,
-              "price": 12.59,
-              "cost": 12.59,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Baihua Tan Park",
-          "start_time": "15:10",
-          "end_time": "16:10",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Sichuan Museum",
               "end": "Baihua Tan Park",
               "mode": "taxi",
-              "start_time": "15:08",
-              "end_time": "15:09",
-              "distance": 1.07,
+              "start_time": "15:10",
+              "end_time": "15:11",
+              "distance": 1.3,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -130,22 +130,22 @@
         },
         {
           "type": "dinner",
-          "position": "Mawangzi (Taikoo Li Branch)",
+          "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 140.0,
-          "cost": 420.0,
+          "price": 233.0,
+          "cost": 699.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Baihua Tan Park",
-              "end": "Mawangzi (Taikoo Li Branch)",
+              "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "16:10",
-              "end_time": "16:15",
-              "distance": 3.47,
-              "price": 16.84,
-              "cost": 16.84,
+              "start_time": "16:21",
+              "end_time": "16:24",
+              "distance": 2.36,
+              "price": 12.94,
+              "cost": 12.94,
               "cars": 1
             }
           ]
@@ -153,7 +153,7 @@
         {
           "type": "accommodation",
           "position": "THE ONE | ZHU HOTEL",
-          "start_time": "18:39",
+          "start_time": "18:41",
           "end_time": "24:00",
           "price": 1170.0,
           "cost": 2340.0,
@@ -162,14 +162,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Mawangzi (Taikoo Li Branch)",
+              "start": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "end": "THE ONE | ZHU HOTEL",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:39",
-              "distance": 26.37,
-              "price": 113.39,
-              "cost": 113.39,
+              "end_time": "18:41",
+              "distance": 27.56,
+              "price": 118.71,
+              "cost": 118.71,
               "cars": 1
             }
           ]
@@ -257,53 +257,53 @@
         },
         {
           "type": "lunch",
-          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "position": "Crane's Call Tea House (People's Park Branch)",
           "start_time": "12:19",
           "end_time": "13:19",
-          "price": 250.0,
-          "cost": 750.0,
+          "price": 45.0,
+          "cost": 135.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Manjushri Lane",
-              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "taxi",
               "start_time": "12:15",
               "end_time": "12:19",
-              "distance": 2.94,
-              "price": 15.0,
-              "cost": 15.0,
+              "distance": 3.18,
+              "price": 15.83,
+              "cost": 15.83,
               "cars": 1
             }
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:13",
-          "end_time": "19:08",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 819.12,
-          "cost": 2457.36,
+          "type": "train",
+          "start_time": "18:57",
+          "end_time": "05:24",
+          "start": "Chengdu West Railway Station",
+          "end": "Hangzhou South Railway Station",
+          "price": 616.66,
+          "cost": 1849.98,
           "tickets": 3,
           "transports": [
             {
-              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-              "end": "Chengdu Tianfu International Airport",
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "Chengdu West Railway Station",
               "mode": "taxi",
               "start_time": "13:19",
-              "end_time": "14:41",
-              "distance": 54.78,
-              "price": 241.22,
-              "cost": 241.22,
+              "end_time": "13:31",
+              "distance": 8.36,
+              "price": 33.96,
+              "cost": 33.96,
               "cars": 1
             }
           ],
-          "FlightID": "FL452"
+          "TrainID": "K352"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 208.95657801628113,
-  "_eval_score": 97.60515873015873
+  "elapsed_time(sec)": 234.15951776504517,
+  "_eval_score": 97.63690476190476
 }
