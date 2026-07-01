@@ -618,6 +618,18 @@ class TPCAgent(BaseAgent):
                 gaps.append((idx, gap_start, gap_end))
         return gaps
 
+    def _env_time_minutes(self, name, default):
+        raw = str(os.environ.get(name, default))
+        try:
+            if ":" in raw:
+                return time_to_minutes(raw)
+            value = float(raw)
+            if 0 <= value <= 24:
+                return int(value * 60)
+            return int(value)
+        except Exception:
+            return time_to_minutes(default)
+
     def _find_hotel_for_day(self, plan, day_idx):
         itinerary = plan.get("itinerary", []) or []
         for scan in range(day_idx, -1, -1):
@@ -645,7 +657,10 @@ class TPCAgent(BaseAgent):
                 anchor_raw = first_transports[0].get("start_time", "")
             else:
                 anchor_raw = first_act.get("start_time", "00:00")
-            end_min = min(time_to_minutes(str(anchor_raw)), time_to_minutes("08:30"))
+            end_min = min(
+                time_to_minutes(str(anchor_raw)),
+                self._env_time_minutes("TPC_DENSIFY_HOTEL_BREAKFAST_END", "08:30"),
+            )
             dwell = max(1, int(os.environ.get(
                 "TPC_DENSIFY_HOTEL_BREAKFAST_DWELL",
                 os.environ.get("TPC_DENSIFY_MEAL_DWELL", "60"),
@@ -670,7 +685,7 @@ class TPCAgent(BaseAgent):
         activities = plan["itinerary"][day_idx].get("activities", [])
         if not activities:
             return None
-        window = (6 * 60, 9 * 60)
+        window = (6 * 60, self._env_time_minutes("TPC_DENSIFY_BREAKFAST_WIN_CLOSE", "09:00"))
         meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", "60")))
         for restaurant in restaurants:
             r_name = self._norm_text(restaurant.get("name", ""))
@@ -943,7 +958,9 @@ class TPCAgent(BaseAgent):
             cur_dep = time_to_minutes(str(acts[-1].get("start_time", "")))
         except Exception:
             return
-        if cur_dep >= time_to_minutes("20:30"):
+        min_dep = self._env_time_minutes("TPC_DENSIFY_LATE_DINNER_MIN_DEP", "20:30")
+        dinner_close = self._env_time_minutes("TPC_DENSIFY_DINNER_WIN_CLOSE", "20:00")
+        if cur_dep >= min_dep:
             return
         later = self._get_intercity(
             self.env, target_city, start_city, "00:00", return_pref,
@@ -954,7 +971,7 @@ class TPCAgent(BaseAgent):
             new_dep = time_to_minutes(str(later.get("BeginTime", "")))
         except Exception:
             return
-        if new_dep < time_to_minutes("20:30") or new_dep <= cur_dep:
+        if new_dep < min_dep or new_dep <= cur_dep:
             return
         trial = deepcopy(plan)
         tacts = trial["itinerary"][last_idx]["activities"]
@@ -970,7 +987,7 @@ class TPCAgent(BaseAgent):
                 continue
             if self._insert_activity(
                     trial, last_idx, len(tacts) - 2, restaurant, "dinner",
-                    (17 * 60, 20 * 60), target_city, people, check):
+                    (17 * 60, dinner_close), target_city, people, check):
                 itinerary[last_idx]["activities"] = trial["itinerary"][last_idx]["activities"]
                 return
 
@@ -1103,7 +1120,9 @@ class TPCAgent(BaseAgent):
                         used_restaurants.add(r_name)
                         meal_types.add("breakfast")
 
-            for meal_type, window in (("lunch", (11 * 60, 14 * 60)), ("dinner", (17 * 60, 20 * 60))):
+            lunch_close = self._env_time_minutes("TPC_DENSIFY_LUNCH_WIN_CLOSE", "14:00")
+            dinner_close = self._env_time_minutes("TPC_DENSIFY_DINNER_WIN_CLOSE", "20:00")
+            for meal_type, window in (("lunch", (11 * 60, lunch_close)), ("dinner", (17 * 60, dinner_close))):
                 if meal_type in meal_types:
                     continue
                 inserted = False
