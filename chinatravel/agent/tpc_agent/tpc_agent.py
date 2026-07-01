@@ -630,6 +630,46 @@ class TPCAgent(BaseAgent):
         except Exception:
             return time_to_minutes(default)
 
+    def _compress_activity_windows(self, plan, check):
+        if os.environ.get("TPC_DENSIFY_COMPRESS_BEFORE", "0") != "1":
+            return
+        try:
+            attr_dwell = max(1, int(os.environ.get(
+                "TPC_DENSIFY_COMPRESS_ATTR_DWELL",
+                os.environ.get("TPC_DENSIFY_ATTR_DWELL", "60"),
+            )))
+            meal_dwell = max(1, int(os.environ.get(
+                "TPC_DENSIFY_COMPRESS_MEAL_DWELL",
+                os.environ.get("TPC_DENSIFY_MEAL_DWELL", "60"),
+            )))
+        except Exception:
+            return
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                kind = activity.get("type")
+                if kind == "attraction":
+                    target = attr_dwell
+                elif kind in ("breakfast", "lunch", "dinner"):
+                    target = meal_dwell
+                else:
+                    continue
+                try:
+                    start_min = time_to_minutes(str(activity.get("start_time", "")))
+                    end_min = time_to_minutes(str(activity.get("end_time", "")))
+                except Exception:
+                    continue
+                new_end = start_min + target
+                if new_end >= end_min:
+                    continue
+                old_end = activity.get("end_time")
+                activity["end_time"] = minutes_to_time(new_end)
+                try:
+                    if self._accepted(*check(plan)):
+                        continue
+                except Exception:
+                    pass
+                activity["end_time"] = old_end
+
     def _find_hotel_for_day(self, plan, day_idx):
         itinerary = plan.get("itinerary", []) or []
         for scan in range(day_idx, -1, -1):
@@ -1070,6 +1110,8 @@ class TPCAgent(BaseAgent):
             name = self._norm_text(row.get("name", ""))
             if name and "lat" in row and "lon" in row:
                 coords[name] = row
+
+        self._compress_activity_windows(dense, check)
 
         self._extend_window_meals(dense, query, constraints, check, restaurants)
 
