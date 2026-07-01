@@ -575,7 +575,7 @@ class TPCAgent(BaseAgent):
 
     def _densify_dwell_minutes(self, poi, kind):
         if kind != "attraction":
-            return 60
+            return int(os.environ.get("TPC_DENSIFY_MEAL_DWELL", "60"))
         # Attraction visit length used when packing idle gaps. The verifier enforces no
         # minimum duration (only open-hours containment + positive duration), so a shorter
         # dwell lets more attractions fit tight gaps and lifts DAV; default is the
