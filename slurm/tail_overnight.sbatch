@@ -77,17 +77,11 @@ STOP_NO_IMPROVE="${TPC_TAIL_STOP_NO_IMPROVE:-2}"
 RUN_ID="${TPC_TAIL_RUN_ID:-tail_hpc_${SLURM_JOB_ID}}"
 ARTIFACTS_ROOT="${TPC_TAIL_ARTIFACTS_ROOT:-cache/hpc_tail_runs}"
 SEED_PREFIX="${TPC_TAIL_SEED_PREFIX:-tailhpc}"
-LLM_PREF_LLM="${TPC_TAIL_LLM_PREF_LLM:-gpt-4o}"
-LLM_PREF_METHOD="${TPC_TAIL_LLM_PREF_METHOD:-TPCAgent_TPCLLM_en_oracletranslation_llm_pref}"
-LLM_PREF_CANDIDATE_MODE="${TPC_TAIL_LLM_PREF_CANDIDATE_MODE:-safe}"
-LLM_PREF_PASSES="${TPC_TAIL_LLM_PREF_PASSES:-2}"
-LLM_PREF_MAX_CANDIDATES="${TPC_TAIL_LLM_PREF_MAX_CANDIDATES:-24}"
 
 start_epoch=$(date +%s)
 echo "[tail-hpc] job=$SLURM_JOB_ID host=$(hostname) start=$(date -Is)"
 echo "[tail-hpc] split=$SPLIT method=$METHOD rank_mode=$RANK_MODE pref_metric=$PREF_METRIC runner=$RUNNER rounds=$ROUNDS topk=$TOPK min_score=$MIN_SCORE"
 echo "[tail-hpc] restarts=$RESTARTS budget=$BUDGET workers=$WORKERS stop_no_improve=$STOP_NO_IMPROVE run_id=$RUN_ID"
-echo "[tail-hpc] llm_pref: llm=$LLM_PREF_LLM method=$LLM_PREF_METHOD candidate_mode=$LLM_PREF_CANDIDATE_MODE passes=$LLM_PREF_PASSES max_candidates=$LLM_PREF_MAX_CANDIDATES"
 
 singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/python" scripts/iterate_tail.py \
     --split "$SPLIT" \
@@ -104,12 +98,7 @@ singularity exec --bind /beegfs --bind /tmp/drive "$BASE_SIF" "$NODE_VENV/bin/py
     --stop-no-improve-rounds "$STOP_NO_IMPROVE" \
     --run-id "$RUN_ID" \
     --artifacts-root "$ARTIFACTS_ROOT" \
-    --seed-prefix "$SEED_PREFIX" \
-    --llm-pref-llm "$LLM_PREF_LLM" \
-    --llm-pref-method "$LLM_PREF_METHOD" \
-    --llm-pref-candidate-mode "$LLM_PREF_CANDIDATE_MODE" \
-    --llm-pref-passes "$LLM_PREF_PASSES" \
-    --llm-pref-max-candidates "$LLM_PREF_MAX_CANDIDATES"
+    --seed-prefix "$SEED_PREFIX"
 
 end_epoch=$(date +%s)
 echo "[tail-hpc] done elapsed_sec=$((end_epoch - start_epoch)) end=$(date -Is)"

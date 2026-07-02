@@ -206,19 +206,10 @@ def main() -> int:
                     help="preference mode only: rank each round's focus by this component's gap")
     ap.add_argument(
         "--runner",
-        choices=["solve", "densify", "llm_pref"],
+        choices=["solve", "densify"],
         default="solve",
-        help="solve: rerun TPCAgent search; densify: improve already-solved plans; llm_pref: choose checker-gated preference candidates",
+        help="solve: rerun TPCAgent search on the focus split; densify: improve already-solved plans only",
     )
-    ap.add_argument("--llm-pref-llm", default=os.environ.get("TPC_TAIL_LLM_PREF_LLM", os.environ.get("TPC_LLM_PREF_LLM", "gpt-4o")))
-    ap.add_argument("--llm-pref-method", default=os.environ.get("TPC_TAIL_LLM_PREF_METHOD", "TPCAgent_TPCLLM_en_oracletranslation_llm_pref"))
-    ap.add_argument(
-        "--llm-pref-candidate-mode",
-        choices=["safe", "ghost", "both"],
-        default=os.environ.get("TPC_TAIL_LLM_PREF_CANDIDATE_MODE", "safe"),
-    )
-    ap.add_argument("--llm-pref-passes", type=int, default=int(os.environ.get("TPC_TAIL_LLM_PREF_PASSES", "2")))
-    ap.add_argument("--llm-pref-max-candidates", type=int, default=int(os.environ.get("TPC_TAIL_LLM_PREF_MAX_CANDIDATES", "24")))
     ap.add_argument("--rounds", type=int, default=4)
     ap.add_argument("--top-k", type=int, default=120)
     ap.add_argument("--min-score", type=float, default=99.0)
@@ -271,11 +262,6 @@ def main() -> int:
             "artifacts_root": args.artifacts_root,
             "resume": bool(args.resume),
             "skip_existing": bool(args.skip_existing),
-            "llm_pref_llm": args.llm_pref_llm,
-            "llm_pref_method": args.llm_pref_method,
-            "llm_pref_candidate_mode": args.llm_pref_candidate_mode,
-            "llm_pref_passes": args.llm_pref_passes,
-            "llm_pref_max_candidates": args.llm_pref_max_candidates,
         },
         "solver_env": {
             "TPC_USE_CP_SOLVER": os.environ.get("TPC_USE_CP_SOLVER", None),
@@ -359,24 +345,12 @@ def main() -> int:
             ]
             if args.skip_existing:
                 work_cmd.append("--skip")
-        elif args.runner == "densify":
+        else:
             work_cmd = [
                 sys.executable,
                 os.path.join("scripts", "densify.py"),
                 "--split", focus_split,
                 "--workers", str(args.workers),
-            ]
-        else:
-            work_cmd = [
-                sys.executable,
-                os.path.join("scripts", "llm_pref_optimize.py"),
-                "--split", focus_split,
-                "--workers", str(args.workers),
-                "--method", args.llm_pref_method,
-                "--llm", args.llm_pref_llm,
-                "--candidate-mode", args.llm_pref_candidate_mode,
-                "--passes", str(args.llm_pref_passes),
-                "--max-candidates", str(args.llm_pref_max_candidates),
             ]
         print("[tail-iterate] {} {} {} IDs...".format(round_name, args.runner, focus_count))
         rc = _run(
@@ -395,8 +369,6 @@ def main() -> int:
             os.path.join("scripts", "merge.py"),
             "--split", focus_split,
         ]
-        if args.runner == "llm_pref":
-            merge_cmd.extend(["--method", args.llm_pref_method])
         print("[tail-iterate] {} merge...".format(round_name))
         rc = _run(merge_cmd, log_path=merge_log)
         if rc != 0:

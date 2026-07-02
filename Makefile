@@ -86,19 +86,7 @@ HPC_PREFERENCE_STOP ?= 3
 HPC_PREFERENCE_METRIC ?= overall
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
-LLM_PREF_LLM ?= gpt-4o
-LLM_PREF_METHOD ?= TPCAgent_TPCLLM_en_oracletranslation_llm_pref
-LLM_PREF_CANDIDATE_MODE ?= both
-LLM_PREF_PASSES ?= 3
-LLM_PREF_MAX_CANDIDATES ?= 24
-LLM_PREF_WORKERS ?= 1
-LLM_PREF_ROUNDS ?= 6
-LLM_PREF_TOPK ?= 120
-LLM_PREF_MIN_SCORE ?= 99.5
-LLM_PREF_STOP ?= 2
-LLM_PREF_RUN_ID ?=
-
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-solve preference-overnight preference-quick llm-preference-local llm-preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit hpc-llm-preference-submit merge score submission upload upload-check clean-light help
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
 # Default: preference optimization on already-solved plans.
 all: preference-local score submission
@@ -295,37 +283,6 @@ preference-overnight:
 		OVERNIGHT_LOCAL_BUDGET=240
 	$(PYTHON) scripts/score.py --split $(SPLIT)
 
-# Local LLM-assisted preference optimization profile: choose among checker-gated candidates.
-llm-preference-local:
-	$(PYTHON) scripts/iterate_tail.py \
-		--split $(SPLIT) \
-		--method $(TAIL_METHOD) \
-		--rank-mode preference \
-		--pref-metric overall \
-		--runner llm_pref \
-		--rounds $(LLM_PREF_ROUNDS) \
-		--top-k $(LLM_PREF_TOPK) \
-		--min-score $(LLM_PREF_MIN_SCORE) \
-		--workers $(LLM_PREF_WORKERS) \
-		--stop-no-improve-rounds $(LLM_PREF_STOP) \
-		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
-		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
-		--llm-pref-llm $(LLM_PREF_LLM) \
-		--llm-pref-method $(LLM_PREF_METHOD) \
-		--llm-pref-candidate-mode $(LLM_PREF_CANDIDATE_MODE) \
-		--llm-pref-passes $(LLM_PREF_PASSES) \
-		--llm-pref-max-candidates $(LLM_PREF_MAX_CANDIDATES) \
-		$(if $(LLM_PREF_RUN_ID),--run-id $(LLM_PREF_RUN_ID),--run-id llm_pref_local_$(shell date +%Y%m%d_%H%M%S))
-
-# Quick LLM preference smoke profile.
-llm-preference-quick:
-	$(MAKE) llm-preference-local \
-		LLM_PREF_ROUNDS=1 \
-		LLM_PREF_TOPK=$(SHORT_LOCAL_TOPK) \
-		LLM_PREF_WORKERS=1 \
-		LLM_PREF_PASSES=1 \
-		LLM_PREF_STOP=1
-
 # Submit one 7h tail-iterate run to SLURM (single controller job orchestrating multi-round solve/merge/score).
 hpc-tail-submit:
 	bash slurm/submit_tail_overnight.sh \
@@ -405,29 +362,6 @@ hpc-preference-submit:
 		STOP_NO_IMPROVE=$(HPC_PREFERENCE_STOP) \
 		RUN_ID=$(HPC_PREFERENCE_RUN_ID)
 
-# Submit LLM-assisted preference rounds to SLURM.
-hpc-llm-preference-submit:
-	bash slurm/submit_tail_overnight.sh \
-		PARTITION=$(HPC_PARTITION) \
-		WORKERS=$(LLM_PREF_WORKERS) \
-		MEM=$(HPC_MEM) \
-		TIME=$(HPC_TIME) \
-		SPLIT=$(SPLIT) \
-		METHOD=$(TAIL_METHOD) \
-		RANK_MODE=preference \
-		PREF_METRIC=overall \
-		RUNNER=llm_pref \
-		LLM_PREF_LLM=$(LLM_PREF_LLM) \
-		LLM_PREF_METHOD=$(LLM_PREF_METHOD) \
-		LLM_PREF_CANDIDATE_MODE=$(LLM_PREF_CANDIDATE_MODE) \
-		LLM_PREF_PASSES=$(LLM_PREF_PASSES) \
-		LLM_PREF_MAX_CANDIDATES=$(LLM_PREF_MAX_CANDIDATES) \
-		ROUNDS=$(LLM_PREF_ROUNDS) \
-		TOPK=$(LLM_PREF_TOPK) \
-		MIN_SCORE=$(LLM_PREF_MIN_SCORE) \
-		STOP_NO_IMPROVE=$(LLM_PREF_STOP) \
-		RUN_ID=$(if $(LLM_PREF_RUN_ID),$(LLM_PREF_RUN_ID),llm_pref_$(shell date +%Y%m%d_%H%M%S))
-
 # Re-run the monotonic merge alone.
 merge:
 	$(PYTHON) scripts/merge.py --split $(SPLIT)
@@ -465,13 +399,10 @@ help:
 	  'make preference-solve - re-solve worst-preference queries from scratch (~7 h overnight)' \
 	  'make preference-overnight - refresh suboptimal split, then ATT-focused densify + re-solve overnight' \
 	  'make preference-quick - one-round quick local preference pass' \
-	  'make llm-preference-local - local LLM preference optimizer over checker-gated candidates' \
-	  'make llm-preference-quick - one-round quick LLM preference smoke pass' \
 	  'make hpc-tail-submit - submit 7h tail iterate controller job to SLURM' \
 	  'make hpc-unsolved   - HPC phase A: solve unresolved tail with CP + heavy search' \
 	  'make hpc-preference - HPC phase B: improve preference on solved plans via densify' \
 	  'make hpc-preference-submit - submit HPC preference-only densify run to SLURM' \
-	  'make hpc-llm-preference-submit - submit HPC LLM-assisted preference run to SLURM' \
 	  'make merge          - monotonic merge only' \
 	  'make score          - evaluate results/best' \
 	  'make submission     - build the next submission zip (version from git tags; override with VERSION=vN)' \
@@ -527,17 +458,6 @@ help:
 	  '  PREFERENCE_LOCAL_STOP=<n> default: $(PREFERENCE_LOCAL_STOP)' \
 	  '  PREFERENCE_LOCAL_RUN_ID=<id> default: auto timestamp' \
 	  '  PREFERENCE_LOCAL_METRIC=<overall|ddr|dav|att> default: $(PREFERENCE_LOCAL_METRIC)' \
-	  '  LLM_PREF_LLM=<name>     default: $(LLM_PREF_LLM)' \
-	  '  LLM_PREF_METHOD=<name>  default: $(LLM_PREF_METHOD)' \
-	  '  LLM_PREF_CANDIDATE_MODE=<safe|ghost|both> default: $(LLM_PREF_CANDIDATE_MODE)' \
-	  '  LLM_PREF_PASSES=<n>     default: $(LLM_PREF_PASSES)' \
-	  '  LLM_PREF_MAX_CANDIDATES=<n> default: $(LLM_PREF_MAX_CANDIDATES)' \
-	  '  LLM_PREF_WORKERS=<n>    default: $(LLM_PREF_WORKERS)' \
-	  '  LLM_PREF_ROUNDS=<n>     default: $(LLM_PREF_ROUNDS)' \
-	  '  LLM_PREF_TOPK=<n>       default: $(LLM_PREF_TOPK)' \
-	  '  LLM_PREF_MIN_SCORE=<n>  default: $(LLM_PREF_MIN_SCORE)' \
-	  '  LLM_PREF_STOP=<n>       default: $(LLM_PREF_STOP)' \
-	  '  LLM_PREF_RUN_ID=<id>    default: auto timestamp' \
 	  '  HPC_PARTITION=<name>    default: $(HPC_PARTITION)' \
 	  '  HPC_WORKERS=<n>         default: $(HPC_WORKERS)' \
 	  '  HPC_MEM=<xG>            default: $(HPC_MEM)' \
