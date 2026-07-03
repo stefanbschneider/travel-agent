@@ -581,13 +581,24 @@ def _attraction_orderings(agent, attrs: list[dict], constraints: dict, hotel: di
             seen.add(key)
             orders.append(order)
 
-    add(list(attrs))
-    add(_nn_order(attrs, _centroid(attrs)))
-    add(_nn_order(attrs, (hotel.get("lat"), hotel.get("lon"))))
+    base = list(attrs)
+    add(base)
+    add(list(reversed(base)))
+
+    nn_centroid = _nn_order(attrs, _centroid(attrs))
+    add(nn_centroid)
+    add(list(reversed(nn_centroid)))
+
+    nn_hotel = _nn_order(attrs, (hotel.get("lat"), hotel.get("lon")))
+    add(nn_hotel)
+    add(list(reversed(nn_hotel)))
+
     try:
-        n_shuffles = int(os.environ.get("TPC_CP_RECON_SHUFFLES", "0"))
+        # A small default shuffle budget helps escape routing local optima on
+        # hard unsolved queries while keeping runtime bounded.
+        n_shuffles = int(os.environ.get("TPC_CP_RECON_SHUFFLES", "4"))
     except Exception:
-        n_shuffles = 0
+        n_shuffles = 4
     for seed in range(1, max(0, n_shuffles) + 1):
         shuffled = list(attrs)
         random.Random(seed).shuffle(shuffled)

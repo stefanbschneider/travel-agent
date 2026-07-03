@@ -56,6 +56,16 @@ PREFERENCE_LOCAL_METRIC ?= overall
 PREFERENCE_LOCAL_RUN_ID ?=
 PREFERENCE_SUBOPT_SPLIT ?= $(SPLIT)_suboptimal
 
+UNSOLVED_LOCAL_WORKERS ?= $(OVERNIGHT_LOCAL_WORKERS)
+UNSOLVED_LOCAL_ROUNDS ?= 6
+UNSOLVED_LOCAL_TOPK ?= 160
+UNSOLVED_LOCAL_MIN_SCORE ?= 99
+UNSOLVED_LOCAL_RESTARTS ?= 1200
+UNSOLVED_LOCAL_BUDGET ?= 240
+UNSOLVED_LOCAL_STOP ?= 2
+UNSOLVED_LOCAL_RUN_ID ?=
+UNSOLVED_LOCAL_CP_RECON_SHUFFLES ?= 8
+
 HPC_PARTITION ?= standard
 HPC_WORKERS ?= 8
 HPC_MEM ?= 6G
@@ -86,7 +96,7 @@ HPC_PREFERENCE_STOP ?= 3
 HPC_PREFERENCE_METRIC ?= overall
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local unsolved-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
 # Default: preference optimization on already-solved plans.
 all: preference-local score submission
@@ -195,6 +205,33 @@ overnight-local:
 		$(if $(TAIL_RUN_ID),--run-id $(TAIL_RUN_ID),--run-id overnight_local_$(shell date +%Y%m%d_%H%M%S)) \
 		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
 		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,)
+
+# Local unresolved-constraints profile: focus solve rounds on currently failing queries.
+unsolved-local:
+	TPC_USE_CP_SOLVER=$(TPC_USE_CP_SOLVER) \
+	TPC_CP_AFTER_PASS=$(TPC_CP_AFTER_PASS) \
+	TPC_CP_FOUR_SLOT_SHARE=$(TPC_CP_FOUR_SLOT_SHARE) \
+	TPC_CP_FOUR_SLOT_ROUNDS=$(TPC_CP_FOUR_SLOT_ROUNDS) \
+	TPC_CP_RECON_SHUFFLES=$(UNSOLVED_LOCAL_CP_RECON_SHUFFLES) \
+	$(PYTHON) scripts/iterate_tail.py \
+		--split $(SPLIT) \
+		--method $(TAIL_METHOD) \
+		--rank-mode unsolved \
+		--runner solve \
+		--rounds $(UNSOLVED_LOCAL_ROUNDS) \
+		--top-k $(UNSOLVED_LOCAL_TOPK) \
+		--min-score $(UNSOLVED_LOCAL_MIN_SCORE) \
+		--restarts $(UNSOLVED_LOCAL_RESTARTS) \
+		--budget $(UNSOLVED_LOCAL_BUDGET) \
+		--workers $(UNSOLVED_LOCAL_WORKERS) \
+		--stop-no-improve-rounds $(UNSOLVED_LOCAL_STOP) \
+		--artifacts-root $(TAIL_ARTIFACTS_ROOT) \
+		--seed-prefix unsolved_local \
+		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
+		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
+		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
+		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,) \
+		$(if $(UNSOLVED_LOCAL_RUN_ID),--run-id $(UNSOLVED_LOCAL_RUN_ID),--run-id unsolved_local_$(shell date +%Y%m%d_%H%M%S))
 
 # Local preference optimization profile: only densify already-solved plans (constraint-safe).
 preference-local:
@@ -395,6 +432,7 @@ help:
 	  'make tail-iterate   - multi-round tail optimization with reproducible artifacts' \
 	  'make short-local    - short local profile (~10 min) using iterate_tail' \
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
+	  'make unsolved-local - local unsolved-focused solve rounds (best next step when FPR/MacEPR trail)' \
 	  'make preference-local - local preference optimization on already-solved plans (densify only)' \
 	  'make preference-solve - re-solve worst-preference queries from scratch (~7 h overnight)' \
 	  'make preference-overnight - refresh suboptimal split, then ATT-focused densify + re-solve overnight' \
@@ -451,6 +489,15 @@ help:
 	  '  OVERNIGHT_LOCAL_BUDGET=<sec> default: $(OVERNIGHT_LOCAL_BUDGET)' \
 	  '  OVERNIGHT_LOCAL_ROUNDS=<n> default: $(OVERNIGHT_LOCAL_ROUNDS)' \
 	  '  OVERNIGHT_LOCAL_STOP=<n> default: $(OVERNIGHT_LOCAL_STOP)' \
+	  '  UNSOLVED_LOCAL_WORKERS=<n> default: $(UNSOLVED_LOCAL_WORKERS)' \
+	  '  UNSOLVED_LOCAL_ROUNDS=<n> default: $(UNSOLVED_LOCAL_ROUNDS)' \
+	  '  UNSOLVED_LOCAL_TOPK=<n> default: $(UNSOLVED_LOCAL_TOPK)' \
+	  '  UNSOLVED_LOCAL_MIN_SCORE=<n> default: $(UNSOLVED_LOCAL_MIN_SCORE)' \
+	  '  UNSOLVED_LOCAL_RESTARTS=<n> default: $(UNSOLVED_LOCAL_RESTARTS)' \
+	  '  UNSOLVED_LOCAL_BUDGET=<sec> default: $(UNSOLVED_LOCAL_BUDGET)' \
+	  '  UNSOLVED_LOCAL_STOP=<n> default: $(UNSOLVED_LOCAL_STOP)' \
+	  '  UNSOLVED_LOCAL_CP_RECON_SHUFFLES=<n> default: $(UNSOLVED_LOCAL_CP_RECON_SHUFFLES)' \
+	  '  UNSOLVED_LOCAL_RUN_ID=<id> default: auto timestamp' \
 	  '  PREFERENCE_LOCAL_WORKERS=<n> default: $(PREFERENCE_LOCAL_WORKERS)' \
 	  '  PREFERENCE_LOCAL_ROUNDS=<n> default: $(PREFERENCE_LOCAL_ROUNDS)' \
 	  '  PREFERENCE_LOCAL_TOPK=<n> default: $(PREFERENCE_LOCAL_TOPK)' \
