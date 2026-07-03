@@ -422,6 +422,25 @@ def _constrain_budgets(model, constraints, people, hotel_idx, outbound_idx, retu
 # Reconstruction: travel-aware flexible scheduler
 # ---------------------------------------------------------------------------
 
+def _grounding_shape_ok(plan: dict) -> bool:
+    """Quick structural grounding check: intercity only at global boundaries."""
+    if not isinstance(plan, dict):
+        return False
+    itinerary = plan.get("itinerary", []) or []
+    refs = []
+    for day in itinerary:
+        activities = (day or {}).get("activities", [])
+        if not isinstance(activities, list):
+            continue
+        refs.extend(activities)
+    if len(refs) <= 2:
+        return True
+    for idx, activity in enumerate(refs):
+        if isinstance(activity, dict) and activity.get("type") in ("airplane", "train"):
+            if idx not in (0, len(refs) - 1):
+                return False
+    return True
+
 def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignment: dict, check=None) -> dict | None:
     """Try several attraction orderings/distributions; return the first emitted
     plan that passes ``check`` (or the first non-None plan when check is None).
@@ -452,6 +471,13 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
         for order in orderings:
             plan = _reconstruct_one(agent, query, constraints, ctx, assignment, order, lunch_pool, dinner_pool)
             if plan is None:
+                continue
+            if hasattr(agent, "_sanitize_plan_for_grounding"):
+                try:
+                    plan = agent._sanitize_plan_for_grounding(plan, query)
+                except Exception:
+                    pass
+            if not _grounding_shape_ok(plan):
                 continue
             if check is None:
                 return plan

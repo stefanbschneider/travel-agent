@@ -16,6 +16,7 @@ import contextlib
 import io
 from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
 from chinatravel.evaluation.commonsense_constraint import evaluate_commonsense_constraints
+from chinatravel.symbol_verification.concept_func import normalize_poi_name
 
 sys.path.append("./../../../")
 project_root_path = os.path.dirname(
@@ -150,8 +151,107 @@ class TPCAgent(BaseAgent):
         """A plan is accepted when it has no checkable constraints or passes all of them."""
         return total == 0 or passed == total
 
+    def _is_intercity_activity(self, activity):
+        return isinstance(activity, dict) and activity.get("type") in ("airplane", "train")
+
+    def _sanitize_plan_for_grounding(self, plan, query):
+        """Drop accidental mid-itinerary intercity placeholders.
+
+        Hardened evaluator grounding allows train/airplane only as the global first/last
+        activity. If a candidate contains middle intercity markers, remove them and, when
+        possible, reconnect the following POI via a legal inner-city transport edge.
+        """
+        if not isinstance(plan, dict):
+            return plan
+        itinerary = plan.get("itinerary", []) or []
+        if not isinstance(itinerary, list) or len(itinerary) == 0:
+            return plan
+
+        def flatten_refs(p):
+            refs = []
+            for day_idx, day in enumerate(p.get("itinerary", []) or []):
+                activities = (day or {}).get("activities", [])
+                if not isinstance(activities, list):
+                    continue
+                for act_idx, activity in enumerate(activities):
+                    refs.append((day_idx, act_idx, activity))
+            return refs
+
+        refs = flatten_refs(plan)
+        if len(refs) <= 2:
+            return plan
+        if not any(
+            self._is_intercity_activity(activity) and global_idx not in (0, len(refs) - 1)
+            for global_idx, (_, _, activity) in enumerate(refs)
+        ):
+            return plan
+
+        cleaned = deepcopy(plan)
+        city = str(query.get("target_city", ""))
+        people = int(query.get("people_number", 1) or 1)
+
+        # Remove one illegal marker at a time so indices stay valid.
+        while True:
+            refs = flatten_refs(cleaned)
+            illegal_idx = None
+            for global_idx, (_day_idx, _act_idx, activity) in enumerate(refs):
+                if self._is_intercity_activity(activity) and global_idx not in (0, len(refs) - 1):
+                    illegal_idx = global_idx
+                    break
+            if illegal_idx is None:
+                break
+
+            day_idx, act_idx, _activity = refs[illegal_idx]
+            prev_ref = refs[illegal_idx - 1] if illegal_idx > 0 else None
+            next_ref = refs[illegal_idx + 1] if illegal_idx + 1 < len(refs) else None
+
+            day_activities = cleaned["itinerary"][day_idx].get("activities", [])
+            if not isinstance(day_activities, list) or act_idx >= len(day_activities):
+                break
+            del day_activities[act_idx]
+
+            if prev_ref is None or next_ref is None:
+                continue
+            prev_day, prev_idx, _ = prev_ref
+            next_day, next_idx, _ = next_ref
+            if next_day == day_idx and next_idx > act_idx:
+                next_idx -= 1
+            try:
+                prev_act = cleaned["itinerary"][prev_day]["activities"][prev_idx]
+                next_act = cleaned["itinerary"][next_day]["activities"][next_idx]
+            except Exception:
+                continue
+            if not isinstance(next_act, dict) or self._is_intercity_activity(next_act):
+                continue
+
+            from_pos = self._activity_end_position(prev_act)
+            to_pos = self._activity_start_position(next_act)
+            depart_time = str(prev_act.get("end_time", ""))
+            if not (city and from_pos and to_pos and depart_time):
+                continue
+            try:
+                transports, arrival = self._get_transport(
+                    self.env, city, from_pos, to_pos, depart_time, people
+                )
+            except Exception:
+                transports, arrival = None, None
+            if not transports:
+                continue
+            next_start = str(next_act.get("start_time", ""))
+            if next_start and (not arrival or not time_before(arrival, next_start)):
+                continue
+            next_act["transports"] = transports
+
+        return cleaned
+
     def _norm_text(self, value):
-        return str(value).strip().lower() if value is not None else ""
+        if value is None:
+            return ""
+        try:
+            value = normalize_poi_name(str(value))
+        except Exception:
+            pass
+        return str(value).strip().lower()
 
     def _match_constraint_text(self, candidate, constraint):
         c = self._norm_text(candidate)
@@ -432,6 +532,7 @@ class TPCAgent(BaseAgent):
         }
 
         def consider(plan, constraints, check, params):
+            plan = self._sanitize_plan_for_grounding(plan, query)
             try:
                 passed, total = check(plan)
             except Exception:
@@ -519,11 +620,14 @@ class TPCAgent(BaseAgent):
             if packed is not None:
                 chosen["plan"] = packed
 
-        return chosen["plan"] if chosen["plan"] is not None else self._build_plan(query)
+        if chosen["plan"] is not None:
+            return self._sanitize_plan_for_grounding(chosen["plan"], query)
+        return self._sanitize_plan_for_grounding(self._build_plan(query), query)
 
     def _pack_plan(self, plan, query, constraints, check, base_params):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
         DAV/DDR. Never trades a hard pass for preference: gated locally by `check`."""
+        plan = self._sanitize_plan_for_grounding(plan, query)
         if not self._accepted(*check(plan)):
             return plan
         best_plan = plan
@@ -537,13 +641,15 @@ class TPCAgent(BaseAgent):
                 cand = self._build_plan(query, constraints=constraints, params=params)
             except Exception:
                 continue
+            cand = self._sanitize_plan_for_grounding(cand, query)
             if not self._accepted(*check(cand)):
                 continue
             c_attrs, c_meals = self._activity_counts(cand)
             if (c_attrs + c_meals) > (best_attrs + best_meals):
                 best_plan = cand
                 best_attrs, best_meals = c_attrs, c_meals
-        return self._densify_plan(best_plan, query, constraints, check)
+        dense = self._densify_plan(best_plan, query, constraints, check)
+        return self._sanitize_plan_for_grounding(dense, query)
 
     def _activity_start_position(self, activity):
         if activity.get("type") in ("airplane", "train"):
