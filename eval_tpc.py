@@ -324,6 +324,12 @@ if __name__ == "__main__":
     parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en")
     parser.add_argument("--update_best", action="store_true", default=False,
                         help="Auto-update results/best and results/constraints_solved")
+    parser.add_argument(
+        "--refresh_best_baseline",
+        action="store_true",
+        default=False,
+        help="Recompute and rewrite _eval_score for all results/best entries using current branch eval rules",
+    )
     args = parser.parse_args()
     # Commented out to properly score our best results (without _en suffix). This is different upstream! Check phase 2 harness against upstream scoring.
     # if args.lang == "en" and not _method_has_en_suffix(args.method):
@@ -487,13 +493,80 @@ if __name__ == "__main__":
             )
 
         # ------------------------------------------------------------------ #
+        # Refresh baseline scores for results/best under current eval rules   #
+        # ------------------------------------------------------------------ #
+        best_dir = os.path.join(project_root_path, "results", "best")
+        prev_scores = {}
+        recompute_prev = args.refresh_best_baseline or args.update_best
+        if recompute_prev:
+            _, best_result_data = load_result(args, query_index, best_dir)
+            best_plans = best_result_data['default']
+
+            _, _, best_schema_pass_id = evaluate_schema_constraints(
+                query_index, best_plans, schema=schema
+            )
+            _, _, _, best_commonsense_pass_id = evaluate_commonsense_constraints(
+                query_index, query_data, best_plans, verbose=False, lang=args.lang
+            )
+            _, _, _, _, _, best_logi_pass_id = evaluate_hard_constraints_v2(
+                query_index,
+                query_data,
+                best_plans,
+                env_pass_id=best_commonsense_pass_id,
+                verbose=False,
+                lang=args.lang,
+            )
+
+            best_commonsense_pass_set = set(best_commonsense_pass_id)
+            best_logi_pass_set = set(best_logi_pass_id)
+            best_all_pass_set = set(best_schema_pass_id) & best_commonsense_pass_set & best_logi_pass_set
+            best_per_query_pr = cal_per_query_pr_scores(query_index, best_plans, best_all_pass_set)
+
+            for query_id in query_index:
+                comm_score = 100.0 if query_id in best_commonsense_pass_set else 0.0
+                logic_score = 100.0 if query_id in best_logi_pass_set else 0.0
+                all_pass_score = 100.0 if query_id in best_all_pass_set else 0.0
+                pr = best_per_query_pr.get(query_id, np.zeros(len(DEFAULT_PR)))
+                dav_score = pr[0] * 100
+                att_score = pr[1] * 100
+                ddr_score = pr[2] * 100
+                prev_scores[query_id] = (
+                    0.1 * comm_score
+                    + 0.1 * comm_score
+                    + 0.25 * logic_score
+                    + 0.05 * dav_score
+                    + 0.05 * att_score
+                    + 0.05 * ddr_score
+                    + 0.4 * all_pass_score
+                )
+
+            if args.refresh_best_baseline:
+                refreshed = 0
+                for query_id in query_index:
+                    best_file = os.path.join(best_dir, "{}.json".format(query_id))
+                    if not os.path.exists(best_file):
+                        continue
+                    try:
+                        with open(best_file, encoding="utf-8") as f:
+                            best_payload = json.load(f)
+                        new_score = float(prev_scores.get(query_id, -1.0))
+                        old_score = best_payload.get("_eval_score", None)
+                        if old_score is None or abs(float(old_score) - new_score) > 1e-9:
+                            best_payload["_eval_score"] = new_score
+                            with open(best_file, "w", encoding="utf-8") as f:
+                                json.dump(best_payload, f, ensure_ascii=False, indent=2)
+                            refreshed += 1
+                    except Exception:
+                        continue
+                print("best baseline refresh: {} files updated in {}".format(refreshed, best_dir))
+
+        # ------------------------------------------------------------------ #
         # Auto-update results/constraints_solved and results/best             #
         # ------------------------------------------------------------------ #
         if not args.update_best:
             continue
 
         constraints_solved_dir = os.path.join(project_root_path, "results", "constraints_solved")
-        best_dir = os.path.join(project_root_path, "results", "best")
         unsolved_split_file = os.path.join(
             project_root_path,
             "chinatravel",
@@ -507,22 +580,6 @@ if __name__ == "__main__":
         updated_constraints = 0
         updated_best = 0
         solved_query_ids = set()
-
-        def _prev_score(query_id):
-            best_file = os.path.join(best_dir, "{}.json".format(query_id))
-            if not os.path.exists(best_file):
-                return query_id, -1.0
-            try:
-                with open(best_file) as f:
-                    stored = json.load(f)
-                return query_id, float(stored.get("_eval_score", 0))
-            except Exception:
-                return query_id, -1.0
-
-        prev_scores = {}
-        with ThreadPoolExecutor(max_workers=min(32, (os.cpu_count() or 4) * 4)) as pool:
-            for query_id, score in pool.map(_prev_score, query_index):
-                prev_scores[query_id] = score
 
         for query_id in query_index:
             src_file = os.path.join(project_root_path, "results", args.method, "{}.json".format(query_id))
