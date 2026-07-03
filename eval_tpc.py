@@ -229,6 +229,62 @@ def remove_query_ids_from_split_file(split_file_path, query_ids):
     return removed_count
 
 
+def update_suboptimal_split_file(split_file_path, query_ids, score_by_query, threshold=100.0):
+    """Update a split file with query IDs whose score is below threshold.
+
+    This function supports both full-split refreshes and partial updates
+    (e.g., when evaluating a single query via --index).
+    """
+    if not query_ids:
+        return 0
+
+    query_ids = [str(query_id).strip() for query_id in query_ids if str(query_id).strip()]
+    if not query_ids:
+        return 0
+
+    query_id_set = set(query_ids)
+
+    lock_dir = os.path.join(project_root_path, "cache", "eval_locks")
+    os.makedirs(lock_dir, exist_ok=True)
+    lock_file_path = os.path.join(lock_dir, "{}.lock".format(os.path.basename(split_file_path)))
+
+    with open(lock_file_path, "a", encoding="utf-8") as lock_f:
+        fcntl.flock(lock_f, fcntl.LOCK_EX)
+        try:
+            existing_lines = []
+            if os.path.exists(split_file_path):
+                with open(split_file_path, "r", encoding="utf-8") as f:
+                    existing_lines = [line.strip() for line in f.readlines() if line.strip()]
+
+            # Preserve non-evaluated IDs, then append evaluated IDs that remain suboptimal.
+            updated_lines = [query_id for query_id in existing_lines if query_id not in query_id_set]
+            for query_id in query_ids:
+                score = float(score_by_query.get(query_id, 0.0))
+                if score < threshold:
+                    updated_lines.append(query_id)
+
+            # De-duplicate while preserving order.
+            deduped_lines = []
+            seen = set()
+            for query_id in updated_lines:
+                if query_id in seen:
+                    continue
+                seen.add(query_id)
+                deduped_lines.append(query_id)
+
+            tmp_file_path = "{}.{}.tmp".format(split_file_path, os.getpid())
+            with open(tmp_file_path, "w", encoding="utf-8") as f:
+                if deduped_lines:
+                    f.write("\n".join(deduped_lines) + "\n")
+                else:
+                    f.write("")
+            os.replace(tmp_file_path, split_file_path)
+        finally:
+            fcntl.flock(lock_f, fcntl.LOCK_UN)
+
+    return len(deduped_lines)
+
+
 def _resolve_method_dir(method, lang):
     """Pick the results directory name for a method under a locale.
 
@@ -368,6 +424,47 @@ if __name__ == "__main__":
         scores['ATT']=pre_res[1]*100
         scores['DDR']=pre_res[2]*100
 
+        commonsense_pass_set = set(commonsense_pass_id)
+        logi_pass_set = set(logi_pass_id)
+        all_pass_set = set(all_pass_id)
+        per_query_pr = cal_per_query_pr_scores(query_index, result_data[method], all_pass_set)
+
+        # Per-query weighted score on the same 0-100 scale as final_score.
+        per_query_weighted_scores = {}
+        for query_id in query_index:
+            comm_score = 100.0 if query_id in commonsense_pass_set else 0.0
+            logic_score = 100.0 if query_id in logi_pass_set else 0.0
+            all_pass_score = 100.0 if query_id in all_pass_set else 0.0
+            pr = per_query_pr.get(query_id, np.zeros(len(DEFAULT_PR)))
+            dav_score = pr[0] * 100
+            att_score = pr[1] * 100
+            ddr_score = pr[2] * 100
+            per_query_weighted_scores[query_id] = (
+                0.1 * comm_score
+                + 0.1 * comm_score
+                + 0.25 * logic_score
+                + 0.05 * dav_score
+                + 0.05 * att_score
+                + 0.05 * ddr_score
+                + 0.4 * all_pass_score
+            )
+
+        # Always maintain a split file of not-yet-optimal query IDs.
+        suboptimal_split_file = os.path.join(
+            project_root_path,
+            "chinatravel",
+            "evaluation",
+            "default_splits",
+            "{}_suboptimal.txt".format(args.splits),
+        )
+        suboptimal_count = update_suboptimal_split_file(
+            suboptimal_split_file,
+            query_index,
+            per_query_weighted_scores,
+            threshold=100.0,
+        )
+        print("suboptimal split: {} query IDs in {}".format(suboptimal_count, suboptimal_split_file))
+
         # Leaderboard-parity weighting: the current competition scorer still doubles EPR-micro.
         final_score=0.1*micro_comm+0.1*micro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
         # Official documented weights: 10% EPR-micro + 10% EPR-macro.
@@ -408,15 +505,6 @@ if __name__ == "__main__":
         os.makedirs(constraints_solved_dir, exist_ok=True)
         os.makedirs(best_dir, exist_ok=True)
 
-        # Per-query weighted score using the same weights as final_score above:
-        #   0.1*commonsense + 0.1*commonsense + 0.25*logic + 0.05*DAV + 0.05*ATT + 0.05*DDR + 0.4*all_pass
-        # (expressed in the 0-100 scale that matches micro_comm/conditional_micro_logi/fpr)
-        commonsense_pass_set = set(commonsense_pass_id)
-        logi_pass_set = set(logi_pass_id)
-        all_pass_set = set(all_pass_id)
-
-        per_query_pr = cal_per_query_pr_scores(query_index, result_data[method], all_pass_set)
-
         updated_constraints = 0
         updated_best = 0
         solved_query_ids = set()
@@ -442,23 +530,7 @@ if __name__ == "__main__":
             if not os.path.exists(src_file):
                 continue
 
-            comm_score = 100.0 if query_id in commonsense_pass_set else 0.0
-            logic_score = 100.0 if query_id in logi_pass_set else 0.0
-            all_pass_score = 100.0 if query_id in all_pass_set else 0.0
-            pr = per_query_pr.get(query_id, np.zeros(len(DEFAULT_PR)))
-            dav_score = pr[0] * 100
-            att_score = pr[1] * 100
-            ddr_score = pr[2] * 100
-
-            current_score = (
-                0.1 * comm_score
-                + 0.1 * comm_score
-                + 0.25 * logic_score
-                + 0.05 * dav_score
-                + 0.05 * att_score
-                + 0.05 * ddr_score
-                + 0.4 * all_pass_score
-            )
+            current_score = per_query_weighted_scores.get(query_id, 0.0)
 
             # -- constraints_solved: save if all hard constraints pass -------
             if query_id in all_pass_set:

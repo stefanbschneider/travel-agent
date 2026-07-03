@@ -22,7 +22,7 @@
           "type": "attraction",
           "position": "Chang Garden",
           "start_time": "09:48",
-          "end_time": "10:48",
+          "end_time": "10:03",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -44,7 +44,7 @@
           "type": "lunch",
           "position": "Moon Pavilion (Guanqian Branch)",
           "start_time": "11:00",
-          "end_time": "12:00",
+          "end_time": "11:05",
           "price": 153.0,
           "cost": 459.0,
           "tickets": 3,
@@ -66,7 +66,7 @@
           "type": "attraction",
           "position": "Pingjiang Road Historic District",
           "start_time": "12:20",
-          "end_time": "13:50",
+          "end_time": "12:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -88,7 +88,7 @@
           "type": "attraction",
           "position": "Golden Rooster Lake",
           "start_time": "14:23",
-          "end_time": "15:53",
+          "end_time": "14:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -110,7 +110,7 @@
           "type": "attraction",
           "position": "Suzhou Water Tour",
           "start_time": "16:23",
-          "end_time": "17:53",
+          "end_time": "16:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -132,7 +132,7 @@
           "type": "dinner",
           "position": "Miss Fu in Chengdu (Guanqian Street Branch)",
           "start_time": "18:03",
-          "end_time": "19:03",
+          "end_time": "18:08",
           "price": 78.0,
           "cost": 234.0,
           "tickets": 3,
@@ -183,7 +183,7 @@
           "type": "breakfast",
           "position": "Qiushi Fanhua Guesthouse",
           "start_time": "07:30",
-          "end_time": "08:30",
+          "end_time": "07:35",
           "price": 0,
           "cost": 0,
           "tickets": 0,
@@ -191,20 +191,64 @@
         },
         {
           "type": "attraction",
-          "position": "West Garden Temple",
-          "start_time": "08:45",
-          "end_time": "10:15",
+          "position": "Changmen Gate",
+          "start_time": "07:51",
+          "end_time": "08:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Qiushi Fanhua Guesthouse",
+              "end": "Changmen Gate",
+              "mode": "taxi",
+              "start_time": "07:35",
+              "end_time": "07:35",
+              "distance": 0.62,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cloud-Crowned Peak",
+          "start_time": "08:21",
+          "end_time": "08:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Changmen Gate",
+              "end": "Cloud-Crowned Peak",
+              "mode": "taxi",
+              "start_time": "08:06",
+              "end_time": "08:07",
+              "distance": 1.2,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "West Garden Temple",
+          "start_time": "08:45",
+          "end_time": "09:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Cloud-Crowned Peak",
               "end": "West Garden Temple",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:31",
-              "distance": 1.28,
+              "start_time": "08:36",
+              "end_time": "08:36",
+              "distance": 0.56,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -215,7 +259,7 @@
           "type": "attraction",
           "position": "Arhat Hall",
           "start_time": "10:15",
-          "end_time": "11:15",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -282,5 +326,5 @@
     }
   ],
   "elapsed_time(sec)": 233.67540454864502,
-  "_eval_score": 97.08333333333334
+  "_eval_score": 98.33333333333333
 }
