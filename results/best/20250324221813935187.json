@@ -7,77 +7,54 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "01:11",
-          "end_time": "03:36",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 923.58,
-          "cost": 923.58,
-          "tickets": 1,
-          "transports": [],
-          "FlightID": "FL095"
-        },
-        {
           "type": "train",
-          "start_time": "07:00",
-          "end_time": "07:00",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Delicious Noodle House (Taoyuan Branch)",
-          "price": 0.0,
-          "cost": 0.0,
+          "start_time": "07:26",
+          "end_time": "17:56",
+          "start": "Beijing West Railway Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 1263.04,
+          "cost": 1263.04,
           "tickets": 1,
           "transports": [],
-          "TrainID": "GHOST-935187-D1-0-IN"
-        },
-        {
-          "type": "breakfast",
-          "position": "Delicious Noodle House (Taoyuan Branch)",
-          "start_time": "07:00",
-          "end_time": "08:00",
-          "price": 26.0,
-          "cost": 26.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "11:01",
-          "end_time": "11:01",
-          "start": "Delicious Noodle House (Taoyuan Branch)",
-          "end": "Galaxy Development Center Building - Fitness Center",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D1-0-OUT"
+          "TrainID": "G335"
         },
         {
           "type": "attraction",
-          "position": "Galaxy Development Center Building - Fitness Center",
-          "start_time": "11:01",
-          "end_time": "11:31",
+          "position": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+          "start_time": "18:26",
+          "end_time": "19:41",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "lunch",
-          "position": "gaga (Junsun Shopping Center, AVIC City Branch)",
-          "start_time": "11:50",
-          "end_time": "12:50",
-          "price": 74.0,
-          "cost": 74.0,
-          "tickets": 1,
           "transports": [
             {
-              "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "gaga (Junsun Shopping Center, AVIC City Branch)",
+              "start": "Shenzhen North Railway Station",
+              "end": "Shenzhen North Railway Station-Metro Station",
               "mode": "walk",
-              "start_time": "11:31",
-              "end_time": "11:50",
-              "distance": 1.5980939327663815,
+              "start_time": "17:56",
+              "end_time": "17:57",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shenzhen North Railway Station-Metro Station",
+              "end": "Minzhi-Metro Station",
+              "mode": "metro",
+              "start_time": "17:57",
+              "end_time": "17:59",
+              "distance": 1.34,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Minzhi-Metro Station",
+              "end": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "mode": "walk",
+              "start_time": "17:59",
+              "end_time": "18:16",
+              "distance": 1.45,
               "price": 0,
               "cost": 0
             }
@@ -85,118 +62,50 @@
         },
         {
           "type": "attraction",
-          "position": "Deng Xiaoping Portrait Square",
-          "start_time": "13:24",
-          "end_time": "13:54",
+          "position": "Guanlan River Wetland Park",
+          "start_time": "20:59",
+          "end_time": "22:14",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "gaga (Junsun Shopping Center, AVIC City Branch)",
-              "end": "Deng Xiaoping Portrait Square",
+              "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "end": "Minzhi-Metro Station",
               "mode": "walk",
-              "start_time": "12:50",
-              "end_time": "13:24",
-              "distance": 2.8880754974777783,
+              "start_time": "19:41",
+              "end_time": "19:58",
+              "distance": 1.45,
               "price": 0,
               "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "East Gate Old Street",
-          "start_time": "14:47",
-          "end_time": "15:17",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
+            },
             {
-              "start": "Deng Xiaoping Portrait Square",
-              "end": "East Gate Old Street",
+              "start": "Minzhi-Metro Station",
+              "end": "Bamboo Village-Metro Station",
+              "mode": "metro",
+              "start_time": "19:58",
+              "end_time": "20:13",
+              "distance": 7.66,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Bamboo Village-Metro Station",
+              "end": "Guanlan River Wetland Park",
               "mode": "walk",
-              "start_time": "13:54",
-              "end_time": "14:09",
-              "distance": 1.2826287209184728,
+              "start_time": "20:13",
+              "end_time": "20:24",
+              "distance": 0.97,
               "price": 0,
               "cost": 0
             }
           ]
-        },
-        {
-          "type": "train",
-          "start_time": "09:00",
-          "end_time": "09:00",
-          "start": "East Gate Old Street",
-          "end": "Baguang Beach",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D1-1-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "Baguang Beach",
-          "start_time": "09:00",
-          "end_time": "10:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "10:00",
-          "start": "Baguang Beach",
-          "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D1-1-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "18:00",
-          "end_time": "18:00",
-          "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D1-2-IN"
-        },
-        {
-          "type": "dinner",
-          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
-          "start_time": "18:00",
-          "end_time": "19:00",
-          "price": 22.0,
-          "cost": 22.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "19:00",
-          "end_time": "19:00",
-          "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
-          "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D1-2-OUT"
         },
         {
           "type": "accommodation",
           "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "start_time": "18:22",
+          "start_time": "23:37",
           "end_time": "24:00",
           "price": 231.0,
           "cost": 231.0,
@@ -205,12 +114,33 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "East Gate Old Street",
+              "start": "Guanlan River Wetland Park",
+              "end": "Bamboo Village-Metro Station",
+              "mode": "walk",
+              "start_time": "22:14",
+              "end_time": "22:25",
+              "distance": 0.97,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bamboo Village-Metro Station",
+              "end": "Gankeng-Metro Station",
+              "mode": "metro",
+              "start_time": "22:25",
+              "end_time": "22:40",
+              "distance": 7.99,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Gankeng-Metro Station",
               "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
               "mode": "walk",
-              "start_time": "15:17",
-              "end_time": "17:36",
-              "distance": 11.65634673668004,
+              "start_time": "22:40",
+              "end_time": "22:48",
+              "distance": 0.75,
               "price": 0,
               "cost": 0
             }
@@ -233,9 +163,9 @@
         },
         {
           "type": "attraction",
-          "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "09:13",
-          "end_time": "10:43",
+          "position": "Qiu Shui Mountain Park",
+          "start_time": "09:56",
+          "end_time": "11:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -252,22 +182,22 @@
             },
             {
               "start": "Gankeng-Metro Station",
-              "end": "Qiaocheng North-Metro Station",
+              "end": "Dafen-Metro Station",
               "mode": "metro",
               "start_time": "08:38",
-              "end_time": "09:11",
-              "distance": 16.62,
-              "price": 5,
-              "cost": 5,
+              "end_time": "08:48",
+              "distance": 5.01,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Shenzhen OCT Tourism Resort",
+              "start": "Dafen-Metro Station",
+              "end": "Qiu Shui Mountain Park",
               "mode": "walk",
-              "start_time": "09:11",
-              "end_time": "09:13",
-              "distance": 0.21,
+              "start_time": "08:48",
+              "end_time": "09:07",
+              "distance": 1.62,
               "price": 0,
               "cost": 0
             }
@@ -275,41 +205,41 @@
         },
         {
           "type": "lunch",
-          "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-          "start_time": "11:01",
-          "end_time": "12:01",
-          "price": 590.0,
-          "cost": 590.0,
+          "position": "Nanxianglou Art Hotel (Overseas Chinese Town Gankeng Ancient Town Branch) · Phoenix Hakka Restaurant",
+          "start_time": "12:41",
+          "end_time": "13:41",
+          "price": 98.0,
+          "cost": 98.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen OCT Tourism Resort",
-              "end": "Qiaocheng North-Metro Station",
+              "start": "Qiu Shui Mountain Park",
+              "end": "Dafen-Metro Station",
               "mode": "walk",
-              "start_time": "10:43",
-              "end_time": "10:45",
-              "distance": 0.21,
+              "start_time": "11:11",
+              "end_time": "11:30",
+              "distance": 1.62,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Qiaocheng North-Metro Station",
-              "end": "Convention and Exhibition Center-Metro Station",
+              "start": "Dafen-Metro Station",
+              "end": "Gankeng-Metro Station",
               "mode": "metro",
-              "start_time": "10:45",
-              "end_time": "10:59",
-              "distance": 7.47,
+              "start_time": "11:30",
+              "end_time": "11:40",
+              "distance": 5.01,
               "price": 3,
               "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Convention and Exhibition Center-Metro Station",
-              "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
+              "start": "Gankeng-Metro Station",
+              "end": "Nanxianglou Art Hotel (Overseas Chinese Town Gankeng Ancient Town Branch) · Phoenix Hakka Restaurant",
               "mode": "walk",
-              "start_time": "10:59",
-              "end_time": "11:01",
-              "distance": 0.19,
+              "start_time": "11:40",
+              "end_time": "11:53",
+              "distance": 1.11,
               "price": 0,
               "cost": 0
             }
@@ -317,83 +247,41 @@
         },
         {
           "type": "attraction",
-          "position": "Shenzhen OCT Harbour",
-          "start_time": "12:20",
-          "end_time": "13:50",
+          "position": "Pinghu Ecological Park",
+          "start_time": "14:15",
+          "end_time": "15:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-              "end": "Convention and Exhibition Center-Metro Station",
+              "start": "Nanxianglou Art Hotel (Overseas Chinese Town Gankeng Ancient Town Branch) · Phoenix Hakka Restaurant",
+              "end": "Gankeng-Metro Station",
               "mode": "walk",
-              "start_time": "12:01",
-              "end_time": "12:03",
-              "distance": 0.19,
+              "start_time": "13:41",
+              "end_time": "13:54",
+              "distance": 1.11,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Convention and Exhibition Center-Metro Station",
-              "end": "Qiaocheng East-Metro Station",
+              "start": "Gankeng-Metro Station",
+              "end": "South China City-Metro Station",
               "mode": "metro",
-              "start_time": "12:03",
-              "end_time": "12:16",
-              "distance": 6.64,
-              "price": 3,
-              "cost": 3,
+              "start_time": "13:54",
+              "end_time": "14:01",
+              "distance": 3.54,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Qiaocheng East-Metro Station",
-              "end": "Shenzhen OCT Harbour",
+              "start": "South China City-Metro Station",
+              "end": "Pinghu Ecological Park",
               "mode": "walk",
-              "start_time": "12:16",
-              "end_time": "12:20",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Cave Exploration Factory (Happy Coast Branch)",
-          "start_time": "13:53",
-          "end_time": "15:23",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen OCT Harbour",
-              "end": "Cave Exploration Factory (Happy Coast Branch)",
-              "mode": "walk",
-              "start_time": "13:50",
-              "end_time": "13:53",
-              "distance": 0.2882598013768936,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Dashabe Ecological Corridor",
-          "start_time": "16:05",
-          "end_time": "16:35",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Cave Exploration Factory (Happy Coast Branch)",
-              "end": "Dashabe Ecological Corridor",
-              "mode": "walk",
-              "start_time": "15:23",
-              "end_time": "16:05",
-              "distance": 3.54437548599252,
+              "start_time": "14:01",
+              "end_time": "14:09",
+              "distance": 0.7,
               "price": 0,
               "cost": 0
             }
@@ -401,20 +289,62 @@
         },
         {
           "type": "dinner",
-          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+          "position": "Shenzhen Hard Rock Hotel · Hard Rock Cafe (Mission Hills International Tower)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 400.0,
-          "cost": 400.0,
+          "price": 169.0,
+          "cost": 169.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dashabe Ecological Corridor",
-              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+              "start": "Pinghu Ecological Park",
+              "end": "South China City-Metro Station",
               "mode": "walk",
-              "start_time": "16:35",
-              "end_time": "16:53",
-              "distance": 1.56935035764396,
+              "start_time": "15:30",
+              "end_time": "15:38",
+              "distance": 0.7,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "South China City-Metro Station",
+              "end": "Mission Hills-Metro Station",
+              "mode": "metro",
+              "start_time": "15:38",
+              "end_time": "15:51",
+              "distance": 6.92,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Mission Hills-Metro Station",
+              "end": "Shenzhen Hard Rock Hotel · Hard Rock Cafe (Mission Hills International Tower)",
+              "mode": "walk",
+              "start_time": "15:51",
+              "end_time": "15:52",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shangwei Art Village",
+          "start_time": "18:49",
+          "end_time": "20:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Hard Rock Hotel · Hard Rock Cafe (Mission Hills International Tower)",
+              "end": "Shangwei Art Village",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:49",
+              "distance": 4.101943704835539,
               "price": 0,
               "cost": 0
             }
@@ -423,7 +353,7 @@
         {
           "type": "accommodation",
           "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
-          "start_time": "18:46",
+          "start_time": "20:50",
           "end_time": "24:00",
           "price": 231.0,
           "cost": 231.0,
@@ -432,33 +362,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "end": "Window of the World-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Window of the World-Metro Station",
-              "end": "Gankeng-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:38",
-              "distance": 18.28,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Gankeng-Metro Station",
+              "start": "Shangwei Art Village",
               "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
               "mode": "walk",
-              "start_time": "18:38",
-              "end_time": "18:46",
-              "distance": 0.75,
+              "start_time": "20:04",
+              "end_time": "20:50",
+              "distance": 3.9108949289285384,
               "price": 0,
               "cost": 0
             }
@@ -480,12 +389,12 @@
           "transports": []
         },
         {
-          "type": "lunch",
-          "position": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 706.0,
-          "cost": 706.0,
+          "type": "attraction",
+          "position": "Qianjiang Art Center",
+          "start_time": "09:20",
+          "end_time": "10:35",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -500,22 +409,22 @@
             },
             {
               "start": "Gankeng-Metro Station",
-              "end": "Ludan Village-Metro Station",
+              "end": "Shiya Ridge-Metro Station",
               "mode": "metro",
               "start_time": "08:38",
-              "end_time": "09:02",
-              "distance": 12.42,
-              "price": 4,
-              "cost": 4,
+              "end_time": "08:45",
+              "distance": 3.94,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Ludan Village-Metro Station",
-              "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
+              "start": "Shiya Ridge-Metro Station",
+              "end": "Qianjiang Art Center",
               "mode": "walk",
-              "start_time": "09:02",
-              "end_time": "09:05",
-              "distance": 0.31,
+              "start_time": "08:45",
+              "end_time": "08:55",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             }
@@ -523,41 +432,62 @@
         },
         {
           "type": "attraction",
-          "position": "Baishilong Music Theme Park",
-          "start_time": "13:59",
-          "end_time": "15:29",
+          "position": "Dafen Oil Painting Village",
+          "start_time": "11:01",
+          "end_time": "12:16",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-              "end": "Ludan Village-Metro Station",
+              "start": "Qianjiang Art Center",
+              "end": "Shiya Ridge-Metro Station",
               "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:03",
-              "distance": 0.31,
+              "start_time": "10:35",
+              "end_time": "10:45",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Ludan Village-Metro Station",
-              "end": "Baishilong-Metro Station",
+              "start": "Shiya Ridge-Metro Station",
+              "end": "Dafen-Metro Station",
               "mode": "metro",
-              "start_time": "12:03",
-              "end_time": "12:22",
-              "distance": 9.97,
-              "price": 4,
-              "cost": 4,
+              "start_time": "10:45",
+              "end_time": "10:48",
+              "distance": 1.58,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
-              "start": "Baishilong-Metro Station",
-              "end": "Baishilong Music Theme Park",
+              "start": "Dafen-Metro Station",
+              "end": "Dafen Oil Painting Village",
               "mode": "walk",
-              "start_time": "12:22",
-              "end_time": "12:25",
-              "distance": 0.28,
+              "start_time": "10:48",
+              "end_time": "10:53",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dafen Art Museum",
+          "start_time": "12:18",
+          "end_time": "13:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dafen Oil Painting Village",
+              "end": "Dafen Art Museum",
+              "mode": "walk",
+              "start_time": "12:16",
+              "end_time": "12:18",
+              "distance": 0.22867558192727527,
               "price": 0,
               "cost": 0
             }
@@ -565,147 +495,45 @@
         },
         {
           "type": "dinner",
-          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "position": "Le Caisa Pizza (Joy Park Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 20.0,
-          "cost": 20.0,
+          "price": 63.0,
+          "cost": 63.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Baishilong Music Theme Park",
-              "end": "Baishilong-Metro Station",
+              "start": "Dafen Art Museum",
+              "end": "Danzhutou-Metro Station",
               "mode": "walk",
-              "start_time": "15:29",
-              "end_time": "15:32",
-              "distance": 0.28,
+              "start_time": "13:33",
+              "end_time": "13:39",
+              "distance": 0.52,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Baishilong-Metro Station",
-              "end": "Meicun-Metro Station",
+              "start": "Danzhutou-Metro Station",
+              "end": "Shangmeilin-Metro Station",
               "mode": "metro",
-              "start_time": "15:32",
-              "end_time": "15:39",
-              "distance": 3.8,
-              "price": 2,
-              "cost": 2,
+              "start_time": "13:39",
+              "end_time": "14:00",
+              "distance": 10.62,
+              "price": 4,
+              "cost": 4,
               "tickets": 1
             },
             {
-              "start": "Meicun-Metro Station",
-              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "start": "Shangmeilin-Metro Station",
+              "end": "Le Caisa Pizza (Joy Park Branch)",
               "mode": "walk",
-              "start_time": "15:39",
-              "end_time": "15:41",
-              "distance": 0.24,
+              "start_time": "14:00",
+              "end_time": "14:01",
+              "distance": 0.16,
               "price": 0,
               "cost": 0
             }
           ]
-        },
-        {
-          "type": "train",
-          "start_time": "09:00",
-          "end_time": "09:00",
-          "start": "Old Zhou's Shunde Double-Skin Milk",
-          "end": "Balcony Mountain Forest Park",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D3-3-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "Balcony Mountain Forest Park",
-          "start_time": "09:00",
-          "end_time": "10:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "10:00",
-          "start": "Balcony Mountain Forest Park",
-          "end": "Shenzhen North Railway Station",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D3-3-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "10:15",
-          "end_time": "10:15",
-          "start": "Shenzhen North Railway Station",
-          "end": "Bao'an Jesus the King Church",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D3-4-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "Bao'an Jesus the King Church",
-          "start_time": "10:15",
-          "end_time": "11:15",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "11:15",
-          "end_time": "11:15",
-          "start": "Bao'an Jesus the King Church",
-          "end": "Shenzhen North Railway Station",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D3-4-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "14:00",
-          "end_time": "14:00",
-          "start": "Shenzhen North Railway Station",
-          "end": "Bao'an Library",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D3-5-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "Bao'an Library",
-          "start_time": "14:00",
-          "end_time": "15:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "15:00",
-          "end_time": "15:00",
-          "start": "Bao'an Library",
-          "end": "Shenzhen North Railway Station",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-935187-D3-5-OUT"
         },
         {
           "type": "train",
@@ -718,22 +546,22 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Meicun-Metro Station",
+              "start": "Le Caisa Pizza (Joy Park Branch)",
+              "end": "Shangmeilin-Metro Station",
               "mode": "walk",
               "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.24,
+              "end_time": "18:01",
+              "distance": 0.16,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Meicun-Metro Station",
+              "start": "Shangmeilin-Metro Station",
               "end": "Shenzhen North Railway Station-Metro Station",
               "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:12",
-              "distance": 5.18,
+              "start_time": "18:01",
+              "end_time": "18:11",
+              "distance": 5.35,
               "price": 3,
               "cost": 3,
               "tickets": 1
@@ -742,8 +570,8 @@
               "start": "Shenzhen North Railway Station-Metro Station",
               "end": "Shenzhen North Railway Station",
               "mode": "walk",
-              "start_time": "18:12",
-              "end_time": "18:13",
+              "start_time": "18:11",
+              "end_time": "18:12",
               "distance": 0.15,
               "price": 0,
               "cost": 0
@@ -754,6 +582,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 181.33068585395813,
-  "_eval_score": 25.0
+  "elapsed_time(sec)": 243.1636779308319,
+  "_eval_score": 95.44444444444446
 }

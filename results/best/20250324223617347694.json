@@ -8,57 +8,55 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "00:03",
-          "end_time": "02:32",
-          "start": "Nanjing Station",
-          "end": "Suzhou Station",
-          "price": 94.54,
-          "cost": 472.70000000000005,
+          "start_time": "07:00",
+          "end_time": "08:10",
+          "start": "Nanjing South Railway Station",
+          "end": "Suzhou North Station",
+          "price": 122.9,
+          "cost": 614.5,
           "tickets": 5,
           "transports": [],
-          "TrainID": "Z175"
-        },
-        {
-          "type": "breakfast",
-          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
-          "start_time": "06:00",
-          "end_time": "07:00",
-          "price": 9.0,
-          "cost": 45.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Suzhou Station",
-              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
-              "mode": "taxi",
-              "start_time": "02:32",
-              "end_time": "02:37",
-              "distance": 3.49,
-              "price": 16.9,
-              "cost": 33.8,
-              "cars": 2
-            }
-          ]
+          "TrainID": "G1509"
         },
         {
           "type": "attraction",
-          "position": "Arhat Hall",
+          "position": "A Hidden Wonderland",
           "start_time": "09:00",
-          "end_time": "10:30",
+          "end_time": "10:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
-              "end": "Arhat Hall",
-              "mode": "taxi",
-              "start_time": "07:00",
-              "end_time": "07:06",
-              "distance": 4.26,
-              "price": 19.61,
-              "cost": 39.22,
-              "cars": 2
+              "start": "Suzhou North Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:10",
+              "end_time": "08:11",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:11",
+              "end_time": "08:16",
+              "distance": 2.78,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "A Hidden Wonderland",
+              "mode": "walk",
+              "start_time": "08:16",
+              "end_time": "08:28",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -72,15 +70,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Arhat Hall",
+              "start": "A Hidden Wonderland",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "10:15",
+              "end_time": "10:27",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "Shilu-Metro Station",
+              "mode": "metro",
+              "start_time": "10:27",
+              "end_time": "10:48",
+              "distance": 10.5,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Shilu-Metro Station",
               "end": "Yumiantang Premium Suzhou-Style Noodle House (Shilu Branch)",
-              "mode": "taxi",
-              "start_time": "10:30",
-              "end_time": "10:32",
-              "distance": 1.45,
-              "price": 11.0,
-              "cost": 22.0,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "10:48",
+              "end_time": "10:54",
+              "distance": 0.56,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -322,40 +340,6 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "18:00",
-          "end_time": "18:00",
-          "start": "Yangcheng Lake",
-          "end": "Old Patron's Egg Pancake",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-347694-D2-1-IN"
-        },
-        {
-          "type": "dinner",
-          "position": "Old Patron's Egg Pancake",
-          "start_time": "18:00",
-          "end_time": "19:00",
-          "price": 11.0,
-          "cost": 55.0,
-          "tickets": 5,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "19:00",
-          "end_time": "19:00",
-          "start": "Old Patron's Egg Pancake",
-          "end": "Suning Yayue Hotel (Suzhou North High-speed Railway Station Wuyue Plaza Branch)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-347694-D2-1-OUT"
-        },
-        {
           "type": "accommodation",
           "position": "Suning Yayue Hotel (Suzhou North High-speed Railway Station Wuyue Plaza Branch)",
           "start_time": "15:06",
@@ -461,110 +445,32 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
-          "start_time": "17:40",
-          "end_time": "18:40",
-          "price": 10.0,
-          "cost": 50.0,
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:31",
+          "start": "Suzhou Park Station",
+          "end": "Nanjing South Railway Station",
+          "price": 122.9,
+          "cost": 614.5,
           "tickets": 5,
           "transports": [
             {
               "start": "Jinxi Ancient Town",
-              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
+              "end": "Suzhou Park Station",
               "mode": "taxi",
               "start_time": "14:00",
-              "end_time": "14:45",
-              "distance": 30.12,
-              "price": 130.25,
-              "cost": 260.5,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Ancient Canal Night Cruise",
-          "start_time": "18:43",
-          "end_time": "19:43",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
-              "end": "Ancient Canal Night Cruise",
-              "mode": "taxi",
-              "start_time": "18:40",
-              "end_time": "18:40",
-              "distance": 0.25,
-              "price": 11.0,
-              "cost": 22.0,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "train",
-          "start_time": "12:07",
-          "end_time": "12:07",
-          "start": "Ancient Canal Night Cruise",
-          "end": "Chen's Wonton (Wuqufang Branch)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-347694-D3-1-IN"
-        },
-        {
-          "type": "lunch",
-          "position": "Chen's Wonton (Wuqufang Branch)",
-          "start_time": "12:07",
-          "end_time": "12:22",
-          "price": 11.0,
-          "cost": 55.0,
-          "tickets": 5,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "12:22",
-          "end_time": "12:22",
-          "start": "Chen's Wonton (Wuqufang Branch)",
-          "end": "Suzhou Station",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-347694-D3-1-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "23:39",
-          "end_time": "02:23",
-          "start": "Suzhou Station",
-          "end": "Nanjing Station",
-          "price": 75.63,
-          "cost": 378.15,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Ancient Canal Night Cruise",
-              "end": "Suzhou Station",
-              "mode": "taxi",
-              "start_time": "19:43",
-              "end_time": "19:48",
-              "distance": 3.57,
-              "price": 17.21,
-              "cost": 34.42,
+              "end_time": "14:38",
+              "distance": 25.71,
+              "price": 110.38,
+              "cost": 220.76,
               "cars": 2
             }
           ],
-          "TrainID": "K8366"
+          "TrainID": "G7376"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 182.05608320236206,
-  "_eval_score": 25.0
+  "_eval_score": 96.9969654528478
 }
