@@ -65,6 +65,7 @@ UNSOLVED_LOCAL_BUDGET ?= 240
 UNSOLVED_LOCAL_STOP ?= 2
 UNSOLVED_LOCAL_RUN_ID ?=
 UNSOLVED_LOCAL_CP_RECON_SHUFFLES ?= 8
+UNSOLVED_LOCAL_SKIP_EXISTING ?= 0
 
 HPC_PARTITION ?= standard
 HPC_WORKERS ?= 8
@@ -230,7 +231,7 @@ unsolved-local:
 		--heartbeat-sec $(TAIL_HEARTBEAT_SEC) \
 		$(if $(filter 1,$(TAIL_STREAM_SOLVE_LOG)),--stream-solve-log,) \
 		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
-		$(if $(filter 1,$(TAIL_SKIP_EXISTING)),--skip-existing,) \
+		$(if $(filter 1,$(UNSOLVED_LOCAL_SKIP_EXISTING)),--skip-existing,) \
 		$(if $(UNSOLVED_LOCAL_RUN_ID),--run-id $(UNSOLVED_LOCAL_RUN_ID),--run-id unsolved_local_$(shell date +%Y%m%d_%H%M%S))
 
 # Local preference optimization profile: only densify already-solved plans (constraint-safe).
@@ -497,6 +498,7 @@ help:
 	  '  UNSOLVED_LOCAL_BUDGET=<sec> default: $(UNSOLVED_LOCAL_BUDGET)' \
 	  '  UNSOLVED_LOCAL_STOP=<n> default: $(UNSOLVED_LOCAL_STOP)' \
 	  '  UNSOLVED_LOCAL_CP_RECON_SHUFFLES=<n> default: $(UNSOLVED_LOCAL_CP_RECON_SHUFFLES)' \
+	  '  UNSOLVED_LOCAL_SKIP_EXISTING=<0|1> default: $(UNSOLVED_LOCAL_SKIP_EXISTING)' \
 	  '  UNSOLVED_LOCAL_RUN_ID=<id> default: auto timestamp' \
 	  '  PREFERENCE_LOCAL_WORKERS=<n> default: $(PREFERENCE_LOCAL_WORKERS)' \
 	  '  PREFERENCE_LOCAL_ROUNDS=<n> default: $(PREFERENCE_LOCAL_ROUNDS)' \
