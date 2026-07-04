@@ -23,7 +23,22 @@ behavior.
 - ChinaTravel GitHub repo: https://github.com/LAMDA-NeSy/ChinaTravel
 - Local upstream divergence report: `docs/upstream_divergence.md`
 
+**Competition docs in this repo:**
+
+- `docs/tpc_phase1_playbook.md` — Phase 1 public-leaderboard strategy, workflows, and operating commands
+- `docs/tpc_phase2_design.md` — Phase 2 rules interpretation, harness architecture, and implementation plan
+- `AGENT_DESIGN.md` — shared overview of the current TPCAgent stack and how it bridges both phases
+- `IJCAI2026_competition.md` — source-based summary of the official competition pages
+
 **Important commands:**
+
+The commands and score snapshots in the next section are primarily for **Phase 1** work.
+Phase 1 is an offline prediction-generation problem on the released dataset, where the
+current workflow intentionally uses oracle hard constraints (`hard_logic_py`) to maximize
+public leaderboard score. Phase 2 has a different execution model: per-query harness runs,
+held-out queries, no oracle verifier fields visible to the agent, and bounded runtime.
+
+## Phase 1 Operations
 
 Latest verified score snapshot (`results/best`, 2026-06-22):
 
@@ -174,6 +189,9 @@ against budget/time constraints) to show where more attractions can be packed sa
 `eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the current
 leaderboard formula, which still doubles EPR-micro) and `overall_official` (the documented
 10% EPR-micro + 10% EPR-macro).
+
+For the detailed Phase 1 operating model and what transfers cleanly to Phase 2, see
+`docs/tpc_phase1_playbook.md`.
 
 **Notes:**
 

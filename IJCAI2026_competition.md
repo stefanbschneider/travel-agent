@@ -2,6 +2,12 @@
 
 Source: https://chinatravel-competition.github.io/IJCAI2026/
 
+Repo-local companion docs:
+
+- `docs/tpc_phase1_playbook.md` — our Phase 1 public-leaderboard strategy and workflows
+- `docs/tpc_phase2_design.md` — our Phase 2 harness design and no-oracle approach
+- `AGENT_DESIGN.md` — shared overview of the deterministic planning core
+
 ## Overview
 
 TPC 2026 is the second edition of the Travel Planning Challenge. It focuses on real-world travel planning in China, where language agents must convert open-ended traveler intent into feasible, preference-aligned, multi-day itineraries.
