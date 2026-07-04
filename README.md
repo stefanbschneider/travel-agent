@@ -26,7 +26,10 @@ behavior.
 **Competition docs in this repo:**
 
 - `docs/tpc_phase1_playbook.md` — Phase 1 public-leaderboard strategy, workflows, and operating commands
-- `docs/tpc_phase2_design.md` — Phase 2 rules interpretation, harness architecture, and implementation plan
+- `docs/tpc_phase2_design.md` — Phase 2 rules interpretation, harness architecture, and no-oracle approach
+- `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (three axes, attribution, regression gate)
+- `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the Phase 2 skeleton harness + eval pipeline
+- `docs/tpc_phase2_hf_dataset.md` — note on the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset vs local data
 - `AGENT_DESIGN.md` — shared overview of the current TPCAgent stack and how it bridges both phases
 - `IJCAI2026_competition.md` — source-based summary of the official competition pages
 

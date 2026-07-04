@@ -6,6 +6,8 @@ Repo-local companion docs:
 
 - `docs/tpc_phase1_playbook.md` — our Phase 1 public-leaderboard strategy and workflows
 - `docs/tpc_phase2_design.md` — our Phase 2 harness design and no-oracle approach
+- `docs/tpc_phase2_eval.md` — our Phase 2 evaluation methodology
+- `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the skeleton harness + eval
 - `AGENT_DESIGN.md` — shared overview of the deterministic planning core
 
 ## Overview

@@ -6,6 +6,8 @@ Phase-specific details now live in:
 
 - `docs/tpc_phase1_playbook.md` — public leaderboard strategy and operating workflows
 - `docs/tpc_phase2_design.md` — final harness design, no-oracle parsing, and orchestration plan
+- `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (three axes + attribution)
+- `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the skeleton harness + eval
 
 ## Competition Split
 
