@@ -473,11 +473,8 @@ if __name__ == "__main__":
 
         # Aligned with upstream PR #25: use 10% EPR-micro + 10% EPR-macro.
         final_score=0.1*micro_comm+0.1*macro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
-        # Keep the explicit official field for downstream scripts; identical to overall.
-        final_score_official=0.1*micro_comm+0.1*macro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
-        print('Overall Score (micro+macro): ', final_score)
+        print('Overall Score: ', final_score)
         scores['overall'] = final_score
-        scores['overall_official'] = final_score_official
         print(scores)
 
         score_file = os.path.join('your_tpc_scores.json')
