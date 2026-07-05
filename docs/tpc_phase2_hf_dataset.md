@@ -1,7 +1,7 @@
 # Hugging Face `LAMDA-NeSy/ChinaTravel` vs Local Data
 
-Status: **investigation note + planned compare script** (Task 12). No comparison code has been run yet;
-the facts below are read from the dataset card. Confirm programmatically before relying on them.
+Status: **built and run** (Task 12, `scripts/compare_hf_dataset.py`; findings below verified against
+the live dataset on 2026-07-05).
 
 Dataset card: https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel
 
@@ -41,19 +41,46 @@ ship **with oracle `hard_logic_py` and both zh/en phrasing**. That makes them a 
 phrasing it was never tuned on — the exact Phase-2 risk — while still having oracle ground truth for the
 three-axis attribution in `docs/tpc_phase2_eval.md`.
 
-## Planned compare script (Task 12, not yet built)
+## Findings (from `scripts/compare_hf_dataset.py`, run 2026-07-05)
 
-`scripts/compare_hf_dataset.py` should:
+Comparing HF `default` (654 rows) against local `tpc_phase1` (1000):
 
-1. Load the HF dataset (all subsets/splits) via `datasets.load_dataset("LAMDA-NeSy/ChinaTravel", name=...)`.
-2. Load local `tpc_phase1` queries.
-3. Report: uid overlap, per-field presence (esp. `hard_logic_py`, `nature_language_en`), city coverage
-   vs local, day/people distributions, and constraint-family coverage vs `tpc_phase1`.
-4. Conclude whether HF `human`/`human1000` can serve as an independent generalization rehearsal set, and
-   note any schema normalization needed to run our evaluators on it.
+- **uid overlap: 0** — the HF paper benchmark and the TPC-2026 `tpc_phase1` split are disjoint uid
+  spaces. No contamination risk in treating HF as an independent generalization set.
+- **HF field presence:** all 654 rows have `hard_logic_py`, `nature_language`, **and
+  `nature_language_en`**, plus `start_city`/`target_city`/`days`/`people_number`. (Local `tpc_phase1`
+  has `hard_logic_py` but **no** `nature_language_en` — it stores English text differently.)
+- **Coverage:** HF adds shorter and longer trips — `days` ∈ {1..6} (incl. 84 one-day and a 6-day),
+  vs local {2..5}. People counts broadly overlap.
+- **Cities:** HF `start_city`/`target_city` are stored in **Chinese** (上海, 北京, 成都, …) while the
+  local `en` data uses English names (Shanghai, …). The 10 cities are the same set; the "hf-only
+  cities" in the report are a language-encoding artifact, not genuinely new destinations. To use HF as
+  an English generalization set, read `nature_language_en` and map city names to the English forms.
 
-Open questions to resolve when building the script:
+Comparing HF `test` (human1000, 1000 rows):
 
-- Does HF `test/human1000` include `hard_logic_py`, or is it withheld for the leaderboard?
-- Are any `tpc_phase1` uids also present in HF (contamination risk for a "generalization" claim)?
-- Do all HF cities exist in our local `chinatravel/environment` database?
+- The `test`/`human1000` config carries **no `hard_logic_py`** (oracle withheld). It is therefore
+  **not** usable for the oracle-ground-truth attribution in `docs/tpc_phase2_eval.md`; it can only be
+  used for schema/commonsense checks or blind qualitative review.
+
+## Conclusion
+
+- Use HF **`default`** (easy/medium/human, 654 queries) as an **independent generalization / held-out
+  rehearsal set**: it has oracle `hard_logic_py` + English text and is uid-disjoint from `tpc_phase1`,
+  so it directly tests whether the no-oracle parser degrades on phrasing/trip-shapes it was never tuned
+  on (the core Phase-2 risk). Its extra 1-day and 6-day trips are useful stress cases.
+- Do **not** rely on HF `test`/`human1000` for parser-vs-oracle attribution (no oracle fields).
+- Normalization needed to run our EN pipeline/evaluators on HF `default`: prefer `nature_language_en`
+  for the agent prompt, and map Chinese city names to the English environment names.
+
+## Compare script
+
+`scripts/compare_hf_dataset.py` (pure `compare(local_rows, hf_rows)` core + CLI):
+
+```bash
+python scripts/compare_hf_dataset.py --hf-config default   # generalization candidate
+python scripts/compare_hf_dataset.py --hf-config test      # human1000 (no oracle)
+```
+
+It reports uid overlap, per-field presence, city coverage vs local, and day/people distributions, and
+sets `usable_as_generalization_set` (True for `default`, False for `test`).

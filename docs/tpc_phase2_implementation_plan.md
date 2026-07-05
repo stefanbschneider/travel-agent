@@ -44,8 +44,10 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
 - **Milestone 2 (DONE):** measurement depth — `parser_vs_oracle.py` (Task 8: structural diff +
   behavioral equivalence), `phase2_timing.py` (Task 9: per-stage p50/p95, budget overruns, variance),
   `phase2_gate.py` + the `make phase2-rehearse` dashboard target (Task 10).
-- **Milestone 3 (TODO):** extension points + generalization data — flag-gated improvement stubs
-  (Task 11) and the HF dataset compare (Task 12).
+- **Milestone 3 (DONE):** extension points + generalization data — flag-gated improvement stubs
+  (Task 11: `llm_parse_stub`, `disjunction_stub`, `llm_refine_stub`, all no-ops, off by default) and
+  the HF dataset compare (Task 12: `scripts/compare_hf_dataset.py`). All Phase 2 make targets live in a
+  clearly separated `PHASE 2` section of the `Makefile` (`make phase2-help`).
 
 ## Eval split task (built in Milestone 1)
 

@@ -67,6 +67,19 @@ UNSOLVED_LOCAL_RUN_ID ?=
 UNSOLVED_LOCAL_CP_RECON_SHUFFLES ?= 8
 UNSOLVED_LOCAL_SKIP_EXISTING ?= 0
 
+PUSH_LOCAL_UNSOLVED_TOPK ?= 260
+PUSH_LOCAL_UNSOLVED_ROUNDS ?= 8
+PUSH_LOCAL_UNSOLVED_RESTARTS ?= 1600
+PUSH_LOCAL_UNSOLVED_BUDGET ?= 320
+PUSH_LOCAL_CP_RECON_SHUFFLES ?= 12
+PUSH_LOCAL_PREF_METRIC ?= ddr
+PUSH_LOCAL_PREF_TOPK ?= 240
+PUSH_LOCAL_PREF_ROUNDS ?= 4
+PUSH_LOCAL_PREF_STOP ?= 2
+PUSH_LOCAL_PREF_WORKERS ?= $(OVERNIGHT_LOCAL_WORKERS)
+PUSH_LOCAL_PREF_RESTARTS ?= 1200
+PUSH_LOCAL_PREF_BUDGET ?= 240
+
 HPC_PARTITION ?= standard
 HPC_WORKERS ?= 8
 HPC_MEM ?= 6G
@@ -97,7 +110,13 @@ HPC_PREFERENCE_STOP ?= 3
 HPC_PREFERENCE_METRIC ?= overall
 HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local unsolved-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
+# ===========================================================================
+# PHASE 1 — public leaderboard (offline prediction generation, oracle-guided)
+# Targets below drive run_tpc.py/eval_tpc.py and the resumable solve/merge/score
+# scripts. See docs/tpc_phase1_playbook.md.
+# ===========================================================================
+
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local unsolved-local push-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
 # Default: preference optimization on already-solved plans.
 all: preference-local score submission
@@ -233,6 +252,31 @@ unsolved-local:
 		$(if $(filter 1,$(TAIL_RESUME)),--resume,) \
 		$(if $(filter 1,$(UNSOLVED_LOCAL_SKIP_EXISTING)),--skip-existing,) \
 		$(if $(UNSOLVED_LOCAL_RUN_ID),--run-id $(UNSOLVED_LOCAL_RUN_ID),--run-id unsolved_local_$(shell date +%Y%m%d_%H%M%S))
+
+# Two-step local push: fix unresolved validity first, then optimize preference on solved plans.
+push-local:
+	$(MAKE) unsolved-local \
+		UNSOLVED_LOCAL_TOPK=$(PUSH_LOCAL_UNSOLVED_TOPK) \
+		UNSOLVED_LOCAL_ROUNDS=$(PUSH_LOCAL_UNSOLVED_ROUNDS) \
+		UNSOLVED_LOCAL_RESTARTS=$(PUSH_LOCAL_UNSOLVED_RESTARTS) \
+		UNSOLVED_LOCAL_BUDGET=$(PUSH_LOCAL_UNSOLVED_BUDGET) \
+		UNSOLVED_LOCAL_CP_RECON_SHUFFLES=$(PUSH_LOCAL_CP_RECON_SHUFFLES) \
+		UNSOLVED_LOCAL_SKIP_EXISTING=0
+	TPC_DENSIFY_SWAP_MEALS=1 \
+	TPC_DENSIFY_MEAL_SWAP_MAX=16 \
+	TPC_DENSIFY_MEAL_SWAP_CANDIDATES=32 \
+	TPC_DENSIFY_SWAP_MAX=16 \
+	TPC_DENSIFY_SWAP_CANDIDATES=32 \
+	TPC_DENSIFY_ATTR_CANDIDATES=40 \
+	$(MAKE) preference-solve \
+		PREFERENCE_LOCAL_METRIC=$(PUSH_LOCAL_PREF_METRIC) \
+		PREFERENCE_LOCAL_TOPK=$(PUSH_LOCAL_PREF_TOPK) \
+		PREFERENCE_LOCAL_ROUNDS=$(PUSH_LOCAL_PREF_ROUNDS) \
+		PREFERENCE_LOCAL_STOP=$(PUSH_LOCAL_PREF_STOP) \
+		PREFERENCE_LOCAL_WORKERS=$(PUSH_LOCAL_PREF_WORKERS) \
+		OVERNIGHT_LOCAL_RESTARTS=$(PUSH_LOCAL_PREF_RESTARTS) \
+		OVERNIGHT_LOCAL_BUDGET=$(PUSH_LOCAL_PREF_BUDGET)
+	$(PYTHON) scripts/score.py --split $(SPLIT)
 
 # Local preference optimization profile: only densify already-solved plans (constraint-safe).
 preference-local:
@@ -434,6 +478,7 @@ help:
 	  'make short-local    - short local profile (~10 min) using iterate_tail' \
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
 	  'make unsolved-local - local unsolved-focused solve rounds (best next step when FPR/MacEPR trail)' \
+	  'make push-local     - two-step local push (unsolved solve -> preference-solve -> score)' \
 	  'make preference-local - local preference optimization on already-solved plans (densify only)' \
 	  'make preference-solve - re-solve worst-preference queries from scratch (~7 h overnight)' \
 	  'make preference-overnight - refresh suboptimal split, then ATT-focused densify + re-solve overnight' \
@@ -500,6 +545,18 @@ help:
 	  '  UNSOLVED_LOCAL_CP_RECON_SHUFFLES=<n> default: $(UNSOLVED_LOCAL_CP_RECON_SHUFFLES)' \
 	  '  UNSOLVED_LOCAL_SKIP_EXISTING=<0|1> default: $(UNSOLVED_LOCAL_SKIP_EXISTING)' \
 	  '  UNSOLVED_LOCAL_RUN_ID=<id> default: auto timestamp' \
+	  '  PUSH_LOCAL_UNSOLVED_TOPK=<n> default: $(PUSH_LOCAL_UNSOLVED_TOPK)' \
+	  '  PUSH_LOCAL_UNSOLVED_ROUNDS=<n> default: $(PUSH_LOCAL_UNSOLVED_ROUNDS)' \
+	  '  PUSH_LOCAL_UNSOLVED_RESTARTS=<n> default: $(PUSH_LOCAL_UNSOLVED_RESTARTS)' \
+	  '  PUSH_LOCAL_UNSOLVED_BUDGET=<sec> default: $(PUSH_LOCAL_UNSOLVED_BUDGET)' \
+	  '  PUSH_LOCAL_CP_RECON_SHUFFLES=<n> default: $(PUSH_LOCAL_CP_RECON_SHUFFLES)' \
+	  '  PUSH_LOCAL_PREF_METRIC=<overall|ddr|dav|att> default: $(PUSH_LOCAL_PREF_METRIC)' \
+	  '  PUSH_LOCAL_PREF_TOPK=<n> default: $(PUSH_LOCAL_PREF_TOPK)' \
+	  '  PUSH_LOCAL_PREF_ROUNDS=<n> default: $(PUSH_LOCAL_PREF_ROUNDS)' \
+	  '  PUSH_LOCAL_PREF_STOP=<n> default: $(PUSH_LOCAL_PREF_STOP)' \
+	  '  PUSH_LOCAL_PREF_WORKERS=<n> default: $(PUSH_LOCAL_PREF_WORKERS)' \
+	  '  PUSH_LOCAL_PREF_RESTARTS=<n> default: $(PUSH_LOCAL_PREF_RESTARTS)' \
+	  '  PUSH_LOCAL_PREF_BUDGET=<sec> default: $(PUSH_LOCAL_PREF_BUDGET)' \
 	  '  PREFERENCE_LOCAL_WORKERS=<n> default: $(PREFERENCE_LOCAL_WORKERS)' \
 	  '  PREFERENCE_LOCAL_ROUNDS=<n> default: $(PREFERENCE_LOCAL_ROUNDS)' \
 	  '  PREFERENCE_LOCAL_TOPK=<n> default: $(PREFERENCE_LOCAL_TOPK)' \
@@ -533,4 +590,73 @@ help:
 	  '  HPC_PREFERENCE_STOP=<n> default: $(HPC_PREFERENCE_STOP)' \
 	  '  HPC_PREFERENCE_RUN_ID=<id> default: $(HPC_PREFERENCE_RUN_ID)' \
 	  '  HPC_PREFERENCE_METRIC=<overall|ddr|dav|att> default: $(HPC_PREFERENCE_METRIC)' \
-	  '  VERSION=<vN>           default: next version after the highest v<N> git tag'
+	  '  VERSION=<vN>           default: next version after the highest v<N> git tag' \
+	  '' \
+	  'Phase 2 (harness + eval): run `make phase2-help` for phase2-* targets.'
+
+# ===========================================================================
+# PHASE 2 — final harness (per-query, no oracle, bounded budget) + evaluation
+# No-oracle parsing + orchestration around the deterministic TPCAgent. LLM is
+# off by default. See docs/tpc_phase2_design.md and docs/tpc_phase2_eval.md.
+# ===========================================================================
+
+# Per-query budget: 15 min primary (TBC), 5 min alternative. Override with P2_BUDGET.
+P2_SPLIT_SET ?= val
+FOLD ?= 0
+P2_FOLDS ?= 10
+P2_BUDGET ?= 900
+P2_LIMIT ?=
+P2_METHOD ?= phase2_e2e_tpc_phase2_$(P2_SPLIT_SET)
+P2_SPLIT ?= tpc_phase2_$(P2_SPLIT_SET)
+P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
+
+.PHONY: phase2-help phase2-test phase2-splits phase2-solve phase2-rehearse \
+	phase2-parser-report phase2-timing phase2-gate
+
+phase2-help:
+	@printf '%s\n' \
+	  'Phase 2 targets (docs/tpc_phase2_design.md, docs/tpc_phase2_eval.md):' \
+	  '  make phase2-test            - run the Phase 2 pytest suite (unit; add integration below)' \
+	  '  make phase2-splits          - (re)create tpc_phase2_val/test split files' \
+	  '  make phase2-solve           - run the no-oracle harness over a split (LLM off)' \
+	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
+	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
+	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
+	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
+	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)'
+
+# Run the Phase 2 test suite (unit by default; integration is opt-in).
+phase2-test:
+	.venv/bin/python -m pytest tests/phase2
+	@echo "(integration: .venv/bin/python -m pytest -m integration tests/phase2)"
+
+# (Re)create the validation / held-out-test split files (idempotent; --force to overwrite).
+phase2-splits:
+	.venv/bin/python scripts/make_phase2_splits.py
+
+# Run the no-oracle harness over a split (oracle hidden from the agent; LLM off by default).
+phase2-solve:
+	.venv/bin/python agent_env/scripts/solve_phase2.py --split $(P2_SPLIT) \
+	  --method $(P2_METHOD) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+
+# Full rehearsal dashboard: rehearse (both modes, three-way attribution) -> parser-vs-oracle -> timing.
+phase2-rehearse:
+	@echo "=== [1/3] Rehearsal (end-to-end + solver-only), three-way attribution ==="
+	.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+	@echo "=== [2/3] Parser-vs-oracle attribution (Axis 1) ==="
+	.venv/bin/python scripts/parser_vs_oracle.py --split-set $(P2_SPLIT_SET) --behavioral $(P2_LIMIT_FLAG)
+	@echo "=== [3/3] Timing + reliability telemetry (Axis 3) ==="
+	.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/$(P2_METHOD) --budget-sec $(P2_BUDGET)
+
+# Parser-vs-oracle attribution only (Axis 1), incl. behavioral equivalence.
+phase2-parser-report:
+	.venv/bin/python scripts/parser_vs_oracle.py --split-set $(P2_SPLIT_SET) --behavioral $(P2_LIMIT_FLAG)
+
+# Per-stage timing + reliability from a completed run directory (Axis 3).
+phase2-timing:
+	.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/$(P2_METHOD) --budget-sec $(P2_BUDGET)
+
+# Monotonic regression gate: fails if CANDIDATE is worse than BASELINE. Requires BASELINE/CANDIDATE.
+phase2-gate:
+	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)

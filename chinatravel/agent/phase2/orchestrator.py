@@ -59,6 +59,16 @@ class Flags:
 SolveFn = Callable[[dict, list, float], dict]
 
 
+def llm_refine_stub(plan: dict, query: dict, llm_client, budget_sec: float) -> dict:
+    """TODO(phase2, Milestone 3+): bounded, acceptance-gated LLM plan refinement.
+
+    Will ask ``llm_client`` for a targeted improvement of an already-valid plan within
+    ``budget_sec``, keeping the change only if the plan still passes acceptance. No-op placeholder
+    for now (returns the plan unchanged, does not call the LLM).
+    """
+    return plan
+
+
 def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -> SolveFn:
     """Build a solve_fn that drives the existing TPCAgent in no-oracle mode.
 
@@ -160,8 +170,7 @@ def solve_phase2(
     # --- Stage 3: improve (stub; deterministic densify already inside TPCAgent) --
     t0 = time.perf_counter()
     if flags.llm_refine and plan_candidate is not None:
-        # TODO(phase2): bounded LLM-guided refinement via llm_client, acceptance-gated. No-op stub.
-        pass
+        plan_candidate = llm_refine_stub(plan_candidate, query, llm_client, b.improve_sec)
     telemetry["stage_sec"]["improve"] = time.perf_counter() - t0
 
     # --- Stage 4: finalize -------------------------------------------------
