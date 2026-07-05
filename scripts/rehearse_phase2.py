@@ -154,7 +154,7 @@ def rehearse(
     fold=0,
     folds=DEFAULT_FOLDS,
     seed=DEFAULT_SEED,
-    budget_sec=30.0,
+    budget_sec=900.0,
     limit=None,
     lang="en",
 ) -> dict:
@@ -196,7 +196,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--folds", type=int, default=DEFAULT_FOLDS)
     p.add_argument("--seed", type=int, default=DEFAULT_SEED)
-    p.add_argument("--budget-sec", type=float, default=30.0)
+    p.add_argument(
+        "--budget-sec",
+        type=float,
+        default=900.0,
+        help="Per-query budget (default 900s = 15 min, TBC; 300s = 5 min alt). Use small values "
+        "with --limit/--folds for quick smoke runs.",
+    )
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--lang", default="en", choices=["en", "zh"])
     return p.parse_args()

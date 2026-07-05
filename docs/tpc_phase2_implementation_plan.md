@@ -41,8 +41,9 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
   validation/held-out-test split (`make_phase2_splits.py`), `llm_client`, `schema`, `normalize`,
   `budget`, `fallback`, `orchestrator`, the `solve_phase2` runner, and the basic `rehearse_phase2`
   (fold selection + both modes + three-way attribution).
-- **Milestone 2 (TODO):** measurement depth — `parser_vs_oracle.py` (Task 8), `phase2_timing.py`
-  (Task 9), dashboard + gate (Task 10).
+- **Milestone 2 (DONE):** measurement depth — `parser_vs_oracle.py` (Task 8: structural diff +
+  behavioral equivalence), `phase2_timing.py` (Task 9: per-stage p50/p95, budget overruns, variance),
+  `phase2_gate.py` + the `make phase2-rehearse` dashboard target (Task 10).
 - **Milestone 3 (TODO):** extension points + generalization data — flag-gated improvement stubs
   (Task 11) and the HF dataset compare (Task 12).
 

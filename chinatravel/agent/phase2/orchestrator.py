@@ -24,7 +24,11 @@ from . import budget as budget_mod
 from . import fallback as fallback_mod
 from . import normalize
 
-DEFAULT_BUDGET_SEC = 300.0
+# Expected Phase 2 per-query budget: 15 min primary (to be confirmed); 5 min alternative.
+# Override per query via the TPC_P2_BUDGET_SEC env var or the ``budget_sec`` argument.
+PHASE2_DEFAULT_BUDGET_SEC = 900.0  # 15 minutes (primary, TBC)
+PHASE2_ALT_BUDGET_SEC = 300.0      # 5 minutes (alternative)
+DEFAULT_BUDGET_SEC = PHASE2_DEFAULT_BUDGET_SEC
 
 
 def _truthy(value) -> bool:

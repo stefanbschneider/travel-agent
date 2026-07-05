@@ -34,7 +34,7 @@ import solve_script_with_harness as hb  # noqa: E402
 from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_METHOD = "phase2_skeleton"
-DEFAULT_BUDGET_SEC = 60.0
+DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
 
 
 def _load_queries(split: str, lang: str = "en"):

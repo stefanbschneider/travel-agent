@@ -152,12 +152,14 @@ improvement.)
 | Solver-only official score (oracle, bounded) | `python scripts/rehearse_phase2.py --mode solver-only --fold <i> --folds <n>` |
 | Three-way attribution | `python scripts/rehearse_phase2.py --mode both --fold <i> --folds <n>` (prints ceiling/solver/end-to-end) |
 | Held-out test (sparingly) | add `--split-set test` to any rehearse command |
-| Parsing precision/recall + buckets *(Task 8, TODO)* | `python scripts/parser_vs_oracle.py --split-set val` |
-| Behavioral equivalence *(Task 8, TODO)* | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
-| Per-stage timing p50/p95 *(Task 9, TODO)* | `python scripts/phase2_timing.py --fold <i>` |
-| Run-to-run variance *(Task 9, TODO)* | `python scripts/phase2_timing.py --fold <i> --repeats N` |
-| Full dashboard + gate *(Task 10, TODO)* | `make phase2-rehearse FOLD=<i>` |
+| Parsing precision/recall + buckets | `python scripts/parser_vs_oracle.py --split-set val` |
+| Behavioral equivalence | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
+| Per-stage timing p50/p95 + reliability | `python scripts/phase2_timing.py --work-dir agent_env/runs/<method>` |
+| Run-to-run variance | `python scripts/phase2_timing.py --work-dir <run> --repeat-dirs <run2> <run3> ...` |
+| Regression gate | `python scripts/phase2_gate.py --baseline <base.json> --candidate <cand.json>` |
+| Full dashboard | `make phase2-rehearse FOLD=<i> P2_FOLDS=<n> P2_BUDGET=900` |
 
-Milestone 1 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution) and the
-`solve_phase2.py` runner. The parsing report, timing/variance, and dashboard/gate are Milestone 2/3
-(see `docs/tpc_phase2_implementation_plan.md`).
+Milestones 1 and 2 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution),
+the `solve_phase2.py` runner, `parser_vs_oracle.py` (Axis 1), `phase2_timing.py` (Axis 3),
+`phase2_gate.py`, and the `make phase2-rehearse` dashboard. The flag-gated improvement stubs and the
+HF dataset compare are Milestone 3 (see `docs/tpc_phase2_implementation_plan.md`).
