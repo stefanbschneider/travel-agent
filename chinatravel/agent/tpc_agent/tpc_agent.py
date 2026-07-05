@@ -236,9 +236,13 @@ class TPCAgent(BaseAgent):
             except Exception:
                 transports, arrival = None, None
             if not transports:
+                # Keep schema-compliant empty transports rather than stale, now-invalid
+                # edge details inherited from removed placeholder activities.
+                next_act["transports"] = []
                 continue
             next_start = str(next_act.get("start_time", ""))
             if next_start and (not arrival or not time_before(arrival, next_start)):
+                next_act["transports"] = []
                 continue
             next_act["transports"] = transports
 
