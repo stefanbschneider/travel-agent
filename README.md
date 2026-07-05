@@ -196,6 +196,71 @@ leaderboard formula, which still doubles EPR-micro) and `overall_official` (the 
 For the detailed Phase 1 operating model and what transfers cleanly to Phase 2, see
 `docs/tpc_phase1_playbook.md`.
 
+## Phase 2 Operations
+
+Phase 2 is the final harness: per-query, held-out queries, **no oracle**, bounded per-query budget,
+fixed Qwen model. Our harness does no-oracle parsing + orchestration around the deterministic
+TPCAgent. **The LLM is off by default, so none of these commands make API calls.** All Python entry
+points use the venv interpreter (`.venv/bin/python`); the `make` targets already do. See
+`docs/tpc_phase2_design.md` and `docs/tpc_phase2_eval.md`, and run `make phase2-help` for the full
+target list.
+
+Suggested first pass: run the tests, then the parsing report (fast, shows the parsing gap without the
+solver), then a small end-to-end solve.
+
+Tests (fast; no solver/LLM):
+```
+make phase2-test                            # unit suite (LLM/WorldEnv-free)
+.venv/bin/python -m pytest -m integration   # opt-in: real WorldEnv + TPCAgent (~1-2 min)
+```
+
+Create the validation / held-out-test split files (one-time, idempotent):
+```
+make phase2-splits
+```
+
+Parsing-quality report — fastest real signal (no solver, seconds). Shows how well the no-oracle
+parser recovers constraints vs the oracle (precision / recall / value-accuracy, disjunction
+flattening, and behavioral equivalence):
+```
+.venv/bin/python scripts/parser_vs_oracle.py --split-set val --limit 20 --behavioral
+make phase2-parser-report P2_LIMIT=20
+```
+
+Run the harness end-to-end (invokes the real solver; use a small `--limit`/`--budget-sec` locally —
+the 900s default is the full Phase-2 budget):
+```
+.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase1 --limit 3 --budget-sec 60
+make phase2-solve P2_LIMIT=3 P2_BUDGET=60
+```
+Outputs: `results/<method>/<uid>.json` plus per-query
+`agent_env/runs/<method>/<uid>/{output,telemetry,evaluation}.json`.
+
+Rehearsal + three-way attribution (heaviest: runs both the no-oracle and oracle-fed solver). Prints
+`ceiling | solver-only | end-to-end (solver headroom, parsing loss)`. Folds are drawn from the
+validation split; add `--split-set test` (sparingly) for the held-out set:
+```
+# quick smoke: 1-query fold, small budget
+.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set val --fold 0 --folds 850 --budget-sec 30
+# full dashboard (rehearse -> parser report -> timing)
+make phase2-rehearse FOLD=0 P2_FOLDS=850 P2_LIMIT=1 P2_BUDGET=30
+```
+
+Timing / reliability from a completed run dir, and the monotonic regression gate:
+```
+.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_skeleton --budget-sec 900
+.venv/bin/python scripts/phase2_gate.py --baseline base.json --candidate cand.json
+```
+
+Compare the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset (generalization set) to local data
+(network):
+```
+.venv/bin/python scripts/compare_hf_dataset.py --hf-config default
+```
+
+The (currently no-op) LLM stubs are exercised by setting `TPC_P2_LLM_BACKEND=fixture` plus the
+relevant `TPC_P2_LLM_PARSE` / `TPC_P2_DISJUNCTION` / `TPC_P2_LLM_REFINE=1`.
+
 **Notes:**
 
 Fixed setup:

@@ -7,35 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:15",
-          "end_time": "14:05",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Shenzhen Station",
-          "price": 788.63,
-          "cost": 2365.89,
+          "type": "airplane",
+          "start_time": "07:28",
+          "end_time": "08:59",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 619.66,
+          "cost": 1858.98,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G997"
+          "FlightID": "FL011"
+        },
+        {
+          "type": "lunch",
+          "position": "Shenzhen Mandarin Oriental Hotel · East Bay",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 835.0,
+          "cost": 2505.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
+              "mode": "taxi",
+              "start_time": "08:59",
+              "end_time": "09:40",
+              "distance": 27.53,
+              "price": 118.59,
+              "cost": 118.59,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "Chung Ying Street",
-          "start_time": "14:24",
-          "end_time": "15:39",
+          "position": "Chung Ying Street History Museum",
+          "start_time": "12:51",
+          "end_time": "13:51",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Station",
+              "start": "Shenzhen Mandarin Oriental Hotel · East Bay",
+              "end": "Chung Ying Street History Museum",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:25",
+              "distance": 17.07,
+              "price": 71.52,
+              "cost": 71.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chung Ying Street",
+          "start_time": "15:05",
+          "end_time": "16:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chung Ying Street History Museum",
               "end": "Chung Ying Street",
               "mode": "taxi",
-              "start_time": "14:05",
-              "end_time": "14:24",
-              "distance": 12.69,
-              "price": 51.81,
-              "cost": 51.81,
+              "start_time": "13:51",
+              "end_time": "13:51",
+              "distance": 0.39,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -43,8 +87,8 @@
         {
           "type": "attraction",
           "position": "Haishan Park (Shenyan Road)",
-          "start_time": "15:50",
-          "end_time": "17:05",
+          "start_time": "16:16",
+          "end_time": "17:16",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -53,8 +97,8 @@
               "start": "Chung Ying Street",
               "end": "Haishan Park (Shenyan Road)",
               "mode": "taxi",
-              "start_time": "15:39",
-              "end_time": "15:41",
+              "start_time": "16:05",
+              "end_time": "16:07",
               "distance": 1.82,
               "price": 11.07,
               "cost": 11.07,
@@ -64,67 +108,46 @@
         },
         {
           "type": "dinner",
-          "position": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-          "start_time": "18:46",
-          "end_time": "19:46",
-          "price": 519.0,
-          "cost": 1557.0,
+          "position": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+          "start_time": "18:12",
+          "end_time": "19:12",
+          "price": 500.0,
+          "cost": 1500.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Haishan Park (Shenyan Road)",
-              "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
+              "end": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "17:05",
-              "end_time": "17:16",
-              "distance": 7.95,
-              "price": 32.52,
-              "cost": 32.52,
+              "start_time": "17:16",
+              "end_time": "17:49",
+              "distance": 22.28,
+              "price": 94.97,
+              "cost": 94.97,
               "cars": 1
             }
           ]
         },
         {
-          "type": "attraction",
-          "position": "Dameisha Beach",
-          "start_time": "19:46",
-          "end_time": "21:01",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
-              "end": "Dameisha Beach",
-              "mode": "walk",
-              "start_time": "19:46",
-              "end_time": "19:46",
-              "distance": 0.05131046854535916,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "accommodation",
-          "position": "Shenzhen Felicity Hotel",
-          "start_time": "22:53",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "19:45",
           "end_time": "24:00",
-          "price": 389.0,
-          "cost": 1167.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 288.0,
+          "cost": 576.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Dameisha Beach",
-              "end": "Shenzhen Felicity Hotel",
+              "start": "JW Marriott Hotel Shenzhen JINMAO - Marriott Chinese Restaurant",
+              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
               "mode": "taxi",
-              "start_time": "21:01",
-              "end_time": "21:33",
-              "distance": 21.95,
-              "price": 93.46,
-              "cost": 93.46,
+              "start_time": "19:12",
+              "end_time": "19:45",
+              "distance": 22.29,
+              "price": 94.99,
+              "cost": 94.99,
               "cars": 1
             }
           ]
@@ -136,7 +159,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Shenzhen Felicity Hotel",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -146,44 +169,22 @@
         },
         {
           "type": "attraction",
-          "position": "Shenzhen Civic Center",
-          "start_time": "08:38",
-          "end_time": "09:53",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shenzhen Felicity Hotel",
-              "end": "Shenzhen Civic Center",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 5.45,
-              "price": 23.77,
-              "cost": 23.77,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
           "position": "Baishilong Music Theme Park",
-          "start_time": "10:10",
-          "end_time": "11:25",
+          "start_time": "09:23",
+          "end_time": "10:23",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Civic Center",
+              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
               "end": "Baishilong Music Theme Park",
               "mode": "taxi",
-              "start_time": "09:53",
-              "end_time": "10:02",
-              "distance": 6.3,
-              "price": 26.74,
-              "cost": 26.74,
+              "start_time": "08:30",
+              "end_time": "09:02",
+              "distance": 21.53,
+              "price": 91.59,
+              "cost": 91.59,
               "cars": 1
             }
           ]
@@ -191,8 +192,8 @@
         {
           "type": "lunch",
           "position": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-          "start_time": "11:56",
-          "end_time": "12:56",
+          "start_time": "12:44",
+          "end_time": "13:44",
           "price": 590.0,
           "cost": 1770.0,
           "tickets": 3,
@@ -201,8 +202,8 @@
               "start": "Baishilong Music Theme Park",
               "end": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "11:25",
-              "end_time": "11:36",
+              "start_time": "10:23",
+              "end_time": "10:34",
               "distance": 7.89,
               "price": 32.31,
               "cost": 32.31,
@@ -212,22 +213,66 @@
         },
         {
           "type": "attraction",
-          "position": "Dashabe Ecological Corridor",
-          "start_time": "13:27",
-          "end_time": "14:42",
+          "position": "Shenzhen Civic Center",
+          "start_time": "13:46",
+          "end_time": "14:46",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen St. Regis Hotel · Starry Chinese Restaurant",
-              "end": "Dashabe Ecological Corridor",
+              "end": "Shenzhen Civic Center",
               "mode": "taxi",
-              "start_time": "12:56",
-              "end_time": "13:11",
-              "distance": 10.28,
-              "price": 40.97,
-              "cost": 40.97,
+              "start_time": "13:44",
+              "end_time": "13:46",
+              "distance": 1.86,
+              "price": 11.22,
+              "cost": 11.22,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shekou Port Zhuhai Cruise",
+          "start_time": "15:11",
+          "end_time": "16:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Civic Center",
+              "end": "Shekou Port Zhuhai Cruise",
+              "mode": "taxi",
+              "start_time": "14:46",
+              "end_time": "15:11",
+              "distance": 17.17,
+              "price": 71.95,
+              "cost": 71.95,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "More Than Cuisine (Seaworld Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 68.0,
+          "cost": 204.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shekou Port Zhuhai Cruise",
+              "end": "More Than Cuisine (Seaworld Branch)",
+              "mode": "taxi",
+              "start_time": "16:11",
+              "end_time": "16:12",
+              "distance": 1.33,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -235,67 +280,45 @@
         {
           "type": "attraction",
           "position": "China Merchants Shekou Cruise Home Port Tour",
-          "start_time": "15:55",
-          "end_time": "17:10",
+          "start_time": "19:19",
+          "end_time": "20:19",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Dashabe Ecological Corridor",
+              "start": "More Than Cuisine (Seaworld Branch)",
               "end": "China Merchants Shekou Cruise Home Port Tour",
               "mode": "taxi",
-              "start_time": "14:42",
-              "end_time": "14:53",
-              "distance": 7.76,
-              "price": 31.87,
-              "cost": 31.87,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-          "start_time": "17:23",
-          "end_time": "18:23",
-          "price": 400.0,
-          "cost": 1200.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "China Merchants Shekou Cruise Home Port Tour",
-              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "mode": "taxi",
-              "start_time": "17:10",
-              "end_time": "17:23",
-              "distance": 9.05,
-              "price": 36.39,
-              "cost": 36.39,
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 1.33,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Shenzhen Felicity Hotel",
-          "start_time": "18:44",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "20:46",
           "end_time": "24:00",
-          "price": 389.0,
-          "cost": 1167.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 288.0,
+          "cost": 576.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "end": "Shenzhen Felicity Hotel",
+              "start": "China Merchants Shekou Cruise Home Port Tour",
+              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
               "mode": "taxi",
-              "start_time": "18:23",
-              "end_time": "18:44",
-              "distance": 14.34,
-              "price": 59.25,
-              "cost": 59.25,
+              "start_time": "20:19",
+              "end_time": "20:46",
+              "distance": 18.51,
+              "price": 78.01,
+              "cost": 78.01,
               "cars": 1
             }
           ]
@@ -307,7 +330,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Shenzhen Felicity Hotel",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -317,44 +340,44 @@
         },
         {
           "type": "attraction",
-          "position": "Bauhinia Lane Hong Kong International Style Street",
-          "start_time": "08:46",
-          "end_time": "10:01",
+          "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+          "start_time": "08:57",
+          "end_time": "09:57",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Felicity Hotel",
-              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:37",
-              "distance": 5.2,
-              "price": 22.89,
-              "cost": 22.89,
+              "end_time": "08:57",
+              "distance": 18.51,
+              "price": 78.01,
+              "cost": 78.01,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Futian Mangrove Ecological Park",
-          "start_time": "10:07",
-          "end_time": "11:22",
+          "position": "Shenzhen Bay Park",
+          "start_time": "10:08",
+          "end_time": "11:08",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Bauhinia Lane Hong Kong International Style Street",
-              "end": "Futian Mangrove Ecological Park",
+              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "end": "Shenzhen Bay Park",
               "mode": "taxi",
-              "start_time": "10:01",
-              "end_time": "10:03",
-              "distance": 1.86,
-              "price": 11.23,
-              "cost": 11.23,
+              "start_time": "09:57",
+              "end_time": "10:08",
+              "distance": 7.53,
+              "price": 31.06,
+              "cost": 31.06,
               "cars": 1
             }
           ]
@@ -362,111 +385,111 @@
         {
           "type": "lunch",
           "position": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-          "start_time": "12:03",
-          "end_time": "13:03",
+          "start_time": "11:29",
+          "end_time": "12:29",
           "price": 706.0,
           "cost": 2118.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Futian Mangrove Ecological Park",
+              "start": "Shenzhen Bay Park",
               "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
               "mode": "taxi",
-              "start_time": "11:22",
-              "end_time": "11:32",
-              "distance": 6.74,
-              "price": 28.28,
-              "cost": 28.28,
+              "start_time": "11:08",
+              "end_time": "11:29",
+              "distance": 14.66,
+              "price": 60.65,
+              "cost": 60.65,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Jujiao Beach",
-          "start_time": "14:12",
-          "end_time": "15:27",
+          "position": "East River Guerrilla Force Command Post Memorial Hall",
+          "start_time": "12:38",
+          "end_time": "13:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
-              "end": "Jujiao Beach",
+              "end": "East River Guerrilla Force Command Post Memorial Hall",
               "mode": "taxi",
-              "start_time": "13:03",
-              "end_time": "14:12",
-              "distance": 46.48,
-              "price": 203.87,
-              "cost": 203.87,
+              "start_time": "12:29",
+              "end_time": "12:32",
+              "distance": 2.02,
+              "price": 11.75,
+              "cost": 11.75,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Dapeng Peninsula",
-          "start_time": "15:32",
-          "end_time": "16:47",
+          "position": "East Gate Old Street",
+          "start_time": "15:38",
+          "end_time": "16:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Jujiao Beach",
-              "end": "Dapeng Peninsula",
+              "start": "East River Guerrilla Force Command Post Memorial Hall",
+              "end": "East Gate Old Street",
               "mode": "taxi",
-              "start_time": "15:27",
-              "end_time": "15:32",
-              "distance": 3.91,
-              "price": 18.37,
-              "cost": 18.37,
+              "start_time": "13:38",
+              "end_time": "13:38",
+              "distance": 0.15,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Jia Yuan Restaurant",
-          "start_time": "18:00",
-          "end_time": "19:00",
-          "price": 844.0,
-          "cost": 2532.0,
+          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 400.0,
+          "cost": 1200.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Dapeng Peninsula",
-              "end": "Jia Yuan Restaurant",
+              "start": "East Gate Old Street",
+              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
               "mode": "taxi",
-              "start_time": "16:47",
-              "end_time": "18:00",
-              "distance": 49.31,
-              "price": 216.58,
-              "cost": 216.58,
+              "start_time": "16:38",
+              "end_time": "17:00",
+              "distance": 15.15,
+              "price": 62.89,
+              "cost": 62.89,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Shenzhen Felicity Hotel",
-          "start_time": "19:08",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "start_time": "18:25",
           "end_time": "24:00",
-          "price": 389.0,
-          "cost": 1167.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
+          "price": 288.0,
+          "cost": 576.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Jia Yuan Restaurant",
-              "end": "Shenzhen Felicity Hotel",
+              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
               "mode": "taxi",
-              "start_time": "19:00",
-              "end_time": "19:08",
-              "distance": 5.9,
-              "price": 25.35,
-              "cost": 25.35,
+              "start_time": "18:00",
+              "end_time": "18:25",
+              "distance": 17.16,
+              "price": 71.93,
+              "cost": 71.93,
               "cars": 1
             }
           ]
@@ -478,7 +501,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Shenzhen Felicity Hotel",
+          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -488,44 +511,22 @@
         },
         {
           "type": "attraction",
-          "position": "East Gate Old Street",
-          "start_time": "08:33",
-          "end_time": "09:48",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shenzhen Felicity Hotel",
-              "end": "East Gate Old Street",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 2.31,
-              "price": 12.78,
-              "cost": 12.78,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
           "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "10:08",
-          "end_time": "11:23",
+          "start_time": "08:57",
+          "end_time": "09:57",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "East Gate Old Street",
+              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
               "end": "Shenzhen OCT Tourism Resort",
               "mode": "taxi",
-              "start_time": "09:48",
-              "end_time": "10:08",
-              "distance": 13.54,
-              "price": 55.64,
-              "cost": 55.64,
+              "start_time": "08:30",
+              "end_time": "08:57",
+              "distance": 18.12,
+              "price": 76.23,
+              "cost": 76.23,
               "cars": 1
             }
           ]
@@ -533,8 +534,8 @@
         {
           "type": "attraction",
           "position": "Shenzhen OCT Harbour",
-          "start_time": "11:25",
-          "end_time": "12:40",
+          "start_time": "09:59",
+          "end_time": "10:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -543,8 +544,8 @@
               "start": "Shenzhen OCT Tourism Resort",
               "end": "Shenzhen OCT Harbour",
               "mode": "taxi",
-              "start_time": "11:23",
-              "end_time": "11:25",
+              "start_time": "09:57",
+              "end_time": "09:59",
               "distance": 1.66,
               "price": 11.0,
               "cost": 11.0,
@@ -555,8 +556,8 @@
         {
           "type": "lunch",
           "position": "Libaoge (Kerry Store)",
-          "start_time": "12:49",
-          "end_time": "13:49",
+          "start_time": "11:08",
+          "end_time": "12:08",
           "price": 156.0,
           "cost": 468.0,
           "tickets": 3,
@@ -565,8 +566,8 @@
               "start": "Shenzhen OCT Harbour",
               "end": "Libaoge (Kerry Store)",
               "mode": "taxi",
-              "start_time": "12:40",
-              "end_time": "12:49",
+              "start_time": "10:59",
+              "end_time": "11:08",
               "distance": 6.46,
               "price": 27.32,
               "cost": 27.32,
@@ -577,8 +578,8 @@
         {
           "type": "attraction",
           "position": "Galaxy Development Center Building - Fitness Center",
-          "start_time": "13:53",
-          "end_time": "14:53",
+          "start_time": "12:12",
+          "end_time": "13:12",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -587,8 +588,8 @@
               "start": "Libaoge (Kerry Store)",
               "end": "Galaxy Development Center Building - Fitness Center",
               "mode": "taxi",
-              "start_time": "13:49",
-              "end_time": "13:50",
+              "start_time": "12:08",
+              "end_time": "12:09",
               "distance": 1.21,
               "price": 11.0,
               "cost": 11.0,
@@ -597,54 +598,76 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 48.0,
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "13:38",
+          "end_time": "14:38",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
               "mode": "taxi",
-              "start_time": "14:53",
-              "end_time": "15:03",
-              "distance": 7.14,
-              "price": 29.69,
-              "cost": 29.69,
+              "start_time": "13:12",
+              "end_time": "13:13",
+              "distance": 1.01,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "20:05",
-          "end_time": "06:50",
-          "start": "Shenzhen North Railway Station",
-          "end": "Shanghai Hongqiao Station",
-          "price": 727.96,
-          "cost": 2183.88,
+          "type": "dinner",
+          "position": "Le Caisa Pizza (Joy Park Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 63.0,
+          "cost": 189.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Shenzhen North Railway Station",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Le Caisa Pizza (Joy Park Branch)",
+              "mode": "taxi",
+              "start_time": "14:38",
+              "end_time": "14:41",
+              "distance": 2.65,
+              "price": 13.97,
+              "cost": 13.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "19:08",
+          "end_time": "20:39",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 624.58,
+          "cost": 1873.7400000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Le Caisa Pizza (Joy Park Branch)",
+              "end": "Shenzhen Bao'an International Airport",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:19",
-              "distance": 13.01,
-              "price": 53.26,
-              "cost": 53.26,
+              "end_time": "18:38",
+              "distance": 25.95,
+              "price": 111.47,
+              "cost": 111.47,
               "cars": 1
             }
           ],
-          "TrainID": "D933"
+          "FlightID": "FL168"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 269.27215814590454,
-  "_eval_score": 98.85416666666666
+  "elapsed_time(sec)": 296.4009802341461,
+  "_eval_score": 99.23732363315696
 }
