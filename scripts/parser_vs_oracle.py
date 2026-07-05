@@ -156,14 +156,17 @@ def query_variants(query: dict):
 def compute_query_diff(query: dict) -> dict:
     parsed_variants, oracle_variants = query_variants(query)
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants)
+    precision = dv["diff"]["precision"]
+    recall = dv["diff"]["recall"]
     row = {
         "uid": query.get("uid"),
         "oracle_branches": dv["oracle_branches"],
         "parsed_branches": dv["parsed_branches"],
         "disjunction_flattened": dv["disjunction_flattened"],
         **{k: dv["diff"]["counts"][k] for k in ("matched", "missing", "spurious", "wrong_value")},
-        "precision": round(dv["diff"]["precision"], 4),
-        "recall": round(dv["diff"]["recall"], 4),
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(_f1(precision, recall), 4),
         "value_accuracy": round(dv["diff"]["value_accuracy"], 4),
     }
     return row
@@ -195,6 +198,11 @@ def _mean(xs):
     return sum(xs) / len(xs) if xs else 0.0
 
 
+def _f1(precision: float, recall: float) -> float:
+    denom = precision + recall
+    return (2.0 * precision * recall / denom) if denom else 0.0
+
+
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
                results_best=None, out_dir=None) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
@@ -214,11 +222,14 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
                 plan = json.loads(plan_path.read_text(encoding="utf-8"))
                 behav_rows.append(behavioral_check(q, plan))
 
+    mean_precision = _mean(r["precision"] for r in rows)
+    mean_recall = _mean(r["recall"] for r in rows)
     agg = {
         "split": split,
         "n": len(rows),
-        "precision": round(_mean(r["precision"] for r in rows), 4),
-        "recall": round(_mean(r["recall"] for r in rows), 4),
+        "precision": round(mean_precision, 4),
+        "recall": round(mean_recall, 4),
+        "f1": round(_f1(mean_precision, mean_recall), 4),
         "value_accuracy": round(_mean(r["value_accuracy"] for r in rows), 4),
         "disjunction_flattened": sum(1 for r in rows if r["disjunction_flattened"]),
         "totals": {k: sum(r[k] for r in rows) for k in ("matched", "missing", "spurious", "wrong_value")},
