@@ -15,15 +15,43 @@ measurement methodology lives in `docs/tpc_phase2_eval.md`.
 - **Resumable / cache-friendly**, matching the Phase 1 scripts (skip existing result files, write state to
   disk).
 
-## Test convention (important)
+## Test convention (pytest + TDD)
 
-`pytest` is **not installed** and the repo is deliberately script-based (see `scripts/test_solver.py`:
-"No pytest dependency ... the repo is script-based"). Follow that pattern:
+The team adopted **pytest** for the Phase 2 work (installed into `.venv`; declared under
+`[project.optional-dependencies].dev` in `pyproject.toml`). The older `scripts/test_solver.py`
+self-contained script remains runnable, but new Phase 2 tests use pytest.
 
-- Tests are self-contained runnable scripts under `scripts/` (e.g. `scripts/test_phase2_*.py`) that
-  `assert` and exit non-zero on first failure.
-- Run with `.venv/bin/python scripts/test_phase2_xxx.py`.
-- Do **not** add `pytest` as a dependency unless the team decides to adopt it repo-wide.
+- Tests live under `tests/phase2/` (package with `conftest.py`). Run: `.venv/bin/python -m pytest`.
+- **TDD loop:** for each step, write the test(s) first and confirm they fail, then implement until
+  green, then refactor.
+- Config in `pyproject.toml` `[tool.pytest.ini_options]`: `testpaths=["tests"]`,
+  `addopts="-q -m 'not integration'"`, and a registered `integration` marker.
+- **Integration tests are opt-in.** Slow tests that touch the real `WorldEnv`/`TPCAgent` are marked
+  `@pytest.mark.integration` and excluded from the default run; run them with
+  `.venv/bin/python -m pytest -m integration`.
+- `tests/phase2/conftest.py` provides shared fixtures: `sample_queries`/`sample_uids`/`one_query`,
+  `SpyLLMClient`/`spy_llm` (records calls; asserts the deterministic path never calls the LLM),
+  `fast_solve_fn` (injectable Stage-2 stub, signature `solve_fn(query, variants, budget_sec) -> plan`),
+  and `no_network` (fails loudly on socket use). It also adds `scripts/` and `agent_env/scripts/` to
+  `sys.path` so script modules are importable.
+
+## Milestone sequencing and status
+
+- **Milestone 1 (DONE):** pure end-to-end no-oracle skeleton + minimal eval — pytest infra, the
+  validation/held-out-test split (`make_phase2_splits.py`), `llm_client`, `schema`, `normalize`,
+  `budget`, `fallback`, `orchestrator`, the `solve_phase2` runner, and the basic `rehearse_phase2`
+  (fold selection + both modes + three-way attribution).
+- **Milestone 2 (TODO):** measurement depth — `parser_vs_oracle.py` (Task 8), `phase2_timing.py`
+  (Task 9), dashboard + gate (Task 10).
+- **Milestone 3 (TODO):** extension points + generalization data — flag-gated improvement stubs
+  (Task 11) and the HF dataset compare (Task 12).
+
+## Eval split task (built in Milestone 1)
+
+`scripts/make_phase2_splits.py` deterministically partitions the 1000 `tpc_phase1` uids into
+`tpc_phase2_val.txt` (~850) and a frozen `tpc_phase2_test.txt` (~150), idempotent unless `--force`.
+Rehearsal folds are drawn from the validation split only; `rehearse_phase2.py --split-set test`
+(with a warning) is required to touch the held-out set. See `docs/tpc_phase2_eval.md`.
 
 ## Integration facts (verified while planning)
 
@@ -74,7 +102,9 @@ scripts/
   parser_vs_oracle.py   # Task 8
   phase2_timing.py      # Task 9
   compare_hf_dataset.py # Task 12
-  test_phase2_*.py      # per-task tests
+tests/phase2/
+  conftest.py           # shared fixtures
+  test_*.py             # per-task pytest modules
 ```
 
 ---
@@ -95,7 +125,7 @@ File: `chinatravel/agent/phase2/llm_client.py`
 - `def build_llm_client(config: dict | None = None) -> LLMClient` factory honoring the flag/config;
   default `none`.
 
-Tests (`scripts/test_phase2_llm_client.py`):
+Tests (`tests/phase2/test_llm_client.py`):
 
 - `none` backend is constructible and performs no network.
 - `fixture` backend returns the cached content for a known key; missing key raises a clear error.
@@ -123,7 +153,7 @@ Files: `chinatravel/agent/phase2/schema.py`, `chinatravel/agent/phase2/normalize
     reproduces exactly what `solver_constraint_variants(query, raw, use_oracle=False)` returns today
     (WorldEnv validation hook present but pass-through).
 
-Tests (`scripts/test_phase2_schema.py`):
+Tests (`tests/phase2/test_schema_normalize.py`):
 
 - For a sample of `tpc_phase1` queries, `ir_to_solver_variants(parse_to_ir(q), q)` **equals**
   `solver_constraint_variants(q, parse_query_no_oracle(q), use_oracle=False)` (passthrough invariant).
@@ -153,7 +183,7 @@ Files: `chinatravel/agent/phase2/{budget.py,fallback.py,orchestrator.py}`
   4. **Stage 4 (finalize):** validate against schema; on empty/invalid/timeout, return `fallback_plan`.
   - Records per-stage timings into `telemetry` (fleshed out in Task 9).
 
-Tests (`scripts/test_phase2_orchestrator.py`):
+Tests (`tests/phase2/test_orchestrator.py`, plus `test_budget.py` / `test_fallback.py`):
 
 - With an injected fast `solve_fn`, a normal query yields the solver's plan and populated telemetry.
 - A `solve_fn` that sleeps past the deadline / raises → finalize returns a schema-valid fallback (never
@@ -253,7 +283,7 @@ Extend `orchestrator.py` / `normalize.py` with three flag-gated stubs, each a cl
 - (b) `TPC_P2_LLM_PARSE` → LLM-assisted second-pass parse via the Task 3 client. Stub is a no-op.
 - (c) `TPC_P2_LLM_REFINE` → bounded LLM plan refinement in Stage 3. Stub is a no-op.
 
-Tests (`scripts/test_phase2_flags.py`):
+Tests (`tests/phase2/test_flags.py`):
 
 - With all flags off, output and solver variants are **identical** to the deterministic baseline
   (byte-compare on a query sample).
@@ -281,5 +311,5 @@ Demo: a compare report + a documented conclusion.
 ## Suggested build order
 
 3 → 4 → 5 → 6 (vertical slice runs one query end-to-end) → 7 → 8 → 9 → 10 (measurement loop closed) →
-11 (extension points) → 12 (generalization data). Run the relevant `scripts/test_phase2_*.py` after each
+11 (extension points) → 12 (generalization data). Run `.venv/bin/python -m pytest` after each
 task and keep the deterministic path green. Do not commit unless asked.

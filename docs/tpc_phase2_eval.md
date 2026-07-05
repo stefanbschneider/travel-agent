@@ -88,11 +88,36 @@ Metrics:
 Script: `scripts/phase2_timing.py` (timing + variance), fed by per-stage telemetry the orchestrator
 emits.
 
+## Validation vs Held-Out Test Split
+
+The 1000 `tpc_phase1` queries are partitioned **once, deterministically** into two split files under
+`chinatravel/evaluation/default_splits/` by `scripts/make_phase2_splits.py`
+(seed `20260705`, idempotent unless `--force`):
+
+- `tpc_phase2_val.txt` — **validation** (~850 queries): used to iterate and improve the agent.
+- `tpc_phase2_test.txt` — **held-out test** (~150 queries): frozen; used sparingly, only as a final
+  overfitting check.
+
+Discipline (enforced by `scripts/rehearse_phase2.py`):
+
+- **Rehearsal folds are drawn from the validation split only** by default (`--split-set val`). Fold
+  selection is deterministic (seeded shuffle → disjoint, covering contiguous chunks via
+  `select_fold`), so runs are reproducible and cover all of validation across folds.
+- Touching the test split requires the explicit `--split-set test`, which prints a warning. Score on
+  it rarely (e.g. right before a submission) so we do not overfit to it via repeated peeking.
+- `make_phase2_splits.py` refuses to overwrite existing split files without `--force`, keeping the
+  held-out set stable once created.
+
+(Seeded random split for now; stratification by constraint-family/difficulty signature is a later
+improvement.)
+
 ## Rehearsal Folds vs Full Regression Set
 
-- **Rehearsal folds:** rotating subsets of `tpc_phase1` used during iteration, so we do not overfit the
-  parser to queries we hand-tuned on. Fold selection is deterministic (seeded) and recorded.
-- **Full regression set:** all 1000 `tpc_phase1` queries, scored less frequently as the final check.
+- **Rehearsal folds:** rotating subsets of the **validation** split used during iteration, so we do not
+  overfit the parser to queries we hand-tuned on. Fold selection is deterministic (seeded) and recorded.
+- **Full regression set:** all 850 validation queries (or all 1000 `tpc_phase1`), scored less
+  frequently as a broader check.
+- **Held-out test set:** `tpc_phase2_test.txt`, scored only sparingly (final overfitting check).
 - **Generalization set (candidate):** the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset, if it contains
   queries/phrasings beyond the released split (see `docs/tpc_phase2_hf_dataset.md` and Task 12). Held-out
   phrasing is the exact Phase-2 risk, so an independent generalization set is valuable.
@@ -123,14 +148,16 @@ emits.
 
 | Metric | Command |
 | ------ | ------- |
-| End-to-end official score (no-oracle, bounded) | `python scripts/rehearse_phase2.py --mode end-to-end --split <fold>` |
-| Solver-only official score (oracle, bounded) | `python scripts/rehearse_phase2.py --mode solver-only --split <fold>` |
-| Three-way attribution | either rehearse mode prints ceiling/solver/end-to-end lines |
-| Parsing precision/recall + buckets | `python scripts/parser_vs_oracle.py --split <fold>` |
-| Behavioral equivalence | `python scripts/parser_vs_oracle.py --split <fold> --behavioral` |
-| Per-stage timing p50/p95 | `python scripts/phase2_timing.py --split <fold>` |
-| Run-to-run variance | `python scripts/phase2_timing.py --split <fold> --repeats N` |
-| Full dashboard + gate | `make phase2-rehearse FOLD=<fold>` |
+| End-to-end official score (no-oracle, bounded) | `python scripts/rehearse_phase2.py --mode end-to-end --fold <i> --folds <n>` |
+| Solver-only official score (oracle, bounded) | `python scripts/rehearse_phase2.py --mode solver-only --fold <i> --folds <n>` |
+| Three-way attribution | `python scripts/rehearse_phase2.py --mode both --fold <i> --folds <n>` (prints ceiling/solver/end-to-end) |
+| Held-out test (sparingly) | add `--split-set test` to any rehearse command |
+| Parsing precision/recall + buckets *(Task 8, TODO)* | `python scripts/parser_vs_oracle.py --split-set val` |
+| Behavioral equivalence *(Task 8, TODO)* | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
+| Per-stage timing p50/p95 *(Task 9, TODO)* | `python scripts/phase2_timing.py --fold <i>` |
+| Run-to-run variance *(Task 9, TODO)* | `python scripts/phase2_timing.py --fold <i> --repeats N` |
+| Full dashboard + gate *(Task 10, TODO)* | `make phase2-rehearse FOLD=<i>` |
 
-(Commands reflect the planned interfaces in `docs/tpc_phase2_implementation_plan.md`; scripts are built
-in the implementation phase.)
+Milestone 1 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution) and the
+`solve_phase2.py` runner. The parsing report, timing/variance, and dashboard/gate are Milestone 2/3
+(see `docs/tpc_phase2_implementation_plan.md`).

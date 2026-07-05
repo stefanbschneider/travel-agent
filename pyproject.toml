@@ -35,6 +35,18 @@ dependencies = [
     "ortools==9.9.3963",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -m 'not integration'"
+markers = [
+    "integration: slower tests that touch WorldEnv / the real solver (opt-in: run with -m integration)",
+]
+
 [tool.setuptools]
 include-package-data = true
 
