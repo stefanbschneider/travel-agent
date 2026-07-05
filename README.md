@@ -230,18 +230,29 @@ make phase2-parser-report P2_LIMIT=20
 Run the harness end-to-end (invokes the real solver; use a small `--limit`/`--budget-sec` locally —
 the 900s default is the full Phase-2 budget):
 ```
-.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase1 --limit 3 --budget-sec 60
-make phase2-solve P2_LIMIT=3 P2_BUDGET=60
+# Equivalent pair (same split/method/limit/budget):
+.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --method phase2_e2e_tpc_phase2_val --limit 3 --budget-sec 60
+make phase2-solve P2_SPLIT=tpc_phase2_val P2_METHOD=phase2_e2e_tpc_phase2_val P2_LIMIT=3 P2_BUDGET=60
+
+# Equivalent pair for tpc_phase1 + script-default method:
+.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase1 --method phase2_skeleton --limit 3 --budget-sec 60
+make phase2-solve P2_SPLIT=tpc_phase1 P2_METHOD=phase2_skeleton P2_LIMIT=3 P2_BUDGET=60
 ```
 Outputs: `results/<method>/<uid>.json` plus per-query
 `agent_env/runs/<method>/<uid>/{output,telemetry,evaluation}.json`.
+
+Default difference (important):
+
+- `make phase2-solve` always passes `--method $(P2_METHOD)` (default `phase2_e2e_tpc_phase2_val`).
+- direct `python ... solve_phase2.py` defaults to `--method phase2_skeleton` if omitted.
+- They are equivalent only when `split`, `method`, `limit`, and `budget` are aligned explicitly.
 
 Rehearsal + three-way attribution (heaviest: runs both the no-oracle and oracle-fed solver). Prints
 `ceiling | solver-only | end-to-end (solver headroom, parsing loss)`. Folds are drawn from the
 validation split; add `--split-set test` (sparingly) for the held-out set:
 ```
 # quick smoke: 1-query fold, small budget
-.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set val --fold 0 --folds 850 --budget-sec 30
+.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set val --fold 0 --folds 850 --limit 1 --budget-sec 30
 # full dashboard (rehearse -> parser report -> timing)
 make phase2-rehearse FOLD=0 P2_FOLDS=850 P2_LIMIT=1 P2_BUDGET=30
 ```
@@ -250,6 +261,10 @@ Timing / reliability from a completed run dir, and the monotonic regression gate
 ```
 .venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_skeleton --budget-sec 900
 .venv/bin/python scripts/phase2_gate.py --baseline base.json --candidate cand.json
+
+# Make equivalents:
+make phase2-timing P2_METHOD=phase2_skeleton P2_BUDGET=900
+make phase2-gate BASELINE=base.json CANDIDATE=cand.json
 ```
 
 Compare the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset (generalization set) to local data

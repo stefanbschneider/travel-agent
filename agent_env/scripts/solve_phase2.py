@@ -17,9 +17,9 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
+from statistics import mean, pstdev
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -35,6 +35,26 @@ from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_METHOD = "phase2_skeleton"
 DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
+
+
+def _score_stats(values: list[float]) -> dict:
+    vals = [float(v) for v in values]
+    if not vals:
+        return {"count": 0, "mean": 0.0, "min": 0.0, "max": 0.0, "std": 0.0}
+    return {
+        "count": len(vals),
+        "mean": mean(vals),
+        "min": min(vals),
+        "max": max(vals),
+        "std": pstdev(vals),
+    }
+
+
+def _aggregate_overall_scores(evaluations: list[dict]) -> dict:
+    return {
+        "overall_true": _score_stats([e.get("overall_true", 0.0) for e in evaluations]),
+        "overall_parsed": _score_stats([e.get("overall_parsed", 0.0) for e in evaluations]),
+    }
 
 
 def _load_queries(split: str, lang: str = "en"):
@@ -94,6 +114,7 @@ def run_split(
     done_uids: list[str] = []
     skipped = 0
     parse_failures = 0
+    solved_evaluations: list[dict] = []
     for idx, quid in enumerate(selected, start=1):
         result_path = result_method_dir / f"{quid}.json"
         if resume and result_path.exists():
@@ -119,6 +140,7 @@ def run_split(
         except Exception as exc:  # never let evaluation crash the batch
             evaluation = {"uid": quid, "error": f"evaluation: {exc}", "all_pass": False}
         hb.write_json(run_dir / "evaluation.json", evaluation)
+        solved_evaluations.append(evaluation)
 
         if telemetry.get("used_fallback"):
             parse_failures += 0  # fallback != parse failure; kept for future attribution
@@ -126,7 +148,66 @@ def run_split(
         print(
             f"[{idx}/{len(selected)}] {quid} "
             f"valid={telemetry.get('valid_output')} fallback={telemetry.get('used_fallback')} "
-            f"solve_sec={telemetry.get('stage_sec', {}).get('solve', 0):.2f}"
+            f"solve_sec={telemetry.get('stage_sec', {}).get('solve', 0):.2f} "
+            f"overall_true={float(evaluation.get('overall_true', 0.0)):.4f} "
+            f"overall_parsed={float(evaluation.get('overall_parsed', 0.0)):.4f}"
+        )
+
+    solved_overall_stats = _aggregate_overall_scores(solved_evaluations)
+    print(
+        "[overall/solved_this_run] "
+        f"true(mean/min/max/std)="
+        f"{solved_overall_stats['overall_true']['mean']:.4f}/"
+        f"{solved_overall_stats['overall_true']['min']:.4f}/"
+        f"{solved_overall_stats['overall_true']['max']:.4f}/"
+        f"{solved_overall_stats['overall_true']['std']:.4f} "
+        f"parsed(mean/min/max/std)="
+        f"{solved_overall_stats['overall_parsed']['mean']:.4f}/"
+        f"{solved_overall_stats['overall_parsed']['min']:.4f}/"
+        f"{solved_overall_stats['overall_parsed']['max']:.4f}/"
+        f"{solved_overall_stats['overall_parsed']['std']:.4f}"
+    )
+
+    resume_all_selected_stats = None
+    if resume:
+        all_selected_evals: list[dict] = []
+        for quid in selected:
+            eval_path = work_root / quid / "evaluation.json"
+            if eval_path.exists():
+                try:
+                    all_selected_evals.append(hb.read_json(eval_path))
+                    continue
+                except Exception:
+                    pass
+
+            result_path = result_method_dir / f"{quid}.json"
+            if not result_path.exists():
+                continue
+            full_query = query_data.get(quid)
+            if full_query is None:
+                continue
+            full_query.setdefault("uid", quid)
+            try:
+                plan = hb.read_json(result_path)
+                evaluation = hb.evaluate_one(split, quid, full_query, plan)
+                hb.write_json(eval_path, evaluation)
+                all_selected_evals.append(evaluation)
+            except Exception:
+                continue
+
+        resume_all_selected_stats = _aggregate_overall_scores(all_selected_evals)
+        print(
+            "[overall/resume_all_selected] "
+            f"true(mean/min/max/std)="
+            f"{resume_all_selected_stats['overall_true']['mean']:.4f}/"
+            f"{resume_all_selected_stats['overall_true']['min']:.4f}/"
+            f"{resume_all_selected_stats['overall_true']['max']:.4f}/"
+            f"{resume_all_selected_stats['overall_true']['std']:.4f} "
+            f"parsed(mean/min/max/std)="
+            f"{resume_all_selected_stats['overall_parsed']['mean']:.4f}/"
+            f"{resume_all_selected_stats['overall_parsed']['min']:.4f}/"
+            f"{resume_all_selected_stats['overall_parsed']['max']:.4f}/"
+            f"{resume_all_selected_stats['overall_parsed']['std']:.4f}"
         )
 
     summary = {
@@ -136,7 +217,10 @@ def run_split(
         "selected": len(selected),
         "skipped": skipped,
         "uids": done_uids,
+        "overall_solved_this_run": solved_overall_stats,
     }
+    if resume_all_selected_stats is not None:
+        summary["overall_resume_all_selected"] = resume_all_selected_stats
     summary_path = work_root / f"{split}_summary.json"
     hb.write_json(summary_path, summary)
     return summary
