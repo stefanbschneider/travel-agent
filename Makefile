@@ -80,6 +80,21 @@ PUSH_LOCAL_PREF_WORKERS ?= $(OVERNIGHT_LOCAL_WORKERS)
 PUSH_LOCAL_PREF_RESTARTS ?= 1200
 PUSH_LOCAL_PREF_BUDGET ?= 240
 
+MACBOOK_BOOST_WORKERS ?= 7
+MACBOOK_BOOST_UNSOLVED_TOPK ?= 260
+MACBOOK_BOOST_UNSOLVED_ROUNDS ?= 6
+MACBOOK_BOOST_UNSOLVED_RESTARTS ?= 1500
+MACBOOK_BOOST_UNSOLVED_BUDGET ?= 300
+MACBOOK_BOOST_CP_RECON_SHUFFLES ?= 10
+MACBOOK_BOOST_DDR_TOPK ?= 420
+MACBOOK_BOOST_DDR_ROUNDS ?= 8
+MACBOOK_BOOST_DDR_STOP ?= 2
+MACBOOK_BOOST_ATT_TOPK ?= 160
+MACBOOK_BOOST_ATT_ROUNDS ?= 3
+MACBOOK_BOOST_ATT_STOP ?= 1
+MACBOOK_BOOST_ATT_RESTARTS ?= 1400
+MACBOOK_BOOST_ATT_BUDGET ?= 240
+
 HPC_PARTITION ?= standard
 HPC_WORKERS ?= 8
 HPC_MEM ?= 6G
@@ -116,7 +131,7 @@ HPC_PREFERENCE_RUN_ID ?= hpc_preference_$(shell date +%Y%m%d_%H%M%S)
 # scripts. See docs/tpc_phase1_playbook.md.
 # ===========================================================================
 
-.PHONY: all heavy light tail-round tail-iterate short-local overnight-local unsolved-local push-local preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
+.PHONY: all heavy light tail-round tail-iterate short-local overnight-local unsolved-local push-local phase1-macbook-boost preference-local preference-solve preference-overnight preference-quick hpc-tail-submit hpc-unsolved hpc-preference hpc-preference-submit merge score submission upload upload-check clean-light help
 
 # Default: preference optimization on already-solved plans.
 all: preference-local score submission
@@ -276,6 +291,50 @@ push-local:
 		PREFERENCE_LOCAL_WORKERS=$(PUSH_LOCAL_PREF_WORKERS) \
 		OVERNIGHT_LOCAL_RESTARTS=$(PUSH_LOCAL_PREF_RESTARTS) \
 		OVERNIGHT_LOCAL_BUDGET=$(PUSH_LOCAL_PREF_BUDGET)
+	$(PYTHON) scripts/score.py --split $(SPLIT)
+
+# Macbook-oriented Phase 1 booster:
+# 1) refresh suboptimal split from current best
+# 2) solve unresolved hard/commonsense tail with heavy local search
+# 3) run DDR-first densify on the active suboptimal split
+# 4) run ATT-focused preference re-solve on remaining suboptimal tail
+# 5) rescore full split
+phase1-macbook-boost:
+	$(PYTHON) scripts/score.py --split $(SPLIT)
+	$(MAKE) unsolved-local \
+		UNSOLVED_LOCAL_WORKERS=$(MACBOOK_BOOST_WORKERS) \
+		UNSOLVED_LOCAL_TOPK=$(MACBOOK_BOOST_UNSOLVED_TOPK) \
+		UNSOLVED_LOCAL_ROUNDS=$(MACBOOK_BOOST_UNSOLVED_ROUNDS) \
+		UNSOLVED_LOCAL_RESTARTS=$(MACBOOK_BOOST_UNSOLVED_RESTARTS) \
+		UNSOLVED_LOCAL_BUDGET=$(MACBOOK_BOOST_UNSOLVED_BUDGET) \
+		UNSOLVED_LOCAL_CP_RECON_SHUFFLES=$(MACBOOK_BOOST_CP_RECON_SHUFFLES) \
+		UNSOLVED_LOCAL_SKIP_EXISTING=0
+	TPC_DENSIFY_LATE_DINNER=1 \
+	TPC_DENSIFY_EARLY_BREAKFAST=1 \
+	TPC_DENSIFY_SWAP_MEALS=1 \
+	TPC_DENSIFY_MEAL_SWAP_MAX=20 \
+	TPC_DENSIFY_MEAL_SWAP_CANDIDATES=36 \
+	TPC_DENSIFY_SWAP_MAX=16 \
+	TPC_DENSIFY_SWAP_CANDIDATES=32 \
+	TPC_DENSIFY_ATTR_CANDIDATES=44 \
+	$(MAKE) preference-local \
+		SPLIT=$(PREFERENCE_SUBOPT_SPLIT) \
+		PREFERENCE_LOCAL_WORKERS=$(MACBOOK_BOOST_WORKERS) \
+		PREFERENCE_LOCAL_METRIC=ddr \
+		PREFERENCE_LOCAL_TOPK=$(MACBOOK_BOOST_DDR_TOPK) \
+		PREFERENCE_LOCAL_ROUNDS=$(MACBOOK_BOOST_DDR_ROUNDS) \
+		PREFERENCE_LOCAL_STOP=$(MACBOOK_BOOST_DDR_STOP)
+	TPC_DENSIFY_LATE_DINNER=1 \
+	TPC_DENSIFY_EARLY_BREAKFAST=1 \
+	$(MAKE) preference-solve \
+		SPLIT=$(PREFERENCE_SUBOPT_SPLIT) \
+		PREFERENCE_LOCAL_WORKERS=$(MACBOOK_BOOST_WORKERS) \
+		PREFERENCE_LOCAL_METRIC=att \
+		PREFERENCE_LOCAL_TOPK=$(MACBOOK_BOOST_ATT_TOPK) \
+		PREFERENCE_LOCAL_ROUNDS=$(MACBOOK_BOOST_ATT_ROUNDS) \
+		PREFERENCE_LOCAL_STOP=$(MACBOOK_BOOST_ATT_STOP) \
+		OVERNIGHT_LOCAL_RESTARTS=$(MACBOOK_BOOST_ATT_RESTARTS) \
+		OVERNIGHT_LOCAL_BUDGET=$(MACBOOK_BOOST_ATT_BUDGET)
 	$(PYTHON) scripts/score.py --split $(SPLIT)
 
 # Local preference optimization profile: only densify already-solved plans (constraint-safe).
@@ -479,6 +538,7 @@ help:
 	  'make overnight-local - long local profile (~7 h) using iterate_tail' \
 	  'make unsolved-local - local unsolved-focused solve rounds (best next step when FPR/MacEPR trail)' \
 	  'make push-local     - two-step local push (unsolved solve -> preference-solve -> score)' \
+	  'make phase1-macbook-boost - full local phase-1 boost (unsolved solve + DDR densify + ATT re-solve)' \
 	  'make preference-local - local preference optimization on already-solved plans (densify only)' \
 	  'make preference-solve - re-solve worst-preference queries from scratch (~7 h overnight)' \
 	  'make preference-overnight - refresh suboptimal split, then ATT-focused densify + re-solve overnight' \
@@ -557,6 +617,20 @@ help:
 	  '  PUSH_LOCAL_PREF_WORKERS=<n> default: $(PUSH_LOCAL_PREF_WORKERS)' \
 	  '  PUSH_LOCAL_PREF_RESTARTS=<n> default: $(PUSH_LOCAL_PREF_RESTARTS)' \
 	  '  PUSH_LOCAL_PREF_BUDGET=<sec> default: $(PUSH_LOCAL_PREF_BUDGET)' \
+	  '  MACBOOK_BOOST_WORKERS=<n> default: $(MACBOOK_BOOST_WORKERS)' \
+	  '  MACBOOK_BOOST_UNSOLVED_TOPK=<n> default: $(MACBOOK_BOOST_UNSOLVED_TOPK)' \
+	  '  MACBOOK_BOOST_UNSOLVED_ROUNDS=<n> default: $(MACBOOK_BOOST_UNSOLVED_ROUNDS)' \
+	  '  MACBOOK_BOOST_UNSOLVED_RESTARTS=<n> default: $(MACBOOK_BOOST_UNSOLVED_RESTARTS)' \
+	  '  MACBOOK_BOOST_UNSOLVED_BUDGET=<sec> default: $(MACBOOK_BOOST_UNSOLVED_BUDGET)' \
+	  '  MACBOOK_BOOST_CP_RECON_SHUFFLES=<n> default: $(MACBOOK_BOOST_CP_RECON_SHUFFLES)' \
+	  '  MACBOOK_BOOST_DDR_TOPK=<n> default: $(MACBOOK_BOOST_DDR_TOPK)' \
+	  '  MACBOOK_BOOST_DDR_ROUNDS=<n> default: $(MACBOOK_BOOST_DDR_ROUNDS)' \
+	  '  MACBOOK_BOOST_DDR_STOP=<n> default: $(MACBOOK_BOOST_DDR_STOP)' \
+	  '  MACBOOK_BOOST_ATT_TOPK=<n> default: $(MACBOOK_BOOST_ATT_TOPK)' \
+	  '  MACBOOK_BOOST_ATT_ROUNDS=<n> default: $(MACBOOK_BOOST_ATT_ROUNDS)' \
+	  '  MACBOOK_BOOST_ATT_STOP=<n> default: $(MACBOOK_BOOST_ATT_STOP)' \
+	  '  MACBOOK_BOOST_ATT_RESTARTS=<n> default: $(MACBOOK_BOOST_ATT_RESTARTS)' \
+	  '  MACBOOK_BOOST_ATT_BUDGET=<sec> default: $(MACBOOK_BOOST_ATT_BUDGET)' \
 	  '  PREFERENCE_LOCAL_WORKERS=<n> default: $(PREFERENCE_LOCAL_WORKERS)' \
 	  '  PREFERENCE_LOCAL_ROUNDS=<n> default: $(PREFERENCE_LOCAL_ROUNDS)' \
 	  '  PREFERENCE_LOCAL_TOPK=<n> default: $(PREFERENCE_LOCAL_TOPK)' \
@@ -608,10 +682,13 @@ P2_BUDGET ?= 900
 P2_LIMIT ?=
 P2_METHOD ?= phase2_e2e_tpc_phase2_$(P2_SPLIT_SET)
 P2_SPLIT ?= tpc_phase2_$(P2_SPLIT_SET)
+P2_BUDGETS ?= 30,60,120,300,900
+P2_SWEEP_CSV ?= cache/phase2_budget_sweep/budget_sweep.csv
+P2_SWEEP_JSON ?= cache/phase2_budget_sweep/budget_sweep.json
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
 
 .PHONY: phase2-help phase2-test phase2-splits phase2-solve phase2-rehearse \
-	phase2-parser-report phase2-timing phase2-gate
+	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep
 
 phase2-help:
 	@printf '%s\n' \
@@ -620,10 +697,11 @@ phase2-help:
 	  '  make phase2-splits          - (re)create tpc_phase2_val/test split files' \
 	  '  make phase2-solve           - run the no-oracle harness over a split (LLM off)' \
 	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
+	  '  make phase2-budget-sweep    - sweep budgets and export attribution CSV/JSON' \
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)'
+	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:
@@ -648,6 +726,12 @@ phase2-rehearse:
 	.venv/bin/python scripts/parser_vs_oracle.py --split-set $(P2_SPLIT_SET) --behavioral $(P2_LIMIT_FLAG)
 	@echo "=== [3/3] Timing + reliability telemetry (Axis 3) ==="
 	.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/$(P2_METHOD) --budget-sec $(P2_BUDGET)
+
+# Sweep multiple budgets and export one attribution CSV/JSON.
+phase2-budget-sweep:
+	.venv/bin/python scripts/phase2_budget_sweep.py --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budgets "$(P2_BUDGETS)" $(P2_LIMIT_FLAG) \
+	  --out-csv $(P2_SWEEP_CSV) --out-json $(P2_SWEEP_JSON)
 
 # Parser-vs-oracle attribution only (Axis 1), incl. behavioral equivalence.
 phase2-parser-report:
