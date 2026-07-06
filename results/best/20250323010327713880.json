@@ -8,15 +8,81 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Fuxing Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Fuxing Park",
+              "mode": "taxi",
+              "start_time": "08:45",
+              "end_time": "08:47",
+              "distance": 1.87,
+              "price": 11.25,
+              "cost": 11.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "10:01",
+          "end_time": "10:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fuxing Park",
+              "end": "Jululu Road",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:52",
+              "distance": 1.86,
+              "price": 11.2,
+              "cost": 11.2,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +94,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jululu Road",
               "end": "Large Intestine Noodles",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:19",
-              "distance": 32.55,
-              "price": 141.19,
-              "cost": 141.19,
+              "start_time": "10:51",
+              "end_time": "10:55",
+              "distance": 2.72,
+              "price": 14.21,
+              "cost": 14.21,
               "cars": 1
             }
           ]
@@ -305,5 +371,5 @@
     }
   ],
   "elapsed_time(sec)": 261.81613779067993,
-  "_eval_score": 97.89285714285714
+  "_eval_score": 100.0
 }

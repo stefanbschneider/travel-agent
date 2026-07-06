@@ -8,15 +8,58 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 112.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +71,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -191,44 +234,44 @@
         },
         {
           "type": "lunch",
-          "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "12:14",
-          "end_time": "13:14",
-          "price": 203.0,
-          "cost": 812.0,
+          "position": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 97.0,
+          "cost": 388.0,
           "tickets": 4,
           "transports": [
             {
               "start": "1933 Old Millfun",
-              "end": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
               "mode": "taxi",
               "start_time": "10:36",
-              "end_time": "10:47",
-              "distance": 7.52,
-              "price": 31.04,
-              "cost": 31.04,
+              "end_time": "10:37",
+              "distance": 1.3,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "13:22",
-          "end_time": "14:22",
+          "position": "Bank of China",
+          "start_time": "12:04",
+          "end_time": "13:04",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "The Bund",
+              "start": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+              "end": "Bank of China",
               "mode": "taxi",
-              "start_time": "13:14",
-              "end_time": "13:22",
-              "distance": 5.94,
-              "price": 25.49,
-              "cost": 25.49,
+              "start_time": "12:00",
+              "end_time": "12:00",
+              "distance": 0.37,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -243,12 +286,12 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "The Bund",
+              "start": "Bank of China",
               "end": "Huangpu River",
               "mode": "taxi",
-              "start_time": "14:22",
-              "end_time": "14:22",
-              "distance": 0.24,
+              "start_time": "13:04",
+              "end_time": "13:04",
+              "distance": 0.33,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -449,32 +492,54 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "dinner",
+          "position": "C Cafe (Duoyun Bookstore Flagship Store)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 53.0,
+          "cost": 212.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Century Avenue Cherry Orchard",
-              "end": "Shanghai Pudong International Airport",
+              "end": "C Cafe (Duoyun Bookstore Flagship Store)",
               "mode": "taxi",
               "start_time": "14:42",
-              "end_time": "15:26",
-              "distance": 29.93,
-              "price": 129.36,
-              "cost": 129.36,
+              "end_time": "14:44",
+              "distance": 1.59,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "C Cafe (Duoyun Bookstore Flagship Store)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:31",
+              "distance": 31.04,
+              "price": 134.38,
+              "cost": 134.38,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 259.237181186676,
-  "_eval_score": 98.24916457811194
+  "_eval_score": 100.0
 }

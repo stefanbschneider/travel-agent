@@ -7,36 +7,57 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:39",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 876.4,
+          "type": "airplane",
+          "start_time": "02:33",
+          "end_time": "02:53",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 312.9,
+          "cost": 1564.5,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G7001"
+          "FlightID": "FL643"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 140.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "02:53",
+              "end_time": "03:10",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 92.5,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "China Securities Museum",
-          "start_time": "09:30",
-          "end_time": "10:30",
+          "position": "Jululu Road",
+          "start_time": "08:45",
+          "end_time": "09:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Shanghai Station",
-              "end": "China Securities Museum",
-              "mode": "taxi",
-              "start_time": "08:39",
-              "end_time": "08:44",
-              "distance": 3.97,
-              "price": 18.61,
-              "cost": 37.22,
-              "cars": 2
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -50,14 +71,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "China Securities Museum",
+              "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:30",
-              "end_time": "10:37",
-              "distance": 4.69,
-              "price": 21.13,
-              "cost": 42.26,
+              "start_time": "09:45",
+              "end_time": "09:46",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
@@ -235,22 +256,22 @@
         },
         {
           "type": "lunch",
-          "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "12:08",
-          "end_time": "13:08",
-          "price": 203.0,
-          "cost": 1015.0,
+          "position": "Jardine 1915 (Binjiang International Plaza Branch)",
+          "start_time": "11:10",
+          "end_time": "12:10",
+          "price": 53.0,
+          "cost": 265.0,
           "tickets": 5,
           "transports": [
             {
               "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Jardine 1915 (Binjiang International Plaza Branch)",
               "mode": "taxi",
               "start_time": "11:00",
-              "end_time": "11:11",
-              "distance": 7.97,
-              "price": 32.6,
-              "cost": 65.2,
+              "end_time": "11:02",
+              "distance": 1.82,
+              "price": 11.07,
+              "cost": 22.14,
               "cars": 2
             }
           ]
@@ -265,14 +286,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "Jardine 1915 (Binjiang International Plaza Branch)",
               "end": "Shanghai Bund Art Museum",
               "mode": "taxi",
-              "start_time": "13:08",
-              "end_time": "13:17",
-              "distance": 6.07,
-              "price": 25.95,
-              "cost": 51.9,
+              "start_time": "12:10",
+              "end_time": "12:15",
+              "distance": 3.44,
+              "price": 16.75,
+              "cost": 33.5,
               "cars": 2
             }
           ]
@@ -520,5 +541,5 @@
     }
   ],
   "elapsed_time(sec)": 269.91727900505066,
-  "_eval_score": 99.44444444444444
+  "_eval_score": 100.0
 }

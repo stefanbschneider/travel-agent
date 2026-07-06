@@ -427,32 +427,74 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
           "start_time": "17:00",
-          "end_time": "18:40",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "end_time": "17:45",
+          "price": 6.0,
+          "cost": 12.0,
           "tickets": 2,
           "transports": [
             {
               "start": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
-              "end": "Nanjing Station",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
               "mode": "taxi",
               "start_time": "15:38",
-              "end_time": "15:48",
-              "distance": 7.02,
-              "price": 29.26,
-              "cost": 29.26,
+              "end_time": "15:46",
+              "distance": 5.7,
+              "price": 24.65,
+              "cost": 24.65,
               "cars": 1
             }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Xuanwu Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "17:45",
+              "end_time": "17:54",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "17:54",
+              "end_time": "19:11",
+              "distance": 38.61,
+              "price": 8,
+              "cost": 16,
+              "tickets": 2
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
+              "end": "Nanjing Lukou International Airport",
+              "mode": "walk",
+              "start_time": "19:11",
+              "end_time": "19:14",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            }
           ],
-          "TrainID": "G7021"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 247.17622923851013,
-  "_eval_score": 97.77777777777777
+  "_eval_score": 98.33333333333334
 }

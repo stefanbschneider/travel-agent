@@ -8,55 +8,57 @@
       "activities": [
         {
           "type": "train",
-          "start_time": "07:03",
-          "end_time": "07:30",
+          "start_time": "02:29",
+          "end_time": "04:00",
           "start": "Suzhou Station",
-          "end": "Shanghai Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "end": "Shanghai South Railway Station",
+          "price": 33.99,
+          "cost": 33.99,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G7029"
+          "TrainID": "K1808"
+        },
+        {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "06:45",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai South Railway Station",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "04:00",
+              "end_time": "04:17",
+              "distance": 11.73,
+              "price": 47.5,
+              "cost": 47.5,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "263-meter Main Observation Deck",
-          "start_time": "09:00",
-          "end_time": "10:15",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "06:52",
+          "end_time": "08:07",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Station",
-              "end": "Shanghai Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "07:32",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shanghai Railway Station-Metro Station",
-              "end": "Lujiazui-Metro Station",
-              "mode": "metro",
-              "start_time": "07:32",
-              "end_time": "07:40",
-              "distance": 4.39,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "263-meter Main Observation Deck",
-              "mode": "walk",
-              "start_time": "07:40",
-              "end_time": "07:50",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
+              "start": "Valley Sand Noodle Shop",
+              "end": "Jing'an Sculpture Park",
+              "mode": "taxi",
+              "start_time": "06:45",
+              "end_time": "06:46",
+              "distance": 1.25,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -70,35 +72,15 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "263-meter Main Observation Deck",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
-              "start_time": "10:15",
-              "end_time": "10:25",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "Middle Huaihai Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:25",
-              "end_time": "10:33",
-              "distance": 4.13,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Middle Huaihai Road-Metro Station",
+              "start": "Jing'an Sculpture Park",
               "end": "Yong Fu (Huangpu Branch)",
-              "mode": "walk",
-              "start_time": "10:33",
-              "end_time": "10:36",
-              "distance": 0.31,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "08:07",
+              "end_time": "08:10",
+              "distance": 2.38,
+              "price": 13.02,
+              "cost": 13.02,
+              "cars": 1
             }
           ]
         },
@@ -126,43 +108,45 @@
         },
         {
           "type": "attraction",
-          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "13:52",
-          "end_time": "15:22",
+          "position": "Duoyun Bookstore · Flagship Store",
+          "start_time": "13:45",
+          "end_time": "15:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "The Bund",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
+              "end": "Duoyun Bookstore · Flagship Store",
+              "mode": "taxi",
               "start_time": "13:36",
-              "end_time": "13:44",
-              "distance": 0.74,
-              "price": 0,
-              "cost": 0
-            },
+              "end_time": "13:38",
+              "distance": 1.49,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "15:28",
+          "end_time": "16:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "Lujiazui-Metro Station",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "metro",
-              "start_time": "13:44",
-              "end_time": "13:50",
-              "distance": 3.15,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "mode": "walk",
-              "start_time": "13:50",
-              "end_time": "13:52",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
+              "start": "Duoyun Bookstore · Flagship Store",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "15:15",
+              "end_time": "15:16",
+              "distance": 0.83,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -176,35 +160,15 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Yuanshen Sports Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:22",
-              "end_time": "15:24",
-              "distance": 0.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuanshen Sports Center-Metro Station",
-              "end": "Jiangsu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "15:24",
-              "end_time": "15:44",
-              "distance": 10.01,
-              "price": 4,
-              "cost": 4,
-              "tickets": 1
-            },
-            {
-              "start": "Jiangsu Road-Metro Station",
+              "start": "Century Avenue Cherry Orchard",
               "end": "Fu He Hui",
-              "mode": "walk",
-              "start_time": "15:44",
-              "end_time": "15:46",
-              "distance": 0.22,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:18",
+              "end_time": "16:31",
+              "distance": 8.98,
+              "price": 36.14,
+              "cost": 36.14,
+              "cars": 1
             }
           ]
         },
@@ -293,22 +257,22 @@
         },
         {
           "type": "attraction",
-          "position": "Shanghai Planetarium",
-          "start_time": "13:22",
-          "end_time": "14:52",
+          "position": "Adventure Island",
+          "start_time": "12:55",
+          "end_time": "14:25",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Planetarium",
+              "end": "Adventure Island",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "13:22",
-              "distance": 55.1,
-              "price": 242.63,
-              "cost": 242.63,
+              "end_time": "12:31",
+              "distance": 20.97,
+              "price": 89.07,
+              "cost": 89.07,
               "cars": 1
             }
           ]
@@ -323,14 +287,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Planetarium",
+              "start": "Adventure Island",
               "end": "Kurogi",
               "mode": "taxi",
-              "start_time": "14:52",
-              "end_time": "16:15",
-              "distance": 55.81,
-              "price": 245.84,
-              "cost": 245.84,
+              "start_time": "14:25",
+              "end_time": "14:55",
+              "distance": 20.34,
+              "price": 86.25,
+              "cost": 86.25,
               "cars": 1
             }
           ]
@@ -420,43 +384,23 @@
         },
         {
           "type": "attraction",
-          "position": "1933 Old Millfun",
-          "start_time": "12:15",
-          "end_time": "13:45",
+          "position": "Jinling East Road Ferry",
+          "start_time": "12:11",
+          "end_time": "13:41",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "walk",
+              "end": "Jinling East Road Ferry",
+              "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:08",
-              "distance": 0.69,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Liping Road-Metro Station",
-              "mode": "metro",
-              "start_time": "12:08",
-              "end_time": "12:13",
-              "distance": 2.72,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "1933 Old Millfun",
-              "mode": "walk",
-              "start_time": "12:13",
-              "end_time": "12:15",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
+              "end_time": "12:02",
+              "distance": 1.52,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -470,85 +414,88 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "1933 Old Millfun",
-              "end": "Liping Road-Metro Station",
-              "mode": "walk",
-              "start_time": "13:45",
-              "end_time": "13:47",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Liping Road-Metro Station",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "metro",
-              "start_time": "13:47",
-              "end_time": "13:49",
-              "distance": 1.21,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
+              "start": "Jinling East Road Ferry",
               "end": "China Securities Museum",
+              "mode": "taxi",
+              "start_time": "13:41",
+              "end_time": "13:42",
+              "distance": 1.31,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Garden Bridge",
+          "start_time": "15:19",
+          "end_time": "16:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "China Securities Museum",
+              "end": "Garden Bridge",
               "mode": "walk",
-              "start_time": "13:49",
-              "end_time": "13:49",
-              "distance": 0.08,
+              "start_time": "15:19",
+              "end_time": "15:19",
+              "distance": 0.05138947717624654,
               "price": 0,
               "cost": 0
             }
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
           "start_time": "17:00",
-          "end_time": "17:21",
-          "start": "Shanghai Hongqiao Station",
-          "end": "Suzhou North Station",
-          "price": 55.23,
-          "cost": 55.23,
+          "end_time": "17:45",
+          "price": 97.0,
+          "cost": 97.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "China Securities Museum",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "walk",
-              "start_time": "15:19",
-              "end_time": "15:19",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            },
+              "start": "Garden Bridge",
+              "end": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "16:09",
+              "end_time": "16:09",
+              "distance": 0.13,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "23:39",
+          "end_time": "00:40",
+          "start": "Shanghai Station",
+          "end": "Suzhou Station",
+          "price": 33.99,
+          "cost": 33.99,
+          "tickets": 1,
+          "transports": [
             {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Hongqiao Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "15:19",
-              "end_time": "15:55",
-              "distance": 18.17,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Hongqiao Railway Station-Metro Station",
-              "end": "Shanghai Hongqiao Station",
-              "mode": "walk",
-              "start_time": "15:55",
-              "end_time": "15:56",
-              "distance": 0.12,
-              "price": 0,
-              "cost": 0
+              "start": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+              "end": "Shanghai Station",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "17:50",
+              "distance": 3.97,
+              "price": 18.61,
+              "cost": 18.61,
+              "cars": 1
             }
           ],
-          "TrainID": "G24"
+          "TrainID": "K1506"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 0.06301307678222656,
-  "_eval_score": 96.87996031746032
+  "_eval_score": 99.16666666666666
 }

@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:26",
-          "end_time": "09:30",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:14",
+          "end_time": "02:18",
+          "start": "Shanghai Pudong International Airport",
           "end": "Chengdu Shuangliu International Airport",
-          "price": 838.84,
-          "cost": 3355.36,
+          "price": 800.01,
+          "cost": 3200.04,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL049"
+          "FlightID": "FL041"
+        },
+        {
+          "type": "breakfast",
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+          "start_time": "07:30",
+          "end_time": "08:15",
+          "price": 9.0,
+          "cost": 36.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "mode": "taxi",
+              "start_time": "02:18",
+              "end_time": "02:40",
+              "distance": 15.21,
+              "price": 63.13,
+              "cost": 63.13,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Chengdu Library",
+              "mode": "taxi",
+              "start_time": "08:15",
+              "end_time": "08:15",
+              "distance": 0.47,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Chengdu Library",
               "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:52",
-              "distance": 14.93,
-              "price": 61.87,
-              "cost": 61.87,
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 0.85,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -840,5 +884,5 @@
     }
   ],
   "elapsed_time(sec)": 269.3811151981354,
-  "_eval_score": 99.3844537815126
+  "_eval_score": 100.0
 }

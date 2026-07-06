@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Lu's Soup Dumpling King (Changbai Street Branch)",
+          "start_time": "06:00",
+          "end_time": "06:45",
+          "price": 24.0,
+          "cost": 48.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Lu's Soup Dumpling King (Changbai Street Branch)",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:42",
+              "distance": 32.99,
+              "price": 143.15,
+              "cost": 143.15,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Lu's Soup Dumpling King (Changbai Street Branch)",
               "end": "Black Clothes Lane",
               "mode": "taxi",
-              "start_time": "08:11",
-              "end_time": "08:20",
-              "distance": 6.24,
-              "price": 26.56,
-              "cost": 26.56,
+              "start_time": "06:45",
+              "end_time": "06:45",
+              "distance": 0.38,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -471,32 +493,54 @@
           ]
         },
         {
-          "type": "train",
+          "type": "dinner",
+          "position": "Halal Lotus Lake Cake and Dumpling Shop (Gongyuan West Street Branch)",
           "start_time": "17:00",
-          "end_time": "18:40",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "end_time": "17:45",
+          "price": 17.0,
+          "cost": 34.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Confucius Temple Snack Square (East Archway Branch)",
-              "end": "Nanjing Station",
+              "end": "Halal Lotus Lake Cake and Dumpling Shop (Gongyuan West Street Branch)",
               "mode": "taxi",
               "start_time": "15:06",
-              "end_time": "15:15",
-              "distance": 6.48,
-              "price": 27.37,
-              "cost": 27.37,
+              "end_time": "15:07",
+              "distance": 1.01,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Halal Lotus Lake Cake and Dumpling Shop (Gongyuan West Street Branch)",
+              "end": "Nanjing Lukou International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:34",
+              "distance": 33.02,
+              "price": 143.3,
+              "cost": 143.3,
               "cars": 1
             }
           ],
-          "TrainID": "G7021"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 250.47018790245056,
-  "_eval_score": 98.88888888888889
+  "_eval_score": 100.0
 }

@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Fatty Noodles",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 41.0,
+          "cost": 164.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Fatty Noodles",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:07",
+              "distance": 12.76,
+              "price": 52.11,
+              "cost": 52.11,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Fatty Noodles",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:22",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "start_time": "07:45",
+              "end_time": "07:47",
+              "distance": 1.84,
+              "price": 11.13,
+              "cost": 11.13,
               "cars": 1
             }
           ]
@@ -471,32 +493,54 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 2330.6,
+          "type": "dinner",
+          "position": "Huxi Old Alley Noodle House (Guangdong Road Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 44.0,
+          "cost": 176.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Xintiandi",
-              "end": "Shanghai Pudong International Airport",
+              "end": "Huxi Old Alley Noodle House (Guangdong Road Branch)",
               "mode": "taxi",
               "start_time": "14:34",
-              "end_time": "15:23",
-              "distance": 33.03,
-              "price": 143.33,
-              "cost": 143.33,
+              "end_time": "14:34",
+              "distance": 0.63,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 2563.72,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Huxi Old Alley Noodle House (Guangdong Road Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:34",
+              "distance": 33.15,
+              "price": 143.86,
+              "cost": 143.86,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 259.2895419597626,
-  "_eval_score": 98.88888888888889
+  "_eval_score": 100.0
 }

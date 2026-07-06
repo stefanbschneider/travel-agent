@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Fatty Noodles",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 41.0,
+          "cost": 41.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Fatty Noodles",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:07",
+              "distance": 12.76,
+              "price": 52.11,
+              "cost": 52.11,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Fatty Noodles",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:22",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "start_time": "07:45",
+              "end_time": "07:47",
+              "distance": 1.84,
+              "price": 11.13,
+              "cost": 11.13,
               "cars": 1
             }
           ]
@@ -327,5 +349,5 @@
     }
   ],
   "elapsed_time(sec)": 255.35446500778198,
-  "_eval_score": 98.22710622710622
+  "_eval_score": 99.16666666666666
 }

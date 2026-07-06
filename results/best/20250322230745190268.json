@@ -7,35 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:48",
-          "end_time": "12:20",
-          "start": "Hangzhou East Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 730.27,
-          "cost": 2921.08,
+          "type": "airplane",
+          "start_time": "00:05",
+          "end_time": "01:29",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 563.58,
+          "cost": 2254.32,
           "tickets": 4,
           "transports": [],
-          "TrainID": "G32"
+          "FlightID": "FL499"
         },
         {
-          "type": "lunch",
-          "position": "Tidu (Beijing Fang Branch)",
-          "start_time": "12:25",
-          "end_time": "13:25",
-          "price": 337.0,
-          "cost": 1348.0,
+          "type": "breakfast",
+          "position": "Zengshengkui Snack Shop",
+          "start_time": "06:00",
+          "end_time": "06:45",
+          "price": 16.0,
+          "cost": 64.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
-              "end": "Tidu (Beijing Fang Branch)",
+              "start": "Beijing Daxing International Airport",
+              "end": "Zengshengkui Snack Shop",
               "mode": "taxi",
-              "start_time": "12:20",
-              "end_time": "12:25",
-              "distance": 3.87,
-              "price": 18.26,
-              "cost": 18.26,
+              "start_time": "01:29",
+              "end_time": "02:39",
+              "distance": 47.11,
+              "price": 206.71,
+              "cost": 206.71,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Working People's Cultural Palace",
+          "start_time": "06:57",
+          "end_time": "07:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Zengshengkui Snack Shop",
+              "end": "Beijing Working People's Cultural Palace",
+              "mode": "taxi",
+              "start_time": "06:45",
+              "end_time": "06:46",
+              "distance": 1.07,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Noodle Master's Ultra Meat Sauce Noodles (Dongsi Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 32.0,
+          "cost": 128.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Working People's Cultural Palace",
+              "end": "Noodle Master's Ultra Meat Sauce Noodles (Dongsi Branch)",
+              "mode": "taxi",
+              "start_time": "07:47",
+              "end_time": "07:48",
+              "distance": 1.24,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,14 +94,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Tidu (Beijing Fang Branch)",
+              "start": "Noodle Master's Ultra Meat Sauce Noodles (Dongsi Branch)",
               "end": "The Palace Museum",
               "mode": "taxi",
-              "start_time": "13:25",
-              "end_time": "13:29",
-              "distance": 3.03,
-              "price": 15.32,
-              "cost": 15.32,
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 1.27,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -449,32 +493,54 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:18",
-          "end_time": "18:42",
-          "start": "Beijing Daxing International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 516.02,
-          "cost": 2064.08,
+          "type": "dinner",
+          "position": "Gongmenkou Steamed Bun Shop (Founder's Flagship Store)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 26.0,
+          "cost": 104.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Beijing Ancient Architecture Museum",
-              "end": "Beijing Daxing International Airport",
+              "end": "Gongmenkou Steamed Bun Shop (Founder's Flagship Store)",
               "mode": "taxi",
               "start_time": "14:21",
-              "end_time": "15:24",
-              "distance": 42.25,
-              "price": 184.84,
-              "cost": 184.84,
+              "end_time": "14:21",
+              "distance": 0.61,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:57",
+          "end_time": "00:21",
+          "start": "Beijing Daxing International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 529.77,
+          "cost": 2119.08,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Gongmenkou Steamed Bun Shop (Founder's Flagship Store)",
+              "end": "Beijing Daxing International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:49",
+              "distance": 42.77,
+              "price": 187.17,
+              "cost": 187.17,
               "cars": 1
             }
           ],
-          "FlightID": "FL139"
+          "FlightID": "FL140"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 255.5373020172119,
-  "_eval_score": 98.47222222222223
+  "_eval_score": 100.0
 }

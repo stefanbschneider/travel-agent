@@ -8,15 +8,37 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:14",
-          "end_time": "08:05",
+          "start_time": "00:33",
+          "end_time": "01:24",
           "start": "Wuhan Tianhe International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 359.89,
-          "cost": 1079.67,
+          "end": "Shanghai Pudong International Airport",
+          "price": 303.66,
+          "cost": 910.98,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL563"
+          "FlightID": "FL566"
+        },
+        {
+          "type": "breakfast",
+          "position": "Fatty Noodles",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 41.0,
+          "cost": 123.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Fatty Noodles",
+              "mode": "taxi",
+              "start_time": "01:24",
+              "end_time": "02:13",
+              "distance": 33.26,
+              "price": 144.38,
+              "cost": 144.38,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
+              "start": "Fatty Noodles",
               "end": "Anfu Road",
               "mode": "taxi",
-              "start_time": "08:05",
-              "end_time": "08:21",
-              "distance": 10.71,
-              "price": 42.89,
-              "cost": 42.89,
+              "start_time": "07:45",
+              "end_time": "07:48",
+              "distance": 2.49,
+              "price": 13.41,
+              "cost": 13.41,
               "cars": 1
             }
           ]
@@ -669,5 +691,5 @@
     }
   ],
   "elapsed_time(sec)": 270.1510589122772,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 99.58333333333334
 }

@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:26",
-          "end_time": "09:30",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:14",
+          "end_time": "02:18",
+          "start": "Shanghai Pudong International Airport",
           "end": "Chengdu Shuangliu International Airport",
-          "price": 838.84,
-          "cost": 3355.36,
+          "price": 800.01,
+          "cost": 3200.04,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL049"
+          "FlightID": "FL041"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "02:18",
+              "end_time": "02:43",
+              "distance": 17.05,
+              "price": 71.43,
+              "cost": 71.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Museum",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Chengdu Museum",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:46",
+              "distance": 1.03,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Chengdu Museum",
               "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
               "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:52",
-              "distance": 15.23,
-              "price": 63.25,
-              "cost": 63.25,
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 1.0,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -279,22 +323,22 @@
         },
         {
           "type": "dinner",
-          "position": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-          "start_time": "17:53",
-          "end_time": "18:53",
-          "price": 984.0,
-          "cost": 3936.0,
+          "position": "Flavorful Noodle House (Longxing Street Branch)",
+          "start_time": "17:04",
+          "end_time": "18:04",
+          "price": 26.0,
+          "cost": 104.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Butterfly Drama Club",
-              "end": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
+              "end": "Flavorful Noodle House (Longxing Street Branch)",
               "mode": "taxi",
               "start_time": "17:00",
-              "end_time": "17:12",
-              "distance": 8.66,
-              "price": 35.02,
-              "cost": 35.02,
+              "end_time": "17:00",
+              "distance": 0.39,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -311,14 +355,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
+              "start": "Flavorful Noodle House (Longxing Street Branch)",
               "end": "ECHARM Hotel (Shuangliu International Airport store)",
               "mode": "taxi",
-              "start_time": "18:53",
-              "end_time": "19:06",
-              "distance": 8.95,
-              "price": 36.03,
-              "cost": 36.03,
+              "start_time": "18:04",
+              "end_time": "18:25",
+              "distance": 14.45,
+              "price": 59.73,
+              "cost": 59.73,
               "cars": 1
             }
           ]
@@ -840,5 +884,5 @@
     }
   ],
   "elapsed_time(sec)": 273.73556900024414,
-  "_eval_score": 99.41666666666666
+  "_eval_score": 100.0
 }

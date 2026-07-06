@@ -7,55 +7,143 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:26",
-          "end_time": "17:56",
-          "start": "Beijing West Railway Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 1263.04,
-          "cost": 1263.04,
+          "type": "airplane",
+          "start_time": "01:11",
+          "end_time": "03:36",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G335"
+          "FlightID": "FL095"
         },
         {
-          "type": "dinner",
-          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-          "start_time": "18:10",
-          "end_time": "19:10",
-          "price": 400.0,
-          "cost": 400.0,
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 28.0,
+          "cost": 28.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
-              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
               "mode": "taxi",
-              "start_time": "17:56",
-              "end_time": "18:10",
-              "distance": 9.67,
-              "price": 38.53,
-              "cost": 38.53,
+              "start_time": "03:36",
+              "end_time": "04:12",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "19:12",
-          "end_time": "20:12",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "08:01",
+          "end_time": "08:51",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "end": "Shenzhen OCT Tourism Resort",
+              "start": "Joyful Gathering (Jingtian Branch)",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
               "mode": "taxi",
-              "start_time": "19:10",
-              "end_time": "19:12",
-              "distance": 1.73,
+              "start_time": "07:45",
+              "end_time": "07:50",
+              "distance": 3.66,
+              "price": 17.51,
+              "cost": 17.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "10:01",
+          "end_time": "10:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "taxi",
+              "start_time": "08:51",
+              "end_time": "08:57",
+              "distance": 4.04,
+              "price": 18.86,
+              "cost": 18.86,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "11:04",
+          "end_time": "11:49",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "10:51",
+              "end_time": "10:53",
+              "distance": 1.41,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "gaga (Junsun Shopping Center, AVIC City Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 74.0,
+          "cost": 74.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "gaga (Junsun Shopping Center, AVIC City Branch)",
+              "mode": "taxi",
+              "start_time": "11:49",
+              "end_time": "11:51",
+              "distance": 1.76,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "18:06",
+          "end_time": "19:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "gaga (Junsun Shopping Center, AVIC City Branch)",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 1.6,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -72,14 +160,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen OCT Tourism Resort",
+              "start": "Galaxy Development Center Building - Fitness Center",
               "end": "Shenzhen OCT Harbour",
               "mode": "taxi",
-              "start_time": "20:12",
-              "end_time": "20:14",
-              "distance": 1.66,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "19:06",
+              "end_time": "19:17",
+              "distance": 7.64,
+              "price": 31.44,
+              "cost": 31.44,
               "cars": 1
             }
           ]
@@ -410,5 +498,5 @@
     }
   ],
   "elapsed_time(sec)": 262.0530059337616,
-  "_eval_score": 96.94444444444444
+  "_eval_score": 98.88888888888889
 }

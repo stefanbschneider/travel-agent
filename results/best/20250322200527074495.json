@@ -8,34 +8,77 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 2455.84,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 2284.72,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
         },
         {
-          "type": "lunch",
-          "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:23",
-          "end_time": "12:23",
-          "price": 600.0,
-          "cost": 2400.0,
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 112.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Yong Fu (Huangpu Branch)",
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Yu Noodle House: Changshu Wild Mushroom Noodle Restaurant",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 62.0,
+          "cost": 248.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Yu Noodle House: Changshu Wild Mushroom Noodle Restaurant",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 0.9,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,14 +93,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Yong Fu (Huangpu Branch)",
+              "start": "Yu Noodle House: Changshu Wild Mushroom Noodle Restaurant",
               "end": "Foreigner Street 101",
               "mode": "taxi",
-              "start_time": "12:23",
-              "end_time": "12:33",
-              "distance": 7.11,
-              "price": 29.6,
-              "cost": 29.6,
+              "start_time": "12:00",
+              "end_time": "12:11",
+              "distance": 7.69,
+              "price": 31.61,
+              "cost": 31.61,
               "cars": 1
             }
           ]
@@ -498,5 +541,5 @@
     }
   ],
   "elapsed_time(sec)": 264.68505597114563,
-  "_eval_score": 99.02777777777777
+  "_eval_score": 100.0
 }

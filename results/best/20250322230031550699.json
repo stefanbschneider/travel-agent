@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:05",
-          "end_time": "11:01",
-          "start": "Beijing West Railway Station",
-          "end": "Wuhan Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "airplane",
+          "start_time": "03:43",
+          "end_time": "05:02",
+          "start": "Beijing Capital International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 519.12,
+          "cost": 2595.6,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G71"
+          "FlightID": "FL150"
+        },
+        {
+          "type": "breakfast",
+          "position": "Cai Lin Ji (Hubu Lane Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 22.0,
+          "cost": 110.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Cai Lin Ji (Hubu Lane Branch)",
+              "mode": "taxi",
+              "start_time": "05:02",
+              "end_time": "05:41",
+              "distance": 26.18,
+              "price": 112.52,
+              "cost": 225.04,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Cai Lin Ji (Hubu Lane Branch)",
+              "end": "Hanyang Riverside Park",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:46",
+              "distance": 1.25,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Wuhan Station",
+              "start": "Hanyang Riverside Park",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "11:01",
-              "end_time": "11:08",
-              "distance": 4.84,
-              "price": 21.64,
-              "cost": 43.28,
+              "start_time": "09:50",
+              "end_time": "10:04",
+              "distance": 9.95,
+              "price": 39.52,
+              "cost": 79.04,
               "cars": 2
             }
           ]
@@ -620,32 +664,54 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:12",
-          "end_time": "22:55",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "dinner",
+          "position": "Liu's Three Dogs Beef Noodle House",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 18.0,
+          "cost": 90.0,
           "tickets": 5,
           "transports": [
             {
               "start": "5D Starry Sky Illusion Art Museum",
-              "end": "Wuhan Station",
+              "end": "Liu's Three Dogs Beef Noodle House",
               "mode": "taxi",
               "start_time": "15:14",
-              "end_time": "15:33",
-              "distance": 12.69,
-              "price": 51.81,
-              "cost": 103.62,
+              "end_time": "15:14",
+              "distance": 0.11,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:07",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 521.9,
+          "cost": 2609.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Liu's Three Dogs Beef Noodle House",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:17",
+              "distance": 21.88,
+              "price": 93.16,
+              "cost": 186.32,
               "cars": 2
             }
           ],
-          "TrainID": "G340"
+          "FlightID": "FL580"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 253.34247398376465,
-  "_eval_score": 98.85416666666666
+  "_eval_score": 100.0
 }

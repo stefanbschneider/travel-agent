@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:05",
-          "end_time": "11:01",
-          "start": "Beijing West Railway Station",
-          "end": "Wuhan Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "airplane",
+          "start_time": "03:43",
+          "end_time": "05:02",
+          "start": "Beijing Capital International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 519.12,
+          "cost": 2595.6,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G71"
+          "FlightID": "FL150"
+        },
+        {
+          "type": "breakfast",
+          "position": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+          "start_time": "07:30",
+          "end_time": "08:15",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "mode": "taxi",
+              "start_time": "05:02",
+              "end_time": "05:35",
+              "distance": 22.15,
+              "price": 94.39,
+              "cost": 188.78,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Wuhan Station",
+              "start": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "11:01",
-              "end_time": "11:08",
-              "distance": 4.84,
-              "price": 21.64,
-              "cost": 43.28,
+              "start_time": "08:15",
+              "end_time": "08:28",
+              "distance": 9.18,
+              "price": 36.82,
+              "cost": 73.64,
               "cars": 2
             }
           ]
@@ -640,32 +662,54 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "17:23",
-          "end_time": "18:42",
-          "start": "Wuhan Tianhe International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 549.85,
-          "cost": 2749.25,
+          "type": "dinner",
+          "position": "Cai Lin Ji (Luoshi South Road Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 13.0,
+          "cost": 65.0,
           "tickets": 5,
           "transports": [
             {
               "start": "WS Dreamland",
-              "end": "Wuhan Tianhe International Airport",
+              "end": "Cai Lin Ji (Luoshi South Road Branch)",
               "mode": "taxi",
               "start_time": "15:21",
-              "end_time": "16:04",
-              "distance": 29.25,
-              "price": 126.31,
-              "cost": 252.62,
+              "end_time": "15:23",
+              "distance": 1.89,
+              "price": 11.3,
+              "cost": 22.6,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:07",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 521.9,
+          "cost": 2609.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Cai Lin Ji (Luoshi South Road Branch)",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:31",
+              "distance": 31.02,
+              "price": 134.29,
+              "cost": 268.58,
               "cars": 2
             }
           ],
-          "FlightID": "FL579"
+          "FlightID": "FL580"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 258.18711829185486,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 100.0
 }

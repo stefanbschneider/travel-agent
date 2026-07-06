@@ -7,35 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:03",
-          "end_time": "11:16",
-          "start": "Guangzhou South Railway Station",
-          "end": "Wuhan Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "airplane",
+          "start_time": "01:45",
+          "end_time": "02:48",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 388.13,
+          "cost": 388.13,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G835"
+          "FlightID": "FL309"
         },
         {
-          "type": "lunch",
-          "position": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
-          "start_time": "11:31",
-          "end_time": "12:31",
-          "price": 297.0,
-          "cost": 297.0,
+          "type": "breakfast",
+          "position": "Cai Lin Ji (Hubu Lane Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Wuhan Station",
-              "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Cai Lin Ji (Hubu Lane Branch)",
               "mode": "taxi",
-              "start_time": "11:16",
-              "end_time": "11:31",
-              "distance": 10.36,
-              "price": 41.34,
-              "cost": 41.34,
+              "start_time": "02:48",
+              "end_time": "03:27",
+              "distance": 26.18,
+              "price": 112.52,
+              "cost": 112.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hanyang Riverside Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Cai Lin Ji (Hubu Lane Branch)",
+              "end": "Hanyang Riverside Park",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:46",
+              "distance": 1.25,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Sanpang Kidney Noodle (Zhonghua Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 21.0,
+          "cost": 21.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Hanyang Riverside Park",
+              "end": "Sanpang Kidney Noodle (Zhonghua Road Branch)",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:52",
+              "distance": 1.5,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,14 +94,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
+              "start": "Sanpang Kidney Noodle (Zhonghua Road Branch)",
               "end": "Tanhualin",
               "mode": "taxi",
-              "start_time": "12:31",
-              "end_time": "12:35",
-              "distance": 3.15,
-              "price": 15.72,
-              "cost": 15.72,
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.62,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -449,32 +493,54 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "21:22",
-          "start": "Wuhan Station",
-          "end": "Guangzhou South Railway Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "dinner",
+          "position": "Artisan Heart Wonton (Shengli Street Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 24.0,
+          "cost": 24.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Great Wisdom Unbounded · Sky Town",
-              "end": "Wuhan Station",
+              "end": "Artisan Heart Wonton (Shengli Street Branch)",
               "mode": "taxi",
               "start_time": "14:24",
-              "end_time": "14:42",
-              "distance": 12.06,
-              "price": 48.95,
-              "cost": 48.95,
+              "end_time": "14:25",
+              "distance": 1.32,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:09",
+          "end_time": "22:12",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 453.61,
+          "cost": 453.61,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Artisan Heart Wonton (Shengli Street Branch)",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:15",
+              "distance": 20.52,
+              "price": 87.04,
+              "cost": 87.04,
               "cars": 1
             }
           ],
-          "TrainID": "G695"
+          "FlightID": "FL597"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 257.55884408950806,
-  "_eval_score": 98.47222222222223
+  "_eval_score": 100.0
 }

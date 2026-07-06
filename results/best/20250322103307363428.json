@@ -8,34 +8,78 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "08:01",
-          "end_time": "08:57",
+          "start_time": "03:11",
+          "end_time": "04:07",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Wuhan Tianhe International Airport",
-          "price": 330.37,
-          "cost": 991.11,
+          "price": 426.14,
+          "cost": 1278.42,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL383"
+          "FlightID": "FL390"
         },
         {
-          "type": "lunch",
-          "position": "Green Grain Restaurant (East Lake Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 306.0,
-          "cost": 918.0,
+          "type": "breakfast",
+          "position": "Cai Lin Ji (Hubu Lane Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 22.0,
+          "cost": 66.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Wuhan Tianhe International Airport",
-              "end": "Green Grain Restaurant (East Lake Branch)",
+              "end": "Cai Lin Ji (Hubu Lane Branch)",
               "mode": "taxi",
-              "start_time": "08:57",
-              "end_time": "09:36",
+              "start_time": "04:07",
+              "end_time": "04:46",
               "distance": 26.18,
-              "price": 112.5,
-              "cost": 112.5,
+              "price": 112.52,
+              "cost": 112.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bronze Sculpture of the Yellow Crane's Return",
+          "start_time": "07:57",
+          "end_time": "08:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Cai Lin Ji (Hubu Lane Branch)",
+              "end": "Bronze Sculpture of the Yellow Crane's Return",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:46",
+              "distance": 1.1,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Sanpang Kidney Noodle (Zhonghua Road Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 21.0,
+          "cost": 63.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bronze Sculpture of the Yellow Crane's Return",
+              "end": "Sanpang Kidney Noodle (Zhonghua Road Branch)",
+              "mode": "taxi",
+              "start_time": "08:47",
+              "end_time": "08:47",
+              "distance": 0.67,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,14 +94,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Green Grain Restaurant (East Lake Branch)",
+              "start": "Sanpang Kidney Noodle (Zhonghua Road Branch)",
               "end": "Tanhualin",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:10",
-              "distance": 7.22,
-              "price": 29.97,
-              "cost": 29.97,
+              "end_time": "12:02",
+              "distance": 1.62,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -796,5 +840,5 @@
     }
   ],
   "elapsed_time(sec)": 267.4894149303436,
-  "_eval_score": 98.80803571428572
+  "_eval_score": 99.41666666666666
 }

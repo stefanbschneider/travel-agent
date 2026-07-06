@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "03:09",
+              "end_time": "03:45",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Joyful Gathering (Jingtian Branch)",
+              "end": "Guan Shanyue Art Museum",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:50",
+              "distance": 3.51,
+              "price": 17.0,
+              "cost": 17.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Guan Shanyue Art Museum",
               "end": "Shenzhen Mandarin Oriental Hotel · East Bay",
               "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:40",
-              "distance": 27.53,
-              "price": 118.59,
-              "cost": 118.59,
+              "start_time": "09:50",
+              "end_time": "09:50",
+              "distance": 0.29,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -669,5 +713,5 @@
     }
   ],
   "elapsed_time(sec)": 296.4009802341461,
-  "_eval_score": 99.23732363315696
+  "_eval_score": 100.0
 }

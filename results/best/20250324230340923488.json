@@ -8,34 +8,100 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
+          "start_time": "01:11",
+          "end_time": "03:36",
           "start": "Beijing Capital International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
+          "FlightID": "FL095"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "03:36",
+              "end_time": "04:12",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "Shangri-La Snow Region",
-          "start_time": "15:26",
-          "end_time": "16:26",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Shangri-La Snow Region",
+              "start": "Joyful Gathering (Jingtian Branch)",
+              "end": "Baishilong Music Theme Park",
               "mode": "taxi",
-              "start_time": "14:32",
-              "end_time": "15:02",
-              "distance": 20.09,
-              "price": 85.1,
-              "cost": 85.1,
+              "start_time": "07:45",
+              "end_time": "07:52",
+              "distance": 5.32,
+              "price": 23.33,
+              "cost": 23.33,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Le Caisa Pizza (Joy Park Branch)",
+          "start_time": "11:00",
+          "end_time": "11:45",
+          "price": 63.0,
+          "cost": 63.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Baishilong Music Theme Park",
+              "end": "Le Caisa Pizza (Joy Park Branch)",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:56",
+              "distance": 4.03,
+              "price": 18.79,
+              "cost": 18.79,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "12:00",
+          "end_time": "13:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Le Caisa Pizza (Joy Park Branch)",
+              "end": "East Gate Old Street",
+              "mode": "taxi",
+              "start_time": "11:45",
+              "end_time": "11:55",
+              "distance": 6.77,
+              "price": 28.4,
+              "cost": 28.4,
               "cars": 1
             }
           ]
@@ -50,14 +116,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shangri-La Snow Region",
+              "start": "East Gate Old Street",
               "end": "Shenzhen Dameisha InterContinental Resort - Executive Club - Azure Pavilion Restaurant - Steak, Seafood, Red Wine, Whiskey",
               "mode": "taxi",
-              "start_time": "16:26",
-              "end_time": "17:17",
-              "distance": 34.1,
-              "price": 148.14,
-              "cost": 148.14,
+              "start_time": "13:00",
+              "end_time": "13:30",
+              "distance": 20.54,
+              "price": 87.13,
+              "cost": 87.13,
               "cars": 1
             }
           ]
@@ -381,6 +447,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Dameisha Seaside Park",
+          "start_time": "15:58",
+          "end_time": "16:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guihu Beach, Kwai Chung",
+              "end": "Dameisha Seaside Park",
+              "mode": "taxi",
+              "start_time": "13:23",
+              "end_time": "13:40",
+              "distance": 11.88,
+              "price": 48.17,
+              "cost": 48.17,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
           "start_time": "17:56",
@@ -390,14 +478,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Guihu Beach, Kwai Chung",
+              "start": "Dameisha Seaside Park",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
               "mode": "taxi",
-              "start_time": "13:23",
-              "end_time": "14:09",
-              "distance": 30.79,
-              "price": 133.24,
-              "cost": 133.24,
+              "start_time": "16:48",
+              "end_time": "17:16",
+              "distance": 19.06,
+              "price": 80.45,
+              "cost": 80.45,
               "cars": 1
             }
           ]
@@ -430,5 +518,5 @@
     }
   ],
   "elapsed_time(sec)": 263.0639588832855,
-  "_eval_score": 96.46638655462185
+  "_eval_score": 98.72789115646259
 }

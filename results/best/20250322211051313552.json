@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Valley Sand Noodle Shop",
+          "start_time": "06:00",
+          "end_time": "06:45",
+          "price": 30.0,
+          "cost": 30.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Valley Sand Noodle Shop",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:09",
+              "distance": 14.04,
+              "price": 57.9,
+              "cost": 57.9,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jinling East Road Ferry",
+          "start_time": "06:55",
+          "end_time": "07:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Valley Sand Noodle Shop",
+              "end": "Jinling East Road Ferry",
+              "mode": "taxi",
+              "start_time": "06:45",
+              "end_time": "06:49",
+              "distance": 2.96,
+              "price": 15.05,
+              "cost": 15.05,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jinling East Road Ferry",
               "end": "Large Intestine Noodles",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:19",
-              "distance": 32.55,
-              "price": 141.19,
-              "cost": 141.19,
+              "start_time": "07:45",
+              "end_time": "07:49",
+              "distance": 2.82,
+              "price": 14.57,
+              "cost": 14.57,
               "cars": 1
             }
           ]
@@ -305,5 +349,5 @@
     }
   ],
   "elapsed_time(sec)": 269.3352608680725,
-  "_eval_score": 97.70833333333334
+  "_eval_score": 99.16666666666666
 }

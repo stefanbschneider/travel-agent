@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:27",
-          "end_time": "11:12",
+          "start_time": "03:00",
+          "end_time": "04:45",
           "start": "Nanjing Lukou International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 690.19,
-          "cost": 1380.38,
+          "end": "Chengdu Tianfu International Airport",
+          "price": 709.26,
+          "cost": 1418.52,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL698"
+          "FlightID": "FL696"
+        },
+        {
+          "type": "breakfast",
+          "position": "Flavorful Noodle House (Longxing Street Branch)",
+          "start_time": "07:16",
+          "end_time": "08:01",
+          "price": 26.0,
+          "cost": 52.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Tianfu International Airport",
+              "end": "Flavorful Noodle House (Longxing Street Branch)",
+              "mode": "taxi",
+              "start_time": "04:45",
+              "end_time": "06:06",
+              "distance": 54.27,
+              "price": 238.91,
+              "cost": 238.91,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hovering Leap Theater (Chunxi Road Maoye Department Store Branch)",
+          "start_time": "10:00",
+          "end_time": "10:50",
+          "price": 39.9,
+          "cost": 79.8,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Flavorful Noodle House (Longxing Street Branch)",
+              "end": "Hovering Leap Theater (Chunxi Road Maoye Department Store Branch)",
+              "mode": "taxi",
+              "start_time": "08:01",
+              "end_time": "08:01",
+              "distance": 0.51,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Hovering Leap Theater (Chunxi Road Maoye Department Store Branch)",
               "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
               "mode": "taxi",
-              "start_time": "11:12",
-              "end_time": "11:36",
-              "distance": 16.29,
-              "price": 67.98,
-              "cost": 67.98,
+              "start_time": "10:50",
+              "end_time": "10:51",
+              "distance": 1.04,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -647,5 +691,5 @@
     }
   ],
   "elapsed_time(sec)": 270.6683073043823,
-  "_eval_score": 98.41460622710622
+  "_eval_score": 99.12755102040816
 }

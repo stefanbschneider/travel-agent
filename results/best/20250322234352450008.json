@@ -7,35 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:40",
-          "end_time": "11:35",
-          "start": "Wuhan Station",
-          "end": "Beijing West Railway Station",
-          "price": 684.27,
-          "cost": 684.27,
+          "type": "airplane",
+          "start_time": "03:07",
+          "end_time": "04:26",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 532.46,
+          "cost": 532.46,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G66"
+          "FlightID": "FL574"
         },
         {
-          "type": "lunch",
-          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
-          "start_time": "11:45",
-          "end_time": "12:45",
-          "price": 14.0,
-          "cost": 14.0,
+          "type": "breakfast",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "06:16",
+          "end_time": "07:01",
+          "price": 12.0,
+          "cost": 12.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Beijing West Railway Station",
-              "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "start": "Beijing Daxing International Airport",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
               "mode": "taxi",
-              "start_time": "11:35",
-              "end_time": "11:40",
-              "distance": 3.69,
-              "price": 17.62,
-              "cost": 17.62,
+              "start_time": "04:26",
+              "end_time": "05:38",
+              "distance": 48.13,
+              "price": 211.27,
+              "cost": 211.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Fang",
+          "start_time": "10:00",
+          "end_time": "10:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "end": "Beijing Fang",
+              "mode": "taxi",
+              "start_time": "07:01",
+              "end_time": "07:06",
+              "distance": 3.7,
+              "price": 17.66,
+              "cost": 17.66,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Tianxingju Restaurant (Xianyukou Street Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 31.0,
+          "cost": 31.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Beijing Fang",
+              "end": "Tianxingju Restaurant (Xianyukou Street Branch)",
+              "mode": "taxi",
+              "start_time": "10:50",
+              "end_time": "10:51",
+              "distance": 0.92,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,14 +94,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "start": "Tianxingju Restaurant (Xianyukou Street Branch)",
               "end": "Dashilar",
               "mode": "taxi",
-              "start_time": "12:45",
-              "end_time": "12:49",
-              "distance": 3.32,
-              "price": 16.32,
-              "cost": 16.32,
+              "start_time": "12:00",
+              "end_time": "12:00",
+              "distance": 0.62,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -498,5 +542,5 @@
     }
   ],
   "elapsed_time(sec)": 204.07843708992004,
-  "_eval_score": 99.02777777777777
+  "_eval_score": 100.0
 }

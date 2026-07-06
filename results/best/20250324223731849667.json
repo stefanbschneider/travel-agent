@@ -7,16 +7,60 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:03",
-          "end_time": "11:16",
-          "start": "Guangzhou South Railway Station",
-          "end": "Wuhan Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "airplane",
+          "start_time": "01:45",
+          "end_time": "02:48",
+          "start": "Guangzhou Baiyun International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 388.13,
+          "cost": 388.13,
           "tickets": 1,
           "transports": [],
-          "TrainID": "G835"
+          "FlightID": "FL309"
+        },
+        {
+          "type": "breakfast",
+          "position": "Cai Lin Ji (Hubu Lane Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Cai Lin Ji (Hubu Lane Branch)",
+              "mode": "taxi",
+              "start_time": "02:48",
+              "end_time": "03:27",
+              "distance": 26.18,
+              "price": 112.52,
+              "cost": 112.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Wuhan Sightseeing Cruise (Qingchuan Pier)",
+          "start_time": "08:08",
+          "end_time": "08:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Cai Lin Ji (Hubu Lane Branch)",
+              "end": "Wuhan Sightseeing Cruise (Qingchuan Pier)",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:47",
+              "distance": 1.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Wuhan Station",
+              "start": "Wuhan Sightseeing Cruise (Qingchuan Pier)",
               "end": "Shrimp King (Huquan Branch)",
               "mode": "taxi",
-              "start_time": "11:16",
-              "end_time": "11:34",
-              "distance": 12.07,
-              "price": 49.0,
-              "cost": 49.0,
+              "start_time": "08:58",
+              "end_time": "09:12",
+              "distance": 9.76,
+              "price": 38.87,
+              "cost": 38.87,
               "cars": 1
             }
           ]
@@ -405,32 +449,54 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:03",
-          "end_time": "21:22",
-          "start": "Wuhan Station",
-          "end": "Guangzhou South Railway Station",
-          "price": 543.6,
-          "cost": 543.6,
+          "type": "dinner",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 5.0,
+          "cost": 5.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Guqin Cruise Ship",
-              "end": "Wuhan Station",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
               "mode": "taxi",
               "start_time": "14:38",
-              "end_time": "14:55",
-              "distance": 11.84,
-              "price": 47.98,
-              "cost": 47.98,
+              "end_time": "14:39",
+              "distance": 1.08,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "21:09",
+          "end_time": "22:12",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Guangzhou Baiyun International Airport",
+          "price": 453.61,
+          "cost": 453.61,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Wuhan Tianhe International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:17",
+              "distance": 21.53,
+              "price": 91.56,
+              "cost": 91.56,
               "cars": 1
             }
           ],
-          "TrainID": "G695"
+          "FlightID": "FL597"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 255.19194197654724,
-  "_eval_score": 97.36111111111111
+  "_eval_score": 98.88888888888889
 }

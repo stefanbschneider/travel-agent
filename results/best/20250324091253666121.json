@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:04",
-          "end_time": "08:50",
-          "start": "Chongqing West Railway Station",
-          "end": "Chengdu East Railway Station",
-          "price": 171.7,
-          "cost": 858.5,
+          "type": "airplane",
+          "start_time": "04:39",
+          "end_time": "04:58",
+          "start": "Chongqing Jiangbei International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 299.27,
+          "cost": 1496.35,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G8512"
+          "FlightID": "FL363"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "04:58",
+              "end_time": "05:23",
+              "distance": 17.05,
+              "price": 71.43,
+              "cost": 142.86,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "attraction",
@@ -28,14 +50,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Chengdu East Railway Station",
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
               "end": "China Shadow Puppet Museum",
               "mode": "taxi",
-              "start_time": "08:50",
-              "end_time": "09:01",
-              "distance": 7.64,
-              "price": 31.45,
-              "cost": 62.9,
+              "start_time": "07:45",
+              "end_time": "07:46",
+              "distance": 1.11,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
@@ -813,32 +835,54 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:25",
-          "end_time": "18:59",
-          "start": "Chengdu East Railway Station",
-          "end": "Chongqing North Railway Station",
-          "price": 171.7,
-          "cost": 858.5,
+          "type": "dinner",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 5.0,
+          "cost": 25.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Chengdu Night Cruise on the Jinjiang River",
-              "end": "Chengdu East Railway Station",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
               "mode": "taxi",
               "start_time": "15:00",
-              "end_time": "15:07",
-              "distance": 5.24,
-              "price": 23.04,
-              "cost": 46.08,
+              "end_time": "15:06",
+              "distance": 4.09,
+              "price": 19.03,
+              "cost": 38.06,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:20",
+          "end_time": "22:39",
+          "start": "Chengdu Shuangliu International Airport",
+          "end": "Chongqing Jiangbei International Airport",
+          "price": 279.92,
+          "cost": 1399.6000000000001,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Chengdu Shuangliu International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:09",
+              "distance": 16.04,
+              "price": 66.86,
+              "cost": 133.72,
               "cars": 2
             }
           ],
-          "TrainID": "G8717"
+          "FlightID": "FL444"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 267.11394906044006,
-  "_eval_score": 99.33333333333334
+  "_eval_score": 100.0
 }

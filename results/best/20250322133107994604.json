@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:28",
-          "end_time": "08:59",
-          "start": "Shanghai Pudong International Airport",
+          "start_time": "01:38",
+          "end_time": "03:09",
+          "start": "Shanghai Hongqiao International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 619.66,
-          "cost": 1858.98,
+          "price": 607.72,
+          "cost": 1823.16,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL011"
+          "FlightID": "FL013"
+        },
+        {
+          "type": "breakfast",
+          "position": "Joyful Gathering (Jingtian Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 28.0,
+          "cost": 84.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Joyful Gathering (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "03:09",
+              "end_time": "03:45",
+              "distance": 24.27,
+              "price": 103.9,
+              "cost": 103.9,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Futian Mangrove Ecological Park",
+          "start_time": "08:01",
+          "end_time": "08:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Joyful Gathering (Jingtian Branch)",
+              "end": "Futian Mangrove Ecological Park",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:51",
+              "distance": 4.4,
+              "price": 20.11,
+              "cost": 20.11,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "Futian Mangrove Ecological Park",
               "end": "Shenzhen Grand Hyatt Hotel - Chairman's Building",
               "mode": "taxi",
-              "start_time": "08:59",
-              "end_time": "09:47",
-              "distance": 32.12,
-              "price": 139.22,
-              "cost": 139.22,
+              "start_time": "08:51",
+              "end_time": "09:01",
+              "distance": 6.74,
+              "price": 28.28,
+              "cost": 28.28,
               "cars": 1
             }
           ]
@@ -669,5 +713,5 @@
     }
   ],
   "elapsed_time(sec)": 292.406005859375,
-  "_eval_score": 99.17383156966491
+  "_eval_score": 99.95238095238095
 }
