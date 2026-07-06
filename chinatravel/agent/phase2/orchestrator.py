@@ -13,10 +13,11 @@ is needed; the runner injects a TPCAgent-backed ``solve_fn`` (see ``make_tpcagen
 
 from __future__ import annotations
 
+from copy import deepcopy
 import os
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable
+from dataclasses import dataclass
+from typing import Any, Callable, Mapping, TypeGuard
 
 from func_timeout import FunctionTimedOut, func_timeout
 
@@ -29,10 +30,36 @@ from . import normalize
 PHASE2_DEFAULT_BUDGET_SEC = 900.0  # 15 minutes (primary, TBC)
 PHASE2_ALT_BUDGET_SEC = 300.0      # 5 minutes (alternative)
 DEFAULT_BUDGET_SEC = PHASE2_DEFAULT_BUDGET_SEC
+DEFAULT_SOLVE_TIMEOUT_GRACE_SEC = 1.0
 
 
 def _truthy(value) -> bool:
     return str(value) not in ("0", "", "false", "False", "None", None)
+
+
+def _valid_plan_shape(plan: Any) -> TypeGuard[dict]:
+    return isinstance(plan, dict) and isinstance(plan.get("itinerary"), list)
+
+
+def _append_error(telemetry: dict[str, Any], message: str) -> None:
+    prev = telemetry.get("error")
+    telemetry["error"] = message if not prev else f"{prev} | {message}"
+
+
+def _recover_solve_plan(solve_fn) -> dict | None:
+    getter = getattr(solve_fn, "get_timeout_recovery_plan", None)
+    if not callable(getter):
+        return None
+    try:
+        candidate = getter()
+    except Exception:
+        return None
+    if not isinstance(candidate, dict):
+        return None
+    try:
+        return deepcopy(candidate)
+    except Exception:
+        return candidate
 
 
 @dataclass
@@ -45,13 +72,13 @@ class Flags:
     llm_refine: bool = False
 
     @classmethod
-    def from_env(cls, env: dict | None = None) -> "Flags":
-        env = os.environ if env is None else env
+    def from_env(cls, env: Mapping[str, Any] | None = None) -> "Flags":
+        env_map = os.environ if env is None else env
         return cls(
-            llm_backend=str(env.get("TPC_P2_LLM_BACKEND", "none") or "none").lower(),
-            disjunction=_truthy(env.get("TPC_P2_DISJUNCTION", "0")),
-            llm_parse=_truthy(env.get("TPC_P2_LLM_PARSE", "0")),
-            llm_refine=_truthy(env.get("TPC_P2_LLM_REFINE", "0")),
+            llm_backend=str(env_map.get("TPC_P2_LLM_BACKEND", "none") or "none").lower(),
+            disjunction=_truthy(env_map.get("TPC_P2_DISJUNCTION", "0")),
+            llm_parse=_truthy(env_map.get("TPC_P2_LLM_PARSE", "0")),
+            llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
         )
 
 
@@ -93,15 +120,21 @@ def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -
         os.environ["TPC_USE_ORACLE"] = "0"
         os.environ["TPC_SOLVE_BUDGET_SEC"] = str(max(float(budget_sec), 1.0))
         agent.solve_budget_sec = max(float(budget_sec), 1.0)
+        agent.reset_timeout_recovery_plan()
         # Harness owns parsing: inject the (possibly disjunction-expanded) variants so the agent
         # uses them directly instead of re-parsing. Empty/None injection preserves the agent's own
         # no-oracle parse, so a parse failure upstream degrades gracefully rather than crashing.
-        agent._injected_variants = variants if isinstance(variants, list) and variants else None
+        setattr(agent, "_injected_variants", variants if isinstance(variants, list) and variants else None)
         try:
             _succ, plan = agent.run(query)
         finally:
-            agent._injected_variants = None
+            setattr(agent, "_injected_variants", None)
         return plan
+
+    def _get_timeout_recovery_plan() -> dict | None:
+        return agent.get_timeout_recovery_plan()
+
+    setattr(_solve, "get_timeout_recovery_plan", _get_timeout_recovery_plan)
 
     return _solve
 
@@ -138,6 +171,10 @@ def solve_phase2(
         "budget_sec": budget_sec,
         "stage_sec": {},
         "timed_out": False,
+        "solve_recovered_from_timeout": False,
+        "solve_recovered_from_error": False,
+        "improve_timed_out": False,
+        "improve_reverted_to_last_valid": False,
         "used_fallback": False,
         "valid_output": False,
         "error": None,
@@ -162,32 +199,67 @@ def solve_phase2(
     plan_candidate: dict | None = None
     t0 = time.perf_counter()
     if solve_fn is not None:
-        solve_timeout = max(b.solve_sec, 0.01)
+        grace_cap = max(b.finalize_sec * 0.5, 0.0)
+        solve_grace = min(
+            max(float(os.environ.get("TPC_P2_SOLVE_TIMEOUT_GRACE_SEC", DEFAULT_SOLVE_TIMEOUT_GRACE_SEC)), 0.0),
+            grace_cap,
+        )
+        solve_timeout = max(b.solve_sec + solve_grace, 0.01)
         try:
             plan_candidate = func_timeout(
                 solve_timeout, solve_fn, args=(query, variants, b.solve_sec)
             )
         except FunctionTimedOut:
             telemetry["timed_out"] = True
+            recovered = _recover_solve_plan(solve_fn)
+            if _valid_plan_shape(recovered):
+                plan_candidate = recovered
+                telemetry["solve_recovered_from_timeout"] = True
         except Exception as exc:
-            telemetry["error"] = f"solve: {exc}"
-            plan_candidate = None
+            _append_error(telemetry, f"solve: {exc}")
+            recovered = _recover_solve_plan(solve_fn)
+            if _valid_plan_shape(recovered):
+                plan_candidate = recovered
+                telemetry["solve_recovered_from_error"] = True
+            else:
+                plan_candidate = None
     telemetry["stage_sec"]["solve"] = time.perf_counter() - t0
 
     # --- Stage 3: improve (stub; deterministic densify already inside TPCAgent) --
     t0 = time.perf_counter()
     if flags.llm_refine and plan_candidate is not None:
-        plan_candidate = llm_refine_stub(plan_candidate, query, llm_client, b.improve_sec)
+        last_valid_plan = deepcopy(plan_candidate)
+        improve_timeout = max(b.improve_sec, 0.01)
+        try:
+            improved = func_timeout(
+                improve_timeout,
+                llm_refine_stub,
+                args=(plan_candidate, query, llm_client, b.improve_sec),
+            )
+            if _valid_plan_shape(improved):
+                plan_candidate = improved
+            else:
+                telemetry["improve_reverted_to_last_valid"] = True
+                plan_candidate = last_valid_plan
+        except FunctionTimedOut:
+            telemetry["timed_out"] = True
+            telemetry["improve_timed_out"] = True
+            telemetry["improve_reverted_to_last_valid"] = True
+            plan_candidate = last_valid_plan
+        except Exception as exc:
+            _append_error(telemetry, f"improve: {exc}")
+            telemetry["improve_reverted_to_last_valid"] = True
+            plan_candidate = last_valid_plan
     telemetry["stage_sec"]["improve"] = time.perf_counter() - t0
 
     # --- Stage 4: finalize -------------------------------------------------
     t0 = time.perf_counter()
-    if isinstance(plan_candidate, dict) and isinstance(plan_candidate.get("itinerary"), list):
+    if _valid_plan_shape(plan_candidate):
         final_plan = plan_candidate
     else:
         final_plan = fallback_mod.fallback_plan(query, best=plan_candidate)
         telemetry["used_fallback"] = True
-    telemetry["valid_output"] = isinstance(final_plan.get("itinerary"), list)
+    telemetry["valid_output"] = _valid_plan_shape(final_plan)
     telemetry["stage_sec"]["finalize"] = time.perf_counter() - t0
 
     return final_plan, telemetry

@@ -54,6 +54,65 @@ def test_fallback_on_timeout(one_query):
     assert telemetry["used_fallback"] is True
 
 
+def test_timeout_recovers_best_plan_from_solve_hook(one_query):
+    recovered_plan = {
+        "people_number": one_query.get("people_number", 1),
+        "start_city": one_query.get("start_city", ""),
+        "target_city": one_query.get("target_city", ""),
+        "itinerary": [{"day": 1, "activities": []}],
+    }
+
+    def slow_with_recovery(query, variants, budget_sec):
+        time.sleep(5.0)
+        return {"itinerary": []}
+
+    slow_with_recovery.get_timeout_recovery_plan = lambda: recovered_plan
+
+    plan, telemetry = O.solve_phase2(one_query, budget_sec=0.3, solve_fn=slow_with_recovery)
+    jsonschema.validate(plan, SCHEMA)
+    assert telemetry["timed_out"] is True
+    assert telemetry["solve_recovered_from_timeout"] is True
+    assert telemetry["used_fallback"] is False
+    assert plan["itinerary"] == [{"day": 1, "activities": []}]
+
+
+def test_improve_invalid_output_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
+    def invalid_improve(plan, query, llm_client, budget_sec):
+        return {"not": "a plan"}
+
+    monkeypatch.setattr(O, "llm_refine_stub", invalid_improve)
+    plan, telemetry = O.solve_phase2(
+        one_query,
+        budget_sec=10.0,
+        solve_fn=fast_solve_fn,
+        flags=O.Flags(llm_refine=True),
+    )
+    jsonschema.validate(plan, SCHEMA)
+    assert plan["itinerary"] == [{"day": 1, "activities": []}]
+    assert telemetry["improve_reverted_to_last_valid"] is True
+    assert telemetry["used_fallback"] is False
+
+
+def test_improve_timeout_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
+    def slow_improve(plan, query, llm_client, budget_sec):
+        time.sleep(0.3)
+        return {"itinerary": []}
+
+    monkeypatch.setattr(O, "llm_refine_stub", slow_improve)
+    plan, telemetry = O.solve_phase2(
+        one_query,
+        budget_sec=1.0,
+        solve_fn=fast_solve_fn,
+        flags=O.Flags(llm_refine=True),
+    )
+    jsonschema.validate(plan, SCHEMA)
+    assert telemetry["timed_out"] is True
+    assert telemetry["improve_timed_out"] is True
+    assert telemetry["improve_reverted_to_last_valid"] is True
+    assert telemetry["used_fallback"] is False
+    assert plan["itinerary"] == [{"day": 1, "activities": []}]
+
+
 def test_flags_off_never_calls_llm(sample_queries, spy_llm, fast_solve_fn):
     for query in sample_queries.values():
         O.solve_phase2(query, budget_sec=10.0, solve_fn=fast_solve_fn, llm_client=spy_llm)

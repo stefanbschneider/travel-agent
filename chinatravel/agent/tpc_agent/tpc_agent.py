@@ -84,6 +84,28 @@ class TPCAgent(BaseAgent):
         # re-parsing the query, so the harness stays the single owner of parsing (incl. no-oracle
         # disjunctive branch expansion). None/empty preserves the internal parse path.
         self._injected_variants = None
+        # Best-so-far plan snapshot exported to the Phase 2 harness when external timeouts fire.
+        self._timeout_recovery_plan = None
+
+    def reset_timeout_recovery_plan(self):
+        self._timeout_recovery_plan = None
+
+    def _set_timeout_recovery_plan(self, plan):
+        if not isinstance(plan, dict):
+            return
+        try:
+            self._timeout_recovery_plan = deepcopy(plan)
+        except Exception:
+            # Fall back to direct assignment when deepcopy fails on custom objects.
+            self._timeout_recovery_plan = plan
+
+    def get_timeout_recovery_plan(self):
+        if not isinstance(self._timeout_recovery_plan, dict):
+            return None
+        try:
+            return deepcopy(self._timeout_recovery_plan)
+        except Exception:
+            return self._timeout_recovery_plan
 
     def _make_checker(self, query, constraints):
         """Return check(plan) -> (passed, total).
@@ -531,6 +553,7 @@ class TPCAgent(BaseAgent):
     def _solve(self, query):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
         keeping the best accepted plan found within budget; finally pack it."""
+        self.reset_timeout_recovery_plan()
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         init_key = (-1, float("-inf"), float("-inf"))
@@ -551,8 +574,10 @@ class TPCAgent(BaseAgent):
             except Exception:
                 passed, total = 0, 0
             search_key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
+            updated = False
             if best["plan"] is None or search_key > best["key"]:
                 best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params)
+                updated = True
             accepted = self._accepted(passed, total)
             if accepted:
                 accepted_key = self._accepted_eval_key(plan)
@@ -564,6 +589,10 @@ class TPCAgent(BaseAgent):
                         check=check,
                         params=params,
                     )
+                    updated = True
+            if updated:
+                best_now = best_accepted["plan"] if best_accepted["plan"] is not None else best["plan"]
+                self._set_timeout_recovery_plan(best_now)
             return accepted
 
         def out_of_budget():
@@ -634,8 +663,12 @@ class TPCAgent(BaseAgent):
                 chosen["plan"] = packed
 
         if chosen["plan"] is not None:
-            return self._sanitize_plan_for_grounding(chosen["plan"], query)
-        return self._sanitize_plan_for_grounding(self._build_plan(query), query)
+            resolved = self._sanitize_plan_for_grounding(chosen["plan"], query)
+            self._set_timeout_recovery_plan(resolved)
+            return resolved
+        resolved = self._sanitize_plan_for_grounding(self._build_plan(query), query)
+        self._set_timeout_recovery_plan(resolved)
+        return resolved
 
     def _pack_plan(self, plan, query, constraints, check, base_params):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
@@ -2038,6 +2071,7 @@ class TPCAgent(BaseAgent):
 
     def run(self, query, prob_idx=None, oralce_translation=False):
         self.reset_clock()
+        self.reset_timeout_recovery_plan()
 
         try:
             plan = self._solve(query)
@@ -2050,6 +2084,7 @@ class TPCAgent(BaseAgent):
                 "target_city": query.get("target_city", ""),
                 "itinerary": [],
             }
+            self._set_timeout_recovery_plan(plan)
 
         plan["elapsed_time(sec)"] = time.time() - self.start_clock
         return True, plan
