@@ -7,35 +7,101 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
+        },
+        {
+          "type": "breakfast",
+          "position": "Zengshengkui Snack Shop",
+          "start_time": "06:00",
+          "end_time": "06:45",
+          "price": 16.0,
+          "cost": 80.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Zengshengkui Snack Shop",
+              "mode": "taxi",
+              "start_time": "02:29",
+              "end_time": "03:39",
+              "distance": 47.11,
+              "price": 206.71,
+              "cost": 413.42,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "China Science and Technology Museum",
-          "start_time": "12:32",
-          "end_time": "13:32",
+          "position": "Cining Palace",
+          "start_time": "09:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
-              "end": "China Science and Technology Museum",
+              "start": "Zengshengkui Snack Shop",
+              "end": "Cining Palace",
               "mode": "taxi",
-              "start_time": "12:08",
-              "end_time": "12:32",
-              "distance": 16.52,
-              "price": 69.04,
-              "cost": 138.08,
+              "start_time": "06:45",
+              "end_time": "06:46",
+              "distance": 0.9,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+          "start_time": "11:00",
+          "end_time": "11:45",
+          "price": 16.0,
+          "cost": 80.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Cining Palace",
+              "end": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:52",
+              "distance": 1.74,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Beijing Fire Virtue Temple",
+          "start_time": "11:48",
+          "end_time": "12:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tianze Xiang Drum Tower Steamed Bun (Drum Tower Branch)",
+              "end": "Beijing Fire Virtue Temple",
+              "mode": "taxi",
+              "start_time": "11:45",
+              "end_time": "11:45",
+              "distance": 0.27,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
@@ -50,14 +116,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "China Science and Technology Museum",
+              "start": "Beijing Fire Virtue Temple",
               "end": "Olympic Park",
               "mode": "taxi",
-              "start_time": "13:32",
-              "end_time": "13:34",
-              "distance": 1.53,
-              "price": 11.0,
-              "cost": 22.0,
+              "start_time": "12:48",
+              "end_time": "12:57",
+              "distance": 6.21,
+              "price": 26.44,
+              "cost": 52.88,
               "cars": 2
             }
           ]
@@ -283,5 +349,5 @@
     }
   ],
   "elapsed_time(sec)": 255.97039103507996,
-  "_eval_score": 96.875
+  "_eval_score": 99.16666666666666
 }
