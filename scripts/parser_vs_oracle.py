@@ -96,19 +96,88 @@ def _best_oracle_index(parsed_variant: dict, oracle_variants: list[dict]) -> int
     return best_i
 
 
-def diff_variants(*, parsed_variants: list[dict], oracle_variants: list[dict]) -> dict:
+def _match_pairs(parsed_variants: list[dict], oracle_variants: list[dict]):
+    """Greedy one-to-one matching of oracle branches to parsed branches.
+
+    Returns (pairs, unmatched_oracle_idx, unmatched_parsed_idx) where pairs is a list of
+    (oracle_idx, parsed_idx) chosen by descending matched-family count without reusing a branch.
+    """
+    candidates = []
+    for oi, ov in enumerate(oracle_variants):
+        for pj, pv in enumerate(parsed_variants):
+            m = diff_constraints(pv, ov)["counts"]["matched"]
+            candidates.append((m, oi, pj))
+    # Highest matched first; ties broken deterministically by (oracle_idx, parsed_idx).
+    candidates.sort(key=lambda t: (-t[0], t[1], t[2]))
+    used_o, used_p, pairs = set(), set(), []
+    for _m, oi, pj in candidates:
+        if oi in used_o or pj in used_p:
+            continue
+        used_o.add(oi); used_p.add(pj); pairs.append((oi, pj))
+    unmatched_o = [oi for oi in range(len(oracle_variants)) if oi not in used_o]
+    unmatched_p = [pj for pj in range(len(parsed_variants)) if pj not in used_p]
+    return pairs, unmatched_o, unmatched_p
+
+
+def _branch_aware_diff(parsed_variants: list[dict], oracle_variants: list[dict]) -> dict:
+    """Matched-pair diff aggregated across all OR branches (micro-averaged counts).
+
+    Each oracle branch is matched to a distinct parsed branch; per-pair family counts are summed.
+    Unmatched oracle branches contribute their families as recall misses (``missing``); extra
+    parsed branches contribute theirs as precision misses (``spurious``). This credits correct
+    multi-branch parsing that the single-branch diff (parsed_variants[0] only) cannot.
+    """
+    pairs, unmatched_o, unmatched_p = _match_pairs(parsed_variants, oracle_variants)
+    tot = {"matched": 0, "missing": 0, "spurious": 0, "wrong_value": 0}
+    for oi, pj in pairs:
+        c = diff_constraints(parsed_variants[pj], oracle_variants[oi])["counts"]
+        for k in tot:
+            tot[k] += c[k]
+    for oi in unmatched_o:  # whole oracle branch missing from the parse
+        tot["missing"] += len(_families(oracle_variants[oi]))
+    for pj in unmatched_p:  # extra parsed branch the oracle does not have
+        tot["spurious"] += len(_families(parsed_variants[pj]))
+
+    predicted = tot["matched"] + tot["spurious"] + tot["wrong_value"]
+    relevant = tot["matched"] + tot["missing"] + tot["wrong_value"]
+    shared = tot["matched"] + tot["wrong_value"]
+    return {
+        "counts": tot,
+        "precision": tot["matched"] / predicted if predicted else 1.0,
+        "recall": tot["matched"] / relevant if relevant else 1.0,
+        "value_accuracy": tot["matched"] / shared if shared else 1.0,
+    }
+
+
+def diff_variants(*, parsed_variants: list[dict], oracle_variants: list[dict],
+                  branch_aware: bool = False) -> dict:
     """Diff parsed vs oracle at the variant-list level, flagging disjunction flattening.
 
     ``disjunction_flattened`` is True when the oracle encodes multiple OR branches but the parser
     collapsed them into fewer variants.
+
+    Two scoring modes:
+    - default (``branch_aware=False``): **single-branch** diff — scores only ``parsed_variants[0]``
+      against its best-matching oracle branch. This UNDER-REPORTS correct multi-branch parsing: a
+      perfectly split N-branch query is credited for at most one branch, so its recall/precision
+      look low even when every branch is parsed correctly. Prefer ``disjunction_flattened`` and the
+      disjunction-aware behavioral check as the trustworthy signals for disjunctive queries.
+    - ``branch_aware=True``: matched-pair diff over all branches (see ``_branch_aware_diff``), which
+      credits multi-branch parsing and subsumes ``disjunction_flattened`` (a flattened query shows
+      unmatched oracle branches as recall misses).
     """
     parsed_variants = parsed_variants or [{}]
     oracle_variants = oracle_variants or [{}]
     flattened = len(oracle_variants) > 1 and len(parsed_variants) < len(oracle_variants)
 
-    pv = parsed_variants[0]
-    oi = _best_oracle_index(pv, oracle_variants)
-    diff = diff_constraints(pv, oracle_variants[oi])
+    if branch_aware:
+        diff = _branch_aware_diff(parsed_variants, oracle_variants)
+        # Keep the bucket lists present for schema compatibility with the single-branch path.
+        diff.setdefault("buckets", {"matched": [], "missing": [], "spurious": [], "wrong_value": []})
+    else:
+        pv = parsed_variants[0]
+        oi = _best_oracle_index(pv, oracle_variants)
+        diff = diff_constraints(pv, oracle_variants[oi])
 
     return {
         "disjunction_flattened": flattened,
@@ -167,9 +236,10 @@ def query_variants(query: dict, *, disjunction: bool = False):
     return parsed, oracle
 
 
-def compute_query_diff(query: dict, *, disjunction: bool = False) -> dict:
+def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: bool = False) -> dict:
     parsed_variants, oracle_variants = query_variants(query, disjunction=disjunction)
-    dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants)
+    dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants,
+                       branch_aware=branch_aware)
     precision = dv["diff"]["precision"]
     recall = dv["diff"]["recall"]
     row = {
@@ -228,7 +298,7 @@ def _f1(precision: float, recall: float) -> float:
 
 
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
-               results_best=None, out_dir=None, disjunction=False) -> dict:
+               results_best=None, out_dir=None, disjunction=False, branch_aware=False) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
     selected = list(uids) if uids else (query_ids[: int(limit)] if limit else query_ids)
 
@@ -238,7 +308,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
     for uid in selected:
         q = query_data[uid]
         q.setdefault("uid", uid)
-        row = compute_query_diff(q, disjunction=disjunction)
+        row = compute_query_diff(q, disjunction=disjunction, branch_aware=branch_aware)
         rows.append(row)
         if behavioral:
             plan_path = results_best / f"{uid}.json"
@@ -289,6 +359,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--disjunction", action="store_true",
                    help="Expand disjunctive queries via the Phase 2 normalize layer "
                         "(TPC_P2_DISJUNCTION) instead of the flat single-variant parse.")
+    p.add_argument("--branch-aware", action="store_true",
+                   help="Score precision/recall with a matched-pair diff across all OR branches "
+                        "(credits multi-branch parsing) instead of the single-branch "
+                        "parsed_variants[0] diff. Best combined with --disjunction.")
     p.add_argument("--out-dir", default=str(PROJECT_ROOT / "cache" / "phase2_parser_vs_oracle"))
     return p.parse_args()
 
@@ -297,7 +371,8 @@ def main() -> None:
     args = parse_args()
     split = args.split or ("tpc_phase2_test" if args.split_set == "test" else "tpc_phase2_val")
     agg = run_report(split, limit=args.limit, behavioral=args.behavioral, lang=args.lang,
-                     out_dir=args.out_dir, disjunction=args.disjunction)
+                     out_dir=args.out_dir, disjunction=args.disjunction,
+                     branch_aware=args.branch_aware)
     print(json.dumps(agg, ensure_ascii=False, indent=2))
 
 

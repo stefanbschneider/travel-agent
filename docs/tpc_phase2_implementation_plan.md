@@ -113,6 +113,21 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
   - Note: the verifier deliberately still fails a time-window/dwell constraint whose location is
     absent from the plan — that matches the oracle (`any([])` is False), confirmed by the 0 non-
     disjunctive flips, so it is not softened.
+- **Milestone 7 (DONE):** branch-aware parsing metric (`scripts/parser_vs_oracle.py`). The default
+  `diff_variants` scores only `parsed_variants[0]` vs its best oracle branch, so it is blind to
+  branches 2..N — it neither credits a correctly parsed second branch nor penalizes a wrong one.
+  Added an opt-in **matched-pair diff** (`diff_variants(..., branch_aware=True)`, CLI
+  `--branch-aware`): each oracle branch is greedily matched one-to-one to a distinct parsed branch,
+  per-pair family counts are summed (micro-average), unmatched oracle branches are recall misses,
+  extra parsed branches are precision misses — subsuming `disjunction_flattened`. The single-branch
+  limitation is now documented at the `diff_variants` source. Tests in
+  `tests/phase2/test_branch_aware_diff.py`.
+  - **Interpretation:** on val (first 400, `--disjunction`) branch-aware vs single-branch is
+    precision 0.610 → 0.617, recall 0.713 → 0.683, value-accuracy 0.807 → 0.828. The recall *drop*
+    is the honesty gain: single-branch cherry-picked the best branch, while branch-aware also counts
+    the poorly-parsed second arms. It is an opt-in so historical single-branch numbers and existing
+    tests are unchanged; **behavioral agreement (OR-aware) remains the ground-truth signal**, with
+    branch-aware precision/recall as the faster structural diagnostic.
 
 ## Eval split task (built in Milestone 1)
 
