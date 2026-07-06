@@ -96,6 +96,23 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
     conversion, zero spurious additions. Phase-1 *scoring* uses `hard_logic_py`
     (`evaluate_constraints_py`) independently of the parser, so `results/best` is unaffected; the
     change only makes the oracle *search* heuristic more accurate.
+- **Milestone 6 (DONE):** acceptance-gate **OR-awareness** (Phase C). Diagnosis showed the
+  behavioral regression in Milestone 5 was a *measurement* artifact: the flat behavioral check ANDs
+  OR-arm constraints, so disjunctive queries scored 0.41 agreement vs 0.67 non-disjunctive, and
+  `activity_time_windows` caused **0** agree→disagree flips on non-disjunctive queries. The agent
+  itself already accepts a plan satisfying *any* branch (`TPCAgent._solve` variant loop), so the fix
+  is to make the gate and its metric OR-aware:
+  - `parser_vs_oracle.behavioral_check(..., disjunction=True)` now accepts if any
+    disjunction-expanded variant passes (wired to the `--disjunction` CLI flag).
+  - `agent_env/scripts/solve_phase2.py` enables disjunctive branch generation **by default** (unless
+    `TPC_P2_DISJUNCTION` is explicitly set), so the production acceptance gate is OR-correct. The
+    library default (`Flags()`) stays off, preserving the byte-identical invariant tests.
+  - **Measured (val):** behavioral agreement **0.478 → 0.633** (first 400) / **0.547 → 0.711**
+    (n=850) flat → disjunction-aware; `disjunction_flattened` in the report drops 169 → 53. No
+    `parse_constraints.py` change, so the Phase-1 oracle gate is untouched.
+  - Note: the verifier deliberately still fails a time-window/dwell constraint whose location is
+    absent from the plan — that matches the oracle (`any([])` is False), confirmed by the 0 non-
+    disjunctive flips, so it is not softened.
 
 ## Eval split task (built in Milestone 1)
 

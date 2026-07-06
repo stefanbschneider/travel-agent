@@ -186,16 +186,26 @@ def compute_query_diff(query: dict, *, disjunction: bool = False) -> dict:
     return row
 
 
-def behavioral_check(query: dict, plan: dict) -> dict:
-    """Do parsed vs oracle constraints accept/reject the plan identically?"""
+def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False) -> dict:
+    """Do parsed vs oracle constraints accept/reject the plan identically?
+
+    With ``disjunction=True`` the parsed side uses OR semantics over disjunction-expanded variants
+    (accept if ANY branch's constraints all pass) — matching how the agent actually accepts plans
+    (``TPCAgent._solve`` keeps a plan that satisfies any one variant). The flat default ANDs OR-arm
+    constraints and therefore under-reports agreement on disjunctive queries.
+    """
     from chinatravel.agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
     from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
 
-    parsed_variants, _ = query_variants(query)
+    parsed_variants, _ = query_variants(query, disjunction=disjunction)
     target_city = query.get("target_city", "")
     try:
-        parsed_res = evaluate_parsed_constraints(parsed_variants[0], plan, target_city)
-        parsed_pass = all(parsed_res)
+        if disjunction:
+            parsed_pass = any(
+                all(evaluate_parsed_constraints(v, plan, target_city)) for v in parsed_variants
+            )
+        else:
+            parsed_pass = all(evaluate_parsed_constraints(parsed_variants[0], plan, target_city))
     except Exception:
         parsed_pass = False
     try:
@@ -234,7 +244,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
             plan_path = results_best / f"{uid}.json"
             if plan_path.exists():
                 plan = json.loads(plan_path.read_text(encoding="utf-8"))
-                behav_rows.append(behavioral_check(q, plan))
+                behav_rows.append(behavioral_check(q, plan, disjunction=disjunction))
 
     mean_precision = _mean(r["precision"] for r in rows)
     mean_recall = _mean(r["recall"] for r in rows)

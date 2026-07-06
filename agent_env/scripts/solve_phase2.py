@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from statistics import mean, pstdev
@@ -117,6 +118,13 @@ def run_split(
             env = WorldEnv(lang=lang)
         solve_fn = orch.make_tpcagent_solve_fn(env, lang=lang)
 
+    # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
+    # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
+    # the deterministic byte-identical invariant tests are unaffected.
+    flags = orch.Flags.from_env()
+    if "TPC_P2_DISJUNCTION" not in os.environ:
+        flags.disjunction = True
+
     done_uids: list[str] = []
     skipped = 0
     parse_failures = 0
@@ -133,7 +141,7 @@ def run_split(
         visible = hb.visible_query(full_query)  # oracle hidden from the agent
 
         plan, telemetry = orch.solve_phase2(
-            visible, env=env, budget_sec=budget_sec, solve_fn=solve_fn
+            visible, env=env, budget_sec=budget_sec, solve_fn=solve_fn, flags=flags
         )
 
         hb.write_json(result_path, plan)
