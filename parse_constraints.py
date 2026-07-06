@@ -472,10 +472,23 @@ def parse_hotel_amenity(text):
 def parse_stay_duration(text):
     """Extract minimum stay duration at a specific location."""
     constraints = []
+    seen = set()
+
+    def _add(loc, minutes):
+        loc = loc.strip().rstrip(".")
+        if loc and loc not in seen:
+            seen.add(loc)
+            constraints.append({"location": loc, "min_minutes": int(minutes)})
+
     for m in re.finditer(r"stay\s+at\s+(.+?)\s+for\s+(?:at\s+least\s+)?(\d+)\s*minutes?", text, re.I):
-        constraints.append({"location": m.group(1).strip(), "min_minutes": int(m.group(2))})
+        _add(m.group(1), m.group(2))
     for m in re.finditer(r"spend\s+(?:at\s+least\s+)?(\d+)\s*minutes?\s+at\s+(.+?)(?:\.|;|,|$)", text, re.I):
-        constraints.append({"location": m.group(2).strip().rstrip("."), "min_minutes": int(m.group(1))})
+        _add(m.group(2), m.group(1))
+    # "visit/be at X between A and B" -> min stay = (B - A) minutes
+    for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", text, re.I):
+        dur = _hhmm_to_min(m.group(3)) - _hhmm_to_min(m.group(2))
+        if dur > 0:
+            _add(m.group(1), dur)
     return constraints if constraints else None
 
 
@@ -648,6 +661,199 @@ def parse_timing_constraints(text):
     return constraints if constraints else None
 
 
+def _cap_first(s):
+    s = s.strip().rstrip(".")
+    return s[:1].upper() + s[1:] if s else s
+
+
+def _split_types(chunk):
+    out = []
+    for p in re.split(r"\s+and\s+|,\s*(?:and\s+|or\s+)?|\s+or\s+", chunk):
+        p = _cap_first(p)
+        if p and p.lower() not in {"the", "following", "these", "a", "an", ""}:
+            if p not in out:
+                out.append(p)
+    return out
+
+
+def parse_required_hotel_types(text):
+    """Extract hotel FEATURE types, split into (any_types, all_types).
+
+    "one of the following (hotel) types: A, B"  -> any_types (at least one must hold)
+    "hotel of (the) type X" / "hotel that offers X" -> all_types (all must hold)
+    Values are normalized to sentence case to match the oracle vocabulary
+    ("free parking" -> "Free parking").
+    """
+    any_types, all_types = [], []
+    m = re.search(
+        r"one\s+of\s+the\s+following\s+(?:hotel\s+)?types?(?:\s+of\s+hotels?)?[:\s]+(.+?)(?:\.|;|$)",
+        text, re.I,
+    )
+    if m:
+        any_types = _split_types(m.group(1))
+    if not any_types:
+        for pat in (
+            r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+            r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+            r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+        ):
+            m = re.search(pat, text, re.I)
+            if m:
+                all_types = _split_types(m.group(1))
+                break
+    return any_types, all_types
+
+
+def _hhmm_to_min(t):
+    h, m = t.split(":")
+    return int(h) * 60 + int(m)
+
+
+def parse_activity_time_windows(text):
+    """Extract per-location time windows in the oracle shape.
+
+    {location, earliest, latest, end_after, end_before}
+      - "arrive at/reach X no later than T"    -> latest=T
+      - "arrive at/reach X no earlier than T"   -> earliest=T
+      - "leave/depart (from) X no earlier than T" / "depart no earlier than T from X" -> end_after=T
+      - "leave/depart (from) X no later than T"  -> end_before=T
+      - "visit/be at X between A and B"          -> latest=A, end_after=B
+    """
+    def _loc(s):
+        return re.sub(r"^the\s+", "", s.strip().rstrip("."), flags=re.I).strip()
+
+    by_loc = {}
+
+    def _set(loc, key, val):
+        loc = _loc(loc)
+        w = by_loc.setdefault(loc, {"location": loc, "earliest": None, "latest": None,
+                                    "end_after": None, "end_before": None})
+        if w[key] is None:
+            w[key] = val
+
+    order = []
+
+    def _mark(loc):
+        loc = _loc(loc)
+        if loc not in order:
+            order.append(loc)
+
+    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "latest", m.group(2))
+    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "earliest", m.group(2))
+    for m in re.finditer(r"(?:leave|depart(?:\s+from)?)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "end_after", m.group(2))
+    for m in re.finditer(r"(?:leave|depart(?:\s+from)?)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "end_before", m.group(2))
+    # "depart no earlier/later than T from X" (reversed order)
+    for m in re.finditer(r"depart\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})\s+from\s+(.+?)(?:\.|;|,|$)", text, re.I):
+        _mark(m.group(2)); _set(m.group(2), "end_after", m.group(1))
+    for m in re.finditer(r"depart\s+no\s+later\s+than\s+(\d{1,2}:\d{2})\s+from\s+(.+?)(?:\.|;|,|$)", text, re.I):
+        _mark(m.group(2)); _set(m.group(2), "end_before", m.group(1))
+    # "visit/be at X between A and B"
+    for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "latest", m.group(2)); _set(m.group(1), "end_after", m.group(3))
+
+    return [by_loc[loc] for loc in order] if order else None
+
+
+def _cap_first(s):
+    s = s.strip().rstrip(".")
+    return s[:1].upper() + s[1:] if s else s
+
+
+def _split_types(chunk):
+    out = []
+    for p in re.split(r"\s+and\s+|,\s*(?:and\s+|or\s+)?|\s+or\s+", chunk):
+        p = _cap_first(p)
+        if p and p.lower() not in {"the", "following", "these", "a", "an", ""}:
+            if p not in out:
+                out.append(p)
+    return out
+
+
+def parse_required_hotel_types(text):
+    """Extract hotel FEATURE types, split into (any_types, all_types).
+
+    "one of the following (hotel) types: A, B"  -> any_types (at least one must hold)
+    "hotel of (the) type X" / "hotel that offers X" -> all_types (all must hold)
+    Values are normalized to sentence case to match the oracle vocabulary
+    ("free parking" -> "Free parking").
+    """
+    any_types, all_types = [], []
+    m = re.search(
+        r"one\s+of\s+the\s+following\s+(?:hotel\s+)?types?(?:\s+of\s+hotels?)?[:\s]+(.+?)(?:\.|;|$)",
+        text, re.I,
+    )
+    if m:
+        any_types = _split_types(m.group(1))
+    if not any_types:
+        for pat in (
+            r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+            r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+            r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+        ):
+            m = re.search(pat, text, re.I)
+            if m:
+                all_types = _split_types(m.group(1))
+                break
+    return any_types, all_types
+
+
+def _hhmm_to_min(t):
+    h, m = t.split(":")
+    return int(h) * 60 + int(m)
+
+
+def parse_activity_time_windows(text):
+    """Extract per-location time windows in the oracle shape.
+
+    {location, earliest, latest, end_after, end_before}
+      - "arrive at/reach X no later than T"    -> latest=T
+      - "arrive at/reach X no earlier than T"   -> earliest=T
+      - "leave/depart (from) X no earlier than T" / "depart no earlier than T from X" -> end_after=T
+      - "leave/depart (from) X no later than T"  -> end_before=T
+      - "visit/be at X between A and B"          -> latest=A, end_after=B
+    """
+    def _loc(s):
+        return re.sub(r"^the\s+", "", s.strip().rstrip("."), flags=re.I).strip()
+
+    by_loc = {}
+    order = []
+
+    def _mark(loc):
+        loc = _loc(loc)
+        if loc not in order:
+            order.append(loc)
+
+    def _set(loc, key, val):
+        loc = _loc(loc)
+        w = by_loc.setdefault(loc, {"location": loc, "earliest": None, "latest": None,
+                                    "end_after": None, "end_before": None})
+        if w[key] is None:
+            w[key] = val
+
+    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "latest", m.group(2))
+    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "earliest", m.group(2))
+    for m in re.finditer(r"(?:leave|depart(?:\s+from)?)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "end_after", m.group(2))
+    for m in re.finditer(r"(?:leave|depart(?:\s+from)?)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "end_before", m.group(2))
+    # "depart no earlier/later than T from X" (reversed order)
+    for m in re.finditer(r"depart\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})\s+from\s+(.+?)(?:\.|;|,|$)", text, re.I):
+        _mark(m.group(2)); _set(m.group(2), "end_after", m.group(1))
+    for m in re.finditer(r"depart\s+no\s+later\s+than\s+(\d{1,2}:\d{2})\s+from\s+(.+?)(?:\.|;|,|$)", text, re.I):
+        _mark(m.group(2)); _set(m.group(2), "end_before", m.group(1))
+    # "visit/be at X between A and B"
+    for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", text, re.I):
+        _mark(m.group(1)); _set(m.group(1), "latest", m.group(2)); _set(m.group(1), "end_after", m.group(3))
+
+    return [by_loc[loc] for loc in order] if order else None
+
+
 def detect_disjunctive(text):
     """Detect if the query has OR/disjunctive constraints."""
     if re.search(r"(?:at\s+least\s+one|either|any\s+one)\s+of\s+(?:the\s+following)?", text, re.I):
@@ -721,9 +927,11 @@ def parse_single_constraint_text(text):
     if room:
         result["room_type"] = room
 
-    hotel_type = parse_hotel_type(text)
-    if hotel_type:
-        result["hotel_type"] = hotel_type
+    any_hotel_types, all_hotel_types = parse_required_hotel_types(text)
+    if any_hotel_types:
+        result["required_hotel_any_types"] = any_hotel_types
+    if all_hotel_types:
+        result["required_hotel_all_types"] = all_hotel_types
 
     hotel_near = parse_hotel_nearby(text)
     if hotel_near:
@@ -765,6 +973,10 @@ def parse_single_constraint_text(text):
     if timing:
         result["timing_constraints"] = timing
 
+    time_windows = parse_activity_time_windows(text)
+    if time_windows:
+        result["activity_time_windows"] = time_windows
+
     cond = parse_conditional_transport(text)
     if cond:
         result["conditional_transport"] = cond
@@ -784,6 +996,20 @@ def parse_single_constraint_text(text):
     stay_dur = parse_stay_duration(text)
     if stay_dur:
         result["stay_duration"] = stay_dur
+
+    # position_presence: any location that carries a time-window or stay-duration constraint must
+    # appear in the plan (mirrors the oracle, which lists these locations explicitly).
+    presence = []
+    for w in result.get("activity_time_windows", []) or []:
+        loc = w.get("location")
+        if loc and loc not in presence:
+            presence.append(loc)
+    for sd in result.get("stay_duration", []) or []:
+        loc = sd.get("location")
+        if loc and loc not in presence:
+            presence.append(loc)
+    if presence:
+        result["position_presence"] = presence
 
     return result
 
