@@ -139,22 +139,36 @@ def _load_queries(split: str, lang: str = "en"):
     return load_query(args)
 
 
-def query_variants(query: dict):
-    """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema."""
+def query_variants(query: dict, *, disjunction: bool = False):
+    """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema.
+
+    When ``disjunction`` is True, the parsed side is produced through the Phase 2 normalize layer
+    with ``TPC_P2_DISJUNCTION`` on, so disjunctive queries expand into one branch-local variant per
+    OR arm (the same path the harness feeds the solver). Default (False) keeps the flat single-
+    variant no-oracle parse, so existing reports are unchanged.
+    """
     import parse_constraints
     from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
 
-    parsed = solver_constraint_variants(
-        query, parse_constraints.parse_query_no_oracle(query), use_oracle=False
-    )
+    if disjunction:
+        from chinatravel.agent.phase2 import normalize
+        from chinatravel.agent.phase2.orchestrator import Flags
+
+        flags = Flags(disjunction=True)
+        ir = normalize.parse_to_ir(query, flags=flags)
+        parsed = normalize.ir_to_solver_variants(ir, query, flags=flags)
+    else:
+        parsed = solver_constraint_variants(
+            query, parse_constraints.parse_query_no_oracle(query), use_oracle=False
+        )
     oracle = solver_constraint_variants(
         query, parse_constraints.parse_query(query), use_oracle=True
     )
     return parsed, oracle
 
 
-def compute_query_diff(query: dict) -> dict:
-    parsed_variants, oracle_variants = query_variants(query)
+def compute_query_diff(query: dict, *, disjunction: bool = False) -> dict:
+    parsed_variants, oracle_variants = query_variants(query, disjunction=disjunction)
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants)
     precision = dv["diff"]["precision"]
     recall = dv["diff"]["recall"]
@@ -204,7 +218,7 @@ def _f1(precision: float, recall: float) -> float:
 
 
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
-               results_best=None, out_dir=None) -> dict:
+               results_best=None, out_dir=None, disjunction=False) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
     selected = list(uids) if uids else (query_ids[: int(limit)] if limit else query_ids)
 
@@ -214,7 +228,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
     for uid in selected:
         q = query_data[uid]
         q.setdefault("uid", uid)
-        row = compute_query_diff(q)
+        row = compute_query_diff(q, disjunction=disjunction)
         rows.append(row)
         if behavioral:
             plan_path = results_best / f"{uid}.json"
@@ -262,6 +276,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--behavioral", action="store_true", help="Also run the behavioral-equivalence check.")
     p.add_argument("--lang", default="en", choices=["en", "zh"])
+    p.add_argument("--disjunction", action="store_true",
+                   help="Expand disjunctive queries via the Phase 2 normalize layer "
+                        "(TPC_P2_DISJUNCTION) instead of the flat single-variant parse.")
     p.add_argument("--out-dir", default=str(PROJECT_ROOT / "cache" / "phase2_parser_vs_oracle"))
     return p.parse_args()
 
@@ -270,7 +287,7 @@ def main() -> None:
     args = parse_args()
     split = args.split or ("tpc_phase2_test" if args.split_set == "test" else "tpc_phase2_val")
     agg = run_report(split, limit=args.limit, behavioral=args.behavioral, lang=args.lang,
-                     out_dir=args.out_dir)
+                     out_dir=args.out_dir, disjunction=args.disjunction)
     print(json.dumps(agg, ensure_ascii=False, indent=2))
 
 

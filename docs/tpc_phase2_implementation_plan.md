@@ -48,6 +48,31 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
   (Task 11: `llm_parse_stub`, `disjunction_stub`, `llm_refine_stub`, all no-ops, off by default) and
   the HF dataset compare (Task 12: `scripts/compare_hf_dataset.py`). All Phase 2 make targets live in a
   clearly separated `PHASE 2` section of the `Makefile` (`make phase2-help`).
+- **Milestone 4 (DONE):** first real improvement behind a flag — true no-oracle **disjunctive branch
+  generation** (`TPC_P2_DISJUNCTION`). `parse_to_ir` now deterministically detects OR-groups from NL
+  (`detect_disjunctive` / `split_disjunctive_groups` / `parse_single_constraint_text`) and populates
+  `ParsedIR.or_groups`; `ir_to_solver_variants` (via `disjunction_stub`) expands them into one
+  branch-local solver variant per arm, mirroring the oracle path (strip `_BRANCH_LOCAL_KEYS` from the
+  shared base, re-add per-arm facts, normalize through `solver_constraint_variants(use_oracle=False)`).
+  The harness became the single parsing owner: `TPCAgent` gained an `_injected_variants` seam and
+  `make_tpcagent_solve_fn` injects the (expanded) variants so the agent's existing per-variant loop
+  provides OR (accept-any-branch) semantics end-to-end. LLM-assisted arm splitting is **deferred** —
+  only a `TODO(phase2, LLM disjunction assist)` marker sits at the split site in `normalize.py`,
+  gated on both `TPC_P2_DISJUNCTION` and `TPC_P2_LLM_PARSE` with a deterministic fallback and no
+  network on the default path.
+  - **Measured (val, first 200):** `disjunction_flattened` 72 → 25 (−65%), precision 0.642 → 0.703,
+    F1 0.594 → 0.613, recall ~flat (0.552 → 0.544). The tiny recall dip is a metric artifact:
+    `parser_vs_oracle.diff_variants` scores only `parsed_variants[0]`, so a flattened "A and B"
+    variant over-populates families and inflates single-branch recall; `disjunction_flattened` is the
+    correct structural signal here. Reproduce with `scripts/parser_vs_oracle.py --disjunction`.
+  - **Scope reality:** 474/1000 phase-1 queries are oracle-disjunctive; only ~309 are
+    *deterministically recoverable* (NL splits into ≥2 arms that each parse to a non-empty
+    constraint). The rest have an unparseable arm (e.g. an unlisted attraction name) and stay flat —
+    that residual is the deferred LLM-assist territory. Pre-existing per-field no-oracle parser
+    inaccuracies (e.g. "do not want restaurants X" mis-mapped) are out of scope for this
+    structure-only milestone.
+  - **Flags-off invariant:** byte-identical to the prior no-oracle path (enforced by
+    `tests/phase2/test_flags.py`, `test_schema_normalize.py`, and `test_disjunction.py`).
 
 ## Eval split task (built in Milestone 1)
 
@@ -82,7 +107,7 @@ Rehearsal folds are drawn from the validation split only; `rehearse_phase2.py --
 | Flag | Default | Meaning |
 | ---- | ------- | ------- |
 | `TPC_P2_LLM_BACKEND` | `none` | `none` / `fixture` / `openai` |
-| `TPC_P2_DISJUNCTION` | `0` | true no-oracle disjunctive branch generation (stub) |
+| `TPC_P2_DISJUNCTION` | `0` | true no-oracle disjunctive branch generation (implemented, Milestone 4) |
 | `TPC_P2_LLM_PARSE` | `0` | LLM-assisted second-pass parse (stub) |
 | `TPC_P2_LLM_REFINE` | `0` | bounded LLM plan refinement (stub) |
 | `TPC_P2_BUDGET_SEC` | per-query timeout | total budget the orchestrator splits across stages |

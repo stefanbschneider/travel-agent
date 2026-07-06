@@ -227,6 +227,21 @@ flattening, and behavioral equivalence):
 make phase2-parser-report P2_LIMIT=20
 ```
 
+No-oracle disjunctive branch generation is implemented behind `TPC_P2_DISJUNCTION` (Milestone 4).
+Add `--disjunction` to the parser report to expand "satisfy either A or B" queries into one
+branch-local variant per OR arm (instead of the over-constrained flat "A and B") and see the effect
+on the flattening / precision metrics:
+```
+# before (flat) vs after (disjunction-expanded), same sample:
+.venv/bin/python scripts/parser_vs_oracle.py --split tpc_phase2_val --limit 200
+.venv/bin/python scripts/parser_vs_oracle.py --split tpc_phase2_val --limit 200 --disjunction
+```
+On the first 200 val queries this drops `disjunction_flattened` 72 → 25 and lifts precision
+0.642 → 0.703 / F1 0.594 → 0.613 (recall stays ~flat — `diff_variants` scores only the first
+parsed branch, so `disjunction_flattened` is the reliable structural signal). Only the ~309/474
+oracle-disjunctive queries with deterministically parseable arms are recovered; the rest are the
+deferred LLM-assist territory.
+
 Run the harness end-to-end (invokes the real solver; use a small `--limit`/`--budget-sec` locally —
 the 900s default is the full Phase-2 budget):
 ```
@@ -273,8 +288,11 @@ Compare the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset (generalization set) t
 .venv/bin/python scripts/compare_hf_dataset.py --hf-config default
 ```
 
-The (currently no-op) LLM stubs are exercised by setting `TPC_P2_LLM_BACKEND=fixture` plus the
-relevant `TPC_P2_LLM_PARSE` / `TPC_P2_DISJUNCTION` / `TPC_P2_LLM_REFINE=1`.
+`TPC_P2_DISJUNCTION` is implemented (Milestone 4; deterministic, no LLM). The remaining no-op LLM
+stubs are exercised by setting `TPC_P2_LLM_BACKEND=fixture` plus the relevant `TPC_P2_LLM_PARSE` /
+`TPC_P2_LLM_REFINE=1`. LLM-assisted disjunction arm-splitting is deferred (a `TODO(phase2, LLM
+disjunction assist)` marker in `normalize.py`, gated on both `TPC_P2_DISJUNCTION` and
+`TPC_P2_LLM_PARSE`).
 
 **Notes:**
 

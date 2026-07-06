@@ -93,7 +93,14 @@ def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -
         os.environ["TPC_USE_ORACLE"] = "0"
         os.environ["TPC_SOLVE_BUDGET_SEC"] = str(max(float(budget_sec), 1.0))
         agent.solve_budget_sec = max(float(budget_sec), 1.0)
-        _succ, plan = agent.run(query)
+        # Harness owns parsing: inject the (possibly disjunction-expanded) variants so the agent
+        # uses them directly instead of re-parsing. Empty/None injection preserves the agent's own
+        # no-oracle parse, so a parse failure upstream degrades gracefully rather than crashing.
+        agent._injected_variants = variants if isinstance(variants, list) and variants else None
+        try:
+            _succ, plan = agent.run(query)
+        finally:
+            agent._injected_variants = None
         return plan
 
     return _solve

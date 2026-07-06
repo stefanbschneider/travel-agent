@@ -170,7 +170,7 @@ The harness always preserves a hard finalization buffer and returns before the t
 | Flag (env var) | Default | Effect when ON |
 | -------------- | ------- | -------------- |
 | `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai`. |
-| `TPC_P2_DISJUNCTION` | `0` | Enable true no-oracle disjunctive branch generation (Stage 1). Stub in skeleton. |
+| `TPC_P2_DISJUNCTION` | `0` | Enable true no-oracle disjunctive branch generation (Stage 1). Implemented (Milestone 4); deterministic NL splitting, one branch-local variant per OR arm. |
 | `TPC_P2_LLM_PARSE` | `0` | Enable LLM-assisted second-pass parsing (Stage 1). Stub in skeleton. |
 | `TPC_P2_LLM_REFINE` | `0` | Enable bounded LLM-guided plan refinement (Stage 3). Stub in skeleton. |
 | `TPC_P2_BUDGET_SEC` | inherits per-query timeout | Total per-query time budget the orchestrator splits across stages. |
