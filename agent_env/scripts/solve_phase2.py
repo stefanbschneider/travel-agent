@@ -33,8 +33,13 @@ import solve_script_with_harness as hb  # noqa: E402
 
 from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
-DEFAULT_METHOD = "phase2_skeleton"
+DEFAULT_METHOD_PREFIX = "phase2_e2e_"
 DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
+
+
+def _default_method_for_split(split: str) -> str:
+    """Keep the script default aligned with Makefile P2_METHOD."""
+    return f"{DEFAULT_METHOD_PREFIX}{split}"
 
 
 def _score_stats(values: list[float]) -> dict:
@@ -71,7 +76,7 @@ def _load_queries(split: str, lang: str = "en"):
 def run_split(
     split: str,
     *,
-    method: str = DEFAULT_METHOD,
+    method: str | None = None,
     limit: int | None = None,
     uid: str | None = None,
     uids: list[str] | None = None,
@@ -84,6 +89,7 @@ def run_split(
     solve_fn=None,
 ) -> dict:
     """Run the Phase 2 pipeline over a split. Returns a summary dict."""
+    method = method or _default_method_for_split(split)
     budget_sec = float(budget_sec if budget_sec is not None else DEFAULT_BUDGET_SEC)
     results_root = Path(results_dir) if results_dir else PROJECT_ROOT / "results"
     work_root = Path(work_dir) if work_dir else PROJECT_ROOT / "agent_env" / "runs" / method
@@ -231,7 +237,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--split", default="tpc_phase2_val")
     p.add_argument("--uid", default=None)
     p.add_argument("--limit", type=int, default=None)
-    p.add_argument("--method", default=DEFAULT_METHOD)
+    p.add_argument("--method", default=None)
     p.add_argument("--resume", action="store_true")
     p.add_argument("--budget-sec", type=float, default=None)
     p.add_argument("--lang", default="en", choices=["en", "zh"])
@@ -242,9 +248,10 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    method = args.method or _default_method_for_split(args.split)
     summary = run_split(
         args.split,
-        method=args.method,
+        method=method,
         limit=args.limit,
         uid=args.uid,
         resume=args.resume,

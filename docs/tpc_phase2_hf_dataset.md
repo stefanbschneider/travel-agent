@@ -47,6 +47,9 @@ Comparing HF `default` (654 rows) against local `tpc_phase1` (1000):
 
 - **uid overlap: 0** — the HF paper benchmark and the TPC-2026 `tpc_phase1` split are disjoint uid
   spaces. No contamination risk in treating HF as an independent generalization set.
+- **UID counting caveat:** `hf_only_uids` is computed from a **set** of HF ids (unique UID values),
+  while `hf_n` is raw row count. If HF contains repeated or missing `uid` values, these two numbers can
+  differ; interpret `hf_only_uids` as unique-id coverage, not total query rows.
 - **HF field presence:** all 654 rows have `hard_logic_py`, `nature_language`, **and
   `nature_language_en`**, plus `start_city`/`target_city`/`days`/`people_number`. (Local `tpc_phase1`
   has `hard_logic_py` but **no** `nature_language_en` — it stores English text differently.)

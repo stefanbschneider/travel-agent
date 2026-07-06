@@ -1,27 +1,7 @@
-## Current upstream evaluation state
-
-These notes track the organizers' benchmark (github.com/LAMDASZ-ML/ChinaTravel) and the
-leaderboard scoring server so local evaluation stays aligned with current upstream
-behavior.
-
-1. Concept-name canonicalization is fixed in current upstream main.
-    The verifier now normalizes equivalent labels such as "Swimming pool" / "Swimming Pool",
-    "cafe" / "coffee shop", and "university campus" / "University campus" before evaluation,
-    so the earlier case-sensitive unsatisfiable-query issue no longer applies to the latest
-    competition code.
-
-2. Overall score still double-counts EPR-micro on the leaderboard.
-    eval_tpc.py:343 computes 0.1*EPR_micro + 0.1*EPR_micro instead of the documented
-    0.1*EPR_micro + 0.1*EPR_macro, so the leaderboard "overall" weights EPR-micro twice
-    and ignores EPR-macro. We keep this verbatim as `overall` for leaderboard parity and
-    additionally report the corrected `overall_official` (eval_tpc.py:345). The two differ
-    only when EPR-micro != EPR-macro.
-
 **Important links:**
 
 - Competition website: https://chinatravel-competition.github.io/IJCAI2026/
 - ChinaTravel GitHub repo: https://github.com/LAMDA-NeSy/ChinaTravel
-- Local upstream divergence report: `docs/upstream_divergence.md`
 
 **Competition docs in this repo:**
 
@@ -42,14 +22,6 @@ public leaderboard score. Phase 2 has a different execution model: per-query har
 held-out queries, no oracle verifier fields visible to the agent, and bounded runtime.
 
 ## Phase 1 Operations
-
-Latest verified score snapshot (`results/best`, 2026-06-22):
-
-- Overall: 95.4340 (official: 95.4340)
-- FPR: 98.9000
-- C-LPR: 99.5796
-- MicEPR/MacEPR: 100.0000 / 100.0000
-- DAV/ATT/DDR: 67.5720 / 82.4808 / 69.5298
 
 `TPCAgent` runs a per-query oracle-guided search. Drive it with the resumable scripts in
 `scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
@@ -200,109 +172,62 @@ For the detailed Phase 1 operating model and what transfers cleanly to Phase 2, 
 
 Phase 2 is the final harness: per-query, held-out queries, **no oracle**, bounded per-query budget,
 fixed Qwen model. Our harness does no-oracle parsing + orchestration around the deterministic
-TPCAgent. **The LLM is off by default, so none of these commands make API calls.** All Python entry
-points use the venv interpreter (`.venv/bin/python`); the `make` targets already do. See
-`docs/tpc_phase2_design.md` and `docs/tpc_phase2_eval.md`, and run `make phase2-help` for the full
-target list.
+TPCAgent. **The LLM is off by default, so none of these commands make API calls.**
+Use the venv interpreter directly (`.venv/bin/python`). See `docs/tpc_phase2_design.md`
+and `docs/tpc_phase2_eval.md` for full details.
 
-Suggested first pass: run the tests, then the parsing report (fast, shows the parsing gap without the
-solver), then a small end-to-end solve.
+Suggested order: tests -> parser report -> small end-to-end solve -> rehearsal -> timing/gate.
 
-Tests (fast; no solver/LLM):
-```
-make phase2-test                            # unit suite (LLM/WorldEnv-free)
-.venv/bin/python -m pytest -m integration   # opt-in: real WorldEnv + TPCAgent (~1-2 min)
-```
+1. Tests (fast; no solver/LLM by default)
 
-Create the validation / held-out-test split files (one-time, idempotent):
-```
-make phase2-splits
+```bash
+.venv/bin/python -m pytest tests/phase2
+# optional integration run (~1-2 min):
+.venv/bin/python -m pytest -m integration tests/phase2
 ```
 
-Parsing-quality report — fastest real signal (no solver, seconds). Shows how well the no-oracle
-parser recovers constraints vs the oracle (precision / recall / value-accuracy, disjunction
-flattening, and behavioral equivalence):
-```
-.venv/bin/python scripts/parser_vs_oracle.py --split-set val --limit 20 --behavioral
-make phase2-parser-report P2_LIMIT=20
+2. Create validation / held-out split files (one-time, idempotent)
+
+```bash
+.venv/bin/python scripts/make_phase2_splits.py
 ```
 
-No-oracle disjunctive branch generation is implemented behind `TPC_P2_DISJUNCTION` (Milestone 4).
-Add `--disjunction` to the parser report to expand "satisfy either A or B" queries into one
-branch-local variant per OR arm (instead of the over-constrained flat "A and B") and see the effect
-on the flattening / precision metrics:
-```
-# before (flat) vs after (disjunction-expanded), same sample:
-.venv/bin/python scripts/parser_vs_oracle.py --split tpc_phase2_val --limit 200
-.venv/bin/python scripts/parser_vs_oracle.py --split tpc_phase2_val --limit 200 --disjunction
-```
-On the first 200 val queries this drops `disjunction_flattened` 72 → 25 and lifts precision
-0.642 → 0.703 / F1 0.594 → 0.613 (recall stays ~flat — `diff_variants` scores only the first
-parsed branch, so `disjunction_flattened` is the reliable structural signal). Only the ~309/474
-oracle-disjunctive queries with deterministically parseable arms are recovered; the rest are the
-deferred LLM-assist territory.
+3. Parsing-quality report (fast, no solver)
 
-Run the harness end-to-end (invokes the real solver; use a small `--limit`/`--budget-sec` locally —
-the 900s default is the full Phase-2 budget):
+```bash
+.venv/bin/python scripts/parser_vs_oracle.py --limit 20 --behavioral
 ```
-# Equivalent pair (same split/method/limit/budget):
-.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --method phase2_e2e_tpc_phase2_val --limit 3 --budget-sec 60
-make phase2-solve P2_SPLIT=tpc_phase2_val P2_METHOD=phase2_e2e_tpc_phase2_val P2_LIMIT=3 P2_BUDGET=60
 
-# Equivalent pair for tpc_phase1 + script-default method:
-.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase1 --method phase2_skeleton --limit 3 --budget-sec 60
-make phase2-solve P2_SPLIT=tpc_phase1 P2_METHOD=phase2_skeleton P2_LIMIT=3 P2_BUDGET=60
+4. End-to-end harness (real solver; small local smoke)
+
+```bash
+.venv/bin/python agent_env/scripts/solve_phase2.py --limit 3 --budget-sec 60
 ```
-Outputs: `results/<method>/<uid>.json` plus per-query
+
+Defaults used above: `--split tpc_phase2_val`, `--method phase2_e2e_tpc_phase2_val`, `--lang en`.
+Outputs: `results/<method>/<uid>.json` and
 `agent_env/runs/<method>/<uid>/{output,telemetry,evaluation}.json`.
 
-Default difference (important):
+5. Full rehearsal + three-way attribution (`ceiling | solver-only | end-to-end`)
 
-- `make phase2-solve` always passes `--method $(P2_METHOD)` (default `phase2_e2e_tpc_phase2_val`).
-- direct `python ... solve_phase2.py` defaults to `--method phase2_skeleton` if omitted.
-- They are equivalent only when `split`, `method`, `limit`, and `budget` are aligned explicitly.
-
-Rehearsal + three-way attribution (heaviest: runs both the no-oracle and oracle-fed solver). Prints
-`ceiling | solver-only | end-to-end (solver headroom, parsing loss)`. Folds are drawn from the
-validation split; add `--split-set test` (sparingly) for the held-out set:
-```
-# quick smoke: 1-query fold, small budget
-.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set val --fold 0 --folds 850 --limit 1 --budget-sec 30
-# full dashboard (rehearse -> parser report -> timing)
-make phase2-rehearse FOLD=0 P2_FOLDS=850 P2_LIMIT=1 P2_BUDGET=30
+```bash
+# quick smoke
+.venv/bin/python scripts/rehearse_phase2.py --limit 1 --budget-sec 30
 ```
 
-Timing / reliability from a completed run dir, and the monotonic regression gate:
-```
-.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_skeleton --budget-sec 900
+Use `--split-set test` sparingly for held-out checks.
+
+6. Timing / reliability and monotonic regression gate
+
+```bash
+.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_e2e_tpc_phase2_val
 .venv/bin/python scripts/phase2_gate.py --baseline base.json --candidate cand.json
-
-# Make equivalents:
-make phase2-timing P2_METHOD=phase2_skeleton P2_BUDGET=900
-make phase2-gate BASELINE=base.json CANDIDATE=cand.json
 ```
 
-Compare the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset (generalization set) to local data
-(network):
-```
-.venv/bin/python scripts/compare_hf_dataset.py --hf-config default
-```
-
-`TPC_P2_DISJUNCTION` is implemented (Milestone 4; deterministic, no LLM). The remaining no-op LLM
-stubs are exercised by setting `TPC_P2_LLM_BACKEND=fixture` plus the relevant `TPC_P2_LLM_PARSE` /
-`TPC_P2_LLM_REFINE=1`. LLM-assisted disjunction arm-splitting is deferred (a `TODO(phase2, LLM
-disjunction assist)` marker in `normalize.py`, gated on both `TPC_P2_DISJUNCTION` and
-`TPC_P2_LLM_PARSE`).
-
-**Notes:**
-
-Fixed setup:
-
-- I downloaded and added the environment datasets in English and Chinese from Google Drive and put them into the enviornment folder
-- I downloaded and put the competition queries into the correct data/en/ folder
-- I added the competition eval split to `chinatravel/evaluation/default_splits/tpc_phase1.txt`
-- I removed all these files from gitignore, so that I can easily add and commit them
-
+**Generalization:**
+- Use held out test split
+- Compare against the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset. See `docs/tpc_phase2_hf_dataset.md`.
+- Try own custom queries and check results manually
 
 
 
