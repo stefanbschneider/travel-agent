@@ -73,6 +73,29 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
     structure-only milestone.
   - **Flags-off invariant:** byte-identical to the prior no-oracle path (enforced by
     `tests/phase2/test_flags.py`, `test_schema_normalize.py`, and `test_disjunction.py`).
+- **Milestone 5 (DONE):** deterministic no-oracle **parser-accuracy** fixes (Phase A), driven by a
+  per-family val-split diagnosis (`tests/phase2/test_parser_accuracy.py`):
+  - **A1** derive `taxi_cars_equals = ceil(people_number/4)` in `parse_query_no_oracle` (the oracle
+    always encodes it; the NL rarely states it) — closed the single largest recall sink (449/850
+    missing). Also switched `normalize.disjunction_stub` to strip only *arm-claimed* branch-local
+    keys, so global constraints (taxi, a one-off budget) survive across OR branches.
+  - **A2** negation guard so "do **not** want to try restaurant X" maps to `excluded_restaurants`
+    (singular/plural, "the following", "the restaurant:") / `excluded_cuisine_types`
+    ("of the type X"), never to `required_restaurants`; dropped the bogus
+    `cuisine_preference:'the following'` leak.
+  - **A3** budget disambiguation: the intra-city regex's bare `city` alternative no longer matches
+    inside "cross-city"/"inter-city"/"intercity", so those no longer duplicate into
+    `inner_transport`.
+  - **Measured (val, n=850):** recall **0.488 → 0.693** (flat) / **0.466 → 0.677** (disjunction),
+    value-accuracy **0.747 → 0.838**, behavioral agreement **0.539 → 0.581** (parsed-verifier now
+    accepts 494/850 oracle-valid `results/best` plans, up from 458). `disjunction_flattened`
+    essentially unchanged (137 → 139).
+  - **Phase-1 oracle regression gate:** on the shared `parse_constraints.py`, the oracle path
+    (`parse_query`) changed for 31/850 val queries — **all bogus-field removals** (24
+    `required_restaurants`, 12 `cuisine_preference`) plus 1 correct `excluded_restaurants`
+    conversion, zero spurious additions. Phase-1 *scoring* uses `hard_logic_py`
+    (`evaluate_constraints_py`) independently of the parser, so `results/best` is unaffected; the
+    change only makes the oracle *search* heuristic more accurate.
 
 ## Eval split task (built in Milestone 1)
 

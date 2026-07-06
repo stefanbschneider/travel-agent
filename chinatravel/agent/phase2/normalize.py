@@ -101,12 +101,15 @@ def disjunction_stub(variants: list, ir: ParsedIR, query: dict) -> list:
     if len(or_groups) < 2:
         return variants
 
-    # Shared context = flat parse minus branch-local families (those are re-added per arm below,
-    # so "A or B" is never encoded as "A and B").
+    # Shared context = flat parse minus the branch-local families that an arm actually claims.
+    # Only arm-claimed families are re-added per branch; global constraints stated once outside the
+    # OR (e.g. a party-size-derived taxi_cars_equals, or a global budget) stay in every branch so
+    # "A or B" is never encoded as "A and B" yet globals are not dropped.
+    claimed = set().union(*[set(a) for a in or_groups])
     base = {
         k: v
         for k, v in ir.raw.items()
-        if k not in _BRANCH_LOCAL_KEYS and k != "disjunctive"
+        if k != "disjunctive" and not (k in _BRANCH_LOCAL_KEYS and k in claimed)
     }
 
     expanded: list[SolverConstraints] = []

@@ -4,6 +4,7 @@ constraints consumed by TPCAgent. Pure regex; runs live per query at agent runti
 """
 
 import re
+import math
 
 
 def parse_budget(text):
@@ -46,8 +47,18 @@ def parse_budget(text):
     if m:
         budgets["intercity_transport"] = float(m.group(1))
 
-    # Intra-city transportation budget
-    m = re.search(r"(?:intra-city|inner-city|city|intra\s*city|local)\s*transportation\s*(?:budget|is)[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
+    # Intra-city transportation budget.
+    # NOTE: the bare "city" alternative can match inside "cross-city"/"inter-city"; guard against
+    # that by rejecting a match whose token is immediately preceded by a hyphen (A3 fix).
+    m = None
+    for cand in re.finditer(
+        r"(?:intra-city|inner-city|city|intra\s*city|local)\s*transportation\s*(?:budget|is)[^0-9]*?([\d]+(?:\.[\d]+)?)",
+        text, re.I,
+    ):
+        if cand.start() > 0 and (text[cand.start() - 1] == "-" or text[cand.start() - 1].isalnum()):
+            continue  # part of "cross-city" / "inter-city" / "intercity"
+        m = cand
+        break
     if not m:
         m = re.search(r"budget\s+for\s+(?:intra-city|inner-city|intra\s*city|local)\s*transportation[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
     if not m:
@@ -481,8 +492,14 @@ def parse_conditional_transport(text):
 
 
 def parse_required_restaurants(text):
-    """Extract specific restaurant names that must be visited."""
+    """Extract specific restaurant names that must be visited.
+
+    Guards against negated phrasing ("do not want to try ...") which must map to *excluded*
+    restaurants / cuisine types, not required ones.
+    """
     names = []
+    # Negation immediately preceding the "want/wish/hope to try" trigger.
+    neg_prefix = re.compile(r"(?:do\s+not|don't|didn't|does\s+not|do\s+n't|not|avoid|never|no)\s+$", re.I)
 
     patterns = [
         r"(?:want|wish|hope)\s+to\s+(?:try|dine\s+at)\s+(?:the\s+following\s+)?(?:restaurants?[:\s]+)?(.+?)(?:\.|;|$)",
@@ -490,9 +507,14 @@ def parse_required_restaurants(text):
     ]
 
     for pat in patterns:
-        m = re.search(pat, text, re.I)
-        if m:
+        for m in re.finditer(pat, text, re.I):
+            # Skip when the trigger is negated ("do not want to try ...").
+            if neg_prefix.search(text[: m.start()]):
+                continue
             chunk = m.group(1).strip().rstrip(".")
+            # Skip cuisine-TYPE phrasing ("of the type X"); those are not restaurant names.
+            if re.match(r"of\s+(?:the\s+)?types?\b", chunk, re.I):
+                continue
             # Split on " and " or ", "
             parts = re.split(r"\s+and\s+|,\s*", chunk)
             for p in parts:
@@ -503,35 +525,50 @@ def parse_required_restaurants(text):
                                     "chinese", "western", "japanese", "korean"}
                     if p.lower() in cuisine_words:
                         continue
-                    names.append(p)
+                    if p not in names:
+                        names.append(p)
 
     return names if names else None
 
 
 def parse_excluded_restaurants(text):
-    """Extract specific restaurant names to NOT visit."""
+    """Extract specific restaurant names to NOT visit.
+
+    Handles singular/plural ("restaurant"/"restaurants"), an optional "the following" / "the"
+    determiner, and "try/dine at/visit" verbs. Cuisine-TYPE phrasing ("of the type X") is left to
+    parse_excluded_cuisine_types.
+    """
     names = []
 
-    m = re.search(r"(?:do\s+not|don't|not)\s+(?:want|wish|hope)\s+to\s+(?:try|dine\s+at|visit)\s+(?:the\s+following\s+)?restaurant[:\s]+(.+?)(?:\.|;|$)", text, re.I)
+    m = re.search(
+        r"(?:do\s+not|don't|not)\s+(?:want|wish|hope)\s+to\s+(?:try|dine\s+at|visit)\s+"
+        r"(?:the\s+following\s+)?(?:the\s+)?restaurants?[:\s]+(.+?)(?:\.|;|$)",
+        text, re.I,
+    )
     if m:
         chunk = m.group(1).strip().rstrip(".")
+        # Not a restaurant name list — it's a cuisine type ("of the type X"); handled elsewhere.
+        if re.match(r"of\s+(?:the\s+)?types?\b", chunk, re.I):
+            return None
         parts = re.split(r"\s+and\s+|,\s*", chunk)
         for p in parts:
             p = p.strip()
-            if p and len(p) > 2:
+            if p and len(p) > 2 and p not in names:
                 names.append(p)
 
     return names if names else None
 
 
 def parse_cuisine_preference(text):
-    """Extract cuisine/restaurant type preference."""
+    """Extract cuisine/restaurant type preference (positive only)."""
     cuisines = []
+    _STOP = {"the", "following", "these", "the following", "of the type", "a"}
+    neg_prefix = re.compile(r"(?:do\s+not|don't|didn't|does\s+not|not|avoid|never|no)\s+$", re.I)
     # "want to try a Hot pot restaurant"
     m = re.search(r"(?:want|wish|hope)\s+to\s+try\s+(?:a\s+)?(.+?)\s+restaurant", text, re.I)
-    if m:
+    if m and not neg_prefix.search(text[: m.start()]):
         cuisine = m.group(1).strip()
-        if cuisine.lower() not in {"the", "following", "these"}:
+        if cuisine.lower() not in _STOP:
             cuisines.append(cuisine)
 
     # "try one of these restaurant types: Beijing cuisine, Barbecue, or Japanese cuisine"
@@ -568,6 +605,32 @@ def parse_cuisine_preference(text):
     elif cuisines:
         return cuisines
     return None
+
+
+def parse_excluded_cuisine_types(text):
+    """Extract cuisine/restaurant TYPES the traveler wants to avoid.
+
+    Handles negated type phrasing such as "do not want to try restaurants of the type Snacks"
+    (-> ["Snacks"]). Restaurant *names* under negation are handled by parse_excluded_restaurants.
+    """
+    types = []
+    patterns = [
+        # "do not want to try (restaurants) of the type X (and Y)"
+        r"(?:do\s+not|don't|didn't|does\s+not|not|avoid|never)\s+(?:want|wish|hope)?\s*(?:to\s+)?"
+        r"(?:try|dine\s+at|eat|visit|have)\s+(?:at\s+)?(?:restaurants?\s+)?of\s+(?:the\s+)?types?\s+(.+?)(?:\.|;|$)",
+        # "do not want ... X-type restaurants" / "X cuisine restaurants"
+        r"(?:do\s+not|don't|not|avoid|never)\s+(?:want|wish|hope)?\s*(?:to\s+)?"
+        r"(?:try|dine\s+at|eat|visit|have)\s+(?:at\s+)?(?:the\s+)?(.+?)\s+(?:type|cuisine)\s+restaurants?",
+    ]
+    for pat in patterns:
+        for m in re.finditer(pat, text, re.I):
+            chunk = m.group(1).strip().rstrip(".")
+            for p in re.split(r"\s+and\s+|,\s*(?:or\s+)?|\s+or\s+", chunk):
+                p = p.strip()
+                if p and p.lower() not in {"the", "following", "these", "a"}:
+                    if p not in types:
+                        types.append(p)
+    return types if types else None
 
 
 def parse_timing_constraints(text):
@@ -693,6 +756,10 @@ def parse_single_constraint_text(text):
     cuisine = parse_cuisine_preference(text)
     if cuisine:
         result["cuisine_preference"] = cuisine
+
+    excl_cuisine = parse_excluded_cuisine_types(text)
+    if excl_cuisine:
+        result["excluded_cuisine_types"] = excl_cuisine
 
     timing = parse_timing_constraints(text)
     if timing:
@@ -1013,4 +1080,13 @@ def parse_query_no_oracle(query):
     """
     result = parse_single_constraint_text(query["nature_language"])
     result["disjunctive"] = False
+    # A1: taxi car count is a deterministic function of party size (the oracle always encodes it as
+    # ceil(people/4): 1-4 people -> 1 car, 5-8 -> 2, ...). The NL rarely states it explicitly, so
+    # derive it here to match the oracle instead of leaving it unconstrained. No-oracle path only;
+    # the oracle path already gets it from hard_logic_py.
+    try:
+        people = int(query.get("people_number", 1) or 1)
+    except (TypeError, ValueError):
+        people = 1
+    result["taxi_cars_equals"] = max(1, math.ceil(people / 4))
     return result
