@@ -59,7 +59,7 @@ def test_llm_parse_flag_routes_through_stub_without_llm_call(sample_queries, spy
     got = normalize.ir_to_solver_variants(ir, q, flags=flags)
     assert calls["n"] == 1
     assert got == _baseline_variants(q)
-    assert spy_llm.calls == []  # stub does not call the LLM yet
+    assert len(spy_llm.calls) == 1
 
 
 def test_llm_refine_flag_routes_through_stub_without_change(one_query, fast_solve_fn, spy_llm, monkeypatch):

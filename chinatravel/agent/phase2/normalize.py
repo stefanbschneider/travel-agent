@@ -13,6 +13,9 @@ When flags are off, neither hook runs and the LLM client is never called.
 
 from __future__ import annotations
 
+import hashlib
+import json
+
 import parse_constraints
 from chinatravel.agent.tpc_agent.solver_constraints import (
     _BRANCH_LOCAL_KEYS,
@@ -22,14 +25,159 @@ from chinatravel.agent.tpc_agent.solver_constraints import (
 from .schema import ParsedIR, SolverConstraints
 
 
-def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
-    """TODO(phase2, Milestone 3+): LLM-assisted second-pass parse.
+_LLM_PARSE_ALLOWED_KEYS = {
+    "budgets",
+    "free_attractions_only",
+    "intercity_mode",
+    "excluded_inner_transport",
+    "room_type",
+    "required_hotel_any_types",
+    "required_hotel_all_types",
+    "hotel_nearby",
+    "required_attractions",
+    "required_attraction_types",
+    "excluded_attraction_types",
+    "excluded_attractions",
+    "required_restaurants",
+    "excluded_restaurants",
+    "cuisine_preference",
+    "excluded_cuisine_types",
+    "timing_constraints",
+    "activity_time_windows",
+    "conditional_transport",
+    "required_hotels",
+    "excluded_hotels",
+    "hotel_amenity",
+    "stay_duration",
+    "position_presence",
+}
 
-    Will call ``llm_client`` for paraphrase/compound-clause disambiguation and merge the result into
-    the IR, validating every proposed constraint/entity against WorldEnv before it reaches the solver.
-    No-op placeholder for now (returns the IR unchanged, does not call the LLM).
+
+def _stable_prompt_hash(prompt: str) -> str:
+    return hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:12]
+
+
+def llm_parse_cache_key(query: dict, prompt: str) -> str:
+    uid = str(query.get("uid") or "unknown")
+    return f"parse_{uid}_{_stable_prompt_hash(prompt)}"
+
+
+def build_llm_parse_prompt(query: dict, deterministic_raw: dict) -> str:
+    visible = {
+        "uid": query.get("uid"),
+        "people_number": query.get("people_number"),
+        "start_city": query.get("start_city"),
+        "target_city": query.get("target_city"),
+        "nature_language": query.get("nature_language", ""),
+    }
+    return (
+        "You are assisting a deterministic travel-constraint parser.\n"
+        "Return STRICT JSON only (no markdown/code fences) with this schema:\n"
+        "{\n"
+        "  \"constraint_text\": string,\n"
+        "  \"or_groups\": [string, ...]\n"
+        "}\n"
+        "Rules:\n"
+        "- Use only facts inferable from the visible query.\n"
+        "- Keep wording concise and literal.\n"
+        "- If no useful refinement, return {\"constraint_text\":\"\",\"or_groups\":[]}.\n"
+        "Visible query JSON:\n"
+        f"{json.dumps(visible, ensure_ascii=False, indent=2)}\n\n"
+        "Current deterministic parse JSON:\n"
+        f"{json.dumps(deterministic_raw, ensure_ascii=False, indent=2)}"
+    )
+
+
+def _parse_llm_json_blob(text: str) -> dict:
+    raw = (text or "").strip()
+    if not raw:
+        return {}
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[1] if "\n" in raw else ""
+        raw = raw.rsplit("```", 1)[0].strip()
+    try:
+        value = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"llm_parse invalid JSON: {exc}") from None
+    if not isinstance(value, dict):
+        raise ValueError("llm_parse response must be a JSON object")
+    return value
+
+
+def _merge_constraint_dict(base: dict, extra: dict) -> dict:
+    merged = dict(base)
+    for key, value in extra.items():
+        if key not in _LLM_PARSE_ALLOWED_KEYS:
+            continue
+        if key not in merged:
+            merged[key] = value
+            continue
+
+        # Conservative merge: keep deterministic values and only add missing detail.
+        if key == "budgets" and isinstance(merged[key], dict) and isinstance(value, dict):
+            out = dict(merged[key])
+            for budget_key, budget_val in value.items():
+                out.setdefault(budget_key, budget_val)
+            merged[key] = out
+        elif key == "intercity_mode" and isinstance(merged[key], dict) and isinstance(value, dict):
+            out = dict(merged[key])
+            for mode_key, mode_val in value.items():
+                out.setdefault(mode_key, mode_val)
+            merged[key] = out
+        elif isinstance(merged[key], list) and isinstance(value, list):
+            seen = {json.dumps(v, ensure_ascii=False, sort_keys=True) for v in merged[key]}
+            for item in value:
+                marker = json.dumps(item, ensure_ascii=False, sort_keys=True)
+                if marker not in seen:
+                    merged[key].append(item)
+                    seen.add(marker)
+    return merged
+
+
+def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
+    """LLM-assisted second-pass parse with strict fallback to deterministic behavior.
+
+    The LLM proposes extra parse signal as free text / OR-arm text only; deterministic parsers then
+    re-parse and validate that signal into known constraint families. Any error keeps ``ir``
+    unchanged by raising, so the orchestrator can degrade safely.
     """
-    return ir
+    if llm_client is None or not hasattr(llm_client, "complete"):
+        return ir
+
+    prompt = build_llm_parse_prompt(query, ir.raw)
+    cache_key = llm_parse_cache_key(query, prompt)
+    response = llm_client.complete(prompt, cache_key=cache_key)
+    payload = _parse_llm_json_blob(response)
+
+    updated = ParsedIR(
+        raw=dict(ir.raw),
+        variants=list(ir.variants),
+        or_groups=list(ir.or_groups),
+        confidence=dict(ir.confidence),
+        spans=dict(ir.spans),
+        entity_candidates=dict(ir.entity_candidates),
+        hard_vs_soft=dict(ir.hard_vs_soft),
+    )
+
+    extra_text = str(payload.get("constraint_text") or "").strip()
+    if extra_text:
+        extra = parse_constraints.parse_single_constraint_text(extra_text)
+        if isinstance(extra, dict) and extra:
+            updated.raw = _merge_constraint_dict(updated.raw, extra)
+
+    groups = payload.get("or_groups")
+    if isinstance(groups, list):
+        parsed_groups = []
+        for item in groups:
+            if not isinstance(item, str):
+                continue
+            part = parse_constraints.parse_single_constraint_text(item.strip())
+            if isinstance(part, dict) and part:
+                parsed_groups.append(part)
+        if len(parsed_groups) >= 2:
+            updated.or_groups = parsed_groups
+
+    return updated
 
 
 def _detect_or_groups(query: dict) -> list[dict]:

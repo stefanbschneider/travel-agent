@@ -125,3 +125,20 @@ def test_flags_default_all_off():
     assert flags.disjunction is False
     assert flags.llm_parse is False
     assert flags.llm_refine is False
+
+
+def test_llm_parse_error_degrades_to_fallback(one_query):
+    class BadLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return "{not-json}"
+
+    plan, telemetry = O.solve_phase2(
+        one_query,
+        budget_sec=10.0,
+        solve_fn=None,
+        llm_client=BadLLM(),
+        flags=O.Flags(llm_parse=True),
+    )
+    jsonschema.validate(plan, SCHEMA)
+    assert telemetry["used_fallback"] is True
+    assert "parse:" in str(telemetry.get("error", ""))

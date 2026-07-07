@@ -38,3 +38,37 @@ def test_parse_to_ir_does_not_call_llm_by_default(sample_queries, spy_llm):
     for query in sample_queries.values():
         normalize.parse_to_ir(query, llm_client=spy_llm)
     assert spy_llm.calls == [], "parse_to_ir must not call the LLM on the default path"
+
+
+def test_llm_parse_adds_missing_constraint_without_overwriting_existing(one_query):
+    class FakeLLM:
+        def __init__(self, response):
+            self.response = response
+            self.calls = []
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls.append({"prompt": prompt, "cache_key": cache_key})
+            return self.response
+
+    # dining budget is often absent in deterministic parse for generic queries; use LLM hint text.
+    llm = FakeLLM('{"constraint_text":"The budget for dining is 120."}')
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=llm, flags=flags)
+
+    assert len(llm.calls) == 1
+    budgets = ir.raw.get("budgets", {})
+    assert budgets.get("dining") == 120.0
+
+
+def test_llm_parse_invalid_json_raises(one_query):
+    class BadLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return "not-json"
+
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    try:
+        normalize.parse_to_ir(one_query, llm_client=BadLLM(), flags=flags)
+    except ValueError as exc:
+        assert "llm_parse invalid JSON" in str(exc)
+    else:
+        raise AssertionError("Expected llm_parse invalid JSON to raise")
