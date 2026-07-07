@@ -85,24 +85,24 @@ def solver_constraint_variants(query: dict, parsed_raw: dict, use_oracle: bool =
         return [_normalize_variant(_base_from_raw(raw), use_oracle=False)]
 
     branch_texts = _hard_logic_branches(query)
+    # In oracle mode, hard_logic_py is the source of truth for branch-local facts.
+    # Raw NL parser outputs can contain tokenization noise (for example names with
+    # apostrophes split into fragments), so drop branch-local keys and rehydrate
+    # them from hard logic only.
+    base_oracle = {k: v for k, v in _base_from_raw(raw).items() if k not in _BRANCH_LOCAL_KEYS}
     if branch_texts:
-        base = _base_from_raw(raw)
-        # NL parsing can collapse disjunctive text into global fields.  Those
-        # fields are unsafe for CP-SAT, because they encode "A or B" as "A and
-        # B".  Keep only non branch-local context and re-add branch facts from
-        # the exact DSL arm below.
-        base = {k: v for k, v in base.items() if k not in _BRANCH_LOCAL_KEYS}
         variants = []
         raw_groups = raw.get("groups") if isinstance(raw.get("groups"), list) else []
         for index, branch in enumerate(branch_texts):
-            merged = deepcopy(base)
+            merged = deepcopy(base_oracle)
             if index < len(raw_groups) and isinstance(raw_groups[index], dict):
-                _merge_into(merged, raw_groups[index], use_oracle=True)
+                group = {k: v for k, v in raw_groups[index].items() if k not in _BRANCH_LOCAL_KEYS}
+                _merge_into(merged, group, use_oracle=True)
             _merge_into(merged, _parse_logic_snippet(branch, include_inner_transport=True), use_oracle=True)
             variants.append(_normalize_variant(merged, use_oracle=True))
-        return variants or [_normalize_variant(base, use_oracle=True)]
+        return variants or [_normalize_variant(base_oracle, use_oracle=True)]
 
-    merged = _base_from_raw(raw)
+    merged = deepcopy(base_oracle)
     for expr in query.get("hard_logic_py", []) or []:
         if isinstance(expr, str):
             _merge_into(merged, _parse_logic_snippet(expr, include_inner_transport=True), use_oracle=True)
@@ -211,10 +211,25 @@ def _set_literal_ops(logic: str, set_name: str) -> list[tuple[list[str], str]]:
     matches: list[tuple[list[str], str]] = []
     pattern = re.compile(r"\{([^{}]*)\}\s*(&|<=)\s*" + re.escape(set_name), re.DOTALL)
     for match in pattern.finditer(logic):
-        literals = re.findall(r"['\"]([^'\"]+)['\"]", match.group(1))
+        literals = _extract_quoted_literals(match.group(1))
         if literals:
             matches.append((_dedupe(literals), match.group(2)))
     return matches
+
+
+def _extract_quoted_literals(text: str) -> list[str]:
+    """Extract quoted string literals while respecting quote type.
+
+    This preserves apostrophes inside double-quoted values (for example
+    "Cong's Restaurant"), which a naive quote-agnostic regex would split.
+    """
+    values: list[str] = []
+    pattern = re.compile(r"(['\"])((?:\\.|(?!\1).)*)\1", re.DOTALL)
+    for quote, raw in pattern.findall(text):
+        value = raw.replace("\\" + quote, quote).replace("\\\\", "\\")
+        if value.strip():
+            values.append(value)
+    return values
 
 
 def _parse_budgets(logic: str, result: dict[str, Any]) -> None:
