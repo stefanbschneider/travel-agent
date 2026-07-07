@@ -227,10 +227,15 @@ def _solve_template(
         attr_vars, rest_vars, attr_selected, rest_selected,
         hotels, outbound, returning, attractions, restaurants,
     )
-    total_cost_yuan = model.NewIntVar(0, 10**7, "total_cost_yuan")
-    model.AddDivisionEquality(total_cost_yuan, total_cost, 100)
+    # Keep the objective fully linear over integer expressions.
+    # Some OR-Tools versions treat AddDivisionEquality with a composite linear
+    # expression numerator as MODEL_INVALID.
     model.Maximize(
-        1000 * sum(attr_selected) + 100 * sum(rest_selected) - total_cost_yuan + ret_units - out_units
+        100000 * sum(attr_selected)
+        + 10000 * sum(rest_selected)
+        - total_cost
+        + 100 * ret_units
+        - 100 * out_units
     )
 
     solver = cp_model.CpSolver()
