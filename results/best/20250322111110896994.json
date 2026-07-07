@@ -7,121 +7,55 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "02:33",
-          "end_time": "02:53",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 312.9,
-          "cost": 1564.5,
+          "type": "train",
+          "start_time": "07:00",
+          "end_time": "08:39",
+          "start": "Nanjing Station",
+          "end": "Shanghai Station",
+          "price": 175.28,
+          "cost": 876.4,
           "tickets": 5,
           "transports": [],
-          "FlightID": "FL643"
-        },
-        {
-          "type": "breakfast",
-          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-          "start_time": "08:00",
-          "end_time": "09:00",
-          "price": 28.0,
-          "cost": 140.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-              "mode": "taxi",
-              "start_time": "02:53",
-              "end_time": "03:10",
-              "distance": 11.45,
-              "price": 46.25,
-              "cost": 92.5,
-              "cars": 2
-            }
-          ]
+          "TrainID": "G7001"
         },
         {
           "type": "attraction",
-          "position": "1933 Old Millfun",
-          "start_time": "09:43",
-          "end_time": "10:43",
+          "position": "Garden Bridge",
+          "start_time": "08:49",
+          "end_time": "09:49",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-              "end": "1933 Old Millfun",
+              "start": "Shanghai Station",
+              "end": "Garden Bridge",
               "mode": "taxi",
-              "start_time": "09:00",
-              "end_time": "09:08",
-              "distance": 5.55,
-              "price": 24.11,
-              "cost": 48.22,
+              "start_time": "08:39",
+              "end_time": "08:44",
+              "distance": 3.93,
+              "price": 18.45,
+              "cost": 36.9,
               "cars": 2
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Yong Fu (Huangpu Branch)",
+          "position": "The Friends Cafe - Central Perk Theme Store (Harbin Road Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 600.0,
-          "cost": 3000.0,
+          "price": 68.0,
+          "cost": 340.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "1933 Old Millfun",
-              "end": "Yong Fu (Huangpu Branch)",
+              "start": "Garden Bridge",
+              "end": "The Friends Cafe - Central Perk Theme Store (Harbin Road Branch)",
               "mode": "taxi",
-              "start_time": "10:43",
-              "end_time": "10:51",
-              "distance": 5.59,
-              "price": 24.27,
-              "cost": 48.54,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Pudong Art Museum",
-          "start_time": "12:07",
-          "end_time": "13:37",
-          "price": 80.0,
-          "cost": 400.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Yong Fu (Huangpu Branch)",
-              "end": "Pudong Art Museum",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:07",
-              "distance": 4.7,
-              "price": 21.14,
-              "cost": 42.28,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shanghai Starry Sky Art Museum",
-          "start_time": "13:38",
-          "end_time": "15:08",
-          "price": 39.8,
-          "cost": 199.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Pudong Art Museum",
-              "end": "Shanghai Starry Sky Art Museum",
-              "mode": "taxi",
-              "start_time": "13:37",
-              "end_time": "13:38",
-              "distance": 1.2,
+              "start_time": "09:49",
+              "end_time": "09:50",
+              "distance": 0.94,
               "price": 11.0,
               "cost": 22.0,
               "cars": 2
@@ -130,68 +64,112 @@
         },
         {
           "type": "attraction",
-          "position": "China Art Museum",
-          "start_time": "15:16",
-          "end_time": "16:46",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "Pudong Art Museum",
+          "start_time": "12:18",
+          "end_time": "14:03",
+          "price": 80.0,
+          "cost": 400.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Shanghai Starry Sky Art Museum",
-              "end": "China Art Museum",
+              "start": "The Friends Cafe - Central Perk Theme Store (Harbin Road Branch)",
+              "end": "Pudong Art Museum",
               "mode": "taxi",
-              "start_time": "15:08",
-              "end_time": "15:16",
-              "distance": 5.92,
-              "price": 25.42,
-              "cost": 50.84,
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.8,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Starry Sky Art Museum",
+          "start_time": "14:21",
+          "end_time": "16:06",
+          "price": 39.8,
+          "cost": 199.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Pudong Art Museum",
+              "end": "Shanghai Starry Sky Art Museum",
+              "mode": "taxi",
+              "start_time": "14:03",
+              "end_time": "14:04",
+              "distance": 1.2,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Fu He Hui",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 1280.0,
-          "cost": 6400.0,
+          "price": 28.0,
+          "cost": 140.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "China Art Museum",
-              "end": "Fu He Hui",
+              "start": "Shanghai Starry Sky Art Museum",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "mode": "taxi",
-              "start_time": "16:46",
-              "end_time": "16:57",
-              "distance": 7.53,
-              "price": 31.05,
-              "cost": 62.1,
+              "start_time": "16:06",
+              "end_time": "16:11",
+              "distance": 3.76,
+              "price": 17.86,
+              "cost": 35.72,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Upside Down Art Museum (Shanghai Flagship Store)",
+          "start_time": "18:22",
+          "end_time": "20:07",
+          "price": 77.9,
+          "cost": 389.5,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Upside Down Art Museum (Shanghai Flagship Store)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:07",
+              "distance": 5.05,
+              "price": 22.36,
+              "cost": 44.72,
               "cars": 2
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Orange Hotel (Shanghai Pudong Airport)",
-          "start_time": "18:49",
+          "position": "Pullman Shanghai Jing An",
+          "start_time": "20:25",
           "end_time": "24:00",
-          "price": 351.0,
-          "cost": 1053.0,
+          "price": 952.0,
+          "cost": 2856.0,
           "rooms": 3,
           "room_type": 2,
           "tickets": 3,
           "transports": [
             {
-              "start": "Fu He Hui",
-              "end": "Orange Hotel (Shanghai Pudong Airport)",
+              "start": "Upside Down Art Museum (Shanghai Flagship Store)",
+              "end": "Pullman Shanghai Jing An",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:49",
-              "distance": 32.83,
-              "price": 142.44,
-              "cost": 284.88,
+              "start_time": "20:07",
+              "end_time": "20:13",
+              "distance": 4.65,
+              "price": 20.98,
+              "cost": 41.96,
               "cars": 2
             }
           ]
@@ -203,7 +181,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Orange Hotel (Shanghai Pudong Airport)",
+          "position": "Pullman Shanghai Jing An",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -213,66 +191,44 @@
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "09:11",
-          "end_time": "10:41",
+          "position": "Fuxing Park",
+          "start_time": "08:43",
+          "end_time": "10:28",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Orange Hotel (Shanghai Pudong Airport)",
-              "end": "The Bund",
+              "start": "Pullman Shanghai Jing An",
+              "end": "Fuxing Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:11",
-              "distance": 27.63,
-              "price": 119.05,
-              "cost": 238.1,
+              "end_time": "08:34",
+              "distance": 3.17,
+              "price": 15.79,
+              "cost": 31.58,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shanghai Van Gogh Starry Night Art Museum",
-          "start_time": "10:43",
-          "end_time": "12:13",
-          "price": 39.9,
-          "cost": 199.5,
+          "position": "China Art Museum",
+          "start_time": "11:05",
+          "end_time": "12:50",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "The Bund",
-              "end": "Shanghai Van Gogh Starry Night Art Museum",
+              "start": "Fuxing Park",
+              "end": "China Art Museum",
               "mode": "taxi",
-              "start_time": "10:41",
-              "end_time": "10:43",
-              "distance": 1.47,
-              "price": 11.0,
-              "cost": 22.0,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "12:20",
-          "end_time": "13:20",
-          "price": 203.0,
-          "cost": 1015.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Shanghai Van Gogh Starry Night Art Museum",
-              "end": "Renhe Hall (Zhaojiabang Road Branch)",
-              "mode": "taxi",
-              "start_time": "12:13",
-              "end_time": "12:20",
-              "distance": 4.98,
-              "price": 22.12,
-              "cost": 44.24,
+              "start_time": "10:28",
+              "end_time": "10:34",
+              "distance": 4.4,
+              "price": 20.09,
+              "cost": 40.18,
               "cars": 2
             }
           ]
@@ -280,63 +236,63 @@
         {
           "type": "attraction",
           "position": "Shanghai Bund Art Museum",
-          "start_time": "13:29",
-          "end_time": "14:59",
+          "start_time": "13:21",
+          "end_time": "15:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "China Art Museum",
               "end": "Shanghai Bund Art Museum",
               "mode": "taxi",
-              "start_time": "13:20",
-              "end_time": "13:29",
-              "distance": 6.07,
-              "price": 25.95,
-              "cost": 51.9,
+              "start_time": "12:50",
+              "end_time": "12:59",
+              "distance": 6.35,
+              "price": 26.93,
+              "cost": 53.86,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Upside Down Art Museum (Shanghai Flagship Store)",
-          "start_time": "15:00",
-          "end_time": "16:30",
-          "price": 77.9,
-          "cost": 389.5,
+          "position": "Columbia Circle",
+          "start_time": "15:34",
+          "end_time": "17:19",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Shanghai Bund Art Museum",
-              "end": "Upside Down Art Museum (Shanghai Flagship Store)",
+              "end": "Columbia Circle",
               "mode": "taxi",
-              "start_time": "14:59",
-              "end_time": "15:00",
-              "distance": 1.18,
-              "price": 11.0,
-              "cost": 22.0,
+              "start_time": "15:06",
+              "end_time": "15:16",
+              "distance": 6.74,
+              "price": 28.27,
+              "cost": 56.54,
               "cars": 2
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Kurogi",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 3312.0,
-          "cost": 16560.0,
+          "position": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
+          "start_time": "18:01",
+          "end_time": "19:01",
+          "price": 31.0,
+          "cost": 155.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Upside Down Art Museum (Shanghai Flagship Store)",
-              "end": "Kurogi",
+              "start": "Columbia Circle",
+              "end": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
               "mode": "taxi",
-              "start_time": "16:30",
-              "end_time": "16:32",
-              "distance": 1.75,
+              "start_time": "17:19",
+              "end_time": "17:19",
+              "distance": 0.39,
               "price": 11.0,
               "cost": 22.0,
               "cars": 2
@@ -345,24 +301,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Orange Hotel (Shanghai Pudong Airport)",
-          "start_time": "18:42",
+          "position": "Pullman Shanghai Jing An",
+          "start_time": "19:27",
           "end_time": "24:00",
-          "price": 351.0,
-          "cost": 1053.0,
+          "price": 952.0,
+          "cost": 2856.0,
           "rooms": 3,
           "room_type": 2,
           "tickets": 3,
           "transports": [
             {
-              "start": "Kurogi",
-              "end": "Orange Hotel (Shanghai Pudong Airport)",
+              "start": "Shangmianfang Crispy Duck Noodles (Dongzhu'anbang Road Branch)",
+              "end": "Pullman Shanghai Jing An",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:42",
-              "distance": 28.57,
-              "price": 123.28,
-              "cost": 246.56,
+              "start_time": "19:01",
+              "end_time": "19:06",
+              "distance": 3.84,
+              "price": 18.14,
+              "cost": 36.28,
               "cars": 2
             }
           ]
@@ -374,7 +330,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Orange Hotel (Shanghai Pudong Airport)",
+          "position": "Pullman Shanghai Jing An",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -384,66 +340,66 @@
         },
         {
           "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "09:11",
-          "end_time": "10:41",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "08:46",
+          "end_time": "10:31",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Orange Hotel (Shanghai Pudong Airport)",
-              "end": "Huangpu River",
+              "start": "Pullman Shanghai Jing An",
+              "end": "Century Avenue Cherry Orchard",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:11",
-              "distance": 27.45,
-              "price": 118.24,
-              "cost": 236.48,
+              "end_time": "08:39",
+              "distance": 6.13,
+              "price": 26.16,
+              "cost": 52.32,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Bank of China",
-          "start_time": "10:44",
-          "end_time": "12:14",
+          "position": "Century Square",
+          "start_time": "10:43",
+          "end_time": "12:28",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Huangpu River",
-              "end": "Bank of China",
+              "start": "Century Avenue Cherry Orchard",
+              "end": "Century Square",
               "mode": "taxi",
-              "start_time": "10:41",
-              "end_time": "10:41",
-              "distance": 0.33,
-              "price": 11.0,
-              "cost": 22.0,
+              "start_time": "10:31",
+              "end_time": "10:35",
+              "distance": 3.05,
+              "price": 15.36,
+              "cost": 30.72,
               "cars": 2
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Duoyun Bookstore · Flagship Store",
-          "start_time": "12:23",
-          "end_time": "13:53",
+          "position": "Himalaya Art Museum",
+          "start_time": "13:11",
+          "end_time": "14:56",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Bank of China",
-              "end": "Duoyun Bookstore · Flagship Store",
+              "start": "Century Square",
+              "end": "Himalaya Art Museum",
               "mode": "taxi",
-              "start_time": "12:14",
-              "end_time": "12:16",
-              "distance": 1.63,
-              "price": 11.0,
-              "cost": 22.0,
+              "start_time": "12:28",
+              "end_time": "12:31",
+              "distance": 2.26,
+              "price": 12.59,
+              "cost": 25.18,
               "cars": 2
             }
           ]
@@ -451,80 +407,46 @@
         {
           "type": "attraction",
           "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "14:42",
-          "end_time": "16:12",
+          "start_time": "15:13",
+          "end_time": "16:13",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Duoyun Bookstore · Flagship Store",
+              "start": "Himalaya Art Museum",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
-              "start_time": "13:53",
-              "end_time": "13:56",
-              "distance": 2.06,
-              "price": 11.91,
-              "cost": 23.82,
+              "start_time": "14:56",
+              "end_time": "15:01",
+              "distance": 3.99,
+              "price": 18.65,
+              "cost": 37.3,
               "cars": 2
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "position": "Kebabs on the Grille Indian Restaurant (Thumbs Up Plaza Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 16.0,
-          "cost": 80.0,
+          "price": 103.0,
+          "cost": 515.0,
           "tickets": 5,
           "transports": [
             {
               "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "end": "Kebabs on the Grille Indian Restaurant (Thumbs Up Plaza Branch)",
               "mode": "taxi",
-              "start_time": "16:12",
-              "end_time": "16:20",
-              "distance": 5.92,
-              "price": 25.41,
-              "cost": 50.82,
+              "start_time": "16:13",
+              "end_time": "16:17",
+              "distance": 2.69,
+              "price": 14.11,
+              "cost": 28.22,
               "cars": 2
             }
           ]
-        },
-        {
-          "type": "train",
-          "start_time": "12:34",
-          "end_time": "12:34",
-          "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-          "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-896994-D3-1-IN"
-        },
-        {
-          "type": "lunch",
-          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-          "start_time": "12:34",
-          "end_time": "12:49",
-          "price": 18.0,
-          "cost": 90.0,
-          "tickets": 5,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "12:49",
-          "end_time": "12:49",
-          "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-896994-D3-1-OUT"
         },
         {
           "type": "airplane",
@@ -537,14 +459,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "start": "Kebabs on the Grille Indian Restaurant (Thumbs Up Plaza Branch)",
               "end": "Shanghai Hongqiao International Airport",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:32",
-              "distance": 21.76,
-              "price": 92.63,
-              "cost": 185.26,
+              "end_time": "18:31",
+              "distance": 21.1,
+              "price": 89.67,
+              "cost": 179.34,
               "cars": 2
             }
           ],
@@ -553,6 +475,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 152.4945456981659,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 3702.0104699134827,
+  "_eval_score": 98.33333333333334
 }

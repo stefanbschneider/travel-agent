@@ -7,60 +7,16 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "00:05",
-          "end_time": "01:29",
-          "start": "Hangzhou Xiaoshan International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 563.58,
-          "cost": 2254.32,
+          "type": "train",
+          "start_time": "07:48",
+          "end_time": "12:20",
+          "start": "Hangzhou East Railway Station",
+          "end": "Beijing South Railway Station",
+          "price": 730.27,
+          "cost": 2921.08,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL499"
-        },
-        {
-          "type": "breakfast",
-          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-          "start_time": "06:00",
-          "end_time": "07:00",
-          "price": 12.0,
-          "cost": 48.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Beijing Daxing International Airport",
-              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-              "mode": "taxi",
-              "start_time": "01:29",
-              "end_time": "02:41",
-              "distance": 48.13,
-              "price": 211.27,
-              "cost": 211.27,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Corner Tower",
-          "start_time": "09:00",
-          "end_time": "10:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-              "end": "Corner Tower",
-              "mode": "taxi",
-              "start_time": "07:00",
-              "end_time": "07:01",
-              "distance": 0.96,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
+          "TrainID": "G32"
         },
         {
           "type": "lunch",
@@ -72,14 +28,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Corner Tower",
+              "start": "Beijing South Railway Station",
               "end": "Tidu (Beijing Fang Branch)",
               "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:05",
-              "distance": 3.64,
-              "price": 17.43,
-              "cost": 17.43,
+              "start_time": "12:20",
+              "end_time": "12:25",
+              "distance": 3.87,
+              "price": 18.26,
+              "cost": 18.26,
               "cars": 1
             }
           ]
@@ -459,100 +415,84 @@
           "transports": [
             {
               "start": "Olympic Park",
-              "end": "Bao Guo Temple",
-              "mode": "taxi",
+              "end": "Olympic Park-Metro Station",
+              "mode": "walk",
               "start_time": "12:58",
-              "end_time": "13:15",
-              "distance": 11.72,
-              "price": 47.43,
-              "cost": 47.43,
-              "cars": 1
+              "end_time": "13:06",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Olympic Park-Metro Station",
+              "end": "Changchun Street-Metro Station",
+              "mode": "metro",
+              "start_time": "13:06",
+              "end_time": "13:29",
+              "distance": 11.67,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Changchun Street-Metro Station",
+              "end": "Bao Guo Temple",
+              "mode": "walk",
+              "start_time": "13:29",
+              "end_time": "13:33",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "dinner",
-          "position": "Helude Candied Hawthorn Sticks",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 7.0,
-          "cost": 28.0,
+          "type": "airplane",
+          "start_time": "17:18",
+          "end_time": "18:42",
+          "start": "Beijing Daxing International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 516.02,
+          "cost": 2064.08,
           "tickets": 4,
           "transports": [
             {
               "start": "Bao Guo Temple",
-              "end": "Helude Candied Hawthorn Sticks",
-              "mode": "taxi",
+              "end": "Changchun Street-Metro Station",
+              "mode": "walk",
               "start_time": "15:03",
-              "end_time": "15:11",
-              "distance": 5.39,
-              "price": 23.58,
-              "cost": 23.58,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "train",
-          "start_time": "12:58",
-          "end_time": "12:58",
-          "start": "Helude Candied Hawthorn Sticks",
-          "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-190268-D3-1-IN"
-        },
-        {
-          "type": "lunch",
-          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
-          "start_time": "12:58",
-          "end_time": "13:13",
-          "price": 14.0,
-          "cost": 56.0,
-          "tickets": 4,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "13:13",
-          "end_time": "13:13",
-          "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
-          "end": "Beijing Daxing International Airport",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-190268-D3-1-OUT"
-        },
-        {
-          "type": "airplane",
-          "start_time": "22:57",
-          "end_time": "00:21",
-          "start": "Beijing Daxing International Airport",
-          "end": "Hangzhou Xiaoshan International Airport",
-          "price": 529.77,
-          "cost": 2119.08,
-          "tickets": 4,
-          "transports": [
+              "end_time": "15:07",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Helude Candied Hawthorn Sticks",
+              "start": "Changchun Street-Metro Station",
+              "end": "Daxing Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:07",
+              "end_time": "16:33",
+              "distance": 43.33,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Daxing Airport-Metro Station",
               "end": "Beijing Daxing International Airport",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "19:10",
-              "distance": 46.77,
-              "price": 205.16,
-              "cost": 205.16,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:33",
+              "end_time": "16:44",
+              "distance": 0.93,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "FlightID": "FL140"
+          "FlightID": "FL139"
         }
       ]
     }
   ],
   "elapsed_time(sec)": 182.9630310535431,
-  "_eval_score": 99.98412698412699
+  "_eval_score": 97.86375661375662
 }

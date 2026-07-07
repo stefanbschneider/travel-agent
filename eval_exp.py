@@ -186,7 +186,6 @@ if __name__ == "__main__":
 
 
         print("All pass ratio: ", 1. * len(all_pass_id) / len(query_index) * 100)
-
         if args.preference:
             print("Preference:")
             result_agg = evaluate_preference_v2(

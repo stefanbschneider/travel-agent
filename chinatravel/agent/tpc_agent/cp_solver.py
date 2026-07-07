@@ -227,10 +227,15 @@ def _solve_template(
         attr_vars, rest_vars, attr_selected, rest_selected,
         hotels, outbound, returning, attractions, restaurants,
     )
-    total_cost_yuan = model.NewIntVar(0, 10**7, "total_cost_yuan")
-    model.AddDivisionEquality(total_cost_yuan, total_cost, 100)
+    # Keep the objective fully linear over integer expressions.
+    # Some OR-Tools versions treat AddDivisionEquality with a composite linear
+    # expression numerator as MODEL_INVALID.
     model.Maximize(
-        1000 * sum(attr_selected) + 100 * sum(rest_selected) - total_cost_yuan + ret_units - out_units
+        100000 * sum(attr_selected)
+        + 10000 * sum(rest_selected)
+        - total_cost
+        + 100 * ret_units
+        - 100 * out_units
     )
 
     solver = cp_model.CpSolver()
@@ -422,6 +427,25 @@ def _constrain_budgets(model, constraints, people, hotel_idx, outbound_idx, retu
 # Reconstruction: travel-aware flexible scheduler
 # ---------------------------------------------------------------------------
 
+def _grounding_shape_ok(plan: dict) -> bool:
+    """Quick structural grounding check: intercity only at global boundaries."""
+    if not isinstance(plan, dict):
+        return False
+    itinerary = plan.get("itinerary", []) or []
+    refs = []
+    for day in itinerary:
+        activities = (day or {}).get("activities", [])
+        if not isinstance(activities, list):
+            continue
+        refs.extend(activities)
+    if len(refs) <= 2:
+        return True
+    for idx, activity in enumerate(refs):
+        if isinstance(activity, dict) and activity.get("type") in ("airplane", "train"):
+            if idx not in (0, len(refs) - 1):
+                return False
+    return True
+
 def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignment: dict, check=None) -> dict | None:
     """Try several attraction orderings/distributions; return the first emitted
     plan that passes ``check`` (or the first non-None plan when check is None).
@@ -452,6 +476,13 @@ def _reconstruct_plan(agent, query: dict, constraints: dict, ctx: dict, assignme
         for order in orderings:
             plan = _reconstruct_one(agent, query, constraints, ctx, assignment, order, lunch_pool, dinner_pool)
             if plan is None:
+                continue
+            if hasattr(agent, "_sanitize_plan_for_grounding"):
+                try:
+                    plan = agent._sanitize_plan_for_grounding(plan, query)
+                except Exception:
+                    pass
+            if not _grounding_shape_ok(plan):
                 continue
             if check is None:
                 return plan
@@ -555,13 +586,24 @@ def _attraction_orderings(agent, attrs: list[dict], constraints: dict, hotel: di
             seen.add(key)
             orders.append(order)
 
-    add(list(attrs))
-    add(_nn_order(attrs, _centroid(attrs)))
-    add(_nn_order(attrs, (hotel.get("lat"), hotel.get("lon"))))
+    base = list(attrs)
+    add(base)
+    add(list(reversed(base)))
+
+    nn_centroid = _nn_order(attrs, _centroid(attrs))
+    add(nn_centroid)
+    add(list(reversed(nn_centroid)))
+
+    nn_hotel = _nn_order(attrs, (hotel.get("lat"), hotel.get("lon")))
+    add(nn_hotel)
+    add(list(reversed(nn_hotel)))
+
     try:
-        n_shuffles = int(os.environ.get("TPC_CP_RECON_SHUFFLES", "0"))
+        # A small default shuffle budget helps escape routing local optima on
+        # hard unsolved queries while keeping runtime bounded.
+        n_shuffles = int(os.environ.get("TPC_CP_RECON_SHUFFLES", "4"))
     except Exception:
-        n_shuffles = 0
+        n_shuffles = 4
     for seed in range(1, max(0, n_shuffles) + 1):
         shuffled = list(attrs)
         random.Random(seed).shuffle(shuffled)

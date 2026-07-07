@@ -29,14 +29,34 @@
           "transports": [
             {
               "start": "Nanjing South Railway Station",
-              "end": "Nanjing Jinling Hotel - Plum Garden",
-              "mode": "taxi",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "16:53",
-              "end_time": "17:05",
-              "distance": 8.32,
-              "price": 33.81,
-              "cost": 33.81,
-              "cars": 1
+              "end_time": "16:56",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "16:56",
+              "end_time": "17:11",
+              "distance": 7.95,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Nanjing Jinling Hotel - Plum Garden",
+              "mode": "walk",
+              "start_time": "17:11",
+              "end_time": "17:12",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -44,203 +64,127 @@
           "type": "attraction",
           "position": "Zhongshan Scenic Area",
           "start_time": "18:59",
-          "end_time": "20:44",
+          "end_time": "19:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Nanjing Jinling Hotel - Plum Garden",
-              "end": "Zhongshan Scenic Area",
-              "mode": "taxi",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "walk",
               "start_time": "18:12",
-              "end_time": "18:23",
-              "distance": 7.82,
-              "price": 32.06,
-              "cost": 32.06,
-              "cars": 1
+              "end_time": "18:13",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "metro",
+              "start_time": "18:13",
+              "end_time": "18:27",
+              "distance": 7.0,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Zhongshan Scenic Area",
+              "mode": "walk",
+              "start_time": "18:27",
+              "end_time": "18:59",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Xuanwu Lake Scenic Area",
-          "start_time": "21:29",
-          "end_time": "23:14",
+          "start_time": "20:44",
+          "end_time": "21:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Zhongshan Scenic Area",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "walk",
+              "start_time": "19:59",
+              "end_time": "20:31",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "20:31",
+              "end_time": "20:36",
+              "distance": 2.78,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
               "end": "Xuanwu Lake Scenic Area",
-              "mode": "taxi",
-              "start_time": "20:44",
-              "end_time": "20:52",
-              "distance": 5.37,
-              "price": 23.48,
-              "cost": 23.48,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:36",
+              "end_time": "20:44",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "09:00",
-          "end_time": "09:00",
-          "start": "Xuanwu Lake Scenic Area",
-          "end": "Ageless Village",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-1-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "Ageless Village",
-          "start_time": "09:00",
-          "end_time": "10:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "10:00",
-          "end_time": "10:00",
-          "start": "Ageless Village",
-          "end": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-1-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "10:15",
-          "end_time": "10:15",
-          "start": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "end": "Ancient Huiji Temple",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-2-IN"
-        },
-        {
-          "type": "attraction",
-          "position": "Ancient Huiji Temple",
-          "start_time": "10:15",
-          "end_time": "11:15",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "11:15",
-          "end_time": "11:15",
-          "start": "Ancient Huiji Temple",
-          "end": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-2-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "06:00",
-          "end_time": "06:00",
-          "start": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "end": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-1-IN"
-        },
-        {
-          "type": "breakfast",
-          "position": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
-          "start_time": "06:00",
-          "end_time": "07:00",
-          "price": 10.0,
-          "cost": 40.0,
-          "tickets": 4,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "07:00",
-          "start": "Zhu Ji Xiao Zheng Crispy Pancake (Laomendong Branch)",
-          "end": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-1-OUT"
-        },
-        {
-          "type": "train",
-          "start_time": "12:00",
-          "end_time": "12:00",
-          "start": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "end": "Zhu's Plum Blossom Cake",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-1-IN"
-        },
-        {
-          "type": "lunch",
-          "position": "Zhu's Plum Blossom Cake",
-          "start_time": "12:00",
-          "end_time": "13:00",
-          "price": 6.0,
-          "cost": 24.0,
-          "tickets": 4,
-          "transports": []
-        },
-        {
-          "type": "train",
-          "start_time": "13:00",
-          "end_time": "13:00",
-          "start": "Zhu's Plum Blossom Cake",
-          "end": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [],
-          "TrainID": "GHOST-666010-D1-1-OUT"
-        },
-        {
           "type": "accommodation",
-          "position": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-          "start_time": "23:53",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+          "start_time": "22:18",
           "end_time": "24:00",
-          "price": 289.0,
-          "cost": 1156.0,
+          "price": 368.0,
+          "cost": 1472.0,
           "rooms": 4,
           "room_type": 1,
           "tickets": 4,
           "transports": [
             {
               "start": "Xuanwu Lake Scenic Area",
-              "end": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-              "mode": "taxi",
-              "start_time": "23:14",
-              "end_time": "23:33",
-              "distance": 12.75,
-              "price": 52.08,
-              "cost": 52.08,
-              "cars": 1
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "21:44",
+              "end_time": "21:52",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "21:52",
+              "end_time": "22:15",
+              "distance": 11.76,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "mode": "walk",
+              "start_time": "22:15",
+              "end_time": "22:18",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -251,7 +195,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Nanjing South Railway Station Ziyi Tianyue Hotel",
+          "position": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -262,30 +206,50 @@
         {
           "type": "attraction",
           "position": "Confucius Temple",
-          "start_time": "08:55",
-          "end_time": "10:40",
+          "start_time": "08:50",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing South Railway Station Ziyi Tianyue Hotel",
-              "end": "Confucius Temple",
-              "mode": "taxi",
+              "start": "HOTEL CELESTIS GREAT(Nanjing South Railway Station)",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:40",
-              "distance": 6.89,
-              "price": 28.8,
-              "cost": 28.8,
-              "cars": 1
+              "end_time": "08:33",
+              "distance": 0.31,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:33",
+              "end_time": "08:44",
+              "distance": 5.92,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Confucius Temple",
+              "mode": "walk",
+              "start_time": "08:44",
+              "end_time": "08:50",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
           "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "10:41",
-          "end_time": "12:26",
+          "start_time": "09:51",
+          "end_time": "10:51",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -293,21 +257,20 @@
             {
               "start": "Confucius Temple",
               "end": "Confucius Temple and Qinhuai River Scenic Area",
-              "mode": "taxi",
-              "start_time": "10:40",
-              "end_time": "10:40",
-              "distance": 0.1,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 0.10372376922251704,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
           "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-          "start_time": "12:33",
-          "end_time": "13:33",
+          "start_time": "11:00",
+          "end_time": "12:00",
           "price": 74.0,
           "cost": 296.0,
           "tickets": 4,
@@ -315,109 +278,104 @@
             {
               "start": "Confucius Temple and Qinhuai River Scenic Area",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "mode": "taxi",
-              "start_time": "12:26",
-              "end_time": "12:26",
-              "distance": 0.67,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:51",
+              "end_time": "10:58",
+              "distance": 0.6657854428530755,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-          "start_time": "13:57",
-          "end_time": "15:27",
+          "position": "Ageless Village",
+          "start_time": "13:23",
+          "end_time": "14:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "mode": "taxi",
-              "start_time": "13:33",
-              "end_time": "13:40",
-              "distance": 5.14,
-              "price": 22.69,
-              "cost": 22.69,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beiqiu Museum of Contemporary Art",
-          "start_time": "15:33",
-          "end_time": "17:03",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
-              "end": "Beiqiu Museum of Contemporary Art",
-              "mode": "taxi",
-              "start_time": "15:27",
-              "end_time": "15:27",
-              "distance": 0.58,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
-          "start_time": "17:26",
-          "end_time": "18:26",
-          "price": 6.0,
-          "cost": 24.0,
-          "tickets": 4,
-          "transports": [
+              "start": "Confucius Temple-Metro Station",
+              "end": "Longhua Road-Metro Station",
+              "mode": "metro",
+              "start_time": "12:04",
+              "end_time": "12:34",
+              "distance": 15.38,
+              "price": 5,
+              "cost": 20,
+              "tickets": 4
+            },
             {
-              "start": "Beiqiu Museum of Contemporary Art",
-              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
-              "mode": "taxi",
-              "start_time": "17:03",
-              "end_time": "17:05",
-              "distance": 1.92,
-              "price": 11.41,
-              "cost": 11.41,
-              "cars": 1
+              "start": "Longhua Road-Metro Station",
+              "end": "Ageless Village",
+              "mode": "walk",
+              "start_time": "12:34",
+              "end_time": "13:23",
+              "distance": 4.09,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "20:34",
-          "end_time": "22:04",
+          "start_time": "18:34",
+          "end_time": "20:04",
           "start": "Nanjing Lukou International Airport",
           "end": "Chongqing Jiangbei International Airport",
-          "price": 577.68,
-          "cost": 2310.72,
+          "price": 603.53,
+          "cost": 2414.12,
           "tickets": 4,
           "transports": [
             {
-              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "start": "Ageless Village",
+              "end": "Longhua Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:53",
+              "end_time": "15:42",
+              "distance": 4.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Longhua Road-Metro Station",
+              "end": "Lukou Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:42",
+              "end_time": "17:08",
+              "distance": 43.4,
+              "price": 8,
+              "cost": 32,
+              "tickets": 4
+            },
+            {
+              "start": "Lukou Airport-Metro Station",
               "end": "Nanjing Lukou International Airport",
-              "mode": "taxi",
-              "start_time": "18:26",
-              "end_time": "19:23",
-              "distance": 38.65,
-              "price": 168.64,
-              "cost": 168.64,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:08",
+              "end_time": "17:11",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "FlightID": "FL686"
+          "FlightID": "FL685"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 188.66996932029724,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 184.7365210056305,
+  "_eval_score": 94.25462962962962
 }
