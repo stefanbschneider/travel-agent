@@ -7,35 +7,57 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:00",
-          "end_time": "08:11",
-          "start": "Shanghai Station",
-          "end": "Nanjing South Railway Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "00:33",
+          "end_time": "00:53",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 242.41,
+          "cost": 484.82,
           "tickets": 2,
           "transports": [],
-          "TrainID": "G2"
+          "FlightID": "FL074"
+        },
+        {
+          "type": "breakfast",
+          "position": "Clip Coffee",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 27.0,
+          "cost": 54.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Lukou International Airport",
+              "end": "Clip Coffee",
+              "mode": "taxi",
+              "start_time": "00:53",
+              "end_time": "01:47",
+              "distance": 36.15,
+              "price": 157.38,
+              "cost": 157.38,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "attraction",
-          "position": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+          "position": "Jiangsu Art Museum",
           "start_time": "09:00",
-          "end_time": "10:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
-              "end": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+              "start": "Clip Coffee",
+              "end": "Jiangsu Art Museum",
               "mode": "taxi",
-              "start_time": "08:11",
-              "end_time": "08:20",
-              "distance": 6.14,
-              "price": 26.2,
-              "cost": 26.2,
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.66,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -50,58 +72,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "China Qinhuai Lantern Festival Main Venue (Egret Island Park)",
+              "start": "Jiangsu Art Museum",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:01",
-              "distance": 0.94,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanjing Museum",
-          "start_time": "12:07",
-          "end_time": "13:07",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
-              "end": "Nanjing Museum",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:07",
-              "distance": 4.67,
-              "price": 21.03,
-              "cost": 21.03,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanjing Presidential Palace",
-          "start_time": "13:10",
-          "end_time": "14:10",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Nanjing Museum",
-              "end": "Nanjing Presidential Palace",
-              "mode": "taxi",
-              "start_time": "13:07",
-              "end_time": "13:10",
-              "distance": 2.66,
-              "price": 14.0,
-              "cost": 14.0,
+              "start_time": "09:50",
+              "end_time": "09:55",
+              "distance": 3.34,
+              "price": 16.38,
+              "cost": 16.38,
               "cars": 1
             }
           ]
@@ -109,45 +87,89 @@
         {
           "type": "attraction",
           "position": "Sun Yat-sen Mausoleum Scenic Area",
-          "start_time": "14:18",
-          "end_time": "15:18",
+          "start_time": "12:11",
+          "end_time": "13:26",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Nanjing Presidential Palace",
+              "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "end": "Sun Yat-sen Mausoleum Scenic Area",
               "mode": "taxi",
-              "start_time": "14:10",
-              "end_time": "14:18",
-              "distance": 5.51,
-              "price": 23.98,
-              "cost": 23.98,
+              "start_time": "12:00",
+              "end_time": "12:11",
+              "distance": 7.8,
+              "price": 31.98,
+              "cost": 31.98,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing City Wall",
+          "start_time": "13:57",
+          "end_time": "15:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Sun Yat-sen Mausoleum Scenic Area",
+              "end": "Nanjing City Wall",
+              "mode": "taxi",
+              "start_time": "13:26",
+              "end_time": "13:57",
+              "distance": 21.02,
+              "price": 89.29,
+              "cost": 89.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Xuanwu Lake Scenic Area",
+          "start_time": "15:34",
+          "end_time": "16:49",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing City Wall",
+              "end": "Xuanwu Lake Scenic Area",
+              "mode": "taxi",
+              "start_time": "15:12",
+              "end_time": "15:34",
+              "distance": 15.22,
+              "price": 63.2,
+              "cost": 63.2,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "UrCove by HYATT Nanjing South Railway Station",
-          "start_time": "15:35",
+          "position": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
+          "start_time": "17:47",
           "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "price": 311.0,
+          "cost": 622.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Sun Yat-sen Mausoleum Scenic Area",
-              "end": "UrCove by HYATT Nanjing South Railway Station",
+              "start": "Xuanwu Lake Scenic Area",
+              "end": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
               "mode": "taxi",
-              "start_time": "15:18",
-              "end_time": "15:35",
-              "distance": 11.87,
-              "price": 48.12,
-              "cost": 48.12,
+              "start_time": "16:49",
+              "end_time": "17:47",
+              "distance": 38.86,
+              "price": 169.55,
+              "cost": 169.55,
               "cars": 1
             }
           ]
@@ -159,7 +181,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "position": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -169,88 +191,22 @@
         },
         {
           "type": "attraction",
-          "position": "Black Clothes Lane",
-          "start_time": "08:58",
-          "end_time": "09:58",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "UrCove by HYATT Nanjing South Railway Station",
-              "end": "Black Clothes Lane",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:39",
-              "distance": 6.59,
-              "price": 27.78,
-              "cost": 27.78,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Intangible Cultural Heritage Hall · Nanjing Intangible Cultural Heritage Experience Center",
-          "start_time": "10:00",
-          "end_time": "11:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Black Clothes Lane",
-              "end": "Intangible Cultural Heritage Hall · Nanjing Intangible Cultural Heritage Experience Center",
-              "mode": "taxi",
-              "start_time": "09:58",
-              "end_time": "09:58",
-              "distance": 0.23,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
           "position": "Rooster Crowing Temple",
-          "start_time": "11:29",
-          "end_time": "12:29",
+          "start_time": "09:26",
+          "end_time": "10:41",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Intangible Cultural Heritage Hall · Nanjing Intangible Cultural Heritage Experience Center",
+              "start": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
               "end": "Rooster Crowing Temple",
               "mode": "taxi",
-              "start_time": "11:00",
-              "end_time": "11:07",
-              "distance": 4.85,
-              "price": 21.67,
-              "cost": 21.67,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Li's Halal Restaurant (Dading Lane Branch)",
-          "start_time": "12:36",
-          "end_time": "13:36",
-          "price": 29.0,
-          "cost": 58.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Rooster Crowing Temple",
-              "end": "Li's Halal Restaurant (Dading Lane Branch)",
-              "mode": "taxi",
-              "start_time": "12:29",
-              "end_time": "12:36",
-              "distance": 4.71,
-              "price": 21.17,
-              "cost": 21.17,
+              "start_time": "08:30",
+              "end_time": "09:26",
+              "distance": 37.57,
+              "price": 163.74,
+              "cost": 163.74,
               "cars": 1
             }
           ]
@@ -258,18 +214,40 @@
         {
           "type": "attraction",
           "position": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
-          "start_time": "13:40",
-          "end_time": "14:40",
+          "start_time": "10:49",
+          "end_time": "12:04",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Li's Halal Restaurant (Dading Lane Branch)",
+              "start": "Rooster Crowing Temple",
               "end": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
               "mode": "taxi",
-              "start_time": "13:36",
-              "end_time": "13:40",
+              "start_time": "10:41",
+              "end_time": "10:49",
+              "distance": 5.69,
+              "price": 24.62,
+              "cost": 24.62,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Li's Halal Restaurant (Dading Lane Branch)",
+          "start_time": "12:08",
+          "end_time": "13:08",
+          "price": 29.0,
+          "cost": 58.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
+              "end": "Li's Halal Restaurant (Dading Lane Branch)",
+              "mode": "taxi",
+              "start_time": "12:04",
+              "end_time": "12:08",
               "distance": 3.11,
               "price": 15.59,
               "cost": 15.59,
@@ -278,25 +256,69 @@
           ]
         },
         {
-          "type": "accommodation",
-          "position": "UrCove by HYATT Nanjing South Railway Station",
-          "start_time": "14:54",
-          "end_time": "24:00",
-          "price": 379.0,
-          "cost": 379.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
+          "type": "attraction",
+          "position": "Yuhuatai",
+          "start_time": "13:12",
+          "end_time": "14:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
           "transports": [
             {
-              "start": "Memorial Hall of the Victims in Nanjing Massacre by Japanese Invaders",
-              "end": "UrCove by HYATT Nanjing South Railway Station",
+              "start": "Li's Halal Restaurant (Dading Lane Branch)",
+              "end": "Yuhuatai",
               "mode": "taxi",
-              "start_time": "14:40",
-              "end_time": "14:54",
-              "distance": 9.68,
-              "price": 38.58,
-              "cost": 38.58,
+              "start_time": "13:08",
+              "end_time": "13:12",
+              "distance": 3.01,
+              "price": 15.24,
+              "cost": 15.24,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Black Clothes Lane",
+          "start_time": "14:42",
+          "end_time": "15:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Yuhuatai",
+              "end": "Black Clothes Lane",
+              "mode": "taxi",
+              "start_time": "14:27",
+              "end_time": "14:30",
+              "distance": 2.57,
+              "price": 13.68,
+              "cost": 13.68,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
+          "start_time": "17:16",
+          "end_time": "24:00",
+          "price": 311.0,
+          "cost": 622.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Black Clothes Lane",
+              "end": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
+              "mode": "taxi",
+              "start_time": "15:57",
+              "end_time": "16:46",
+              "distance": 33.11,
+              "price": 143.71,
+              "cost": 143.71,
               "cars": 1
             }
           ]
@@ -308,7 +330,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "position": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -318,22 +340,22 @@
         },
         {
           "type": "attraction",
-          "position": "Yuhuatai",
-          "start_time": "08:36",
-          "end_time": "09:36",
+          "position": "Confucius Temple",
+          "start_time": "09:20",
+          "end_time": "10:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "UrCove by HYATT Nanjing South Railway Station",
-              "end": "Yuhuatai",
+              "start": "GreenTree Eastern Hotel (Nanjing Lukou Airport Branch)",
+              "end": "Confucius Temple",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:36",
-              "distance": 4.33,
-              "price": 19.84,
-              "cost": 19.84,
+              "end_time": "09:20",
+              "distance": 33.34,
+              "price": 144.71,
+              "cost": 144.71,
               "cars": 1
             }
           ]
@@ -341,63 +363,41 @@
         {
           "type": "attraction",
           "position": "Confucius Temple and Qinhuai River Scenic Area",
-          "start_time": "09:51",
-          "end_time": "10:51",
+          "start_time": "10:35",
+          "end_time": "11:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Yuhuatai",
+              "start": "Confucius Temple",
               "end": "Confucius Temple and Qinhuai River Scenic Area",
               "mode": "taxi",
-              "start_time": "09:36",
-              "end_time": "09:40",
-              "distance": 2.68,
-              "price": 14.08,
-              "cost": 14.08,
+              "start_time": "10:35",
+              "end_time": "10:35",
+              "distance": 0.1,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple Yuhua Stone Museum",
-          "start_time": "10:52",
-          "end_time": "11:52",
+          "position": "Dream of the Red Chamber Immersive Exhibition and Performance",
+          "start_time": "11:59",
+          "end_time": "13:14",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Confucius Temple and Qinhuai River Scenic Area",
-              "end": "Confucius Temple Yuhua Stone Museum",
+              "end": "Dream of the Red Chamber Immersive Exhibition and Performance",
               "mode": "taxi",
-              "start_time": "10:51",
-              "end_time": "10:51",
-              "distance": 0.13,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Republic Red Mansion (Laomendong Branch)",
-          "start_time": "12:43",
-          "end_time": "13:43",
-          "price": 295.0,
-          "cost": 590.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Confucius Temple Yuhua Stone Museum",
-              "end": "Republic Red Mansion (Laomendong Branch)",
-              "mode": "taxi",
-              "start_time": "11:52",
-              "end_time": "11:54",
-              "distance": 1.77,
+              "start_time": "11:50",
+              "end_time": "11:52",
+              "distance": 1.78,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -406,20 +406,42 @@
         },
         {
           "type": "attraction",
-          "position": "Confucius Temple",
-          "start_time": "13:58",
-          "end_time": "14:58",
+          "position": "Former National Government (Ministry of Foreign Affairs) Site",
+          "start_time": "13:59",
+          "end_time": "14:49",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Republic Red Mansion (Laomendong Branch)",
-              "end": "Confucius Temple",
+              "start": "Dream of the Red Chamber Immersive Exhibition and Performance",
+              "end": "Former National Government (Ministry of Foreign Affairs) Site",
               "mode": "taxi",
-              "start_time": "13:43",
-              "end_time": "13:45",
-              "distance": 1.7,
+              "start_time": "13:14",
+              "end_time": "13:18",
+              "distance": 3.22,
+              "price": 15.98,
+              "cost": 15.98,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Former National Government (Ministry of Foreign Affairs) Site",
+              "end": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "mode": "taxi",
+              "start_time": "14:49",
+              "end_time": "14:50",
+              "distance": 0.92,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -427,32 +449,32 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "18:40",
-          "start": "Nanjing Station",
-          "end": "Shanghai Station",
-          "price": 175.28,
-          "cost": 350.56,
+          "type": "airplane",
+          "start_time": "22:30",
+          "end_time": "22:50",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 306.84,
+          "cost": 613.68,
           "tickets": 2,
           "transports": [
             {
-              "start": "Confucius Temple",
-              "end": "Nanjing Station",
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Nanjing Lukou International Airport",
               "mode": "taxi",
-              "start_time": "14:58",
-              "end_time": "15:08",
-              "distance": 6.69,
-              "price": 28.12,
-              "cost": 28.12,
+              "start_time": "17:45",
+              "end_time": "18:42",
+              "distance": 38.65,
+              "price": 168.64,
+              "cost": 168.64,
               "cars": 1
             }
           ],
-          "TrainID": "G7021"
+          "FlightID": "FL647"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 246.99510598182678,
-  "_eval_score": 97.77777777777777
+  "elapsed_time(sec)": 101.86518406867981,
+  "_eval_score": 97.99749373433585
 }

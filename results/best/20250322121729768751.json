@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "06:45",
-          "end_time": "08:16",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Shanghai Hongqiao International Airport",
-          "price": 636.61,
-          "cost": 636.61,
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL165"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jing'an Park",
+              "mode": "taxi",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Hongqiao International Airport",
+              "start": "Jing'an Park",
               "end": "Shanghai Club (Hong Kong Metropolis Branch)",
               "mode": "taxi",
-              "start_time": "08:16",
-              "end_time": "08:37",
-              "distance": 14.49,
-              "price": 59.9,
-              "cost": 59.9,
+              "start_time": "09:50",
+              "end_time": "09:55",
+              "distance": 3.57,
+              "price": 17.19,
+              "cost": 17.19,
               "cars": 1
             }
           ]
@@ -168,31 +212,120 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "Lujiazui Central Green Space",
+          "start_time": "12:21",
+          "end_time": "13:11",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Pudong International Airport",
+              "end": "Lujiazui Central Green Space",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:51",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "end_time": "12:10",
+              "distance": 6.96,
+              "price": 29.04,
+              "cost": 29.04,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Century Avenue Cherry Orchard",
+          "start_time": "13:19",
+          "end_time": "14:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Lujiazui Central Green Space",
+              "end": "Century Avenue Cherry Orchard",
+              "mode": "taxi",
+              "start_time": "13:11",
+              "end_time": "13:12",
+              "distance": 0.88,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "North Bund Riverside Green Space",
+          "start_time": "14:23",
+          "end_time": "15:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Century Avenue Cherry Orchard",
+              "end": "North Bund Riverside Green Space",
+              "mode": "taxi",
+              "start_time": "14:09",
+              "end_time": "14:11",
+              "distance": 1.97,
+              "price": 11.59,
+              "cost": 11.59,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 97.0,
+          "cost": 97.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "North Bund Riverside Green Space",
+              "end": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "15:13",
+              "end_time": "15:14",
+              "distance": 1.12,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "23:48",
+          "end_time": "01:19",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 640.93,
+          "cost": 640.93,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:33",
+              "distance": 32.34,
+              "price": 140.22,
+              "cost": 140.22,
               "cars": 1
             }
           ],
-          "FlightID": "FL018"
+          "FlightID": "FL014"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 0.03342795372009277
+  "elapsed_time(sec)": 0.03342795372009277,
+  "_eval_score": 98.51968864468864
 }

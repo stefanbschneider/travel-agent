@@ -22,7 +22,7 @@
           "type": "breakfast",
           "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
           "start_time": "08:00",
-          "end_time": "09:00",
+          "end_time": "08:45",
           "price": 28.0,
           "cost": 112.0,
           "tickets": 4,
@@ -44,7 +44,7 @@
           "type": "attraction",
           "position": "Jululu Road",
           "start_time": "09:00",
-          "end_time": "10:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -53,8 +53,8 @@
               "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
               "end": "Jululu Road",
               "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:00",
+              "start_time": "08:45",
+              "end_time": "08:45",
               "distance": 0.020900053972197186,
               "price": 0,
               "cost": 0
@@ -74,8 +74,8 @@
               "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:01",
+              "start_time": "09:50",
+              "end_time": "09:51",
               "distance": 0.7,
               "price": 11.0,
               "cost": 11.0,
@@ -85,22 +85,44 @@
         },
         {
           "type": "attraction",
-          "position": "Guangfulin Cultural Site",
-          "start_time": "13:07",
-          "end_time": "14:07",
+          "position": "Foreigner Street 101",
+          "start_time": "12:43",
+          "end_time": "13:43",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Yong Fu (Huangpu Branch)",
-              "end": "Guangfulin Cultural Site",
+              "end": "Foreigner Street 101",
               "mode": "taxi",
               "start_time": "12:23",
-              "end_time": "13:07",
-              "distance": 29.79,
-              "price": 128.77,
-              "cost": 128.77,
+              "end_time": "12:33",
+              "distance": 7.11,
+              "price": 29.6,
+              "cost": 29.6,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guangfulin Cultural Site",
+          "start_time": "15:05",
+          "end_time": "16:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Foreigner Street 101",
+              "end": "Guangfulin Cultural Site",
+              "mode": "taxi",
+              "start_time": "13:43",
+              "end_time": "14:17",
+              "distance": 22.89,
+              "price": 97.7,
+              "cost": 97.7,
               "cars": 1
             }
           ]
@@ -108,8 +130,8 @@
         {
           "type": "attraction",
           "position": "Zhujiajiao Ancient Town Scenic Area",
-          "start_time": "14:28",
-          "end_time": "15:28",
+          "start_time": "16:26",
+          "end_time": "17:26",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -118,8 +140,8 @@
               "start": "Guangfulin Cultural Site",
               "end": "Zhujiajiao Ancient Town Scenic Area",
               "mode": "taxi",
-              "start_time": "14:07",
-              "end_time": "14:28",
+              "start_time": "16:05",
+              "end_time": "16:26",
               "distance": 14.64,
               "price": 60.57,
               "cost": 60.57,
@@ -128,69 +150,47 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Venice Town",
-          "start_time": "16:18",
-          "end_time": "17:18",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Zhujiajiao Ancient Town Scenic Area",
-              "end": "Venice Town",
-              "mode": "taxi",
-              "start_time": "15:28",
-              "end_time": "16:18",
-              "distance": 33.63,
-              "price": 146.01,
-              "cost": 146.01,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "dinner",
           "position": "Fu He Hui",
-          "start_time": "17:25",
-          "end_time": "18:25",
+          "start_time": "18:21",
+          "end_time": "19:21",
           "price": 1280.0,
           "cost": 5120.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Venice Town",
+              "start": "Zhujiajiao Ancient Town Scenic Area",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "17:18",
-              "end_time": "17:25",
-              "distance": 4.78,
-              "price": 21.41,
-              "cost": 21.41,
+              "start_time": "17:26",
+              "end_time": "18:21",
+              "distance": 37.01,
+              "price": 161.23,
+              "cost": 161.23,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
-          "start_time": "19:26",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "start_time": "20:10",
           "end_time": "24:00",
-          "price": 368.0,
-          "cost": 1472.0,
+          "price": 339.0,
+          "cost": 1356.0,
           "rooms": 4,
           "room_type": 1,
           "tickets": 4,
           "transports": [
             {
               "start": "Fu He Hui",
-              "end": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+              "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
               "mode": "taxi",
-              "start_time": "18:25",
-              "end_time": "19:26",
-              "distance": 40.75,
-              "price": 178.08,
-              "cost": 178.08,
+              "start_time": "19:21",
+              "end_time": "20:10",
+              "distance": 32.88,
+              "price": 142.67,
+              "cost": 142.67,
               "cars": 1
             }
           ]
@@ -202,7 +202,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -212,44 +212,44 @@
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "09:23",
-          "end_time": "10:23",
+          "position": "Venice Town",
+          "start_time": "09:26",
+          "end_time": "10:26",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Ramada Encore by Wyndham Shanghai Pudong Airport",
-              "end": "The Bund",
+              "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+              "end": "Venice Town",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:23",
-              "distance": 35.85,
-              "price": 156.02,
-              "cost": 156.02,
+              "end_time": "09:26",
+              "distance": 37.6,
+              "price": 163.88,
+              "cost": 163.88,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "10:23",
-          "end_time": "11:23",
+          "position": "The Bund",
+          "start_time": "10:42",
+          "end_time": "11:42",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "The Bund",
-              "end": "Huangpu River",
+              "start": "Venice Town",
+              "end": "The Bund",
               "mode": "taxi",
-              "start_time": "10:23",
-              "end_time": "10:23",
-              "distance": 0.24,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "10:26",
+              "end_time": "10:42",
+              "distance": 10.81,
+              "price": 43.33,
+              "cost": 43.33,
               "cars": 1
             }
           ]
@@ -257,65 +257,43 @@
         {
           "type": "lunch",
           "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "11:32",
-          "end_time": "12:32",
+          "start_time": "11:50",
+          "end_time": "12:50",
           "price": 203.0,
           "cost": 812.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Huangpu River",
+              "start": "The Bund",
               "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "taxi",
-              "start_time": "11:23",
-              "end_time": "11:32",
-              "distance": 6.14,
-              "price": 26.2,
-              "cost": 26.2,
+              "start_time": "11:42",
+              "end_time": "11:50",
+              "distance": 5.94,
+              "price": 25.49,
+              "cost": 25.49,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shanghai Museum",
-          "start_time": "12:38",
-          "end_time": "13:38",
+          "position": "Huangpu River",
+          "start_time": "12:59",
+          "end_time": "13:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Shanghai Museum",
+              "end": "Huangpu River",
               "mode": "taxi",
-              "start_time": "12:32",
-              "end_time": "12:38",
-              "distance": 4.27,
-              "price": 19.65,
-              "cost": 19.65,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanjing Road Pedestrian Street",
-          "start_time": "13:39",
-          "end_time": "14:39",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Shanghai Museum",
-              "end": "Nanjing Road Pedestrian Street",
-              "mode": "taxi",
-              "start_time": "13:38",
-              "end_time": "13:39",
-              "distance": 1.28,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "12:50",
+              "end_time": "12:59",
+              "distance": 6.14,
+              "price": 26.2,
+              "cost": 26.2,
               "cars": 1
             }
           ]
@@ -330,11 +308,33 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Nanjing Road Pedestrian Street",
+              "start": "Huangpu River",
               "end": "Kurogi",
               "mode": "taxi",
-              "start_time": "14:39",
-              "end_time": "14:39",
+              "start_time": "13:59",
+              "end_time": "14:00",
+              "distance": 1.18,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "18:00",
+          "end_time": "19:00",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Kurogi",
+              "end": "Nanjing Road Pedestrian Street",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:00",
               "distance": 0.39,
               "price": 11.0,
               "cost": 11.0,
@@ -344,24 +344,24 @@
         },
         {
           "type": "accommodation",
-          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
-          "start_time": "18:55",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
+          "start_time": "19:42",
           "end_time": "24:00",
-          "price": 368.0,
-          "cost": 1472.0,
+          "price": 339.0,
+          "cost": 1356.0,
           "rooms": 4,
           "room_type": 1,
           "tickets": 4,
           "transports": [
             {
-              "start": "Kurogi",
-              "end": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:55",
-              "distance": 36.78,
-              "price": 160.21,
-              "cost": 160.21,
+              "start_time": "19:00",
+              "end_time": "19:42",
+              "distance": 28.24,
+              "price": 121.77,
+              "cost": 121.77,
               "cars": 1
             }
           ]
@@ -373,7 +373,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+          "position": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -384,21 +384,21 @@
         {
           "type": "attraction",
           "position": "Lujiazui",
-          "start_time": "09:21",
-          "end_time": "10:21",
+          "start_time": "09:09",
+          "end_time": "10:09",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "Ramada Encore by Wyndham Shanghai Pudong Airport",
+              "start": "Vienna International Hotel (Shanghai Pudong Airport Free Trade Zone)",
               "end": "Lujiazui",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:21",
-              "distance": 34.44,
-              "price": 149.69,
-              "cost": 149.69,
+              "end_time": "09:09",
+              "distance": 26.25,
+              "price": 112.84,
+              "cost": 112.84,
               "cars": 1
             }
           ]
@@ -406,8 +406,8 @@
         {
           "type": "attraction",
           "position": "Shanghai Natural History Museum",
-          "start_time": "10:27",
-          "end_time": "11:27",
+          "start_time": "10:15",
+          "end_time": "11:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -416,8 +416,8 @@
               "start": "Lujiazui",
               "end": "Shanghai Natural History Museum",
               "mode": "taxi",
-              "start_time": "10:21",
-              "end_time": "10:27",
+              "start_time": "10:09",
+              "end_time": "10:15",
               "distance": 4.11,
               "price": 19.08,
               "cost": 19.08,
@@ -428,8 +428,8 @@
         {
           "type": "attraction",
           "position": "Jing'an Sculpture Park",
-          "start_time": "11:27",
-          "end_time": "12:27",
+          "start_time": "11:15",
+          "end_time": "12:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
@@ -438,8 +438,8 @@
               "start": "Shanghai Natural History Museum",
               "end": "Jing'an Sculpture Park",
               "mode": "taxi",
-              "start_time": "11:27",
-              "end_time": "11:27",
+              "start_time": "11:15",
+              "end_time": "11:15",
               "distance": 0.13,
               "price": 11.0,
               "cost": 11.0,
@@ -450,8 +450,8 @@
         {
           "type": "lunch",
           "position": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-          "start_time": "12:33",
-          "end_time": "13:33",
+          "start_time": "12:21",
+          "end_time": "13:21",
           "price": 498.0,
           "cost": 1992.0,
           "tickets": 4,
@@ -460,8 +460,8 @@
               "start": "Jing'an Sculpture Park",
               "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
               "mode": "taxi",
-              "start_time": "12:27",
-              "end_time": "12:33",
+              "start_time": "12:15",
+              "end_time": "12:21",
               "distance": 4.16,
               "price": 19.27,
               "cost": 19.27,
@@ -471,44 +471,44 @@
         },
         {
           "type": "attraction",
-          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "13:47",
-          "end_time": "15:17",
+          "position": "Garden Bridge",
+          "start_time": "13:33",
+          "end_time": "14:23",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 4,
           "transports": [
             {
               "start": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
-              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Garden Bridge",
               "mode": "taxi",
-              "start_time": "13:33",
-              "end_time": "13:36",
-              "distance": 2.14,
-              "price": 12.19,
-              "cost": 12.19,
+              "start_time": "13:21",
+              "end_time": "13:23",
+              "distance": 1.71,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+          "position": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
           "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 64.0,
+          "end_time": "17:45",
+          "price": 97.0,
+          "cost": 388.0,
           "tickets": 4,
           "transports": [
             {
-              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "start": "Garden Bridge",
+              "end": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
               "mode": "taxi",
-              "start_time": "15:17",
-              "end_time": "15:25",
-              "distance": 5.92,
-              "price": 25.41,
-              "cost": 25.41,
+              "start_time": "14:23",
+              "end_time": "14:23",
+              "distance": 0.13,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -524,14 +524,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
+              "start": "Xiaojiang Mountain · Exquisite Xinjiang Cuisine (Magnolia Plaza Branch)",
               "end": "Shanghai Pudong International Airport",
               "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:45",
-              "distance": 30.3,
-              "price": 131.05,
-              "cost": 131.05,
+              "start_time": "17:45",
+              "end_time": "18:33",
+              "distance": 32.34,
+              "price": 140.22,
+              "cost": 140.22,
               "cars": 1
             }
           ],
@@ -540,6 +540,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 192.82524943351746,
-  "_eval_score": 99.75324675324676
+  "elapsed_time(sec)": 78.71748995780945,
+  "_eval_score": 99.8051948051948
 }

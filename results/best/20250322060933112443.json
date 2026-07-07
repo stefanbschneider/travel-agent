@@ -8,53 +8,158 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "12:07",
-          "end_time": "14:32",
+          "start_time": "01:11",
+          "end_time": "03:36",
           "start": "Beijing Capital International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 949.32,
-          "cost": 949.32,
+          "price": 923.58,
+          "cost": 923.58,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL096"
+          "FlightID": "FL095"
         },
         {
-          "type": "attraction",
-          "position": "Binhai Cultural Park",
-          "start_time": "17:02",
-          "end_time": "18:02",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "breakfast",
+          "position": "Delicious Noodle House (Taoyuan Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 26.0,
+          "cost": 26.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Shenzhen Bao'an International Airport",
               "end": "Airport East-Metro Station",
               "mode": "walk",
-              "start_time": "14:32",
-              "end_time": "14:37",
+              "start_time": "03:36",
+              "end_time": "03:41",
               "distance": 0.45,
               "price": 0,
               "cost": 0
             },
             {
               "start": "Airport East-Metro Station",
-              "end": "Baohua-Metro Station",
+              "end": "Taoyuan-Metro Station",
               "mode": "metro",
-              "start_time": "14:37",
-              "end_time": "15:02",
-              "distance": 12.55,
-              "price": 4,
-              "cost": 4,
+              "start_time": "03:41",
+              "end_time": "04:14",
+              "distance": 16.55,
+              "price": 5,
+              "cost": 5,
               "tickets": 1
             },
             {
-              "start": "Baohua-Metro Station",
-              "end": "Binhai Cultural Park",
+              "start": "Taoyuan-Metro Station",
+              "end": "Delicious Noodle House (Taoyuan Branch)",
               "mode": "walk",
-              "start_time": "15:02",
-              "end_time": "15:08",
-              "distance": 0.51,
+              "start_time": "04:14",
+              "end_time": "04:19",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "GODIVA (Coastal City Store)",
+          "start_time": "11:00",
+          "end_time": "11:45",
+          "price": 54.0,
+          "cost": 54.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Delicious Noodle House (Taoyuan Branch)",
+              "end": "GODIVA (Coastal City Store)",
+              "mode": "walk",
+              "start_time": "07:45",
+              "end_time": "08:12",
+              "distance": 2.2642910482131167,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dashabe Park",
+          "start_time": "12:58",
+          "end_time": "13:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "GODIVA (Coastal City Store)",
+              "end": "Dashabe Park",
+              "mode": "walk",
+              "start_time": "11:45",
+              "end_time": "12:58",
+              "distance": 6.083733907886549,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dashabe Ecological Corridor",
+          "start_time": "14:48",
+          "end_time": "15:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dashabe Park",
+              "end": "Dashabe Ecological Corridor",
+              "mode": "walk",
+              "start_time": "13:48",
+              "end_time": "14:28",
+              "distance": 3.342942047562895,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Long Kee Hong Kong Tea Restaurant (Nanshan Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 65.0,
+          "cost": 65.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dashabe Ecological Corridor",
+              "end": "Long Kee Hong Kong Tea Restaurant (Nanshan Branch)",
+              "mode": "walk",
+              "start_time": "15:38",
+              "end_time": "16:41",
+              "distance": 5.327014773435454,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanshan Park",
+          "start_time": "18:13",
+          "end_time": "19:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Long Kee Hong Kong Tea Restaurant (Nanshan Branch)",
+              "end": "Nanshan Park",
+              "mode": "walk",
+              "start_time": "17:45",
+              "end_time": "18:01",
+              "distance": 1.4115888146888638,
               "price": 0,
               "cost": 0
             }
@@ -70,33 +175,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Binhai Cultural Park",
-              "end": "Baohua-Metro Station",
-              "mode": "walk",
-              "start_time": "18:02",
-              "end_time": "18:08",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Baohua-Metro Station",
-              "end": "Nanyou West-Metro Station",
-              "mode": "metro",
-              "start_time": "18:08",
-              "end_time": "18:19",
-              "distance": 5.65,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Nanyou West-Metro Station",
+              "start": "Nanshan Park",
               "end": "Nanshan",
               "mode": "walk",
-              "start_time": "18:19",
-              "end_time": "18:29",
-              "distance": 0.88,
+              "start_time": "19:13",
+              "end_time": "19:16",
+              "distance": 0.32709313417559344,
               "price": 0,
               "cost": 0
             }
@@ -104,13 +188,13 @@
         },
         {
           "type": "accommodation",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-          "start_time": "23:21",
+          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "start_time": "23:45",
           "end_time": "24:00",
-          "price": 288.0,
-          "cost": 288.0,
+          "price": 379.0,
+          "cost": 379.0,
           "rooms": 1,
-          "room_type": 2,
+          "room_type": 1,
           "tickets": 1,
           "transports": [
             {
@@ -125,22 +209,22 @@
             },
             {
               "start": "Nanyou West-Metro Station",
-              "end": "Hourui-Metro Station",
+              "end": "Xingwei-Metro Station",
               "mode": "metro",
               "start_time": "20:26",
-              "end_time": "20:57",
-              "distance": 15.77,
+              "end_time": "21:00",
+              "distance": 17.15,
               "price": 5,
               "cost": 5,
               "tickets": 1
             },
             {
-              "start": "Hourui-Metro Station",
-              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "start": "Xingwei-Metro Station",
+              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
               "mode": "walk",
-              "start_time": "20:57",
-              "end_time": "21:05",
-              "distance": 0.68,
+              "start_time": "21:00",
+              "end_time": "21:10",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             }
@@ -153,7 +237,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -163,62 +247,62 @@
         },
         {
           "type": "attraction",
-          "position": "Shenzhen Airport Ferry Cruise",
-          "start_time": "08:58",
-          "end_time": "09:58",
+          "position": "Dutch Flower Town",
+          "start_time": "11:13",
+          "end_time": "12:13",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-              "end": "Shenzhen Airport Ferry Cruise",
+              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "end": "Xingwei-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:58",
-              "distance": 2.4068019448418108,
+              "end_time": "08:40",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Zhongshan Park-Metro Station",
+              "mode": "metro",
+              "start_time": "08:40",
+              "end_time": "09:07",
+              "distance": 14.0,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Zhongshan Park-Metro Station",
+              "end": "Dutch Flower Town",
+              "mode": "walk",
+              "start_time": "09:07",
+              "end_time": "09:14",
+              "distance": 0.63,
               "price": 0,
               "cost": 0
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Yuhua Seafood (Fuyong Branch)",
-          "start_time": "11:20",
-          "end_time": "12:20",
-          "price": 170.0,
-          "cost": 170.0,
+          "type": "attraction",
+          "position": "Nanshan Museum",
+          "start_time": "15:04",
+          "end_time": "16:04",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Airport Ferry Cruise",
-              "end": "Airport-Metro Station",
+              "start": "Dutch Flower Town",
+              "end": "Nanshan Museum",
               "mode": "walk",
-              "start_time": "09:58",
-              "end_time": "10:23",
-              "distance": 2.11,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Huaide-Metro Station",
-              "mode": "metro",
-              "start_time": "10:23",
-              "end_time": "10:32",
-              "distance": 4.75,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Huaide-Metro Station",
-              "end": "Yuhua Seafood (Fuyong Branch)",
-              "mode": "walk",
-              "start_time": "10:32",
-              "end_time": "10:34",
-              "distance": 0.23,
+              "start_time": "12:13",
+              "end_time": "12:32",
+              "distance": 1.6371244890115997,
               "price": 0,
               "cost": 0
             }
@@ -227,40 +311,19 @@
         {
           "type": "attraction",
           "position": "Nanshan Library",
-          "start_time": "15:57",
-          "end_time": "16:57",
+          "start_time": "16:05",
+          "end_time": "17:05",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Yuhua Seafood (Fuyong Branch)",
-              "end": "Huaide-Metro Station",
-              "mode": "walk",
-              "start_time": "12:20",
-              "end_time": "12:22",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huaide-Metro Station",
-              "end": "Nantou Ancient City-Metro Station",
-              "mode": "metro",
-              "start_time": "12:22",
-              "end_time": "12:57",
-              "distance": 17.85,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Nantou Ancient City-Metro Station",
+              "start": "Nanshan Museum",
               "end": "Nanshan Library",
               "mode": "walk",
-              "start_time": "12:57",
-              "end_time": "13:03",
-              "distance": 0.55,
+              "start_time": "16:04",
+              "end_time": "16:05",
+              "distance": 0.16040334066703663,
               "price": 0,
               "cost": 0
             }
@@ -268,83 +331,20 @@
         },
         {
           "type": "dinner",
-          "position": "New World Restaurant (Wanda Branch)",
-          "start_time": "17:57",
-          "end_time": "18:57",
-          "price": 55.0,
-          "cost": 55.0,
+          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+          "start_time": "18:03",
+          "end_time": "19:03",
+          "price": 400.0,
+          "cost": 400.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Nanshan Library",
-              "end": "Nantou Ancient City-Metro Station",
+              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
               "mode": "walk",
-              "start_time": "16:57",
-              "end_time": "17:03",
-              "distance": 0.55,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nantou Ancient City-Metro Station",
-              "end": "Shangchuan-Metro Station",
-              "mode": "metro",
-              "start_time": "17:03",
-              "end_time": "17:13",
-              "distance": 5.28,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Shangchuan-Metro Station",
-              "end": "New World Restaurant (Wanda Branch)",
-              "mode": "walk",
-              "start_time": "17:13",
-              "end_time": "17:22",
-              "distance": 0.77,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Bao'an Xibay Mangrove Park",
-          "start_time": "20:13",
-          "end_time": "21:13",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "New World Restaurant (Wanda Branch)",
-              "end": "Shangchuan-Metro Station",
-              "mode": "walk",
-              "start_time": "18:57",
-              "end_time": "19:06",
-              "distance": 0.77,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shangchuan-Metro Station",
-              "end": "Gushu-Metro Station",
-              "mode": "metro",
-              "start_time": "19:06",
-              "end_time": "19:17",
-              "distance": 5.61,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Gushu-Metro Station",
-              "end": "Bao'an Xibay Mangrove Park",
-              "mode": "walk",
-              "start_time": "19:17",
-              "end_time": "19:28",
-              "distance": 0.93,
+              "start_time": "17:05",
+              "end_time": "18:03",
+              "distance": 4.853007738959288,
               "price": 0,
               "cost": 0
             }
@@ -352,22 +352,43 @@
         },
         {
           "type": "accommodation",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-          "start_time": "21:52",
+          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+          "start_time": "22:51",
           "end_time": "24:00",
-          "price": 288.0,
-          "cost": 288.0,
+          "price": 379.0,
+          "cost": 379.0,
           "rooms": 1,
-          "room_type": 2,
+          "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "Bao'an Xibay Mangrove Park",
-              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+              "end": "Window of the World-Metro Station",
               "mode": "walk",
-              "start_time": "21:13",
-              "end_time": "21:52",
-              "distance": 3.307874428329153,
+              "start_time": "19:03",
+              "end_time": "19:05",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Window of the World-Metro Station",
+              "end": "Xingwei-Metro Station",
+              "mode": "metro",
+              "start_time": "19:05",
+              "end_time": "19:42",
+              "distance": 18.55,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "mode": "walk",
+              "start_time": "19:42",
+              "end_time": "19:52",
+              "distance": 0.9,
               "price": 0,
               "cost": 0
             }
@@ -380,7 +401,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "position": "Tianhe Hotel (Shenzhen Bao'an Airport)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -390,20 +411,41 @@
         },
         {
           "type": "attraction",
-          "position": "Tie Zai Mountain Park",
-          "start_time": "09:17",
-          "end_time": "10:17",
+          "position": "Shenzhen Bay Park",
+          "start_time": "12:22",
+          "end_time": "13:22",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-              "end": "Tie Zai Mountain Park",
+              "start": "Tianhe Hotel (Shenzhen Bao'an Airport)",
+              "end": "Xingwei-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
+              "end_time": "08:40",
+              "distance": 0.9,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xingwei-Metro Station",
+              "end": "Hongshu Bay-Metro Station",
+              "mode": "metro",
+              "start_time": "08:40",
               "end_time": "09:17",
-              "distance": 3.943123357051242,
+              "distance": 18.97,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Hongshu Bay-Metro Station",
+              "end": "Shenzhen Bay Park",
+              "mode": "walk",
+              "start_time": "09:17",
+              "end_time": "09:18",
+              "distance": 0.11,
               "price": 0,
               "cost": 0
             }
@@ -411,62 +453,41 @@
         },
         {
           "type": "attraction",
-          "position": "Bihai Bay Park",
-          "start_time": "10:33",
-          "end_time": "11:33",
+          "position": "Futian District Sports Park",
+          "start_time": "14:52",
+          "end_time": "15:42",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Tie Zai Mountain Park",
-              "end": "Bihai Bay Park",
+              "start": "Shenzhen Bay Park",
+              "end": "Futian District Sports Park",
               "mode": "walk",
-              "start_time": "10:17",
-              "end_time": "10:33",
-              "distance": 1.4006042551147733,
+              "start_time": "13:22",
+              "end_time": "14:52",
+              "distance": 7.553881049243636,
               "price": 0,
               "cost": 0
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "Shenzhen Airport Hyatt Hotel · Market Café Buffet · Joyful Family Restaurant",
-          "start_time": "12:44",
-          "end_time": "13:44",
-          "price": 228.0,
-          "cost": 228.0,
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 20.0,
+          "cost": 20.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Bihai Bay Park",
-              "end": "Bihaiwan-Metro Station",
+              "start": "Futian District Sports Park",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "walk",
-              "start_time": "11:33",
-              "end_time": "11:53",
-              "distance": 1.71,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Bihaiwan-Metro Station",
-              "end": "Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "11:53",
-              "end_time": "12:06",
-              "distance": 6.96,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Airport-Metro Station",
-              "end": "Shenzhen Airport Hyatt Hotel · Market Café Buffet · Joyful Family Restaurant",
-              "mode": "walk",
-              "start_time": "12:06",
-              "end_time": "12:09",
-              "distance": 0.26,
+              "start_time": "15:42",
+              "end_time": "16:29",
+              "distance": 3.9834421533725517,
               "price": 0,
               "cost": 0
             }
@@ -474,30 +495,51 @@
         },
         {
           "type": "airplane",
-          "start_time": "17:56",
-          "end_time": "20:21",
+          "start_time": "23:24",
+          "end_time": "01:49",
           "start": "Shenzhen Bao'an International Airport",
           "end": "Beijing Daxing International Airport",
-          "price": 1008.34,
-          "cost": 1008.34,
+          "price": 1006.35,
+          "cost": 1006.35,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Airport Hyatt Hotel · Market Café Buffet · Joyful Family Restaurant",
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "17:45",
+              "end_time": "17:47",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Airport East-Metro Station",
+              "mode": "metro",
+              "start_time": "17:47",
+              "end_time": "18:37",
+              "distance": 25.18,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Airport East-Metro Station",
               "end": "Shenzhen Bao'an International Airport",
               "mode": "walk",
-              "start_time": "13:44",
-              "end_time": "14:14",
-              "distance": 2.5210610905137543,
+              "start_time": "18:37",
+              "end_time": "18:42",
+              "distance": 0.45,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL179"
+          "FlightID": "FL174"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 242.2597119808197,
-  "_eval_score": 94.78601953601952
+  "elapsed_time(sec)": 62.72617292404175,
+  "_eval_score": 96.30275443510737
 }

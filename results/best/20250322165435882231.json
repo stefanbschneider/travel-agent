@@ -7,35 +7,57 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:25",
-          "end_time": "12:14",
-          "start": "Wuhan Station",
-          "end": "Shenzhen North Railway Station",
-          "price": 582.03,
-          "cost": 1746.09,
+          "type": "airplane",
+          "start_time": "02:39",
+          "end_time": "03:46",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 410.74,
+          "cost": 1232.22,
           "tickets": 3,
           "transports": [],
-          "TrainID": "G1001"
+          "FlightID": "FL590"
         },
         {
-          "type": "lunch",
-          "position": "Libaoge (Kerry Store)",
-          "start_time": "12:27",
-          "end_time": "13:27",
-          "price": 156.0,
-          "cost": 468.0,
+          "type": "breakfast",
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 24.0,
+          "cost": 72.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen North Railway Station",
-              "end": "Libaoge (Kerry Store)",
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
               "mode": "taxi",
-              "start_time": "12:14",
-              "end_time": "12:27",
-              "distance": 8.72,
-              "price": 35.22,
-              "cost": 35.22,
+              "start_time": "03:46",
+              "end_time": "04:24",
+              "distance": 25.7,
+              "price": 110.35,
+              "cost": 110.35,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Ziyuan Teahouse (Central Book City Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 128.0,
+          "cost": 384.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Ziyuan Teahouse (Central Book City Branch)",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:48",
+              "distance": 2.07,
+              "price": 11.95,
+              "cost": 11.95,
               "cars": 1
             }
           ]
@@ -50,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Libaoge (Kerry Store)",
+              "start": "Ziyuan Teahouse (Central Book City Branch)",
               "end": "Futian District Sports Park",
               "mode": "taxi",
-              "start_time": "13:27",
-              "end_time": "13:29",
-              "distance": 1.53,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 2.34,
+              "price": 12.91,
+              "cost": 12.91,
               "cars": 1
             }
           ]
@@ -498,5 +520,5 @@
     }
   ],
   "elapsed_time(sec)": 259.2754490375519,
-  "_eval_score": 98.88888888888889
+  "_eval_score": 99.44444444444444
 }

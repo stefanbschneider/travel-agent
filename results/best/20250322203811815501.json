@@ -8,15 +8,80 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jing'an Park",
+          "start_time": "09:55",
+          "end_time": "10:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jululu Road",
+              "end": "Jing'an Park",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:50",
+              "distance": 0.44,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +93,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jing'an Park",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "10:45",
+              "end_time": "10:46",
+              "distance": 1.14,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -63,6 +128,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "14:14",
+          "end_time": "15:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "The Bund",
+              "end": "1933 Old Millfun",
+              "mode": "taxi",
+              "start_time": "13:59",
+              "end_time": "14:01",
+              "distance": 1.85,
+              "price": 11.19,
+              "cost": 11.19,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Fu He Hui",
           "start_time": "17:00",
@@ -72,14 +159,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "The Bund",
+              "start": "1933 Old Millfun",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "13:59",
-              "end_time": "14:09",
-              "distance": 7.0,
-              "price": 29.18,
-              "cost": 29.18,
+              "start_time": "15:04",
+              "end_time": "15:15",
+              "distance": 8.0,
+              "price": 32.68,
+              "cost": 32.68,
               "cars": 1
             }
           ]
@@ -168,6 +255,71 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Jinling East Road Ferry",
+          "start_time": "12:16",
+          "end_time": "13:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Jinling East Road Ferry",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:08",
+              "distance": 5.67,
+              "price": 24.53,
+              "cost": 24.53,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Securities Museum",
+          "start_time": "13:13",
+          "end_time": "14:03",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jinling East Road Ferry",
+              "end": "China Securities Museum",
+              "mode": "taxi",
+              "start_time": "13:06",
+              "end_time": "13:07",
+              "distance": 1.31,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Garden Bridge",
+          "start_time": "14:03",
+          "end_time": "14:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "China Securities Museum",
+              "end": "Garden Bridge",
+              "mode": "walk",
+              "start_time": "14:03",
+              "end_time": "14:03",
+              "distance": 0.05138947717624654,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "18:32",
           "end_time": "20:03",
@@ -178,14 +330,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "start": "Garden Bridge",
               "end": "Shanghai Pudong International Airport",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:51",
-              "distance": 34.5,
-              "price": 149.96,
-              "cost": 149.96,
+              "start_time": "14:53",
+              "end_time": "15:41",
+              "distance": 32.43,
+              "price": 140.61,
+              "cost": 140.61,
               "cars": 1
             }
           ],
@@ -195,5 +347,5 @@
     }
   ],
   "elapsed_time(sec)": 0.03260087966918945,
-  "_eval_score": 20.0
+  "_eval_score": 99.16666666666666
 }

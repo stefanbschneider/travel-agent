@@ -44,7 +44,7 @@
           "type": "attraction",
           "position": "The Palace Museum",
           "start_time": "12:49",
-          "end_time": "14:19",
+          "end_time": "13:49",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -64,20 +64,42 @@
         },
         {
           "type": "attraction",
-          "position": "Hall of Central Harmony",
-          "start_time": "14:19",
-          "end_time": "15:19",
+          "position": "National Museum of China",
+          "start_time": "13:51",
+          "end_time": "14:51",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "The Palace Museum",
-              "end": "Hall of Central Harmony",
+              "end": "National Museum of China",
+              "mode": "taxi",
+              "start_time": "13:49",
+              "end_time": "13:51",
+              "distance": 1.46,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Road to Rejuvenation Exhibition Hall",
+          "start_time": "14:51",
+          "end_time": "15:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "National Museum of China",
+              "end": "The Road to Rejuvenation Exhibition Hall",
               "mode": "walk",
-              "start_time": "14:19",
-              "end_time": "14:19",
-              "distance": 0.014617697999881017,
+              "start_time": "14:51",
+              "end_time": "14:51",
+              "distance": 0.011876481898394835,
               "price": 0,
               "cost": 0
             }
@@ -93,14 +115,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Hall of Central Harmony",
+              "start": "The Road to Rejuvenation Exhibition Hall",
               "end": "O.M.G. Coffee (Temple of Heaven Branch)",
               "mode": "taxi",
-              "start_time": "15:19",
-              "end_time": "15:25",
-              "distance": 4.31,
-              "price": 19.77,
-              "cost": 19.77,
+              "start_time": "15:41",
+              "end_time": "15:45",
+              "distance": 2.84,
+              "price": 14.63,
+              "cost": 14.63,
               "cars": 1
             }
           ]
@@ -109,7 +131,7 @@
           "type": "attraction",
           "position": "Temple of Heaven",
           "start_time": "18:08",
-          "end_time": "19:38",
+          "end_time": "19:08",
           "price": 34.0,
           "cost": 102.0,
           "tickets": 3,
@@ -128,31 +150,9 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "National Museum of Natural History",
-          "start_time": "19:39",
-          "end_time": "21:09",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Temple of Heaven",
-              "end": "National Museum of Natural History",
-              "mode": "taxi",
-              "start_time": "19:38",
-              "end_time": "19:39",
-              "distance": 1.12,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "accommodation",
           "position": "Shangdu Hotel",
-          "start_time": "21:14",
+          "start_time": "19:15",
           "end_time": "24:00",
           "price": 562.0,
           "cost": 1686.0,
@@ -161,14 +161,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "National Museum of Natural History",
+              "start": "Temple of Heaven",
               "end": "Shangdu Hotel",
               "mode": "taxi",
-              "start_time": "21:09",
-              "end_time": "21:14",
-              "distance": 3.96,
-              "price": 18.58,
-              "cost": 18.58,
+              "start_time": "19:08",
+              "end_time": "19:15",
+              "distance": 4.94,
+              "price": 21.99,
+              "cost": 21.99,
               "cars": 1
             }
           ]
@@ -192,7 +192,7 @@
           "type": "attraction",
           "position": "Prince Gong's Mansion",
           "start_time": "08:42",
-          "end_time": "10:12",
+          "end_time": "09:42",
           "price": 40.0,
           "cost": 120.0,
           "tickets": 3,
@@ -212,22 +212,22 @@
         },
         {
           "type": "attraction",
-          "position": "National Museum of China",
-          "start_time": "10:17",
-          "end_time": "11:47",
+          "position": "Nine Dragon Wall",
+          "start_time": "09:53",
+          "end_time": "10:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Prince Gong's Mansion",
-              "end": "National Museum of China",
+              "end": "Nine Dragon Wall",
               "mode": "taxi",
-              "start_time": "10:12",
-              "end_time": "10:17",
-              "distance": 3.78,
-              "price": 17.94,
-              "cost": 17.94,
+              "start_time": "09:42",
+              "end_time": "09:42",
+              "distance": 0.59,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -235,43 +235,21 @@
         {
           "type": "lunch",
           "position": "Beijing Puxuan Hotel · Left Bank",
-          "start_time": "11:49",
-          "end_time": "12:49",
+          "start_time": "11:18",
+          "end_time": "12:18",
           "price": 733.0,
           "cost": 2199.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "National Museum of China",
+              "start": "Nine Dragon Wall",
               "end": "Beijing Puxuan Hotel · Left Bank",
               "mode": "taxi",
-              "start_time": "11:47",
-              "end_time": "11:49",
-              "distance": 1.38,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beijing Science Center",
-          "start_time": "13:06",
-          "end_time": "14:36",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Beijing Puxuan Hotel · Left Bank",
-              "end": "Beijing Science Center",
-              "mode": "taxi",
-              "start_time": "12:49",
-              "end_time": "12:57",
-              "distance": 5.92,
-              "price": 25.42,
-              "cost": 25.42,
+              "start_time": "10:53",
+              "end_time": "10:56",
+              "distance": 2.11,
+              "price": 12.08,
+              "cost": 12.08,
               "cars": 1
             }
           ]
@@ -279,21 +257,43 @@
         {
           "type": "attraction",
           "position": "West Yellow Temple",
-          "start_time": "14:44",
-          "end_time": "16:14",
+          "start_time": "12:30",
+          "end_time": "13:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Beijing Science Center",
+              "start": "Beijing Puxuan Hotel · Left Bank",
               "end": "West Yellow Temple",
               "mode": "taxi",
-              "start_time": "14:36",
-              "end_time": "14:37",
-              "distance": 0.78,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "12:18",
+              "end_time": "12:25",
+              "distance": 5.22,
+              "price": 22.96,
+              "cost": 22.96,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Museum of the History of the Communist Party of China",
+          "start_time": "13:57",
+          "end_time": "14:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "West Yellow Temple",
+              "end": "Museum of the History of the Communist Party of China",
+              "mode": "taxi",
+              "start_time": "13:30",
+              "end_time": "13:36",
+              "distance": 4.57,
+              "price": 20.68,
+              "cost": 20.68,
               "cars": 1
             }
           ]
@@ -301,21 +301,21 @@
         {
           "type": "dinner",
           "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
-          "start_time": "18:52",
-          "end_time": "19:52",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 1100.0,
           "cost": 3300.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "West Yellow Temple",
+              "start": "Museum of the History of the Communist Party of China",
               "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
               "mode": "taxi",
-              "start_time": "16:14",
-              "end_time": "16:24",
-              "distance": 6.71,
-              "price": 28.18,
-              "cost": 28.18,
+              "start_time": "14:57",
+              "end_time": "15:11",
+              "distance": 9.76,
+              "price": 38.85,
+              "cost": 38.85,
               "cars": 1
             }
           ]
@@ -323,7 +323,7 @@
         {
           "type": "accommodation",
           "position": "Shangdu Hotel",
-          "start_time": "20:07",
+          "start_time": "18:15",
           "end_time": "24:00",
           "price": 562.0,
           "cost": 1686.0,
@@ -335,8 +335,8 @@
               "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
               "end": "Shangdu Hotel",
               "mode": "taxi",
-              "start_time": "19:52",
-              "end_time": "20:07",
+              "start_time": "18:00",
+              "end_time": "18:15",
               "distance": 10.41,
               "price": 41.55,
               "cost": 41.55,
@@ -361,88 +361,110 @@
         },
         {
           "type": "attraction",
-          "position": "Beijing Arts and Crafts Museum (Beitou Xinao Shopping Center Branch)",
-          "start_time": "10:00",
-          "end_time": "11:30",
+          "position": "National Museum of Natural History",
+          "start_time": "08:35",
+          "end_time": "09:35",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shangdu Hotel",
-              "end": "Beijing Arts and Crafts Museum (Beitou Xinao Shopping Center Branch)",
+              "end": "National Museum of Natural History",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:53",
-              "distance": 15.39,
-              "price": 63.96,
-              "cost": 63.96,
+              "end_time": "08:35",
+              "distance": 3.96,
+              "price": 18.58,
+              "cost": 18.58,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Exquisite Pagoda",
-          "start_time": "11:32",
-          "end_time": "13:02",
+          "position": "Military Museum of the Chinese People's Revolution",
+          "start_time": "09:45",
+          "end_time": "10:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Beijing Arts and Crafts Museum (Beitou Xinao Shopping Center Branch)",
-              "end": "Exquisite Pagoda",
+              "start": "National Museum of Natural History",
+              "end": "Military Museum of the Chinese People's Revolution",
               "mode": "taxi",
-              "start_time": "11:30",
-              "end_time": "11:30",
-              "distance": 0.23,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "09:35",
+              "end_time": "09:45",
+              "distance": 7.09,
+              "price": 29.5,
+              "cost": 29.5,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Museum of the History of the Communist Party of China",
-          "start_time": "13:49",
-          "end_time": "14:49",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "China Geological Museum",
+          "start_time": "10:51",
+          "end_time": "11:51",
+          "price": 15.0,
+          "cost": 45.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Exquisite Pagoda",
-              "end": "Museum of the History of the Communist Party of China",
+              "start": "Military Museum of the Chinese People's Revolution",
+              "end": "China Geological Museum",
               "mode": "taxi",
-              "start_time": "13:02",
-              "end_time": "13:03",
-              "distance": 0.86,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "10:45",
+              "end_time": "10:51",
+              "distance": 4.45,
+              "price": 20.27,
+              "cost": 20.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "South Gate Hot Pot (Temple of Heaven Branch)",
+          "start_time": "12:01",
+          "end_time": "13:01",
+          "price": 101.0,
+          "cost": 303.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Geological Museum",
+              "end": "South Gate Hot Pot (Temple of Heaven Branch)",
+              "mode": "taxi",
+              "start_time": "11:51",
+              "end_time": "12:01",
+              "distance": 6.85,
+              "price": 28.69,
+              "cost": 28.69,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "China Arts and Crafts Museum, China Intangible Cultural Heritage Museum",
-          "start_time": "14:50",
-          "end_time": "15:50",
+          "position": "Lao She Memorial Museum",
+          "start_time": "13:27",
+          "end_time": "14:17",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Museum of the History of the Communist Party of China",
-              "end": "China Arts and Crafts Museum, China Intangible Cultural Heritage Museum",
+              "start": "South Gate Hot Pot (Temple of Heaven Branch)",
+              "end": "Lao She Memorial Museum",
               "mode": "taxi",
-              "start_time": "14:49",
-              "end_time": "14:49",
-              "distance": 0.15,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "13:01",
+              "end_time": "13:09",
+              "distance": 5.68,
+              "price": 24.58,
+              "cost": 24.58,
               "cars": 1
             }
           ]
@@ -457,14 +479,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "China Arts and Crafts Museum, China Intangible Cultural Heritage Museum",
+              "start": "Lao She Memorial Museum",
               "end": "Helude Candied Hawthorn Sticks",
               "mode": "taxi",
-              "start_time": "15:50",
-              "end_time": "16:04",
-              "distance": 9.55,
-              "price": 38.11,
-              "cost": 38.11,
+              "start_time": "14:17",
+              "end_time": "14:17",
+              "distance": 0.26,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -496,6 +518,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 259.1065559387207,
-  "_eval_score": 98.88888888888889
+  "elapsed_time(sec)": 102.47660613059998,
+  "_eval_score": 99.44444444444444
 }
