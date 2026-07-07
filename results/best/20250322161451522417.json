@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "07:26",
-          "end_time": "09:30",
-          "start": "Shanghai Hongqiao International Airport",
+          "start_time": "00:14",
+          "end_time": "02:18",
+          "start": "Shanghai Pudong International Airport",
           "end": "Chengdu Shuangliu International Airport",
-          "price": 838.84,
-          "cost": 3355.36,
+          "price": 800.01,
+          "cost": 3200.04,
           "tickets": 4,
           "transports": [],
-          "FlightID": "FL049"
+          "FlightID": "FL041"
+        },
+        {
+          "type": "breakfast",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "02:18",
+              "end_time": "02:43",
+              "distance": 17.05,
+              "price": 71.43,
+              "cost": 71.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Chengdu Library",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:47",
+              "distance": 1.58,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chengdu Shuangliu International Airport",
+              "start": "Chengdu Library",
               "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:52",
-              "distance": 14.93,
-              "price": 61.87,
-              "cost": 61.87,
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 0.85,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -498,5 +542,5 @@
     }
   ],
   "elapsed_time(sec)": 193.44105005264282,
-  "_eval_score": 99.02777777777777
+  "_eval_score": 100.0
 }

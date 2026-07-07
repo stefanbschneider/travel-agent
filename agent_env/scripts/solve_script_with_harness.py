@@ -443,7 +443,12 @@ def evaluate_one(
     )
     from chinatravel.evaluation.hard_constraint import evaluate_hard_constraints_v2
     from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
+    from chinatravel.agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
+    from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
+    from chinatravel.symbol_verification.concept_func import func_dict
     from chinatravel.evaluation.utils import load_json_file
+    import parse_constraints
+    from copy import deepcopy
 
     query_index = [uid]
     query_data = {uid: query}
@@ -475,14 +480,111 @@ def evaluate_one(
         verbose=False,
     )
 
+    parsed_raw = parse_constraints.parse_query_no_oracle(query)
+    parsed_variants = solver_constraint_variants(query, parsed_raw, use_oracle=False)
+    parsed_constraints = parsed_variants[0] if parsed_variants else {}
+    parsed_results = evaluate_parsed_constraints(
+        parsed_constraints,
+        plan,
+        query.get("target_city", ""),
+    )
+    parsed_total = len(parsed_results)
+    parsed_succ = sum(1 for r in parsed_results if bool(r))
+    parsed_logical_micro = (100.0 * parsed_succ / parsed_total) if parsed_total else 100.0
+    parsed_logical_macro = 100.0 if parsed_succ == parsed_total else 0.0
+    commonsense_pass = uid in commonsense_pass_id
+    parsed_conditional_micro = parsed_logical_micro if commonsense_pass else 0.0
+    parsed_conditional_macro = parsed_logical_macro if commonsense_pass else 0.0
+    parsed_logical_pass = parsed_succ == parsed_total
+
+    schema_pass = uid in schema_pass_id
+    true_logical_pass = uid in logi_pass_id
+    all_pass_true = schema_pass and commonsense_pass and true_logical_pass
+    all_pass_parsed = schema_pass and commonsense_pass and parsed_logical_pass
+
+    def _default_pr_scores(is_all_pass: bool) -> tuple[float, float, float]:
+        if not is_all_pass:
+            return 0.0, 0.0, 0.0
+
+        def clamp(value: Any) -> float:
+            try:
+                return max(0.0, min(1.0, float(value)))
+            except Exception:
+                return 0.0
+
+        default_pr = [
+            """
+attraction_count = 0
+for activity in allactivities(plan):
+    if activity_type(activity) == 'attraction':
+        attraction_count += 1
+result=attraction_count/(4*day_count(plan))
+""",
+            """
+time_cost = 0
+transport_count = 0
+for activity in allactivities(plan):
+    transports = activity_transports(activity)
+    if transports!=[]:
+        transport_count += 1
+        time_cost += innercity_transport_time(transports)
+average_time_cost = time_cost / transport_count if transport_count > 0 else -1
+result= (-1/105) * average_time_cost + 8/7
+""",
+            """
+res_count=0
+for activity in allactivities(plan):
+    if activity_type(activity) in ['breakfast', 'lunch', 'dinner']:
+        res_count+=1
+res_count=res_count/(day_count(plan))
+result=res_count/3
+""",
+        ]
+
+        scores: list[float] = []
+        for constraint in default_pr:
+            vars_dict = deepcopy(func_dict)
+            vars_dict["plan"] = plan
+            try:
+                exec(constraint, {"__builtins__": {"set": set}}, vars_dict)
+                scores.append(clamp(vars_dict.get("result", 0.0)))
+            except Exception:
+                scores.append(0.0)
+        return scores[0] * 100.0, scores[1] * 100.0, scores[2] * 100.0
+
+    dav_true, att_true, ddr_true = _default_pr_scores(all_pass_true)
+    dav_parsed, att_parsed, ddr_parsed = _default_pr_scores(all_pass_parsed)
+
+    fpr_true = 100.0 if all_pass_true else 0.0
+    fpr_parsed = 100.0 if all_pass_parsed else 0.0
+
+    # Aligned with eval_tpc.py: 0.1*MicEPR + 0.1*MacEPR + 0.25*C-LPR + 0.05*DAV + 0.05*ATT + 0.05*DDR + 0.4*FPR
+    overall_true = (
+        0.1 * micro_comm
+        + 0.1 * macro_comm
+        + 0.25 * conditional_micro_logi
+        + 0.05 * dav_true
+        + 0.05 * att_true
+        + 0.05 * ddr_true
+        + 0.4 * fpr_true
+    )
+    overall_parsed = (
+        0.1 * micro_comm
+        + 0.1 * macro_comm
+        + 0.25 * parsed_conditional_micro
+        + 0.05 * dav_parsed
+        + 0.05 * att_parsed
+        + 0.05 * ddr_parsed
+        + 0.4 * fpr_parsed
+    )
+
     return {
         "split": split,
         "uid": uid,
-        "schema_pass": uid in schema_pass_id,
-        "commonsense_pass": uid in commonsense_pass_id,
-        "logical_pass": uid in logi_pass_id,
-        "all_pass": uid
-        in set(schema_pass_id) & set(commonsense_pass_id) & set(logi_pass_id),
+        "schema_pass": schema_pass,
+        "commonsense_pass": commonsense_pass,
+        "logical_pass": true_logical_pass,
+        "all_pass": all_pass_true,
         "schema_rate": schema_rate,
         "commonsense_micro": micro_comm,
         "commonsense_macro": macro_comm,
@@ -490,9 +592,31 @@ def evaluate_one(
         "logical_macro": macro_logi,
         "conditional_logical_micro": conditional_micro_logi,
         "conditional_logical_macro": conditional_macro_logi,
+        "parsed_constraints_total": parsed_total,
+        "parsed_constraints_satisfied": parsed_succ,
+        "parsed_logical_pass": parsed_logical_pass,
+        "parsed_logical_micro": parsed_logical_micro,
+        "parsed_logical_macro": parsed_logical_macro,
+        "conditional_parsed_logical_micro": parsed_conditional_micro,
+        "conditional_parsed_logical_macro": parsed_conditional_macro,
+        "all_pass_parsed": all_pass_parsed,
+        "dav_true": dav_true,
+        "att_true": att_true,
+        "ddr_true": ddr_true,
+        "fpr_true": fpr_true,
+        "overall_true": overall_true,
+        "dav_parsed": dav_parsed,
+        "att_parsed": att_parsed,
+        "ddr_parsed": ddr_parsed,
+        "fpr_parsed": fpr_parsed,
+        "overall_parsed": overall_parsed,
         "schema_details": schema_result_agg.to_dict(orient="records"),
         "commonsense_details": common_result_agg.to_dict(orient="records"),
         "logical_details": logi_result_agg.to_dict(orient="records"),
+        "parsed_constraints_eval": {
+            "checks": [bool(r) for r in parsed_results],
+            "constraints": parsed_constraints,
+        },
     }
 
 

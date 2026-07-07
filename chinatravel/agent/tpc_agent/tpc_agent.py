@@ -79,6 +79,33 @@ class TPCAgent(BaseAgent):
         self.seed_salt = os.environ.get("TPC_SEED_SALT", "0")
         self._transport_constraints = {}
         self._schema = None
+        # Optional harness-supplied constraint variants. When set to a non-empty list (e.g. by the
+        # Phase 2 orchestrator via make_tpcagent_solve_fn), the agent uses these directly instead of
+        # re-parsing the query, so the harness stays the single owner of parsing (incl. no-oracle
+        # disjunctive branch expansion). None/empty preserves the internal parse path.
+        self._injected_variants = None
+        # Best-so-far plan snapshot exported to the Phase 2 harness when external timeouts fire.
+        self._timeout_recovery_plan = None
+
+    def reset_timeout_recovery_plan(self):
+        self._timeout_recovery_plan = None
+
+    def _set_timeout_recovery_plan(self, plan):
+        if not isinstance(plan, dict):
+            return
+        try:
+            self._timeout_recovery_plan = deepcopy(plan)
+        except Exception:
+            # Fall back to direct assignment when deepcopy fails on custom objects.
+            self._timeout_recovery_plan = plan
+
+    def get_timeout_recovery_plan(self):
+        if not isinstance(self._timeout_recovery_plan, dict):
+            return None
+        try:
+            return deepcopy(self._timeout_recovery_plan)
+        except Exception:
+            return self._timeout_recovery_plan
 
     def _make_checker(self, query, constraints):
         """Return check(plan) -> (passed, total).
@@ -236,9 +263,13 @@ class TPCAgent(BaseAgent):
             except Exception:
                 transports, arrival = None, None
             if not transports:
+                # Keep schema-compliant empty transports rather than stale, now-invalid
+                # edge details inherited from removed placeholder activities.
+                next_act["transports"] = []
                 continue
             next_start = str(next_act.get("start_time", ""))
             if next_start and (not arrival or not time_before(arrival, next_start)):
+                next_act["transports"] = []
                 continue
             next_act["transports"] = transports
 
@@ -277,6 +308,10 @@ class TPCAgent(BaseAgent):
         return req_norm in segments
 
     def _constraint_variants(self, query):
+        # Prefer harness-supplied variants (single parsing owner) when present and non-empty.
+        injected = self._injected_variants
+        if isinstance(injected, list) and len(injected) > 0:
+            return injected
         raw = parse_constraints.parse_query(query) if self.use_oracle else parse_constraints.parse_query_no_oracle(query)
         if not isinstance(raw, dict):
             return [{}]
@@ -518,6 +553,7 @@ class TPCAgent(BaseAgent):
     def _solve(self, query):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
         keeping the best accepted plan found within budget; finally pack it."""
+        self.reset_timeout_recovery_plan()
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         init_key = (-1, float("-inf"), float("-inf"))
@@ -538,8 +574,10 @@ class TPCAgent(BaseAgent):
             except Exception:
                 passed, total = 0, 0
             search_key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
+            updated = False
             if best["plan"] is None or search_key > best["key"]:
                 best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params)
+                updated = True
             accepted = self._accepted(passed, total)
             if accepted:
                 accepted_key = self._accepted_eval_key(plan)
@@ -551,6 +589,10 @@ class TPCAgent(BaseAgent):
                         check=check,
                         params=params,
                     )
+                    updated = True
+            if updated:
+                best_now = best_accepted["plan"] if best_accepted["plan"] is not None else best["plan"]
+                self._set_timeout_recovery_plan(best_now)
             return accepted
 
         def out_of_budget():
@@ -621,8 +663,12 @@ class TPCAgent(BaseAgent):
                 chosen["plan"] = packed
 
         if chosen["plan"] is not None:
-            return self._sanitize_plan_for_grounding(chosen["plan"], query)
-        return self._sanitize_plan_for_grounding(self._build_plan(query), query)
+            resolved = self._sanitize_plan_for_grounding(chosen["plan"], query)
+            self._set_timeout_recovery_plan(resolved)
+            return resolved
+        resolved = self._sanitize_plan_for_grounding(self._build_plan(query), query)
+        self._set_timeout_recovery_plan(resolved)
+        return resolved
 
     def _pack_plan(self, plan, query, constraints, check, base_params):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
@@ -681,12 +727,14 @@ class TPCAgent(BaseAgent):
 
     def _densify_dwell_minutes(self, poi, kind):
         if kind != "attraction":
-            return int(os.environ.get("TPC_DENSIFY_MEAL_DWELL", "60"))
+            default_meal_dwell = "45" if self.use_oracle else "60"
+            return int(os.environ.get("TPC_DENSIFY_MEAL_DWELL", default_meal_dwell))
         # Attraction visit length used when packing idle gaps. The verifier enforces no
         # minimum duration (only open-hours containment + positive duration), so a shorter
         # dwell lets more attractions fit tight gaps and lifts DAV; default is the
         # compute-node smoke/full-score winner.
-        return int(os.environ.get("TPC_DENSIFY_ATTR_DWELL", "60"))
+        default_attr_dwell = "50" if self.use_oracle else "60"
+        return int(os.environ.get("TPC_DENSIFY_ATTR_DWELL", default_attr_dwell))
 
     def _inner_activity_minutes(self, activity):
         total = 0
@@ -803,13 +851,15 @@ class TPCAgent(BaseAgent):
                 anchor_raw = first_transports[0].get("start_time", "")
             else:
                 anchor_raw = first_act.get("start_time", "00:00")
+            default_hotel_breakfast_end = "09:00" if self.use_oracle else "08:30"
             end_min = min(
                 time_to_minutes(str(anchor_raw)),
-                self._env_time_minutes("TPC_DENSIFY_HOTEL_BREAKFAST_END", "08:30"),
+                self._env_time_minutes("TPC_DENSIFY_HOTEL_BREAKFAST_END", default_hotel_breakfast_end),
             )
+            default_meal_dwell = "45" if self.use_oracle else "60"
             dwell = max(1, int(os.environ.get(
                 "TPC_DENSIFY_HOTEL_BREAKFAST_DWELL",
-                os.environ.get("TPC_DENSIFY_MEAL_DWELL", "60"),
+                os.environ.get("TPC_DENSIFY_MEAL_DWELL", default_meal_dwell),
             )))
             start_min = end_min - dwell
             if start_min < time_to_minutes("06:00"):
@@ -832,7 +882,8 @@ class TPCAgent(BaseAgent):
         if not activities:
             return None
         window = (6 * 60, self._env_time_minutes("TPC_DENSIFY_BREAKFAST_WIN_CLOSE", "09:00"))
-        meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", "60")))
+        default_gap = "45" if self.use_oracle else "60"
+        meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", default_gap)))
         for restaurant in restaurants:
             r_name = self._norm_text(restaurant.get("name", ""))
             if not r_name or (used_restaurants is not None and r_name in used_restaurants):
@@ -1085,9 +1136,11 @@ class TPCAgent(BaseAgent):
             return_pref = intercity_mode.get("return", None)
         elif isinstance(intercity_mode, str):
             outbound_pref = return_pref = intercity_mode
-        if os.environ.get("TPC_DENSIFY_LATE_DINNER", "0") == "1":
+        default_late_dinner = "1" if self.use_oracle else "0"
+        default_early_breakfast = "1" if self.use_oracle else "0"
+        if os.environ.get("TPC_DENSIFY_LATE_DINNER", default_late_dinner) == "1":
             self._swap_return_add_dinner(plan, start_city, target_city, people, return_pref, restaurants, check)
-        if os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "0") == "1":
+        if os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", default_early_breakfast) == "1":
             self._swap_outbound_add_breakfast(plan, start_city, target_city, people, outbound_pref, restaurants, check)
 
     def _swap_return_add_dinner(self, plan, start_city, target_city, people, return_pref, restaurants, check):
@@ -1095,6 +1148,7 @@ class TPCAgent(BaseAgent):
         last_idx = len(itinerary) - 1
         if last_idx < 0:
             return
+        before_key = self._accepted_eval_key(plan)
         acts = itinerary[last_idx].get("activities", []) or []
         if len(acts) < 2 or acts[-1].get("type") not in ("airplane", "train"):
             return
@@ -1134,13 +1188,18 @@ class TPCAgent(BaseAgent):
             if self._insert_activity(
                     trial, last_idx, len(tacts) - 2, restaurant, "dinner",
                     (17 * 60, dinner_close), target_city, people, check):
-                itinerary[last_idx]["activities"] = trial["itinerary"][last_idx]["activities"]
-                return
+                try:
+                    if self._accepted_eval_key(trial) >= before_key:
+                        itinerary[last_idx]["activities"] = trial["itinerary"][last_idx]["activities"]
+                        return
+                except Exception:
+                    continue
 
     def _swap_outbound_add_breakfast(self, plan, start_city, target_city, people, outbound_pref, restaurants, check):
         itinerary = plan.get("itinerary", []) or []
         if not itinerary:
             return
+        before_key = self._accepted_eval_key(plan)
         acts = itinerary[0].get("activities", []) or []
         if len(acts) < 2 or acts[0].get("type") not in ("airplane", "train"):
             return
@@ -1174,8 +1233,12 @@ class TPCAgent(BaseAgent):
             if self._insert_activity(
                     trial, 0, 0, restaurant, "breakfast",
                     (6 * 60, 9 * 60), target_city, people, check):
-                itinerary[0]["activities"] = trial["itinerary"][0]["activities"]
-                return
+                try:
+                    if self._accepted_eval_key(trial) >= before_key:
+                        itinerary[0]["activities"] = trial["itinerary"][0]["activities"]
+                        return
+                except Exception:
+                    continue
 
     def _densify_plan(self, plan, query, constraints, check):
         """Insert meals/attractions into proven idle gaps without trading away acceptance.
@@ -1235,10 +1298,12 @@ class TPCAgent(BaseAgent):
         # Idle-gap attraction packing knobs. The former 130-min threshold / 18:00 cutoff left
         # many real 90-120 min gaps (breakfast->lunch, afternoon->dinner) and all evening slots
         # unfilled; every insertion is still gated by the full checker via _insert_activity.
-        attr_gap_min = int(os.environ.get("TPC_DENSIFY_ATTR_GAP_MIN", "75"))
+        default_attr_gap = "60" if self.use_oracle else "75"
+        attr_gap_min = int(os.environ.get("TPC_DENSIFY_ATTR_GAP_MIN", default_attr_gap))
         attr_win_open = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_OPEN", "9")) * 60
         attr_win_close = int(os.environ.get("TPC_DENSIFY_ATTR_WIN_CLOSE", "21")) * 60
-        attr_candidate_limit = int(os.environ.get("TPC_DENSIFY_ATTR_CANDIDATES", "24"))
+        default_attr_candidates = "32" if self.use_oracle else "24"
+        attr_candidate_limit = int(os.environ.get("TPC_DENSIFY_ATTR_CANDIDATES", default_attr_candidates))
         def _ranked_attractions(anchor_row=None, next_row=None):
             return sorted(
                 attractions,
@@ -1255,13 +1320,14 @@ class TPCAgent(BaseAgent):
             if not activities:
                 continue
             meal_types = {a.get("type") for a in activities if a.get("type") in ("breakfast", "lunch", "dinner")}
-            meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", "60")))
+            default_gap = "45" if self.use_oracle else "60"
+            meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", default_gap)))
 
             if "breakfast" not in meal_types:
                 hotel = self._find_hotel_for_day(dense, day_idx)
                 if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
                     meal_types.add("breakfast")
-                elif os.environ.get("TPC_DENSIFY_EARLY_BREAKFAST", "0") == "1":
+                else:
                     r_name = self._insert_restaurant_breakfast(
                         dense, day_idx, restaurants, city, people, check, used_restaurants)
                     if r_name:
@@ -2005,6 +2071,7 @@ class TPCAgent(BaseAgent):
 
     def run(self, query, prob_idx=None, oralce_translation=False):
         self.reset_clock()
+        self.reset_timeout_recovery_plan()
 
         try:
             plan = self._solve(query)
@@ -2017,6 +2084,7 @@ class TPCAgent(BaseAgent):
                 "target_city": query.get("target_city", ""),
                 "itinerary": [],
             }
+            self._set_timeout_recovery_plan(plan)
 
         plan["elapsed_time(sec)"] = time.time() - self.start_clock
         return True, plan

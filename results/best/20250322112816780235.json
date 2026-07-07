@@ -8,15 +8,59 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 1841.88,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 1713.54,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Fatty Noodles",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 41.0,
+          "cost": 123.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Fatty Noodles",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:07",
+              "distance": 12.76,
+              "price": 52.11,
+              "cost": 52.11,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Yuanwang 1",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 80.0,
+          "cost": 240.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Fatty Noodles",
+              "end": "Yuanwang 1",
+              "mode": "taxi",
+              "start_time": "07:45",
+              "end_time": "07:48",
+              "distance": 2.42,
+              "price": 13.18,
+              "cost": 13.18,
+              "cars": 1
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +72,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Yuanwang 1",
               "end": "Objective Folk Cuisine",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:04",
-              "distance": 22.24,
-              "price": 94.76,
-              "cost": 94.76,
+              "start_time": "09:50",
+              "end_time": "10:06",
+              "distance": 10.83,
+              "price": 43.46,
+              "cost": 43.46,
               "cars": 1
             }
           ]
@@ -427,22 +471,22 @@
         },
         {
           "type": "dinner",
-          "position": "Le Caisa Pizza (Jing'an Joy City Branch)",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 76.0,
-          "cost": 228.0,
+          "price": 18.0,
+          "cost": 54.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shanghai Happy Valley Bungee Jumping and Zip Line",
-              "end": "Le Caisa Pizza (Jing'an Joy City Branch)",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "mode": "taxi",
               "start_time": "14:55",
-              "end_time": "15:37",
-              "distance": 28.38,
-              "price": 122.39,
-              "cost": 122.39,
+              "end_time": "15:15",
+              "distance": 13.63,
+              "price": 56.02,
+              "cost": 56.02,
               "cars": 1
             }
           ]
@@ -458,14 +502,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Le Caisa Pizza (Jing'an Joy City Branch)",
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
               "end": "Shanghai Hongqiao Station",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:23",
-              "distance": 15.49,
-              "price": 64.41,
-              "cost": 64.41,
+              "end_time": "18:08",
+              "distance": 5.78,
+              "price": 24.92,
+              "cost": 24.92,
               "cars": 1
             }
           ],
@@ -475,5 +519,5 @@
     }
   ],
   "elapsed_time(sec)": 258.29383516311646,
-  "_eval_score": 98.08876357560568
+  "_eval_score": 99.23809523809524
 }

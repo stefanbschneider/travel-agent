@@ -1,37 +1,27 @@
-## Current upstream evaluation state
-
-These notes track the organizers' benchmark (github.com/LAMDASZ-ML/ChinaTravel) and the
-leaderboard scoring server so local evaluation stays aligned with current upstream
-behavior.
-
-1. Concept-name canonicalization is fixed in current upstream main.
-    The verifier now normalizes equivalent labels such as "Swimming pool" / "Swimming Pool",
-    "cafe" / "coffee shop", and "university campus" / "University campus" before evaluation,
-    so the earlier case-sensitive unsatisfiable-query issue no longer applies to the latest
-    competition code.
-
-2. Overall score still double-counts EPR-micro on the leaderboard.
-    eval_tpc.py:343 computes 0.1*EPR_micro + 0.1*EPR_micro instead of the documented
-    0.1*EPR_micro + 0.1*EPR_macro, so the leaderboard "overall" weights EPR-micro twice
-    and ignores EPR-macro. We keep this verbatim as `overall` for leaderboard parity and
-    additionally report the corrected `overall_official` (eval_tpc.py:345). The two differ
-    only when EPR-micro != EPR-macro.
-
 **Important links:**
 
 - Competition website: https://chinatravel-competition.github.io/IJCAI2026/
 - ChinaTravel GitHub repo: https://github.com/LAMDA-NeSy/ChinaTravel
-- Local upstream divergence report: `docs/upstream_divergence.md`
+
+**Competition docs in this repo:**
+
+- `docs/tpc_phase1_playbook.md` — Phase 1 public-leaderboard strategy, workflows, and operating commands
+- `docs/tpc_phase2_design.md` — Phase 2 rules interpretation, harness architecture, and no-oracle approach
+- `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (three axes, attribution, regression gate)
+- `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the Phase 2 skeleton harness + eval pipeline
+- `docs/tpc_phase2_hf_dataset.md` — note on the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset vs local data
+- `AGENT_DESIGN.md` — shared overview of the current TPCAgent stack and how it bridges both phases
+- `IJCAI2026_competition.md` — source-based summary of the official competition pages
 
 **Important commands:**
 
-Latest verified score snapshot (`results/best`, 2026-06-22):
+The commands and score snapshots in the next section are primarily for **Phase 1** work.
+Phase 1 is an offline prediction-generation problem on the released dataset, where the
+current workflow intentionally uses oracle hard constraints (`hard_logic_py`) to maximize
+public leaderboard score. Phase 2 has a different execution model: per-query harness runs,
+held-out queries, no oracle verifier fields visible to the agent, and bounded runtime.
 
-- Overall: 95.4340 (official: 95.4340)
-- FPR: 98.9000
-- C-LPR: 99.5796
-- MicEPR/MacEPR: 100.0000 / 100.0000
-- DAV/ATT/DDR: 67.5720 / 82.4808 / 69.5298
+## Phase 1 Operations
 
 `TPCAgent` runs a per-query oracle-guided search. Drive it with the resumable scripts in
 `scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
@@ -175,15 +165,69 @@ against budget/time constraints) to show where more attractions can be packed sa
 leaderboard formula, which still doubles EPR-micro) and `overall_official` (the documented
 10% EPR-micro + 10% EPR-macro).
 
-**Notes:**
+For the detailed Phase 1 operating model and what transfers cleanly to Phase 2, see
+`docs/tpc_phase1_playbook.md`.
 
-Fixed setup:
+## Phase 2 Operations
 
-- I downloaded and added the environment datasets in English and Chinese from Google Drive and put them into the enviornment folder
-- I downloaded and put the competition queries into the correct data/en/ folder
-- I added the competition eval split to `chinatravel/evaluation/default_splits/tpc_phase1.txt`
-- I removed all these files from gitignore, so that I can easily add and commit them
+Phase 2 is the final harness: per-query, held-out queries, **no oracle**, bounded per-query budget,
+fixed Qwen model. Our harness does no-oracle parsing + orchestration around the deterministic
+TPCAgent. **The LLM is off by default, so none of these commands make API calls.**
+Use the venv interpreter directly (`.venv/bin/python`). See `docs/tpc_phase2_design.md`
+and `docs/tpc_phase2_eval.md` for full details.
 
+Suggested order: tests -> parser report -> small end-to-end solve -> rehearsal -> timing/gate.
+
+1. Tests (fast; no solver/LLM by default)
+
+```bash
+.venv/bin/python -m pytest tests/phase2
+# optional integration run (~1-2 min):
+.venv/bin/python -m pytest -m integration tests/phase2
+```
+
+2. Create validation / held-out split files (one-time, idempotent)
+
+```bash
+.venv/bin/python scripts/make_phase2_splits.py
+```
+
+3. Parsing-quality report (fast, no solver)
+
+```bash
+.venv/bin/python scripts/parser_vs_oracle.py --limit 20 --behavioral
+```
+
+4. End-to-end harness (real solver; small local smoke)
+
+```bash
+.venv/bin/python agent_env/scripts/solve_phase2.py --limit 3 --budget-sec 60
+```
+
+Defaults used above: `--split tpc_phase2_val`, `--method phase2_e2e_tpc_phase2_val`, `--lang en`.
+Outputs: `results/<method>/<uid>.json` and
+`agent_env/runs/<method>/<uid>/{output,telemetry,evaluation}.json`.
+
+5. Full rehearsal + three-way attribution (`ceiling | solver-only | end-to-end`)
+
+```bash
+# quick smoke
+.venv/bin/python scripts/rehearse_phase2.py --limit 1 --budget-sec 30
+```
+
+Use `--split-set test` sparingly for held-out checks.
+
+6. Timing / reliability and monotonic regression gate
+
+```bash
+.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_e2e_tpc_phase2_val
+.venv/bin/python scripts/phase2_gate.py --baseline base.json --candidate cand.json
+```
+
+**Generalization:**
+- Use held out test split
+- Compare against the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset. See `docs/tpc_phase2_hf_dataset.md`.
+- Try own custom queries and check results manually
 
 
 

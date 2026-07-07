@@ -8,15 +8,58 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "taxi",
+              "start_time": "04:48",
+              "end_time": "05:05",
+              "distance": 11.45,
+              "price": 46.25,
+              "cost": 46.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +71,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
+              "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "10:31",
-              "end_time": "11:23",
-              "distance": 34.67,
-              "price": 150.73,
-              "cost": 150.73,
+              "start_time": "09:50",
+              "end_time": "09:51",
+              "distance": 0.7,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -211,6 +254,28 @@
           ]
         },
         {
+          "type": "lunch",
+          "position": "Huxi Old Alley Noodle House (Guangdong Road Branch)",
+          "start_time": "12:19",
+          "end_time": "13:04",
+          "price": 44.0,
+          "cost": 44.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Great World",
+              "end": "Huxi Old Alley Noodle House (Guangdong Road Branch)",
+              "mode": "taxi",
+              "start_time": "12:15",
+              "end_time": "12:15",
+              "distance": 0.41,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Shanghai Museum",
           "start_time": "14:22",
@@ -220,12 +285,34 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Great World",
+              "start": "Huxi Old Alley Noodle House (Guangdong Road Branch)",
               "end": "Shanghai Museum",
               "mode": "taxi",
-              "start_time": "12:15",
-              "end_time": "12:15",
-              "distance": 0.34,
+              "start_time": "13:04",
+              "end_time": "13:04",
+              "distance": 0.15,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shanghai Tourism Festival",
+          "start_time": "15:40",
+          "end_time": "16:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Museum",
+              "end": "Shanghai Tourism Festival",
+              "mode": "taxi",
+              "start_time": "15:37",
+              "end_time": "15:37",
+              "distance": 0.26,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -242,12 +329,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Museum",
+              "start": "Shanghai Tourism Festival",
               "end": "San Ma Lu Restaurant (Hankou Road Branch)",
               "mode": "taxi",
-              "start_time": "15:37",
-              "end_time": "15:37",
-              "distance": 0.1,
+              "start_time": "16:30",
+              "end_time": "16:30",
+              "distance": 0.22,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -282,5 +369,5 @@
     }
   ],
   "elapsed_time(sec)": 344.246374130249,
-  "_eval_score": 96.77597402597402
+  "_eval_score": 100.0
 }

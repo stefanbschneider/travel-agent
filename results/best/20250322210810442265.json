@@ -8,15 +8,78 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "09:00",
-          "end_time": "10:31",
+          "start_time": "03:17",
+          "end_time": "04:48",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 613.96,
-          "cost": 613.96,
+          "end": "Shanghai Hongqiao International Airport",
+          "price": 571.18,
+          "cost": 571.18,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL169"
+          "FlightID": "FL164"
+        },
+        {
+          "type": "breakfast",
+          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+          "start_time": "08:00",
+          "end_time": "08:45",
+          "price": 28.0,
+          "cost": 28.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Hongqiao International Airport",
+              "end": "Hongqiao Terminal 1-Metro Station",
+              "mode": "walk",
+              "start_time": "04:48",
+              "end_time": "04:57",
+              "distance": 0.78,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongqiao Terminal 1-Metro Station",
+              "end": "West Nanjing Road-Metro Station",
+              "mode": "metro",
+              "start_time": "04:57",
+              "end_time": "05:20",
+              "distance": 11.55,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "West Nanjing Road-Metro Station",
+              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "mode": "walk",
+              "start_time": "05:20",
+              "end_time": "05:27",
+              "distance": 0.59,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jululu Road",
+          "start_time": "09:00",
+          "end_time": "09:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "end": "Jululu Road",
+              "mode": "walk",
+              "start_time": "08:45",
+              "end_time": "08:45",
+              "distance": 0.020900053972197186,
+              "price": 0,
+              "cost": 0
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,33 +91,12 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "walk",
-              "start_time": "10:31",
-              "end_time": "10:46",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Middle Huaihai Road-Metro Station",
-              "mode": "metro",
-              "start_time": "10:46",
-              "end_time": "11:52",
-              "distance": 33.42,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Middle Huaihai Road-Metro Station",
+              "start": "Jululu Road",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "walk",
-              "start_time": "11:52",
-              "end_time": "11:55",
-              "distance": 0.31,
+              "start_time": "09:50",
+              "end_time": "09:58",
+              "distance": 0.6967100278305787,
               "price": 0,
               "cost": 0
             }
@@ -64,7 +106,7 @@
           "type": "attraction",
           "position": "Nanjing Road Pedestrian Street",
           "start_time": "13:13",
-          "end_time": "14:13",
+          "end_time": "14:28",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -104,41 +146,20 @@
         },
         {
           "type": "attraction",
-          "position": "Lujiazui",
+          "position": "Holy Trinity Church",
           "start_time": "14:30",
-          "end_time": "15:30",
+          "end_time": "15:45",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Nanjing Road Pedestrian Street",
-              "end": "Tiantong Road-Metro Station",
+              "end": "Holy Trinity Church",
               "mode": "walk",
-              "start_time": "14:13",
-              "end_time": "14:22",
-              "distance": 0.8,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tiantong Road-Metro Station",
-              "end": "Pudong South Road-Metro Station",
-              "mode": "metro",
-              "start_time": "14:22",
-              "end_time": "14:27",
-              "distance": 2.93,
-              "price": 2,
-              "cost": 2,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong South Road-Metro Station",
-              "end": "Lujiazui",
-              "mode": "walk",
-              "start_time": "14:27",
+              "start_time": "14:28",
               "end_time": "14:30",
-              "distance": 0.27,
+              "distance": 0.21642662645901503,
               "price": 0,
               "cost": 0
             }
@@ -146,20 +167,41 @@
         },
         {
           "type": "attraction",
-          "position": "263-meter Main Observation Deck",
-          "start_time": "15:38",
-          "end_time": "16:38",
+          "position": "Jing'an Sculpture Park",
+          "start_time": "16:12",
+          "end_time": "17:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Lujiazui",
-              "end": "263-meter Main Observation Deck",
+              "start": "Holy Trinity Church",
+              "end": "East Nanjing Road-Metro Station",
               "mode": "walk",
-              "start_time": "15:30",
-              "end_time": "15:38",
-              "distance": 0.7376574549980116,
+              "start_time": "15:45",
+              "end_time": "15:55",
+              "distance": 0.91,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "East Nanjing Road-Metro Station",
+              "end": "Qufu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "15:55",
+              "end_time": "15:57",
+              "distance": 1.33,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Jing'an Sculpture Park",
+              "mode": "walk",
+              "start_time": "15:57",
+              "end_time": "15:59",
+              "distance": 0.18,
               "price": 0,
               "cost": 0
             }
@@ -167,20 +209,41 @@
         },
         {
           "type": "dinner",
-          "position": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 1026.0,
-          "cost": 1026.0,
+          "position": "Fu He Hui",
+          "start_time": "17:40",
+          "end_time": "18:40",
+          "price": 1280.0,
+          "cost": 1280.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "263-meter Main Observation Deck",
-              "end": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
+              "start": "Jing'an Sculpture Park",
+              "end": "Qufu Road-Metro Station",
               "mode": "walk",
-              "start_time": "16:38",
-              "end_time": "16:51",
-              "distance": 1.1016729126056704,
+              "start_time": "17:27",
+              "end_time": "17:29",
+              "distance": 0.18,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qufu Road-Metro Station",
+              "end": "Jiangsu Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:29",
+              "end_time": "17:38",
+              "distance": 4.59,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Jiangsu Road-Metro Station",
+              "end": "Fu He Hui",
+              "mode": "walk",
+              "start_time": "17:38",
+              "end_time": "17:40",
+              "distance": 0.22,
               "price": 0,
               "cost": 0
             }
@@ -188,43 +251,43 @@
         },
         {
           "type": "accommodation",
-          "position": "Novotel Shanghai Clover",
-          "start_time": "18:39",
+          "position": "Wassim Hotel (Shanghai Pudong Theme Park)",
+          "start_time": "19:59",
           "end_time": "24:00",
-          "price": 530.0,
-          "cost": 530.0,
+          "price": 469.0,
+          "cost": 469.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "Jin Xuan Chinese Restaurant at The Ritz-Carlton Shanghai, Pudong",
-              "end": "Lujiazui-Metro Station",
+              "start": "Fu He Hui",
+              "end": "Jiangsu Road-Metro Station",
               "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
+              "start_time": "18:40",
+              "end_time": "18:42",
               "distance": 0.22,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Lujiazui-Metro Station",
-              "end": "Kangxin Highway-Metro Station",
+              "start": "Jiangsu Road-Metro Station",
+              "end": "Chuansha-Metro Station",
               "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "18:34",
-              "distance": 16.22,
-              "price": 5,
-              "cost": 5,
+              "start_time": "18:42",
+              "end_time": "19:33",
+              "distance": 25.77,
+              "price": 6,
+              "cost": 6,
               "tickets": 1
             },
             {
-              "start": "Kangxin Highway-Metro Station",
-              "end": "Novotel Shanghai Clover",
+              "start": "Chuansha-Metro Station",
+              "end": "Wassim Hotel (Shanghai Pudong Theme Park)",
               "mode": "walk",
-              "start_time": "18:34",
-              "end_time": "18:39",
-              "distance": 0.43,
+              "start_time": "19:33",
+              "end_time": "19:59",
+              "distance": 2.23,
               "price": 0,
               "cost": 0
             }
@@ -237,7 +300,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Novotel Shanghai Clover",
+          "position": "Wassim Hotel (Shanghai Pudong Theme Park)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -247,82 +310,40 @@
         },
         {
           "type": "attraction",
-          "position": "Jing'an Sculpture Park",
-          "start_time": "09:14",
-          "end_time": "10:14",
+          "position": "The Bund",
+          "start_time": "09:43",
+          "end_time": "10:58",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Novotel Shanghai Clover",
-              "end": "Kangxin Highway-Metro Station",
+              "start": "Wassim Hotel (Shanghai Pudong Theme Park)",
+              "end": "Chuansha-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:35",
-              "distance": 0.43,
+              "end_time": "08:56",
+              "distance": 2.23,
               "price": 0,
               "cost": 0
             },
             {
-              "start": "Kangxin Highway-Metro Station",
-              "end": "Qufu Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:35",
-              "end_time": "09:12",
-              "distance": 18.62,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Qufu Road-Metro Station",
-              "end": "Jing'an Sculpture Park",
-              "mode": "walk",
-              "start_time": "09:12",
-              "end_time": "09:14",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "The Bund",
-          "start_time": "10:29",
-          "end_time": "11:29",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Jing'an Sculpture Park",
-              "end": "Qufu Road-Metro Station",
-              "mode": "walk",
-              "start_time": "10:14",
-              "end_time": "10:16",
-              "distance": 0.18,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qufu Road-Metro Station",
+              "start": "Chuansha-Metro Station",
               "end": "Lujiazui-Metro Station",
               "mode": "metro",
-              "start_time": "10:16",
-              "end_time": "10:21",
-              "distance": 2.95,
-              "price": 2,
-              "cost": 2,
+              "start_time": "08:56",
+              "end_time": "09:35",
+              "distance": 19.54,
+              "price": 5,
+              "cost": 5,
               "tickets": 1
             },
             {
               "start": "Lujiazui-Metro Station",
               "end": "The Bund",
               "mode": "walk",
-              "start_time": "10:21",
-              "end_time": "10:29",
+              "start_time": "09:35",
+              "end_time": "09:43",
               "distance": 0.74,
               "price": 0,
               "cost": 0
@@ -332,8 +353,8 @@
         {
           "type": "attraction",
           "position": "Huangpu River",
-          "start_time": "11:47",
-          "end_time": "12:47",
+          "start_time": "11:16",
+          "end_time": "12:31",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
@@ -342,8 +363,8 @@
               "start": "The Bund",
               "end": "Lujiazui-Metro Station",
               "mode": "walk",
-              "start_time": "11:29",
-              "end_time": "11:37",
+              "start_time": "10:58",
+              "end_time": "11:06",
               "distance": 0.74,
               "price": 0,
               "cost": 0
@@ -352,8 +373,8 @@
               "start": "Lujiazui-Metro Station",
               "end": "International Passenger Transport Center-Metro Station",
               "mode": "metro",
-              "start_time": "11:37",
-              "end_time": "11:39",
+              "start_time": "11:06",
+              "end_time": "11:08",
               "distance": 1.37,
               "price": 2,
               "cost": 2,
@@ -363,8 +384,8 @@
               "start": "International Passenger Transport Center-Metro Station",
               "end": "Huangpu River",
               "mode": "walk",
-              "start_time": "11:39",
-              "end_time": "11:47",
+              "start_time": "11:08",
+              "end_time": "11:16",
               "distance": 0.68,
               "price": 0,
               "cost": 0
@@ -372,52 +393,136 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "lunch",
+          "position": "Renhe Hall (Zhaojiabang Road Branch)",
+          "start_time": "12:54",
+          "end_time": "13:54",
+          "price": 203.0,
+          "cost": 203.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Huangpu River",
               "end": "International Passenger Transport Center-Metro Station",
               "mode": "walk",
-              "start_time": "12:47",
-              "end_time": "12:55",
+              "start_time": "12:31",
+              "end_time": "12:39",
               "distance": 0.68,
               "price": 0,
               "cost": 0
             },
             {
               "start": "International Passenger Transport Center-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Jiashan Road-Metro Station",
               "mode": "metro",
-              "start_time": "12:55",
-              "end_time": "13:57",
-              "distance": 31.3,
-              "price": 7,
-              "cost": 7,
+              "start_time": "12:39",
+              "end_time": "12:51",
+              "distance": 6.35,
+              "price": 3,
+              "cost": 3,
               "tickets": 1
             },
             {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
+              "start": "Jiashan Road-Metro Station",
+              "end": "Renhe Hall (Zhaojiabang Road Branch)",
               "mode": "walk",
+              "start_time": "12:51",
+              "end_time": "12:54",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 18.0,
+          "cost": 18.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Jiashan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "13:54",
+              "end_time": "13:57",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiashan Road-Metro Station",
+              "end": "Qibao-Metro Station",
+              "mode": "metro",
               "start_time": "13:57",
-              "end_time": "14:12",
-              "distance": 1.27,
+              "end_time": "14:20",
+              "distance": 11.86,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "mode": "walk",
+              "start_time": "14:20",
+              "end_time": "14:28",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "19:55",
+          "end_time": "06:21",
+          "start": "Shanghai Hongqiao Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 727.96,
+          "cost": 727.96,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shunchang Renshou Stuffed Egg (Qibao Old Street Branch)",
+              "end": "Qibao-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:08",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Qibao-Metro Station",
+              "end": "Hongqiao Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:08",
+              "end_time": "18:18",
+              "distance": 5.17,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Hongqiao Railway Station-Metro Station",
+              "end": "Shanghai Hongqiao Station",
+              "mode": "walk",
+              "start_time": "18:18",
+              "end_time": "18:19",
+              "distance": 0.12,
               "price": 0,
               "cost": 0
             }
           ],
-          "FlightID": "FL018"
+          "TrainID": "D941"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 243.6870472431183,
-  "_eval_score": 95.34047619047618
+  "elapsed_time(sec)": 246.76007294654846,
+  "_eval_score": 98.21886446886447
 }

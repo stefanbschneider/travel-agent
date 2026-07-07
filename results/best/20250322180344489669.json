@@ -7,35 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:16",
-          "end_time": "12:08",
-          "start": "Nanjing South Railway Station",
-          "end": "Beijing South Railway Station",
-          "price": 583.83,
-          "cost": 2919.15,
+          "type": "airplane",
+          "start_time": "01:22",
+          "end_time": "02:29",
+          "start": "Nanjing Lukou International Airport",
+          "end": "Beijing Daxing International Airport",
+          "price": 405.41,
+          "cost": 2027.0500000000002,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G2578"
+          "FlightID": "FL651"
         },
         {
-          "type": "lunch",
-          "position": "Gate Frame Alley Dalián Huoshao (Zhaogongkou Branch)",
-          "start_time": "12:12",
-          "end_time": "13:12",
-          "price": 67.0,
-          "cost": 335.0,
+          "type": "breakfast",
+          "position": "Zengshengkui Snack Shop",
+          "start_time": "06:00",
+          "end_time": "06:45",
+          "price": 16.0,
+          "cost": 80.0,
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing South Railway Station",
-              "end": "Gate Frame Alley Dalián Huoshao (Zhaogongkou Branch)",
+              "start": "Beijing Daxing International Airport",
+              "end": "Zengshengkui Snack Shop",
               "mode": "taxi",
-              "start_time": "12:08",
-              "end_time": "12:12",
-              "distance": 3.15,
-              "price": 15.73,
-              "cost": 31.46,
+              "start_time": "02:29",
+              "end_time": "03:39",
+              "distance": 47.11,
+              "price": 206.71,
+              "cost": 413.42,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cining Palace",
+          "start_time": "08:30",
+          "end_time": "09:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Zengshengkui Snack Shop",
+              "end": "Cining Palace",
+              "mode": "taxi",
+              "start_time": "06:45",
+              "end_time": "06:46",
+              "distance": 0.9,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 12.0,
+          "cost": 60.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Cining Palace",
+              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
+              "mode": "taxi",
+              "start_time": "09:20",
+              "end_time": "09:22",
+              "distance": 1.59,
+              "price": 11.0,
+              "cost": 22.0,
               "cars": 2
             }
           ]
@@ -50,14 +94,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Gate Frame Alley Dalián Huoshao (Zhaogongkou Branch)",
+              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
               "end": "National Museum of Natural History",
               "mode": "taxi",
-              "start_time": "13:12",
-              "end_time": "13:17",
-              "distance": 3.82,
-              "price": 18.06,
-              "cost": 36.12,
+              "start_time": "12:00",
+              "end_time": "12:07",
+              "distance": 5.26,
+              "price": 23.13,
+              "cost": 46.26,
               "cars": 2
             }
           ]
@@ -327,5 +371,5 @@
     }
   ],
   "elapsed_time(sec)": 243.33783292770386,
-  "_eval_score": 98.54166666666666
+  "_eval_score": 100.0
 }

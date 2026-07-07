@@ -7,16 +7,38 @@
       "day": 1,
       "activities": [
         {
-          "type": "train",
-          "start_time": "07:05",
-          "end_time": "11:01",
-          "start": "Beijing West Railway Station",
-          "end": "Wuhan Station",
-          "price": 684.27,
-          "cost": 3421.35,
+          "type": "airplane",
+          "start_time": "03:43",
+          "end_time": "05:02",
+          "start": "Beijing Capital International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 519.12,
+          "cost": 2595.6,
           "tickets": 5,
           "transports": [],
-          "TrainID": "G71"
+          "FlightID": "FL150"
+        },
+        {
+          "type": "breakfast",
+          "position": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+          "start_time": "07:30",
+          "end_time": "08:15",
+          "price": 6.0,
+          "cost": 30.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Wuhan Tianhe International Airport",
+              "end": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "mode": "taxi",
+              "start_time": "05:02",
+              "end_time": "05:35",
+              "distance": 22.15,
+              "price": 94.39,
+              "cost": 188.78,
+              "cars": 2
+            }
+          ]
         },
         {
           "type": "lunch",
@@ -28,14 +50,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Wuhan Station",
+              "start": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
               "end": "Green Grain Restaurant (East Lake Branch)",
               "mode": "taxi",
-              "start_time": "11:01",
-              "end_time": "11:08",
-              "distance": 4.84,
-              "price": 21.64,
-              "cost": 43.28,
+              "start_time": "08:15",
+              "end_time": "08:28",
+              "distance": 9.18,
+              "price": 36.82,
+              "cost": 73.64,
               "cars": 2
             }
           ]
@@ -107,23 +129,44 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Five Percent Villa Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 298.0,
-          "cost": 1490.0,
+          "type": "attraction",
+          "position": "Ice and Snow Kingdom",
+          "start_time": "15:34",
+          "end_time": "16:34",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Wuhan Polar Ocean Park",
-              "end": "Five Percent Villa Restaurant",
-              "mode": "taxi",
+              "end": "Ice and Snow Kingdom",
+              "mode": "walk",
               "start_time": "15:34",
-              "end_time": "15:48",
-              "distance": 9.94,
-              "price": 39.5,
-              "cost": 79.0,
+              "end_time": "15:34",
+              "distance": 0.060123140279533534,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wuhan Shangri-La Hotel · Shang Palace Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 194.0,
+          "cost": 970.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Ice and Snow Kingdom",
+              "end": "Wuhan Shangri-La Hotel · Shang Palace Chinese Restaurant",
+              "mode": "taxi",
+              "start_time": "16:34",
+              "end_time": "16:45",
+              "distance": 7.48,
+              "price": 30.88,
+              "cost": 61.76,
               "cars": 2
             }
           ]
@@ -131,7 +174,7 @@
         {
           "type": "accommodation",
           "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
-          "start_time": "18:18",
+          "start_time": "18:19",
           "end_time": "24:00",
           "price": 206.0,
           "cost": 1030.0,
@@ -140,14 +183,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Five Percent Villa Restaurant",
+              "start": "Wuhan Shangri-La Hotel · Shang Palace Chinese Restaurant",
               "end": "Home Inn Selected (Wuhan High-speed Railway Station)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:18",
-              "distance": 12.0,
-              "price": 48.71,
-              "cost": 97.42,
+              "end_time": "18:19",
+              "distance": 13.25,
+              "price": 54.34,
+              "cost": 108.68,
               "cars": 2
             }
           ]
@@ -279,22 +322,22 @@
         },
         {
           "type": "dinner",
-          "position": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+          "position": "Joyful Abode (Riverside Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 218.0,
-          "cost": 1090.0,
+          "price": 317.0,
+          "cost": 1585.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Wuhan East Lake Ocean World",
-              "end": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+              "end": "Joyful Abode (Riverside Branch)",
               "mode": "taxi",
               "start_time": "14:25",
-              "end_time": "14:40",
-              "distance": 10.53,
-              "price": 42.1,
-              "cost": 84.2,
+              "end_time": "14:37",
+              "distance": 8.09,
+              "price": 33.01,
+              "cost": 66.02,
               "cars": 2
             }
           ]
@@ -302,7 +345,7 @@
         {
           "type": "accommodation",
           "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
-          "start_time": "18:13",
+          "start_time": "18:17",
           "end_time": "24:00",
           "price": 206.0,
           "cost": 1030.0,
@@ -311,14 +354,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Wuhan Optics Valley Hilton Hotel - Imperial Seal Chinese Restaurant",
+              "start": "Joyful Abode (Riverside Branch)",
               "end": "Home Inn Selected (Wuhan High-speed Railway Station)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:13",
-              "distance": 9.31,
-              "price": 37.29,
-              "cost": 74.58,
+              "end_time": "18:17",
+              "distance": 11.67,
+              "price": 47.23,
+              "cost": 94.46,
               "cars": 2
             }
           ]
@@ -450,22 +493,22 @@
         },
         {
           "type": "dinner",
-          "position": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
+          "position": "Simple Meals · Hankow Mansion (Xunlimen Branch)",
           "start_time": "17:00",
           "end_time": "18:00",
-          "price": 322.0,
-          "cost": 1610.0,
+          "price": 122.0,
+          "cost": 610.0,
           "tickets": 5,
           "transports": [
             {
               "start": "East Lake Eye Ferris Wheel",
-              "end": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
+              "end": "Simple Meals · Hankow Mansion (Xunlimen Branch)",
               "mode": "taxi",
               "start_time": "14:18",
-              "end_time": "14:26",
-              "distance": 5.36,
-              "price": 23.45,
-              "cost": 46.9,
+              "end_time": "14:37",
+              "distance": 13.02,
+              "price": 53.29,
+              "cost": 106.58,
               "cars": 2
             }
           ]
@@ -473,7 +516,7 @@
         {
           "type": "accommodation",
           "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
-          "start_time": "18:17",
+          "start_time": "18:20",
           "end_time": "24:00",
           "price": 206.0,
           "cost": 1030.0,
@@ -482,14 +525,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
+              "start": "Simple Meals · Hankow Mansion (Xunlimen Branch)",
               "end": "Home Inn Selected (Wuhan High-speed Railway Station)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:17",
-              "distance": 11.34,
-              "price": 45.72,
-              "cost": 91.44,
+              "end_time": "18:20",
+              "distance": 13.42,
+              "price": 55.11,
+              "cost": 110.22,
               "cars": 2
             }
           ]
@@ -598,53 +641,75 @@
         },
         {
           "type": "attraction",
-          "position": "2024 Dongfeng Voyah Wuhan Open",
-          "start_time": "14:49",
-          "end_time": "15:49",
-          "price": 0.0,
-          "cost": 0.0,
+          "position": "WS Dreamland",
+          "start_time": "14:21",
+          "end_time": "15:21",
+          "price": 220.0,
+          "cost": 1100.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Xia's Clay Pot (Wansongyuan Branch)",
-              "end": "2024 Dongfeng Voyah Wuhan Open",
+              "end": "WS Dreamland",
               "mode": "taxi",
               "start_time": "13:49",
-              "end_time": "14:23",
-              "distance": 22.86,
-              "price": 97.59,
-              "cost": 195.18,
+              "end_time": "14:04",
+              "distance": 10.04,
+              "price": 39.87,
+              "cost": 79.74,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Cai Lin Ji (Luoshi South Road Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 13.0,
+          "cost": 65.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "WS Dreamland",
+              "end": "Cai Lin Ji (Luoshi South Road Branch)",
+              "mode": "taxi",
+              "start_time": "15:21",
+              "end_time": "15:23",
+              "distance": 1.89,
+              "price": 11.3,
+              "cost": 22.6,
               "cars": 2
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "17:23",
-          "end_time": "18:42",
+          "start_time": "23:48",
+          "end_time": "01:07",
           "start": "Wuhan Tianhe International Airport",
           "end": "Beijing Daxing International Airport",
-          "price": 549.85,
-          "cost": 2749.25,
+          "price": 521.9,
+          "cost": 2609.5,
           "tickets": 5,
           "transports": [
             {
-              "start": "2024 Dongfeng Voyah Wuhan Open",
+              "start": "Cai Lin Ji (Luoshi South Road Branch)",
               "end": "Wuhan Tianhe International Airport",
               "mode": "taxi",
-              "start_time": "15:49",
-              "end_time": "16:49",
-              "distance": 40.32,
-              "price": 176.15,
-              "cost": 352.3,
+              "start_time": "17:45",
+              "end_time": "18:31",
+              "distance": 31.02,
+              "price": 134.29,
+              "cost": 268.58,
               "cars": 2
             }
           ],
-          "FlightID": "FL579"
+          "FlightID": "FL580"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 189.7764437198639,
-  "_eval_score": 98.85416666666666
+  "elapsed_time(sec)": 258.18711829185486,
+  "_eval_score": 100.0
 }
