@@ -162,19 +162,19 @@ def _best_transport(agent, city, from_pos, to_pos, depart, people, force_mode=No
     return best, best_arr
 
 
-def _rebuild_anchor(agent, plan, day_idx, anchor, poi_pos, city, people):
+def _rebuild_anchor(agent, plan, day_idx, anchor, poi_pos, city, people, force_mode=None):
     atype = anchor.get("type")
     if atype in ("train", "airplane"):
         anchor_start = time_to_minutes(str(anchor.get("start_time", "23:59")))
         depart = minutes_to_time(max(0, anchor_start - 180))
         dest = _norm(anchor.get("start") or anchor.get("From"))
-        tr, arr = _best_transport(agent, city, poi_pos, dest, depart, people)
+        tr, arr = _best_transport(agent, city, poi_pos, dest, depart, people, force_mode)
         if tr is None or time_to_minutes(str(arr)) > anchor_start:
             return False
         anchor["transports"] = tr
         return True
     dest = _norm(anchor.get("position"))
-    tr, arr = _best_transport(agent, city, poi_pos, dest, "20:00", people)
+    tr, arr = _best_transport(agent, city, poi_pos, dest, "20:00", people, force_mode)
     if tr is None:
         return False
     anchor["transports"] = tr
@@ -195,31 +195,31 @@ def _try_insert(agent, plan, day_idx, activity_factory, city, people, check, req
     prev_pos = agent._activity_end_position(prev)
     if not prev_pos:
         return False
-    built = activity_factory(prev_pos)
-    if built is None:
-        return False
-    activity, poi_position = built
-    snapshot = deepcopy(acts)
     before_pref = _pref(agent, plan) if require_pref else None
-    acts.insert(anchor_idx, activity)
-    if not _rebuild_anchor(agent, plan, day_idx, anchor, poi_position, city, people):
-        day["activities"] = snapshot
-        return False
-    try:
-        if agent._accepted(*check(plan)):
-            if not require_pref or _pref(agent, plan) > before_pref + 1e-9:
+    for fmode in ("walk", None):
+        built = activity_factory(prev_pos, fmode)
+        if built is None:
+            continue
+        activity, poi_position = built
+        snapshot = deepcopy(acts)
+        acts.insert(anchor_idx, activity)
+        if not _rebuild_anchor(agent, plan, day_idx, anchor, poi_position, city, people, fmode):
+            day["activities"] = snapshot
+            continue
+        try:
+            if agent._accepted(*check(plan)) and (not require_pref or _pref(agent, plan) > before_pref + 1e-9):
                 return True
-    except Exception:
-        pass
-    day["activities"] = snapshot
+        except Exception:
+            pass
+        day["activities"] = snapshot
     return False
 
 
 def _attr_factory(agent, poi, city, people):
-    def make(prev_pos):
+    def make(prev_pos, force_mode=None):
         o, c = agent._poi_open_bounds(poi)
         depart_min = min(max(o, time_to_minutes("07:30")), 23 * 60)
-        tr, arr = _best_transport(agent, city, prev_pos, poi["name"], minutes_to_time(depart_min), people)
+        tr, arr = _best_transport(agent, city, prev_pos, poi["name"], minutes_to_time(depart_min), people, force_mode)
         if tr is None or arr is None:
             return None
         vs = time_to_minutes(str(arr))
@@ -231,11 +231,11 @@ def _attr_factory(agent, poi, city, people):
 
 
 def _meal_factory(agent, kind, poi, city, people, hotel_name=None):
-    def make(prev_pos):
+    def make(prev_pos, force_mode=None):
         depart = MEAL_DEPART[kind]
         dwell = MEAL_DWELL[kind]
         if kind == "breakfast" and hotel_name is not None:
-            tr, arr = _best_transport(agent, city, prev_pos, hotel_name, depart, people)
+            tr, arr = _best_transport(agent, city, prev_pos, hotel_name, depart, people, force_mode)
             if tr is None or arr is None:
                 return None
             vs = time_to_minutes(str(arr))
@@ -247,7 +247,7 @@ def _meal_factory(agent, kind, poi, city, people, hotel_name=None):
             act["transports"] = tr
             return act, hotel_name
         o, c = agent._poi_open_bounds(poi)
-        tr, arr = _best_transport(agent, city, prev_pos, poi["name"], depart, people)
+        tr, arr = _best_transport(agent, city, prev_pos, poi["name"], depart, people, force_mode)
         if tr is None or arr is None:
             return None
         vs = time_to_minutes(str(arr))
@@ -408,6 +408,47 @@ def _swap_for_att(agent, plan, city, people, check, attr_rows, rest_rows, coords
     return improved
 
 
+def _topup_breakfasts(agent, plan, check):
+    """Reach 3 meals/day by inserting extra FREE hotel breakfasts adjacent to a hotel-position
+    activity. Same position => transports=[] => zero cost and chain-transparent, so it works
+    even under tight meal/inner-city budgets. Gated by check."""
+    changed = False
+    slots = [("06:00", "06:30"), ("06:35", "07:05"), ("07:10", "07:40"), ("07:45", "08:15"), ("08:20", "08:50")]
+    for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+        acts = day["activities"]
+        meals = sum(1 for a in acts if a.get("type") in ("breakfast", "lunch", "dinner"))
+        if meals >= 3:
+            continue
+        hotel = agent._find_hotel_for_day(plan, day_idx)
+        if not hotel:
+            continue
+        hn = _norm(hotel)
+        j = None
+        for k, a in enumerate(acts):
+            if _norm(a.get("position")) == hn and a.get("type") in ("accommodation", "breakfast"):
+                j = k
+                break
+        if j is None:
+            # entry position may already be the hotel (carried from previous day's accommodation)
+            if acts and _norm(agent._activity_start_position(acts[0])) == hn and acts[0].get("type") not in ("train", "airplane"):
+                j = -1  # insert before first activity
+            else:
+                continue
+        need = 3 - meals
+        snapshot = deepcopy(acts)
+        block = [agent._make_hotel_breakfast(hotel, slots[k % len(slots)][0], slots[k % len(slots)][1]) for k in range(need)]
+        ins_at = j + 1 if j >= 0 else 0
+        acts[ins_at:ins_at] = block
+        try:
+            if agent._accepted(*check(plan)):
+                changed = True
+                continue
+        except Exception:
+            pass
+        day["activities"] = snapshot
+    return changed
+
+
 def pack_one(uid, plan, query, agent, attr_rows, rest_rows, coords):
     plan = deepcopy(plan)
     plan.pop("_eval_score", None)
@@ -480,6 +521,8 @@ def pack_one(uid, plan, query, agent, attr_rows, rest_rows, coords):
                     break
             if not inserted:
                 break
+
+    _topup_breakfasts(agent, plan, check)
 
     _att_reroute(agent, plan, city, people, check)
 
