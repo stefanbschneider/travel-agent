@@ -322,9 +322,51 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Qiantang River",
+          "start_time": "08:34",
+          "end_time": "09:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+              "end": "Dongyue-Metro Station",
+              "mode": "walk",
+              "start_time": "07:30",
+              "end_time": "07:37",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongyue-Metro Station",
+              "end": "Puyan-Metro Station",
+              "mode": "metro",
+              "start_time": "07:37",
+              "end_time": "08:02",
+              "distance": 12.92,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Puyan-Metro Station",
+              "end": "Qiantang River",
+              "mode": "walk",
+              "start_time": "08:02",
+              "end_time": "08:34",
+              "distance": 2.71,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Holiday Inn Express Hangzhou West Lake East",
-          "start_time": "18:13",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 450.0,
           "cost": 1800.0,
@@ -333,15 +375,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+              "start": "Qiantang River",
+              "end": "Puyan-Metro Station",
+              "mode": "walk",
+              "start_time": "20:00",
+              "end_time": "20:32",
+              "distance": 2.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Puyan-Metro Station",
+              "end": "City Station-Metro Station",
+              "mode": "metro",
+              "start_time": "20:32",
+              "end_time": "20:51",
+              "distance": 9.77,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "City Station-Metro Station",
               "end": "Holiday Inn Express Hangzhou West Lake East",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:13",
-              "distance": 9.3,
-              "price": 37.25,
-              "cost": 37.25,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:51",
+              "end_time": "20:52",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -691,5 +753,5 @@
     }
   ],
   "elapsed_time(sec)": 0.03451704978942871,
-  "_eval_score": 99.6875
+  "_eval_score": 100.0
 }

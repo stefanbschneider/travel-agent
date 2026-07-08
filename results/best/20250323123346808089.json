@@ -1,340 +1,372 @@
 {
-    "people_number": 3,
-    "start_city": "Hangzhou",
-    "target_city": "Chengdu",
-    "itinerary": [
+  "people_number": 3,
+  "start_city": "Hangzhou",
+  "target_city": "Chengdu",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
         {
-            "day": 1,
-            "activities": [
-                {
-                    "type": "airplane",
-                    "start_time": "07:09",
-                    "end_time": "09:04",
-                    "start": "Hangzhou Xiaoshan International Airport",
-                    "end": "Chengdu Shuangliu International Airport",
-                    "price": 791.78,
-                    "cost": 2375.34,
-                    "tickets": 3,
-                    "transports": [],
-                    "FlightID": "FL533"
-                },
-                {
-                    "type": "lunch",
-                    "position": "Crane's Call Tea House (People's Park Branch)",
-                    "start_time": "11:00",
-                    "end_time": "11:05",
-                    "price": 45.0,
-                    "cost": 135.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Chengdu Shuangliu International Airport",
-                            "end": "Crane's Call Tea House (People's Park Branch)",
-                            "mode": "taxi",
-                            "start_time": "09:04",
-                            "end_time": "09:26",
-                            "distance": 14.93,
-                            "price": 61.87,
-                            "cost": 61.87,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Chengdu Library",
-                    "start_time": "11:11",
-                    "end_time": "11:26",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Crane's Call Tea House (People's Park Branch)",
-                            "end": "Chengdu Library",
-                            "mode": "taxi",
-                            "start_time": "11:05",
-                            "end_time": "11:06",
-                            "distance": 0.85,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Manjushri Temple",
-                    "start_time": "12:05",
-                    "end_time": "12:20",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Chengdu Library",
-                            "end": "Manjushri Temple",
-                            "mode": "taxi",
-                            "start_time": "11:26",
-                            "end_time": "11:30",
-                            "distance": 2.73,
-                            "price": 14.25,
-                            "cost": 14.25,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Kuanzhai Alley",
-                    "start_time": "13:23",
-                    "end_time": "13:38",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Manjushri Temple",
-                            "end": "Kuanzhai Alley",
-                            "mode": "taxi",
-                            "start_time": "13:20",
-                            "end_time": "13:23",
-                            "distance": 2.23,
-                            "price": 12.52,
-                            "cost": 12.52,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Jinli Ancient Street",
-                    "start_time": "14:41",
-                    "end_time": "14:56",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Kuanzhai Alley",
-                            "end": "Jinli Ancient Street",
-                            "mode": "taxi",
-                            "start_time": "14:38",
-                            "end_time": "14:41",
-                            "distance": 2.03,
-                            "price": 11.79,
-                            "cost": 11.79,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "dinner",
-                    "position": "Hawaii Global Seafood Artistry (High-Tech Branch)",
-                    "start_time": "17:00",
-                    "end_time": "18:00",
-                    "price": 379.0,
-                    "cost": 1137.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Jinli Ancient Street",
-                            "end": "Hawaii Global Seafood Artistry (High-Tech Branch)",
-                            "mode": "taxi",
-                            "start_time": "15:56",
-                            "end_time": "16:08",
-                            "distance": 8.16,
-                            "price": 33.25,
-                            "cost": 33.25,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "accommodation",
-                    "position": "ECHARM Hotel (Shuangliu International Airport store)",
-                    "start_time": "18:12",
-                    "end_time": "24:00",
-                    "price": 314.0,
-                    "cost": 942.0,
-                    "rooms": 3,
-                    "room_type": 1,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Hawaii Global Seafood Artistry (High-Tech Branch)",
-                            "end": "ECHARM Hotel (Shuangliu International Airport store)",
-                            "mode": "taxi",
-                            "start_time": "18:00",
-                            "end_time": "18:12",
-                            "distance": 8.04,
-                            "price": 32.83,
-                            "cost": 32.83,
-                            "cars": 1
-                        }
-                    ]
-                }
-            ]
+          "type": "airplane",
+          "start_time": "07:09",
+          "end_time": "09:04",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 791.78,
+          "cost": 2375.34,
+          "tickets": 3,
+          "transports": [],
+          "FlightID": "FL533"
         },
         {
-            "day": 2,
-            "activities": [
-                {
-                    "type": "breakfast",
-                    "position": "ECHARM Hotel (Shuangliu International Airport store)",
-                    "start_time": "06:30",
-                    "end_time": "07:30",
-                    "price": 0,
-                    "cost": 0,
-                    "tickets": 0,
-                    "transports": []
-                },
-                {
-                    "type": "breakfast",
-                    "position": "ECHARM Hotel (Shuangliu International Airport store)",
-                    "start_time": "07:30",
-                    "end_time": "08:30",
-                    "price": 0,
-                    "cost": 0,
-                    "tickets": 0,
-                    "transports": []
-                },
-                {
-                    "type": "attraction",
-                    "position": "Chunxi Road",
-                    "start_time": "08:52",
-                    "end_time": "09:07",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "ECHARM Hotel (Shuangliu International Airport store)",
-                            "end": "Chunxi Road",
-                            "mode": "taxi",
-                            "start_time": "08:30",
-                            "end_time": "08:52",
-                            "distance": 14.84,
-                            "price": 61.49,
-                            "cost": 61.49,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "China Shadow Puppet Museum",
-                    "start_time": "09:19",
-                    "end_time": "09:34",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Chunxi Road",
-                            "end": "China Shadow Puppet Museum",
-                            "mode": "taxi",
-                            "start_time": "09:07",
-                            "end_time": "09:09",
-                            "distance": 1.37,
-                            "price": 11.0,
-                            "cost": 11.0,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Chengdu Museum",
-                    "start_time": "10:09",
-                    "end_time": "10:24",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "China Shadow Puppet Museum",
-                            "end": "Chengdu Museum",
-                            "mode": "walk",
-                            "start_time": "09:34",
-                            "end_time": "09:34",
-                            "distance": 0.07916972935558433,
-                            "price": 0,
-                            "cost": 0
-                        }
-                    ]
-                },
-                {
-                    "type": "attraction",
-                    "position": "Manjushri Lane",
-                    "start_time": "11:26",
-                    "end_time": "11:41",
-                    "price": 0.0,
-                    "cost": 0.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Chengdu Museum",
-                            "end": "Manjushri Lane",
-                            "mode": "taxi",
-                            "start_time": "11:24",
-                            "end_time": "11:26",
-                            "distance": 1.95,
-                            "price": 11.51,
-                            "cost": 11.51,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "lunch",
-                    "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-                    "start_time": "12:45",
-                    "end_time": "12:50",
-                    "price": 250.0,
-                    "cost": 750.0,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Manjushri Lane",
-                            "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-                            "mode": "taxi",
-                            "start_time": "12:41",
-                            "end_time": "12:45",
-                            "distance": 2.94,
-                            "price": 15.0,
-                            "cost": 15.0,
-                            "cars": 1
-                        }
-                    ]
-                },
-                {
-                    "type": "train",
-                    "start_time": "18:27",
-                    "end_time": "22:13",
-                    "start": "Chengdu East Railway Station",
-                    "end": "Hangzhou Railway Station",
-                    "price": 616.66,
-                    "cost": 1849.98,
-                    "tickets": 3,
-                    "transports": [
-                        {
-                            "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-                            "end": "Chengdu East Railway Station",
-                            "mode": "taxi",
-                            "start_time": "13:45",
-                            "end_time": "13:56",
-                            "distance": 7.86,
-                            "price": 32.2,
-                            "cost": 32.2,
-                            "cars": 1
-                        }
-                    ],
-                    "TrainID": "K530"
-                }
-            ]
+          "type": "lunch",
+          "position": "Crane's Call Tea House (People's Park Branch)",
+          "start_time": "11:00",
+          "end_time": "11:05",
+          "price": 45.0,
+          "cost": 135.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Crane's Call Tea House (People's Park Branch)",
+              "mode": "taxi",
+              "start_time": "09:04",
+              "end_time": "09:26",
+              "distance": 14.93,
+              "price": 61.87,
+              "cost": 61.87,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Library",
+          "start_time": "11:11",
+          "end_time": "11:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "Chengdu Library",
+              "mode": "taxi",
+              "start_time": "11:05",
+              "end_time": "11:06",
+              "distance": 0.85,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Temple",
+          "start_time": "12:05",
+          "end_time": "12:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Library",
+              "end": "Manjushri Temple",
+              "mode": "taxi",
+              "start_time": "11:26",
+              "end_time": "11:30",
+              "distance": 2.73,
+              "price": 14.25,
+              "cost": 14.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Kuanzhai Alley",
+          "start_time": "13:23",
+          "end_time": "13:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Manjushri Temple",
+              "end": "Kuanzhai Alley",
+              "mode": "taxi",
+              "start_time": "13:20",
+              "end_time": "13:23",
+              "distance": 2.23,
+              "price": 12.52,
+              "cost": 12.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jinli Ancient Street",
+          "start_time": "14:41",
+          "end_time": "14:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Kuanzhai Alley",
+              "end": "Jinli Ancient Street",
+              "mode": "taxi",
+              "start_time": "14:38",
+              "end_time": "14:41",
+              "distance": 2.03,
+              "price": 11.79,
+              "cost": 11.79,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hawaii Global Seafood Artistry (High-Tech Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 379.0,
+          "cost": 1137.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Jinli Ancient Street",
+              "end": "Hawaii Global Seafood Artistry (High-Tech Branch)",
+              "mode": "taxi",
+              "start_time": "15:56",
+              "end_time": "16:08",
+              "distance": 8.16,
+              "price": 33.25,
+              "cost": 33.25,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "breakfast",
+          "position": "ECHARM Hotel (Shuangliu International Airport store)",
+          "start_time": "06:12",
+          "end_time": "06:42",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": [
+            {
+              "start": "Hawaii Global Seafood Artistry (High-Tech Branch)",
+              "end": "ECHARM Hotel (Shuangliu International Airport store)",
+              "mode": "taxi",
+              "start_time": "06:00",
+              "end_time": "06:12",
+              "distance": 8.04,
+              "price": 32.83,
+              "cost": 32.83,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "ECHARM Hotel (Shuangliu International Airport store)",
+          "start_time": "23:00",
+          "end_time": "24:00",
+          "price": 314.0,
+          "cost": 942.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": []
         }
-    ],
-    "elapsed_time(sec)": 188.39729714393616,
-    "_eval_score": 99.16666666666667
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "ECHARM Hotel (Shuangliu International Airport store)",
+          "start_time": "06:30",
+          "end_time": "07:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "breakfast",
+          "position": "ECHARM Hotel (Shuangliu International Airport store)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Chunxi Road",
+          "start_time": "08:52",
+          "end_time": "09:07",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "ECHARM Hotel (Shuangliu International Airport store)",
+              "end": "Chunxi Road",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 14.84,
+              "price": 61.49,
+              "cost": 61.49,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Shadow Puppet Museum",
+          "start_time": "09:19",
+          "end_time": "09:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chunxi Road",
+              "end": "China Shadow Puppet Museum",
+              "mode": "taxi",
+              "start_time": "09:07",
+              "end_time": "09:09",
+              "distance": 1.37,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu Museum",
+          "start_time": "10:09",
+          "end_time": "10:24",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Shadow Puppet Museum",
+              "end": "Chengdu Museum",
+              "mode": "walk",
+              "start_time": "09:34",
+              "end_time": "09:34",
+              "distance": 0.07916972935558433,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Lane",
+          "start_time": "11:26",
+          "end_time": "11:41",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chengdu Museum",
+              "end": "Manjushri Lane",
+              "mode": "taxi",
+              "start_time": "11:24",
+              "end_time": "11:26",
+              "distance": 1.95,
+              "price": 11.51,
+              "cost": 11.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "start_time": "12:45",
+          "end_time": "12:50",
+          "price": 250.0,
+          "cost": 750.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Manjushri Lane",
+              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "mode": "taxi",
+              "start_time": "12:41",
+              "end_time": "12:45",
+              "distance": 2.94,
+              "price": 15.0,
+              "cost": 15.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "mode": "taxi",
+              "start_time": "17:00",
+              "end_time": "17:00",
+              "distance": 0.09,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "18:27",
+          "end_time": "22:13",
+          "start": "Chengdu East Railway Station",
+          "end": "Hangzhou Railway Station",
+          "price": 616.66,
+          "cost": 1849.98,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Chengdu East Railway Station",
+              "mode": "taxi",
+              "start_time": "15:27",
+              "end_time": "15:38",
+              "distance": 7.95,
+              "price": 32.53,
+              "cost": 32.53,
+              "cars": 1
+            }
+          ],
+          "TrainID": "K530"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 188.39729714393616,
+  "_eval_score": 100.0
 }

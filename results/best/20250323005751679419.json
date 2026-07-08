@@ -52,12 +52,13 @@
             {
               "start": "Wuhan Train Culture Theme Park",
               "end": "Qingshan Library",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "15:40",
-              "end_time": "16:05",
-              "distance": 2.1447040964776662,
-              "price": 0,
-              "cost": 0
+              "end_time": "15:43",
+              "distance": 2.14,
+              "price": 12.21,
+              "cost": 12.21,
+              "cars": 1
             }
           ]
         },
@@ -73,12 +74,13 @@
             {
               "start": "Qingshan Library",
               "end": "Erpang Barbecue (Gongye 1st Road Branch)",
-              "mode": "walk",
+              "mode": "taxi",
               "start_time": "17:35",
-              "end_time": "17:54",
-              "distance": 1.6525231144830266,
-              "price": 0,
-              "cost": 0
+              "end_time": "17:37",
+              "distance": 1.65,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -104,9 +106,72 @@
           ]
         },
         {
+          "type": "breakfast",
+          "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
+          "start_time": "06:52",
+          "end_time": "07:22",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": [
+            {
+              "start": "Peace Park",
+              "end": "Home Inn Selected (Wuhan High-speed Railway Station)",
+              "mode": "walk",
+              "start_time": "06:00",
+              "end_time": "06:52",
+              "distance": 4.3431466941044015,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+          "start_time": "13:17",
+          "end_time": "14:02",
+          "price": 5.0,
+          "cost": 20.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Home Inn Selected (Wuhan High-speed Railway Station)",
+              "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "mode": "walk",
+              "start_time": "11:00",
+              "end_time": "13:17",
+              "distance": 11.480001217013683,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Historical and Cultural District",
+          "start_time": "14:04",
+          "end_time": "15:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
+              "end": "Hankou Historical and Cultural District",
+              "mode": "walk",
+              "start_time": "14:02",
+              "end_time": "14:04",
+              "distance": 0.24545649770736752,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
-          "start_time": "21:37",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 206.0,
           "cost": 824.0,
@@ -115,15 +180,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Peace Park",
+              "start": "Hankou Historical and Cultural District",
               "end": "Home Inn Selected (Wuhan High-speed Railway Station)",
-              "mode": "taxi",
-              "start_time": "20:45",
-              "end_time": "20:51",
-              "distance": 4.34,
-              "price": 19.9,
-              "cost": 19.9,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "15:04",
+              "end_time": "17:24",
+              "distance": 11.710286908294218,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -227,6 +291,69 @@
           ]
         },
         {
+          "type": "dinner",
+          "position": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+          "start_time": "19:23",
+          "end_time": "20:08",
+          "price": 6.0,
+          "cost": 24.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Chongqing Spicy Fish Home-style Cuisine (Branch 105)",
+              "end": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "19:23",
+              "distance": 11.996990633231142,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hubei Provincial Museum",
+          "start_time": "10:37",
+          "end_time": "11:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Tu's Crispy Pancake (Jianghan Third Road Branch)",
+              "end": "Hubei Provincial Museum",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "10:37",
+              "distance": 8.157747101134287,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Aquatic Life Museum",
+          "start_time": "12:01",
+          "end_time": "13:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hubei Provincial Museum",
+              "end": "Aquatic Life Museum",
+              "mode": "walk",
+              "start_time": "11:37",
+              "end_time": "12:01",
+              "distance": 2.0586828600340845,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "15:09",
           "end_time": "19:22",
@@ -237,12 +364,12 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Chongqing Spicy Fish Home-style Cuisine (Branch 105)",
+              "start": "Aquatic Life Museum",
               "end": "Wuhan Station",
               "mode": "walk",
-              "start_time": "13:35",
-              "end_time": "14:04",
-              "distance": 2.4796393715167944,
+              "start_time": "13:01",
+              "end_time": "14:46",
+              "distance": 8.823768352368761,
               "price": 0,
               "cost": 0
             }
@@ -253,5 +380,5 @@
     }
   ],
   "elapsed_time(sec)": 207.03921484947205,
-  "_eval_score": 95.48214285714286
+  "_eval_score": 98.21269841269842
 }

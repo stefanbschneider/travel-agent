@@ -322,6 +322,48 @@
           ]
         },
         {
+          "type": "lunch",
+          "position": "Lu's Plum Blossom Cake (Laomendong Branch)",
+          "start_time": "11:30",
+          "end_time": "12:15",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "end": "Xuanwu Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "11:00",
+              "end_time": "11:09",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanwu Gate-Metro Station",
+              "end": "Wuding Gate-Metro Station",
+              "mode": "metro",
+              "start_time": "11:09",
+              "end_time": "11:21",
+              "distance": 6.32,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Wuding Gate-Metro Station",
+              "end": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "mode": "walk",
+              "start_time": "11:21",
+              "end_time": "11:30",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "22:24",
           "end_time": "02:26",
@@ -332,15 +374,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Master Zuo's Plum Blossom Cake (Tongjia Lane Branch)",
+              "start": "Lu's Plum Blossom Cake (Laomendong Branch)",
+              "end": "Wuding Gate-Metro Station",
+              "mode": "walk",
+              "start_time": "19:24",
+              "end_time": "19:33",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wuding Gate-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "19:33",
+              "end_time": "19:49",
+              "distance": 8.38,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:04",
-              "distance": 2.77,
-              "price": 14.38,
-              "cost": 14.38,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "19:49",
+              "end_time": "19:51",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "K1805"
@@ -349,5 +411,5 @@
     }
   ],
   "elapsed_time(sec)": 1.6263599395751953,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 100.0
 }

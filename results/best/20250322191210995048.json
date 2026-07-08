@@ -493,9 +493,51 @@
           ]
         },
         {
+          "type": "dinner",
+          "position": "Grandma Sun's Scallion Pancake Rolls",
+          "start_time": "17:50",
+          "end_time": "18:35",
+          "price": 10.0,
+          "cost": 40.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lingyin Temple",
+              "end": "Gudun Road-Metro Station",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "17:25",
+              "distance": 2.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gudun Road-Metro Station",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:25",
+              "end_time": "17:40",
+              "distance": 7.92,
+              "price": 3,
+              "cost": 12,
+              "tickets": 4
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "Grandma Sun's Scallion Pancake Rolls",
+              "mode": "walk",
+              "start_time": "17:40",
+              "end_time": "17:50",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Holiday Inn Express Hangzhou West Lake East",
-          "start_time": "14:51",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 450.0,
           "cost": 1800.0,
@@ -504,15 +546,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Lingyin Temple",
+              "start": "Grandma Sun's Scallion Pancake Rolls",
+              "end": "Jiangcheng Road-Metro Station",
+              "mode": "walk",
+              "start_time": "20:00",
+              "end_time": "20:10",
+              "distance": 0.86,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiangcheng Road-Metro Station",
+              "end": "City Station-Metro Station",
+              "mode": "metro",
+              "start_time": "20:10",
+              "end_time": "20:11",
+              "distance": 0.71,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "City Station-Metro Station",
               "end": "Holiday Inn Express Hangzhou West Lake East",
-              "mode": "taxi",
-              "start_time": "14:41",
-              "end_time": "14:51",
-              "distance": 7.14,
-              "price": 29.68,
-              "cost": 29.68,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:11",
+              "end_time": "20:12",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -691,5 +753,5 @@
     }
   ],
   "elapsed_time(sec)": 261.58143520355225,
-  "_eval_score": 99.58333333333334
+  "_eval_score": 100.0
 }
