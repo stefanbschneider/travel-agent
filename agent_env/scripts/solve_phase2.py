@@ -32,6 +32,7 @@ if str(_THIS_DIR) not in sys.path:
 
 import solve_script_with_harness as hb  # noqa: E402
 
+from chinatravel.agent.phase2 import llm_client as p2_llm  # noqa: E402
 from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_METHOD_PREFIX = "phase2_e2e_"
@@ -41,6 +42,18 @@ DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override vi
 def _default_method_for_split(split: str) -> str:
     """Keep the script default aligned with Makefile P2_METHOD."""
     return f"{DEFAULT_METHOD_PREFIX}{split}"
+
+
+def _phase2_llm_config_from_env() -> dict:
+    cfg = {
+        "backend": os.environ.get("TPC_P2_LLM_BACKEND", "none"),
+        "fixtures_dir": os.environ.get("TPC_P2_LLM_FIXTURES"),
+        "model": os.environ.get("TPC_P2_LLM_MODEL"),
+        "base_url": os.environ.get("TPC_P2_LLM_BASE_URL"),
+        "api_key_env": os.environ.get("TPC_P2_LLM_API_KEY_ENV"),
+        "api_key": os.environ.get("TPC_P2_LLM_API_KEY"),
+    }
+    return {k: v for k, v in cfg.items() if v not in (None, "")}
 
 
 def _score_stats(values: list[float]) -> dict:
@@ -128,7 +141,13 @@ def run_split(
     done_uids: list[str] = []
     skipped = 0
     parse_failures = 0
+    llm_parse_attempts = 0
+    llm_fixture_missing = 0
     solved_evaluations: list[dict] = []
+
+    llm_cfg = _phase2_llm_config_from_env()
+    llm_client = p2_llm.build_llm_client(llm_cfg)
+
     for idx, quid in enumerate(selected, start=1):
         result_path = result_method_dir / f"{quid}.json"
         if resume and result_path.exists():
@@ -141,7 +160,12 @@ def run_split(
         visible = hb.visible_query(full_query)  # oracle hidden from the agent
 
         plan, telemetry = orch.solve_phase2(
-            visible, env=env, budget_sec=budget_sec, solve_fn=solve_fn, flags=flags
+            visible,
+            env=env,
+            llm_client=llm_client,
+            budget_sec=budget_sec,
+            solve_fn=solve_fn,
+            flags=flags,
         )
 
         hb.write_json(result_path, plan)
@@ -158,6 +182,11 @@ def run_split(
 
         if telemetry.get("used_fallback"):
             parse_failures += 0  # fallback != parse failure; kept for future attribution
+        if telemetry.get("flags", {}).get("llm_parse"):
+            llm_parse_attempts += 1
+            err = str(telemetry.get("error") or "")
+            if "No fixture for key" in err:
+                llm_fixture_missing += 1
         done_uids.append(quid)
         print(
             f"[{idx}/{len(selected)}] {quid} "
@@ -228,6 +257,9 @@ def run_split(
         "split": split,
         "method": method,
         "budget_sec": budget_sec,
+        "llm_backend": getattr(llm_client, "backend", "none"),
+        "llm_parse_attempts": llm_parse_attempts,
+        "llm_fixture_missing": llm_fixture_missing,
         "selected": len(selected),
         "skipped": skipped,
         "uids": done_uids,

@@ -151,28 +151,58 @@
           ]
         },
         {
+          "type": "breakfast",
+          "position": "Nanjing BuildHome Cinema apartment",
+          "start_time": "06:36",
+          "end_time": "07:06",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": [
+            {
+              "start": "Deji Art Museum",
+              "end": "Floating Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "06:00",
+              "end_time": "06:06",
+              "distance": 0.55,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Floating Bridge-Metro Station",
+              "end": "Maofangchang Road-Metro Station",
+              "mode": "metro",
+              "start_time": "06:06",
+              "end_time": "06:29",
+              "distance": 11.58,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Maofangchang Road-Metro Station",
+              "end": "Nanjing BuildHome Cinema apartment",
+              "mode": "walk",
+              "start_time": "06:29",
+              "end_time": "06:36",
+              "distance": 0.64,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Nanjing BuildHome Cinema apartment",
-          "start_time": "22:20",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 76.0,
           "cost": 76.0,
           "rooms": 1,
           "room_type": 1,
           "tickets": 1,
-          "transports": [
-            {
-              "start": "Deji Art Museum",
-              "end": "Nanjing BuildHome Cinema apartment",
-              "mode": "taxi",
-              "start_time": "21:29",
-              "end_time": "21:46",
-              "distance": 11.68,
-              "price": 47.26,
-              "cost": 47.26,
-              "cars": 1
-            }
-          ]
+          "transports": []
         }
       ]
     },
@@ -300,6 +330,48 @@
           ]
         },
         {
+          "type": "dinner",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "17:13",
+          "end_time": "17:58",
+          "price": 6.0,
+          "cost": 6.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "John Rabe's Former Residence",
+              "end": "Drum Tower-Metro Station",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "17:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Drum Tower-Metro Station",
+              "end": "Yunnan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:07",
+              "end_time": "17:08",
+              "distance": 0.85,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "walk",
+              "start_time": "17:08",
+              "end_time": "17:13",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "17:00",
           "end_time": "14:52",
@@ -310,15 +382,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "John Rabe's Former Residence",
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Yunnan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "14:00",
+              "end_time": "14:05",
+              "distance": 0.5,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yunnan Road-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "14:05",
+              "end_time": "14:12",
+              "distance": 3.93,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
-              "mode": "taxi",
-              "start_time": "16:17",
-              "end_time": "16:22",
-              "distance": 3.45,
-              "price": 16.77,
-              "cost": 16.77,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "14:12",
+              "end_time": "14:14",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "K36"
@@ -327,5 +419,5 @@
     }
   ],
   "elapsed_time(sec)": 4.283175945281982,
-  "_eval_score": 98.33333333333334
+  "_eval_score": 100.0
 }

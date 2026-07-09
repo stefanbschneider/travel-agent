@@ -2475,7 +2475,19 @@ class TPCAgent(BaseAgent):
         current_pos = None  # Track current position for transport
         # Required attractions that haven't been scheduled yet — tried first at each slot
         self._required_attrs_remaining = list(prioritized_required)
+        self._required_attr_types_remaining = [
+            str(t).strip() for t in (required_attraction_types or []) if str(t).strip()
+        ]
         self._scheduled_attr_names = set()
+
+        early_arrival_floor = self._timing_arrival_ceiling(
+            timing_constraints,
+            list(required_attractions) + list(constraints.get("position_presence", []) or []),
+        )
+        if early_arrival_floor is not None and early_arrival_floor <= (8 * 60 + 30):
+            breakfast_start_time, breakfast_end_time = "06:00", "06:20"
+        else:
+            breakfast_start_time, breakfast_end_time = "07:30", "08:30"
 
         for day_num in range(1, days + 1):
             activities = []
@@ -2677,9 +2689,9 @@ class TPCAgent(BaseAgent):
 
                 # Breakfast at hotel (free)
                 breakfast = self._make_hotel_breakfast(
-                    hotel_name, "07:30", "08:30")
+                    hotel_name, breakfast_start_time, breakfast_end_time)
                 self._append_activity(activities, breakfast, budget_limits, budget_tracker)
-                current_time = "08:30"
+                current_time = breakfast_end_time
                 current_pos = hotel_name
 
                 # Morning attraction if time before return
@@ -2826,9 +2838,9 @@ class TPCAgent(BaseAgent):
                 # === MIDDLE DAYS: breakfast + attractions + meals + hotel ===
                 # Breakfast at hotel (free)
                 breakfast = self._make_hotel_breakfast(
-                    hotel_name, "07:30", "08:30")
+                    hotel_name, breakfast_start_time, breakfast_end_time)
                 self._append_activity(activities, breakfast, budget_limits, budget_tracker)
-                current_time = "08:30"
+                current_time = breakfast_end_time
                 current_pos = hotel_name
 
                 # Morning attraction
@@ -3099,12 +3111,24 @@ class TPCAgent(BaseAgent):
         Required attractions (in self._required_attrs_remaining) are tried first.
         Returns (attr, new_attr_idx) or (None, attr_idx) if none found."""
         scheduled = getattr(self, '_scheduled_attr_names', set())
+        required_types = getattr(self, '_required_attr_types_remaining', [])
         # First: try any still-pending required attraction
         remaining = getattr(self, '_required_attrs_remaining', [])
+        if required_types:
+            for i, attr in enumerate(remaining):
+                if not is_open_during(attr, start_time, end_time):
+                    continue
+                attr_type = str(attr.get("type", ""))
+                if any(self._match_type(attr_type, req_t) for req_t in required_types):
+                    remaining.pop(i)
+                    scheduled.add(self._norm_text(str(attr["name"])))
+                    self._consume_required_attr_types(attr)
+                    return attr, attr_idx
         for i, attr in enumerate(remaining):
             if is_open_during(attr, start_time, end_time):
                 remaining.pop(i)
                 scheduled.add(self._norm_text(str(attr["name"])))
+                self._consume_required_attr_types(attr)
                 return attr, attr_idx  # don't advance attr_idx (optional pool unchanged)
         # Fallback: normal forward scan through optional pool, skip already scheduled
         idx = attr_idx
@@ -3112,9 +3136,21 @@ class TPCAgent(BaseAgent):
             attr = good_attrs[idx]
             if self._norm_text(str(attr["name"])) not in scheduled and is_open_during(attr, start_time, end_time):
                 scheduled.add(self._norm_text(str(attr["name"])))
+                self._consume_required_attr_types(attr)
                 return attr, idx + 1
             idx += 1
         return None, attr_idx
+
+    def _consume_required_attr_types(self, attr):
+        remaining = getattr(self, "_required_attr_types_remaining", None)
+        if not remaining:
+            return
+        attr_type = str(attr.get("type", ""))
+        still_missing = []
+        for req_t in remaining:
+            if not self._match_type(attr_type, req_t):
+                still_missing.append(req_t)
+        self._required_attr_types_remaining = still_missing
 
     def _fill_extra_attractions(self, activities, env, target_city, good_attrs, attr_idx,
                                 current_pos, current_time, people, params, constraints,

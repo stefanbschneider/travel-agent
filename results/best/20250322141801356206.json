@@ -151,28 +151,58 @@
           ]
         },
         {
+          "type": "breakfast",
+          "position": "Qiushi Fanhua Guesthouse",
+          "start_time": "06:12",
+          "end_time": "06:42",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": [
+            {
+              "start": "Miss Fu in Chengdu (Guanqian Street Branch)",
+              "end": "Lindun Road-Metro Station",
+              "mode": "walk",
+              "start_time": "06:00",
+              "end_time": "06:02",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lindun Road-Metro Station",
+              "end": "Shantang Street-Metro Station",
+              "mode": "metro",
+              "start_time": "06:02",
+              "end_time": "06:07",
+              "distance": 2.93,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Qiushi Fanhua Guesthouse",
+              "mode": "walk",
+              "start_time": "06:07",
+              "end_time": "06:12",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Qiushi Fanhua Guesthouse",
-          "start_time": "19:15",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 506.0,
           "cost": 1518.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
-          "transports": [
-            {
-              "start": "Miss Fu in Chengdu (Guanqian Street Branch)",
-              "end": "Qiushi Fanhua Guesthouse",
-              "mode": "taxi",
-              "start_time": "19:03",
-              "end_time": "19:06",
-              "distance": 2.19,
-              "price": 12.37,
-              "cost": 12.37,
-              "cars": 1
-            }
-          ]
+          "transports": []
         }
       ]
     },
@@ -299,6 +329,48 @@
           ]
         },
         {
+          "type": "dinner",
+          "position": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+          "start_time": "17:11",
+          "end_time": "17:56",
+          "price": 9.0,
+          "cost": 27.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Yiming Fresh Milk Bar (Shilu Metro Exit 10 Store)",
+              "end": "Shilu-Metro Station",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "17:00",
+              "distance": 0.04,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shilu-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "metro",
+              "start_time": "17:00",
+              "end_time": "17:06",
+              "distance": 3.49,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "mode": "walk",
+              "start_time": "17:06",
+              "end_time": "17:11",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "11:40",
           "end_time": "14:08",
@@ -309,15 +381,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Yiming Fresh Milk Bar (Shilu Metro Exit 10 Store)",
+              "start": "Wang's Linji Baked Pancake (Shuangta Main Store)",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "walk",
+              "start_time": "08:40",
+              "end_time": "08:45",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "08:45",
+              "end_time": "08:52",
+              "distance": 3.95,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
               "end": "Suzhou Station",
-              "mode": "taxi",
-              "start_time": "11:30",
-              "end_time": "11:33",
-              "distance": 2.3,
-              "price": 12.74,
-              "cost": 12.74,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "08:52",
+              "end_time": "08:53",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "T237"
@@ -326,5 +418,5 @@
     }
   ],
   "elapsed_time(sec)": 233.67540454864502,
-  "_eval_score": 98.33333333333333
+  "_eval_score": 100.0
 }

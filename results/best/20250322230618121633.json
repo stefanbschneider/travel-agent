@@ -1,1025 +1,979 @@
 {
-  "people_number": 4,
-  "start_city": "Chengdu",
-  "target_city": "Beijing",
-  "itinerary": [
+ "people_number": 4,
+ "start_city": "Chengdu",
+ "target_city": "Beijing",
+ "elapsed_time(sec)": 240.68666768074036,
+ "_eval_score": 99.91919191919192,
+ "itinerary": [
+  {
+   "day": 1,
+   "activities": [
     {
-      "day": 1,
-      "activities": [
-        {
-          "type": "airplane",
-          "start_time": "01:44",
-          "end_time": "03:38",
-          "start": "Chengdu Tianfu International Airport",
-          "end": "Beijing Capital International Airport",
-          "price": 753.45,
-          "cost": 3013.8,
-          "tickets": 4,
-          "transports": [],
-          "FlightID": "FL412"
-        },
-        {
-          "type": "attraction",
-          "position": "Dongjiaomin Lane",
-          "start_time": "04:37",
-          "end_time": "04:57",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Beijing Capital International Airport",
-              "end": "Terminal 2-Metro Station",
-              "mode": "walk",
-              "start_time": "03:38",
-              "end_time": "03:48",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Terminal 2-Metro Station",
-              "end": "Dongdan-Metro Station",
-              "mode": "metro",
-              "start_time": "03:48",
-              "end_time": "04:36",
-              "distance": 24.13,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Dongdan-Metro Station",
-              "end": "Dongjiaomin Lane",
-              "mode": "walk",
-              "start_time": "04:36",
-              "end_time": "04:37",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "breakfast",
-          "position": "Helude Candied Hawthorn Sticks",
-          "start_time": "08:00",
-          "end_time": "08:15",
-          "price": 7.0,
-          "cost": 28.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Dongjiaomin Lane",
-              "end": "Dongdan-Metro Station",
-              "mode": "walk",
-              "start_time": "04:57",
-              "end_time": "04:58",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dongdan-Metro Station",
-              "end": "Dongsi-Metro Station",
-              "mode": "metro",
-              "start_time": "04:58",
-              "end_time": "05:01",
-              "distance": 1.78,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Dongsi-Metro Station",
-              "end": "Helude Candied Hawthorn Sticks",
-              "mode": "walk",
-              "start_time": "05:01",
-              "end_time": "05:01",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-          "start_time": "11:00",
-          "end_time": "11:15",
-          "price": 12.0,
-          "cost": 48.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Helude Candied Hawthorn Sticks",
-              "end": "Dongsi-Metro Station",
-              "mode": "walk",
-              "start_time": "08:15",
-              "end_time": "08:15",
-              "distance": 0.04,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dongsi-Metro Station",
-              "end": "Zhang Zizhong Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:15",
-              "end_time": "08:17",
-              "distance": 1.02,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Zhang Zizhong Road-Metro Station",
-              "end": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-              "mode": "walk",
-              "start_time": "08:17",
-              "end_time": "08:23",
-              "distance": 0.57,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beijing Fire Virtue Temple",
-          "start_time": "11:33",
-          "end_time": "12:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Dahua Pancake (Jiaodaokou North Scissors Lane Branch)",
-              "end": "Beijing Fire Virtue Temple",
-              "mode": "taxi",
-              "start_time": "11:15",
-              "end_time": "11:16",
-              "distance": 1.13,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beihai Park",
-          "start_time": "12:47",
-          "end_time": "13:47",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Beijing Fire Virtue Temple",
-              "end": "Beihai Park",
-              "mode": "walk",
-              "start_time": "12:33",
-              "end_time": "12:47",
-              "distance": 1.1800214923095018,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Corner Tower",
-          "start_time": "13:59",
-          "end_time": "14:59",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Beihai Park",
-              "end": "Shichahai-Metro Station",
-              "mode": "walk",
-              "start_time": "13:47",
-              "end_time": "13:51",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shichahai-Metro Station",
-              "end": "Nanluoguxiang-Metro Station",
-              "mode": "metro",
-              "start_time": "13:51",
-              "end_time": "13:52",
-              "distance": 0.8,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Nanluoguxiang-Metro Station",
-              "end": "Corner Tower",
-              "mode": "walk",
-              "start_time": "13:52",
-              "end_time": "13:59",
-              "distance": 0.62,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Tian Fu Hao (Xizhimen Branch)",
-          "start_time": "17:14",
-          "end_time": "17:29",
-          "price": 55.0,
-          "cost": 220.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Corner Tower",
-              "end": "Nanluoguxiang-Metro Station",
-              "mode": "walk",
-              "start_time": "14:59",
-              "end_time": "15:06",
-              "distance": 0.62,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Nanluoguxiang-Metro Station",
-              "end": "Xinjiekou-Metro Station",
-              "mode": "metro",
-              "start_time": "15:06",
-              "end_time": "15:12",
-              "distance": 3.21,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Xinjiekou-Metro Station",
-              "end": "Tian Fu Hao (Xizhimen Branch)",
-              "mode": "walk",
-              "start_time": "15:12",
-              "end_time": "15:13",
-              "distance": 0.16,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Atour Hotel (Beijing West Railway Station South Square)",
-          "start_time": "19:23",
-          "end_time": "24:00",
-          "price": 666.0,
-          "cost": 2664.0,
-          "rooms": 4,
-          "room_type": 1,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Tian Fu Hao (Xizhimen Branch)",
-              "end": "Xinjiekou-Metro Station",
-              "mode": "walk",
-              "start_time": "17:29",
-              "end_time": "17:30",
-              "distance": 0.16,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xinjiekou-Metro Station",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "17:30",
-              "end_time": "17:42",
-              "distance": 6.47,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Atour Hotel (Beijing West Railway Station South Square)",
-              "mode": "walk",
-              "start_time": "17:42",
-              "end_time": "17:46",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "airplane",
+     "start_time": "01:44",
+     "end_time": "03:38",
+     "start": "Chengdu Tianfu International Airport",
+     "end": "Beijing Capital International Airport",
+     "price": 753.45,
+     "cost": 3013.8,
+     "tickets": 4,
+     "transports": [],
+     "FlightID": "FL412"
     },
     {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Atour Hotel (Beijing West Railway Station South Square)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Cining Palace",
-          "start_time": "09:00",
-          "end_time": "10:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Atour Hotel (Beijing West Railway Station South Square)",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "National Art Museum of China-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "08:50",
-              "distance": 8.31,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "National Art Museum of China-Metro Station",
-              "end": "Cining Palace",
-              "mode": "walk",
-              "start_time": "08:50",
-              "end_time": "09:00",
-              "distance": 0.87,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Zengshengkui Snack Shop",
-          "start_time": "11:40",
-          "end_time": "12:40",
-          "price": 16.0,
-          "cost": 64.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Cining Palace",
-              "end": "Zengshengkui Snack Shop",
-              "mode": "walk",
-              "start_time": "10:00",
-              "end_time": "10:10",
-              "distance": 0.9044592118408609,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "The Palace Museum",
-          "start_time": "12:53",
-          "end_time": "13:53",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Zengshengkui Snack Shop",
-              "end": "The Palace Museum",
-              "mode": "walk",
-              "start_time": "12:40",
-              "end_time": "12:49",
-              "distance": 0.7624949909035864,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "National Museum of China",
-          "start_time": "14:10",
-          "end_time": "15:10",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "The Palace Museum",
-              "end": "National Museum of China",
-              "mode": "walk",
-              "start_time": "13:53",
-              "end_time": "14:10",
-              "distance": 1.4578262512993045,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 1100.0,
-          "cost": 4400.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "National Museum of China",
-              "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
-              "mode": "walk",
-              "start_time": "15:10",
-              "end_time": "16:08",
-              "distance": 4.88613220526773,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Olympic Park",
-          "start_time": "19:48",
-          "end_time": "20:48",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
-              "end": "Olympic Park",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "19:48",
-              "distance": 9.003065686916672,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Atour Hotel (Beijing West Railway Station South Square)",
-          "start_time": "23:31",
-          "end_time": "24:00",
-          "price": 666.0,
-          "cost": 2664.0,
-          "rooms": 4,
-          "room_type": 1,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Olympic Park",
-              "end": "Atour Hotel (Beijing West Railway Station South Square)",
-              "mode": "walk",
-              "start_time": "20:48",
-              "end_time": "23:31",
-              "distance": 13.61321398790326,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "attraction",
+     "position": "Tiananmen Square",
+     "start_time": "04:42",
+     "end_time": "05:02",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Beijing Capital International Airport",
+       "end": "Terminal 2-Metro Station",
+       "mode": "walk",
+       "start_time": "03:38",
+       "end_time": "03:48",
+       "cost": 0,
+       "distance": 0.88,
+       "price": 0
+      },
+      {
+       "start": "Terminal 2-Metro Station",
+       "end": "Tiananmen East-Metro Station",
+       "mode": "metro",
+       "start_time": "03:48",
+       "end_time": "04:38",
+       "cost": 24,
+       "distance": 25.11,
+       "price": 6,
+       "tickets": 4
+      },
+      {
+       "start": "Tiananmen East-Metro Station",
+       "end": "Tiananmen Square",
+       "mode": "walk",
+       "start_time": "04:38",
+       "end_time": "04:42",
+       "cost": 0,
+       "distance": 0.36,
+       "price": 0
+      }
+     ]
     },
     {
-      "day": 3,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Atour Hotel (Beijing West Railway Station South Square)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Tiananmen Square",
-          "start_time": "09:56",
-          "end_time": "10:56",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Atour Hotel (Beijing West Railway Station South Square)",
-              "end": "Tiananmen Square",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "09:56",
-              "distance": 7.238086149223799,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Noodle Master's Ultra Meat Sauce Noodles (Dongsi Branch)",
-          "start_time": "11:05",
-          "end_time": "11:20",
-          "price": 32.0,
-          "cost": 128.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Tiananmen Square",
-              "end": "Tiananmen East-Metro Station",
-              "mode": "walk",
-              "start_time": "10:56",
-              "end_time": "11:00",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tiananmen East-Metro Station",
-              "end": "Dongsi-Metro Station",
-              "mode": "metro",
-              "start_time": "11:00",
-              "end_time": "11:04",
-              "distance": 2.31,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Dongsi-Metro Station",
-              "end": "Noodle Master's Ultra Meat Sauce Noodles (Dongsi Branch)",
-              "mode": "walk",
-              "start_time": "11:04",
-              "end_time": "11:05",
-              "distance": 0.09,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Beihai Park Boat Ride",
-          "start_time": "11:30",
-          "end_time": "12:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Noodle Master's Ultra Meat Sauce Noodles (Dongsi Branch)",
-              "end": "Dongsi-Metro Station",
-              "mode": "walk",
-              "start_time": "11:20",
-              "end_time": "11:21",
-              "distance": 0.09,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dongsi-Metro Station",
-              "end": "Shichahai-Metro Station",
-              "mode": "metro",
-              "start_time": "11:21",
-              "end_time": "11:25",
-              "distance": 2.34,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Shichahai-Metro Station",
-              "end": "Beihai Park Boat Ride",
-              "mode": "walk",
-              "start_time": "11:25",
-              "end_time": "11:30",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shichahai",
-          "start_time": "13:31",
-          "end_time": "14:31",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Beihai Park Boat Ride",
-              "end": "Shichahai-Metro Station",
-              "mode": "walk",
-              "start_time": "12:30",
-              "end_time": "12:35",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Shichahai-Metro Station",
-              "end": "Gulou Street-Metro Station",
-              "mode": "metro",
-              "start_time": "12:35",
-              "end_time": "12:37",
-              "distance": 1.28,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Gulou Street-Metro Station",
-              "end": "Shichahai",
-              "mode": "walk",
-              "start_time": "12:37",
-              "end_time": "12:39",
-              "distance": 0.23,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "National Museum of Natural History",
-          "start_time": "15:50",
-          "end_time": "16:50",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Shichahai",
-              "end": "National Museum of Natural History",
-              "mode": "walk",
-              "start_time": "14:31",
-              "end_time": "15:50",
-              "distance": 6.6510967442118645,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Summer Palace at China World Hotel, Beijing",
-          "start_time": "17:50",
-          "end_time": "18:50",
-          "price": 454.0,
-          "cost": 1816.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "National Museum of Natural History",
-              "end": "Summer Palace at China World Hotel, Beijing",
-              "mode": "walk",
-              "start_time": "16:50",
-              "end_time": "17:50",
-              "distance": 5.063752483636077,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Atour Hotel (Beijing West Railway Station South Square)",
-          "start_time": "21:11",
-          "end_time": "24:00",
-          "price": 666.0,
-          "cost": 2664.0,
-          "rooms": 4,
-          "room_type": 1,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Summer Palace at China World Hotel, Beijing",
-              "end": "Atour Hotel (Beijing West Railway Station South Square)",
-              "mode": "walk",
-              "start_time": "18:50",
-              "end_time": "21:11",
-              "distance": 11.814202166346158,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "breakfast",
+     "position": "Mandarin Oriental Wangfujing, Beijing - Zi Restaurant",
+     "start_time": "08:00",
+     "end_time": "08:40",
+     "price": 568.0,
+     "cost": 2272.0,
+     "transports": [
+      {
+       "start": "Tiananmen Square",
+       "end": "Mandarin Oriental Wangfujing, Beijing - Zi Restaurant",
+       "mode": "walk",
+       "start_time": "07:54",
+       "end_time": "08:00",
+       "cost": 0,
+       "distance": 0.5157897163363956,
+       "price": 0
+      }
+     ]
     },
     {
-      "day": 4,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Atour Hotel (Beijing West Railway Station South Square)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Bao Guo Temple",
-          "start_time": "08:45",
-          "end_time": "09:05",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Atour Hotel (Beijing West Railway Station South Square)",
-              "end": "Beijing West Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Beijing West Railway Station-Metro Station",
-              "end": "Changchun Street-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "08:41",
-              "distance": 3.64,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Changchun Street-Metro Station",
-              "end": "Bao Guo Temple",
-              "mode": "walk",
-              "start_time": "08:41",
-              "end_time": "08:45",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Dashilar",
-          "start_time": "09:15",
-          "end_time": "09:35",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Bao Guo Temple",
-              "end": "Changchun Street-Metro Station",
-              "mode": "walk",
-              "start_time": "09:05",
-              "end_time": "09:09",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Changchun Street-Metro Station",
-              "end": "Qianmen-Metro Station",
-              "mode": "metro",
-              "start_time": "09:09",
-              "end_time": "09:14",
-              "distance": 2.96,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Qianmen-Metro Station",
-              "end": "Dashilar",
-              "mode": "walk",
-              "start_time": "09:14",
-              "end_time": "09:15",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "China Numismatic Museum",
-          "start_time": "09:38",
-          "end_time": "10:38",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Dashilar",
-              "end": "Qianmen-Metro Station",
-              "mode": "walk",
-              "start_time": "09:35",
-              "end_time": "09:36",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Qianmen-Metro Station",
-              "end": "Tiananmen East-Metro Station",
-              "mode": "metro",
-              "start_time": "09:36",
-              "end_time": "09:37",
-              "distance": 0.89,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Tiananmen East-Metro Station",
-              "end": "China Numismatic Museum",
-              "mode": "walk",
-              "start_time": "09:37",
-              "end_time": "09:38",
-              "distance": 0.08,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chairman Mao Memorial Hall",
-          "start_time": "10:40",
-          "end_time": "11:00",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "China Numismatic Museum",
-              "end": "Chairman Mao Memorial Hall",
-              "mode": "walk",
-              "start_time": "10:38",
-              "end_time": "10:40",
-              "distance": 0.23963129327912552,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Riverside Spring Pancakes (Wangfujing Branch)",
-          "start_time": "11:07",
-          "end_time": "12:07",
-          "price": 58.0,
-          "cost": 232.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chairman Mao Memorial Hall",
-              "end": "Tiananmen East-Metro Station",
-              "mode": "walk",
-              "start_time": "11:00",
-              "end_time": "11:03",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tiananmen East-Metro Station",
-              "end": "Goldfish Alley-Metro Station",
-              "mode": "metro",
-              "start_time": "11:03",
-              "end_time": "11:05",
-              "distance": 1.2,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Goldfish Alley-Metro Station",
-              "end": "Riverside Spring Pancakes (Wangfujing Branch)",
-              "mode": "walk",
-              "start_time": "11:05",
-              "end_time": "11:07",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Peach Blossoms Beyond Bamboo - Jiangnan Snacks (COFCO Plaza Shopping Center Branch)",
-          "start_time": "17:00",
-          "end_time": "17:15",
-          "price": 56.0,
-          "cost": 224.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Riverside Spring Pancakes (Wangfujing Branch)",
-              "end": "Goldfish Alley-Metro Station",
-              "mode": "walk",
-              "start_time": "12:07",
-              "end_time": "12:09",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Goldfish Alley-Metro Station",
-              "end": "Beijing Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "12:09",
-              "end_time": "12:12",
-              "distance": 1.8,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Beijing Railway Station-Metro Station",
-              "end": "Peach Blossoms Beyond Bamboo - Jiangnan Snacks (COFCO Plaza Shopping Center Branch)",
-              "mode": "walk",
-              "start_time": "12:12",
-              "end_time": "12:16",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "22:26",
-          "end_time": "00:20",
-          "start": "Beijing Capital International Airport",
-          "end": "Chengdu Shuangliu International Airport",
-          "price": 809.5,
-          "cost": 3238.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Peach Blossoms Beyond Bamboo - Jiangnan Snacks (COFCO Plaza Shopping Center Branch)",
-              "end": "Beijing Railway Station-Metro Station",
-              "mode": "walk",
-              "start_time": "17:15",
-              "end_time": "17:19",
-              "distance": 0.37,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Beijing Railway Station-Metro Station",
-              "end": "Terminal 2-Metro Station",
-              "mode": "metro",
-              "start_time": "17:19",
-              "end_time": "18:06",
-              "distance": 23.97,
-              "price": 6,
-              "cost": 24,
-              "tickets": 4
-            },
-            {
-              "start": "Terminal 2-Metro Station",
-              "end": "Beijing Capital International Airport",
-              "mode": "walk",
-              "start_time": "18:06",
-              "end_time": "18:16",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
-            }
-          ],
-          "FlightID": "FL122"
-        }
-      ]
+     "type": "lunch",
+     "position": "Beijing Hotel NUO·Writer's Bar",
+     "start_time": "11:00",
+     "end_time": "11:40",
+     "price": 246.0,
+     "cost": 984.0,
+     "transports": [
+      {
+       "start": "Mandarin Oriental Wangfujing, Beijing - Zi Restaurant",
+       "end": "Beijing Hotel NUO·Writer's Bar",
+       "mode": "walk",
+       "start_time": "10:56",
+       "end_time": "11:00",
+       "cost": 0,
+       "distance": 0.41050953389795375,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "The Road to Rejuvenation Exhibition Hall",
+     "start_time": "11:43",
+     "end_time": "12:03",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Beijing Hotel NUO·Writer's Bar",
+       "end": "The Road to Rejuvenation Exhibition Hall",
+       "mode": "walk",
+       "start_time": "11:40",
+       "end_time": "11:43",
+       "cost": 0,
+       "distance": 0.2880913917470289,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "National Museum of China",
+     "start_time": "12:03",
+     "end_time": "12:23",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "The Road to Rejuvenation Exhibition Hall",
+       "end": "National Museum of China",
+       "mode": "walk",
+       "start_time": "12:03",
+       "end_time": "12:03",
+       "cost": 0,
+       "distance": 0.011876481898748703,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Monument to the People's Heroes",
+     "start_time": "12:27",
+     "end_time": "12:47",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "National Museum of China",
+       "end": "Monument to the People's Heroes",
+       "mode": "walk",
+       "start_time": "12:23",
+       "end_time": "12:27",
+       "cost": 0,
+       "distance": 0.33378472322770775,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Da Dong Roast Duck Restaurant (Wangfujing Branch)",
+     "start_time": "17:09",
+     "end_time": "17:49",
+     "price": 430.0,
+     "cost": 1720.0,
+     "transports": [
+      {
+       "start": "Monument to the People's Heroes",
+       "end": "Da Dong Roast Duck Restaurant (Wangfujing Branch)",
+       "mode": "walk",
+       "start_time": "17:03",
+       "end_time": "17:09",
+       "cost": 0,
+       "distance": 0.5163454997651902,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "UrCove by HYATT Beijing Forbidden City",
+     "room_type": 1,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "23:59",
+     "price": 610.0,
+     "cost": 610.0,
+     "transports": [
+      {
+       "start": "Da Dong Roast Duck Restaurant (Wangfujing Branch)",
+       "end": "UrCove by HYATT Beijing Forbidden City",
+       "mode": "walk",
+       "start_time": "22:57",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.25419915382755487,
+       "price": 0
+      }
+     ]
     }
-  ],
-  "elapsed_time(sec)": 240.68666768074036,
-  "_eval_score": 99.0311986863711
+   ]
+  },
+  {
+   "day": 2,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Waldorf Astoria Beijing · Iris Palace 1893 (Jinyu Hutong Branch)",
+     "start_time": "07:40",
+     "end_time": "08:20",
+     "price": 846.0,
+     "cost": 3384.0,
+     "transports": [
+      {
+       "start": "UrCove by HYATT Beijing Forbidden City",
+       "end": "Waldorf Astoria Beijing · Iris Palace 1893 (Jinyu Hutong Branch)",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:40",
+       "cost": 0,
+       "distance": 0.8451106131474789,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Chairman Mao Memorial Hall",
+     "start_time": "08:33",
+     "end_time": "08:53",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Waldorf Astoria Beijing · Iris Palace 1893 (Jinyu Hutong Branch)",
+       "end": "Chairman Mao Memorial Hall",
+       "mode": "walk",
+       "start_time": "08:20",
+       "end_time": "08:33",
+       "cost": 0,
+       "distance": 1.1366520633040778,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "VEGE WONDER Chinese Vegetarian Cuisine (Wangfujing Central Mall Branch)",
+     "start_time": "11:07",
+     "end_time": "11:47",
+     "price": 946.0,
+     "cost": 3784.0,
+     "transports": [
+      {
+       "start": "Chairman Mao Memorial Hall",
+       "end": "VEGE WONDER Chinese Vegetarian Cuisine (Wangfujing Central Mall Branch)",
+       "mode": "walk",
+       "start_time": "11:01",
+       "end_time": "11:07",
+       "cost": 0,
+       "distance": 0.5692255799191663,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Beijing Police Museum",
+     "start_time": "11:53",
+     "end_time": "12:13",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "VEGE WONDER Chinese Vegetarian Cuisine (Wangfujing Central Mall Branch)",
+       "end": "Beijing Police Museum",
+       "mode": "walk",
+       "start_time": "11:47",
+       "end_time": "11:53",
+       "cost": 0,
+       "distance": 0.5657522110937058,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "China Numismatic Museum",
+     "start_time": "12:23",
+     "end_time": "12:43",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Beijing Police Museum",
+       "end": "China Numismatic Museum",
+       "mode": "walk",
+       "start_time": "12:13",
+       "end_time": "12:23",
+       "cost": 0,
+       "distance": 0.8691186376502491,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Mandarin Oriental Wangfujing, Beijing · MO Bar (Wangfujing Central Mall Branch)",
+     "start_time": "17:14",
+     "end_time": "17:54",
+     "price": 304.0,
+     "cost": 1216.0,
+     "transports": [
+      {
+       "start": "China Numismatic Museum",
+       "end": "Mandarin Oriental Wangfujing, Beijing · MO Bar (Wangfujing Central Mall Branch)",
+       "mode": "walk",
+       "start_time": "17:05",
+       "end_time": "17:14",
+       "cost": 0,
+       "distance": 0.8116557526769209,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Beijing Central Axis Tour by Ding-Ding Tram",
+     "start_time": "18:05",
+     "end_time": "18:25",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Mandarin Oriental Wangfujing, Beijing · MO Bar (Wangfujing Central Mall Branch)",
+       "end": "Beijing Central Axis Tour by Ding-Ding Tram",
+       "mode": "walk",
+       "start_time": "17:54",
+       "end_time": "18:05",
+       "cost": 0,
+       "distance": 0.9662702940351489,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "UrCove by HYATT Beijing Forbidden City",
+     "room_type": 1,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "23:59",
+     "price": 610.0,
+     "cost": 610.0,
+     "transports": [
+      {
+       "start": "Beijing Central Axis Tour by Ding-Ding Tram",
+       "end": "UrCove by HYATT Beijing Forbidden City",
+       "mode": "walk",
+       "start_time": "22:52",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.6679728093808227,
+       "price": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "day": 3,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Beijing Puxuan Hotel · Left Bank",
+     "start_time": "07:38",
+     "end_time": "08:18",
+     "price": 733.0,
+     "cost": 2932.0,
+     "transports": [
+      {
+       "start": "UrCove by HYATT Beijing Forbidden City",
+       "end": "Wangfujing-Metro Station",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:35",
+       "cost": 0,
+       "distance": 0.46,
+       "price": 0
+      },
+      {
+       "start": "Wangfujing-Metro Station",
+       "end": "National Art Museum of China-Metro Station",
+       "mode": "metro",
+       "start_time": "07:35",
+       "end_time": "07:38",
+       "cost": 8,
+       "distance": 1.74,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "National Art Museum of China-Metro Station",
+       "end": "Beijing Puxuan Hotel · Left Bank",
+       "mode": "walk",
+       "start_time": "07:38",
+       "end_time": "07:38",
+       "cost": 0,
+       "distance": 0.05,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Great Hall of the People",
+     "start_time": "09:56",
+     "end_time": "10:16",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Beijing Puxuan Hotel · Left Bank",
+       "end": "National Art Museum of China-Metro Station",
+       "mode": "walk",
+       "start_time": "09:49",
+       "end_time": "09:49",
+       "cost": 0,
+       "distance": 0.05,
+       "price": 0
+      },
+      {
+       "start": "National Art Museum of China-Metro Station",
+       "end": "Tiananmen East-Metro Station",
+       "mode": "metro",
+       "start_time": "09:49",
+       "end_time": "09:52",
+       "cost": 8,
+       "distance": 1.95,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "Tiananmen East-Metro Station",
+       "end": "Great Hall of the People",
+       "mode": "walk",
+       "start_time": "09:52",
+       "end_time": "09:56",
+       "cost": 0,
+       "distance": 0.41,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Deyong Jujube-Fragrance Roast Duck (Wangfujing Central Mall Branch)",
+     "start_time": "11:05",
+     "end_time": "11:45",
+     "price": 225.0,
+     "cost": 900.0,
+     "transports": [
+      {
+       "start": "Great Hall of the People",
+       "end": "Deyong Jujube-Fragrance Roast Duck (Wangfujing Central Mall Branch)",
+       "mode": "walk",
+       "start_time": "10:56",
+       "end_time": "11:05",
+       "cost": 0,
+       "distance": 0.7869162915980363,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Tiananmen Rostrum",
+     "start_time": "11:51",
+     "end_time": "12:11",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Deyong Jujube-Fragrance Roast Duck (Wangfujing Central Mall Branch)",
+       "end": "Tiananmen Rostrum",
+       "mode": "walk",
+       "start_time": "11:45",
+       "end_time": "11:51",
+       "cost": 0,
+       "distance": 0.5559670217530439,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Madame Tussauds Beijing",
+     "start_time": "12:26",
+     "end_time": "12:46",
+     "price": 129.0,
+     "tickets": 4,
+     "cost": 516.0,
+     "transports": [
+      {
+       "start": "Tiananmen Rostrum",
+       "end": "Madame Tussauds Beijing",
+       "mode": "walk",
+       "start_time": "12:11",
+       "end_time": "12:26",
+       "cost": 0,
+       "distance": 1.3057902959744423,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Beijing Fang",
+     "start_time": "12:48",
+     "end_time": "13:08",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Madame Tussauds Beijing",
+       "end": "Beijing Fang",
+       "mode": "walk",
+       "start_time": "12:46",
+       "end_time": "12:48",
+       "cost": 0,
+       "distance": 0.20338355227716942,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Tan Family Cuisine (East Chang'an Avenue Branch)",
+     "start_time": "17:24",
+     "end_time": "18:04",
+     "price": 1450.0,
+     "cost": 5800.0,
+     "transports": [
+      {
+       "start": "Beijing Fang",
+       "end": "Tan Family Cuisine (East Chang'an Avenue Branch)",
+       "mode": "walk",
+       "start_time": "17:14",
+       "end_time": "17:24",
+       "cost": 0,
+       "distance": 0.8450152080424264,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "UrCove by HYATT Beijing Forbidden City",
+     "room_type": 1,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "23:59",
+     "price": 610.0,
+     "cost": 610.0,
+     "transports": [
+      {
+       "start": "Tan Family Cuisine (East Chang'an Avenue Branch)",
+       "end": "UrCove by HYATT Beijing Forbidden City",
+       "mode": "walk",
+       "start_time": "22:57",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.33236021353174194,
+       "price": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "day": 4,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Tianxingju Restaurant (Xianyukou Street Branch)",
+     "start_time": "07:42",
+     "end_time": "08:22",
+     "price": 31.0,
+     "cost": 124.0,
+     "transports": [
+      {
+       "start": "UrCove by HYATT Beijing Forbidden City",
+       "end": "Wangfujing-Metro Station",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:35",
+       "cost": 0,
+       "distance": 0.46,
+       "price": 0
+      },
+      {
+       "start": "Wangfujing-Metro Station",
+       "end": "Qianmen-Metro Station",
+       "mode": "metro",
+       "start_time": "07:35",
+       "end_time": "07:37",
+       "cost": 8,
+       "distance": 1.46,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "Qianmen-Metro Station",
+       "end": "Tianxingju Restaurant (Xianyukou Street Branch)",
+       "mode": "walk",
+       "start_time": "07:37",
+       "end_time": "07:42",
+       "cost": 0,
+       "distance": 0.47,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Dongjiaomin Lane",
+     "start_time": "08:31",
+     "end_time": "08:51",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Tianxingju Restaurant (Xianyukou Street Branch)",
+       "end": "Qianmen-Metro Station",
+       "mode": "walk",
+       "start_time": "08:22",
+       "end_time": "08:27",
+       "cost": 0,
+       "distance": 0.47,
+       "price": 0
+      },
+      {
+       "start": "Qianmen-Metro Station",
+       "end": "Dongdan-Metro Station",
+       "mode": "metro",
+       "start_time": "08:27",
+       "end_time": "08:30",
+       "cost": 8,
+       "distance": 1.98,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "Dongdan-Metro Station",
+       "end": "Dongjiaomin Lane",
+       "mode": "walk",
+       "start_time": "08:30",
+       "end_time": "08:31",
+       "cost": 0,
+       "distance": 0.14,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Chang'an Avenue",
+     "start_time": "09:15",
+     "end_time": "09:35",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Dongjiaomin Lane",
+       "end": "Chang'an Avenue",
+       "mode": "walk",
+       "start_time": "09:08",
+       "end_time": "09:15",
+       "cost": 0,
+       "distance": 0.5985548036086978,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Zhongshan Park",
+     "start_time": "09:51",
+     "end_time": "10:11",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Chang'an Avenue",
+       "end": "Dengshikou-Metro Station",
+       "mode": "walk",
+       "start_time": "09:35",
+       "end_time": "09:39",
+       "cost": 0,
+       "distance": 0.36,
+       "price": 0
+      },
+      {
+       "start": "Dengshikou-Metro Station",
+       "end": "Goldfish Alley-Metro Station",
+       "mode": "metro",
+       "start_time": "09:39",
+       "end_time": "09:40",
+       "cost": 8,
+       "distance": 0.6,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "Goldfish Alley-Metro Station",
+       "end": "Zhongshan Park",
+       "mode": "walk",
+       "start_time": "09:40",
+       "end_time": "09:51",
+       "cost": 0,
+       "distance": 0.92,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Lao She Teahouse",
+     "start_time": "10:40",
+     "end_time": "11:00",
+     "price": 180.0,
+     "tickets": 4,
+     "cost": 720.0,
+     "transports": [
+      {
+       "start": "Zhongshan Park",
+       "end": "Lao She Teahouse",
+       "mode": "walk",
+       "start_time": "10:26",
+       "end_time": "10:40",
+       "cost": 0,
+       "distance": 1.1877611065077989,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "The Cheesecake Factory Restaurant (Wangfujing Central Mall Branch)",
+     "start_time": "11:13",
+     "end_time": "11:53",
+     "price": 213.0,
+     "cost": 852.0,
+     "transports": [
+      {
+       "start": "Lao She Teahouse",
+       "end": "The Cheesecake Factory Restaurant (Wangfujing Central Mall Branch)",
+       "mode": "walk",
+       "start_time": "11:00",
+       "end_time": "11:13",
+       "cost": 0,
+       "distance": 1.1311149135511875,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Mandarin Oriental Wangfujing, Beijing - The Mandarin Grill",
+     "start_time": "17:00",
+     "end_time": "17:40",
+     "price": 786.0,
+     "cost": 3144.0,
+     "transports": [
+      {
+       "start": "The Cheesecake Factory Restaurant (Wangfujing Central Mall Branch)",
+       "end": "Mandarin Oriental Wangfujing, Beijing - The Mandarin Grill",
+       "mode": "walk",
+       "start_time": "17:00",
+       "end_time": "17:00",
+       "cost": 0,
+       "distance": 0.017496021926624437,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Manchester United Dream Theater",
+     "start_time": "17:54",
+     "end_time": "18:14",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Mandarin Oriental Wangfujing, Beijing - The Mandarin Grill",
+       "end": "Manchester United Dream Theater",
+       "mode": "walk",
+       "start_time": "17:40",
+       "end_time": "17:54",
+       "cost": 0,
+       "distance": 1.2477689224987534,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Beijing Working People's Cultural Palace",
+     "start_time": "18:27",
+     "end_time": "18:47",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Manchester United Dream Theater",
+       "end": "Tiananmen East-Metro Station",
+       "mode": "walk",
+       "start_time": "18:14",
+       "end_time": "18:19",
+       "cost": 0,
+       "distance": 0.45,
+       "price": 0
+      },
+      {
+       "start": "Tiananmen East-Metro Station",
+       "end": "Goldfish Alley-Metro Station",
+       "mode": "metro",
+       "start_time": "18:19",
+       "end_time": "18:21",
+       "cost": 8,
+       "distance": 1.2,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "Goldfish Alley-Metro Station",
+       "end": "Beijing Working People's Cultural Palace",
+       "mode": "walk",
+       "start_time": "18:21",
+       "end_time": "18:27",
+       "cost": 0,
+       "distance": 0.57,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Great River Alley",
+     "start_time": "19:05",
+     "end_time": "19:25",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Beijing Working People's Cultural Palace",
+       "end": "Goldfish Alley-Metro Station",
+       "mode": "walk",
+       "start_time": "18:47",
+       "end_time": "18:53",
+       "cost": 0,
+       "distance": 0.57,
+       "price": 0
+      },
+      {
+       "start": "Goldfish Alley-Metro Station",
+       "end": "Qianmen-Metro Station",
+       "mode": "metro",
+       "start_time": "18:53",
+       "end_time": "18:57",
+       "cost": 8,
+       "distance": 2.03,
+       "price": 2,
+       "tickets": 4
+      },
+      {
+       "start": "Qianmen-Metro Station",
+       "end": "Great River Alley",
+       "mode": "walk",
+       "start_time": "18:57",
+       "end_time": "19:05",
+       "cost": 0,
+       "distance": 0.71,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Sanqing Garden",
+     "start_time": "19:30",
+     "end_time": "19:50",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Great River Alley",
+       "end": "Sanqing Garden",
+       "mode": "walk",
+       "start_time": "19:27",
+       "end_time": "19:30",
+       "cost": 0,
+       "distance": 0.25502341473420115,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "airplane",
+     "start_time": "22:26",
+     "end_time": "00:20",
+     "start": "Beijing Capital International Airport",
+     "end": "Chengdu Shuangliu International Airport",
+     "price": 809.5,
+     "cost": 3238.0,
+     "tickets": 4,
+     "transports": [
+      {
+       "start": "Sanqing Garden",
+       "end": "Qianmen-Metro Station",
+       "mode": "walk",
+       "start_time": "21:19",
+       "end_time": "21:25",
+       "cost": 0,
+       "distance": 0.5,
+       "price": 0
+      },
+      {
+       "start": "Qianmen-Metro Station",
+       "end": "Terminal 2-Metro Station",
+       "mode": "metro",
+       "start_time": "21:25",
+       "end_time": "22:16",
+       "cost": 24,
+       "distance": 25.93,
+       "price": 6,
+       "tickets": 4
+      },
+      {
+       "start": "Terminal 2-Metro Station",
+       "end": "Beijing Capital International Airport",
+       "mode": "walk",
+       "start_time": "22:16",
+       "end_time": "22:26",
+       "cost": 0,
+       "distance": 0.88,
+       "price": 0
+      }
+     ],
+     "FlightID": "FL122"
+    }
+   ]
+  }
+ ]
 }

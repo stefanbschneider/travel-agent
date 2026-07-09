@@ -38,6 +38,16 @@ def build_candidate_context(agent, query: dict, constraints: dict, caps: dict | 
     hotels = _hotel_candidates(agent, env, city, people, days, constraints, int(caps["hotels"]))
     outbound, returning = _intercity_candidates(agent, env, start_city, city, constraints)
 
+    # Align POI coordinates with the routing/scoring source. The attraction/restaurant/
+    # accommodation tables carry lat/lon that, for a minority of POIs, disagree (sometimes by
+    # tens of km) with the coordinates the `goto` tool and the official scorer actually use
+    # (env.transportation.poi_search). Proximity ranking / nearest-neighbour routing done on the
+    # table coords would then treat a genuinely far POI as "near", inflating real travel time
+    # (ATT). Overwrite with poi_search coords so the agent's distance model matches reality.
+    _apply_routing_coords(env, city, attractions)
+    _apply_routing_coords(env, city, restaurants)
+    _apply_routing_coords(env, city, hotels)
+
     points = _candidate_points(start_city, city, attractions, restaurants, hotels, outbound, returning)
     return {
         "people": people,
@@ -283,6 +293,32 @@ def _candidate_points(start_city: str, target_city: str, attractions: list[dict]
             _append_point(points, row.get("From"))
             _append_point(points, row.get("To"))
     return points
+
+
+def _apply_routing_coords(env, city: str, rows: list[dict]) -> None:
+    """Overwrite each row's lat/lon with the coordinates the goto tool/scorer use
+    (env.transportation.poi_search). Best-effort: silently keep the table coords on any failure."""
+    poi = getattr(getattr(env, "transportation", None), "poi_search", None)
+    if poi is None:
+        return
+    for row in rows:
+        name = row.get("name")
+        if not name:
+            continue
+        try:
+            coord = poi.search(city, name)
+        except Exception:
+            coord = None
+        if coord and len(coord) == 2 and all(_is_num(c) for c in coord):
+            row["lat"], row["lon"] = float(coord[0]), float(coord[1])
+
+
+def _is_num(v) -> bool:
+    try:
+        float(v)
+        return True
+    except (TypeError, ValueError):
+        return False
 
 
 def _append_point(points: list[str], value: Any) -> None:

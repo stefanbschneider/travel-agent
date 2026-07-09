@@ -1,922 +1,748 @@
 {
-  "people_number": 4,
-  "start_city": "Nanjing",
-  "target_city": "Chongqing",
-  "itinerary": [
+ "people_number": 4,
+ "start_city": "Nanjing",
+ "target_city": "Chongqing",
+ "elapsed_time(sec)": 141.7920482158661,
+ "_eval_score": 99.86699507389162,
+ "itinerary": [
+  {
+   "day": 1,
+   "activities": [
     {
-      "day": 1,
-      "activities": [
-        {
-          "type": "airplane",
-          "start_time": "01:57",
-          "end_time": "03:27",
-          "start": "Nanjing Lukou International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 567.11,
-          "cost": 2268.44,
-          "tickets": 4,
-          "transports": [],
-          "FlightID": "FL681"
-        },
-        {
-          "type": "breakfast",
-          "position": "Warm Origin Noodle House",
-          "start_time": "06:00",
-          "end_time": "07:00",
-          "price": 13.0,
-          "cost": 52.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Jiangbei International Airport",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
-              "mode": "walk",
-              "start_time": "03:27",
-              "end_time": "03:41",
-              "distance": 1.21,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
-              "end": "Dalongshan-Metro Station",
-              "mode": "metro",
-              "start_time": "03:41",
-              "end_time": "04:21",
-              "distance": 20.08,
-              "price": 5,
-              "cost": 20,
-              "tickets": 4
-            },
-            {
-              "start": "Dalongshan-Metro Station",
-              "end": "Warm Origin Noodle House",
-              "mode": "walk",
-              "start_time": "04:21",
-              "end_time": "04:24",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Cave Ship No. 1",
-          "start_time": "09:30",
-          "end_time": "10:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Warm Origin Noodle House",
-              "end": "Dalongshan-Metro Station",
-              "mode": "walk",
-              "start_time": "07:00",
-              "end_time": "07:03",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Dalongshan-Metro Station",
-              "end": "Zhongshutuo-Metro Station",
-              "mode": "metro",
-              "start_time": "07:03",
-              "end_time": "07:08",
-              "distance": 2.96,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Zhongshutuo-Metro Station",
-              "end": "Cave Ship No. 1",
-              "mode": "walk",
-              "start_time": "07:08",
-              "end_time": "07:15",
-              "distance": 0.65,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 9.0,
-          "cost": 36.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Cave Ship No. 1",
-              "end": "Zhongshutuo-Metro Station",
-              "mode": "walk",
-              "start_time": "10:30",
-              "end_time": "10:37",
-              "distance": 0.65,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Zhongshutuo-Metro Station",
-              "end": "Jiaochangkou-Metro Station",
-              "mode": "metro",
-              "start_time": "10:37",
-              "end_time": "10:52",
-              "distance": 7.85,
-              "price": 3,
-              "cost": 12,
-              "tickets": 4
-            },
-            {
-              "start": "Jiaochangkou-Metro Station",
-              "end": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
-              "mode": "walk",
-              "start_time": "10:52",
-              "end_time": "10:54",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Eighteen Steps",
-          "start_time": "12:08",
-          "end_time": "13:08",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Baixiang Street · Stretched Rice Cake (Bayi Road Branch)",
-              "end": "Eighteen Steps",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:04",
-              "distance": 0.3424699829131382,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Daijia Alley Old Street",
-          "start_time": "13:22",
-          "end_time": "14:22",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Eighteen Steps",
-              "end": "Daijia Alley Old Street",
-              "mode": "taxi",
-              "start_time": "13:08",
-              "end_time": "13:09",
-              "distance": 1.11,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Chongqing Regent Hotel · Robbins Steakhouse",
-          "start_time": "17:43",
-          "end_time": "18:43",
-          "price": 665.0,
-          "cost": 2660.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Daijia Alley Old Street",
-              "end": "Chongqing Regent Hotel · Robbins Steakhouse",
-              "mode": "taxi",
-              "start_time": "14:22",
-              "end_time": "14:23",
-              "distance": 1.18,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Liziba Light Rail Station",
-          "start_time": "19:17",
-          "end_time": "20:17",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Regent Hotel · Robbins Steakhouse",
-              "end": "Liziba Light Rail Station",
-              "mode": "walk",
-              "start_time": "18:43",
-              "end_time": "19:17",
-              "distance": 2.9108184561243386,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Chongqing North Railway Station Atour Hotel",
-          "start_time": "21:17",
-          "end_time": "24:00",
-          "price": 332.0,
-          "cost": 664.0,
-          "rooms": 2,
-          "room_type": 2,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Liziba Light Rail Station",
-              "end": "Chongqing North Railway Station Atour Hotel",
-              "mode": "walk",
-              "start_time": "20:17",
-              "end_time": "21:17",
-              "distance": 5.048924819662701,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "airplane",
+     "start_time": "01:57",
+     "end_time": "03:27",
+     "start": "Nanjing Lukou International Airport",
+     "end": "Chongqing Jiangbei International Airport",
+     "price": 567.11,
+     "cost": 2268.44,
+     "tickets": 4,
+     "transports": [],
+     "FlightID": "FL681"
     },
     {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Chongqing North Railway Station Atour Hotel",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Shibati Traditional Style Area",
-          "start_time": "09:37",
-          "end_time": "10:37",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing North Railway Station Atour Hotel",
-              "end": "Chongqing Shibati Traditional Style Area",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "09:37",
-              "distance": 5.5983650077337845,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 96.0,
-          "cost": 384.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Shibati Traditional Style Area",
-              "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "mode": "walk",
-              "start_time": "10:37",
-              "end_time": "10:40",
-              "distance": 0.2636684422279282,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Yangtze River Three Gorges Cruise",
-          "start_time": "12:20",
-          "end_time": "13:20",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "end": "Chongqing Yangtze River Three Gorges Cruise",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 1.94,
-              "price": 11.49,
-              "cost": 11.49,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Three Gorges Cruise",
-          "start_time": "13:24",
-          "end_time": "14:54",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Yangtze River Three Gorges Cruise",
-              "end": "Chongqing Three Gorges Cruise",
-              "mode": "walk",
-              "start_time": "13:20",
-              "end_time": "13:22",
-              "distance": 0.18903024794479656,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Renji Old Casserole Pot (Zhonghua Lane Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 39.0,
-          "cost": 156.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Three Gorges Cruise",
-              "end": "Tushan-Metro Station",
-              "mode": "walk",
-              "start_time": "14:54",
-              "end_time": "15:01",
-              "distance": 0.64,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Tushan-Metro Station",
-              "end": "Linjiangmen-Metro Station",
-              "mode": "metro",
-              "start_time": "15:01",
-              "end_time": "15:07",
-              "distance": 3.22,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Linjiangmen-Metro Station",
-              "end": "Renji Old Casserole Pot (Zhonghua Lane Branch)",
-              "mode": "walk",
-              "start_time": "15:07",
-              "end_time": "15:08",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Night Cruise",
-          "start_time": "18:19",
-          "end_time": "19:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Renji Old Casserole Pot (Zhonghua Lane Branch)",
-              "end": "Linjiangmen-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:01",
-              "distance": 0.15,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Linjiangmen-Metro Station",
-              "end": "Chaotianmen-Metro Station",
-              "mode": "metro",
-              "start_time": "18:01",
-              "end_time": "18:04",
-              "distance": 1.55,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Chaotianmen-Metro Station",
-              "end": "Chongqing Night Cruise",
-              "mode": "walk",
-              "start_time": "18:04",
-              "end_time": "18:09",
-              "distance": 0.49,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Chongqing North Railway Station Atour Hotel",
-          "start_time": "20:17",
-          "end_time": "24:00",
-          "price": 332.0,
-          "cost": 664.0,
-          "rooms": 2,
-          "room_type": 2,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Chongqing Night Cruise",
-              "end": "Chongqing North Railway Station Atour Hotel",
-              "mode": "walk",
-              "start_time": "19:19",
-              "end_time": "20:17",
-              "distance": 4.86152630990931,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "breakfast",
+     "position": "Monkey Three Old Hot Pot (Hongyadong Branch)",
+     "start_time": "06:00",
+     "end_time": "06:40",
+     "price": 101.0,
+     "cost": 404.0,
+     "transports": [
+      {
+       "start": "Chongqing Jiangbei International Airport",
+       "end": "Jiangbei Airport Terminal 3-Metro Station",
+       "mode": "walk",
+       "start_time": "05:05",
+       "end_time": "05:19",
+       "cost": 0,
+       "distance": 1.21,
+       "price": 0
+      },
+      {
+       "start": "Jiangbei Airport Terminal 3-Metro Station",
+       "end": "Xiaoshizi-Metro Station",
+       "mode": "metro",
+       "start_time": "05:19",
+       "end_time": "05:54",
+       "cost": 20,
+       "distance": 17.85,
+       "price": 5,
+       "tickets": 4
+      },
+      {
+       "start": "Xiaoshizi-Metro Station",
+       "end": "Monkey Three Old Hot Pot (Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "05:54",
+       "end_time": "06:00",
+       "cost": 0,
+       "distance": 0.51,
+       "price": 0
+      }
+     ]
     },
     {
-      "day": 3,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Chongqing North Railway Station Atour Hotel",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Mountain City Trail",
-          "start_time": "09:38",
-          "end_time": "10:38",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing North Railway Station Atour Hotel",
-              "end": "Mountain City Trail",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "09:38",
-              "distance": 5.687114657543909,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Hongya Cave",
-          "start_time": "10:57",
-          "end_time": "11:57",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Mountain City Trail",
-              "end": "Hongya Cave",
-              "mode": "walk",
-              "start_time": "10:38",
-              "end_time": "10:57",
-              "distance": 1.5986273217883482,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Staircase Noodles",
-          "start_time": "12:08",
-          "end_time": "13:08",
-          "price": 15.0,
-          "cost": 60.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Hongya Cave",
-              "end": "Chaotianmen-Metro Station",
-              "mode": "walk",
-              "start_time": "11:57",
-              "end_time": "12:00",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chaotianmen-Metro Station",
-              "end": "Daxigou-Metro Station",
-              "mode": "metro",
-              "start_time": "12:00",
-              "end_time": "12:05",
-              "distance": 2.81,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Daxigou-Metro Station",
-              "end": "Staircase Noodles",
-              "mode": "walk",
-              "start_time": "12:05",
-              "end_time": "12:08",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing People's Square",
-          "start_time": "13:25",
-          "end_time": "14:55",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Staircase Noodles",
-              "end": "Chongqing People's Square",
-              "mode": "walk",
-              "start_time": "13:08",
-              "end_time": "13:14",
-              "distance": 0.511561453635003,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Crown Escalator",
-          "start_time": "15:02",
-          "end_time": "16:02",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing People's Square",
-              "end": "Daxigou-Metro Station",
-              "mode": "walk",
-              "start_time": "14:55",
-              "end_time": "14:57",
-              "distance": 0.24,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Daxigou-Metro Station",
-              "end": "Great Hall-Metro Station",
-              "mode": "metro",
-              "start_time": "14:57",
-              "end_time": "14:58",
-              "distance": 0.56,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Great Hall-Metro Station",
-              "end": "Crown Escalator",
-              "mode": "walk",
-              "start_time": "14:58",
-              "end_time": "15:02",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "A Pool of Ice Joy (Guanyinqiao Sunshine Century Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 33.0,
-          "cost": 132.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Crown Escalator",
-              "end": "Great Hall-Metro Station",
-              "mode": "walk",
-              "start_time": "16:02",
-              "end_time": "16:06",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Great Hall-Metro Station",
-              "end": "Guanyinqiao-Metro Station",
-              "mode": "metro",
-              "start_time": "16:06",
-              "end_time": "16:11",
-              "distance": 2.6,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Guanyinqiao-Metro Station",
-              "end": "A Pool of Ice Joy (Guanyinqiao Sunshine Century Branch)",
-              "mode": "walk",
-              "start_time": "16:11",
-              "end_time": "16:14",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Chongqing North Railway Station Atour Hotel",
-          "start_time": "20:37",
-          "end_time": "24:00",
-          "price": 332.0,
-          "cost": 664.0,
-          "rooms": 2,
-          "room_type": 2,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "A Pool of Ice Joy (Guanyinqiao Sunshine Century Branch)",
-              "end": "Guanyinqiao-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:03",
-              "distance": 0.32,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Guanyinqiao-Metro Station",
-              "end": "Shiziping-Metro Station",
-              "mode": "metro",
-              "start_time": "18:03",
-              "end_time": "18:09",
-              "distance": 3.49,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Shiziping-Metro Station",
-              "end": "Chongqing North Railway Station Atour Hotel",
-              "mode": "walk",
-              "start_time": "18:09",
-              "end_time": "18:14",
-              "distance": 0.48,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "attraction",
+     "position": "Chongqing Shibati Traditional Style Area",
+     "start_time": "09:30",
+     "end_time": "09:50",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Monkey Three Old Hot Pot (Hongyadong Branch)",
+       "end": "Chongqing Shibati Traditional Style Area",
+       "mode": "walk",
+       "start_time": "09:26",
+       "end_time": "09:30",
+       "cost": 0,
+       "distance": 0.3652181938510544,
+       "price": 0
+      }
+     ]
     },
     {
-      "day": 4,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Chongqing North Railway Station Atour Hotel",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Liberation Monument Pedestrian Street",
-          "start_time": "09:34",
-          "end_time": "10:34",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing North Railway Station Atour Hotel",
-              "end": "Liberation Monument Pedestrian Street",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "09:34",
-              "distance": 5.3587974107822625,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Two Rivers Ferry",
-          "start_time": "10:40",
-          "end_time": "11:40",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Liberation Monument Pedestrian Street",
-              "end": "Two Rivers Ferry",
-              "mode": "walk",
-              "start_time": "10:34",
-              "end_time": "10:40",
-              "distance": 0.5671022549479996,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Super Li Bench Noodles (Main Store)",
-          "start_time": "11:50",
-          "end_time": "12:50",
-          "price": 19.0,
-          "cost": 76.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Two Rivers Ferry",
-              "end": "Chaotianmen-Metro Station",
-              "mode": "walk",
-              "start_time": "11:40",
-              "end_time": "11:45",
-              "distance": 0.49,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chaotianmen-Metro Station",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "metro",
-              "start_time": "11:45",
-              "end_time": "11:46",
-              "distance": 0.79,
-              "price": 2,
-              "cost": 8,
-              "tickets": 4
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
-              "end": "Super Li Bench Noodles (Main Store)",
-              "mode": "walk",
-              "start_time": "11:46",
-              "end_time": "11:50",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "1941 Teahouse and Theater",
-          "start_time": "13:06",
-          "end_time": "14:36",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Super Li Bench Noodles (Main Store)",
-              "end": "1941 Teahouse and Theater",
-              "mode": "walk",
-              "start_time": "12:50",
-              "end_time": "12:52",
-              "distance": 0.1734851113151567,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-          "start_time": "14:40",
-          "end_time": "16:10",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "1941 Teahouse and Theater",
-              "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-              "mode": "walk",
-              "start_time": "14:36",
-              "end_time": "14:40",
-              "distance": 0.36145056401420345,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Hongya Noodles · Premium Chongqing Noodles (Jiefangbei Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 15.0,
-          "cost": 60.0,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-              "end": "Hongya Noodles · Premium Chongqing Noodles (Jiefangbei Branch)",
-              "mode": "walk",
-              "start_time": "16:10",
-              "end_time": "16:13",
-              "distance": 0.3087186099138348,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "19:32",
-          "end_time": "21:02",
-          "start": "Chongqing Jiangbei International Airport",
-          "end": "Nanjing Lukou International Airport",
-          "price": 641.37,
-          "cost": 2565.48,
-          "tickets": 4,
-          "transports": [
-            {
-              "start": "Hongya Noodles · Premium Chongqing Noodles (Jiefangbei Branch)",
-              "end": "Xiaoshizi-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:05",
-              "distance": 0.43,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xiaoshizi-Metro Station",
-              "end": "Jiangbei Airport Terminal 3-Metro Station",
-              "mode": "metro",
-              "start_time": "18:05",
-              "end_time": "18:40",
-              "distance": 17.85,
-              "price": 5,
-              "cost": 20,
-              "tickets": 4
-            },
-            {
-              "start": "Jiangbei Airport Terminal 3-Metro Station",
-              "end": "Chongqing Jiangbei International Airport",
-              "mode": "walk",
-              "start_time": "18:40",
-              "end_time": "18:54",
-              "distance": 1.21,
-              "price": 0,
-              "cost": 0
-            }
-          ],
-          "FlightID": "FL397"
-        }
-      ]
+     "type": "lunch",
+     "position": "Tian Bang Bang Hot Pot (Hongyadong Branch)",
+     "start_time": "11:00",
+     "end_time": "11:40",
+     "price": 94.0,
+     "cost": 376.0,
+     "transports": [
+      {
+       "start": "Chongqing Shibati Traditional Style Area",
+       "end": "Tian Bang Bang Hot Pot (Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "10:56",
+       "end_time": "11:00",
+       "cost": 0,
+       "distance": 0.3467395123593781,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Yangtze River Three Gorges - Century Legend Cruise",
+     "start_time": "12:08",
+     "end_time": "12:28",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Tian Bang Bang Hot Pot (Hongyadong Branch)",
+       "end": "Yangtze River Three Gorges - Century Legend Cruise",
+       "mode": "walk",
+       "start_time": "12:03",
+       "end_time": "12:08",
+       "cost": 0,
+       "distance": 0.4246682131500485,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Kui Xing Pavilion",
+     "start_time": "13:22",
+     "end_time": "13:42",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Yangtze River Three Gorges - Century Legend Cruise",
+       "end": "Kui Xing Pavilion",
+       "mode": "walk",
+       "start_time": "13:13",
+       "end_time": "13:22",
+       "cost": 0,
+       "distance": 0.7515756672543935,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Paper Salt River Wharf Hot Pot (Hongyadong Branch)",
+     "start_time": "17:43",
+     "end_time": "18:23",
+     "price": 115.0,
+     "cost": 460.0,
+     "transports": [
+      {
+       "start": "Kui Xing Pavilion",
+       "end": "Paper Salt River Wharf Hot Pot (Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "17:38",
+       "end_time": "17:43",
+       "cost": 0,
+       "distance": 0.48711873104231285,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Eighteen Steps",
+     "start_time": "18:29",
+     "end_time": "18:49",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Paper Salt River Wharf Hot Pot (Hongyadong Branch)",
+       "end": "Eighteen Steps",
+       "mode": "walk",
+       "start_time": "18:23",
+       "end_time": "18:29",
+       "cost": 0,
+       "distance": 0.5551747064397052,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+     "room_type": 2,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "23:59",
+     "price": 586.0,
+     "cost": 586.0,
+     "transports": [
+      {
+       "start": "Eighteen Steps",
+       "end": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "22:53",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.5909505028306785,
+       "price": 0
+      }
+     ]
     }
-  ],
-  "elapsed_time(sec)": 141.7920482158661,
-  "_eval_score": 99.67816091954023
+   ]
+  },
+  {
+   "day": 2,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Chongqing Ritz-Carlton Reserve Hyatt Hotel · The Brits Restaurant",
+     "start_time": "07:33",
+     "end_time": "08:13",
+     "price": 398.0,
+     "cost": 1592.0,
+     "transports": [
+      {
+       "start": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+       "end": "Chongqing Ritz-Carlton Reserve Hyatt Hotel · The Brits Restaurant",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:33",
+       "cost": 0,
+       "distance": 0.33074881510418486,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Nengren Temple",
+     "start_time": "08:20",
+     "end_time": "08:40",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Chongqing Ritz-Carlton Reserve Hyatt Hotel · The Brits Restaurant",
+       "end": "Nengren Temple",
+       "mode": "walk",
+       "start_time": "08:13",
+       "end_time": "08:20",
+       "cost": 0,
+       "distance": 0.6061040147838465,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Huzao Riverside Old Hot Pot (Hongyadong Main Store)",
+     "start_time": "11:00",
+     "end_time": "11:40",
+     "price": 99.0,
+     "cost": 396.0,
+     "transports": [
+      {
+       "start": "Nengren Temple",
+       "end": "Huzao Riverside Old Hot Pot (Hongyadong Main Store)",
+       "mode": "walk",
+       "start_time": "10:52",
+       "end_time": "11:00",
+       "cost": 0,
+       "distance": 0.726993621506031,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+     "start_time": "12:20",
+     "end_time": "12:40",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Huzao Riverside Old Hot Pot (Hongyadong Main Store)",
+       "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+       "mode": "walk",
+       "start_time": "12:13",
+       "end_time": "12:20",
+       "cost": 0,
+       "distance": 0.662062027324981,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shancheng Lane Historical and Cultural Area",
+     "start_time": "13:24",
+     "end_time": "13:44",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
+       "end": "Shancheng Lane Historical and Cultural Area",
+       "mode": "walk",
+       "start_time": "13:15",
+       "end_time": "13:24",
+       "cost": 0,
+       "distance": 0.785511988320542,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Tuhuo Old Hot Pot (Hongyadong Branch)",
+     "start_time": "17:00",
+     "end_time": "17:40",
+     "price": 91.0,
+     "cost": 364.0,
+     "transports": [
+      {
+       "start": "Shancheng Lane Historical and Cultural Area",
+       "end": "Tuhuo Old Hot Pot (Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "16:53",
+       "end_time": "17:00",
+       "cost": 0,
+       "distance": 0.6068557735589843,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Mountain City Trail",
+     "start_time": "18:19",
+     "end_time": "18:39",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Tuhuo Old Hot Pot (Hongyadong Branch)",
+       "end": "Mountain City Trail",
+       "mode": "walk",
+       "start_time": "18:12",
+       "end_time": "18:19",
+       "cost": 0,
+       "distance": 0.6081754853028436,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+     "room_type": 2,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "23:59",
+     "price": 586.0,
+     "cost": 586.0,
+     "transports": [
+      {
+       "start": "Mountain City Trail",
+       "end": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "22:53",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.6440076227907213,
+       "price": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "day": 3,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Super Li Bench Noodles (Main Store)",
+     "start_time": "07:37",
+     "end_time": "08:17",
+     "price": 19.0,
+     "cost": 76.0,
+     "transports": [
+      {
+       "start": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+       "end": "Super Li Bench Noodles (Main Store)",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:37",
+       "cost": 0,
+       "distance": 0.5929014725428586,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Monument to the People's Liberation",
+     "start_time": "08:17",
+     "end_time": "08:37",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Super Li Bench Noodles (Main Store)",
+       "end": "Monument to the People's Liberation",
+       "mode": "walk",
+       "start_time": "08:17",
+       "end_time": "08:17",
+       "cost": 0,
+       "distance": 0.05716956668409869,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Liberation Monument Pedestrian Street",
+     "start_time": "08:37",
+     "end_time": "08:57",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Monument to the People's Liberation",
+       "end": "Liberation Monument Pedestrian Street",
+       "mode": "walk",
+       "start_time": "08:37",
+       "end_time": "08:37",
+       "cost": 0,
+       "distance": 0.008530882071862903,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+     "start_time": "12:08",
+     "end_time": "12:48",
+     "price": 96.0,
+     "cost": 384.0,
+     "transports": [
+      {
+       "start": "Liberation Monument Pedestrian Street",
+       "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+       "mode": "walk",
+       "start_time": "12:01",
+       "end_time": "12:08",
+       "cost": 0,
+       "distance": 0.5954564837008706,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Daijia Alley Old Street",
+     "start_time": "13:25",
+     "end_time": "13:45",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+       "end": "Daijia Alley Old Street",
+       "mode": "walk",
+       "start_time": "13:17",
+       "end_time": "13:25",
+       "cost": 0,
+       "distance": 0.6932970944060747,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "1941 Teahouse and Theater",
+     "start_time": "13:51",
+     "end_time": "14:11",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Daijia Alley Old Street",
+       "end": "1941 Teahouse and Theater",
+       "mode": "walk",
+       "start_time": "13:45",
+       "end_time": "13:51",
+       "cost": 0,
+       "distance": 0.5241489700855437,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Yu Chu Yi Ren Diao Guo Hao Er Yu (Main Store)",
+     "start_time": "17:00",
+     "end_time": "17:40",
+     "price": 93.0,
+     "cost": 372.0,
+     "transports": [
+      {
+       "start": "1941 Teahouse and Theater",
+       "end": "Yu Chu Yi Ren Diao Guo Hao Er Yu (Main Store)",
+       "mode": "walk",
+       "start_time": "16:53",
+       "end_time": "17:00",
+       "cost": 0,
+       "distance": 0.6226880491143303,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+     "room_type": 2,
+     "rooms": 1,
+     "start_time": "20:37",
+     "end_time": "21:37",
+     "price": 586.0,
+     "cost": 586.0,
+     "transports": [
+      {
+       "start": "Yu Chu Yi Ren Diao Guo Hao Er Yu (Main Store)",
+       "end": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+       "mode": "walk",
+       "start_time": "20:36",
+       "end_time": "20:37",
+       "cost": 0,
+       "distance": 0.1582681330411374,
+       "price": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "day": 4,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Huailiang Pan-Fried Buns (Bayi Road Branch)",
+     "start_time": "07:38",
+     "end_time": "08:18",
+     "price": 9.0,
+     "cost": 36.0,
+     "transports": [
+      {
+       "start": "Hongya Dieyuan Hotel (Chongqing Jiefangbei Hongyadong Branch)",
+       "end": "Huailiang Pan-Fried Buns (Bayi Road Branch)",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:38",
+       "cost": 0,
+       "distance": 0.6968876057107849,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Triumph Road Elevator",
+     "start_time": "10:19",
+     "end_time": "10:39",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Huailiang Pan-Fried Buns (Bayi Road Branch)",
+       "end": "Triumph Road Elevator",
+       "mode": "walk",
+       "start_time": "10:12",
+       "end_time": "10:19",
+       "cost": 0,
+       "distance": 0.648786620703308,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Chongqing Guotai Art Center",
+     "start_time": "10:49",
+     "end_time": "11:09",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Triumph Road Elevator",
+       "end": "Chongqing Guotai Art Center",
+       "mode": "walk",
+       "start_time": "10:39",
+       "end_time": "10:49",
+       "cost": 0,
+       "distance": 0.9011012798895779,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Spicy Trio Hot Pot (Jiefangbei Branch)",
+     "start_time": "11:50",
+     "end_time": "12:30",
+     "price": 81.0,
+     "cost": 324.0,
+     "transports": [
+      {
+       "start": "Chongqing Guotai Art Center",
+       "end": "Spicy Trio Hot Pot (Jiefangbei Branch)",
+       "mode": "walk",
+       "start_time": "11:41",
+       "end_time": "11:50",
+       "cost": 0,
+       "distance": 0.808785830648953,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Former Site of the National Government Military Commission - Chongqing Field Headquarters",
+     "start_time": "13:06",
+     "end_time": "13:26",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Spicy Trio Hot Pot (Jiefangbei Branch)",
+       "end": "Former Site of the National Government Military Commission - Chongqing Field Headquarters",
+       "mode": "walk",
+       "start_time": "12:59",
+       "end_time": "13:06",
+       "cost": 0,
+       "distance": 0.6414336081153473,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Dajia Alley Cliffside Trail",
+     "start_time": "14:40",
+     "end_time": "15:00",
+     "price": 0.0,
+     "tickets": 4,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Former Site of the National Government Military Commission - Chongqing Field Headquarters",
+       "end": "Dajia Alley Cliffside Trail",
+       "mode": "walk",
+       "start_time": "14:25",
+       "end_time": "14:40",
+       "cost": 0,
+       "distance": 1.2501260122251847,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Concept 98 Cultural Living Room",
+     "start_time": "17:00",
+     "end_time": "17:40",
+     "price": 539.0,
+     "cost": 2156.0,
+     "transports": [
+      {
+       "start": "Dajia Alley Cliffside Trail",
+       "end": "Concept 98 Cultural Living Room",
+       "mode": "walk",
+       "start_time": "16:48",
+       "end_time": "17:00",
+       "cost": 0,
+       "distance": 1.029832455872721,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "airplane",
+     "start_time": "19:32",
+     "end_time": "21:02",
+     "start": "Chongqing Jiangbei International Airport",
+     "end": "Nanjing Lukou International Airport",
+     "price": 641.37,
+     "cost": 2565.48,
+     "tickets": 4,
+     "transports": [
+      {
+       "start": "Concept 98 Cultural Living Room",
+       "end": "Linjiangmen-Metro Station",
+       "mode": "walk",
+       "start_time": "18:37",
+       "end_time": "18:42",
+       "cost": 0,
+       "distance": 0.42,
+       "price": 0
+      },
+      {
+       "start": "Linjiangmen-Metro Station",
+       "end": "Jiangbei Airport Terminal 3-Metro Station",
+       "mode": "metro",
+       "start_time": "18:42",
+       "end_time": "19:18",
+       "cost": 20,
+       "distance": 18.4,
+       "price": 5,
+       "tickets": 4
+      },
+      {
+       "start": "Jiangbei Airport Terminal 3-Metro Station",
+       "end": "Chongqing Jiangbei International Airport",
+       "mode": "walk",
+       "start_time": "19:18",
+       "end_time": "19:32",
+       "cost": 0,
+       "distance": 1.21,
+       "price": 0
+      }
+     ],
+     "FlightID": "FL397"
+    }
+   ]
+  }
+ ]
 }

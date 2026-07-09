@@ -322,9 +322,51 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Zhejiang Provincial Museum (Zhijiang Branch)",
+          "start_time": "09:42",
+          "end_time": "10:42",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+              "end": "Dongyue-Metro Station",
+              "mode": "walk",
+              "start_time": "09:00",
+              "end_time": "09:07",
+              "distance": 0.61,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dongyue-Metro Station",
+              "end": "Zhijiang Cultural Center-Metro Station",
+              "mode": "metro",
+              "start_time": "09:07",
+              "end_time": "09:30",
+              "distance": 11.68,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "Zhijiang Cultural Center-Metro Station",
+              "end": "Zhejiang Provincial Museum (Zhijiang Branch)",
+              "mode": "walk",
+              "start_time": "09:30",
+              "end_time": "09:42",
+              "distance": 1.01,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Holiday Inn Express Hangzhou West Lake East",
-          "start_time": "18:13",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 450.0,
           "cost": 1800.0,
@@ -333,15 +375,35 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+              "start": "Zhejiang Provincial Museum (Zhijiang Branch)",
+              "end": "Zhijiang Cultural Center-Metro Station",
+              "mode": "walk",
+              "start_time": "20:00",
+              "end_time": "20:12",
+              "distance": 1.01,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhijiang Cultural Center-Metro Station",
+              "end": "City Station-Metro Station",
+              "mode": "metro",
+              "start_time": "20:12",
+              "end_time": "20:35",
+              "distance": 11.9,
+              "price": 4,
+              "cost": 16,
+              "tickets": 4
+            },
+            {
+              "start": "City Station-Metro Station",
               "end": "Holiday Inn Express Hangzhou West Lake East",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:13",
-              "distance": 9.3,
-              "price": 37.25,
-              "cost": 37.25,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "20:35",
+              "end_time": "20:36",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -691,5 +753,5 @@
     }
   ],
   "elapsed_time(sec)": 0.032607078552246094,
-  "_eval_score": 99.6875
+  "_eval_score": 100.0
 }

@@ -1,473 +1,368 @@
 {
-  "people_number": 1,
-  "start_city": "Shenzhen",
-  "target_city": "Shanghai",
-  "itinerary": [
+ "people_number": 1,
+ "start_city": "Shenzhen",
+ "target_city": "Shanghai",
+ "elapsed_time(sec)": 8.029937028884888,
+ "_eval_score": 99.67301587301587,
+ "itinerary": [
+  {
+   "day": 1,
+   "activities": [
     {
-      "day": 1,
-      "activities": [
-        {
-          "type": "airplane",
-          "start_time": "23:37",
-          "end_time": "01:08",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 572.8,
-          "cost": 572.8,
-          "tickets": 1,
-          "transports": [],
-          "FlightID": "FL166"
-        },
-        {
-          "type": "breakfast",
-          "position": "Dahuchun (Sichuan Middle Road Branch)",
-          "start_time": "07:00",
-          "end_time": "08:00",
-          "price": 29.0,
-          "cost": 29.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Dahuchun (Sichuan Middle Road Branch)",
-              "mode": "taxi",
-              "start_time": "01:08",
-              "end_time": "01:56",
-              "distance": 32.55,
-              "price": 141.18,
-              "cost": 141.18,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Holy Trinity Church",
-          "start_time": "08:10",
-          "end_time": "09:40",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Dahuchun (Sichuan Middle Road Branch)",
-              "end": "Holy Trinity Church",
-              "mode": "walk",
-              "start_time": "08:00",
-              "end_time": "08:10",
-              "distance": 0.914555268979762,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "1933 Old Millfun",
-          "start_time": "11:04",
-          "end_time": "12:34",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Holy Trinity Church",
-              "end": "1933 Old Millfun",
-              "mode": "taxi",
-              "start_time": "09:40",
-              "end_time": "09:43",
-              "distance": 2.03,
-              "price": 11.82,
-              "cost": 11.82,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "POP Terrace Restaurant · Riverside Pavilion",
-          "start_time": "12:51",
-          "end_time": "13:51",
-          "price": 398.0,
-          "cost": 398.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "1933 Old Millfun",
-              "end": "POP Terrace Restaurant · Riverside Pavilion",
-              "mode": "taxi",
-              "start_time": "12:34",
-              "end_time": "12:38",
-              "distance": 2.99,
-              "price": 15.16,
-              "cost": 15.16,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Eaglewood Pavilion",
-          "start_time": "14:11",
-          "end_time": "15:41",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "POP Terrace Restaurant · Riverside Pavilion",
-              "end": "Eaglewood Pavilion",
-              "mode": "taxi",
-              "start_time": "13:51",
-              "end_time": "13:51",
-              "distance": 0.58,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Fosun Foundation Center",
-          "start_time": "15:49",
-          "end_time": "17:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Eaglewood Pavilion",
-              "end": "Fosun Foundation Center",
-              "mode": "walk",
-              "start_time": "15:41",
-              "end_time": "15:49",
-              "distance": 0.7029367167596484,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Xingxing · Shanghai-Style Local Cuisine",
-          "start_time": "18:55",
-          "end_time": "19:55",
-          "price": 180.0,
-          "cost": 180.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Fosun Foundation Center",
-              "end": "Lujiazui-Metro Station",
-              "mode": "walk",
-              "start_time": "17:19",
-              "end_time": "17:28",
-              "distance": 0.77,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Lujiazui-Metro Station",
-              "end": "Yuntai Road-Metro Station",
-              "mode": "metro",
-              "start_time": "17:28",
-              "end_time": "17:40",
-              "distance": 6.22,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Yuntai Road-Metro Station",
-              "end": "Xingxing · Shanghai-Style Local Cuisine",
-              "mode": "walk",
-              "start_time": "17:40",
-              "end_time": "17:46",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-          "start_time": "20:42",
-          "end_time": "24:00",
-          "price": 303.0,
-          "cost": 303.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Xingxing · Shanghai-Style Local Cuisine",
-              "end": "Yuntai Road-Metro Station",
-              "mode": "walk",
-              "start_time": "19:55",
-              "end_time": "20:01",
-              "distance": 0.51,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yuntai Road-Metro Station",
-              "end": "Chuansha-Metro Station",
-              "mode": "metro",
-              "start_time": "20:01",
-              "end_time": "20:38",
-              "distance": 18.86,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Chuansha-Metro Station",
-              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "mode": "walk",
-              "start_time": "20:38",
-              "end_time": "20:42",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "airplane",
+     "start": "Shenzhen Bao'an International Airport",
+     "end": "Shanghai Hongqiao International Airport",
+     "FlightID": "FL164",
+     "start_time": "03:17",
+     "end_time": "04:48",
+     "price": 571.18,
+     "tickets": 1,
+     "cost": 571.18,
+     "transports": []
     },
     {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Century Square",
-          "start_time": "09:04",
-          "end_time": "10:04",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
-              "end": "Chuansha-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chuansha-Metro Station",
-              "end": "Yanggao Middle Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:34",
-              "end_time": "09:03",
-              "distance": 14.95,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Yanggao Middle Road-Metro Station",
-              "end": "Century Square",
-              "mode": "walk",
-              "start_time": "09:03",
-              "end_time": "09:04",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 75.0,
-          "cost": 75.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Century Square",
-              "end": "Yanggao Middle Road-Metro Station",
-              "mode": "walk",
-              "start_time": "10:04",
-              "end_time": "10:05",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yanggao Middle Road-Metro Station",
-              "end": "Huajing West-Metro Station",
-              "mode": "metro",
-              "start_time": "10:05",
-              "end_time": "10:37",
-              "distance": 16.34,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Huajing West-Metro Station",
-              "end": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
-              "mode": "walk",
-              "start_time": "10:37",
-              "end_time": "10:50",
-              "distance": 1.16,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-          "start_time": "12:42",
-          "end_time": "14:42",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
-              "end": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:11",
-              "distance": 7.77,
-              "price": 31.88,
-              "cost": 31.88,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 16.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Lianquan Oedo (Shanghai Xinzhuang Branch)",
-              "end": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "mode": "taxi",
-              "start_time": "14:42",
-              "end_time": "15:20",
-              "distance": 25.66,
-              "price": 110.17,
-              "cost": 110.17,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Duolun Road Cultural Celebrities Street",
-          "start_time": "18:24",
-          "end_time": "19:24",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Long Journey Shaved Ice (Kongjiang Road Branch)",
-              "end": "Duolun Road Cultural Celebrities Street",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:08",
-              "distance": 5.66,
-              "price": 24.5,
-              "cost": 24.5,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Garden Bridge",
-          "start_time": "19:35",
-          "end_time": "20:35",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Duolun Road Cultural Celebrities Street",
-              "end": "Garden Bridge",
-              "mode": "taxi",
-              "start_time": "19:24",
-              "end_time": "19:27",
-              "distance": 2.21,
-              "price": 12.44,
-              "cost": 12.44,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "23:48",
-          "end_time": "01:19",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 640.93,
-          "cost": 640.93,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Garden Bridge",
-              "end": "International Passenger Transport Center-Metro Station",
-              "mode": "walk",
-              "start_time": "20:35",
-              "end_time": "20:36",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "International Passenger Transport Center-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "20:36",
-              "end_time": "21:38",
-              "distance": 31.3,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "21:38",
-              "end_time": "21:53",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
-            }
-          ],
-          "FlightID": "FL014"
-        }
-      ]
+     "type": "breakfast",
+     "position": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+     "start_time": "07:00",
+     "end_time": "08:00",
+     "price": 0,
+     "cost": 0,
+     "transports": [
+      {
+       "start": "Shanghai Hongqiao International Airport",
+       "end": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+       "mode": "taxi",
+       "start_time": "06:42",
+       "end_time": "07:00",
+       "cost": 49.59,
+       "distance": 12.2,
+       "price": 49.59,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "West Nanjing Road",
+     "start_time": "08:10",
+     "end_time": "09:40",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+       "end": "West Nanjing Road",
+       "mode": "taxi",
+       "start_time": "08:09",
+       "end_time": "08:10",
+       "cost": 11.0,
+       "distance": 0.97,
+       "price": 11.0,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Tribute to the Master: Picasso Art Center",
+     "start_time": "11:04",
+     "end_time": "12:34",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "West Nanjing Road",
+       "end": "Tribute to the Master: Picasso Art Center",
+       "mode": "taxi",
+       "start_time": "11:04",
+       "end_time": "11:04",
+       "cost": 11.0,
+       "distance": 0.46,
+       "price": 11.0,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Xingxing · Shanghai-Style Local Cuisine",
+     "start_time": "12:51",
+     "end_time": "13:51",
+     "price": 180.0,
+     "cost": 180.0,
+     "transports": [
+      {
+       "start": "Tribute to the Master: Picasso Art Center",
+       "end": "Xingxing · Shanghai-Style Local Cuisine",
+       "mode": "taxi",
+       "start_time": "12:40",
+       "end_time": "12:51",
+       "cost": 31.76,
+       "distance": 7.73,
+       "price": 31.76,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shanghai Natural History Museum",
+     "start_time": "14:11",
+     "end_time": "15:41",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Xingxing · Shanghai-Style Local Cuisine",
+       "end": "Shanghai Natural History Museum",
+       "mode": "taxi",
+       "start_time": "14:00",
+       "end_time": "14:11",
+       "cost": 31.57,
+       "distance": 7.68,
+       "price": 31.57,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Zhang Garden",
+     "start_time": "10:06",
+     "end_time": "11:06",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Shanghai Natural History Museum",
+       "end": "Zhang Garden",
+       "mode": "taxi",
+       "start_time": "10:05",
+       "end_time": "10:06",
+       "cost": 11.0,
+       "distance": 0.75,
+       "price": 11.0,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
+     "start_time": "18:55",
+     "end_time": "19:55",
+     "price": 75.0,
+     "cost": 75.0,
+     "transports": [
+      {
+       "start": "Zhang Garden",
+       "end": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
+       "mode": "taxi",
+       "start_time": "18:36",
+       "end_time": "18:55",
+       "cost": 52.25,
+       "distance": 12.79,
+       "price": 52.25,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+     "room_type": 1,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "24:00",
+     "price": 307.0,
+     "cost": 307.0,
+     "transports": [
+      {
+       "start": "Ningguo Vegetarian Restaurant (Huajing Road Branch)",
+       "end": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+       "mode": "taxi",
+       "start_time": "22:40",
+       "end_time": "23:00",
+       "cost": 55.32,
+       "distance": 13.47,
+       "price": 55.32,
+       "cars": 1
+      }
+     ]
     }
-  ],
-  "elapsed_time(sec)": 8.029937028884888,
-  "_eval_score": 99.55555555555556
+   ]
+  },
+  {
+   "day": 2,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+     "start_time": "07:30",
+     "end_time": "08:30",
+     "price": 0,
+     "cost": 0,
+     "transports": []
+    },
+    {
+     "type": "attraction",
+     "position": "Eileen Chang's Former Residence",
+     "start_time": "09:04",
+     "end_time": "10:04",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
+       "end": "Eileen Chang's Former Residence",
+       "mode": "taxi",
+       "start_time": "09:03",
+       "end_time": "09:04",
+       "cost": 11.0,
+       "distance": 1.22,
+       "price": 11.0,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "POP Terrace Restaurant · Riverside Pavilion",
+     "start_time": "11:00",
+     "end_time": "12:00",
+     "price": 398.0,
+     "cost": 398.0,
+     "transports": [
+      {
+       "start": "Eileen Chang's Former Residence",
+       "end": "POP Terrace Restaurant · Riverside Pavilion",
+       "mode": "taxi",
+       "start_time": "10:55",
+       "end_time": "11:00",
+       "cost": 16.98,
+       "distance": 3.51,
+       "price": 16.98,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Jing'an Sculpture Park",
+     "start_time": "07:52",
+     "end_time": "08:52",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "POP Terrace Restaurant · Riverside Pavilion",
+       "end": "Jing'an Sculpture Park",
+       "mode": "taxi",
+       "start_time": "07:49",
+       "end_time": "07:52",
+       "cost": 11.98,
+       "distance": 2.08,
+       "price": 11.98,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+     "start_time": "17:00",
+     "end_time": "18:00",
+     "price": 28.0,
+     "cost": 28.0,
+     "transports": [
+      {
+       "start": "Jing'an Sculpture Park",
+       "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+       "mode": "taxi",
+       "start_time": "16:57",
+       "end_time": "17:00",
+       "cost": 12.33,
+       "distance": 2.18,
+       "price": 12.33,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "The Vanishing Pharaoh—Immersive Exploration Experience of the Khufu Pyramid Exhibition",
+     "start_time": "18:24",
+     "end_time": "19:24",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+       "end": "The Vanishing Pharaoh—Immersive Exploration Experience of the Khufu Pyramid Exhibition",
+       "mode": "taxi",
+       "start_time": "18:22",
+       "end_time": "18:24",
+       "cost": 11.0,
+       "distance": 1.62,
+       "price": 11.0,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Paramount Ballroom",
+     "start_time": "19:35",
+     "end_time": "20:35",
+     "price": 0.0,
+     "tickets": 1,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "The Vanishing Pharaoh—Immersive Exploration Experience of the Khufu Pyramid Exhibition",
+       "end": "Paramount Ballroom",
+       "mode": "taxi",
+       "start_time": "19:33",
+       "end_time": "19:35",
+       "cost": 11.25,
+       "distance": 1.87,
+       "price": 11.25,
+       "cars": 1
+      }
+     ]
+    },
+    {
+     "type": "airplane",
+     "start": "Shanghai Hongqiao International Airport",
+     "end": "Shenzhen Bao'an International Airport",
+     "FlightID": "FL017",
+     "start_time": "21:44",
+     "end_time": "23:15",
+     "price": 598.43,
+     "tickets": 1,
+     "cost": 598.43,
+     "transports": [
+      {
+       "start": "Paramount Ballroom",
+       "end": "Shanghai Hongqiao International Airport",
+       "mode": "taxi",
+       "start_time": "21:28",
+       "end_time": "21:44",
+       "cost": 44.62,
+       "distance": 11.09,
+       "price": 44.62,
+       "cars": 1
+      }
+     ]
+    }
+   ]
+  }
+ ]
 }

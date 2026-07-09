@@ -151,9 +151,51 @@
           ]
         },
         {
+          "type": "dinner",
+          "position": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+          "start_time": "17:14",
+          "end_time": "17:59",
+          "price": 14.0,
+          "cost": 70.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Tiananmen East-Metro Station",
+              "mode": "walk",
+              "start_time": "17:00",
+              "end_time": "17:04",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tiananmen East-Metro Station",
+              "end": "Niujie-Metro Station",
+              "mode": "metro",
+              "start_time": "17:04",
+              "end_time": "17:11",
+              "distance": 3.81,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "mode": "walk",
+              "start_time": "17:11",
+              "end_time": "17:14",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "accommodation",
           "position": "Beijing Hongqiqu Jinglong Hotel",
-          "start_time": "15:57",
+          "start_time": "23:00",
           "end_time": "24:00",
           "price": 478.0,
           "cost": 2390.0,
@@ -162,15 +204,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Tiananmen Square",
+              "start": "Imperial Crispy Beef Pancake - Niujie Gourmet",
+              "end": "Niujie-Metro Station",
+              "mode": "walk",
+              "start_time": "20:00",
+              "end_time": "20:03",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Niujie-Metro Station",
+              "end": "Jiaomen East-Metro Station",
+              "mode": "metro",
+              "start_time": "20:03",
+              "end_time": "20:13",
+              "distance": 5.29,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Jiaomen East-Metro Station",
               "end": "Beijing Hongqiqu Jinglong Hotel",
-              "mode": "taxi",
-              "start_time": "15:48",
-              "end_time": "15:57",
-              "distance": 6.64,
-              "price": 27.94,
-              "cost": 55.88,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "20:13",
+              "end_time": "20:21",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -349,5 +411,5 @@
     }
   ],
   "elapsed_time(sec)": 255.97039103507996,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 100.0
 }
