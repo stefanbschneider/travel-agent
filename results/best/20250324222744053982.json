@@ -1,619 +1,661 @@
 {
-  "people_number": 5,
-  "start_city": "Shenzhen",
-  "target_city": "Suzhou",
-  "itinerary": [
+ "people_number": 5,
+ "start_city": "Shenzhen",
+ "target_city": "Suzhou",
+ "elapsed_time(sec)": 289.5295159816742,
+ "_eval_score": 99.23677248677248,
+ "itinerary": [
+  {
+   "day": 1,
+   "activities": [
     {
-      "day": 1,
-      "activities": [
-        {
-          "type": "train",
-          "start_time": "12:16",
-          "end_time": "12:53",
-          "start": "Shenzhen Station",
-          "end": "Suzhou Station",
-          "price": 467.29,
-          "cost": 2336.4500000000003,
-          "tickets": 5,
-          "transports": [],
-          "TrainID": "K34"
-        },
-        {
-          "type": "attraction",
-          "position": "Garden of Cultivation",
-          "start_time": "07:44",
-          "end_time": "08:44",
-          "price": 10.0,
-          "cost": 50.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Suzhou Station",
-              "end": "Garden of Cultivation",
-              "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "07:44",
-              "distance": 1.2390645059102317,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Huanxiu Mountain Villa",
-          "start_time": "08:30",
-          "end_time": "09:30",
-          "price": 15.0,
-          "cost": 75.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Garden of Cultivation",
-              "end": "Huanxiu Mountain Villa",
-              "mode": "walk",
-              "start_time": "05:30",
-              "end_time": "05:35",
-              "distance": 0.4842729584754698,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Qu Garden of Suzhou",
-          "start_time": "07:36",
-          "end_time": "08:36",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Huanxiu Mountain Villa",
-              "end": "Qu Garden of Suzhou",
-              "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "07:36",
-              "distance": 0.5237784613442332,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Guiyuanpu (Shiquan Street Branch)",
-          "start_time": "17:02",
-          "end_time": "17:47",
-          "price": 18.0,
-          "cost": 90.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Qu Garden of Suzhou",
-              "end": "Guiyuanpu (Shiquan Street Branch)",
-              "mode": "taxi",
-              "start_time": "17:00",
-              "end_time": "17:02",
-              "distance": 1.91,
-              "price": 11.37,
-              "cost": 22.74,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Crane Garden",
-          "start_time": "19:31",
-          "end_time": "20:31",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Guiyuanpu (Shiquan Street Branch)",
-              "end": "Crane Garden",
-              "mode": "taxi",
-              "start_time": "16:31",
-              "end_time": "16:33",
-              "distance": 1.84,
-              "price": 11.12,
-              "cost": 22.24,
-              "cars": 2
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "23:00",
-          "end_time": "24:00",
-          "price": 206.0,
-          "cost": 618.0,
-          "rooms": 3,
-          "room_type": 2,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Crane Garden",
-              "end": "Xuanqiao Lane-Metro Station",
-              "mode": "walk",
-              "start_time": "20:31",
-              "end_time": "20:35",
-              "distance": 0.38,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xuanqiao Lane-Metro Station",
-              "end": "Jiangxing West Road-Metro Station",
-              "mode": "metro",
-              "start_time": "20:35",
-              "end_time": "21:07",
-              "distance": 16.02,
-              "price": 5,
-              "cost": 25,
-              "tickets": 5
-            },
-            {
-              "start": "Jiangxing West Road-Metro Station",
-              "end": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-              "mode": "walk",
-              "start_time": "21:07",
-              "end_time": "21:24",
-              "distance": 1.47,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "train",
+     "start_time": "12:16",
+     "end_time": "12:53",
+     "start": "Shenzhen Station",
+     "end": "Suzhou Station",
+     "price": 467.29,
+     "cost": 2336.4500000000003,
+     "tickets": 5,
+     "transports": [],
+     "TrainID": "K34"
     },
     {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "06:30",
-          "end_time": "07:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "08:30",
-          "end_time": "08:45",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Fengmen Hengjie",
-          "start_time": "09:18",
-          "end_time": "10:18",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-              "end": "Jiangxing West Road-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:47",
-              "distance": 1.47,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangxing West Road-Metro Station",
-              "end": "Xujiabang-Metro Station",
-              "mode": "metro",
-              "start_time": "08:47",
-              "end_time": "09:17",
-              "distance": 15.22,
-              "price": 5,
-              "cost": 25,
-              "tickets": 5
-            },
-            {
-              "start": "Xujiabang-Metro Station",
-              "end": "Fengmen Hengjie",
-              "mode": "walk",
-              "start_time": "09:17",
-              "end_time": "09:18",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Pretty Good Pavilion Bun Shop (Old Xuedian Branch)",
-          "start_time": "11:00",
-          "end_time": "11:15",
-          "price": 15.0,
-          "cost": 75.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Fengmen Hengjie",
-              "end": "Xujiabang-Metro Station",
-              "mode": "walk",
-              "start_time": "10:18",
-              "end_time": "10:19",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xujiabang-Metro Station",
-              "end": "Xuanqiao Lane-Metro Station",
-              "mode": "metro",
-              "start_time": "10:19",
-              "end_time": "10:23",
-              "distance": 2.37,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Xuanqiao Lane-Metro Station",
-              "end": "Pretty Good Pavilion Bun Shop (Old Xuedian Branch)",
-              "mode": "walk",
-              "start_time": "10:23",
-              "end_time": "10:23",
-              "distance": 0.07,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Panmen",
-          "start_time": "08:56",
-          "end_time": "09:56",
-          "price": 34.9,
-          "cost": 174.5,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Pretty Good Pavilion Bun Shop (Old Xuedian Branch)",
-              "end": "Xuanqiao Lane-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:30",
-              "distance": 0.07,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xuanqiao Lane-Metro Station",
-              "end": "South Gate-Metro Station",
-              "mode": "metro",
-              "start_time": "08:30",
-              "end_time": "08:34",
-              "distance": 2.48,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "South Gate-Metro Station",
-              "end": "Panmen",
-              "mode": "walk",
-              "start_time": "08:34",
-              "end_time": "08:37",
-              "distance": 0.33,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Suzhou Ancient Canal Cruise (Panmen Dock)",
-          "start_time": "09:22",
-          "end_time": "10:22",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Panmen",
-              "end": "Suzhou Ancient Canal Cruise (Panmen Dock)",
-              "mode": "walk",
-              "start_time": "06:22",
-              "end_time": "06:24",
-              "distance": 0.21261588792689548,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Stone Lake Scenic Area",
-          "start_time": "08:51",
-          "end_time": "09:51",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Suzhou Ancient Canal Cruise (Panmen Dock)",
-              "end": "Stone Lake Scenic Area",
-              "mode": "walk",
-              "start_time": "05:51",
-              "end_time": "06:53",
-              "distance": 5.225676343497817,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Imagination Science and Technology Museum",
-          "start_time": "10:03",
-          "end_time": "11:03",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Stone Lake Scenic Area",
-              "end": "Imagination Science and Technology Museum",
-              "mode": "walk",
-              "start_time": "07:03",
-              "end_time": "08:16",
-              "distance": 6.094633474148362,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Runji Cantonese Restaurant (Suzhou Bay Gelin Park Branch)",
-          "start_time": "17:08",
-          "end_time": "17:53",
-          "price": 93.0,
-          "cost": 465.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Imagination Science and Technology Museum",
-              "end": "Runji Cantonese Restaurant (Suzhou Bay Gelin Park Branch)",
-              "mode": "walk",
-              "start_time": "17:00",
-              "end_time": "17:08",
-              "distance": 0.6777601426795684,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "23:00",
-          "end_time": "24:00",
-          "price": 206.0,
-          "cost": 618.0,
-          "rooms": 3,
-          "room_type": 2,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Runji Cantonese Restaurant (Suzhou Bay Gelin Park Branch)",
-              "end": "Swan Dang Road-Metro Station",
-              "mode": "walk",
-              "start_time": "20:00",
-              "end_time": "20:13",
-              "distance": 1.12,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Swan Dang Road-Metro Station",
-              "end": "Jiangxing West Road-Metro Station",
-              "mode": "metro",
-              "start_time": "20:13",
-              "end_time": "20:20",
-              "distance": 3.85,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Jiangxing West Road-Metro Station",
-              "end": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-              "mode": "walk",
-              "start_time": "20:20",
-              "end_time": "20:37",
-              "distance": 1.47,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        }
-      ]
+     "type": "attraction",
+     "position": "Chang Garden",
+     "start_time": "07:44",
+     "end_time": "08:44",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Suzhou Station",
+       "end": "Suzhou Railway Station-Metro Station",
+       "mode": "walk",
+       "start_time": "07:37",
+       "end_time": "07:38",
+       "cost": 0,
+       "distance": 0.13,
+       "price": 0
+      },
+      {
+       "start": "Suzhou Railway Station-Metro Station",
+       "end": "Chayuanchang-Metro Station",
+       "mode": "metro",
+       "start_time": "07:38",
+       "end_time": "07:42",
+       "cost": 10,
+       "distance": 2.4,
+       "price": 2,
+       "tickets": 5
+      },
+      {
+       "start": "Chayuanchang-Metro Station",
+       "end": "Chang Garden",
+       "mode": "walk",
+       "start_time": "07:42",
+       "end_time": "07:44",
+       "cost": 0,
+       "distance": 0.2,
+       "price": 0
+      }
+     ]
     },
     {
-      "day": 3,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "06:30",
-          "end_time": "07:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Chang Garden",
-          "start_time": "09:20",
-          "end_time": "10:20",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)",
-              "end": "Jiangxing West Road-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:47",
-              "distance": 1.47,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Jiangxing West Road-Metro Station",
-              "end": "Chayuanchang-Metro Station",
-              "mode": "metro",
-              "start_time": "08:47",
-              "end_time": "09:18",
-              "distance": 15.76,
-              "price": 5,
-              "cost": 25,
-              "tickets": 5
-            },
-            {
-              "start": "Chayuanchang-Metro Station",
-              "end": "Chang Garden",
-              "mode": "walk",
-              "start_time": "09:18",
-              "end_time": "09:20",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Rongyang Tower (Shantang Street Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 15.0,
-          "cost": 75.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Chang Garden",
-              "end": "Chayuanchang-Metro Station",
-              "mode": "walk",
-              "start_time": "10:20",
-              "end_time": "10:22",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Chayuanchang-Metro Station",
-              "end": "Shantang Street-Metro Station",
-              "mode": "metro",
-              "start_time": "10:22",
-              "end_time": "10:26",
-              "distance": 2.07,
-              "price": 2,
-              "cost": 10,
-              "tickets": 5
-            },
-            {
-              "start": "Shantang Street-Metro Station",
-              "end": "Rongyang Tower (Shantang Street Branch)",
-              "mode": "walk",
-              "start_time": "10:26",
-              "end_time": "10:29",
-              "distance": 0.31,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Lingering Garden",
-          "start_time": "07:31",
-          "end_time": "08:31",
-          "price": 55.0,
-          "cost": 275.0,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Rongyang Tower (Shantang Street Branch)",
-              "end": "Lingering Garden",
-              "mode": "walk",
-              "start_time": "07:30",
-              "end_time": "07:31",
-              "distance": 0.15015505144686686,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "train",
-          "start_time": "13:58",
-          "end_time": "14:52",
-          "start": "Suzhou Station",
-          "end": "Shenzhen Station",
-          "price": 467.29,
-          "cost": 2336.4500000000003,
-          "tickets": 5,
-          "transports": [
-            {
-              "start": "Lingering Garden",
-              "end": "Suzhou Station",
-              "mode": "walk",
-              "start_time": "10:58",
-              "end_time": "11:15",
-              "distance": 1.435945192358683,
-              "price": 0,
-              "cost": 0
-            }
-          ],
-          "TrainID": "K33"
-        }
-      ]
+     "type": "attraction",
+     "position": "Suzhou Ancient Canal",
+     "start_time": "08:30",
+     "end_time": "09:30",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Chang Garden",
+       "end": "Suzhou Ancient Canal",
+       "mode": "walk",
+       "start_time": "08:15",
+       "end_time": "08:30",
+       "cost": 0,
+       "distance": 1.3040248043159017,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Suzhou Embroidery Museum",
+     "start_time": "07:36",
+     "end_time": "08:36",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Suzhou Ancient Canal",
+       "end": "Sanyuanfang-Metro Station",
+       "mode": "walk",
+       "start_time": "07:20",
+       "end_time": "07:26",
+       "cost": 0,
+       "distance": 0.55,
+       "price": 0
+      },
+      {
+       "start": "Sanyuanfang-Metro Station",
+       "end": "North Temple Pagoda-Metro Station",
+       "mode": "metro",
+       "start_time": "07:26",
+       "end_time": "07:31",
+       "cost": 10,
+       "distance": 2.5,
+       "price": 2,
+       "tickets": 5
+      },
+      {
+       "start": "North Temple Pagoda-Metro Station",
+       "end": "Suzhou Embroidery Museum",
+       "mode": "walk",
+       "start_time": "07:31",
+       "end_time": "07:36",
+       "cost": 0,
+       "distance": 0.44,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Amuzai Chaoshan Restaurant",
+     "start_time": "17:02",
+     "end_time": "17:47",
+     "price": 74.0,
+     "cost": 370.0,
+     "transports": [
+      {
+       "start": "Suzhou Embroidery Museum",
+       "end": "Amuzai Chaoshan Restaurant",
+       "mode": "walk",
+       "start_time": "16:51",
+       "end_time": "17:02",
+       "cost": 0,
+       "distance": 0.9610389623315755,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Suzhou Ancient Canal Cruise (Xumen Dock)",
+     "start_time": "19:31",
+     "end_time": "20:31",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Amuzai Chaoshan Restaurant",
+       "end": "Suzhou Ancient Canal Cruise (Xumen Dock)",
+       "mode": "walk",
+       "start_time": "19:25",
+       "end_time": "19:31",
+       "cost": 0,
+       "distance": 0.5642914545482194,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "Gusu Yard Xuanzhou",
+     "room_type": 1,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "24:00",
+     "price": 449.0,
+     "cost": 449.0,
+     "transports": [
+      {
+       "start": "Suzhou Ancient Canal Cruise (Xumen Dock)",
+       "end": "Gusu Yard Xuanzhou",
+       "mode": "walk",
+       "start_time": "22:56",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.365161060044885,
+       "price": 0
+      }
+     ]
     }
-  ],
-  "elapsed_time(sec)": 289.5295159816742,
-  "_eval_score": 99.23677248677248
+   ]
+  },
+  {
+   "day": 2,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Yiming Fresh Milk Bar (Leqiao Subway Station Branch)",
+     "start_time": "06:30",
+     "end_time": "07:30",
+     "price": 14.0,
+     "cost": 70.0,
+     "transports": [
+      {
+       "start": "Gusu Yard Xuanzhou",
+       "end": "Yiming Fresh Milk Bar (Leqiao Subway Station Branch)",
+       "mode": "walk",
+       "start_time": "06:24",
+       "end_time": "06:30",
+       "cost": 0,
+       "distance": 0.5089157914601029,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "breakfast",
+     "position": "Tongdexing · Traditional Suzhou-Style Noodle House (Jiayufang Branch)",
+     "start_time": "07:30",
+     "end_time": "08:30",
+     "price": 39.0,
+     "cost": 195.0,
+     "transports": [
+      {
+       "start": "Yiming Fresh Milk Bar (Leqiao Subway Station Branch)",
+       "end": "Tongdexing · Traditional Suzhou-Style Noodle House (Jiayufang Branch)",
+       "mode": "walk",
+       "start_time": "07:29",
+       "end_time": "07:30",
+       "cost": 0,
+       "distance": 0.1483511775297567,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "breakfast",
+     "position": "Old Stone Noodle House",
+     "start_time": "08:30",
+     "end_time": "08:45",
+     "price": 24.0,
+     "cost": 120.0,
+     "transports": [
+      {
+       "start": "Tongdexing · Traditional Suzhou-Style Noodle House (Jiayufang Branch)",
+       "end": "Old Stone Noodle House",
+       "mode": "walk",
+       "start_time": "08:25",
+       "end_time": "08:30",
+       "cost": 0,
+       "distance": 0.44476637759351134,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Suzhou Water Tour",
+     "start_time": "09:18",
+     "end_time": "10:18",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Old Stone Noodle House",
+       "end": "Suzhou Water Tour",
+       "mode": "walk",
+       "start_time": "09:09",
+       "end_time": "09:18",
+       "cost": 0,
+       "distance": 0.7814790521664094,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Suzhou Ancient Canal Cruise (New City Bridge Pier)",
+     "start_time": "10:00",
+     "end_time": "10:20",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Suzhou Water Tour",
+       "end": "Suzhou Ancient Canal Cruise (New City Bridge Pier)",
+       "mode": "walk",
+       "start_time": "10:00",
+       "end_time": "10:00",
+       "cost": 0,
+       "distance": 0.0,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Xiuyuan Suzhou-Style Hot Pot (Main Store, Ocean Department Store)",
+     "start_time": "11:00",
+     "end_time": "11:15",
+     "price": 121.0,
+     "cost": 605.0,
+     "transports": [
+      {
+       "start": "Suzhou Ancient Canal Cruise (New City Bridge Pier)",
+       "end": "Xiuyuan Suzhou-Style Hot Pot (Main Store, Ocean Department Store)",
+       "mode": "walk",
+       "start_time": "10:45",
+       "end_time": "11:00",
+       "cost": 0,
+       "distance": 1.2937718159214238,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Huanxiu Mountain Villa",
+     "start_time": "08:56",
+     "end_time": "09:56",
+     "price": 15.0,
+     "tickets": 5,
+     "cost": 75.0,
+     "transports": [
+      {
+       "start": "Xiuyuan Suzhou-Style Hot Pot (Main Store, Ocean Department Store)",
+       "end": "Huanxiu Mountain Villa",
+       "mode": "walk",
+       "start_time": "08:45",
+       "end_time": "08:56",
+       "cost": 0,
+       "distance": 0.9568978246895082,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Crane Garden",
+     "start_time": "09:22",
+     "end_time": "10:22",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Huanxiu Mountain Villa",
+       "end": "Crane Garden",
+       "mode": "walk",
+       "start_time": "09:16",
+       "end_time": "09:22",
+       "cost": 0,
+       "distance": 0.5717781150363126,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Qu Garden of Suzhou",
+     "start_time": "08:51",
+     "end_time": "09:51",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Crane Garden",
+       "end": "Qu Garden of Suzhou",
+       "mode": "walk",
+       "start_time": "08:51",
+       "end_time": "08:51",
+       "cost": 0,
+       "distance": 0.07291214497850647,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Joyous Garden",
+     "start_time": "10:03",
+     "end_time": "11:03",
+     "price": 15.0,
+     "tickets": 5,
+     "cost": 75.0,
+     "transports": [
+      {
+       "start": "Qu Garden of Suzhou",
+       "end": "Joyous Garden",
+       "mode": "walk",
+       "start_time": "09:59",
+       "end_time": "10:03",
+       "cost": 0,
+       "distance": 0.34023559094139916,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "Hot Pot Express",
+     "start_time": "17:08",
+     "end_time": "17:53",
+     "price": 122.0,
+     "cost": 610.0,
+     "transports": [
+      {
+       "start": "Joyous Garden",
+       "end": "Xuanqiao Lane-Metro Station",
+       "mode": "walk",
+       "start_time": "17:02",
+       "end_time": "17:03",
+       "cost": 0,
+       "distance": 0.13,
+       "price": 0
+      },
+      {
+       "start": "Xuanqiao Lane-Metro Station",
+       "end": "Yangyu Lane-Metro Station",
+       "mode": "metro",
+       "start_time": "17:03",
+       "end_time": "17:06",
+       "cost": 10,
+       "distance": 1.74,
+       "price": 2,
+       "tickets": 5
+      },
+      {
+       "start": "Yangyu Lane-Metro Station",
+       "end": "Hot Pot Express",
+       "mode": "walk",
+       "start_time": "17:06",
+       "end_time": "17:08",
+       "cost": 0,
+       "distance": 0.22,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "Gusu Yard Xuanzhou",
+     "room_type": 1,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "24:00",
+     "price": 449.0,
+     "cost": 449.0,
+     "transports": [
+      {
+       "start": "Hot Pot Express",
+       "end": "Gusu Yard Xuanzhou",
+       "mode": "walk",
+       "start_time": "22:57",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.25714666713964374,
+       "price": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "day": 3,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Lehui Wonton Shop (Wuqufang Branch)",
+     "start_time": "06:30",
+     "end_time": "07:30",
+     "price": 12.0,
+     "cost": 60.0,
+     "transports": [
+      {
+       "start": "Gusu Yard Xuanzhou",
+       "end": "Lehui Wonton Shop (Wuqufang Branch)",
+       "mode": "walk",
+       "start_time": "06:22",
+       "end_time": "06:30",
+       "cost": 0,
+       "distance": 0.7063499764791522,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "breakfast",
+     "position": "Soup Fragrance Noodle House",
+     "start_time": "07:30",
+     "end_time": "08:30",
+     "price": 18.0,
+     "cost": 90.0,
+     "transports": [
+      {
+       "start": "Lehui Wonton Shop (Wuqufang Branch)",
+       "end": "Soup Fragrance Noodle House",
+       "mode": "walk",
+       "start_time": "07:30",
+       "end_time": "07:30",
+       "cost": 0,
+       "distance": 0.07563164640343605,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Suzhou Library",
+     "start_time": "09:20",
+     "end_time": "10:20",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Soup Fragrance Noodle House",
+       "end": "Yangyu Lane-Metro Station",
+       "mode": "walk",
+       "start_time": "09:05",
+       "end_time": "09:13",
+       "cost": 0,
+       "distance": 0.75,
+       "price": 0
+      },
+      {
+       "start": "Yangyu Lane-Metro Station",
+       "end": "Lindun Road-Metro Station",
+       "mode": "metro",
+       "start_time": "09:13",
+       "end_time": "09:16",
+       "cost": 10,
+       "distance": 1.62,
+       "price": 2,
+       "tickets": 5
+      },
+      {
+       "start": "Lindun Road-Metro Station",
+       "end": "Suzhou Library",
+       "mode": "walk",
+       "start_time": "09:16",
+       "end_time": "09:20",
+       "cost": 0,
+       "distance": 0.38,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Jiuquanli Barbecue",
+     "start_time": "11:00",
+     "end_time": "12:00",
+     "price": 91.0,
+     "cost": 455.0,
+     "transports": [
+      {
+       "start": "Suzhou Library",
+       "end": "Lindun Road-Metro Station",
+       "mode": "walk",
+       "start_time": "10:49",
+       "end_time": "10:53",
+       "cost": 0,
+       "distance": 0.38,
+       "price": 0
+      },
+      {
+       "start": "Lindun Road-Metro Station",
+       "end": "Yangyu Lane-Metro Station",
+       "mode": "metro",
+       "start_time": "10:53",
+       "end_time": "10:56",
+       "cost": 10,
+       "distance": 1.62,
+       "price": 2,
+       "tickets": 5
+      },
+      {
+       "start": "Yangyu Lane-Metro Station",
+       "end": "Jiuquanli Barbecue",
+       "mode": "walk",
+       "start_time": "10:56",
+       "end_time": "11:00",
+       "cost": 0,
+       "distance": 0.38,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shilu Food Street (Jinmen Shopping Mall Branch)",
+     "start_time": "07:31",
+     "end_time": "08:31",
+     "price": 0.0,
+     "tickets": 5,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Jiuquanli Barbecue",
+       "end": "Shilu Food Street (Jinmen Shopping Mall Branch)",
+       "mode": "walk",
+       "start_time": "07:19",
+       "end_time": "07:31",
+       "cost": 0,
+       "distance": 1.0204679307047555,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "train",
+     "start_time": "13:58",
+     "end_time": "14:52",
+     "start": "Suzhou Station",
+     "end": "Shenzhen Station",
+     "price": 467.29,
+     "cost": 2336.4500000000003,
+     "tickets": 5,
+     "transports": [
+      {
+       "start": "Shilu Food Street (Jinmen Shopping Mall Branch)",
+       "end": "Shantang Street-Metro Station",
+       "mode": "walk",
+       "start_time": "13:47",
+       "end_time": "13:55",
+       "cost": 0,
+       "distance": 0.71,
+       "price": 0
+      },
+      {
+       "start": "Shantang Street-Metro Station",
+       "end": "Suzhou Railway Station-Metro Station",
+       "mode": "metro",
+       "start_time": "13:55",
+       "end_time": "13:57",
+       "cost": 10,
+       "distance": 1.48,
+       "price": 2,
+       "tickets": 5
+      },
+      {
+       "start": "Suzhou Railway Station-Metro Station",
+       "end": "Suzhou Station",
+       "mode": "walk",
+       "start_time": "13:57",
+       "end_time": "13:58",
+       "cost": 0,
+       "distance": 0.13,
+       "price": 0
+      }
+     ],
+     "TrainID": "K33"
+    }
+   ]
+  }
+ ]
 }

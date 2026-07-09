@@ -1,306 +1,406 @@
 {
-  "people_number": 3,
-  "start_city": "Wuhan",
-  "target_city": "Shanghai",
-  "itinerary": [
+ "people_number": 3,
+ "start_city": "Wuhan",
+ "target_city": "Shanghai",
+ "elapsed_time(sec)": 0.9724280834197998,
+ "_eval_score": 95.88690476190476,
+ "itinerary": [
+  {
+   "day": 1,
+   "activities": [
     {
-      "day": 1,
-      "activities": [
-        {
-          "type": "airplane",
-          "start_time": "07:14",
-          "end_time": "08:05",
-          "start": "Wuhan Tianhe International Airport",
-          "end": "Shanghai Hongqiao International Airport",
-          "price": 359.89,
-          "cost": 1079.67,
-          "tickets": 3,
-          "transports": [],
-          "FlightID": "FL563"
-        },
-        {
-          "type": "attraction",
-          "position": "Xujiahui Catholic Church",
-          "start_time": "09:33",
-          "end_time": "10:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Shanghai Hongqiao International Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
-              "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:09",
-              "distance": 0.78,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongqiao Terminal 1-Metro Station",
-              "end": "Xujiahui-Metro Station",
-              "mode": "metro",
-              "start_time": "09:09",
-              "end_time": "09:26",
-              "distance": 8.52,
-              "price": 3,
-              "cost": 9,
-              "tickets": 3
-            },
-            {
-              "start": "Xujiahui-Metro Station",
-              "end": "Xujiahui Catholic Church",
-              "mode": "walk",
-              "start_time": "09:26",
-              "end_time": "09:33",
-              "distance": 0.62,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 600.0,
-          "cost": 1800.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Xujiahui Catholic Church",
-              "end": "Xujiahui-Metro Station",
-              "mode": "walk",
-              "start_time": "08:00",
-              "end_time": "08:07",
-              "distance": 0.62,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xujiahui-Metro Station",
-              "end": "Middle Huaihai Road-Metro Station",
-              "mode": "metro",
-              "start_time": "08:07",
-              "end_time": "08:14",
-              "distance": 3.8,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Middle Huaihai Road-Metro Station",
-              "end": "Yong Fu (Huangpu Branch)",
-              "mode": "walk",
-              "start_time": "08:14",
-              "end_time": "08:17",
-              "distance": 0.31,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "The Bund",
-          "start_time": "12:50",
-          "end_time": "14:20",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Yong Fu (Huangpu Branch)",
-              "end": "The Bund",
-              "mode": "walk",
-              "start_time": "12:00",
-              "end_time": "12:50",
-              "distance": 4.22759914330109,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "14:22",
-          "end_time": "15:52",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "The Bund",
-              "end": "Huangpu River",
-              "mode": "walk",
-              "start_time": "14:20",
-              "end_time": "14:22",
-              "distance": 0.24037883824900896,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanjing Road Pedestrian Street",
-          "start_time": "16:02",
-          "end_time": "17:32",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Huangpu River",
-              "end": "Nanjing Road Pedestrian Street",
-              "mode": "walk",
-              "start_time": "15:52",
-              "end_time": "16:02",
-              "distance": 0.8540023996107989,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Fu He Hui",
-          "start_time": "18:49",
-          "end_time": "19:49",
-          "price": 1280.0,
-          "cost": 3840.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Nanjing Road Pedestrian Street",
-              "end": "Fu He Hui",
-              "mode": "walk",
-              "start_time": "17:32",
-              "end_time": "18:49",
-              "distance": 6.419481770169005,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Intercity Shanghai Hongqiao Airport",
-          "start_time": "23:00",
-          "end_time": "24:00",
-          "price": 496.0,
-          "cost": 992.0,
-          "rooms": 2,
-          "room_type": 2,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Fu He Hui",
-              "end": "Intercity Shanghai Hongqiao Airport",
-              "mode": "walk",
-              "start_time": "19:49",
-              "end_time": "21:27",
-              "distance": 8.23644141701113,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "breakfast",
-          "position": "Intercity Shanghai Hongqiao Airport",
-          "start_time": "06:00",
-          "end_time": "06:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        }
-      ]
+     "type": "airplane",
+     "start_time": "07:14",
+     "end_time": "08:05",
+     "start": "Wuhan Tianhe International Airport",
+     "end": "Shanghai Hongqiao International Airport",
+     "price": 359.89,
+     "cost": 1079.67,
+     "tickets": 3,
+     "transports": [],
+     "FlightID": "FL563"
     },
     {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Intercity Shanghai Hongqiao Airport",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Intercity Shanghai Hongqiao Airport",
-          "start_time": "06:00",
-          "end_time": "06:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Intercity Shanghai Hongqiao Airport",
-          "start_time": "06:35",
-          "end_time": "07:05",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "airplane",
-          "start_time": "17:28",
-          "end_time": "18:19",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Wuhan Tianhe International Airport",
-          "price": 308.03,
-          "cost": 924.0899999999999,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Intercity Shanghai Hongqiao Airport",
-              "end": "Hongqiao Terminal 1-Metro Station",
-              "mode": "walk",
-              "start_time": "08:30",
-              "end_time": "08:32",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Hongqiao Terminal 1-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
-              "mode": "metro",
-              "start_time": "08:32",
-              "end_time": "09:59",
-              "distance": 43.91,
-              "price": 8,
-              "cost": 24,
-              "tickets": 3
-            },
-            {
-              "start": "Pudong International Airport-Metro Station",
-              "end": "Shanghai Pudong International Airport",
-              "mode": "walk",
-              "start_time": "09:59",
-              "end_time": "10:14",
-              "distance": 1.27,
-              "price": 0,
-              "cost": 0
-            }
-          ],
-          "FlightID": "FL063"
-        }
-      ]
+     "type": "attraction",
+     "position": "Shanghai Museum",
+     "start_time": "09:33",
+     "end_time": "10:33",
+     "price": 0.0,
+     "tickets": 3,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Shanghai Hongqiao International Airport",
+       "end": "Hongqiao Terminal 1-Metro Station",
+       "mode": "walk",
+       "start_time": "08:51",
+       "end_time": "09:00",
+       "cost": 0,
+       "distance": 0.78,
+       "price": 0
+      },
+      {
+       "start": "Hongqiao Terminal 1-Metro Station",
+       "end": "East Nanjing Road-Metro Station",
+       "mode": "metro",
+       "start_time": "09:00",
+       "end_time": "09:28",
+       "cost": 15,
+       "distance": 14.07,
+       "price": 5,
+       "tickets": 3
+      },
+      {
+       "start": "East Nanjing Road-Metro Station",
+       "end": "Shanghai Museum",
+       "mode": "walk",
+       "start_time": "09:28",
+       "end_time": "09:33",
+       "cost": 0,
+       "distance": 0.49,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Old Shanghai 1930s Style Street",
+     "start_time": "10:00",
+     "end_time": "10:20",
+     "price": 0.0,
+     "tickets": 3,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Shanghai Museum",
+       "end": "Old Shanghai 1930s Style Street",
+       "mode": "walk",
+       "start_time": "09:56",
+       "end_time": "10:00",
+       "cost": 0,
+       "distance": 0.3633535387487502,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Flyover Shanghai (Raffles City Nanjing Road Pedestrian Street Store)",
+     "start_time": "10:25",
+     "end_time": "10:45",
+     "price": 48.9,
+     "tickets": 3,
+     "cost": 146.7,
+     "transports": [
+      {
+       "start": "Old Shanghai 1930s Style Street",
+       "end": "Flyover Shanghai (Raffles City Nanjing Road Pedestrian Street Store)",
+       "mode": "walk",
+       "start_time": "10:24",
+       "end_time": "10:25",
+       "cost": 0,
+       "distance": 0.10654685567620936,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shanghai Urban Planning Exhibition Center",
+     "start_time": "10:50",
+     "end_time": "11:10",
+     "price": 0.0,
+     "tickets": 3,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Flyover Shanghai (Raffles City Nanjing Road Pedestrian Street Store)",
+       "end": "Shanghai Urban Planning Exhibition Center",
+       "mode": "walk",
+       "start_time": "10:49",
+       "end_time": "10:50",
+       "cost": 0,
+       "distance": 0.12071307361807967,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shanghai Great World",
+     "start_time": "11:15",
+     "end_time": "11:35",
+     "price": 60.0,
+     "tickets": 3,
+     "cost": 180.0,
+     "transports": [
+      {
+       "start": "Shanghai Urban Planning Exhibition Center",
+       "end": "Shanghai Great World",
+       "mode": "walk",
+       "start_time": "11:10",
+       "end_time": "11:15",
+       "cost": 0,
+       "distance": 0.4898725337881944,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "lunch",
+     "position": "Nanlu Zheli (The Bund Branch)",
+     "start_time": "11:00",
+     "end_time": "12:00",
+     "price": 286.0,
+     "cost": 858.0,
+     "transports": [
+      {
+       "start": "Shanghai Great World",
+       "end": "Nanlu Zheli (The Bund Branch)",
+       "mode": "walk",
+       "start_time": "10:57",
+       "end_time": "11:00",
+       "cost": 0,
+       "distance": 0.3319518477782696,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "People's Square",
+     "start_time": "12:50",
+     "end_time": "14:20",
+     "price": 0.0,
+     "tickets": 3,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Nanlu Zheli (The Bund Branch)",
+       "end": "People's Square",
+       "mode": "walk",
+       "start_time": "12:42",
+       "end_time": "12:50",
+       "cost": 0,
+       "distance": 0.7419450243674062,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shanghai Textile Museum",
+     "start_time": "14:22",
+     "end_time": "15:52",
+     "price": 0.0,
+     "tickets": 3,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "People's Square",
+       "end": "Shanghai Textile Museum",
+       "mode": "walk",
+       "start_time": "14:21",
+       "end_time": "14:22",
+       "cost": 0,
+       "distance": 0.09067086595667141,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "attraction",
+     "position": "Shanghai Tourism Festival",
+     "start_time": "16:02",
+     "end_time": "17:32",
+     "price": 0.0,
+     "tickets": 3,
+     "cost": 0.0,
+     "transports": [
+      {
+       "start": "Shanghai Textile Museum",
+       "end": "Shanghai Tourism Festival",
+       "mode": "walk",
+       "start_time": "16:02",
+       "end_time": "16:02",
+       "cost": 0,
+       "distance": 0.0,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "dinner",
+     "position": "The Captain Restaurant & Bar",
+     "start_time": "18:49",
+     "end_time": "19:49",
+     "price": 173.0,
+     "cost": 519.0,
+     "transports": [
+      {
+       "start": "Shanghai Tourism Festival",
+       "end": "The Captain Restaurant & Bar",
+       "mode": "walk",
+       "start_time": "18:39",
+       "end_time": "18:49",
+       "cost": 0,
+       "distance": 0.8534778551384847,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "accommodation",
+     "position": "Jinjiang Metropolo Hotel Classiq, Shanghai Bund Circle",
+     "room_type": 2,
+     "rooms": 1,
+     "start_time": "23:00",
+     "end_time": "24:00",
+     "price": 691.0,
+     "cost": 691.0,
+     "transports": [
+      {
+       "start": "The Captain Restaurant & Bar",
+       "end": "Jinjiang Metropolo Hotel Classiq, Shanghai Bund Circle",
+       "mode": "walk",
+       "start_time": "22:58",
+       "end_time": "23:00",
+       "cost": 0,
+       "distance": 0.18814083474701546,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "breakfast",
+     "position": "The Westin Shanghai Hotel - The Westin Stage Restaurant",
+     "start_time": "06:00",
+     "end_time": "06:30",
+     "price": 303.0,
+     "cost": 909.0,
+     "transports": [
+      {
+       "start": "Jinjiang Metropolo Hotel Classiq, Shanghai Bund Circle",
+       "end": "The Westin Shanghai Hotel - The Westin Stage Restaurant",
+       "mode": "walk",
+       "start_time": "05:57",
+       "end_time": "06:00",
+       "cost": 0,
+       "distance": 0.3254771428661998,
+       "price": 0
+      }
+     ]
     }
-  ],
-  "elapsed_time(sec)": 0.9724280834197998,
-  "_eval_score": 95.88690476190476
+   ]
+  },
+  {
+   "day": 2,
+   "activities": [
+    {
+     "type": "breakfast",
+     "position": "Dahuchun (Sichuan Middle Road Branch)",
+     "start_time": "07:30",
+     "end_time": "08:30",
+     "price": 29.0,
+     "cost": 87.0,
+     "transports": [
+      {
+       "start": "The Westin Shanghai Hotel - The Westin Stage Restaurant",
+       "end": "Dahuchun (Sichuan Middle Road Branch)",
+       "mode": "walk",
+       "start_time": "07:26",
+       "end_time": "07:30",
+       "cost": 0,
+       "distance": 0.3513496773623501,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "breakfast",
+     "position": "Jinjiang Metropolo Hotel Classiq, Shanghai Bund Circle",
+     "start_time": "06:00",
+     "end_time": "06:30",
+     "price": 0,
+     "cost": 0,
+     "transports": [
+      {
+       "start": "Dahuchun (Sichuan Middle Road Branch)",
+       "end": "Jinjiang Metropolo Hotel Classiq, Shanghai Bund Circle",
+       "mode": "walk",
+       "start_time": "05:58",
+       "end_time": "06:00",
+       "cost": 0,
+       "distance": 0.1809271215685364,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "breakfast",
+     "position": "Shanghai EDITION Hotel · Shanghai Tavern Western Restaurant",
+     "start_time": "06:35",
+     "end_time": "07:05",
+     "price": 366.0,
+     "cost": 1098.0,
+     "transports": [
+      {
+       "start": "Jinjiang Metropolo Hotel Classiq, Shanghai Bund Circle",
+       "end": "Shanghai EDITION Hotel · Shanghai Tavern Western Restaurant",
+       "mode": "walk",
+       "start_time": "06:32",
+       "end_time": "06:35",
+       "cost": 0,
+       "distance": 0.3040273378554976,
+       "price": 0
+      }
+     ]
+    },
+    {
+     "type": "airplane",
+     "start_time": "17:28",
+     "end_time": "18:19",
+     "start": "Shanghai Pudong International Airport",
+     "end": "Wuhan Tianhe International Airport",
+     "price": 308.03,
+     "cost": 924.0899999999999,
+     "tickets": 3,
+     "transports": [
+      {
+       "start": "Shanghai EDITION Hotel · Shanghai Tavern Western Restaurant",
+       "end": "East Nanjing Road-Metro Station",
+       "mode": "walk",
+       "start_time": "16:08",
+       "end_time": "16:09",
+       "cost": 0,
+       "distance": 0.13,
+       "price": 0
+      },
+      {
+       "start": "East Nanjing Road-Metro Station",
+       "end": "Pudong International Airport-Metro Station",
+       "mode": "metro",
+       "start_time": "16:09",
+       "end_time": "17:13",
+       "cost": 21,
+       "distance": 32.08,
+       "price": 7,
+       "tickets": 3
+      },
+      {
+       "start": "Pudong International Airport-Metro Station",
+       "end": "Shanghai Pudong International Airport",
+       "mode": "walk",
+       "start_time": "17:13",
+       "end_time": "17:28",
+       "cost": 0,
+       "distance": 1.27,
+       "price": 0
+      }
+     ],
+     "FlightID": "FL063"
+    }
+   ]
+  }
+ ]
 }
