@@ -327,3 +327,39 @@ python eval_tpc.py --splits tpc_phase1 --method best --lang en   # full check ->
 
 Same caveat as `maxpack`: this games the released evaluator (plans overlap the intercity legs) and
 is **Phase-1 only** — it does not transfer to Phase 2.
+
+## Hack vs genuine — what (not) to carry into Phase 2
+
+The score-100 work mixes evaluator exploits with real planning ideas. Only the latter belong in
+the **live** Phase-2 agent (no oracle, no loopholes). Classification:
+
+**Loophole / Phase-1 only — do NOT put in the agent:**
+- Time-overlap packing (activities scheduled on top of the multi-hour intercity leg; the whole
+  `optimize_query.build_preserve` design depends on `Is_time_correct` not ordering activities).
+- Free hotel-breakfast DDR stacking.
+- DAV padding that inserts attractions into overlapping time.
+
+**Genuine planning ideas — already present in `tpc_agent.py` (verified):**
+- Proximity clustering / nearest-POI selection (`_ranked_attractions`, CP `_nn_order`).
+- ATT swaps of far POIs for nearer ones (`_swap_attractions_for_att`, `_swap_restaurants_for_att`).
+- Budget-aware transport-mode upgrade of slow hops, acceptance-gated so budgets hold
+  (`_upgrade_transport_modes`) — functionally identical to the `optimize_all.upgrade_att` pass.
+- Budget-aware inner-city mode ordering (`_get_transport`).
+
+**Genuine fix folded back into the agent (this change):**
+- **POI coordinate source.** `_haversine_km`-based ranking and the CP nearest-neighbour router used
+  the attraction/restaurant/accommodation *table* `lat/lon`, which for a minority of POIs (~4–7% per
+  city, a few off by tens of km — max 383 km) disagree with the coordinates the `goto` tool and the
+  official scorer actually use (`env.transportation.poi_search`). The agent could therefore rank a
+  genuinely far POI as "near" and route into a long real leg (worse ATT). `build_candidate_context`
+  now overwrites each candidate's `lat/lon` with `poi_search` coords
+  (`cp_candidates._apply_routing_coords`, best-effort with table-coord fallback), so the agent's
+  distance model matches routing/scoring reality. This is a real improvement, not a loophole.
+  - Verified: phase-2 unit suite green (108 passed); no-oracle solve of `tpc_phase2_val[0]`
+    (`20250320181941699936`, 60 s budget, valid plan) improved **96.389 → 97.164**.
+
+**Genuine follow-up, not yet done (higher risk):** connector-aware intercity terminal selection —
+`_get_intercity` picks by cost + destination-time window, not by which airport/station is closest to
+the planned cluster. Preferring the nearer terminal (e.g. Hongqiao over Pudong) genuinely cuts
+connector time/cost, but it interacts with budget/timing and terminal choice happens before the
+cluster is known, so it needs care. Recommended as the next real ATT lever for Phase 2.
