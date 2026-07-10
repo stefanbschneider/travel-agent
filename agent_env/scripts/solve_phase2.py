@@ -41,6 +41,10 @@ from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 DEFAULT_METHOD_PREFIX = "phase2_e2e_"
 DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
+# Warn-only guard: if set, print a warning (never raise/abort) when a single process's RSS grows
+# by more than this many MB since its first solved query. Catches leaks (e.g. func_timeout thread
+# accumulation on timeouts) during long single-process runs; unset by default (opt-in via env).
+MAX_RSS_GROWTH_MB = float(os.environ.get("TPC_P2_MAX_RSS_MB", "0") or "0")
 
 
 def _default_method_for_split(split: str) -> str:
@@ -187,6 +191,7 @@ def run_split(
     llm_parse_attempts = 0
     llm_fixture_missing = 0
     solved_evaluations: list[dict] = []
+    rss_baseline_mb: float | None = None
 
     for idx, quid in enumerate(selected, start=1):
         result_path = result_method_dir / f"{quid}.json"
@@ -210,7 +215,17 @@ def run_split(
 
         hb.write_json(result_path, plan)
 
-        telemetry["rss_mb"] = psutil.Process().memory_info().rss / (1024 * 1024)
+        rss_mb = psutil.Process().memory_info().rss / (1024 * 1024)
+        telemetry["rss_mb"] = rss_mb
+        if MAX_RSS_GROWTH_MB > 0:
+            if rss_baseline_mb is None:
+                rss_baseline_mb = rss_mb
+            elif rss_mb - rss_baseline_mb > MAX_RSS_GROWTH_MB:
+                print(
+                    f"[rss-warn] {quid}: RSS grew {rss_mb - rss_baseline_mb:.0f} MB since first "
+                    f"query ({rss_baseline_mb:.0f} -> {rss_mb:.0f} MB), exceeds "
+                    f"TPC_P2_MAX_RSS_MB={MAX_RSS_GROWTH_MB:.0f} (warn-only, continuing)"
+                )
 
         run_dir = work_root / quid
         hb.write_json(run_dir / "output.json", plan)

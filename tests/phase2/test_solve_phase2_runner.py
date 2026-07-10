@@ -104,6 +104,78 @@ def test_runner_defaults_llm_parse_on_when_backend_configured(tmp_path, monkeypa
     assert "parse:" not in str(telem.get("error") or "")
 
 
+def _fast_solve(query, variants, budget_sec):
+    return {
+        "people_number": query.get("people_number", 1),
+        "start_city": query.get("start_city", ""),
+        "target_city": query.get("target_city", ""),
+        "itinerary": [{"day": 1, "activities": []}],
+    }
+
+
+def test_rss_guard_warns_when_growth_exceeds_threshold(tmp_path, monkeypatch, capsys):
+    """TPC_P2_MAX_RSS_MB is warn-only: it must never abort the run, only print a warning once
+    per-query growth (since the first solved query in this process) exceeds the threshold."""
+    import solve_phase2 as runner
+
+    rss_values_mb = iter([100.0, 100.0, 700.0])  # baseline, under, over threshold
+
+    class FakeMemInfo:
+        def __init__(self, rss_mb):
+            self.rss = rss_mb * 1024 * 1024
+
+    class FakeProcess:
+        def memory_info(self):
+            return FakeMemInfo(next(rss_values_mb))
+
+    monkeypatch.setattr(runner.psutil, "Process", lambda: FakeProcess())
+    monkeypatch.setattr(runner, "MAX_RSS_GROWTH_MB", 500.0)
+
+    summary = runner.run_split(
+        "tpc_phase1",
+        method="phase2_rsstest_warn",
+        limit=3,
+        budget_sec=5.0,
+        results_dir=str(tmp_path / "results"),
+        work_dir=str(tmp_path / "runs"),
+        solve_fn=_fast_solve,
+    )
+
+    assert summary["selected"] == 3, "guard must not abort the run"
+    out = capsys.readouterr().out
+    assert "[rss-warn]" in out
+    assert "TPC_P2_MAX_RSS_MB=500" in out
+
+
+def test_rss_guard_silent_when_disabled(tmp_path, monkeypatch, capsys):
+    import solve_phase2 as runner
+
+    rss_values_mb = iter([100.0, 100.0, 5000.0])
+
+    class FakeMemInfo:
+        def __init__(self, rss_mb):
+            self.rss = rss_mb * 1024 * 1024
+
+    class FakeProcess:
+        def memory_info(self):
+            return FakeMemInfo(next(rss_values_mb))
+
+    monkeypatch.setattr(runner.psutil, "Process", lambda: FakeProcess())
+    monkeypatch.setattr(runner, "MAX_RSS_GROWTH_MB", 0.0)  # disabled (default)
+
+    runner.run_split(
+        "tpc_phase1",
+        method="phase2_rsstest_off",
+        limit=3,
+        budget_sec=5.0,
+        results_dir=str(tmp_path / "results"),
+        work_dir=str(tmp_path / "runs"),
+        solve_fn=_fast_solve,
+    )
+
+    assert "[rss-warn]" not in capsys.readouterr().out
+
+
 @pytest.mark.integration
 def test_runner_resume_skips_existing(tmp_path):
     import solve_phase2 as runner
