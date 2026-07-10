@@ -219,12 +219,15 @@ measured incrementally without destabilizing the deterministic baseline.
    the remaining Stage-1 loss into three concrete buckets:
    - **Negation/over-extraction regex bugs** producing spurious `required_*` families next to the
      correct `excluded_*` ones (e.g. "Do not wish to stay at the following hotels: X and Y" also
-     emits a bogus `required_hotels`). The Milestone-5 A2 negation guard covered restaurants; the
-     same guard is still missing for hotels and attractions. Deterministically fixable.
-   - **Parsed-verifier semantics mismatches**, e.g. a correct parse
-     `{excluded_inner_transport: [taxi], taxi_cars_equals: 1}` fails the oracle-accepted best plan —
-     the parsed verifier's taxi check is not vacuous when the plan contains no taxis. Verifier fix,
-     not parser fix.
+     emits a bogus `required_hotels`). **Resolved 2026-07-10 (roadmap 1c):** the Milestone-5 A2
+     negation guard was extended to hotels and attractions via shared `_negated_before` /
+     `_truncate_at_negation` helpers in `parse_constraints.py`.
+   - **Parsed-verifier semantics mismatches**, e.g. a parse `{excluded_inner_transport: [taxi],
+     taxi_cars_equals: 1}` failing an oracle-accepted best plan. **Resolved 2026-07-10 (roadmap 1c):**
+     the real root cause was that the oracle's inner-transport exclusion scans top-level
+     `activity_type=='transportation'` activities (never emitted) and is therefore vacuously true on
+     all 76 val queries; `parsed_verifier.py` now mirrors that (and uses `innercity_transport_type`
+     for taxi-ness), so it no longer over-constrains. Verifier fix, not parser fix.
    - **LLM-parse conservatism** (see gap 3).
 2. **Normalization is not yet doing the intended WorldEnv-backed resolution work.** The IR and `env`
    hooks exist, but field-level entity resolution, validation, and confidence-aware normalization are

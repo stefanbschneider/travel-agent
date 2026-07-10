@@ -236,21 +236,36 @@ before 2026-07-10 should not be compared across commits.
 
 ### 1c. Deterministic Stage-1 quick wins from the behavioral triage (new, 2026-07-10)
 
+Status: **DONE (2026-07-10).**
+
 The behavioral-disagreement triage on the first 60 val queries (8 disagreements) exposed two cheap,
-fully deterministic fixes that should land before more LLM work:
+fully deterministic fixes that landed before more LLM work:
 
-- **Extend the Milestone-5 A2 negation guard to hotels and attractions.** "Do not wish to stay at
-  the following hotels: X and Y" currently also emits a spurious `required_hotels`; "do not want to
-  visit any Museum..." also emits spurious `required_attractions`/`required_attraction_types`.
-  Same bug family as the restaurant guard that already shipped.
-- **Fix `taxi_cars_equals` vacuity in the parsed verifier.** A correct parse
-  `{excluded_inner_transport: [taxi], taxi_cars_equals: 1}` currently rejects a taxi-free
-  oracle-accepted plan; the oracle encoding is vacuously true when no taxi is used, so the parsed
-  verifier must be too. This is acceptance-gate correctness, so it also affects which solver plans
-  are kept.
+- **Extended the Milestone-5 A2 negation guard to hotels and attractions.** "Do not wish to stay at
+  the following hotels: X and Y" previously also emitted a spurious `required_hotels`; a positive
+  "visit X" clause followed by "and do not want to visit any Museum.../university campus" previously
+  leaked the negated types into `required_attractions`/`required_attraction_types`. Fixed in
+  `parse_constraints.py` via two shared helpers — `_negated_before` (negation directly preceding the
+  trigger, covers "do not wish to stay ...") and `_truncate_at_negation` (cuts a greedy chunk at a
+  following negated-desire clause) — applied to `parse_required_hotels`, `parse_required_attractions`,
+  and `parse_required_attraction_types`. Same bug family as the restaurant guard that already shipped.
+- **Made the parsed verifier's inner-transport taxi checks mirror the oracle exactly.** Root cause
+  (confirmed on all 76 val queries carrying `excluded_inner_transport`): the oracle encodes the
+  exclusion by scanning *top-level* activities with `activity_type=='transportation'`, a category the
+  plan schema never emits (inner-city rides are embedded `transports` segments), so the oracle clause
+  is **vacuously true**. The parsed verifier was instead inspecting embedded segments and rejecting
+  taxi-using plans the oracle accepts. `parsed_verifier.py` now (a) computes `excluded_inner_transport`
+  from top-level `transportation` activities exactly like the oracle (vacuous in practice), and
+  (b) decides taxi-ness for `taxi_cars_equals` via `innercity_transport_type(...)=='taxi'` (the same
+  helper the oracle uses), so a taxi-free plan is vacuously accepted. This is acceptance-gate
+  correctness, so it also affects which solver plans are kept.
 
-Both are measurable immediately via `parser_vs_oracle.py --behavioral` (agreement was 0.867 on the
-first 60 val queries) and cost no LLM calls.
+**Measured (val, `parser_vs_oracle.py --behavioral --disjunction`, n=850):** behavioral agreement
+**0.706 → 0.757**; first-60 agreement **0.867 → 0.950**; structural precision 0.541 → 0.547, recall
+0.698 → 0.698 (flat), F1 0.609 → 0.614, value-accuracy 0.810 (flat), `disjunction_flattened` 137
+(unchanged). Zero new false-acceptances (no oracle-reject / parsed-accept flips). Regression tests:
+`tests/phase2/test_parser_accuracy.py` (hotel/attraction guards) and
+`tests/phase2/test_taxi_verifier_vacuity.py`. No LLM calls.
 
 ### 2. Finish Stage 1 normalization before adding refinement
 

@@ -7,6 +7,53 @@ import re
 import math
 
 
+# --- Negation guards (shared) -------------------------------------------------
+# The dataset expresses exclusions as "do not want/wish to <verb> X". Positive
+# extractors (required_*) must not fire on those clauses. Two helpers cover the
+# two shapes we see:
+#   * the trigger is *directly* preceded by a negation ("do not wish to stay ..."),
+#   * a positive clause runs into a following negated clause ("visit X and do not
+#     want to visit Y") and the greedy chunk swallows the negated tail.
+#
+# `_NEG_BEFORE` matches a negation that ends just before the (a few words before
+# the) trigger; `_NEG_DESIRE_TAIL` matches an embedded negated-desire clause so a
+# captured chunk can be truncated at it.
+_NEG_BEFORE = re.compile(
+    r"\b(?:do(?:es)?\s+not|do\s+n't|don't|doesn't|did\s+not|didn't|will\s+not|"
+    r"won't|not|never|avoid|no)\b[\w'\s]{0,20}$",
+    re.I,
+)
+_NEG_DESIRE_TAIL = re.compile(
+    r"(?:\band\b\s+|\bbut\b\s+|;\s*|,\s*)?"
+    r"\b(?:do(?:es)?\s+not|do\s+n't|don't|doesn't|did\s+not|didn't|will\s+not|"
+    r"won't|never|avoid)\b\s+(?:want|wish|hope|like|plan|intend)?",
+    re.I,
+)
+
+
+def _negated_before(text, pos, window=28):
+    """True when the text immediately preceding ``pos`` expresses a negation.
+
+    A ``window``-char lookback catches both "do not <trigger>" and phrasings where
+    a couple of words sit between the negation and the trigger (e.g.
+    "do not wish to stay at ...").
+    """
+    return bool(_NEG_BEFORE.search(text[max(0, pos - window):pos]))
+
+
+def _truncate_at_negation(chunk):
+    """Cut ``chunk`` at the first embedded negated-desire clause.
+
+    "Xixi Paradise Commercial Street and do not want to visit any Museum" ->
+    "Xixi Paradise Commercial Street". Returns the (stripped) prefix, or the
+    original chunk when no negated tail is present.
+    """
+    m = _NEG_DESIRE_TAIL.search(chunk)
+    if m:
+        return chunk[: m.start()].strip().rstrip(",").strip()
+    return chunk
+
+
 def parse_budget(text):
     """Extract budget constraints from text."""
     budgets = {}
@@ -182,10 +229,13 @@ def parse_required_attractions(text):
         m = re.search(pat, text, re.I)
         if m:
             # Respect negation: "do not want/wish to visit ..." is not a requirement.
-            prefix = text[max(0, m.start() - 14):m.start()]
-            if re.search(r"\b(?:not|no|don't|never|avoid)\b", prefix, re.I):
+            if _negated_before(text, m.start()):
                 continue
-            chunk = m.group(1).strip()
+            # Truncate a greedy chunk that ran into a following negated clause,
+            # e.g. "visit X and do not want to visit Y" -> keep only "X".
+            chunk = _truncate_at_negation(m.group(1).strip())
+            if not chunk:
+                continue
             # Skip attraction TYPE phrases (those belong to parse_required_attraction_types).
             if chunk.lower().strip() in _ATTRACTION_TYPE_PHRASES:
                 continue
@@ -233,6 +283,8 @@ def parse_required_attraction_types(text):
     # "want to visit a park" / "want to visit Cultural Landscape"
     # But NOT "do not want to visit..." (negated)
     m = re.search(r"(?<!not\s)(?<!not\s\w\s)(?:want|wish|hope)\s+to\s+visit\s+(?:a\s+)?(.+?)(?:\.|;|,\s*(?:and\s+we|we|the\s+budget|do|hope|stay|if)|$)", text, re.I)
+    if m and _negated_before(text, m.start()):
+        m = None
     if not m:
         # Try "visit X and Y" (positive form, not preceded by "not")
         m = re.search(r"[Vv]isit\s+(.+?)(?:\.|;|,\s*(?:and\s+we|we|the)|$)", text, re.I)
@@ -240,7 +292,12 @@ def parse_required_attraction_types(text):
         if m and re.search(r"(?:not|don't|no)\s+(?:\w+\s+){0,3}visit", text[:m.start() + 10], re.I):
             m = None
     if m:
-        chunk = m.group(1).strip().rstrip(".")
+        # Truncate a greedy chunk that ran into a following negated clause so
+        # negated types ("... and do not want to visit any Museum") do not leak
+        # into the *required* set (parse_excluded_attraction_types owns those).
+        chunk = _truncate_at_negation(m.group(1).strip().rstrip("."))
+        if not chunk:
+            return types if types else None
         # Check if it matches known types or type-like patterns
         for kt in known_types:
             if kt.lower() in chunk.lower():
@@ -420,9 +477,14 @@ def parse_required_hotels(text):
         r"stay\s+at\s+(?:one\s+of\s+)?(?:the\s+following\s+)?hotels?[:\s]+(.+?)(?:\.|;|,\s*(?:and\s+we|we)|$)",
     ]
     for pat in patterns:
-        m = re.search(pat, text, re.I)
-        if m:
-            chunk = m.group(1).strip().rstrip(".")
+        for m in re.finditer(pat, text, re.I):
+            # Negation guard: "do not wish to stay at ..." is an *exclusion*
+            # (parse_excluded_hotels handles it), never a required hotel.
+            if _negated_before(text, m.start()):
+                continue
+            chunk = _truncate_at_negation(m.group(1).strip().rstrip("."))
+            if not chunk:
+                continue
             # Skip if it matches room type or hotel type patterns
             if re.match(r"(?:a\s+)?(single|double|twin)", chunk, re.I):
                 continue
@@ -436,7 +498,7 @@ def parse_required_hotels(text):
             parts = re.split(r"\s+and\s+", chunk)
             for p in parts:
                 p = p.strip().rstrip(".")
-                if p and len(p) > 3:
+                if p and len(p) > 3 and p not in names:
                     names.append(p)
     return names if names else None
 

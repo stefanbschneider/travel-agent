@@ -256,8 +256,18 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
     # --- Inner transport exclusions ---------------------------------------
     excluded_modes = [_norm(m) for m in _as_list(constraints.get("excluded_inner_transport"))]
     if excluded_modes:
-        used = {_norm(innercity_transport_type(activity_transports(a))) for a in acts}
-        add(not any(m in used for m in excluded_modes))
+        # Mirror the oracle's hard_logic encoding exactly. The oracle builds the set of
+        # activity_position values for *top-level* activities whose activity_type is
+        # 'transportation' and checks the excluded mode string is not in that set. The plan
+        # schema never emits standalone 'transportation' activities (inner-city transport is
+        # carried as embedded `transports` segments), so that set is empty and the oracle
+        # clause is vacuously true. Inspecting embedded segments here instead over-constrains
+        # relative to the oracle and falsely rejects oracle-accepted plans (all 76 val queries
+        # with this family encode it via the vacuous pattern). See docs roadmap 1c.
+        transport_positions = {
+            _norm(activity_position(a)) for a in acts if activity_type(a) == "transportation"
+        }
+        add(not any(m in transport_positions for m in excluded_modes))
 
     # --- Conditional transport (distance threshold -> required mode) -------
     cond = constraints.get("conditional_transport")
@@ -280,10 +290,14 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
         except (TypeError, ValueError):
             want_cars = None
         if want_cars is not None:
+            # Mirror the oracle clause: a transport is "taxi" iff
+            # innercity_transport_type(tr) == 'taxi' (the same helper the oracle uses),
+            # and only taxi transports are constrained -- so a taxi-free plan is
+            # vacuously accepted, exactly like the oracle. See docs roadmap 1c.
             ok = True
             for a in acts:
                 tr = activity_transports(a)
-                if any(_norm(seg.get("mode")) == "taxi" for seg in tr):
+                if _norm(innercity_transport_type(tr)) == "taxi":
                     cars = taxi_cars_fn(tr)
                     if not isinstance(cars, int) or cars != want_cars:
                         ok = False

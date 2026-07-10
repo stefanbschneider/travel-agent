@@ -122,3 +122,77 @@ def test_genuine_inner_transport_budget_still_parsed():
     )
     b = raw.get("budgets") or {}
     assert b.get("inner_transport") == 150.0, b
+
+
+# --- 1c: negation guard extended to hotels ---------------------------------
+
+def test_negated_hotels_are_excluded_not_required():
+    # Real val query 20250320230800586344 shape: "Do not wish to stay at the
+    # following hotels: X and Y" previously also emitted a spurious required_hotels.
+    raw = pc.parse_query_no_oracle(
+        _q("Do not wish to stay at the following hotels: Yucheng Hotel (Wuhan) "
+           "and All Seasons Hotel (Wuhan).")
+    )
+    assert not raw.get("required_hotels"), raw.get("required_hotels")
+    assert raw.get("excluded_hotels") == [
+        "Yucheng Hotel (Wuhan)",
+        "All Seasons Hotel (Wuhan)",
+    ], raw.get("excluded_hotels")
+
+
+def test_negated_hotels_short_form_excluded():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not want to stay at Modern Classic Hotel and Holiday Inn Express Dongmen.")
+    )
+    assert not raw.get("required_hotels"), raw.get("required_hotels")
+    assert raw.get("excluded_hotels") == [
+        "Modern Classic Hotel",
+        "Holiday Inn Express Dongmen",
+    ], raw.get("excluded_hotels")
+
+
+def test_positive_hotel_still_required():
+    raw = pc.parse_query_no_oracle(
+        _q("We want to stay at one of the following hotels: Huayueju Serviced Apartment.")
+    )
+    # The negation guard must not suppress a positive hotel requirement: the clean
+    # hotel name is still present (a pre-existing "one of the following hotels:" prefix
+    # over-extraction is out of scope here and harmless -- the verifier matches by `any`).
+    req = raw.get("required_hotels") or []
+    assert "Huayueju Serviced Apartment" in req, req
+    assert not raw.get("excluded_hotels"), raw.get("excluded_hotels")
+
+
+# --- 1c: negation guard extended to attractions ----------------------------
+
+def test_negated_attraction_types_do_not_leak_into_required():
+    # Real val query 20250321111720443608: a positive "visit X" clause followed by
+    # a negated "do not want to visit any Museum/... or university campus" clause.
+    raw = pc.parse_query_no_oracle(
+        _q("We want to visit Xixi Paradise Commercial Street and do not want to "
+           "visit any Museum/Memorial Hall or university campus.")
+    )
+    # positive name survives ...
+    assert raw.get("required_attractions") == ["Xixi Paradise Commercial Street"], raw
+    # ... but the negated types must NOT be required
+    req_types = raw.get("required_attraction_types") or []
+    assert "Museum/Memorial Hall" not in req_types, raw
+    assert "university campus" not in req_types, raw
+    # they belong to the excluded set instead
+    excl_types = raw.get("excluded_attraction_types") or []
+    assert "Museum/Memorial Hall" in excl_types, raw
+    assert "university campus" in excl_types, raw
+
+
+def test_negated_attraction_name_not_required():
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to visit West Yellow Temple and Hall of Benevolent Longevity.")
+    )
+    assert not raw.get("required_attractions"), raw.get("required_attractions")
+
+
+def test_positive_attraction_still_required():
+    raw = pc.parse_query_no_oracle(
+        _q("We want to visit Xixi Paradise Commercial Street.")
+    )
+    assert raw.get("required_attractions") == ["Xixi Paradise Commercial Street"], raw
