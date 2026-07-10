@@ -48,6 +48,7 @@ split_mod = _load_script_module("make_phase2_splits", "scripts/make_phase2_split
 parser_mod = _load_script_module("parser_vs_oracle", "scripts/parser_vs_oracle.py")
 timing_mod = _load_script_module("phase2_timing", "scripts/phase2_timing.py")
 rehearse_mod = _load_script_module("rehearse_phase2", "scripts/rehearse_phase2.py")
+runner_mod = _load_script_module("solve_phase2", "agent_env/scripts/solve_phase2.py")
 
 
 DEFAULT_HISTORY_DIR = PROJECT_ROOT / "docs" / "phase2_baselines"
@@ -237,6 +238,14 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     parser = record.get("parser", {})
     behavioral = parser.get("behavioral", {}) if isinstance(parser, dict) else {}
 
+    parser_full = record.get("parser_full", {})
+    parser_full_behavioral = (
+        parser_full.get("behavioral", {}) if isinstance(parser_full, dict) else {}
+    )
+
+    llm_config = record.get("llm_config", {}) if isinstance(record, dict) else {}
+    llm_backend = str(llm_config.get("backend") or "none")
+
     timing = record.get("timing", {})
     stage = timing.get("per_stage", {}) if isinstance(timing, dict) else {}
     completion = record.get("completion", {}) if isinstance(record, dict) else {}
@@ -286,6 +295,17 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "parser_value_accuracy": float(parser.get("value_accuracy", 0.0)),
         "parser_disjunction_flattened": int(parser.get("disjunction_flattened", 0)),
         "behavioral_agreement_rate": float(behavioral.get("agreement_rate", 0.0)),
+        "parser_full_n": int(parser_full.get("n", 0)),
+        "parser_full_precision": float(parser_full.get("precision", 0.0)),
+        "parser_full_recall": float(parser_full.get("recall", 0.0)),
+        "parser_full_f1": float(parser_full.get("f1", 0.0)),
+        "parser_full_value_accuracy": float(parser_full.get("value_accuracy", 0.0)),
+        "parser_full_disjunction_flattened": int(parser_full.get("disjunction_flattened", 0)),
+        "parser_full_behavioral_agreement_rate": float(
+            parser_full_behavioral.get("agreement_rate", 0.0)
+        ),
+        "llm_backend": llm_backend,
+        "llm_parse": llm_backend != "none",
         "timing_total_p50": float(timing.get("total_p50", 0.0)),
         "timing_total_p95": float(timing.get("total_p95", 0.0)),
         "timing_valid_output_rate": float(timing.get("valid_output_rate", 0.0)),
@@ -362,6 +382,15 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "parser_value_accuracy",
         "parser_disjunction_flattened",
         "behavioral_agreement_rate",
+        "parser_full_n",
+        "parser_full_precision",
+        "parser_full_recall",
+        "parser_full_f1",
+        "parser_full_value_accuracy",
+        "parser_full_disjunction_flattened",
+        "parser_full_behavioral_agreement_rate",
+        "llm_backend",
+        "llm_parse",
         "timing_total_p50",
         "timing_total_p95",
         "timing_valid_output_rate",
@@ -410,6 +439,11 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
 
     parser = record.get("parser", {})
     behavioral = parser.get("behavioral", {}) if isinstance(parser, dict) else {}
+    parser_full = record.get("parser_full", {})
+    parser_full_behavioral = (
+        parser_full.get("behavioral", {}) if isinstance(parser_full, dict) else {}
+    )
+    llm_config = record.get("llm_config", {}) if isinstance(record, dict) else {}
     timing = record.get("timing", {})
     variance = record.get("variance", {}) if isinstance(record, dict) else {}
     completion = record.get("completion", {}) if isinstance(record, dict) else {}
@@ -465,6 +499,22 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- value_accuracy: {float(parser.get('value_accuracy', 0.0)):.4f}",
         f"- disjunction_flattened: {int(parser.get('disjunction_flattened', 0))}",
         f"- behavioral_agreement_rate: {float(behavioral.get('agreement_rate', 0.0)):.4f}",
+        "",
+        "## Parser Vs Oracle (full val, n={0}) -- headline signal, solver-free".format(
+            int(parser_full.get("n", 0))
+        ),
+        "",
+        f"- precision: {float(parser_full.get('precision', 0.0)):.4f}",
+        f"- recall: {float(parser_full.get('recall', 0.0)):.4f}",
+        f"- f1: {float(parser_full.get('f1', 0.0)):.4f}",
+        f"- value_accuracy: {float(parser_full.get('value_accuracy', 0.0)):.4f}",
+        f"- disjunction_flattened: {int(parser_full.get('disjunction_flattened', 0))}",
+        f"- behavioral_agreement_rate: {float(parser_full_behavioral.get('agreement_rate', 0.0)):.4f}",
+        "",
+        "## LLM Parse Config",
+        "",
+        f"- backend: {llm_config.get('backend', 'none')}",
+        f"- model: {llm_config.get('model') or '(n/a)'}",
         "",
         "## Timing And Reliability",
         "",
@@ -586,6 +636,23 @@ def main() -> None:
         branch_aware=args.branch_aware,
     )
 
+    # Parser metrics on the fold alone are only as representative as the fold: a small seeded
+    # fold can miss every uid a parser fix touched (see roadmap-1c/step2, where full-val
+    # behavioral agreement moved 0.706->0.757 while the n=20 fold row stayed flat). The full val
+    # split is solver-free (diff-only, no solve), so always measuring it here is cheap
+    # (~20s at n=850) and is the headline signal; the fold-scoped "parser" above stays for
+    # continuity with earlier ledger rows.
+    parser_full = parser_mod.run_report(
+        fold_info.split_name,
+        uids=None,
+        behavioral=True,
+        lang=args.lang,
+        disjunction=True,
+        branch_aware=args.branch_aware,
+    )
+
+    llm_cfg = runner_mod._phase2_llm_config()
+
     e2e_method = f"phase2_e2e_{fold_info.split_name}"
     solver_method = f"phase2_solver_only_{fold_info.split_name}"
     e2e_telemetries, e2e_missing = _collect_selected_telemetry(e2e_method, fold_info.uids)
@@ -617,6 +684,11 @@ def main() -> None:
         "variance": variance,
         "rehearsal": rehearsal,
         "parser": parser,
+        "parser_full": parser_full,
+        "llm_config": {
+            "backend": llm_cfg.get("backend", "none"),
+            "model": llm_cfg.get("model"),
+        },
         "timing": timing,
         "completion": completion,
         "timing_source": {

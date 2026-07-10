@@ -41,6 +41,21 @@ whole slice, in both end-to-end and solver-only modes).
 - **`repeats` and `*_std` columns.** With `--repeats N` the rehearsal runs N times (fresh each time)
   and the row records mean/std of e2e/solver-only FPR and overall_true across repeats. Organizers run
   each harness 5x and average, so this is the local estimate of that variance.
+- **`parser_*` vs `parser_full_*` — always compare on `parser_full_*`.** `parser_*` (precision,
+  recall, f1, value_accuracy, disjunction_flattened, behavioral_agreement_rate) is scored only over
+  the row's fold (`n` uids) and can miss whatever a parser change touched if the small seeded fold
+  doesn't happen to contain those uids — this happened for real: full-val behavioral agreement moved
+  0.706 -> 0.757 across a set of fixes while the n=20 fold-0 row's `behavioral_agreement_rate` stayed
+  flat. `parser_full_*` (added 2026-07-10) reruns the same solver-free diff (`parser_vs_oracle.py`,
+  `--behavioral --disjunction --branch-aware`) over the *entire* val/test split regardless of the
+  row's fold/limit, so it is directly comparable across rows and is the headline parsing-quality
+  signal. It costs ~20s (diff-only, no solve) and is computed on every row unconditionally.
+  `parser_*` is kept only for continuity with pre-2026-07-10 rows.
+- **`llm_backend` / `llm_parse`.** Records which LLM backend (if any) was configured for the run via
+  `TPC_P2_LLM_BACKEND`/`agent_env/config.toml` at record time — `llm_parse` is `false` whenever
+  `llm_backend` is `"none"`. Rows with different `llm_backend` values are not directly comparable
+  (LLM-assisted parsing changes both scores and cost); check this column before comparing two rows'
+  `parser_full_*`/FPR numbers.
 
 ## Notes
 
