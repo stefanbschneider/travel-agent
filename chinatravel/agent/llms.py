@@ -10,27 +10,34 @@ try:
 except Exception:  # pragma: no cover
     repair_json = None
 
-try:
-    from transformers import AutoTokenizer
-    from transformers import AutoConfig
-except Exception:  # pragma: no cover
-    AutoTokenizer = None
-    AutoConfig = None
-
 # from modelscope import AutoModelForCausalLM, AutoTokenizer
 try:
     import tiktoken
 except Exception:  # pragma: no cover
     tiktoken = None
 
-try:
-    from vllm import LLM, SamplingParams
-except Exception:  # pragma: no cover
-    LLM = None
-    SamplingParams = None
 import re
 import sys
 import os
+
+
+def _import_transformers():
+    """Lazily import transformers (pulls in torch, ~0.5-1 GB RSS) only when a
+    local-model backend (Deepseek/Qwen/Mistral/Llama) is actually constructed."""
+    try:
+        from transformers import AutoTokenizer, AutoConfig
+    except Exception as e:  # pragma: no cover
+        raise ImportError("transformers is required for this LLM backend but is not installed.") from e
+    return AutoTokenizer, AutoConfig
+
+
+def _import_vllm():
+    """Lazily import vllm (pulls in torch) only when a local-model backend is constructed."""
+    try:
+        from vllm import LLM, SamplingParams
+    except Exception as e:  # pragma: no cover
+        raise ImportError("vllm is required for this LLM backend but is not installed.") from e
+    return LLM, SamplingParams
 
 project_root_path = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -96,7 +103,7 @@ class Deepseek(AbstractLLM):
     def __init__(self):
         super().__init__()
         _require_dependency(OpenAI, "openai")
-        _require_dependency(AutoTokenizer, "transformers")
+        AutoTokenizer, _ = _import_transformers()
         self.llm = OpenAI(
             base_url="https://api.deepseek.com",
         )
@@ -240,10 +247,8 @@ class GPT4o(AbstractLLM):
 class Qwen(AbstractLLM):
     def __init__(self, model_name, max_model_len=None):
         super().__init__()
-        _require_dependency(AutoTokenizer, "transformers")
-        _require_dependency(AutoConfig, "transformers")
-        _require_dependency(LLM, "vllm")
-        _require_dependency(SamplingParams, "vllm")
+        AutoTokenizer, AutoConfig = _import_transformers()
+        LLM, SamplingParams = _import_vllm()
         self.path = os.path.join(
             project_root_path, "chinatravel", "local_llm", model_name
         )
@@ -364,10 +369,8 @@ class Qwen(AbstractLLM):
 class Mistral(AbstractLLM):
     def __init__(self, max_model_len=None):
         super().__init__()
-        _require_dependency(AutoTokenizer, "transformers")
-        _require_dependency(AutoConfig, "transformers")
-        _require_dependency(LLM, "vllm")
-        _require_dependency(SamplingParams, "vllm")
+        AutoTokenizer, AutoConfig = _import_transformers()
+        LLM, SamplingParams = _import_vllm()
         self.path = os.path.join(
             project_root_path, "chinatravel", "local_llm", "Mistral-7B-Instruct-v0.3",
         )
@@ -439,10 +442,8 @@ class Mistral(AbstractLLM):
 class Llama(AbstractLLM):
     def __init__(self, model_name):
         super().__init__()
-        _require_dependency(AutoTokenizer, "transformers")
-        _require_dependency(LLM, "vllm")
-        _require_dependency(SamplingParams, "vllm")
-
+        AutoTokenizer, _ = _import_transformers()
+        LLM, SamplingParams = _import_vllm()
 
         Llama_supported = ["Llama3-3B", "Llama3-8B"]
         if model_name not in Llama_supported:
