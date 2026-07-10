@@ -9,6 +9,24 @@ Companion docs:
 - `AGENT_DESIGN.md` — shared overview of the deterministic planning core
 - `IJCAI2026_competition.md` — source-based summary of the official competition pages
 
+## Current implementation snapshot (2026-07-10)
+
+The Phase 2 harness is no longer hypothetical. The following pieces are already implemented:
+
+- `chinatravel/agent/phase2/orchestrator.py` owns the Stage 1–4 control loop
+- `agent_env/scripts/solve_phase2.py` is the per-query runner
+- deterministic no-oracle disjunctive expansion exists behind `TPC_P2_DISJUNCTION`
+- `scripts/rehearse_phase2.py`, `scripts/parser_vs_oracle.py`, and `scripts/phase2_timing.py`
+   provide rehearsal, parser diagnostics, and telemetry aggregation
+
+What remains incomplete is mostly Stage 1 quality and Stage 3 refinement:
+
+- Stage 1 still starts from `parse_query_no_oracle()` and is therefore still dominated by the current
+   regex parser
+- the richer parser IR exists, but confidence/entity-resolution fields are mostly scaffolding
+- `TPC_P2_LLM_PARSE` is still a conservative additive stub
+- `TPC_P2_LLM_REFINE` is still a no-op placeholder
+
 ## Official Execution Model
 
 Phase 2 differs from Phase 1 in five ways that drive the whole design:
@@ -97,7 +115,9 @@ The Phase 2 harness lives in its own package so it can evolve without touching t
 
 - `chinatravel/agent/phase2/llm_client.py` — LLM client abstraction (backends: `none`/`fixture`/`openai`)
 - `chinatravel/agent/phase2/schema.py` — two-layer schema: parser IR + solver constraint dict
-- `chinatravel/agent/phase2/normalize.py` — IR → branch-local solver variants (WorldEnv-validated)
+- `chinatravel/agent/phase2/normalize.py` — IR → branch-local solver variants (currently mostly a
+   deterministic passthrough plus disjunction expansion; full WorldEnv-backed validation/entity
+   resolution is still to be added)
 - `chinatravel/agent/phase2/budget.py` — per-query time budgeting
 - `chinatravel/agent/phase2/fallback.py` — guaranteed-valid fallback plan
 - `chinatravel/agent/phase2/orchestrator.py` — Stage 1–4 control loop + telemetry
@@ -178,19 +198,21 @@ The harness always preserves a hard finalization buffer and returns before the t
 These are the extension points; the skeleton wires them as no-op stubs so improvements can be added and
 measured incrementally without destabilizing the deterministic baseline.
 
-## Current Gaps To Close (post-skeleton)
+## Current Gaps To Close (post-review)
 
-1. **No-oracle disjunction handling (highest priority).** `parse_query_no_oracle()` returns one flat
-   parse with `disjunctive = False`, so `solver_constraint_variants(..., use_oracle=False)` yields only
-   one normalized variant. Held-out OR-style constraints need true branch generation.
-2. **Regex-only brittleness.** The current parser is strong on repeated released phrasing but will vary
-   on held-out wording. Needs an LLM second pass for paraphrases, compound clauses, OR constraints,
-   conditional transport/timing, and entity/type disambiguation.
-3. **Generic-runner baseline.** The baseline harness delegates the whole loop to `opencode`/`codex`.
-   Our harness owns the loop and invokes the LLM only where needed.
-4. **CLI overhead for deterministic steps.** For our own code, direct Python calls beat shelling out
-   through `agent_env.cli` for every lookup. CLI/MCP/HTTP wrappers remain useful for external-agent
-   experiments.
+1. **Regex-only brittleness remains the main Phase 2 risk.** The live Stage 1 path still starts from
+   `parse_query_no_oracle()`, so held-out phrasing robustness is still mostly bounded by the current
+   regex parser.
+2. **Normalization is not yet doing the intended WorldEnv-backed resolution work.** The IR and `env`
+   hooks exist, but field-level entity resolution, validation, and confidence-aware normalization are
+   still largely unimplemented.
+3. **LLM parsing is still too conservative.** The current `TPC_P2_LLM_PARSE` path can add missing
+   detail, but it is not yet designed to safely correct wrong extracted values or recover failed OR
+   splits in the hard cases.
+4. **Stage 3 refinement is still a stub.** Current Phase 2 performance is effectively deterministic
+   TPCAgent plus fallback, not deterministic solve plus bounded refinement.
+5. **Operational benchmarking is not yet mature.** The scripts exist, but the repo does not yet carry a
+   stable set of rehearsal results that quantify solver-only vs end-to-end gap on validation folds.
 
 ## Design Rules For Phase 2
 

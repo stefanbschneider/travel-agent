@@ -1,13 +1,63 @@
 # TPC 2026 Phase 2 — Skeleton Harness + Eval Implementation Plan
 
-This is the **step-by-step build plan** for the Phase 2 skeleton harness and evaluation pipeline. It is
-documentation only; no code has been written yet. Design rationale lives in `docs/tpc_phase2_design.md`;
-measurement methodology lives in `docs/tpc_phase2_eval.md`.
+This document started as the **step-by-step build plan** for the Phase 2 skeleton harness and evaluation
+pipeline. The core skeleton is now implemented. It should now be read as a combined build log,
+status snapshot, and next-step roadmap for the current Phase 2 agent. Design rationale lives in
+`docs/tpc_phase2_design.md`; measurement methodology lives in `docs/tpc_phase2_eval.md`.
+
+## Current status snapshot (2026-07-10)
+
+What is already implemented:
+
+- a dedicated `chinatravel/agent/phase2/` package with `llm_client`, `schema`, `normalize`, `budget`,
+  `fallback`, and `orchestrator`
+- a Phase 2 runner in `agent_env/scripts/solve_phase2.py`
+- rehearsal and measurement scripts in `scripts/rehearse_phase2.py`, `scripts/parser_vs_oracle.py`,
+  `scripts/phase2_timing.py`, and `scripts/phase2_gate.py`
+- deterministic no-oracle disjunctive branch expansion behind `TPC_P2_DISJUNCTION`
+- a tested injection seam so the harness, not `TPCAgent`, owns parsing and variant selection
+
+What is verified:
+
+- the Phase 2 pytest slice passes: `.venv/bin/python -m pytest tests/phase2 -q`
+- the deterministic harness path, fallback path, disjunction wiring, and evaluation tooling are all
+  implemented and covered by dedicated tests
+
+What is still incomplete:
+
+- Stage 1 still mostly wraps `parse_query_no_oracle()`; the richer parser IR exists but most of its
+  uncertainty, confidence, and entity-resolution fields are not populated yet
+- normalization still does not perform the intended `WorldEnv`-backed entity resolution and validation
+- `TPC_P2_LLM_PARSE` is still an additive second-pass stub, not a robust corrective parser
+- `TPC_P2_LLM_REFINE` is still a no-op placeholder
+- no checked-in rehearsal run artifacts currently exist under `agent_env/runs/` or `results/phase2_*`
+
+## Review summary (2026-07-10)
+
+The main architectural decision remains correct: **own the Phase 2 harness, keep the deterministic
+planner, and improve parsing/orchestration around it**.
+
+The main implementation reality is that the repo now has a real Phase 2 harness surface, but the
+largest remaining risk has shifted from "missing harness" to **Stage 1 parser quality on held-out
+phrasing**.
+
+Current review findings:
+
+1. The deterministic harness path is real and usable now; Phase 2 is no longer only a paper plan.
+2. The parser-side IR and flag structure are in place, but the live path is still dominated by the
+   regex-based no-oracle parser.
+3. Deterministic disjunction handling is implemented and should stay enabled in production unless a
+   run explicitly overrides it.
+4. The current LLM parse path is too conservative to repair many real held-out failures, because it
+   mostly adds missing detail instead of correcting wrong extracted values.
+5. Evaluation coverage is solid for functionality, but operational benchmarking is still missing:
+   the repo has scripts for rehearsal and timing, yet no committed Phase 2 run outputs.
 
 ## Ground rules
 
-- **Skeleton + placeholders only.** No real parser/solver/LLM improvements yet. New behavior sits behind
-  feature flags that default OFF.
+- **Flag-gated evolution.** The original skeleton kept new behavior behind feature flags that default
+  OFF. That invariant still holds: deterministic disjunction and parser fixes are implemented, while
+  LLM-assisted parse/refine paths remain placeholders until promoted by measurement.
 - **Reuse the existing `TPCAgent`** (`chinatravel/agent/tpc_agent/`) in no-oracle mode
   (`TPC_USE_ORACLE=0`). Do not rewrite the planner.
 - **Deterministic path byte-identical when all flags are off.** Every task that adds a flag ships a test
@@ -34,6 +84,10 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
   `fast_solve_fn` (injectable Stage-2 stub, signature `solve_fn(query, variants, budget_sec) -> plan`),
   and `no_network` (fails loudly on socket use). It also adds `scripts/` and `agent_env/scripts/` to
   `sys.path` so script modules are importable.
+
+The note above describes the original development posture. As of 2026-07-10, Milestones 1–7 below are
+implemented; the remaining placeholders are mainly the LLM-assisted parse/refine paths and richer
+normalization logic.
 
 ## Milestone sequencing and status
 
@@ -135,6 +189,60 @@ self-contained script remains runnable, but new Phase 2 tests use pytest.
 `tpc_phase2_val.txt` (~850) and a frozen `tpc_phase2_test.txt` (~150), idempotent unless `--force`.
 Rehearsal folds are drawn from the validation split only; `rehearse_phase2.py --split-set test`
 (with a warning) is required to touch the held-out set. See `docs/tpc_phase2_eval.md`.
+
+## Roadmap From Here (priority order)
+
+### 1. Establish the deterministic baseline on validation folds
+
+Before adding new behavior, run the implemented rehearsal/eval stack on `tpc_phase2_val` and capture:
+
+- end-to-end no-oracle score
+- solver-only score
+- parser-vs-oracle structural and behavioral gaps
+- timing, fallback rate, timeout rate, and valid-output rate
+
+This is the immediate next step because there are currently no checked-in Phase 2 run artifacts. Until
+those numbers exist, roadmap decisions remain partly qualitative.
+
+### 2. Finish Stage 1 normalization before adding refinement
+
+The next highest-leverage code work is in `chinatravel/agent/phase2/normalize.py` and
+`chinatravel/agent/phase2/schema.py`:
+
+- populate `confidence`, `entity_candidates`, and other IR fields with real signal
+- use `WorldEnv` in normalization for entity resolution and validation
+- add explicit low-confidence / ambiguous-parse handling instead of flattening everything into one raw dict
+
+This is more important than Stage 3 refinement because current Phase 2 risk is parsing loss, not
+post-solve preference quality.
+
+### 3. Upgrade LLM parsing from additive to corrective
+
+The current `llm_parse_stub` shape is a good safety-first starting point, but the next version needs to
+be able to:
+
+- repair wrong extracted values, not only add missing ones
+- propose OR-arm recovery when deterministic splitting fails
+- emit field-level alternatives or confidence so deterministic normalization can choose safely
+
+The LLM should still propose and never decide; final authority stays with deterministic validation.
+
+### 4. Extend evaluation to score variance, not only valid-output variance
+
+The docs correctly treat 5-run variance as important, but `scripts/phase2_timing.py` currently reports
+variance only for valid-output rate across repeat runs. Extend this to report variance for at least:
+
+- FPR
+- `overall_true`
+- optionally `overall_parsed`
+
+This makes the organizer's average-over-5 execution model measurable locally.
+
+### 5. Defer Stage 3 refinement until the parser gap is no longer dominant
+
+`TPC_P2_LLM_REFINE` should remain lower priority than Stage 1 work. Refinement becomes worth doing only
+after end-to-end runs show that parser loss has been reduced and solver-only performance is no longer the
+main bottleneck.
 
 ## Integration facts (verified while planning)
 

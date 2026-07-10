@@ -4,6 +4,23 @@ This document defines how we **measure and iterate** on the Phase 2 harness desc
 `docs/tpc_phase2_design.md`. It is the methodology reference; the scripts that implement it are listed
 per metric.
 
+## Current measurement status (2026-07-10)
+
+The measurement stack itself now exists:
+
+- `scripts/rehearse_phase2.py` for end-to-end vs solver-only rehearsal
+- `scripts/parser_vs_oracle.py` for structural and behavioral parser diagnostics
+- `scripts/phase2_timing.py` for per-stage timing and reliability aggregation
+- `scripts/phase2_gate.py` for regression checks
+
+Current limitation: the tooling is ahead of the checked-in measurement artifacts. There are currently
+no committed Phase 2 rehearsal outputs under `agent_env/runs/` or `results/phase2_*`, so the next
+practical step is to run and preserve a deterministic baseline on validation folds.
+
+Also note one tooling gap: `scripts/phase2_timing.py` currently reports repeat-run variance for
+**valid-output rate**, but not yet for the actual score metrics that matter most in organizer
+evaluation (`FPR`, `overall_true`, optionally `overall_parsed`).
+
 ## Guiding Idea
 
 We hold the released oracle (`hard_logic_py`) **locally** for the 1000 Phase-1 queries. Phase 2 hides
@@ -85,8 +102,8 @@ Metrics:
 - **run-to-run score variance** across N repeats. The organizers run each harness **5× and average**,
   and the LLM (when enabled) introduces nondeterminism, so variance is a first-class metric.
 
-Script: `scripts/phase2_timing.py` (timing + variance), fed by per-stage telemetry the orchestrator
-emits.
+Script: `scripts/phase2_timing.py` (timing + reliability today; score-variance extension still needed),
+fed by per-stage telemetry the orchestrator emits.
 
 ## Validation vs Held-Out Test Split
 
@@ -155,7 +172,8 @@ improvement.)
 | Parsing precision/recall + buckets | `python scripts/parser_vs_oracle.py --split-set val` |
 | Behavioral equivalence | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
 | Per-stage timing p50/p95 + reliability | `python scripts/phase2_timing.py --work-dir agent_env/runs/<method>` |
-| Run-to-run variance | `python scripts/phase2_timing.py --work-dir <run> --repeat-dirs <run2> <run3> ...` |
+| Run-to-run valid-output-rate variance | `python scripts/phase2_timing.py --work-dir <run> --repeat-dirs <run2> <run3> ...` |
+| Run-to-run score variance | not implemented yet; extend `scripts/phase2_timing.py` or add a score-aggregation companion |
 | Regression gate | `python scripts/phase2_gate.py --baseline <base.json> --candidate <cand.json>` |
 | Full dashboard | `make phase2-rehearse FOLD=<i> P2_FOLDS=<n> P2_BUDGET=900` |
 
