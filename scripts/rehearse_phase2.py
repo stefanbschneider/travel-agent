@@ -27,19 +27,36 @@ import os
 import random
 import shutil
 import statistics
+import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
+
+import psutil
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "agent_env" / "scripts"))
+# Some solver-only imports (chinatravel/agent/tpc_agent/tpc_agent.py) use `from agent...` rather
+# than `from chinatravel.agent...`; include chinatravel/ on sys.path so _run_solver_only works
+# standalone (previously it only worked when end-to-end mode ran first in the same process and
+# happened to add this path as a side effect of importing tpc_llm.py).
+CHINATRAVEL_ROOT = str(PROJECT_ROOT / "chinatravel")
+if CHINATRAVEL_ROOT not in sys.path:
+    sys.path.insert(0, CHINATRAVEL_ROOT)
 
 import make_phase2_splits as splits  # noqa: E402
 
 DEFAULT_SEED = 20260705
 DEFAULT_FOLDS = 10
+# Queries per subprocess for the chunked rehearsal (Phase 2 plan Step 3). Each subprocess's
+# memory (and any thread func_timeout couldn't kill on a timeout) is fully reclaimed by the OS
+# when it exits, so a small chunk bounds cumulative growth across a large fold regardless of
+# root cause. Override with the P2_CHUNK env var; <=0 disables chunking (single in-process run,
+# original behavior -- useful for short smoke runs where subprocess startup overhead dominates).
+DEFAULT_CHUNK = int(os.environ.get("P2_CHUNK", "5") or "5")
 
 
 # --- Pure helpers (unit-tested) -------------------------------------------
@@ -295,9 +312,89 @@ def _run_solver_only(split_name, fold_uids, *, budget_sec, lang="en"):
         telemetry["completed_without_timeout"] = bool(
             (not telemetry["timed_out"]) and (telemetry.get("error") in (None, ""))
         )
+        telemetry["rss_mb"] = psutil.Process().memory_info().rss / (1024 * 1024)
 
         hb.write_json(out_dir / f"{quid}.json", plan)
         hb.write_json(run_dir / quid / "telemetry.json", telemetry)
+    return method
+
+
+# --- Chunked subprocess execution (Step 3: unblocks larger e2e folds) -----
+#
+# In-process, a large fold accumulates memory across queries: a timed-out solve's thread can't be
+# killed by func_timeout and keeps running in the background (verified: RSS grows and a stray
+# thread is still alive after a timeout), and every query adds to a single process's heap. Running
+# each chunk of uids in its own subprocess bounds that growth -- the OS reclaims everything,
+# leaked threads included, when the chunk's process exits.
+
+
+def _split_into_chunks(uids: list[str], chunk_size: int) -> list[list[str]]:
+    if chunk_size <= 0:
+        return [list(uids)] if uids else []
+    return [list(uids[i : i + chunk_size]) for i in range(0, len(uids), chunk_size)]
+
+
+def _write_uids_file(uids: list[str]) -> Path:
+    fd, name = tempfile.mkstemp(prefix="phase2_uids_", suffix=".txt")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write("\n".join(uids))
+    return Path(name)
+
+
+def _split_set_for(split_name: str) -> str:
+    return "test" if split_name == "tpc_phase2_test" else "val"
+
+
+def _run_end_to_end_chunked(split_name, fold_uids, *, budget_sec, lang, chunk_size):
+    """Same contract as ``_run_end_to_end`` (returns the method name), but runs each chunk of
+    uids as its own ``solve_phase2.py`` subprocess so per-chunk memory is fully reclaimed."""
+    method = f"phase2_e2e_{split_name}"
+    solve_script = PROJECT_ROOT / "agent_env" / "scripts" / "solve_phase2.py"
+    for chunk in _split_into_chunks(fold_uids, chunk_size):
+        uids_file = _write_uids_file(chunk)
+        try:
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(solve_script),
+                    "--split", split_name,
+                    "--method", method,
+                    "--uids-file", str(uids_file),
+                    "--budget-sec", str(budget_sec),
+                    "--lang", lang,
+                    "--resume",
+                ],
+                check=True,
+                cwd=str(PROJECT_ROOT),
+            )
+        finally:
+            uids_file.unlink(missing_ok=True)
+    return method
+
+
+def _run_solver_only_chunked(split_name, fold_uids, *, budget_sec, lang, chunk_size):
+    """Same contract as ``_run_solver_only``, but each chunk is a self-exec worker subprocess
+    (``--worker solver-only``) so leaked func_timeout/CP-SAT threads die with the subprocess."""
+    method = f"phase2_solver_only_{split_name}"
+    this_script = Path(__file__).resolve()
+    for chunk in _split_into_chunks(fold_uids, chunk_size):
+        uids_file = _write_uids_file(chunk)
+        try:
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(this_script),
+                    "--worker", "solver-only",
+                    "--uids-file", str(uids_file),
+                    "--split-set", _split_set_for(split_name),
+                    "--budget-sec", str(budget_sec),
+                    "--lang", lang,
+                ],
+                check=True,
+                cwd=str(PROJECT_ROOT),
+            )
+        finally:
+            uids_file.unlink(missing_ok=True)
     return method
 
 
@@ -321,6 +418,7 @@ def rehearse(
     limit=None,
     lang="en",
     fresh=False,
+    chunk_size=DEFAULT_CHUNK,
 ) -> dict:
     split_name, _is_test = resolve_split_set(split_set)
     uids = splits.read_split(split_name)
@@ -336,6 +434,7 @@ def rehearse(
         "folds": folds,
         "n": len(fold_uids),
         "fresh": bool(fresh),
+        "chunk_size": int(chunk_size),
         "modes": {},
     }
 
@@ -344,10 +443,20 @@ def rehearse(
             removed = clear_method_outputs(f"phase2_e2e_{split_name}", fold_uids)
             if removed:
                 print(f"fresh: cleared {removed} stale end-to-end result(s) for this fold")
-        m = _run_end_to_end(split_name, fold_uids, budget_sec=budget_sec)
+        if chunk_size > 0:
+            m = _run_end_to_end_chunked(
+                split_name, fold_uids, budget_sec=budget_sec, lang=lang, chunk_size=chunk_size
+            )
+        else:
+            m = _run_end_to_end(split_name, fold_uids, budget_sec=budget_sec)
         report["modes"]["end-to-end"] = _evaluate_method(split_name, m, fold_uids, query_data)
     if "solver-only" in modes:
-        m = _run_solver_only(split_name, fold_uids, budget_sec=budget_sec, lang=lang)
+        if chunk_size > 0:
+            m = _run_solver_only_chunked(
+                split_name, fold_uids, budget_sec=budget_sec, lang=lang, chunk_size=chunk_size
+            )
+        else:
+            m = _run_solver_only(split_name, fold_uids, budget_sec=budget_sec, lang=lang)
         report["modes"]["solver-only"] = _evaluate_method(split_name, m, fold_uids, query_data)
 
     # Ceiling from results/best (only meaningful when not writing to a temp results_dir).
@@ -386,11 +495,36 @@ def parse_args() -> argparse.Namespace:
         help="Clear this fold's end-to-end results first so the run reflects the current code "
         "instead of resuming stale plans (recommended for any run used as a baseline).",
     )
+    p.add_argument(
+        "--chunk-size",
+        type=int,
+        default=DEFAULT_CHUNK,
+        help="Queries per subprocess (default from P2_CHUNK env, else 5); <=0 runs everything "
+        "in-process (original behavior, no subprocess isolation).",
+    )
+    p.add_argument(
+        "--worker",
+        choices=["solver-only"],
+        default=None,
+        help=argparse.SUPPRESS,  # internal: self-exec entry point used by _run_solver_only_chunked
+    )
+    p.add_argument("--uids-file", default=None, help=argparse.SUPPRESS)  # internal, with --worker
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    if args.worker == "solver-only":
+        # Self-exec worker: solve exactly the uids in --uids-file and exit. No aggregation here --
+        # the parent process (_run_solver_only_chunked) evaluates once all chunks have run.
+        split_name, _is_test = resolve_split_set(args.split_set)
+        uids = [
+            line.strip()
+            for line in Path(args.uids_file).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        _run_solver_only(split_name, uids, budget_sec=args.budget_sec, lang=args.lang)
+        return
     modes = ("end-to-end", "solver-only") if args.mode == "both" else (args.mode,)
     rehearse(
         modes=modes,
@@ -402,6 +536,7 @@ def main() -> None:
         limit=args.limit,
         lang=args.lang,
         fresh=args.fresh,
+        chunk_size=args.chunk_size,
     )
 
 

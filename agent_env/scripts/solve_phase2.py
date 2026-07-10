@@ -23,6 +23,8 @@ import tomllib
 from pathlib import Path
 from statistics import mean, pstdev
 
+import psutil
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -202,6 +204,8 @@ def run_split(
 
         hb.write_json(result_path, plan)
 
+        telemetry["rss_mb"] = psutil.Process().memory_info().rss / (1024 * 1024)
+
         run_dir = work_root / quid
         hb.write_json(run_dir / "output.json", plan)
         hb.write_json(run_dir / "telemetry.json", telemetry)
@@ -308,6 +312,13 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--split", default="tpc_phase2_val")
     p.add_argument("--uid", default=None)
+    p.add_argument(
+        "--uids-file",
+        default=None,
+        help="Path to a file with one uid per line (blank lines ignored); feeds run_split's "
+        "uids= param, overriding --limit/--uid. Used by rehearse_phase2.py's chunked subprocess "
+        "workers to bound each process to a small uid set.",
+    )
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--method", default=None)
     p.add_argument("--resume", action="store_true")
@@ -321,11 +332,19 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     method = args.method or _default_method_for_split(args.split)
+    uids = None
+    if args.uids_file:
+        uids = [
+            line.strip()
+            for line in Path(args.uids_file).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
     summary = run_split(
         args.split,
         method=method,
         limit=args.limit,
         uid=args.uid,
+        uids=uids,
         resume=args.resume,
         budget_sec=args.budget_sec,
         lang=args.lang,

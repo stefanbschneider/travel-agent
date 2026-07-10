@@ -74,3 +74,35 @@ def test_recover_or_fallback_uses_minimal_plan_for_invalid_recovery():
     q = {"people_number": 3, "start_city": "X", "target_city": "Y"}
     plan = R._recover_or_fallback(_FakeAgent({"not": "a plan"}), q)
     assert plan == {"people_number": 3, "start_city": "X", "target_city": "Y", "itinerary": []}
+
+
+def test_split_into_chunks_covers_all_and_bounds_size():
+    uids = [f"uid{i:03d}" for i in range(23)]
+    chunks = R._split_into_chunks(uids, 5)
+    assert [u for c in chunks for u in c] == uids
+    assert all(0 < len(c) <= 5 for c in chunks)
+    assert len(chunks) == 5  # 5+5+5+5+3
+
+
+def test_split_into_chunks_nonpositive_size_is_one_chunk():
+    uids = [f"uid{i:03d}" for i in range(7)]
+    assert R._split_into_chunks(uids, 0) == [uids]
+    assert R._split_into_chunks(uids, -1) == [uids]
+
+
+def test_split_into_chunks_empty_input():
+    assert R._split_into_chunks([], 5) == []
+
+
+def test_write_uids_file_roundtrips(tmp_path):
+    uids = ["a", "b", "c"]
+    path = R._write_uids_file(uids)
+    try:
+        assert path.read_text(encoding="utf-8").splitlines() == uids
+    finally:
+        path.unlink(missing_ok=True)
+
+
+def test_split_set_for_maps_split_name_back_to_cli_choice():
+    assert R._split_set_for("tpc_phase2_val") == "val"
+    assert R._split_set_for("tpc_phase2_test") == "test"
