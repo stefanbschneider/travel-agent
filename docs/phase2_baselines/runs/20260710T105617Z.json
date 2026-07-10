@@ -1,0 +1,298 @@
+{
+  "run_id": "20260710T105617Z",
+  "timestamp_utc": "2026-07-10T10:56:17+00:00",
+  "git_sha": "0a89cdc106f04605d822a2dd41cb50ff2cf806e2",
+  "split_set": "val",
+  "split_name": "tpc_phase2_val",
+  "fold": 0,
+  "folds": 10,
+  "seed": 20260705,
+  "budget_sec": 30.0,
+  "limit": 1,
+  "n": 1,
+  "lang": "en",
+  "branch_aware": false,
+  "rehearsal": {
+    "split_name": "tpc_phase2_val",
+    "fold": 0,
+    "folds": 10,
+    "n": 1,
+    "modes": {
+      "end-to-end": {
+        "fpr": 100.0,
+        "raw": {
+          "split": "tpc_phase2_val",
+          "method": "phase2_e2e_tpc_phase2_val",
+          "evaluated": 1,
+          "parsed_evaluated": 1,
+          "parse_failures": 0,
+          "schema_pass_count": 1,
+          "commonsense_pass_count": 1,
+          "logical_pass_count": 1,
+          "all_pass_count": 1,
+          "all_pass_ids": [
+            "20250320181941699936"
+          ],
+          "schema_rate": 100.0,
+          "commonsense_micro": 100.0,
+          "commonsense_macro": 100.0,
+          "logical_micro": 100.0,
+          "logical_macro": 100.0,
+          "conditional_logical_micro": 100.0,
+          "conditional_logical_macro": 100.0,
+          "schema_details": [
+            {
+              "data_id": "20250320181941699936",
+              "schema": 1
+            }
+          ],
+          "commonsense_details": [
+            {
+              "data_id": "20250320181941699936",
+              "Invalid or ungrounded activity entity": 0,
+              "Intercity transportation events must occur": 0,
+              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
+              "Incorrect Information of Intercity Transport on price or duration": 0,
+              "Incorrect Cost on Intercity Transportation": 0,
+              "Unavailable attractions": 0,
+              "Visiting attraction in their closed time": 0,
+              "Repeated attraction Choices": 0,
+              "Incorrect price Information of attraction": 0,
+              "Incorrect cost Information of attraction": 0,
+              "Unavailable Accommodation": 0,
+              "Incorrect Information of Accommodation on price or room type": 0,
+              "Incorrect cost Information of Accommodation": 0,
+              "Accomondation is necessary for trips longer than one day": 0,
+              "Unavailable Restruants": 0,
+              "Visiting Restruants in their closed time": 0,
+              "Repeated Restruants Choices": 0,
+              "Incorrect price Information of Restruants": 0,
+              "Incorrect cost Information of Restruants": 0,
+              "Inappropriate Meal Times": 0,
+              "Unavailable Inner-City Transport": 0,
+              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
+              "Inccorrect cost information of Inner-City Transport": 0,
+              "Invalid duration information of each activity": 0,
+              "Does not follow Chronological Order": 0,
+              "Invalid Transport information across positions": 0
+            }
+          ],
+          "logical_details": [
+            {
+              "data_id": "20250320181941699936",
+              "logic_py_0": 1,
+              "logic_py_1": 1,
+              "logic_py_2": 1,
+              "logic_py_3": 1,
+              "logic_py_4": 1
+            }
+          ]
+        }
+      },
+      "solver-only": {
+        "fpr": 100.0,
+        "raw": {
+          "split": "tpc_phase2_val",
+          "method": "phase2_solver_only_tpc_phase2_val",
+          "evaluated": 1,
+          "parsed_evaluated": 1,
+          "parse_failures": 0,
+          "schema_pass_count": 1,
+          "commonsense_pass_count": 1,
+          "logical_pass_count": 1,
+          "all_pass_count": 1,
+          "all_pass_ids": [
+            "20250320181941699936"
+          ],
+          "schema_rate": 100.0,
+          "commonsense_micro": 100.0,
+          "commonsense_macro": 100.0,
+          "logical_micro": 100.0,
+          "logical_macro": 100.0,
+          "conditional_logical_micro": 100.0,
+          "conditional_logical_macro": 100.0,
+          "schema_details": [
+            {
+              "data_id": "20250320181941699936",
+              "schema": 1
+            }
+          ],
+          "commonsense_details": [
+            {
+              "data_id": "20250320181941699936",
+              "Invalid or ungrounded activity entity": 0,
+              "Intercity transportation events must occur": 0,
+              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
+              "Incorrect Information of Intercity Transport on price or duration": 0,
+              "Incorrect Cost on Intercity Transportation": 0,
+              "Unavailable attractions": 0,
+              "Visiting attraction in their closed time": 0,
+              "Repeated attraction Choices": 0,
+              "Incorrect price Information of attraction": 0,
+              "Incorrect cost Information of attraction": 0,
+              "Unavailable Accommodation": 0,
+              "Incorrect Information of Accommodation on price or room type": 0,
+              "Incorrect cost Information of Accommodation": 0,
+              "Accomondation is necessary for trips longer than one day": 0,
+              "Unavailable Restruants": 0,
+              "Visiting Restruants in their closed time": 0,
+              "Repeated Restruants Choices": 0,
+              "Incorrect price Information of Restruants": 0,
+              "Incorrect cost Information of Restruants": 0,
+              "Inappropriate Meal Times": 0,
+              "Unavailable Inner-City Transport": 0,
+              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
+              "Inccorrect cost information of Inner-City Transport": 0,
+              "Invalid duration information of each activity": 0,
+              "Does not follow Chronological Order": 0,
+              "Invalid Transport information across positions": 0
+            }
+          ],
+          "logical_details": [
+            {
+              "data_id": "20250320181941699936",
+              "logic_py_0": 1,
+              "logic_py_1": 1,
+              "logic_py_2": 1,
+              "logic_py_3": 1,
+              "logic_py_4": 1
+            }
+          ]
+        }
+      }
+    },
+    "ceiling": {
+      "fpr": 100.0,
+      "raw": {
+        "split": "tpc_phase2_val",
+        "method": "best",
+        "evaluated": 1,
+        "parsed_evaluated": 1,
+        "parse_failures": 0,
+        "schema_pass_count": 1,
+        "commonsense_pass_count": 1,
+        "logical_pass_count": 1,
+        "all_pass_count": 1,
+        "all_pass_ids": [
+          "20250320181941699936"
+        ],
+        "schema_rate": 100.0,
+        "commonsense_micro": 100.0,
+        "commonsense_macro": 100.0,
+        "logical_micro": 100.0,
+        "logical_macro": 100.0,
+        "conditional_logical_micro": 100.0,
+        "conditional_logical_macro": 100.0,
+        "schema_details": [
+          {
+            "data_id": "20250320181941699936",
+            "schema": 1
+          }
+        ],
+        "commonsense_details": [
+          {
+            "data_id": "20250320181941699936",
+            "Invalid or ungrounded activity entity": 0,
+            "Intercity transportation events must occur": 0,
+            "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
+            "Incorrect Information of Intercity Transport on price or duration": 0,
+            "Incorrect Cost on Intercity Transportation": 0,
+            "Unavailable attractions": 0,
+            "Visiting attraction in their closed time": 0,
+            "Repeated attraction Choices": 0,
+            "Incorrect price Information of attraction": 0,
+            "Incorrect cost Information of attraction": 0,
+            "Unavailable Accommodation": 0,
+            "Incorrect Information of Accommodation on price or room type": 0,
+            "Incorrect cost Information of Accommodation": 0,
+            "Accomondation is necessary for trips longer than one day": 0,
+            "Unavailable Restruants": 0,
+            "Visiting Restruants in their closed time": 0,
+            "Repeated Restruants Choices": 0,
+            "Incorrect price Information of Restruants": 0,
+            "Incorrect cost Information of Restruants": 0,
+            "Inappropriate Meal Times": 0,
+            "Unavailable Inner-City Transport": 0,
+            "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
+            "Inccorrect cost information of Inner-City Transport": 0,
+            "Invalid duration information of each activity": 0,
+            "Does not follow Chronological Order": 0,
+            "Invalid Transport information across positions": 0
+          }
+        ],
+        "logical_details": [
+          {
+            "data_id": "20250320181941699936",
+            "logic_py_0": 1,
+            "logic_py_1": 1,
+            "logic_py_2": 1,
+            "logic_py_3": 1,
+            "logic_py_4": 1
+          }
+        ]
+      }
+    }
+  },
+  "parser": {
+    "split": "tpc_phase2_val",
+    "n": 1,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "value_accuracy": 1.0,
+    "disjunction_flattened": 0,
+    "totals": {
+      "matched": 2,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 0
+    },
+    "behavioral": {
+      "n": 1,
+      "agreement_rate": 1.0,
+      "disagreements": []
+    }
+  },
+  "timing": {
+    "n": 1,
+    "per_stage": {
+      "parse": {
+        "p50": 0.007037458010017872,
+        "p95": 0.007037458010017872,
+        "mean": 0.007037458010017872,
+        "max": 0.007037458010017872
+      },
+      "solve": {
+        "p50": 17.513971250038594,
+        "p95": 17.513971250038594,
+        "mean": 17.513971250038594,
+        "max": 17.513971250038594
+      },
+      "improve": {
+        "p50": 3.1669624149799347e-06,
+        "p95": 3.1669624149799347e-06,
+        "mean": 3.1669624149799347e-06,
+        "max": 3.1669624149799347e-06
+      },
+      "finalize": {
+        "p50": 1.167005393654108e-06,
+        "p95": 1.167005393654108e-06,
+        "mean": 1.167005393654108e-06,
+        "max": 1.167005393654108e-06
+      }
+    },
+    "total_p50": 17.52101304201642,
+    "total_p95": 17.52101304201642,
+    "budget_overruns": 0,
+    "timed_out": 1,
+    "used_fallback": 0,
+    "valid_output_rate": 1.0
+  },
+  "timing_source": {
+    "method": "phase2_e2e_tpc_phase2_val",
+    "selected_uids": 1,
+    "telemetry_found": 1,
+    "telemetry_missing": 0,
+    "missing_uids": []
+  }
+}

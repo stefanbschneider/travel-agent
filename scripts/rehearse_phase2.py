@@ -87,6 +87,30 @@ def _fpr(metrics: dict, n: int) -> float:
     return 100.0 * metrics.get("all_pass_count", 0) / n
 
 
+def _valid_plan_shape(plan) -> bool:
+    return isinstance(plan, dict) and isinstance(plan.get("itinerary"), list)
+
+
+def _minimal_plan(query: dict) -> dict:
+    return {
+        "people_number": query.get("people_number", 1),
+        "start_city": query.get("start_city", ""),
+        "target_city": query.get("target_city", ""),
+        "itinerary": [],
+    }
+
+
+def _recover_or_fallback(agent, query: dict) -> dict:
+    recovered = None
+    try:
+        recovered = agent.get_timeout_recovery_plan()
+    except Exception:
+        recovered = None
+    if _valid_plan_shape(recovered):
+        return recovered
+    return _minimal_plan(query)
+
+
 def _evaluate_method(split_name: str, method: str, fold_uids: list[str], query_data: dict) -> dict:
     import solve_script_with_harness as hb
 
@@ -126,14 +150,15 @@ def _run_solver_only(split_name, fold_uids, *, budget_sec, lang="en"):
     method = f"phase2_solver_only_{split_name}"
     out_dir = PROJECT_ROOT / "results" / method
     out_dir.mkdir(parents=True, exist_ok=True)
+
     for quid in fold_uids:
         q = query_data[quid]
         q.setdefault("uid", quid)
+        agent.reset_timeout_recovery_plan()
         try:
             _, plan = func_timeout(max(float(budget_sec), 1.0) + 5.0, agent.run, args=(q,))
         except (FunctionTimedOut, Exception):
-            plan = {"people_number": q.get("people_number", 1), "start_city": q.get("start_city", ""),
-                    "target_city": q.get("target_city", ""), "itinerary": []}
+            plan = _recover_or_fallback(agent, q)
         hb.write_json(out_dir / f"{quid}.json", plan)
     return method
 

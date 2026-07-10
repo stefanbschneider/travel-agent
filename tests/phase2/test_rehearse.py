@@ -54,3 +54,23 @@ def test_format_attribution_orders_ceiling_solver_e2e():
     # parsing loss = solver_only - end_to_end; solver headroom = ceiling - solver_only
     assert "20.0" in line  # parsing loss
     assert "5.0" in line   # solver headroom
+
+
+class _FakeAgent:
+    def __init__(self, recovered):
+        self._recovered = recovered
+
+    def get_timeout_recovery_plan(self):
+        return self._recovered
+
+
+def test_recover_or_fallback_prefers_valid_recovery_plan():
+    recovered = {"people_number": 2, "start_city": "A", "target_city": "B", "itinerary": [{"day": 1}]}
+    plan = R._recover_or_fallback(_FakeAgent(recovered), {"people_number": 1})
+    assert plan == recovered
+
+
+def test_recover_or_fallback_uses_minimal_plan_for_invalid_recovery():
+    q = {"people_number": 3, "start_city": "X", "target_city": "Y"}
+    plan = R._recover_or_fallback(_FakeAgent({"not": "a plan"}), q)
+    assert plan == {"people_number": 3, "start_city": "X", "target_city": "Y", "itinerary": []}
