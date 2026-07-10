@@ -205,6 +205,41 @@ def test_build_llm_parse_prompt_audits_each_extracted_family():
     assert "no useful refinement" not in prompt.lower()
 
 
+# --- Step 7: OR-arm recovery prompt section ---------------------------------
+
+def _q_or(nl):
+    return {
+        "uid": "q_or",
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Wuhan",
+        "nature_language": nl,
+    }
+
+
+def test_or_arm_section_present_when_deterministic_split_missing():
+    prompt = normalize.build_llm_parse_prompt(
+        _q_or("Must satisfy one of the following: 1. X. 2. Y."), {}, or_groups_count=0
+    )
+    assert "OR-ARM RECOVERY" in prompt
+    assert "or_arms" in prompt
+    # A worked example, not just the bare instruction, per the plan's "one worked or_arms example".
+    assert "Worked example" in prompt
+
+
+def test_or_arm_section_omitted_when_deterministic_split_already_found_2_arms():
+    prompt = normalize.build_llm_parse_prompt(
+        _q_or("Must satisfy one of the following: 1. X. 2. Y."), {}, or_groups_count=2
+    )
+    assert "OR-ARM RECOVERY" not in prompt
+
+
+def test_or_arm_section_defaults_to_present_when_count_unspecified():
+    # Backward-compat default (0): callers that don't pass or_groups_count still get the section.
+    prompt = normalize.build_llm_parse_prompt(_q_or("Some non-disjunctive query."), {})
+    assert "OR-ARM RECOVERY" in prompt
+
+
 def test_llm_parse_removes_spurious_required_family():
     # The deterministic parse contains a spurious required_attractions family; the audit prompt
     # should let the LLM remove it via a remove patch (fields=[...]).

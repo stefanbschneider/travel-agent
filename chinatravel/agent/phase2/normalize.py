@@ -91,7 +91,7 @@ def llm_parse_cache_key(query: dict, prompt: str) -> str:
     return f"parse_{uid}_{_stable_prompt_hash(prompt)}"
 
 
-def build_llm_parse_prompt(query: dict, deterministic_raw: dict) -> str:
+def build_llm_parse_prompt(query: dict, deterministic_raw: dict, *, or_groups_count: int = 0) -> str:
     visible = {
         "uid": query.get("uid"),
         "people_number": query.get("people_number"),
@@ -103,6 +103,33 @@ def build_llm_parse_prompt(query: dict, deterministic_raw: dict) -> str:
     # audit each one against the quoted NL (confirm-or-remove), instead of optionally "refining".
     extracted_fields = [k for k in deterministic_raw.keys() if k in _LLM_PARSE_ALLOWED_KEYS]
     audit_list = ", ".join(extracted_fields) if extracted_fields else "(none)"
+    # Only ask for OR-arm recovery when the deterministic splitter (parse_constraints.
+    # detect_disjunctive/split_disjunctive_groups) hasn't already resolved >=2 branches -- the
+    # merge in llm_parse_stub ignores or_arms once that many are already present (see
+    # normalize.py's `if isinstance(arms, list) and len(updated.or_groups) < 2`), so asking for it
+    # otherwise would just burn tokens on a proposal that gets discarded.
+    or_arm_section = (
+        (
+            "OR-ARM RECOVERY (the deterministic splitter found fewer than 2 branches for this\n"
+            "query -- check whether it actually needs this):\n"
+            "  Some requests are disjunctive: the itinerary only needs to satisfy ONE of several\n"
+            "  numbered/alternative conditions (phrasing varies: \"either X or Y\", \"at least one of\n"
+            "  the following\", \"must satisfy one of the following conditions\", ...). If the query\n"
+            "  IS disjunctive but you don't see >=2 already-correct branches reflected above, set\n"
+            "  \"or_arms\" to one string per branch -- each string must be the SELF-CONTAINED\n"
+            "  constraint text for that branch ALONE, as if it were the entire request (strip the\n"
+            "  \"either/one of the following/...\" framing and numbering; keep every constraint that\n"
+            "  belongs to that branch, drop the constraints that belong to other branches).\n"
+            "  Worked example --\n"
+            "    NL: \"The itinerary must satisfy one of the following: 1. Do not want to visit\n"
+            "    Elm Street Museum. 2. Want to only visit free attractions.\"\n"
+            "    -> \"or_arms\": [\"Do not want to visit Elm Street Museum\",\n"
+            "                     \"Want to only visit free attractions\"]\n"
+            "  If the query is NOT disjunctive, leave \"or_arms\" empty -- do not invent branches.\n\n"
+        )
+        if or_groups_count < 2
+        else ""
+    )
     return (
         "You are auditing the output of a deterministic (regex) travel-constraint parser.\n"
         "The regex parser is known to OVER-EXTRACT: it emits spurious constraint families that the\n"
@@ -129,6 +156,7 @@ def build_llm_parse_prompt(query: dict, deterministic_raw: dict) -> str:
         "     also emit an `add`/`replace` patch with literal constraint_text for the correct family.\n"
         "  3. If the quoted text DOES support the extracted family, leave it untouched (no patch).\n"
         "  4. Add families only when the request clearly states a constraint the parser missed.\n\n"
+        f"{or_arm_section}"
         "Rules:\n"
         "- Use only facts inferable from the visible query; never invent hotels, attractions, or numbers.\n"
         "- Keep wording concise and literal; constraint_text must be parseable deterministically.\n"
@@ -302,7 +330,7 @@ def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
     if llm_client is None or not hasattr(llm_client, "complete"):
         return ir
 
-    prompt = build_llm_parse_prompt(query, ir.raw)
+    prompt = build_llm_parse_prompt(query, ir.raw, or_groups_count=len(ir.or_groups))
     cache_key = llm_parse_cache_key(query, prompt)
     response = llm_client.complete(prompt, cache_key=cache_key)
     payload = _parse_llm_json_blob(response)

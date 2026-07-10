@@ -370,11 +370,14 @@ def parse_excluded_attraction_types(text):
                 if t not in types:
                     types.append(t)
             else:
-                # Try each known alias
-                for alias, canonical in type_aliases.items():
-                    if alias in chunk_lower:
-                        if canonical not in types:
-                            types.append(canonical)
+                # Only trust a comma/and/or-separated PIECE that is itself a known type phrase --
+                # a raw substring match against the whole chunk (e.g. alias "park" inside "Shenzhen
+                # Bay Park") misfires on proper-noun venue names that merely contain a type word.
+                for piece in re.split(r"\s+and\s+|\s+or\s+|,\s*", chunk_lower):
+                    piece = piece.strip()
+                    canonical = type_aliases.get(piece)
+                    if canonical and canonical not in types:
+                        types.append(canonical)
 
     return types if types else None
 
@@ -832,6 +835,11 @@ def detect_disjunctive(text):
     # "satisfying either: 1. X 2. Y"
     if re.search(r"satisfying\s+either", text, re.I):
         return True
+    # "(must/need to) satisfy one of the following: 1. X 2. Y" -- distinct from "stay at one of
+    # the following hotels: X" (a single-list membership constraint, not a disjunctive branch;
+    # that phrasing has no numbered alternatives so it's excluded by requiring one below).
+    if re.search(r"satisfy\s+one\s+of\s+(?:the\s+)?following", text, re.I) and re.search(r"\b1[\.\)]", text):
+        return True
     return False
 
 
@@ -853,13 +861,23 @@ def split_disjunctive_groups(text):
         if len(parts) == 2:
             return [parts[0].strip().rstrip("."), parts[1].strip().rstrip(".")]
 
-    # Find the disjunctive marker and text after it
-    m = re.search(r"(?:at\s+least\s+one|either|any\s+one|must\s+satisfy\s+(?:either|any\s+one))\s+(?:of\s+)?(?:the\s+following)?[^:]*?[:.]?\s*\n?\s*(?:1[\.\)]\s*)?(.+)", text, re.I | re.S)
+    # Find the disjunctive marker phrase (not the colon/list-number handling -- that's done below
+    # via anchored re.sub, which tolerates a label word between "the following" and the colon,
+    # e.g. "the following conditions:", that would otherwise leak into the first arm's text).
+    m = re.search(
+        r"(?:at\s+least\s+one|either|any\s+one|must\s+satisfy\s+(?:either|any\s+one)"
+        r"|(?:must\s+|need\s+to\s+)?satisfy\s+one\s+of)\s+(?:of\s+)?(?:the\s+following)?",
+        text, re.I,
+    )
     if not m:
-        # Try "satisfy either: 1. X 2. Y"
-        m = re.search(r"(?:satisfy|meet)\s+(?:either|any\s+one)[^:]*?[:.]?\s*\n?\s*(?:1[\.\)]\s*)?(.+)", text, re.I | re.S)
+        # Try "satisfy either ...": 1. X 2. Y"
+        m = re.search(r"(?:satisfy|meet)\s+(?:either|any\s+one)", text, re.I)
     if m:
-        remainder = m.group(1).strip()
+        remainder = text[m.end():]
+        # Strip a trailing label + colon/period ("... conditions:", ": ") ...
+        remainder = re.sub(r"^[^:.\n]*[:.]\s*", "", remainder, count=1)
+        # ... then a leading numbered-item marker ("1.", "1)") before the first arm's text.
+        remainder = re.sub(r"^\n?\s*(?:1[\.\)]\s*)?", "", remainder).strip()
         # Split on "2." or "\n2." etc.
         parts = re.split(r"\s*(?:\n\s*)?2[\.\)]\s*", remainder, maxsplit=1)
         if len(parts) == 2:
