@@ -14,6 +14,8 @@ What is already implemented:
 - a Phase 2 runner in `agent_env/scripts/solve_phase2.py`
 - rehearsal and measurement scripts in `scripts/rehearse_phase2.py`, `scripts/parser_vs_oracle.py`,
   `scripts/phase2_timing.py`, and `scripts/phase2_gate.py`
+- deterministic baseline recorder `scripts/phase2_record_baseline.py` + `make phase2-baseline`
+- committed baseline history under `docs/phase2_baselines/` (`history.jsonl`, `history.csv`, latest/run snapshots)
 - deterministic no-oracle disjunctive branch expansion behind `TPC_P2_DISJUNCTION`
 - a tested injection seam so the harness, not `TPCAgent`, owns parsing and variant selection
 
@@ -28,9 +30,11 @@ What is still incomplete:
 - Stage 1 still mostly wraps `parse_query_no_oracle()`; the richer parser IR exists but most of its
   uncertainty, confidence, and entity-resolution fields are not populated yet
 - normalization still does not perform the intended `WorldEnv`-backed entity resolution and validation
-- `TPC_P2_LLM_PARSE` is still an additive second-pass stub, not a robust corrective parser
+- `TPC_P2_LLM_PARSE` now accepts corrective proposals (replace/remove/add), OR-arm recovery proposals,
+  and field alternatives/confidence, but remains dependent on deterministic parsing/validation
 - `TPC_P2_LLM_REFINE` is still a no-op placeholder
-- no checked-in rehearsal run artifacts currently exist under `agent_env/runs/` or `results/phase2_*`
+- solver-only baseline stability is currently inconsistent in some deterministic baseline runs and must
+  be fixed before solver-vs-parser attribution can be trusted
 
 ## Review summary (2026-07-10)
 
@@ -51,7 +55,7 @@ Current review findings:
 4. The current LLM parse path is too conservative to repair many real held-out failures, because it
    mostly adds missing detail instead of correcting wrong extracted values.
 5. Evaluation coverage is solid for functionality, but operational benchmarking is still missing:
-   the repo has scripts for rehearsal and timing, yet no committed Phase 2 run outputs.
+  committed baseline ledgers now exist, but solver-only instability still prevents clean attribution.
 
 ## Ground rules
 
@@ -194,15 +198,31 @@ Rehearsal folds are drawn from the validation split only; `rehearse_phase2.py --
 
 ### 1. Establish the deterministic baseline on validation folds
 
-Before adding new behavior, run the implemented rehearsal/eval stack on `tpc_phase2_val` and capture:
+Status: **DONE (with follow-up needed)**.
+
+The implemented rehearsal/eval stack now writes committed baseline history via
+`scripts/phase2_record_baseline.py` (and `make phase2-baseline`) into `docs/phase2_baselines/`.
+
+Captured metrics include:
 
 - end-to-end no-oracle score
 - solver-only score
 - parser-vs-oracle structural and behavioral gaps
 - timing, fallback rate, timeout rate, and valid-output rate
 
-This is the immediate next step because there are currently no checked-in Phase 2 run artifacts. Until
-those numbers exist, roadmap decisions remain partly qualitative.
+Follow-up from those baseline runs: solver-only FPR can drop unexpectedly while end-to-end stays high.
+This is now the immediate measurement-quality blocker to resolve.
+
+### 1b. Stabilize solver-only rehearsal before attribution decisions
+
+Investigate and fix solver-only instability observed in baseline ledger entries so that
+`solver_headroom` and `parsing_loss` are interpretable again.
+
+Suggested checks:
+
+- compare `phase2_solver_only_*` outputs against corresponding `phase2_e2e_*` plans for the same uids
+- inspect timeout/recovery behavior and budget handling in the solver-only path
+- ensure deterministic environment/agent init parity across end-to-end and solver-only runs
 
 ### 2. Finish Stage 1 normalization before adding refinement
 
@@ -269,7 +289,7 @@ main bottleneck.
 
 | Flag | Default | Meaning |
 | ---- | ------- | ------- |
-| `TPC_P2_LLM_BACKEND` | `none` | `none` / `fixture` / `openai` |
+| `TPC_P2_LLM_BACKEND` | `none` | `none` / `fixture` / `openai` / `infradeep` |
 | `TPC_P2_DISJUNCTION` | `0` | true no-oracle disjunctive branch generation (implemented, Milestone 4) |
 | `TPC_P2_LLM_PARSE` | `0` | LLM-assisted second-pass parse (stub) |
 | `TPC_P2_LLM_REFINE` | `0` | bounded LLM plan refinement (stub) |

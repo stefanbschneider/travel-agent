@@ -8,7 +8,8 @@ SPLIT ?= tpc_phase1
 
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
 	phase2-help phase2-test phase2-splits phase2-solve phase2-rehearse \
-	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep
+	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
+	phase2-baseline
 
 # Run phase 1 evaluation
 p1eval:
@@ -71,7 +72,9 @@ P2_SPLIT ?= tpc_phase2_$(P2_SPLIT_SET)
 P2_BUDGETS ?= 30,60,120,300,900
 P2_SWEEP_CSV ?= cache/phase2_budget_sweep/budget_sweep.csv
 P2_SWEEP_JSON ?= cache/phase2_budget_sweep/budget_sweep.json
+P2_BRANCH_AWARE ?= 0
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
+P2_BRANCH_AWARE_FLAG = $(if $(filter 1,$(P2_BRANCH_AWARE)),--branch-aware,)
 
 phase2-help:
 	@printf '%s\n' \
@@ -81,10 +84,11 @@ phase2-help:
 	  '  make phase2-solve           - run the no-oracle harness over a split (LLM off)' \
 	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
 	  '  make phase2-budget-sweep    - sweep budgets and export attribution CSV/JSON' \
+	  '  make phase2-baseline        - run deterministic baseline and append docs/phase2_baselines history' \
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)'
+	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:
@@ -115,6 +119,12 @@ phase2-budget-sweep:
 	.venv/bin/python scripts/phase2_budget_sweep.py --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budgets "$(P2_BUDGETS)" $(P2_LIMIT_FLAG) \
 	  --out-csv $(P2_SWEEP_CSV) --out-json $(P2_SWEEP_JSON)
+
+# Run deterministic fold baseline and append trend files under docs/phase2_baselines.
+phase2-baseline:
+	.venv/bin/python scripts/phase2_record_baseline.py --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
+	  $(P2_BRANCH_AWARE_FLAG)
 
 # Parser-vs-oracle attribution only (Axis 1), incl. behavioral equivalence.
 phase2-parser-report:

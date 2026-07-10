@@ -18,13 +18,16 @@ The Phase 2 harness is no longer hypothetical. The following pieces are already 
 - deterministic no-oracle disjunctive expansion exists behind `TPC_P2_DISJUNCTION`
 - `scripts/rehearse_phase2.py`, `scripts/parser_vs_oracle.py`, and `scripts/phase2_timing.py`
    provide rehearsal, parser diagnostics, and telemetry aggregation
+- `scripts/phase2_record_baseline.py` + `make phase2-baseline` persist deterministic baseline metrics
+   to committed history files under `docs/phase2_baselines/`
 
 What remains incomplete is mostly Stage 1 quality and Stage 3 refinement:
 
 - Stage 1 still starts from `parse_query_no_oracle()` and is therefore still dominated by the current
    regex parser
-- the richer parser IR exists, but confidence/entity-resolution fields are mostly scaffolding
-- `TPC_P2_LLM_PARSE` is still a conservative additive stub
+- the richer parser IR exists, but entity-resolution fields are still mostly scaffolding
+- `TPC_P2_LLM_PARSE` now supports corrective proposals (replace/remove/add), OR-arm recovery input,
+   and field alternatives/confidence; it still depends on deterministic re-parse + validation
 - `TPC_P2_LLM_REFINE` is still a no-op placeholder
 
 ## Official Execution Model
@@ -113,7 +116,7 @@ last-resort floor.
 
 The Phase 2 harness lives in its own package so it can evolve without touching the shared solver:
 
-- `chinatravel/agent/phase2/llm_client.py` — LLM client abstraction (backends: `none`/`fixture`/`openai`)
+- `chinatravel/agent/phase2/llm_client.py` — LLM client abstraction (backends: `none`/`fixture`/`openai`/`infradeep`)
 - `chinatravel/agent/phase2/schema.py` — two-layer schema: parser IR + solver constraint dict
 - `chinatravel/agent/phase2/normalize.py` — IR → branch-local solver variants (currently mostly a
    deterministic passthrough plus disjunction expansion; full WorldEnv-backed validation/entity
@@ -189,7 +192,7 @@ The harness always preserves a hard finalization buffer and returns before the t
 
 | Flag (env var) | Default | Effect when ON |
 | -------------- | ------- | -------------- |
-| `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai`. |
+| `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai` / `infradeep`. |
 | `TPC_P2_DISJUNCTION` | `0` | Enable true no-oracle disjunctive branch generation (Stage 1). Implemented (Milestone 4); deterministic NL splitting, one branch-local variant per OR arm. |
 | `TPC_P2_LLM_PARSE` | `0` | Enable LLM-assisted second-pass parsing (Stage 1). Stub in skeleton. |
 | `TPC_P2_LLM_REFINE` | `0` | Enable bounded LLM-guided plan refinement (Stage 3). Stub in skeleton. |
@@ -212,7 +215,8 @@ measured incrementally without destabilizing the deterministic baseline.
 4. **Stage 3 refinement is still a stub.** Current Phase 2 performance is effectively deterministic
    TPCAgent plus fallback, not deterministic solve plus bounded refinement.
 5. **Operational benchmarking is not yet mature.** The scripts exist, but the repo does not yet carry a
-   stable set of rehearsal results that quantify solver-only vs end-to-end gap on validation folds.
+   stable/clean set of solver-only results: committed baseline history now exists, but some runs show
+   solver-only instability that must be resolved before attribution is fully trustworthy.
 
 ## Design Rules For Phase 2
 

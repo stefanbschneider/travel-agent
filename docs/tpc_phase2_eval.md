@@ -12,10 +12,22 @@ The measurement stack itself now exists:
 - `scripts/parser_vs_oracle.py` for structural and behavioral parser diagnostics
 - `scripts/phase2_timing.py` for per-stage timing and reliability aggregation
 - `scripts/phase2_gate.py` for regression checks
+- `scripts/phase2_record_baseline.py` for deterministic baseline snapshots and longitudinal tracking
 
-Current limitation: the tooling is ahead of the checked-in measurement artifacts. There are currently
-no committed Phase 2 rehearsal outputs under `agent_env/runs/` or `results/phase2_*`, so the next
-practical step is to run and preserve a deterministic baseline on validation folds.
+Committed tracking artifacts now exist under `docs/phase2_baselines/`:
+
+- `history.jsonl` (append-only per-run records)
+- `history.csv` (tabular projection for comparisons)
+- `latest.json` / `latest.md` (most recent baseline snapshot)
+- `runs/<run_id>.json` (immutable per-run snapshots)
+
+Raw per-query outputs remain intentionally uncommitted under `agent_env/runs/` and `results/`.
+The committed baseline ledger is the source of truth for trend tracking in git.
+
+Current limitation: while the tracking pipeline is now in place, recent baseline entries show
+solver-only instability (including runs where `solver_only_fpr` drops unexpectedly while end-to-end
+remains high). This currently blocks reliable attribution of solver headroom vs parsing loss and should
+be treated as an active measurement risk.
 
 Also note one tooling gap: `scripts/phase2_timing.py` currently reports repeat-run variance for
 **valid-output rate**, but not yet for the actual score metrics that matter most in organizer
@@ -148,6 +160,9 @@ improvement.)
 | end-to-end (no-oracle, bounded) | `rehearse_phase2.py --mode end-to-end` | what Phase 2 scores |
 | `opencode`/`codex` baseline | `agent_env/scripts/solve_script_with_harness.py` | floor |
 
+Additionally, every rehearsal snapshot promoted for comparison should be recorded via
+`scripts/phase2_record_baseline.py` so attribution metrics are versioned in git.
+
 ## Iteration Dashboard And Regression Gate
 
 - **Dashboard:** `make phase2-rehearse` chains rehearse → official score → parsing report → timing/variance
@@ -176,8 +191,13 @@ improvement.)
 | Run-to-run score variance | not implemented yet; extend `scripts/phase2_timing.py` or add a score-aggregation companion |
 | Regression gate | `python scripts/phase2_gate.py --baseline <base.json> --candidate <cand.json>` |
 | Full dashboard | `make phase2-rehearse FOLD=<i> P2_FOLDS=<n> P2_BUDGET=900` |
+| Deterministic baseline ledger entry | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n>` |
+| Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>]` |
 
 Milestones 1 and 2 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution),
 the `solve_phase2.py` runner, `parser_vs_oracle.py` (Axis 1), `phase2_timing.py` (Axis 3),
 `phase2_gate.py`, and the `make phase2-rehearse` dashboard. The flag-gated improvement stubs and the
 HF dataset compare are Milestone 3 (see `docs/tpc_phase2_implementation_plan.md`).
+
+Baseline tracking automation (`scripts/phase2_record_baseline.py`, `make phase2-baseline`) was added
+after Milestone 7 to close roadmap Step 1 (establish deterministic baseline with committed history).
