@@ -449,7 +449,18 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None) -> ParsedIR:
             ir.or_groups = or_groups
 
     if flags is not None and getattr(flags, "llm_parse", False):
-        ir = llm_parse_stub(ir, query, llm_client)
+        # llm_parse_stub raises on any failure by design (network error, malformed response,
+        # ...) so the deterministic ir it was given is never silently corrupted. That contract
+        # only helps if the caller actually keeps the pre-call ir on failure instead of letting
+        # the exception propagate -- previously it didn't: orchestrator.solve_phase2 wraps this
+        # whole function in a broad try/except that discards ir entirely (variants=[]) on any
+        # parse-stage exception, including a transient LLM failure that has nothing to do with
+        # the deterministic parse already sitting in `ir`. Catch here instead, so a flaky LLM
+        # backend degrades to the deterministic parse rather than to no parse at all.
+        try:
+            ir = llm_parse_stub(ir, query, llm_client)
+        except Exception:
+            pass
 
     return ir
 

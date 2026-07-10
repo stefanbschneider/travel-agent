@@ -60,18 +60,48 @@ def test_llm_parse_adds_missing_constraint_without_overwriting_existing(one_quer
     assert budgets.get("dining") == 120.0
 
 
-def test_llm_parse_invalid_json_raises(one_query):
+def test_llm_parse_stub_invalid_json_raises(one_query):
+    """llm_parse_stub itself still raises on a malformed response (its own documented contract:
+    "Any error keeps ir unchanged by raising, so the orchestrator can degrade safely")."""
     class BadLLM:
         def complete(self, prompt, *, system=None, cache_key=None):
             return "not-json"
 
-    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query)  # deterministic ir, llm_parse off
     try:
-        normalize.parse_to_ir(one_query, llm_client=BadLLM(), flags=flags)
+        normalize.llm_parse_stub(ir, one_query, BadLLM())
     except ValueError as exc:
         assert "llm_parse invalid JSON" in str(exc)
     else:
         raise AssertionError("Expected llm_parse invalid JSON to raise")
+
+
+def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_failure(one_query):
+    """parse_to_ir must catch llm_parse_stub's raise and keep the deterministic ir -- previously
+    the exception propagated out of parse_to_ir, and orchestrator.solve_phase2's broad
+    try/except around the whole parse stage discarded the (perfectly good) deterministic parse
+    entirely (variants=[]) on any LLM hiccup, not just genuine parse bugs."""
+    class BadLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return "not-json"
+
+    deterministic = normalize.parse_to_ir(one_query)  # llm_parse off -> no LLM call
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=BadLLM(), flags=flags)
+    assert ir == deterministic
+
+
+def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_exception(one_query):
+    """Same contract, but for a client that raises outright (e.g. a network error) rather than
+    returning malformed JSON."""
+    class RaisingLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            raise RuntimeError("connection reset")
+
+    deterministic = normalize.parse_to_ir(one_query)
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=RaisingLLM(), flags=flags)
+    assert ir == deterministic
 
 
 def test_llm_parse_replace_can_correct_existing_value():

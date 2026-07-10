@@ -127,7 +127,16 @@ def test_flags_default_all_off():
     assert flags.llm_refine is False
 
 
-def test_llm_parse_error_degrades_to_fallback(one_query):
+def test_llm_parse_error_keeps_deterministic_parse_not_a_parse_failure(one_query):
+    """A flaky LLM backend must degrade to the deterministic parse, not to zero variants.
+
+    Previously parse_to_ir let llm_parse_stub's raise propagate, and this whole function wraps
+    parse_to_ir in a try/except that discards ir entirely (variants=[]) on ANY parse-stage
+    exception -- so an LLM hiccup was indistinguishable from a genuine parse bug. solve_fn is
+    None here (no WorldEnv in this unit test), so used_fallback is still True for an unrelated
+    reason (nothing can actually solve) -- but telemetry["error"] must not say "parse:", and the
+    deterministic variant must have survived into variants_count.
+    """
     class BadLLM:
         def complete(self, prompt, *, system=None, cache_key=None):
             return "{not-json}"
@@ -140,5 +149,5 @@ def test_llm_parse_error_degrades_to_fallback(one_query):
         flags=O.Flags(llm_parse=True),
     )
     jsonschema.validate(plan, SCHEMA)
-    assert telemetry["used_fallback"] is True
-    assert "parse:" in str(telemetry.get("error", ""))
+    assert "parse:" not in str(telemetry.get("error", ""))
+    assert telemetry["variants_count"] == 1
