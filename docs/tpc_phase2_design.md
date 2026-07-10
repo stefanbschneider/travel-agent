@@ -27,6 +27,27 @@ end-to-end FPR **85.0** vs solver-only **95.0** vs ceiling 100 — parsing loss 
 solver headroom (5 pts), and run-to-run e2e variance is ~0.09 score points. Stage 1 parsing is the
 confirmed priority; details in `docs/tpc_phase2_eval.md`.
 
+**2026-07-10 (later same day) update — memory + LLM-parse robustness + a full-val OR-detection
+fix:**
+
+- The in-process rehearsal memory ceiling (~26 cumulative solves) is resolved: `llms.py`'s
+  torch/vllm imports are now lazy (single-uid solver-only RSS 898MB → 281MB), and
+  `rehearse_phase2.py` runs both modes as chunked subprocesses so a leaked func_timeout
+  thread/whatever a chunk accumulates is reclaimed by the OS at chunk exit instead of compounding
+  across an entire fold. See "Current Gaps To Close" below for the full root-cause writeup.
+- `orchestrator.solve_phase2`'s parse stage previously discarded a perfectly good deterministic
+  parse (`variants=[]`) on ANY exception, including a transient LLM failure — `llm_parse_stub` is
+  documented to raise on error "so the orchestrator can degrade safely," but nothing actually kept
+  the pre-call `ir` near that raise. Fixed in `parse_to_ir`. This was the correctness prerequisite
+  for defaulting `TPC_P2_LLM_PARSE` on, which `solve_phase2.py::run_split` now does once a backend
+  is configured (mirroring the existing `TPC_P2_DISJUNCTION` default-on pattern). LLM responses are
+  cached by default (`CachingLLMClient`, `TPC_P2_LLM_CACHE=0` to disable) so warm reruns are free
+  and byte-deterministic.
+- The deterministic disjunction detector missed bare "(must/need to) satisfy one of the following"
+  phrasing (6/850 val queries), plus two more bugs found diagnosing the same case (a label word
+  leaking into an OR arm's text; a type-keyword substring match misfiring on a proper-noun venue
+  name). Full-val behavioral agreement (LLM off): 0.7565 → 0.7788.
+
 What remains incomplete is mostly Stage 1 quality and Stage 3 refinement:
 
 - Stage 1 still starts from `parse_query_no_oracle()` and is therefore still dominated by the current
@@ -204,7 +225,7 @@ The harness always preserves a hard finalization buffer and returns before the t
 | -------------- | ------- | -------------- |
 | `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai` / `infradeep`. |
 | `TPC_P2_DISJUNCTION` | `0` | Enable true no-oracle disjunctive branch generation (Stage 1). Implemented (Milestone 4); deterministic NL splitting, one branch-local variant per OR arm. |
-| `TPC_P2_LLM_PARSE` | `0` | Enable LLM-assisted second-pass parsing (Stage 1). Stub in skeleton. |
+| `TPC_P2_LLM_PARSE` | `0` (library `Flags()`); **effectively `1`** in `solve_phase2.py::run_split` once a usable `TPC_P2_LLM_BACKEND` is configured, unless this var is set explicitly | Enable the LLM corrective-audit second-pass parse (Stage 1). Implemented; falls back to the deterministic parse on any LLM failure (see "Current Gaps To Close"). |
 | `TPC_P2_LLM_REFINE` | `0` | Enable bounded LLM-guided plan refinement (Stage 3). Stub in skeleton. |
 | `TPC_P2_BUDGET_SEC` | inherits per-query timeout | Total per-query time budget the orchestrator splits across stages. |
 
@@ -238,14 +259,42 @@ measured incrementally without destabilizing the deterministic baseline.
    was rewritten to make the model *audit each extracted family against the quoted NL* (locate the
    supporting span, check negation/polarity, confirm-or-remove) instead of optionally "refining".
    Re-measured live after the roadmap-1c deterministic fixes: **4/5 disagreements fixed, 0/5 control
-   regressions** (controls unchanged). The remaining gap is OR-arm recovery on flattened-disjunction
-   queries, not family auditing.
+   regressions** (controls unchanged). The remaining gap was OR-arm recovery on flattened-disjunction
+   queries, not family auditing. **Resolved 2026-07-10 for the flagged probe uid
+   (`20250321124345084418`)** — but by fixing the *deterministic* disjunction detector (it never
+   recognized bare "satisfy one of the following" phrasing) rather than the LLM: the uid now
+   behaviorally agrees with the oracle without any LLM call. `build_llm_parse_prompt` still gained
+   an explicit OR-arm-recovery section + worked example as the fallback for phrasing beyond regex
+   reach. Also fixed the plumbing gap that blocked defaulting this on: `parse_to_ir` now catches
+   `llm_parse_stub`'s raise and keeps the deterministic `ir` instead of the caller discarding it
+   entirely, and responses are cached (`CachingLLMClient`) so repeat runs are free. `TPC_P2_LLM_PARSE`
+   now defaults on in `solve_phase2.py::run_split` once a backend is configured.
 4. **Stage 3 refinement is still a stub.** Current Phase 2 performance is effectively deterministic
    TPCAgent plus fallback, not deterministic solve plus bounded refinement.
 5. ~~Operational benchmarking is not yet mature.~~ **Resolved 2026-07-10:** the earlier solver-only
    instability was a measurement artifact of n=1 smoke rows plus stale-resume contamination; the
    baseline recorder now runs fresh by default, labels smoke rows, and records run-to-run score
    variance via `--repeats`. See `docs/tpc_phase2_eval.md` and `docs/phase2_baselines/README.md`.
+6. ~~In-process rehearsal memory growth capped folds at ~26 cumulative solves.~~ **Resolved
+   2026-07-10.** Two root causes, both fixed rather than worked around:
+   - `chinatravel/agent/llms.py` imported `transformers`/`vllm` (→ torch, ~600MB) unconditionally at
+     module top. `init_llm("TPCLLM")` is on the hot path for every Phase 2 solve (the deterministic
+     orchestrator wires a stub backbone LLM), so every process paid that cost even though Phase 2
+     never uses a local-model backend. Moved the imports into the local-model classes'
+     (Deepseek/Qwen/Mistral/Llama) constructors. **Measured:** single-uid solver-only RSS
+     898MB → 281MB.
+   - A timed-out solve leaves a thread `func_timeout` cannot kill running in the background —
+     verified directly (RSS still grows and a stray thread is still alive after the harness moves
+     on from a timeout). Rather than chase the leak, `scripts/rehearse_phase2.py` now runs both
+     end-to-end and solver-only rehearsal as chunked subprocesses (`P2_CHUNK` env, default 5); the
+     OS reclaims whatever a chunk leaks when that chunk's process exits, so fold size is no longer
+     memory-bounded regardless of cause. `agent_env/scripts/solve_phase2.py` gained `--uids-file`
+     to support this; solver-only mode gained a self-exec `--worker solver-only` entry point since
+     it had no standalone script.
+   - Six modules building their own Accommodations/Restaurants/Attractions/... at import time were
+     switched to a lazy-construction `LazyTool` proxy; the real duplication cost turned out to be
+     modest (~10-20MB per redundant build, not the several-hundred-MB hypothesized), but it's a
+     real win regardless.
 
 ## Design Rules For Phase 2
 

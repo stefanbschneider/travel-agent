@@ -51,6 +51,45 @@ Remaining tooling gap (minor): `scripts/phase2_timing.py --repeat-dirs` still re
 for valid-output rate; headline score variance is now covered by the recorder's `--repeats`, so the
 timing-script extension is optional.
 
+### Resolved: in-process rehearsal memory growth (2026-07-10)
+
+A larger fold (n=30–40, 120s) previously failed to complete locally past ~26 cumulative solves as
+memory accumulated in-process. Root-caused, not just worked around:
+
+1. `chinatravel/agent/llms.py` imported `transformers`/`vllm` (→ torch, ~600MB) unconditionally at
+   module top; `init_llm("TPCLLM")` — called for every solve, even solver-only, since the
+   deterministic orchestrator wires a stub backbone LLM — triggered that import despite Phase 2
+   never using a local-model backend. Fixed by moving the imports into the local-model classes'
+   constructors. **Measured:** a single-uid solver-only solve's RSS dropped 898MB → 281MB.
+2. A timed-out solve leaves a thread `func_timeout` cannot kill running in the background —
+   verified directly (a 6-query run with one timeout left a stray thread alive and elevated RSS
+   after the harness moved on).
+
+Fix for (2): `scripts/rehearse_phase2.py` now runs both end-to-end and solver-only rehearsal as
+**chunked subprocesses** rather than in one long-lived process (`P2_CHUNK` env var, default 5
+uids/subprocess; `--chunk-size 0` reverts to the old single-process behavior for short smoke runs
+where subprocess startup overhead would dominate). `agent_env/scripts/solve_phase2.py` gained
+`--uids-file` to support this; solver-only mode (which had no standalone script) gained a self-exec
+`--worker solver-only --uids-file ...` entry point. Whatever a chunk's process leaks — memory,
+threads, anything — is fully reclaimed by the OS when it exits, so fold size is no longer
+memory-bounded regardless of root cause. `make phase2-baseline`/`phase2-rehearse` get chunking for
+free (their `rehearse()` call sites don't pass `chunk_size`, so the new default applies). Per-query
+`rss_mb` (via `psutil`) is now recorded in both loops' telemetry for future soak monitoring.
+
+### Parser metrics are now always measured on the full val split (2026-07-10)
+
+Fold-scoped parser metrics (`parser_precision` etc. in the ledger) can miss whatever a parser fix
+touched if the small seeded fold doesn't happen to contain those uids — this happened for real: full
+val behavioral agreement moved 0.706 → 0.757 across the roadmap-1c fixes while an n=20 fold-0
+ledger row's `behavioral_agreement_rate` stayed completely flat. `parser_vs_oracle.run_report` is
+solver-free (diff-only against cached oracle constraints from `hard_logic_py`) and measured at
+~20s for the full 850-uid val split with `--behavioral --disjunction --branch-aware`, so
+`scripts/phase2_record_baseline.py` now runs it unconditionally on every row (`parser_full_*`
+columns), in addition to the existing fold-scoped `parser_*` columns (kept only for continuity with
+pre-2026-07-10 rows). **`parser_full_*` is the row-to-row comparable headline signal going
+forward** — see `docs/phase2_baselines/README.md` for the full comparability rules, including that
+`llm_backend`/`llm_parse` must match before comparing two rows' numbers.
+
 ### First trustworthy baseline (run `20260710T124113Z`, fold 0, n=20, 60s, LLM off)
 
 ```
@@ -226,16 +265,19 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
 | Solver-only official score (oracle, bounded) | `python scripts/rehearse_phase2.py --mode solver-only --fold <i> --folds <n>` |
 | Three-way attribution | `python scripts/rehearse_phase2.py --mode both --fold <i> --folds <n>` (prints ceiling/solver/end-to-end) |
 | Held-out test (sparingly) | add `--split-set test` to any rehearse command |
-| Parsing precision/recall + buckets | `python scripts/parser_vs_oracle.py --split-set val` |
+| Parsing precision/recall + buckets (full val, headline signal) | `python scripts/parser_vs_oracle.py --split-set val --behavioral --disjunction --branch-aware` |
 | Behavioral equivalence | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
+| Per-family loss attribution (top spurious/missing families + example uids) | same as above; read the `family_stats` field of the JSON output |
+| Same, with the LLM corrective audit applied | add `--llm-parse` (uses `TPC_P2_LLM_BACKEND`/`agent_env/config.toml`; responses cached by default) |
 | Per-stage timing p50/p95 + reliability | `python scripts/phase2_timing.py --work-dir agent_env/runs/<method>` |
 | Run-to-run valid-output-rate variance | `python scripts/phase2_timing.py --work-dir <run> --repeat-dirs <run2> <run3> ...` |
 | Run-to-run score variance (FPR + overall_true) | `python scripts/phase2_record_baseline.py ... --repeats <N>` (recorded as `*_std` columns) |
 | LLM-parse fix/regression probe (no solver, 1 LLM call per uid) | `python scripts/phase2_llm_parse_probe.py --limit 60 --max-probes 8` |
 | Regression gate | `python scripts/phase2_gate.py --baseline <base.json> --candidate <cand.json>` |
 | Full dashboard | `make phase2-rehearse FOLD=<i> P2_FOLDS=<n> P2_BUDGET=900` |
-| Deterministic baseline ledger entry | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n> P2_REPEATS=<r> P2_LABEL=<tag>` |
+| Deterministic baseline ledger entry (full-val parser metrics always included) | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n> P2_REPEATS=<r> P2_LABEL=<tag>` |
 | Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>] [--repeats <r>] [--label <tag>]` |
+| Rehearsal chunk size (memory isolation; default 5) | env `P2_CHUNK=<n>` or `rehearse_phase2.py --chunk-size <n>` (`0` = old single-process behavior) |
 
 Milestones 1 and 2 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution),
 the `solve_phase2.py` runner, `parser_vs_oracle.py` (Axis 1), `phase2_timing.py` (Axis 3),

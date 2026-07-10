@@ -25,6 +25,15 @@ What is verified:
 - the deterministic harness path, fallback path, disjunction wiring, and evaluation tooling are all
   implemented and covered by dedicated tests
 
+**2026-07-10 (later same day) update:** memory fixes landed (see roadmap item below) so fold size
+is no longer bounded by in-process memory growth; parser metrics are now measured on the full val
+split (n=850) unconditionally in every baseline ledger row, not just on request
+(`parser_full_*` columns in `docs/phase2_baselines/history.csv`); `TPC_P2_LLM_PARSE` now defaults
+on in `solve_phase2.py` once a backend is configured, gated on a robustness fix that keeps the
+deterministic parse on any LLM failure; and the deterministic disjunction detector, a stray-label
+regex bug, and a proper-noun/type-keyword collision were fixed, raising full-val behavioral
+agreement 0.7565 → 0.7788 with the LLM off. Details in the roadmap items below.
+
 What is still incomplete:
 
 - Stage 1 still mostly wraps `parse_query_no_oracle()`; the richer parser IR exists but most of its
@@ -232,11 +241,44 @@ which is a far larger sample than any single rehearsal fold. This is exactly the
 larger-fold recommendation was meant to address.
 
 Larger-fold / 300s rehearsals were attempted (n=30–40, 120s) but the in-process rehearsal
-accumulates memory across queries (both arms share one process; vLLM/torch libs load even with the
-LLM off) and did not complete locally past ~26 cumulative solves. Firming up the end-to-end FPR
-attribution at a larger fold or 300s budget therefore still wants either a subprocess-per-query
-rehearsal harness or an HPC run; the deterministic parser gain itself is already established on the
-full val split. Tracked as the remaining item here.
+accumulated memory across queries and did not complete locally past ~26 cumulative solves.
+
+**Resolved 2026-07-10** by root-causing (not working around) the leak — see the "Memory fixes"
+entry below and `docs/tpc_phase2_eval.md`. `scripts/rehearse_phase2.py` now runs both modes as
+chunked subprocesses, so fold size is no longer memory-bounded; a full-fold (n=85) baseline is
+tracked as the Step-8 re-baseline below.
+
+### Memory fixes (2026-07-10)
+
+Root-caused, not just worked around, in three parts:
+
+1. `chinatravel/agent/llms.py` imported `transformers`/`vllm` (→ torch, ~600MB) unconditionally at
+   module top; `init_llm("TPCLLM")` — on the hot path for every solve, even solver-only, since the
+   deterministic orchestrator wires a stub backbone LLM — triggered that import despite Phase 2
+   never using a local-model backend. Moved into the local-model classes' (Deepseek/Qwen/Mistral/
+   Llama) constructors via lazy `_import_transformers()`/`_import_vllm()` helpers. **Measured:**
+   single-uid solver-only solve RSS 898MB → 281MB; torch/vllm/transformers no longer in
+   `sys.modules`.
+2. Six modules (`hard_constraint.py`, `commonsense_constraint.py`, `preference.py`,
+   `evaluation/preference.py`, and the two `nesy_verifier` counterparts) each built their own
+   Accommodations/Restaurants/Attractions/... at import time. Added a `LazyTool` proxy
+   (`chinatravel/environment/tools/_lazy.py`) deferring construction to first attribute access.
+   **Measured:** the real duplication cost on the actual solve path is modest (~10–20MB per
+   redundant build, not the several-hundred-MB originally hypothesized — most of the floor is
+   pandas/numpy's one-time import cost, not per-instance data), but it's still a real,
+   correctness-preserving win (identical scores before/after).
+3. A timed-out solve leaves a thread `func_timeout` cannot kill running in the background —
+   verified directly (a 6-query run with one timeout left a stray thread alive and RSS elevated
+   after the harness moved on). Fixed structurally, not by chasing the leak itself: `solve_phase2.py`
+   gained `--uids-file`, and `rehearse_phase2.py` now runs both end-to-end and solver-only as
+   chunked subprocesses (`P2_CHUNK` env, default 5; solver-only via a new self-exec
+   `--worker solver-only` mode, since it had no standalone script). Whatever a chunk leaks is
+   reclaimed by the OS when that chunk's process exits. Also fixed a latent bug this surfaced:
+   `rehearse_phase2.py` never put `chinatravel/` on `sys.path`, so `--mode solver-only` run
+   standalone (previously it only worked by accident, when end-to-end ran first in the same
+   process and added that path as a side effect) crashed with `ModuleNotFoundError`.
+
+Per-query `rss_mb` telemetry (via `psutil`) is now recorded in both loops.
 
 ### 1b. Stabilize solver-only rehearsal before attribution decisions
 
@@ -321,14 +363,39 @@ authority (the model only proposes patches that are re-parsed and merged).
 case (it expanded to 2 variants but still failed), confirming the remaining gap is OR-arm recovery,
 not family auditing.
 
-Remaining work is prompt/behavior tuning, not plumbing:
+**Resolved 2026-07-10 (robustness + default-on + the flagged flattened-disjunction case):**
 
-- ~~in 3 of 4 unfixed cases the LLM returned no patches~~ **addressed:** the audit prompt now drives
-  confirm-or-remove per family (4/5 fixed above).
-- the flattened-disjunction probe still does not recover `or_arms`; that path needs its own targeted
-  probe set (oracle-disjunctive uids where deterministic splitting fails)
-- probe on a larger disagreement sample and across deeper folds before deciding whether
-  `TPC_P2_LLM_PARSE` defaults on in rehearsals
+- **Robustness fix (load-bearing for everything below).** `llm_parse_stub` is documented to raise
+  on any failure "so the orchestrator can degrade safely," but nothing actually caught that raise
+  near the deterministic `ir` it was meant to protect — the exception propagated out of
+  `parse_to_ir`, and `orchestrator.solve_phase2` wraps the whole parse stage in one broad
+  try/except that discards `ir` entirely (`variants=[]`) on any exception. A transient LLM hiccup
+  (network error, malformed JSON) was therefore indistinguishable from a genuine parse bug and
+  forced the query to fallback. Fixed: `parse_to_ir` now catches `llm_parse_stub`'s exception
+  itself and keeps the pre-call deterministic `ir`.
+- **`CachingLLMClient`** (`chinatravel/agent/phase2/llm_client.py`) wraps openai/infradeep clients
+  with an on-disk response cache under `cache/phase2_llm_parse/<model>/<key>.json`, keyed by the
+  existing `cache_key` plumbing. Warm evals are free and byte-deterministic (temperature is
+  already 0). On by default; `TPC_P2_LLM_CACHE=0` disables it.
+- **`llm_parse` now defaults on** in `solve_phase2.py::run_split` once a usable backend is
+  configured (mirrors the existing `TPC_P2_DISJUNCTION` default-on pattern), gated on the
+  robustness fix above being safe to rely on. `scripts/parser_vs_oracle.py` gained `--llm-parse` so
+  this is measurable on the full val split, not just the probe script.
+- **The flagged uid (`20250321124345084418`) is now fixed, but not by the LLM.** Investigating it
+  found the deterministic disjunction detector never recognized bare "(must/need to) satisfy one of
+  the following" phrasing (only "at least one/either/any one of"), missing 6/850 val queries
+  entirely. Also found and fixed two more bugs on the same uid while there: a regex that leaked a
+  label word ("...the following conditions:") into the first OR arm's text, and
+  `parse_excluded_attraction_types` substring-matching a type keyword ("park") inside a proper-noun
+  venue name ("Shenzhen Bay Park") that `parse_excluded_attractions` had already correctly captured
+  as a specific name. The uid now behaviorally agrees with the oracle via the deterministic path
+  alone. `build_llm_parse_prompt` still gained an explicit OR-arm-recovery section + worked example
+  (the original ask) as the fallback for phrasing beyond regex reach — the plumbing already existed
+  end-to-end (`or_arms` → `_parse_constraint_text` per arm → branch-local solver variants).
+
+**Measured (val n=850, `--behavioral --disjunction --branch-aware`), cumulative over the
+Step-5 + Step-7 deterministic fixes:** precision 0.5475 → 0.5577, recall 0.6524 → 0.6526,
+behavioral agreement **0.7565 → 0.7788**, `disjunction_flattened` 140 → 134.
 
 The LLM still proposes and never decides; final authority stays with deterministic validation.
 
