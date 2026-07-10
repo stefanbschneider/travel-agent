@@ -19,6 +19,7 @@ import argparse
 import json
 import os
 import sys
+import tomllib
 from pathlib import Path
 from statistics import mean, pstdev
 
@@ -37,6 +38,7 @@ from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_METHOD_PREFIX = "phase2_e2e_"
 DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
+DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
 
 
 def _default_method_for_split(split: str) -> str:
@@ -44,16 +46,46 @@ def _default_method_for_split(split: str) -> str:
     return f"{DEFAULT_METHOD_PREFIX}{split}"
 
 
-def _phase2_llm_config_from_env() -> dict:
-    cfg = {
-        "backend": os.environ.get("TPC_P2_LLM_BACKEND", "none"),
+def _read_local_config(path: Path = DEFAULT_CONFIG_PATH) -> dict:
+    if not path.exists():
+        return {}
+    with path.open("rb") as f:
+        return tomllib.load(f)
+
+
+def _phase2_llm_config() -> dict:
+    cfg: dict = {}
+
+    local_cfg = _read_local_config()
+    phase2_cfg = local_cfg.get("phase2") if isinstance(local_cfg, dict) else None
+    if isinstance(phase2_cfg, dict):
+        llm_cfg = phase2_cfg.get("llm")
+        if isinstance(llm_cfg, dict):
+            cfg.update({k: v for k, v in llm_cfg.items() if v not in (None, "")})
+
+    env_cfg = {
+        "backend": os.environ.get("TPC_P2_LLM_BACKEND"),
         "fixtures_dir": os.environ.get("TPC_P2_LLM_FIXTURES"),
         "model": os.environ.get("TPC_P2_LLM_MODEL"),
         "base_url": os.environ.get("TPC_P2_LLM_BASE_URL"),
         "api_key_env": os.environ.get("TPC_P2_LLM_API_KEY_ENV"),
         "api_key": os.environ.get("TPC_P2_LLM_API_KEY"),
+        "temperature": os.environ.get("TPC_P2_LLM_TEMPERATURE"),
+        "max_tokens": os.environ.get("TPC_P2_LLM_MAX_TOKENS"),
     }
-    return {k: v for k, v in cfg.items() if v not in (None, "")}
+    cfg.update({k: v for k, v in env_cfg.items() if v not in (None, "")})
+
+    backend = str(cfg.get("backend") or "none").lower()
+    cfg["backend"] = backend
+
+    if backend == "infradeep":
+        cfg.setdefault("api_key_env", "INFRADEEP_API_KEY")
+        if "base_url" not in cfg and os.environ.get("INFRADEEP_BASE_URL"):
+            cfg["base_url"] = os.environ["INFRADEEP_BASE_URL"]
+        if "model" not in cfg and os.environ.get("INFRADEEP_MODEL"):
+            cfg["model"] = os.environ["INFRADEEP_MODEL"]
+
+    return cfg
 
 
 def _score_stats(values: list[float]) -> dict:
@@ -145,7 +177,7 @@ def run_split(
     llm_fixture_missing = 0
     solved_evaluations: list[dict] = []
 
-    llm_cfg = _phase2_llm_config_from_env()
+    llm_cfg = _phase2_llm_config()
     llm_client = p2_llm.build_llm_client(llm_cfg)
 
     for idx, quid in enumerate(selected, start=1):

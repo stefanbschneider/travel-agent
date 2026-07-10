@@ -72,3 +72,81 @@ def test_llm_parse_invalid_json_raises(one_query):
         assert "llm_parse invalid JSON" in str(exc)
     else:
         raise AssertionError("Expected llm_parse invalid JSON to raise")
+
+
+def test_llm_parse_replace_can_correct_existing_value():
+    class FakeLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[{"mode":"replace",'
+                '"constraint_text":"The budget for dining is 120.",'
+                '"confidence":0.91}],"field_confidence":{"budgets":0.91}}'
+            )
+
+    query = {
+        "uid": "q_replace_budget",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Shanghai",
+        "nature_language": "The budget for dining is 100.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, llm_client=FakeLLM(), flags=flags)
+
+    assert ir.raw.get("budgets", {}).get("dining") == 120.0
+    assert ir.confidence.get("budgets") == 0.91
+
+
+def test_llm_parse_or_arm_recovery_when_deterministic_split_missing():
+    class FakeLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[],"or_arms":['
+                '"I want to visit West Lake.",'
+                "\"I want to try Grandma's Home restaurant.\""
+                '],"field_alternatives":{},"field_confidence":{}}'
+            )
+
+    query = {
+        "uid": "q_or_recover",
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Hangzhou",
+        "nature_language": "Visit West Lake or try Grandma's Home restaurant.",
+    }
+    flags = type("Flags", (), {"disjunction": True, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, llm_client=FakeLLM(), flags=flags)
+    variants = normalize.ir_to_solver_variants(ir, query, flags=flags)
+
+    assert len(ir.or_groups) >= 2
+    assert len(variants) >= 2
+
+
+def test_llm_parse_field_alternatives_expand_solver_variants():
+    class FakeLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[],"or_arms":[],"field_alternatives":{'
+                '"budgets":['
+                '{"constraint_text":"The budget for dining is 80.","confidence":0.40},'
+                '{"constraint_text":"The budget for dining is 120.","confidence":0.80}'
+                ']},"field_confidence":{"budgets":0.55}}'
+            )
+
+    query = {
+        "uid": "q_alt_budget",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Shanghai",
+        "nature_language": "The budget for dining is 100.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, llm_client=FakeLLM(), flags=flags)
+    variants = normalize.ir_to_solver_variants(ir, query, flags=flags)
+
+    dining_values = {
+        float(v.get("budgets", {}).get("dining"))
+        for v in variants
+        if isinstance(v.get("budgets", {}).get("dining"), (int, float))
+    }
+    assert {80.0, 100.0, 120.0}.issubset(dining_values)

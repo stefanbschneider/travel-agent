@@ -30,6 +30,7 @@ class ParsedIR:
         variants: alternative flat parses; skeleton holds exactly one (``raw``).
         or_groups: disjunctive branch descriptors (empty in the skeleton).
         confidence: per-field confidence scores (empty in the skeleton).
+        field_alternatives: per-field alternative candidate values (optional).
         spans: raw extracted text spans per field (empty in the skeleton).
         entity_candidates: entity-resolution candidates per mention (empty in the skeleton).
         hard_vs_soft: split of constraints into hard vs soft (empty in the skeleton).
@@ -39,6 +40,7 @@ class ParsedIR:
     variants: list[dict] = field(default_factory=list)
     or_groups: list[Any] = field(default_factory=list)
     confidence: dict = field(default_factory=dict)
+    field_alternatives: dict = field(default_factory=dict)
     spans: dict = field(default_factory=dict)
     entity_candidates: dict = field(default_factory=dict)
     hard_vs_soft: dict = field(default_factory=dict)

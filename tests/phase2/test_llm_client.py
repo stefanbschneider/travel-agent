@@ -95,3 +95,104 @@ def test_openai_backend_builds_request_without_network(monkeypatch):
 def test_unknown_backend_raises():
     with pytest.raises(ValueError):
         lc.build_llm_client({"backend": "nonsense"})
+
+
+def test_infradeep_backend_builds_openai_compatible_request(monkeypatch):
+    captured = {}
+
+    class FakeMessage:
+        content = "infradeep-answer"
+
+    class FakeChoice:
+        message = FakeMessage()
+
+    class FakeCompletion:
+        choices = [FakeChoice()]
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return FakeCompletion()
+
+    class FakeChat:
+        completions = FakeCompletions()
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+            self.chat = FakeChat()
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+
+    client = lc.build_llm_client(
+        {
+            "backend": "infradeep",
+            "model": "qwen3.6-27b",
+            "base_url": "https://api.infradeep.example/v1",
+            "api_key": "idp-key",
+        }
+    )
+    out = client.complete("hi")
+    assert out == "infradeep-answer"
+    assert client.backend == "infradeep"
+    assert captured["model"] == "qwen3.6-27b"
+    assert captured["client_kwargs"]["base_url"] == "https://api.infradeep.example/v1"
+
+
+def test_load_local_env_parses_export_lines(tmp_path, monkeypatch):
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "# comment\n"
+        "export INFRADEEP_API_KEY=abc123\n"
+        "TPC_P2_LLM_MODEL='Qwen/Qwen3.6-27B-Instruct'\n",
+        encoding="utf-8",
+    )
+    monkeypatch.delenv("INFRADEEP_API_KEY", raising=False)
+    monkeypatch.delenv("TPC_P2_LLM_MODEL", raising=False)
+
+    loaded = lc.load_local_env(str(env_file))
+    assert loaded["INFRADEEP_API_KEY"] == "abc123"
+    assert loaded["TPC_P2_LLM_MODEL"] == "Qwen/Qwen3.6-27B-Instruct"
+
+
+def test_load_local_env_does_not_override_existing_by_default(tmp_path, monkeypatch):
+    env_file = tmp_path / ".env"
+    env_file.write_text('export INFRADEEP_API_KEY="file-value"\n', encoding="utf-8")
+    monkeypatch.setenv("INFRADEEP_API_KEY", "existing-value")
+
+    loaded = lc.load_local_env(str(env_file))
+    assert loaded == {}
+    assert lc.os.environ["INFRADEEP_API_KEY"] == "existing-value"
+
+
+def test_infradeep_backend_defaults_base_url(monkeypatch):
+    captured = {}
+
+    class FakeMessage:
+        content = "ok"
+
+    class FakeChoice:
+        message = FakeMessage()
+
+    class FakeCompletion:
+        choices = [FakeChoice()]
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return FakeCompletion()
+
+    class FakeChat:
+        completions = FakeCompletions()
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+            self.chat = FakeChat()
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+    monkeypatch.setenv("INFRADEEP_API_KEY", "idp-key")
+
+    client = lc.build_llm_client({"backend": "infradeep", "model": "qwen3.6-27b"})
+    assert client.backend == "infradeep"
+    assert captured["client_kwargs"]["base_url"] == "https://api.deepinfra.com/v1/openai"
