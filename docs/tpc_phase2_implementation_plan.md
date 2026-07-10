@@ -219,8 +219,24 @@ Captured metrics include:
 First trustworthy row (`20260710T124113Z`, fold 0, n=20, 60s, fresh, LLM off): e2e FPR 85.0,
 solver-only 95.0, ceiling 100.0; e2e overall_true 85.39 with ~0.09-point run-to-run spread.
 Parsing loss (10 FPR pts) is 2x solver headroom (5 pts) already at a 60s budget, and would dominate
-even more at the organizer budget. Next baseline: larger fold and/or 300s budget to firm up the
-attribution.
+even more at the organizer budget.
+
+**Re-baseline after the roadmap-1c + Step-2 changes (`20260710T144747Z`, git_sha 165cd1fa, fold 0,
+n=20, 60s, fresh, LLM off):** e2e FPR 85.0, solver-only 95.0, ceiling 100.0 (unchanged);
+continuous `overall_true` solver-only 93.28 → 94.04, e2e 85.39 → 85.72; valid-output rate 1.0, no
+fallback. The pipeline runs cleanly under the new code with no regression. Note the fold-0 n=20
+parser metrics are unchanged (precision 0.525, recall 0.767, behavioral 0.750) **because this seeded
+20-query fold contains none of the queries the 1c fixes touched** — the authoritative parser signal
+is the full-val (n=850) measurement recorded under roadmap 1c (behavioral agreement 0.706 → 0.757),
+which is a far larger sample than any single rehearsal fold. This is exactly the coarseness the
+larger-fold recommendation was meant to address.
+
+Larger-fold / 300s rehearsals were attempted (n=30–40, 120s) but the in-process rehearsal
+accumulates memory across queries (both arms share one process; vLLM/torch libs load even with the
+LLM off) and did not complete locally past ~26 cumulative solves. Firming up the end-to-end FPR
+attribution at a larger fold or 300s budget therefore still wants either a subprocess-per-query
+rehearsal harness or an HPC run; the deterministic parser gain itself is already established on the
+full val split. Tracked as the remaining item here.
 
 ### 1b. Stabilize solver-only rehearsal before attribution decisions
 
@@ -328,6 +344,13 @@ measurable locally. (`phase2_timing.py --repeat-dirs` still only covers valid-ou
 `TPC_P2_LLM_REFINE` should remain lower priority than Stage 1 work. Refinement becomes worth doing only
 after end-to-end runs show that parser loss has been reduced and solver-only performance is no longer the
 main bottleneck.
+
+**Deferral still holds after roadmap 1c + Step 2 (2026-07-10).** Parser loss has been *reduced* (full-val
+behavioral agreement 0.706 → 0.757 deterministically, plus 4/5 remaining disagreements fixed by the
+corrective LLM audit) but it is not yet clear it has stopped being the dominant Phase-2 loss: the last
+trustworthy attribution (fold 0, n=20, 60s) still shows parsing loss (10 FPR pts / 8.3 continuous pts)
+larger than solver headroom (5 FPR pts / 6.0 continuous pts). Stage 3 refinement stays deferred until a
+larger-fold / 300s end-to-end attribution confirms parser loss is no longer the bottleneck.
 
 ## Integration facts (verified while planning)
 
