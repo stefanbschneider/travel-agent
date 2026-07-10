@@ -31,10 +31,13 @@ What is still incomplete:
   uncertainty, confidence, and entity-resolution fields are not populated yet
 - normalization still does not perform the intended `WorldEnv`-backed entity resolution and validation
 - `TPC_P2_LLM_PARSE` now accepts corrective proposals (replace/remove/add), OR-arm recovery proposals,
-  and field alternatives/confidence, but remains dependent on deterministic parsing/validation
+  and field alternatives/confidence, but remains dependent on deterministic parsing/validation.
+  First live probe against DeepInfra Qwen3.6-27B (2026-07-10): 4/8 behavioral disagreements fixed,
+  0 regressions, but too conservative in 3/4 unfixed cases (returned no patches)
 - `TPC_P2_LLM_REFINE` is still a no-op placeholder
-- solver-only baseline stability is currently inconsistent in some deterministic baseline runs and must
-  be fixed before solver-vs-parser attribution can be trusted
+- ~~solver-only baseline stability~~ resolved 2026-07-10: the instability was an n=1-smoke-row +
+  stale-resume measurement artifact, fixed in the recorder (fresh runs, smoke labels, `--repeats`
+  score variance); see `docs/tpc_phase2_eval.md`
 
 ## Review summary (2026-07-10)
 
@@ -52,10 +55,12 @@ Current review findings:
    regex-based no-oracle parser.
 3. Deterministic disjunction handling is implemented and should stay enabled in production unless a
    run explicitly overrides it.
-4. The current LLM parse path is too conservative to repair many real held-out failures, because it
-   mostly adds missing detail instead of correcting wrong extracted values.
-5. Evaluation coverage is solid for functionality, but operational benchmarking is still missing:
-  committed baseline ledgers now exist, but solver-only instability still prevents clean attribution.
+4. The LLM parse path is now corrective (replace/remove/add) and measurably useful (4/8
+   disagreements fixed, 0 regressions in the first DeepInfra probe), but its prompting is still too
+   conservative: in most unfixed cases it proposed no patches at all.
+5. Operational benchmarking is now in place: fresh-run baseline recording with labels and
+   run-to-run score variance, plus a first trustworthy attribution row (`20260710T124113Z`:
+   parsing loss 10 FPR pts vs solver headroom 5 at a 60s budget).
 
 ## Ground rules
 
@@ -198,7 +203,7 @@ Rehearsal folds are drawn from the validation split only; `rehearse_phase2.py --
 
 ### 1. Establish the deterministic baseline on validation folds
 
-Status: **DONE (with follow-up needed)**.
+Status: **DONE (2026-07-10, first trustworthy row recorded)**.
 
 The implemented rehearsal/eval stack now writes committed baseline history via
 `scripts/phase2_record_baseline.py` (and `make phase2-baseline`) into `docs/phase2_baselines/`.
@@ -209,20 +214,43 @@ Captured metrics include:
 - solver-only score
 - parser-vs-oracle structural and behavioral gaps
 - timing, fallback rate, timeout rate, and valid-output rate
+- run-to-run score variance across `--repeats`
 
-Follow-up from those baseline runs: solver-only FPR can drop unexpectedly while end-to-end stays high.
-This is now the immediate measurement-quality blocker to resolve.
+First trustworthy row (`20260710T124113Z`, fold 0, n=20, 60s, fresh, LLM off): e2e FPR 85.0,
+solver-only 95.0, ceiling 100.0; e2e overall_true 85.39 with ~0.09-point run-to-run spread.
+Parsing loss (10 FPR pts) is 2x solver headroom (5 pts) already at a 60s budget, and would dominate
+even more at the organizer budget. Next baseline: larger fold and/or 300s budget to firm up the
+attribution.
 
 ### 1b. Stabilize solver-only rehearsal before attribution decisions
 
-Investigate and fix solver-only instability observed in baseline ledger entries so that
-`solver_headroom` and `parsing_loss` are interpretable again.
+Status: **DONE (2026-07-10)** — root-caused as a measurement artifact, not a solver bug.
 
-Suggested checks:
+All unstable ledger rows were n=1 (or n=4) smoke runs at 20–30s budgets, where a single
+near-deadline flake flips FPR between 0 and 100, and end-to-end numbers could additionally be
+stale-resume leftovers from older code (rehearsal used `resume=True` into a shared results dir).
+Fixes shipped in `scripts/rehearse_phase2.py` (`--fresh`, `clear_method_outputs`) and
+`scripts/phase2_record_baseline.py` (fresh by default, `--label` with auto-`smoke` for n<10,
+`--repeats` run-to-run score variance recorded as `*_std` history columns). Baseline rows recorded
+before 2026-07-10 should not be compared across commits.
 
-- compare `phase2_solver_only_*` outputs against corresponding `phase2_e2e_*` plans for the same uids
-- inspect timeout/recovery behavior and budget handling in the solver-only path
-- ensure deterministic environment/agent init parity across end-to-end and solver-only runs
+### 1c. Deterministic Stage-1 quick wins from the behavioral triage (new, 2026-07-10)
+
+The behavioral-disagreement triage on the first 60 val queries (8 disagreements) exposed two cheap,
+fully deterministic fixes that should land before more LLM work:
+
+- **Extend the Milestone-5 A2 negation guard to hotels and attractions.** "Do not wish to stay at
+  the following hotels: X and Y" currently also emits a spurious `required_hotels`; "do not want to
+  visit any Museum..." also emits spurious `required_attractions`/`required_attraction_types`.
+  Same bug family as the restaurant guard that already shipped.
+- **Fix `taxi_cars_equals` vacuity in the parsed verifier.** A correct parse
+  `{excluded_inner_transport: [taxi], taxi_cars_equals: 1}` currently rejects a taxi-free
+  oracle-accepted plan; the oracle encoding is vacuously true when no taxi is used, so the parsed
+  verifier must be too. This is acceptance-gate correctness, so it also affects which solver plans
+  are kept.
+
+Both are measurable immediately via `parser_vs_oracle.py --behavioral` (agreement was 0.867 on the
+first 60 val queries) and cost no LLM calls.
 
 ### 2. Finish Stage 1 normalization before adding refinement
 
@@ -238,25 +266,33 @@ post-solve preference quality.
 
 ### 3. Upgrade LLM parsing from additive to corrective
 
-The current `llm_parse_stub` shape is a good safety-first starting point, but the next version needs to
-be able to:
+Status: **mechanism DONE, prompting needs iteration (2026-07-10).**
 
-- repair wrong extracted values, not only add missing ones
-- propose OR-arm recovery when deterministic splitting fails
-- emit field-level alternatives or confidence so deterministic normalization can choose safely
+The corrective flow (replace/remove/add patches, OR-arm recovery, field alternatives + confidence)
+is implemented and was measured live against DeepInfra Qwen3.6-27B with
+`scripts/phase2_llm_parse_probe.py` (solver-free, one LLM call per probed uid):
 
-The LLM should still propose and never decide; final authority stays with deterministic validation.
+- 8 behavioral-disagreement uids: **4 fixed, 0 made worse**
+- 6 correct-parse control uids: LLM proposed no changes (**0 regressions**)
+
+Remaining work is prompt/behavior tuning, not plumbing:
+
+- in 3 of 4 unfixed cases the LLM returned no patches even though removable spurious families were
+  present — the prompt should instruct it to *audit each extracted family against the quoted NL*
+  and explicitly confirm-or-remove, rather than optionally "refine"
+- the one flattened-disjunction probe did not trigger `or_arms` recovery; that path needs its own
+  targeted probe set (oracle-disjunctive uids where deterministic splitting fails)
+- probe on a larger disagreement sample (the first-60 scan found 8/60; scan deeper folds) before
+  deciding whether `TPC_P2_LLM_PARSE` defaults on in rehearsals
+
+The LLM still proposes and never decides; final authority stays with deterministic validation.
 
 ### 4. Extend evaluation to score variance, not only valid-output variance
 
-The docs correctly treat 5-run variance as important, but `scripts/phase2_timing.py` currently reports
-variance only for valid-output rate across repeat runs. Extend this to report variance for at least:
-
-- FPR
-- `overall_true`
-- optionally `overall_parsed`
-
-This makes the organizer's average-over-5 execution model measurable locally.
+Status: **DONE (2026-07-10)** via `phase2_record_baseline.py --repeats N`, which reruns the fresh
+rehearsal N times and records mean/std of end-to-end and solver-only FPR and `overall_true`
+(`*_std` columns in `history.csv`). This makes the organizer's average-over-5 execution model
+measurable locally. (`phase2_timing.py --repeat-dirs` still only covers valid-output rate; optional.)
 
 ### 5. Defer Stage 3 refinement until the parser gap is no longer dominant
 

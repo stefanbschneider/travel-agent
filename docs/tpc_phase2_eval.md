@@ -4,15 +4,19 @@ This document defines how we **measure and iterate** on the Phase 2 harness desc
 `docs/tpc_phase2_design.md`. It is the methodology reference; the scripts that implement it are listed
 per metric.
 
-## Current measurement status (2026-07-10)
+## Current measurement status (2026-07-10, second pass)
 
 The measurement stack itself now exists:
 
-- `scripts/rehearse_phase2.py` for end-to-end vs solver-only rehearsal
+- `scripts/rehearse_phase2.py` for end-to-end vs solver-only rehearsal (`--fresh` clears the fold's
+  stale end-to-end results first)
 - `scripts/parser_vs_oracle.py` for structural and behavioral parser diagnostics
 - `scripts/phase2_timing.py` for per-stage timing and reliability aggregation
 - `scripts/phase2_gate.py` for regression checks
 - `scripts/phase2_record_baseline.py` for deterministic baseline snapshots and longitudinal tracking
+  (now with `--repeats` score variance, `--label` tagging, and fresh-run semantics by default)
+- `scripts/phase2_llm_parse_probe.py` for a cheap, solver-free measurement of the corrective LLM
+  parse (fixes vs regressions on behavioral-disagreement uids; one LLM call per probed uid)
 
 Committed tracking artifacts now exist under `docs/phase2_baselines/`:
 
@@ -24,14 +28,52 @@ Committed tracking artifacts now exist under `docs/phase2_baselines/`:
 Raw per-query outputs remain intentionally uncommitted under `agent_env/runs/` and `results/`.
 The committed baseline ledger is the source of truth for trend tracking in git.
 
-Current limitation: while the tracking pipeline is now in place, recent baseline entries show
-solver-only instability (including runs where `solver_only_fpr` drops unexpectedly while end-to-end
-remains high). This currently blocks reliable attribution of solver headroom vs parsing loss and should
-be treated as an active measurement risk.
+### Resolved: the "solver-only instability" was a measurement artifact
 
-Also note one tooling gap: `scripts/phase2_timing.py` currently reports repeat-run variance for
-**valid-output rate**, but not yet for the actual score metrics that matter most in organizer
-evaluation (`FPR`, `overall_true`, optionally `overall_parsed`).
+The early ledger entries that showed `solver_only_fpr` flipping between 0 and 100 across identical
+configs were all **n=1 smoke runs at 20–30s budgets**. Two compounding artifacts explained them:
+
+1. **Stale-resume contamination.** The rehearsal ran end-to-end with `resume=True` into a shared
+   `results/phase2_e2e_*` directory, so a "baseline" row could silently reuse plans produced by
+   older code or a different budget (visible in history: identical e2e scores across different
+   commits). Solver-only always recomputed, so the two modes in one row did not even have the same
+   semantics.
+2. **n=1 boundary flakes.** At a 20–30s budget the solve loop runs right up to its slice; a single
+   near-deadline flake flips a one-query FPR between 0 and 100.
+
+Both are addressed: the recorder now clears fold results before running (fresh by default;
+`--reuse-existing` to opt out), auto-labels `n < 10` rows as `smoke`, and measures run-to-run score
+variance directly via `--repeats` (recorded as `*_std` columns in `history.csv`). See
+`docs/phase2_baselines/README.md` for row-comparison rules. Pre-2026-07-10 ledger rows should not be
+used for cross-commit comparison.
+
+Remaining tooling gap (minor): `scripts/phase2_timing.py --repeat-dirs` still reports variance only
+for valid-output rate; headline score variance is now covered by the recorder's `--repeats`, so the
+timing-script extension is optional.
+
+### First trustworthy baseline (run `20260710T124113Z`, fold 0, n=20, 60s, LLM off)
+
+```
+FPR:          ceiling 100.0 | solver-only 95.0  | end-to-end 85.0   (headroom 5.0,  parsing loss 10.0)
+overall_true: ceiling 100.0 | solver-only 93.28 | end-to-end 85.39  (headroom 6.72, parsing loss 7.89)
+```
+
+- Parser on this fold: precision 0.525, recall 0.767, value-accuracy 0.867, behavioral agreement
+  0.75 — precision (spurious constraint families) is the dominant loss, consistent with the
+  behavioral triage in `docs/tpc_phase2_design.md`.
+- Run-to-run e2e `overall_true` spread across two fresh repeats of the same fold/budget: **0.09
+  points** (85.2955 vs 85.3893) — the deterministic path is effectively stable; the organizers'
+  5-run averaging is not a risk while the LLM is off.
+- Reliability: valid-output rate 1.0, zero fallbacks. The high "timed_out" counts (16/20 e2e,
+  19/20 solver-only) are solve-slice-exhaustion events that recovered to valid plans — by design,
+  since the solve loop restarts until its slice ends; they are not failures.
+- Caveat: 60s is a development budget; at the organizer budget (~900s) solver headroom should
+  shrink further, making parsing loss even more dominant. Rerun with a larger budget/fold before
+  drawing final attribution conclusions.
+- Operational note: long-running background recorder invocations were killed twice by the
+  execution sandbox during this session (not a repo bug); the recorded run itself completed all
+  writes. If a run dies mid-way, the per-uid result dirs survive and the aggregation can be
+  replayed from disk.
 
 ## Guiding Idea
 
@@ -188,11 +230,12 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
 | Behavioral equivalence | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
 | Per-stage timing p50/p95 + reliability | `python scripts/phase2_timing.py --work-dir agent_env/runs/<method>` |
 | Run-to-run valid-output-rate variance | `python scripts/phase2_timing.py --work-dir <run> --repeat-dirs <run2> <run3> ...` |
-| Run-to-run score variance | not implemented yet; extend `scripts/phase2_timing.py` or add a score-aggregation companion |
+| Run-to-run score variance (FPR + overall_true) | `python scripts/phase2_record_baseline.py ... --repeats <N>` (recorded as `*_std` columns) |
+| LLM-parse fix/regression probe (no solver, 1 LLM call per uid) | `python scripts/phase2_llm_parse_probe.py --limit 60 --max-probes 8` |
 | Regression gate | `python scripts/phase2_gate.py --baseline <base.json> --candidate <cand.json>` |
 | Full dashboard | `make phase2-rehearse FOLD=<i> P2_FOLDS=<n> P2_BUDGET=900` |
-| Deterministic baseline ledger entry | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n>` |
-| Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>]` |
+| Deterministic baseline ledger entry | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n> P2_REPEATS=<r> P2_LABEL=<tag>` |
+| Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>] [--repeats <r>] [--label <tag>]` |
 
 Milestones 1 and 2 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution),
 the `solve_phase2.py` runner, `parser_vs_oracle.py` (Axis 1), `phase2_timing.py` (Axis 3),

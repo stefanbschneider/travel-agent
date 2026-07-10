@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import os
 import random
+import shutil
 import statistics
 import sys
 import time
@@ -195,6 +196,24 @@ def _evaluate_method(split_name: str, method: str, fold_uids: list[str], query_d
 # --- Mode runners (integration; touch WorldEnv/solver) --------------------
 
 
+def clear_method_outputs(method: str, uids: list[str]) -> int:
+    """Delete per-uid result files and run dirs for ``method`` so a rerun is fresh.
+
+    Without this, ``resume=True`` silently reuses plans produced by older code or a different
+    budget, which contaminates baseline rows. Returns the number of result files removed.
+    """
+    removed = 0
+    for uid in uids:
+        result_path = PROJECT_ROOT / "results" / method / f"{uid}.json"
+        if result_path.exists():
+            result_path.unlink()
+            removed += 1
+        run_dir = PROJECT_ROOT / "agent_env" / "runs" / method / uid
+        if run_dir.is_dir():
+            shutil.rmtree(run_dir, ignore_errors=True)
+    return removed
+
+
 def _run_end_to_end(split_name, fold_uids, *, budget_sec):
     import solve_phase2 as runner
 
@@ -301,6 +320,7 @@ def rehearse(
     budget_sec=900.0,
     limit=None,
     lang="en",
+    fresh=False,
 ) -> dict:
     split_name, _is_test = resolve_split_set(split_set)
     uids = splits.read_split(split_name)
@@ -310,9 +330,20 @@ def rehearse(
 
     _, query_data = runner_load(split_name, lang)
 
-    report = {"split_name": split_name, "fold": fold, "folds": folds, "n": len(fold_uids), "modes": {}}
+    report = {
+        "split_name": split_name,
+        "fold": fold,
+        "folds": folds,
+        "n": len(fold_uids),
+        "fresh": bool(fresh),
+        "modes": {},
+    }
 
     if "end-to-end" in modes:
+        if fresh:
+            removed = clear_method_outputs(f"phase2_e2e_{split_name}", fold_uids)
+            if removed:
+                print(f"fresh: cleared {removed} stale end-to-end result(s) for this fold")
         m = _run_end_to_end(split_name, fold_uids, budget_sec=budget_sec)
         report["modes"]["end-to-end"] = _evaluate_method(split_name, m, fold_uids, query_data)
     if "solver-only" in modes:
@@ -349,6 +380,12 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--lang", default="en", choices=["en", "zh"])
+    p.add_argument(
+        "--fresh",
+        action="store_true",
+        help="Clear this fold's end-to-end results first so the run reflects the current code "
+        "instead of resuming stale plans (recommended for any run used as a baseline).",
+    )
     return p.parse_args()
 
 
@@ -364,6 +401,7 @@ def main() -> None:
         budget_sec=args.budget_sec,
         limit=args.limit,
         lang=args.lang,
+        fresh=args.fresh,
     )
 
 

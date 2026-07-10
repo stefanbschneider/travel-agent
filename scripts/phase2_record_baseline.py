@@ -171,6 +171,39 @@ def _completion_summary(telemetries: list[dict]) -> dict[str, float | int]:
     }
 
 
+def _repeat_scores(rehearsal: dict[str, Any]) -> dict[str, float]:
+    """Extract the four headline scores from one rehearsal report (for variance across repeats)."""
+    modes = rehearsal.get("modes", {})
+    return {
+        "e2e_fpr": float(modes.get("end-to-end", {}).get("fpr", 0.0)),
+        "solver_only_fpr": float(modes.get("solver-only", {}).get("fpr", 0.0)),
+        "e2e_overall_true": float(
+            modes.get("end-to-end", {}).get("quality", {}).get("overall_true", {}).get("mean", 0.0)
+        ),
+        "solver_only_overall_true": float(
+            modes.get("solver-only", {}).get("quality", {}).get("overall_true", {}).get("mean", 0.0)
+        ),
+    }
+
+
+def _variance_summary(rehearsals: list[dict[str, Any]]) -> dict[str, Any]:
+    """Mean/std of the headline scores across repeat runs.
+
+    The organizers run each harness 5x and average, so run-to-run score variance is a
+    first-class metric even on the deterministic path (budget-boundary effects).
+    """
+    import statistics
+
+    per_repeat = [_repeat_scores(r) for r in rehearsals]
+    keys = ["e2e_fpr", "solver_only_fpr", "e2e_overall_true", "solver_only_overall_true"]
+    summary: dict[str, Any] = {"repeats": len(per_repeat), "per_repeat": per_repeat}
+    for key in keys:
+        vals = [r[key] for r in per_repeat]
+        summary[f"{key}_mean"] = statistics.fmean(vals) if vals else 0.0
+        summary[f"{key}_std"] = statistics.pstdev(vals) if len(vals) > 1 else 0.0
+    return summary
+
+
 def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     rehearsal = record.get("rehearsal", {})
     modes = rehearsal.get("modes", {})
@@ -211,10 +244,19 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     e2e_completion = completion.get("end_to_end", {}) if isinstance(completion, dict) else {}
     solver_completion = completion.get("solver_only", {}) if isinstance(completion, dict) else {}
 
+    variance = record.get("variance", {}) if isinstance(record, dict) else {}
+
     return {
         "run_id": record.get("run_id", ""),
         "timestamp_utc": record.get("timestamp_utc", ""),
         "git_sha": record.get("git_sha", ""),
+        "label": record.get("label", ""),
+        "repeats": int(record.get("repeats", 1) or 1),
+        "fresh": bool(record.get("fresh", False)),
+        "e2e_fpr_std": float(variance.get("e2e_fpr_std", 0.0)),
+        "solver_only_fpr_std": float(variance.get("solver_only_fpr_std", 0.0)),
+        "e2e_overall_true_std": float(variance.get("e2e_overall_true_std", 0.0)),
+        "solver_only_overall_true_std": float(variance.get("solver_only_overall_true_std", 0.0)),
         "split_set": record.get("split_set", ""),
         "split_name": record.get("split_name", ""),
         "fold": int(record.get("fold", 0)),
@@ -284,6 +326,13 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "run_id",
         "timestamp_utc",
         "git_sha",
+        "label",
+        "repeats",
+        "fresh",
+        "e2e_fpr_std",
+        "solver_only_fpr_std",
+        "e2e_overall_true_std",
+        "solver_only_overall_true_std",
         "split_set",
         "split_name",
         "fold",
@@ -362,6 +411,7 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
     parser = record.get("parser", {})
     behavioral = parser.get("behavioral", {}) if isinstance(parser, dict) else {}
     timing = record.get("timing", {})
+    variance = record.get("variance", {}) if isinstance(record, dict) else {}
     completion = record.get("completion", {}) if isinstance(record, dict) else {}
     parse_completion = completion.get("parse", {}) if isinstance(completion, dict) else {}
     e2e_completion = completion.get("end_to_end", {}) if isinstance(completion, dict) else {}
@@ -375,6 +425,8 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- git_sha: {record.get('git_sha', '')}",
         f"- split: {record.get('split_name', '')} (set={record.get('split_set', '')}, fold={record.get('fold', 0)}/{record.get('folds', 0)}, n={record.get('n', 0)})",
         f"- budget_sec: {record.get('budget_sec', 0.0)}",
+        f"- label: {record.get('label', '') or '(none)'}",
+        f"- repeats: {int(record.get('repeats', 1) or 1)} (fresh={bool(record.get('fresh', False))})",
         "",
         "## Rehearsal Attribution (FPR)",
         "",
@@ -383,6 +435,14 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- end_to_end_fpr: {e2e:.4f}",
         f"- solver_headroom: {ceiling - solver:.4f}",
         f"- parsing_loss: {solver - e2e:.4f}",
+        "",
+        "## Run-To-Run Variance (across repeats)",
+        "",
+        f"- repeats: {int(variance.get('repeats', 1) or 1)}",
+        f"- e2e_fpr mean/std: {float(variance.get('e2e_fpr_mean', 0.0)):.4f} / {float(variance.get('e2e_fpr_std', 0.0)):.4f}",
+        f"- solver_only_fpr mean/std: {float(variance.get('solver_only_fpr_mean', 0.0)):.4f} / {float(variance.get('solver_only_fpr_std', 0.0)):.4f}",
+        f"- e2e_overall_true mean/std: {float(variance.get('e2e_overall_true_mean', 0.0)):.4f} / {float(variance.get('e2e_overall_true_std', 0.0)):.4f}",
+        f"- solver_only_overall_true mean/std: {float(variance.get('solver_only_overall_true_mean', 0.0)):.4f} / {float(variance.get('solver_only_overall_true_std', 0.0)):.4f}",
         "",
         "## Rehearsal Attribution (Continuous Score)",
         "",
@@ -447,6 +507,25 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Use branch-aware parser-vs-oracle scoring (paired branch matching).",
     )
+    p.add_argument(
+        "--label",
+        default="",
+        help="Free-form tag stored with the run (e.g. 'baseline-60s', 'smoke'). Rows with n < 10 "
+        "are auto-labeled 'smoke' when no label is given.",
+    )
+    p.add_argument(
+        "--repeats",
+        type=int,
+        default=1,
+        help="Run the rehearsal N times (fresh each time) and record run-to-run score variance. "
+        "Organizers average 5 runs, so variance matters even on the deterministic path.",
+    )
+    p.add_argument(
+        "--reuse-existing",
+        action="store_true",
+        help="Allow resuming stale end-to-end results instead of clearing them first. Off by "
+        "default because stale plans from older code/budgets contaminate baseline rows.",
+    )
     return p.parse_args()
 
 
@@ -469,16 +548,34 @@ def main() -> None:
         limit=args.limit,
     )
 
-    rehearsal = rehearse_mod.rehearse(
-        modes=("end-to-end", "solver-only"),
-        split_set=args.split_set,
-        fold=args.fold,
-        folds=args.folds,
-        seed=args.seed,
-        budget_sec=args.budget_sec,
-        limit=args.limit,
-        lang=args.lang,
-    )
+    fresh = not args.reuse_existing
+    repeats = max(int(args.repeats), 1)
+    label = args.label or ("smoke" if len(fold_info.uids) < 10 else "")
+    if len(fold_info.uids) < 10:
+        print(
+            f"WARNING: n={len(fold_info.uids)} < 10 — this row is a smoke run, not a baseline "
+            "(single-query flakes flip FPR between 0 and 100)."
+        )
+
+    rehearsals: list[dict] = []
+    for i in range(repeats):
+        if repeats > 1:
+            print(f"--- repeat {i + 1}/{repeats} ---")
+        rehearsals.append(
+            rehearse_mod.rehearse(
+                modes=("end-to-end", "solver-only"),
+                split_set=args.split_set,
+                fold=args.fold,
+                folds=args.folds,
+                seed=args.seed,
+                budget_sec=args.budget_sec,
+                limit=args.limit,
+                lang=args.lang,
+                fresh=fresh,
+            )
+        )
+    rehearsal = rehearsals[-1]
+    variance = _variance_summary(rehearsals)
 
     parser = parser_mod.run_report(
         fold_info.split_name,
@@ -514,6 +611,10 @@ def main() -> None:
         "n": len(fold_info.uids),
         "lang": args.lang,
         "branch_aware": bool(args.branch_aware),
+        "label": label,
+        "repeats": repeats,
+        "fresh": fresh,
+        "variance": variance,
         "rehearsal": rehearsal,
         "parser": parser,
         "timing": timing,

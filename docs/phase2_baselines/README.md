@@ -15,16 +15,32 @@ This directory stores commit-friendly, longitudinal Phase 2 baseline metrics.
 Run from repo root:
 
 ```bash
-.venv/bin/python scripts/phase2_record_baseline.py --split-set val --fold 0 --folds 10 --budget-sec 120 --limit 20
+.venv/bin/python scripts/phase2_record_baseline.py --split-set val --fold 0 --folds 10 \
+  --budget-sec 60 --limit 20 --repeats 2 --label baseline-60s-n20
 ```
 
 Or via Makefile:
 
 ```bash
-make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=120 P2_LIMIT=20
+make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=60 P2_LIMIT=20 P2_REPEATS=2 P2_LABEL=baseline-60s-n20
 ```
 
 You can remove --limit for full-fold runs once runtime is acceptable for your workflow.
+Runtime scales roughly with `repeats × n × 1.9 × budget_sec` (the solve loop deliberately uses its
+whole slice, in both end-to-end and solver-only modes).
+
+## Row Semantics (read this before comparing rows)
+
+- **Fresh by default.** Since 2026-07-10 the recorder clears the fold's end-to-end results before
+  running, so a row reflects the current code. Before that, `resume=True` could silently reuse plans
+  produced by older code or a different budget — treat pre-fresh rows (those with `fresh` empty/False
+  in history.csv) as unreliable for cross-commit comparison.
+- **`label` and n.** Rows with `n < 10` are auto-labeled `smoke`; at n=1 a single budget-boundary
+  flake flips FPR between 0 and 100, which is what the "solver-only instability" in early ledger rows
+  was. Only compare rows with the same fold/limit/budget and n ≥ 10.
+- **`repeats` and `*_std` columns.** With `--repeats N` the rehearsal runs N times (fresh each time)
+  and the row records mean/std of e2e/solver-only FPR and overall_true across repeats. Organizers run
+  each harness 5x and average, so this is the local estimate of that variance.
 
 ## Notes
 

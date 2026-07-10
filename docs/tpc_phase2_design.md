@@ -19,7 +19,13 @@ The Phase 2 harness is no longer hypothetical. The following pieces are already 
 - `scripts/rehearse_phase2.py`, `scripts/parser_vs_oracle.py`, and `scripts/phase2_timing.py`
    provide rehearsal, parser diagnostics, and telemetry aggregation
 - `scripts/phase2_record_baseline.py` + `make phase2-baseline` persist deterministic baseline metrics
-   to committed history files under `docs/phase2_baselines/`
+   to committed history files under `docs/phase2_baselines/` (fresh-run semantics, `--repeats`
+   score variance, `--label` tagging)
+
+First trustworthy deterministic baseline (fold 0, n=20, 60s budget, run `20260710T124113Z`):
+end-to-end FPR **85.0** vs solver-only **95.0** vs ceiling 100 — parsing loss (10 pts) is twice the
+solver headroom (5 pts), and run-to-run e2e variance is ~0.09 score points. Stage 1 parsing is the
+confirmed priority; details in `docs/tpc_phase2_eval.md`.
 
 What remains incomplete is mostly Stage 1 quality and Stage 3 refinement:
 
@@ -27,7 +33,11 @@ What remains incomplete is mostly Stage 1 quality and Stage 3 refinement:
    regex parser
 - the richer parser IR exists, but entity-resolution fields are still mostly scaffolding
 - `TPC_P2_LLM_PARSE` now supports corrective proposals (replace/remove/add), OR-arm recovery input,
-   and field alternatives/confidence; it still depends on deterministic re-parse + validation
+   and field alternatives/confidence; it still depends on deterministic re-parse + validation.
+   **First live measurement (2026-07-10, Qwen3.6-27B via DeepInfra,
+   `scripts/phase2_llm_parse_probe.py`):** on 8 behavioral-disagreement uids it fixed 4 and broke 0;
+   on 6 correct-parse control uids it proposed no changes (0 regressions). The unfixed cases split
+   into LLM conservatism (returned no patches) and non-parse causes (see gaps below).
 - `TPC_P2_LLM_REFINE` is still a no-op placeholder
 
 ## Official Execution Model
@@ -201,22 +211,36 @@ The harness always preserves a hard finalization buffer and returns before the t
 These are the extension points; the skeleton wires them as no-op stubs so improvements can be added and
 measured incrementally without destabilizing the deterministic baseline.
 
-## Current Gaps To Close (post-review)
+## Current Gaps To Close (post-review, updated 2026-07-10)
 
 1. **Regex-only brittleness remains the main Phase 2 risk.** The live Stage 1 path still starts from
    `parse_query_no_oracle()`, so held-out phrasing robustness is still mostly bounded by the current
-   regex parser.
+   regex parser. A behavioral-disagreement triage (first 60 val queries: 8/60 disagree) decomposes
+   the remaining Stage-1 loss into three concrete buckets:
+   - **Negation/over-extraction regex bugs** producing spurious `required_*` families next to the
+     correct `excluded_*` ones (e.g. "Do not wish to stay at the following hotels: X and Y" also
+     emits a bogus `required_hotels`). The Milestone-5 A2 negation guard covered restaurants; the
+     same guard is still missing for hotels and attractions. Deterministically fixable.
+   - **Parsed-verifier semantics mismatches**, e.g. a correct parse
+     `{excluded_inner_transport: [taxi], taxi_cars_equals: 1}` fails the oracle-accepted best plan —
+     the parsed verifier's taxi check is not vacuous when the plan contains no taxis. Verifier fix,
+     not parser fix.
+   - **LLM-parse conservatism** (see gap 3).
 2. **Normalization is not yet doing the intended WorldEnv-backed resolution work.** The IR and `env`
    hooks exist, but field-level entity resolution, validation, and confidence-aware normalization are
    still largely unimplemented.
-3. **LLM parsing is still too conservative.** The current `TPC_P2_LLM_PARSE` path can add missing
-   detail, but it is not yet designed to safely correct wrong extracted values or recover failed OR
-   splits in the hard cases.
+3. **LLM parsing works but is still too conservative.** First live probe (Qwen3.6-27B via DeepInfra):
+   4/8 behavioral disagreements fixed, 0 regressions on 8 probed + 6 control uids. In 3 of the 4
+   unfixed cases the LLM returned no patches at all even though the deterministic parse contained
+   spurious families it was allowed to remove. Prompting it to actively audit each extracted family
+   against the quoted NL (rather than only "refine") is the obvious next iteration; the OR-arm
+   recovery path also did not trigger on the one flattened-disjunction probe.
 4. **Stage 3 refinement is still a stub.** Current Phase 2 performance is effectively deterministic
    TPCAgent plus fallback, not deterministic solve plus bounded refinement.
-5. **Operational benchmarking is not yet mature.** The scripts exist, but the repo does not yet carry a
-   stable/clean set of solver-only results: committed baseline history now exists, but some runs show
-   solver-only instability that must be resolved before attribution is fully trustworthy.
+5. ~~Operational benchmarking is not yet mature.~~ **Resolved 2026-07-10:** the earlier solver-only
+   instability was a measurement artifact of n=1 smoke rows plus stale-resume contamination; the
+   baseline recorder now runs fresh by default, labels smoke rows, and records run-to-run score
+   variance via `--repeats`. See `docs/tpc_phase2_eval.md` and `docs/phase2_baselines/README.md`.
 
 ## Design Rules For Phase 2
 

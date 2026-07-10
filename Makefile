@@ -73,8 +73,11 @@ P2_BUDGETS ?= 30,60,120,300,900
 P2_SWEEP_CSV ?= cache/phase2_budget_sweep/budget_sweep.csv
 P2_SWEEP_JSON ?= cache/phase2_budget_sweep/budget_sweep.json
 P2_BRANCH_AWARE ?= 0
+P2_REPEATS ?= 1
+P2_LABEL ?=
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
 P2_BRANCH_AWARE_FLAG = $(if $(filter 1,$(P2_BRANCH_AWARE)),--branch-aware,)
+P2_LABEL_FLAG = $(if $(P2_LABEL),--label $(P2_LABEL),)
 
 phase2-help:
 	@printf '%s\n' \
@@ -124,7 +127,7 @@ phase2-budget-sweep:
 phase2-baseline:
 	.venv/bin/python scripts/phase2_record_baseline.py --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
-	  $(P2_BRANCH_AWARE_FLAG)
+	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG)
 
 # Parser-vs-oracle attribution only (Axis 1), incl. behavioral equivalence.
 phase2-parser-report:
