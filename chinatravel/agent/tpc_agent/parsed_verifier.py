@@ -226,20 +226,6 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
 
         add(any(_fits(a) for a in acts_at(w["location"])))
 
-    # --- Timing (NL): arrive no later / depart no earlier ------------------
-    for tc in _as_list(constraints.get("timing_constraints")):
-        if not isinstance(tc, dict):
-            continue
-        loc = tc.get("location")
-        when = _time_to_min(tc.get("time"))
-        if not loc or when is None:
-            continue
-        matched = acts_at(loc)
-        if tc.get("type") == "arrive_no_later":
-            add(any((_time_to_min(activity_start_time(a)) or 0) <= when for a in matched))
-        elif tc.get("type") == "depart_no_earlier":
-            add(all((_time_to_min(activity_start_time(a)) or 0) >= when for a in matched) if matched else True)
-
     # --- Intercity mode ----------------------------------------------------
     mode = constraints.get("intercity_mode")
     if mode and acts:

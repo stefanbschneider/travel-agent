@@ -64,3 +64,60 @@ def test_no_disjunction_when_branch_counts_match():
         oracle_variants=[{"budgets": {"total": 1500.0}}],
     )
     assert d["disjunction_flattened"] is False
+
+
+# --- Step 5: branch_aware family buckets (previously always empty) --------
+#
+# _branch_aware_diff only accumulated counts, never family names, so run_report's family_stats
+# aggregation (which reads row["buckets"]) was silently vacuous whenever --branch-aware was used.
+
+
+def test_branch_aware_diff_populates_buckets_not_just_counts():
+    d = pvo.diff_variants(
+        parsed_variants=[{"budgets": {"total": 1500.0}, "excluded_attractions": ["Z"]}],
+        oracle_variants=[{"budgets": {"total": 1500.0}, "required_attractions": ["A"]}],
+        branch_aware=True,
+    )
+    assert d["diff"]["counts"]["spurious"] == 1
+    assert "excluded_attractions" in d["diff"]["buckets"]["spurious"]
+    assert d["diff"]["counts"]["missing"] == 1
+    assert "required_attractions" in d["diff"]["buckets"]["missing"]
+
+
+def test_branch_aware_diff_buckets_include_unmatched_branch_families():
+    # 2 oracle branches, 1 parsed -> the second oracle branch is unmatched; its family should
+    # land in the aggregated "missing" bucket (not just inflate the count).
+    d = pvo.diff_variants(
+        parsed_variants=[{"budgets": {"total": 1500.0}}],
+        oracle_variants=[{"budgets": {"total": 1500.0}}, {"required_hotels": ["H"]}],
+        branch_aware=True,
+    )
+    assert "required_hotels" in d["diff"]["buckets"]["missing"]
+
+
+def test_compute_query_diff_includes_buckets_for_family_stats():
+    row = pvo.compute_query_diff({
+        "uid": "t1",
+        "nature_language": "no constraints here",
+        "people_number": 1,
+        "days": 1,
+        "start_city": "A",
+        "target_city": "B",
+    })
+    assert "buckets" in row
+    assert set(row["buckets"].keys()) == {"matched", "missing", "spurious", "wrong_value"}
+
+
+def test_aggregate_family_stats_sorts_by_spurious_count_desc():
+    rows = [
+        {"uid": "u1", "buckets": {"matched": [], "missing": [], "spurious": ["a", "a", "b"], "wrong_value": []}},
+        {"uid": "u2", "buckets": {"matched": ["c"], "missing": [], "spurious": ["a"], "wrong_value": []}},
+    ]
+    stats = pvo._aggregate_family_stats(rows)
+    by_family = {s["family"]: s for s in stats}
+    assert by_family["a"]["spurious"] == 3
+    assert by_family["b"]["spurious"] == 1
+    assert by_family["c"]["matched"] == 1
+    # sorted descending by spurious count
+    assert [s["family"] for s in stats][0] == "a"
+    assert by_family["a"]["example_spurious_uids"] == ["u1", "u1", "u2"]

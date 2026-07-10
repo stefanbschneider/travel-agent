@@ -587,8 +587,9 @@ def parse_required_restaurants(text):
             if neg_prefix.search(text[: m.start()]):
                 continue
             chunk = m.group(1).strip().rstrip(".")
-            # Skip cuisine-TYPE phrasing ("of the type X"); those are not restaurant names.
-            if re.match(r"of\s+(?:the\s+)?types?\b", chunk, re.I):
+            # Skip cuisine-TYPE phrasing ("of the type X" / "of the following type(s): X"); those
+            # are not restaurant names.
+            if re.match(r"of\s+(?:the\s+)?(?:following\s+)?types?\b", chunk, re.I):
                 continue
             # Split on " and " or ", "
             parts = re.split(r"\s+and\s+|,\s*", chunk)
@@ -622,8 +623,9 @@ def parse_excluded_restaurants(text):
     )
     if m:
         chunk = m.group(1).strip().rstrip(".")
-        # Not a restaurant name list — it's a cuisine type ("of the type X"); handled elsewhere.
-        if re.match(r"of\s+(?:the\s+)?types?\b", chunk, re.I):
+        # Not a restaurant name list — it's a cuisine type ("of the type X" / "of the following
+        # type(s): X"); handled elsewhere.
+        if re.match(r"of\s+(?:the\s+)?(?:following\s+)?types?\b", chunk, re.I):
             return None
         parts = re.split(r"\s+and\s+|,\s*", chunk)
         for p in parts:
@@ -659,6 +661,22 @@ def parse_cuisine_preference(text):
     # "try the following types of restaurants: Hot pot and Western cuisine"
     m = re.search(r"(?:try|visit)\s+(?:the\s+following\s+)?types?\s+of\s+restaurants?[:\s]+(.+?)(?:\.|;|$)", text, re.I)
     if m:
+        chunk = m.group(1).strip().rstrip(".")
+        parts = re.split(r"\s+and\s+|,\s*(?:or\s+)?|\s+or\s+", chunk)
+        for p in parts:
+            p = p.strip()
+            if p and p.lower() not in {"the", "following", "these"}:
+                if p not in cuisines:
+                    cuisines.append(p)
+
+    # "hope to try restaurants of the following type: Shanghai cuisine" (restaurant(s) BEFORE
+    # "of the (following) type(s)", vs. the "types of restaurants" pattern above). Negated phrasing
+    # ("do not want to try restaurants of the type X") maps to excluded_cuisine_types, not here --
+    # use the wider lookback (_negated_before) since "restaurants" isn't adjacent to "do not".
+    m = re.search(
+        r"restaurants?\s+of\s+(?:the\s+)?(?:following\s+)?types?[:\s]+(.+?)(?:\.|;|$)", text, re.I
+    )
+    if m and not _negated_before(text, m.start()):
         chunk = m.group(1).strip().rstrip(".")
         parts = re.split(r"\s+and\s+|,\s*(?:or\s+)?|\s+or\s+", chunk)
         for p in parts:
@@ -706,118 +724,6 @@ def parse_excluded_cuisine_types(text):
                     if p not in types:
                         types.append(p)
     return types if types else None
-
-
-def parse_timing_constraints(text):
-    """Extract timing constraints like 'leave X no earlier than HH:MM'."""
-    constraints = []
-
-    # "leave/depart X no earlier than HH:MM"
-    for m in re.finditer(r"(?:leave|depart\s+(?:from)?)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
-        constraints.append({"type": "depart_no_earlier", "location": m.group(1).strip(), "time": m.group(2)})
-
-    # "arrive at X no later than HH:MM"
-    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
-        constraints.append({"type": "arrive_no_later", "location": m.group(1).strip(), "time": m.group(2)})
-
-    return constraints if constraints else None
-
-
-def _cap_first(s):
-    s = s.strip().rstrip(".")
-    return s[:1].upper() + s[1:] if s else s
-
-
-def _split_types(chunk):
-    out = []
-    for p in re.split(r"\s+and\s+|,\s*(?:and\s+|or\s+)?|\s+or\s+", chunk):
-        p = _cap_first(p)
-        if p and p.lower() not in {"the", "following", "these", "a", "an", ""}:
-            if p not in out:
-                out.append(p)
-    return out
-
-
-def parse_required_hotel_types(text):
-    """Extract hotel FEATURE types, split into (any_types, all_types).
-
-    "one of the following (hotel) types: A, B"  -> any_types (at least one must hold)
-    "hotel of (the) type X" / "hotel that offers X" -> all_types (all must hold)
-    Values are normalized to sentence case to match the oracle vocabulary
-    ("free parking" -> "Free parking").
-    """
-    any_types, all_types = [], []
-    m = re.search(
-        r"one\s+of\s+the\s+following\s+(?:hotel\s+)?types?(?:\s+of\s+hotels?)?[:\s]+(.+?)(?:\.|;|$)",
-        text, re.I,
-    )
-    if m:
-        any_types = _split_types(m.group(1))
-    if not any_types:
-        for pat in (
-            r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-            r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-            r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-        ):
-            m = re.search(pat, text, re.I)
-            if m:
-                all_types = _split_types(m.group(1))
-                break
-    return any_types, all_types
-
-
-def _hhmm_to_min(t):
-    h, m = t.split(":")
-    return int(h) * 60 + int(m)
-
-
-def parse_activity_time_windows(text):
-    """Extract per-location time windows in the oracle shape.
-
-    {location, earliest, latest, end_after, end_before}
-      - "arrive at/reach X no later than T"    -> latest=T
-      - "arrive at/reach X no earlier than T"   -> earliest=T
-      - "leave/depart (from) X no earlier than T" / "depart no earlier than T from X" -> end_after=T
-      - "leave/depart (from) X no later than T"  -> end_before=T
-      - "visit/be at X between A and B"          -> latest=A, end_after=B
-    """
-    def _loc(s):
-        return re.sub(r"^the\s+", "", s.strip().rstrip("."), flags=re.I).strip()
-
-    by_loc = {}
-
-    def _set(loc, key, val):
-        loc = _loc(loc)
-        w = by_loc.setdefault(loc, {"location": loc, "earliest": None, "latest": None,
-                                    "end_after": None, "end_before": None})
-        if w[key] is None:
-            w[key] = val
-
-    order = []
-
-    def _mark(loc):
-        loc = _loc(loc)
-        if loc not in order:
-            order.append(loc)
-
-    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
-        _mark(m.group(1)); _set(m.group(1), "latest", m.group(2))
-    for m in re.finditer(r"(?:arrive\s+at|reach)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
-        _mark(m.group(1)); _set(m.group(1), "earliest", m.group(2))
-    for m in re.finditer(r"(?:leave|depart(?:\s+from)?)\s+(.+?)\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})", text, re.I):
-        _mark(m.group(1)); _set(m.group(1), "end_after", m.group(2))
-    for m in re.finditer(r"(?:leave|depart(?:\s+from)?)\s+(.+?)\s+no\s+later\s+than\s+(\d{1,2}:\d{2})", text, re.I):
-        _mark(m.group(1)); _set(m.group(1), "end_before", m.group(2))
-    # "depart no earlier/later than T from X" (reversed order)
-    for m in re.finditer(r"depart\s+no\s+earlier\s+than\s+(\d{1,2}:\d{2})\s+from\s+(.+?)(?:\.|;|,|$)", text, re.I):
-        _mark(m.group(2)); _set(m.group(2), "end_after", m.group(1))
-    for m in re.finditer(r"depart\s+no\s+later\s+than\s+(\d{1,2}:\d{2})\s+from\s+(.+?)(?:\.|;|,|$)", text, re.I):
-        _mark(m.group(2)); _set(m.group(2), "end_before", m.group(1))
-    # "visit/be at X between A and B"
-    for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", text, re.I):
-        _mark(m.group(1)); _set(m.group(1), "latest", m.group(2)); _set(m.group(1), "end_after", m.group(3))
-
-    return [by_loc[loc] for loc in order] if order else None
 
 
 def _cap_first(s):
@@ -1030,10 +936,6 @@ def parse_single_constraint_text(text):
     excl_cuisine = parse_excluded_cuisine_types(text)
     if excl_cuisine:
         result["excluded_cuisine_types"] = excl_cuisine
-
-    timing = parse_timing_constraints(text)
-    if timing:
-        result["timing_constraints"] = timing
 
     time_windows = parse_activity_time_windows(text)
     if time_windows:

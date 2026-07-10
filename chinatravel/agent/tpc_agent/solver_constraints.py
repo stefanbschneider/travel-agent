@@ -36,7 +36,6 @@ _BRANCH_LOCAL_KEYS = {
     "intercity_mode",
     "taxi_cars_equals",
     "excluded_inner_transport",
-    "timing_constraints",
     "position_presence",
 }
 

@@ -129,20 +129,27 @@ def _branch_aware_diff(parsed_variants: list[dict], oracle_variants: list[dict])
     """
     pairs, unmatched_o, unmatched_p = _match_pairs(parsed_variants, oracle_variants)
     tot = {"matched": 0, "missing": 0, "spurious": 0, "wrong_value": 0}
+    buckets = {"matched": [], "missing": [], "spurious": [], "wrong_value": []}
     for oi, pj in pairs:
-        c = diff_constraints(parsed_variants[pj], oracle_variants[oi])["counts"]
+        d = diff_constraints(parsed_variants[pj], oracle_variants[oi])
         for k in tot:
-            tot[k] += c[k]
+            tot[k] += d["counts"][k]
+            buckets[k].extend(d["buckets"][k])
     for oi in unmatched_o:  # whole oracle branch missing from the parse
-        tot["missing"] += len(_families(oracle_variants[oi]))
+        fams = sorted(_families(oracle_variants[oi]))
+        tot["missing"] += len(fams)
+        buckets["missing"].extend(fams)
     for pj in unmatched_p:  # extra parsed branch the oracle does not have
-        tot["spurious"] += len(_families(parsed_variants[pj]))
+        fams = sorted(_families(parsed_variants[pj]))
+        tot["spurious"] += len(fams)
+        buckets["spurious"].extend(fams)
 
     predicted = tot["matched"] + tot["spurious"] + tot["wrong_value"]
     relevant = tot["matched"] + tot["missing"] + tot["wrong_value"]
     shared = tot["matched"] + tot["wrong_value"]
     return {
         "counts": tot,
+        "buckets": buckets,
         "precision": tot["matched"] / predicted if predicted else 1.0,
         "recall": tot["matched"] / relevant if relevant else 1.0,
         "value_accuracy": tot["matched"] / shared if shared else 1.0,
@@ -172,8 +179,6 @@ def diff_variants(*, parsed_variants: list[dict], oracle_variants: list[dict],
 
     if branch_aware:
         diff = _branch_aware_diff(parsed_variants, oracle_variants)
-        # Keep the bucket lists present for schema compatibility with the single-branch path.
-        diff.setdefault("buckets", {"matched": [], "missing": [], "spurious": [], "wrong_value": []})
     else:
         pv = parsed_variants[0]
         oi = _best_oracle_index(pv, oracle_variants)
@@ -252,6 +257,10 @@ def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: 
         "recall": round(recall, 4),
         "f1": round(_f1(precision, recall), 4),
         "value_accuracy": round(dv["diff"]["value_accuracy"], 4),
+        # Per-family bucket membership (which constraint families were matched/missing/spurious/
+        # wrong_value for this uid). Not written to the per-uid CSV (see run_report) -- consumed by
+        # _aggregate_family_stats to attribute precision/recall loss to specific families.
+        "buckets": dv["diff"]["buckets"],
     }
     return row
 
@@ -297,6 +306,37 @@ def _f1(precision: float, recall: float) -> float:
     return (2.0 * precision * recall / denom) if denom else 0.0
 
 
+def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5) -> list[dict]:
+    """Roll the per-uid bucket membership up to per-family counts, sorted by spurious count
+    (the dominant loss per docs/tpc_phase2_eval.md) so the top of the list is where to look first
+    for regex over-extraction fixes. Each family also carries a few example uids per failure
+    bucket to jump straight to a repro."""
+    stats: dict[str, dict] = {}
+    for row in rows:
+        uid = row.get("uid")
+        buckets = row.get("buckets", {})
+        for bucket in ("matched", "missing", "spurious", "wrong_value"):
+            for fam in buckets.get(bucket, []):
+                fam_stats = stats.setdefault(
+                    fam,
+                    {
+                        "family": fam,
+                        "matched": 0,
+                        "missing": 0,
+                        "spurious": 0,
+                        "wrong_value": 0,
+                        "example_missing_uids": [],
+                        "example_spurious_uids": [],
+                        "example_wrong_value_uids": [],
+                    },
+                )
+                fam_stats[bucket] += 1
+                example_key = f"example_{bucket}_uids"
+                if example_key in fam_stats and len(fam_stats[example_key]) < max_examples:
+                    fam_stats[example_key].append(uid)
+    return sorted(stats.values(), key=lambda s: (-s["spurious"], -s["missing"], s["family"]))
+
+
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
                results_best=None, out_dir=None, disjunction=False, branch_aware=False) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
@@ -327,6 +367,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         "value_accuracy": round(_mean(r["value_accuracy"] for r in rows), 4),
         "disjunction_flattened": sum(1 for r in rows if r["disjunction_flattened"]),
         "totals": {k: sum(r[k] for r in rows) for k in ("matched", "missing", "spurious", "wrong_value")},
+        "family_stats": _aggregate_family_stats(rows),
     }
     if behavioral:
         agg["behavioral"] = {
@@ -339,10 +380,11 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         out_dir = Path(out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         csv_path = out_dir / f"parser_vs_oracle_{split}.csv"
+        csv_rows = [{k: v for k, v in r.items() if k != "buckets"} for r in rows]
         with open(csv_path, "w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()) if rows else ["uid"])
+            w = csv.DictWriter(f, fieldnames=list(csv_rows[0].keys()) if csv_rows else ["uid"])
             w.writeheader()
-            w.writerows(rows)
+            w.writerows(csv_rows)
         (out_dir / f"parser_vs_oracle_{split}.json").write_text(
             json.dumps(agg, ensure_ascii=False, indent=2), encoding="utf-8"
         )

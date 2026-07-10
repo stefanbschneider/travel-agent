@@ -96,6 +96,35 @@ def test_negated_the_restaurant_singular_is_excluded():
     assert raw.get("excluded_restaurants") == ["Cloud View Hotel Diner"], raw
 
 
+# --- Step 5 (val-split family_stats triage): "restaurants of the following type" ------------
+
+
+def test_restaurant_of_the_following_type_is_not_a_required_restaurant_name():
+    # Regression: the "of (the) type(s)" guard didn't account for "of the FOLLOWING type", so
+    # this leaked through as a bogus required_restaurants entry (val-split top spurious family).
+    raw = pc.parse_query_no_oracle(
+        _q("We hope to try restaurants of the following type: Shanghai cuisine.")
+    )
+    assert not raw.get("required_restaurants"), raw.get("required_restaurants")
+
+
+def test_restaurant_of_the_following_type_is_cuisine_preference():
+    raw = pc.parse_query_no_oracle(
+        _q("We hope to try restaurants of the following type: Shanghai cuisine.")
+    )
+    assert raw.get("cuisine_preference") == "Shanghai cuisine", raw
+
+
+def test_negated_restaurant_of_the_following_type_is_excluded_not_preferred():
+    # The new "restaurants of (the) (following) type(s)" cuisine_preference pattern must respect
+    # negation (the trigger sits ~15 chars before "restaurants", outside a naive adjacent check).
+    raw = pc.parse_query_no_oracle(
+        _q("Do not want to try restaurants of the type Sichuan cuisine.")
+    )
+    assert raw.get("cuisine_preference") in (None, [], ""), raw.get("cuisine_preference")
+    assert raw.get("excluded_cuisine_types") == ["Sichuan cuisine"], raw
+
+
 # --- A3: budget category disambiguation ------------------------------------
 
 def test_cross_city_budget_does_not_leak_into_inner_transport():
