@@ -30,6 +30,8 @@ You can remove --limit for full-fold runs once runtime is acceptable for your wo
 
 - The script always uses deterministic fold selection.
 - It records rehearsal attribution, parser-vs-oracle metrics, and timing/reliability metrics.
+- It also records completion status per stage family: parse completed/failed, and whether
+  end-to-end and solver-only finished without timeout vs were interrupted/recovered/fell back.
 - Raw per-query outputs remain in existing harness locations under agent_env/runs and results.
 - The aggregated `timed_out` count reflects orchestrator timeout events; a timeout can still recover to
 	a valid output (`valid_output_rate=1.0`) when solve recovery succeeds.

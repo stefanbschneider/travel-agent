@@ -106,18 +106,110 @@ def _collect_selected_telemetry(method: str, uids: list[str]) -> tuple[list[dict
     return telemetries, missing
 
 
+def _count_parse_failures(telemetries: list[dict]) -> dict[str, int]:
+    n = len(telemetries)
+    parse_failed = 0
+    for t in telemetries:
+        err = str(t.get("error") or "")
+        if "parse:" in err:
+            parse_failed += 1
+    return {
+        "n": n,
+        "completed": n - parse_failed,
+        "failed": parse_failed,
+        "timed_out": sum(1 for t in telemetries if bool(t.get("parse_timed_out"))),
+    }
+
+
+def _completion_summary(telemetries: list[dict]) -> dict[str, float | int]:
+    n = len(telemetries)
+    if n == 0:
+        return {
+            "n": 0,
+            "completed_without_timeout": 0,
+            "interrupted": 0,
+            "timed_out": 0,
+            "recovered_from_timeout": 0,
+            "recovered_from_error": 0,
+            "used_fallback": 0,
+            "valid_output": 0,
+            "completed_without_timeout_rate": 0.0,
+        }
+
+    completed_without_timeout = 0
+    timed_out = 0
+    recovered_from_timeout = 0
+    recovered_from_error = 0
+    used_fallback = 0
+    valid_output = 0
+
+    for t in telemetries:
+        to = bool(t.get("timed_out"))
+        err = t.get("error")
+        done = t.get("completed_without_timeout")
+        if done is None:
+            done = (not to) and (err in (None, ""))
+
+        completed_without_timeout += 1 if bool(done) else 0
+        timed_out += 1 if to else 0
+        recovered_from_timeout += 1 if bool(t.get("solve_recovered_from_timeout") or t.get("recovered_from_timeout")) else 0
+        recovered_from_error += 1 if bool(t.get("solve_recovered_from_error") or t.get("recovered_from_error")) else 0
+        used_fallback += 1 if bool(t.get("used_fallback")) else 0
+        valid_output += 1 if bool(t.get("valid_output")) else 0
+
+    interrupted = n - completed_without_timeout
+    return {
+        "n": n,
+        "completed_without_timeout": completed_without_timeout,
+        "interrupted": interrupted,
+        "timed_out": timed_out,
+        "recovered_from_timeout": recovered_from_timeout,
+        "recovered_from_error": recovered_from_error,
+        "used_fallback": used_fallback,
+        "valid_output": valid_output,
+        "completed_without_timeout_rate": float(completed_without_timeout) / float(n),
+    }
+
+
 def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     rehearsal = record.get("rehearsal", {})
     modes = rehearsal.get("modes", {})
     ceiling = float(rehearsal.get("ceiling", {}).get("fpr", 0.0))
     solver = float(modes.get("solver-only", {}).get("fpr", 0.0))
     e2e = float(modes.get("end-to-end", {}).get("fpr", 0.0))
+    ceiling_quality = rehearsal.get("ceiling", {}).get("quality", {})
+    solver_quality = modes.get("solver-only", {}).get("quality", {})
+    e2e_quality = modes.get("end-to-end", {}).get("quality", {})
+
+    ceiling_overall_true = float(
+        ceiling_quality.get("overall_true", {}).get("mean", 0.0)
+    )
+    solver_overall_true = float(
+        solver_quality.get("overall_true", {}).get("mean", 0.0)
+    )
+    e2e_overall_true = float(
+        e2e_quality.get("overall_true", {}).get("mean", 0.0)
+    )
+
+    ceiling_overall_parsed = float(
+        ceiling_quality.get("overall_parsed", {}).get("mean", 0.0)
+    )
+    solver_overall_parsed = float(
+        solver_quality.get("overall_parsed", {}).get("mean", 0.0)
+    )
+    e2e_overall_parsed = float(
+        e2e_quality.get("overall_parsed", {}).get("mean", 0.0)
+    )
 
     parser = record.get("parser", {})
     behavioral = parser.get("behavioral", {}) if isinstance(parser, dict) else {}
 
     timing = record.get("timing", {})
     stage = timing.get("per_stage", {}) if isinstance(timing, dict) else {}
+    completion = record.get("completion", {}) if isinstance(record, dict) else {}
+    parse_completion = completion.get("parse", {}) if isinstance(completion, dict) else {}
+    e2e_completion = completion.get("end_to_end", {}) if isinstance(completion, dict) else {}
+    solver_completion = completion.get("solver_only", {}) if isinstance(completion, dict) else {}
 
     return {
         "run_id": record.get("run_id", ""),
@@ -136,6 +228,16 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "end_to_end_fpr": e2e,
         "solver_headroom": ceiling - solver,
         "parsing_loss": solver - e2e,
+        "ceiling_overall_true": ceiling_overall_true,
+        "solver_only_overall_true": solver_overall_true,
+        "end_to_end_overall_true": e2e_overall_true,
+        "overall_true_solver_headroom": ceiling_overall_true - solver_overall_true,
+        "overall_true_parsing_loss": solver_overall_true - e2e_overall_true,
+        "ceiling_overall_parsed": ceiling_overall_parsed,
+        "solver_only_overall_parsed": solver_overall_parsed,
+        "end_to_end_overall_parsed": e2e_overall_parsed,
+        "overall_parsed_solver_headroom": ceiling_overall_parsed - solver_overall_parsed,
+        "overall_parsed_parsing_loss": solver_overall_parsed - e2e_overall_parsed,
         "parser_precision": float(parser.get("precision", 0.0)),
         "parser_recall": float(parser.get("recall", 0.0)),
         "parser_f1": float(parser.get("f1", 0.0)),
@@ -152,6 +254,15 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "timing_solve_p95": float(stage.get("solve", {}).get("p95", 0.0)),
         "timing_improve_p95": float(stage.get("improve", {}).get("p95", 0.0)),
         "timing_finalize_p95": float(stage.get("finalize", {}).get("p95", 0.0)),
+        "parse_completed": int(parse_completion.get("completed", 0)),
+        "parse_failed": int(parse_completion.get("failed", 0)),
+        "parse_timed_out": int(parse_completion.get("timed_out", 0)),
+        "e2e_completed_without_timeout": int(e2e_completion.get("completed_without_timeout", 0)),
+        "e2e_timed_out": int(e2e_completion.get("timed_out", 0)),
+        "solver_completed_without_timeout": int(solver_completion.get("completed_without_timeout", 0)),
+        "solver_timed_out": int(solver_completion.get("timed_out", 0)),
+        "solver_recovered_from_timeout": int(solver_completion.get("recovered_from_timeout", 0)),
+        "solver_used_fallback": int(solver_completion.get("used_fallback", 0)),
     }
 
 
@@ -186,6 +297,16 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "end_to_end_fpr",
         "solver_headroom",
         "parsing_loss",
+        "ceiling_overall_true",
+        "solver_only_overall_true",
+        "end_to_end_overall_true",
+        "overall_true_solver_headroom",
+        "overall_true_parsing_loss",
+        "ceiling_overall_parsed",
+        "solver_only_overall_parsed",
+        "end_to_end_overall_parsed",
+        "overall_parsed_solver_headroom",
+        "overall_parsed_parsing_loss",
         "parser_precision",
         "parser_recall",
         "parser_f1",
@@ -202,6 +323,15 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "timing_solve_p95",
         "timing_improve_p95",
         "timing_finalize_p95",
+        "parse_completed",
+        "parse_failed",
+        "parse_timed_out",
+        "e2e_completed_without_timeout",
+        "e2e_timed_out",
+        "solver_completed_without_timeout",
+        "solver_timed_out",
+        "solver_recovered_from_timeout",
+        "solver_used_fallback",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -217,9 +347,25 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
     solver = float(modes.get("solver-only", {}).get("fpr", 0.0))
     e2e = float(modes.get("end-to-end", {}).get("fpr", 0.0))
 
+    ceiling_q = rehearsal.get("ceiling", {}).get("quality", {})
+    solver_q = modes.get("solver-only", {}).get("quality", {})
+    e2e_q = modes.get("end-to-end", {}).get("quality", {})
+
+    ceiling_true = float(ceiling_q.get("overall_true", {}).get("mean", 0.0))
+    solver_true = float(solver_q.get("overall_true", {}).get("mean", 0.0))
+    e2e_true = float(e2e_q.get("overall_true", {}).get("mean", 0.0))
+
+    ceiling_parsed = float(ceiling_q.get("overall_parsed", {}).get("mean", 0.0))
+    solver_parsed = float(solver_q.get("overall_parsed", {}).get("mean", 0.0))
+    e2e_parsed = float(e2e_q.get("overall_parsed", {}).get("mean", 0.0))
+
     parser = record.get("parser", {})
     behavioral = parser.get("behavioral", {}) if isinstance(parser, dict) else {}
     timing = record.get("timing", {})
+    completion = record.get("completion", {}) if isinstance(record, dict) else {}
+    parse_completion = completion.get("parse", {}) if isinstance(completion, dict) else {}
+    e2e_completion = completion.get("end_to_end", {}) if isinstance(completion, dict) else {}
+    solver_completion = completion.get("solver_only", {}) if isinstance(completion, dict) else {}
 
     lines = [
         "# Phase 2 Baseline (Latest)",
@@ -238,6 +384,19 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- solver_headroom: {ceiling - solver:.4f}",
         f"- parsing_loss: {solver - e2e:.4f}",
         "",
+        "## Rehearsal Attribution (Continuous Score)",
+        "",
+        f"- ceiling_overall_true_mean: {ceiling_true:.4f}",
+        f"- solver_only_overall_true_mean: {solver_true:.4f}",
+        f"- end_to_end_overall_true_mean: {e2e_true:.4f}",
+        f"- overall_true_solver_headroom: {ceiling_true - solver_true:.4f}",
+        f"- overall_true_parsing_loss: {solver_true - e2e_true:.4f}",
+        f"- ceiling_overall_parsed_mean: {ceiling_parsed:.4f}",
+        f"- solver_only_overall_parsed_mean: {solver_parsed:.4f}",
+        f"- end_to_end_overall_parsed_mean: {e2e_parsed:.4f}",
+        f"- overall_parsed_solver_headroom: {ceiling_parsed - solver_parsed:.4f}",
+        f"- overall_parsed_parsing_loss: {solver_parsed - e2e_parsed:.4f}",
+        "",
         "## Parser Vs Oracle",
         "",
         f"- precision: {float(parser.get('precision', 0.0)):.4f}",
@@ -255,6 +414,18 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- timed_out: {int(timing.get('timed_out', 0))}",
         f"- used_fallback: {int(timing.get('used_fallback', 0))}",
         f"- budget_overruns: {int(timing.get('budget_overruns', 0))}",
+        "",
+        "## Completion Status",
+        "",
+        f"- parse_completed: {int(parse_completion.get('completed', 0))}/{int(parse_completion.get('n', 0))}",
+        f"- parse_failed: {int(parse_completion.get('failed', 0))}",
+        f"- parse_timed_out: {int(parse_completion.get('timed_out', 0))}",
+        f"- end_to_end_completed_without_timeout: {int(e2e_completion.get('completed_without_timeout', 0))}/{int(e2e_completion.get('n', 0))}",
+        f"- end_to_end_timed_out: {int(e2e_completion.get('timed_out', 0))}",
+        f"- solver_only_completed_without_timeout: {int(solver_completion.get('completed_without_timeout', 0))}/{int(solver_completion.get('n', 0))}",
+        f"- solver_only_timed_out: {int(solver_completion.get('timed_out', 0))}",
+        f"- solver_only_recovered_from_timeout: {int(solver_completion.get('recovered_from_timeout', 0))}",
+        f"- solver_only_used_fallback: {int(solver_completion.get('used_fallback', 0))}",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -319,8 +490,15 @@ def main() -> None:
     )
 
     e2e_method = f"phase2_e2e_{fold_info.split_name}"
-    telemetries, missing = _collect_selected_telemetry(e2e_method, fold_info.uids)
-    timing = timing_mod.aggregate_timings(telemetries, budget_sec=args.budget_sec)
+    solver_method = f"phase2_solver_only_{fold_info.split_name}"
+    e2e_telemetries, e2e_missing = _collect_selected_telemetry(e2e_method, fold_info.uids)
+    solver_telemetries, solver_missing = _collect_selected_telemetry(solver_method, fold_info.uids)
+    timing = timing_mod.aggregate_timings(e2e_telemetries, budget_sec=args.budget_sec)
+    completion = {
+        "parse": _count_parse_failures(e2e_telemetries),
+        "end_to_end": _completion_summary(e2e_telemetries),
+        "solver_only": _completion_summary(solver_telemetries),
+    }
 
     record = {
         "run_id": run_id,
@@ -339,12 +517,20 @@ def main() -> None:
         "rehearsal": rehearsal,
         "parser": parser,
         "timing": timing,
+        "completion": completion,
         "timing_source": {
             "method": e2e_method,
             "selected_uids": len(fold_info.uids),
-            "telemetry_found": len(telemetries),
-            "telemetry_missing": len(missing),
-            "missing_uids": missing[:20],
+            "telemetry_found": len(e2e_telemetries),
+            "telemetry_missing": len(e2e_missing),
+            "missing_uids": e2e_missing[:20],
+        },
+        "solver_only_timing_source": {
+            "method": solver_method,
+            "selected_uids": len(fold_info.uids),
+            "telemetry_found": len(solver_telemetries),
+            "telemetry_missing": len(solver_missing),
+            "missing_uids": solver_missing[:20],
         },
     }
 

@@ -25,7 +25,9 @@ from __future__ import annotations
 import argparse
 import os
 import random
+import statistics
 import sys
+import time
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -87,6 +89,70 @@ def _fpr(metrics: dict, n: int) -> float:
     return 100.0 * metrics.get("all_pass_count", 0) / n
 
 
+def _float_stats(values: list[float]) -> dict:
+    vals = [float(v) for v in values]
+    if not vals:
+        return {"count": 0, "mean": 0.0, "min": 0.0, "max": 0.0, "std": 0.0}
+    return {
+        "count": len(vals),
+        "mean": statistics.fmean(vals),
+        "min": min(vals),
+        "max": max(vals),
+        "std": statistics.pstdev(vals),
+    }
+
+
+def _quality_metrics(split_name: str, method: str, fold_uids: list[str], query_data: dict) -> dict:
+    """Continuous quality metrics from per-query evaluate_one, not just binary FPR."""
+    import solve_script_with_harness as hb
+
+    result_dir = PROJECT_ROOT / "results" / method
+    overall_true_vals: list[float] = []
+    overall_parsed_vals: list[float] = []
+    fpr_true_vals: list[float] = []
+    fpr_parsed_vals: list[float] = []
+
+    missing: list[str] = []
+    invalid_json: list[str] = []
+    eval_failed: list[str] = []
+
+    for uid in fold_uids:
+        result_path = result_dir / f"{uid}.json"
+        if not result_path.exists():
+            missing.append(uid)
+            continue
+        try:
+            plan = hb.read_json(result_path)
+        except Exception:
+            invalid_json.append(uid)
+            continue
+
+        query = query_data[uid]
+        query.setdefault("uid", uid)
+        try:
+            row = hb.evaluate_one(split_name, uid, query, plan)
+        except Exception:
+            eval_failed.append(uid)
+            continue
+
+        overall_true_vals.append(float(row.get("overall_true", 0.0)))
+        overall_parsed_vals.append(float(row.get("overall_parsed", 0.0)))
+        fpr_true_vals.append(float(row.get("fpr_true", 0.0)))
+        fpr_parsed_vals.append(float(row.get("fpr_parsed", 0.0)))
+
+    return {
+        "requested": len(fold_uids),
+        "evaluated": len(overall_true_vals),
+        "missing": len(missing),
+        "invalid_json": len(invalid_json),
+        "eval_failed": len(eval_failed),
+        "overall_true": _float_stats(overall_true_vals),
+        "overall_parsed": _float_stats(overall_parsed_vals),
+        "fpr_true": _float_stats(fpr_true_vals),
+        "fpr_parsed": _float_stats(fpr_parsed_vals),
+    }
+
+
 def _valid_plan_shape(plan) -> bool:
     return isinstance(plan, dict) and isinstance(plan.get("itinerary"), list)
 
@@ -101,6 +167,13 @@ def _minimal_plan(query: dict) -> dict:
 
 
 def _recover_or_fallback(agent, query: dict) -> dict:
+    recovered = _recover_plan(agent)
+    if _valid_plan_shape(recovered):
+        return recovered
+    return _minimal_plan(query)
+
+
+def _recover_plan(agent):
     recovered = None
     try:
         recovered = agent.get_timeout_recovery_plan()
@@ -108,14 +181,15 @@ def _recover_or_fallback(agent, query: dict) -> dict:
         recovered = None
     if _valid_plan_shape(recovered):
         return recovered
-    return _minimal_plan(query)
+    return None
 
 
 def _evaluate_method(split_name: str, method: str, fold_uids: list[str], query_data: dict) -> dict:
     import solve_script_with_harness as hb
 
     metrics = hb.evaluate_split(split_name, method, fold_uids, query_data)
-    return {"fpr": _fpr(metrics, len(fold_uids)), "raw": metrics}
+    quality = _quality_metrics(split_name, method, fold_uids, query_data)
+    return {"fpr": _fpr(metrics, len(fold_uids)), "raw": metrics, "quality": quality}
 
 
 # --- Mode runners (integration; touch WorldEnv/solver) --------------------
@@ -125,7 +199,13 @@ def _run_end_to_end(split_name, fold_uids, *, budget_sec):
     import solve_phase2 as runner
 
     method = f"phase2_e2e_{split_name}"
-    runner.run_split(split_name, method=method, uids=fold_uids, budget_sec=budget_sec)
+    runner.run_split(
+        split_name,
+        method=method,
+        uids=fold_uids,
+        budget_sec=budget_sec,
+        resume=True,
+    )
     return method
 
 
@@ -150,16 +230,55 @@ def _run_solver_only(split_name, fold_uids, *, budget_sec, lang="en"):
     method = f"phase2_solver_only_{split_name}"
     out_dir = PROJECT_ROOT / "results" / method
     out_dir.mkdir(parents=True, exist_ok=True)
+    run_dir = PROJECT_ROOT / "agent_env" / "runs" / method
+    run_dir.mkdir(parents=True, exist_ok=True)
 
     for quid in fold_uids:
         q = query_data[quid]
         q.setdefault("uid", quid)
+        t0 = time.perf_counter()
+        telemetry = {
+            "uid": quid,
+            "budget_sec": float(budget_sec),
+            "timed_out": False,
+            "completed_without_timeout": False,
+            "recovered_from_timeout": False,
+            "recovered_from_error": False,
+            "used_fallback": False,
+            "valid_output": False,
+            "error": None,
+            "stage_sec": {"solve": 0.0},
+        }
         agent.reset_timeout_recovery_plan()
         try:
             _, plan = func_timeout(max(float(budget_sec), 1.0) + 5.0, agent.run, args=(q,))
-        except (FunctionTimedOut, Exception):
-            plan = _recover_or_fallback(agent, q)
+        except FunctionTimedOut:
+            telemetry["timed_out"] = True
+            recovered = _recover_plan(agent)
+            if recovered is not None:
+                telemetry["recovered_from_timeout"] = True
+                plan = recovered
+            else:
+                telemetry["used_fallback"] = True
+                plan = _minimal_plan(q)
+        except Exception as exc:
+            telemetry["error"] = f"solve: {exc}"
+            recovered = _recover_plan(agent)
+            if recovered is not None:
+                telemetry["recovered_from_error"] = True
+                plan = recovered
+            else:
+                telemetry["used_fallback"] = True
+                plan = _minimal_plan(q)
+
+        telemetry["stage_sec"]["solve"] = time.perf_counter() - t0
+        telemetry["valid_output"] = _valid_plan_shape(plan)
+        telemetry["completed_without_timeout"] = bool(
+            (not telemetry["timed_out"]) and (telemetry.get("error") in (None, ""))
+        )
+
         hb.write_json(out_dir / f"{quid}.json", plan)
+        hb.write_json(run_dir / quid / "telemetry.json", telemetry)
     return method
 
 
