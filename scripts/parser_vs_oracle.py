@@ -213,23 +213,29 @@ def _load_queries(split: str, lang: str = "en"):
     return load_query(args)
 
 
-def query_variants(query: dict, *, disjunction: bool = False):
+def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = False, llm_client=None):
     """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema.
 
     When ``disjunction`` is True, the parsed side is produced through the Phase 2 normalize layer
     with ``TPC_P2_DISJUNCTION`` on, so disjunctive queries expand into one branch-local variant per
     OR arm (the same path the harness feeds the solver). Default (False) keeps the flat single-
     variant no-oracle parse, so existing reports are unchanged.
+
+    When ``llm_parse`` is True, also routes through the LLM corrective-audit stage
+    (``normalize.llm_parse_stub`` via ``parse_to_ir``) using ``llm_client`` -- so this report
+    measures the same parse path ``solve_phase2.py`` uses when a backend is configured, not just
+    the deterministic fallback. A failing/misconfigured client degrades to the deterministic parse
+    (see the parse_to_ir fix), never raises.
     """
     import parse_constraints
     from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
 
-    if disjunction:
+    if disjunction or llm_parse:
         from chinatravel.agent.phase2 import normalize
         from chinatravel.agent.phase2.orchestrator import Flags
 
-        flags = Flags(disjunction=True)
-        ir = normalize.parse_to_ir(query, flags=flags)
+        flags = Flags(disjunction=disjunction, llm_parse=llm_parse)
+        ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags)
         parsed = normalize.ir_to_solver_variants(ir, query, flags=flags)
     else:
         parsed = solver_constraint_variants(
@@ -241,8 +247,11 @@ def query_variants(query: dict, *, disjunction: bool = False):
     return parsed, oracle
 
 
-def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: bool = False) -> dict:
-    parsed_variants, oracle_variants = query_variants(query, disjunction=disjunction)
+def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: bool = False,
+                       llm_parse: bool = False, llm_client=None) -> dict:
+    parsed_variants, oracle_variants = query_variants(
+        query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+    )
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants,
                        branch_aware=branch_aware)
     precision = dv["diff"]["precision"]
@@ -265,7 +274,8 @@ def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: 
     return row
 
 
-def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False) -> dict:
+def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False,
+                     llm_parse: bool = False, llm_client=None) -> dict:
     """Do parsed vs oracle constraints accept/reject the plan identically?
 
     With ``disjunction=True`` the parsed side uses OR semantics over disjunction-expanded variants
@@ -276,7 +286,9 @@ def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False) -> d
     from chinatravel.agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
     from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
 
-    parsed_variants, _ = query_variants(query, disjunction=disjunction)
+    parsed_variants, _ = query_variants(
+        query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+    )
     target_city = query.get("target_city", "")
     try:
         if disjunction:
@@ -338,9 +350,24 @@ def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5) -> list[
 
 
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
-               results_best=None, out_dir=None, disjunction=False, branch_aware=False) -> dict:
+               results_best=None, out_dir=None, disjunction=False, branch_aware=False,
+               llm_parse=False, llm_client=None) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
     selected = list(uids) if uids else (query_ids[: int(limit)] if limit else query_ids)
+
+    if llm_parse and llm_client is None:
+        # Build once per report (not per uid) -- CachingLLMClient makes repeat uids/reruns free,
+        # but constructing the underlying OpenAI-compatible client per query would still be
+        # wasteful and, for the fixture backend, unnecessary duplicate directory reads. Reuse
+        # solve_phase2's config loader (env vars + agent_env/config.toml) so this measures the
+        # same backend/model the real harness would use, not just bare env vars.
+        agent_env_scripts = PROJECT_ROOT / "agent_env" / "scripts"
+        if str(agent_env_scripts) not in sys.path:
+            sys.path.insert(0, str(agent_env_scripts))
+        import solve_phase2 as _runner
+        from chinatravel.agent.phase2 import llm_client as p2_llm
+
+        llm_client = p2_llm.build_llm_client(_runner._phase2_llm_config())
 
     rows = []
     behav_rows = []
@@ -348,13 +375,18 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
     for uid in selected:
         q = query_data[uid]
         q.setdefault("uid", uid)
-        row = compute_query_diff(q, disjunction=disjunction, branch_aware=branch_aware)
+        row = compute_query_diff(
+            q, disjunction=disjunction, branch_aware=branch_aware,
+            llm_parse=llm_parse, llm_client=llm_client,
+        )
         rows.append(row)
         if behavioral:
             plan_path = results_best / f"{uid}.json"
             if plan_path.exists():
                 plan = json.loads(plan_path.read_text(encoding="utf-8"))
-                behav_rows.append(behavioral_check(q, plan, disjunction=disjunction))
+                behav_rows.append(behavioral_check(
+                    q, plan, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+                ))
 
     mean_precision = _mean(r["precision"] for r in rows)
     mean_recall = _mean(r["recall"] for r in rows)
@@ -406,6 +438,11 @@ def parse_args() -> argparse.Namespace:
                         "(credits multi-branch parsing) instead of the single-branch "
                         "parsed_variants[0] diff. Best combined with --disjunction.")
     p.add_argument("--out-dir", default=str(PROJECT_ROOT / "cache" / "phase2_parser_vs_oracle"))
+    p.add_argument("--llm-parse", action="store_true",
+                   help="Route the parsed side through the LLM corrective-audit stage "
+                        "(same backend solve_phase2.py would use, per TPC_P2_LLM_BACKEND / "
+                        "agent_env/config.toml). Responses are cached by default (TPC_P2_LLM_CACHE), "
+                        "so a warm rerun is free and byte-deterministic.")
     return p.parse_args()
 
 
@@ -414,7 +451,7 @@ def main() -> None:
     split = args.split or ("tpc_phase2_test" if args.split_set == "test" else "tpc_phase2_val")
     agg = run_report(split, limit=args.limit, behavioral=args.behavioral, lang=args.lang,
                      out_dir=args.out_dir, disjunction=args.disjunction,
-                     branch_aware=args.branch_aware)
+                     branch_aware=args.branch_aware, llm_parse=args.llm_parse)
     print(json.dumps(agg, ensure_ascii=False, indent=2))
 
 

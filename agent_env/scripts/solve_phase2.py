@@ -165,12 +165,21 @@ def run_split(
             env = WorldEnv(lang=lang)
         solve_fn = orch.make_tpcagent_solve_fn(env, lang=lang)
 
+    llm_cfg = _phase2_llm_config()
+    llm_client = p2_llm.build_llm_client(llm_cfg)
+
     # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
     # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
     # the deterministic byte-identical invariant tests are unaffected.
     flags = orch.Flags.from_env()
     if "TPC_P2_DISJUNCTION" not in os.environ:
         flags.disjunction = True
+    # Same pattern for the LLM corrective parse audit: default it on once a usable backend is
+    # configured (the parse_to_ir fix keeps a deterministic fallback on any LLM failure, so this
+    # is safe to default on), unless the operator explicitly overrides TPC_P2_LLM_PARSE. Library
+    # Flags() and llm_backend="none" (nothing configured) both stay off.
+    if "TPC_P2_LLM_PARSE" not in os.environ and llm_client.backend != "none":
+        flags.llm_parse = True
 
     done_uids: list[str] = []
     skipped = 0
@@ -178,9 +187,6 @@ def run_split(
     llm_parse_attempts = 0
     llm_fixture_missing = 0
     solved_evaluations: list[dict] = []
-
-    llm_cfg = _phase2_llm_config()
-    llm_client = p2_llm.build_llm_client(llm_cfg)
 
     for idx, quid in enumerate(selected, start=1):
         result_path = result_method_dir / f"{quid}.json"

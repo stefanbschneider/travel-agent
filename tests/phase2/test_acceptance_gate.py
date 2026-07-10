@@ -20,7 +20,7 @@ def test_behavioral_check_or_semantics(monkeypatch):
     variant_a = {"required_attractions": ["X"]}
     variant_b = {"excluded_attractions": ["Y"]}
 
-    def fake_query_variants(q, *, disjunction=False):
+    def fake_query_variants(q, *, disjunction=False, llm_parse=False, llm_client=None):
         parsed = [variant_a, variant_b] if disjunction else [{**variant_a, **variant_b}]
         return parsed, [variant_a, variant_b]
 
