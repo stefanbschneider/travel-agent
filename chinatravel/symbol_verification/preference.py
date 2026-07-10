@@ -1,11 +1,14 @@
 import sys
 import os
 
+from functools import lru_cache
+
 from chinatravel.environment.tools.accommodations.apis import Accommodations
 from chinatravel.environment.tools.restaurants.apis import Restaurants
 from chinatravel.environment.tools.attractions.apis import Attractions
 from chinatravel.environment.tools.intercity_transport.apis import IntercityTransport
 from chinatravel.environment.tools.transportation.apis import Transportation
+from chinatravel.environment.tools._lazy import LazyTool
 
 from chinatravel.symbol_verification.concept_func import func_dict
 from chinatravel.evaluation.utils import load_json_file
@@ -14,9 +17,9 @@ import pandas as pd
 
 from copy import deepcopy
 
-accommodation = Accommodations()
-restaurants = Restaurants()
-attractions = Attractions()
+accommodation = LazyTool(lru_cache(maxsize=1)(Accommodations))
+restaurants = LazyTool(lru_cache(maxsize=1)(Restaurants))
+attractions = LazyTool(lru_cache(maxsize=1)(Attractions))
 
 from .concept_func import *
 

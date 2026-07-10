@@ -3,11 +3,14 @@ import os
 import json
 import re
 
+from functools import lru_cache
+
 from chinatravel.environment.tools.accommodations.apis import Accommodations
 from chinatravel.environment.tools.restaurants.apis import Restaurants
 from chinatravel.environment.tools.attractions.apis import Attractions
 from chinatravel.environment.tools.intercity_transport.apis import IntercityTransport
 from chinatravel.environment.tools.transportation.apis import Transportation
+from chinatravel.environment.tools._lazy import LazyTool
 from chinatravel.environment.language import CITY_NAMES, normalize_lang
 
 from chinatravel.symbol_verification.concept_func import (
@@ -22,12 +25,17 @@ import pandas as pd
 
 from copy import deepcopy
 
-accommodation = Accommodations()
-restaurants = Restaurants()
-attractions = Attractions()
-_TOOLS_BY_LANG = {
-    "zh": (accommodation, restaurants, attractions)
-}
+_current_lang = "zh"
+
+
+@lru_cache(maxsize=None)
+def _tools_for_lang(lang):
+    return Accommodations(lang=lang), Restaurants(lang=lang), Attractions(lang=lang)
+
+
+accommodation = LazyTool(lambda: _tools_for_lang(_current_lang)[0])
+restaurants = LazyTool(lambda: _tools_for_lang(_current_lang)[1])
+attractions = LazyTool(lambda: _tools_for_lang(_current_lang)[2])
 
 
 def _infer_lang(symbolic_input):
@@ -41,16 +49,9 @@ def _infer_lang(symbolic_input):
 
 
 def _set_tool_lang(lang):
-    global accommodation, restaurants, attractions
-    lang = normalize_lang(lang)
-    if lang not in _TOOLS_BY_LANG:
-        _TOOLS_BY_LANG[lang] = (
-            Accommodations(lang=lang),
-            Restaurants(lang=lang),
-            Attractions(lang=lang),
-        )
-    accommodation, restaurants, attractions = _TOOLS_BY_LANG[lang]
-    set_concept_func_lang(lang)
+    global _current_lang
+    _current_lang = normalize_lang(lang)
+    set_concept_func_lang(_current_lang)
 
 
 _ACTIVITY_POSITION_EQ_RE = re.compile(

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+from functools import lru_cache
 import pandas as pd
 
 project_root_path = os.path.dirname(
@@ -11,17 +12,32 @@ if project_root_path not in sys.path:
 
 import json
 from chinatravel.environment.world_env import WorldEnv
+from chinatravel.environment.tools._lazy import LazyTool
 from chinatravel.evaluation.utils import Attractions
 from chinatravel.environment.language import CITY_NAMES, normalize_lang
 from chinatravel.symbol_verification.concept_func import set_concept_func_lang
 
 from chinatravel.symbol_verification.preference import evaluate_preference_py
-env = WorldEnv()
-attractions = Attractions()
-goto = env.transportation.goto
-_TOOLS_BY_LANG = {
-    "zh": (env, attractions, goto)
-}
+
+_current_lang = "zh"
+
+
+@lru_cache(maxsize=None)
+def _env_for_lang(lang):
+    return WorldEnv(lang=lang)
+
+
+@lru_cache(maxsize=None)
+def _attractions_for_lang(lang):
+    return Attractions(lang=lang)
+
+
+env = LazyTool(lambda: _env_for_lang(_current_lang))
+attractions = LazyTool(lambda: _attractions_for_lang(_current_lang))
+
+
+def goto(*args, **kwargs):
+    return _env_for_lang(_current_lang).transportation.goto(*args, **kwargs)
 
 
 def _infer_lang(symbolic_input=None, plan_json=None):
@@ -36,14 +52,9 @@ def _infer_lang(symbolic_input=None, plan_json=None):
 
 
 def _set_preference_lang(lang):
-    global env, attractions, goto
-    lang = normalize_lang(lang)
-    if lang not in _TOOLS_BY_LANG:
-        lang_env = WorldEnv(lang=lang)
-        lang_attractions = Attractions(lang=lang)
-        _TOOLS_BY_LANG[lang] = (lang_env, lang_attractions, lang_env.transportation.goto)
-    env, attractions, goto = _TOOLS_BY_LANG[lang]
-    set_concept_func_lang(lang)
+    global _current_lang
+    _current_lang = normalize_lang(lang)
+    set_concept_func_lang(_current_lang)
 
 city_dict = {
     "北京": "beijing",
