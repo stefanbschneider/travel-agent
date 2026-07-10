@@ -150,3 +150,75 @@ def test_llm_parse_field_alternatives_expand_solver_variants():
         if isinstance(v.get("budgets", {}).get("dining"), (int, float))
     }
     assert {80.0, 100.0, 120.0}.issubset(dining_values)
+
+
+# --- Step 2: corrective audit prompt ---------------------------------------
+
+def test_build_llm_parse_prompt_audits_each_extracted_family():
+    query = {
+        "uid": "q_audit",
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Wuhan",
+        "nature_language": "Do not wish to stay at the following hotels: Yucheng Hotel.",
+    }
+    raw = {"excluded_hotels": ["Yucheng Hotel"], "required_attractions": ["Bogus Place"]}
+    prompt = normalize.build_llm_parse_prompt(query, raw)
+    # The prompt must frame the task as an audit (confirm-or-remove), not optional refinement.
+    assert "audit" in prompt.lower()
+    assert "remove" in prompt.lower()
+    assert "negation" in prompt.lower() or "do not" in prompt.lower()
+    # Every extracted family must be listed for the model to audit.
+    assert "excluded_hotels" in prompt
+    assert "required_attractions" in prompt
+    # It must NOT invite the old passive "if no useful refinement" opt-out as the primary framing.
+    assert "no useful refinement" not in prompt.lower()
+
+
+def test_llm_parse_removes_spurious_required_family():
+    # The deterministic parse contains a spurious required_attractions family; the audit prompt
+    # should let the LLM remove it via a remove patch (fields=[...]).
+    class RemovingLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            # Sanity: the family we want removed is presented for audit.
+            assert "required_attractions" in prompt
+            return (
+                '{"patches":[{"mode":"remove","fields":["required_attractions"],'
+                '"constraint_text":"the request only says do NOT visit that place",'
+                '"confidence":0.9}],"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+            )
+
+    query = {
+        "uid": "q_remove_spurious",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "nature_language": "We do not want to visit the Confucius Temple.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    # Seed a spurious family so we can assert removal deterministically.
+    ir = normalize.parse_to_ir(query, flags=flags)
+    ir.raw["required_attractions"] = ["Confucius Temple"]
+
+    # Re-run only the llm parse stub over the seeded IR.
+    updated = normalize.llm_parse_stub(ir, query, RemovingLLM())
+    assert "required_attractions" not in updated.raw, updated.raw
+
+
+def test_llm_parse_empty_patches_keep_parse_unchanged():
+    class NoopLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return '{"patches":[],"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+
+    query = {
+        "uid": "q_noop",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "nature_language": "The budget for dining is 100.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, flags=flags)
+    before = dict(ir.raw)
+    updated = normalize.llm_parse_stub(ir, query, NoopLLM())
+    assert updated.raw == before

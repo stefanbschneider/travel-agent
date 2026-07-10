@@ -290,15 +290,29 @@ is implemented and was measured live against DeepInfra Qwen3.6-27B with
 - 8 behavioral-disagreement uids: **4 fixed, 0 made worse**
 - 6 correct-parse control uids: LLM proposed no changes (**0 regressions**)
 
+**Prompt upgraded to a corrective audit (2026-07-10).** `build_llm_parse_prompt` now frames the task
+as an explicit *audit* of the deterministic parse rather than optional "refinement": it states the
+regex parser is known to over-extract, lists every extracted constraint family, and instructs the
+model to (for each family) locate the supporting NL span, check polarity/negation, and emit a
+`remove` patch (with `fields=[...]`) when the family is spurious or the wrong polarity — returning an
+empty patch list only after auditing all families. Deterministic validation still owns final
+authority (the model only proposes patches that are re-parsed and merged).
+
+**Re-measured live (DeepInfra Qwen3.6-27B, `phase2_llm_parse_probe.py --limit 120 --max-probes 5`,
+2026-07-10, after the roadmap-1c deterministic fixes):** disagreements **4/5 fixed**, control
+**0/5 broke** (all controls left byte-unchanged, `llm_changed_raw=false`) — fix rate up from 4/8 to
+4/5 with no regressions. The single unfixed uid (`20250321124345084418`) is a flattened-disjunction
+case (it expanded to 2 variants but still failed), confirming the remaining gap is OR-arm recovery,
+not family auditing.
+
 Remaining work is prompt/behavior tuning, not plumbing:
 
-- in 3 of 4 unfixed cases the LLM returned no patches even though removable spurious families were
-  present — the prompt should instruct it to *audit each extracted family against the quoted NL*
-  and explicitly confirm-or-remove, rather than optionally "refine"
-- the one flattened-disjunction probe did not trigger `or_arms` recovery; that path needs its own
-  targeted probe set (oracle-disjunctive uids where deterministic splitting fails)
-- probe on a larger disagreement sample (the first-60 scan found 8/60; scan deeper folds) before
-  deciding whether `TPC_P2_LLM_PARSE` defaults on in rehearsals
+- ~~in 3 of 4 unfixed cases the LLM returned no patches~~ **addressed:** the audit prompt now drives
+  confirm-or-remove per family (4/5 fixed above).
+- the flattened-disjunction probe still does not recover `or_arms`; that path needs its own targeted
+  probe set (oracle-disjunctive uids where deterministic splitting fails)
+- probe on a larger disagreement sample and across deeper folds before deciding whether
+  `TPC_P2_LLM_PARSE` defaults on in rehearsals
 
 The LLM still proposes and never decides; final authority stays with deterministic validation.
 

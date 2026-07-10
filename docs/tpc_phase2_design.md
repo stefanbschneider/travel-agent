@@ -232,12 +232,14 @@ measured incrementally without destabilizing the deterministic baseline.
 2. **Normalization is not yet doing the intended WorldEnv-backed resolution work.** The IR and `env`
    hooks exist, but field-level entity resolution, validation, and confidence-aware normalization are
    still largely unimplemented.
-3. **LLM parsing works but is still too conservative.** First live probe (Qwen3.6-27B via DeepInfra):
-   4/8 behavioral disagreements fixed, 0 regressions on 8 probed + 6 control uids. In 3 of the 4
-   unfixed cases the LLM returned no patches at all even though the deterministic parse contained
-   spurious families it was allowed to remove. Prompting it to actively audit each extracted family
-   against the quoted NL (rather than only "refine") is the obvious next iteration; the OR-arm
-   recovery path also did not trigger on the one flattened-disjunction probe.
+3. **LLM parsing upgraded from conservative to corrective (2026-07-10).** First live probe
+   (Qwen3.6-27B via DeepInfra) fixed 4/8 disagreements, 0 regressions, but in 3 of the 4 unfixed
+   cases the LLM returned no patches despite removable spurious families. `build_llm_parse_prompt`
+   was rewritten to make the model *audit each extracted family against the quoted NL* (locate the
+   supporting span, check negation/polarity, confirm-or-remove) instead of optionally "refining".
+   Re-measured live after the roadmap-1c deterministic fixes: **4/5 disagreements fixed, 0/5 control
+   regressions** (controls unchanged). The remaining gap is OR-arm recovery on flattened-disjunction
+   queries, not family auditing.
 4. **Stage 3 refinement is still a stub.** Current Phase 2 performance is effectively deterministic
    TPCAgent plus fallback, not deterministic solve plus bounded refinement.
 5. ~~Operational benchmarking is not yet mature.~~ **Resolved 2026-07-10:** the earlier solver-only

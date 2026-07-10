@@ -99,8 +99,16 @@ def build_llm_parse_prompt(query: dict, deterministic_raw: dict) -> str:
         "target_city": query.get("target_city"),
         "nature_language": query.get("nature_language", ""),
     }
+    # Enumerate the families the deterministic parser actually emitted so the model is forced to
+    # audit each one against the quoted NL (confirm-or-remove), instead of optionally "refining".
+    extracted_fields = [k for k in deterministic_raw.keys() if k in _LLM_PARSE_ALLOWED_KEYS]
+    audit_list = ", ".join(extracted_fields) if extracted_fields else "(none)"
     return (
-        "You are assisting a deterministic travel-constraint parser.\n"
+        "You are auditing the output of a deterministic (regex) travel-constraint parser.\n"
+        "The regex parser is known to OVER-EXTRACT: it emits spurious constraint families that the\n"
+        "traveler's request does not actually support (for example a negated \"do not want to visit\n"
+        "X\" clause wrongly producing a `required_*` family, or a phrase captured under the wrong\n"
+        "family). Your job is to catch those errors.\n\n"
         "Return STRICT JSON only (no markdown/code fences) with this schema:\n"
         "{\n"
         "  \"patches\": [\n"
@@ -110,15 +118,29 @@ def build_llm_parse_prompt(query: dict, deterministic_raw: dict) -> str:
         "  \"field_alternatives\": {\"field_name\": [{\"constraint_text\": string, \"confidence\": number}]},\n"
         "  \"field_confidence\": {\"field_name\": number}\n"
         "}\n"
+        "AUDIT PROCEDURE (do this for EVERY extracted family, do not skip any):\n"
+        f"  Extracted families to audit: {audit_list}\n"
+        "  1. For each extracted family, find the exact span of the natural-language request that\n"
+        "     supports it. Read the surrounding words, especially negations (\"do not\", \"don't\",\n"
+        "     \"no\", \"avoid\", \"without\", \"except\").\n"
+        "  2. If the quoted text does NOT support the extracted family, or supports the OPPOSITE\n"
+        "     polarity (e.g. it is an exclusion mis-labeled as a requirement, or vice versa), emit a\n"
+        "     `remove` patch naming that field. When the correct family is the opposite polarity,\n"
+        "     also emit an `add`/`replace` patch with literal constraint_text for the correct family.\n"
+        "  3. If the quoted text DOES support the extracted family, leave it untouched (no patch).\n"
+        "  4. Add families only when the request clearly states a constraint the parser missed.\n\n"
         "Rules:\n"
-        "- Use only facts inferable from the visible query.\n"
-        "- Keep wording concise and literal.\n"
-        "- For add/replace/alternatives, always provide natural-language constraint_text that can be parsed deterministically.\n"
-        "- Only use remove when deterministic extraction is likely wrong.\n"
-        "- If no useful refinement, return {\"patches\":[],\"or_arms\":[],\"field_alternatives\":{},\"field_confidence\":{}}.\n"
+        "- Use only facts inferable from the visible query; never invent hotels, attractions, or numbers.\n"
+        "- Keep wording concise and literal; constraint_text must be parseable deterministically.\n"
+        "- A `remove` patch must set \"fields\" to the exact family name(s) to drop; \"constraint_text\"\n"
+        "  may quote the NL span that proves the family is wrong.\n"
+        "- Prefer removing a demonstrably spurious family over leaving it in. Returning an empty\n"
+        "  patch list asserts that EVERY extracted family is correct -- only do so after auditing all.\n"
+        "- If, after auditing, nothing needs to change, return\n"
+        "  {\"patches\":[],\"or_arms\":[],\"field_alternatives\":{},\"field_confidence\":{}}.\n"
         "Visible query JSON:\n"
         f"{json.dumps(visible, ensure_ascii=False, indent=2)}\n\n"
-        "Current deterministic parse JSON:\n"
+        "Current deterministic parse JSON (audit each family below):\n"
         f"{json.dumps(deterministic_raw, ensure_ascii=False, indent=2)}"
     )
 
