@@ -325,6 +325,25 @@ fully deterministic fixes that landed before more LLM work:
 `tests/phase2/test_parser_accuracy.py` (hotel/attraction guards) and
 `tests/phase2/test_taxi_verifier_vacuity.py`. No LLM calls.
 
+### Step 9. Final-agent memory soak (2026-07-11)
+
+Status: **DONE.**
+
+The chunked-subprocess fix (section "Memory fixes" above) only protects rehearsal; the actual
+competition runner (`agent_env/scripts/solve_phase2.py`) is a single long-lived process for the
+whole split, so it still needed a direct soak test of the real path: `--split tpc_phase2_val
+--limit 150 --budget-sec 10 --method phase2_soak`.
+
+**Measured:** RSS 235–262 MB across all 150 queries, first→last delta 8.9 MB, linear-fit slope
+0.07 MB/query (≈70 MB extrapolated to 1000 queries) — flat, no monotone growth, well inside the
+~500 MB acceptance bar. 128/150 (85%) solves hit `timed_out` (solve-slice exhaustion at the tight
+10s budget; all recovered to valid plans) and 2/150 fell back to the schema-valid fallback, so the
+`func_timeout` thread-leak concern from the memory-fixes writeup was exercised heavily and still
+did not reproduce at this scale in a single process. Added a warn-only `TPC_P2_MAX_RSS_MB` env
+guard to `run_split` (prints once a query's RSS grows past the threshold since the process's first
+solved query; never aborts) for future longer soaks — silent throughout this run. No escalation
+(func_timeout grace tuning, no-func-timeout mode, chunked wrapper for the real runner) was needed.
+
 ### 2. Finish Stage 1 normalization before adding refinement
 
 The next highest-leverage code work is in `chinatravel/agent/phase2/normalize.py` and

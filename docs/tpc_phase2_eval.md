@@ -76,6 +76,15 @@ memory-bounded regardless of root cause. `make phase2-baseline`/`phase2-rehearse
 free (their `rehearse()` call sites don't pass `chunk_size`, so the new default applies). Per-query
 `rss_mb` (via `psutil`) is now recorded in both loops' telemetry for future soak monitoring.
 
+**Final-agent soak, 2026-07-11.** Chunked subprocesses only cover rehearsal; the actual competition
+runner (`agent_env/scripts/solve_phase2.py`) is a single long-lived process for the whole split, so
+it needed its own soak: `--split tpc_phase2_val --limit 150 --budget-sec 10 --method phase2_soak`.
+RSS stayed flat across all 150 queries (235–262 MB range, 8.9 MB first→last delta, ~0.07 MB/query
+linear-fit slope) even with 128/150 queries hitting `timed_out` — the `func_timeout` thread leak
+theorized above does not reproduce at this scale in-process. A warn-only `TPC_P2_MAX_RSS_MB` guard
+was added to `run_split` for future longer soaks (prints past-threshold growth, never aborts); it
+was silent throughout. No escalation beyond the existing telemetry was needed.
+
 ### Parser metrics are now always measured on the full val split (2026-07-10)
 
 Fold-scoped parser metrics (`parser_precision` etc. in the ledger) can miss whatever a parser fix

@@ -48,6 +48,21 @@ fix:**
   leaking into an OR arm's text; a type-keyword substring match misfiring on a proper-noun venue
   name). Full-val behavioral agreement (LLM off): 0.7565 → 0.7788.
 
+**2026-07-11 update — final-agent memory soak (single long-lived process, the actual competition
+path):** `python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 150
+--budget-sec 10 --method phase2_soak`, in-process (not chunked — this is the one runner mode Step
+3's subprocess mitigation doesn't cover, since the real harness genuinely does run every query in
+one process). **Measured:** RSS ranged 235–262 MB across all 150 queries, first→last delta 8.9 MB,
+linear-fit slope 0.07 MB/query (≈70 MB extrapolated to 1000 queries) — flat, no monotone growth,
+comfortably inside the ~500 MB acceptance bar. This held despite 128/150 (85%) solves hitting
+`timed_out` (solve-slice exhaustion at the tight 10s budget, all recovered to valid plans) and 2/150
+falling back — i.e. the `func_timeout` thread-leak concern from the chunked-rehearsal writeup above
+does not reproduce at this scale in the single-process runner. Added a warn-only
+`TPC_P2_MAX_RSS_MB` env guard to `run_split` (prints, never aborts, if a query's RSS grows past the
+threshold since the process's first solved query) for future longer soaks; it stayed silent
+throughout this run. No further escalation (func_timeout grace tuning, no-func-timeout mode,
+chunked wrapper for the real runner) is needed on this evidence.
+
 What remains incomplete is mostly Stage 1 quality and Stage 3 refinement:
 
 - Stage 1 still starts from `parse_query_no_oracle()` and is therefore still dominated by the current
