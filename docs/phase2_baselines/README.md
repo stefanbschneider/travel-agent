@@ -56,6 +56,16 @@ whole slice, in both end-to-end and solver-only modes).
   `llm_backend` is `"none"`. Rows with different `llm_backend` values are not directly comparable
   (LLM-assisted parsing changes both scores and cost); check this column before comparing two rows'
   `parser_full_*`/FPR numbers.
+- **`parser_full_*` is LLM-blind, even when `llm_parse` is `true`.** The recorder's `parser_full`
+  call (`parser_mod.run_report(..., uids=None)`) never passes `llm_parse=True`, so it always scores
+  the *deterministic* parser against the oracle regardless of the row's LLM config — confirmed
+  2026-07-11 (run `20260711T000602Z`, `llm_backend=infradeep`): `parser_full_behavioral_agreement_rate`
+  came back 0.7788, byte-identical to the deterministic-only number from the prior commit. This is
+  intentional (keeps the headline signal cheap and config-independent), but it means `parser_full_*`
+  cannot be used to judge whether LLM-corrective parsing helped — only the row's e2e
+  FPR/`overall_true` (which do run the real `llm_parse=true` path end to end) can. To measure the
+  LLM audit's effect on parser accuracy directly, use `scripts/parser_vs_oracle.py --llm-parse`
+  (Step 6) separately.
 
 ## Notes
 

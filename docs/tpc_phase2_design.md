@@ -48,6 +48,18 @@ fix:**
   leaking into an OR arm's text; a type-keyword substring match misfiring on a proper-noun venue
   name). Full-val behavioral agreement (LLM off): 0.7565 → 0.7788.
 
+**2026-07-11 update — full-fold LLM-parse baseline (run `20260711T000602Z`, fold 0, n=85, 60s,
+LLM+disjunction on):** end-to-end FPR **85.88** vs solver-only **94.12** vs ceiling 100 — flat vs
+the n=20 baseline (85.0) and within this row's own repeat noise (`e2e_fpr_std=1.76`); regression
+gate vs `20260710T144747Z` passed (fpr/parse_failures/budget_overruns all held or improved).
+**Caveat:** `parser_full_behavioral_agreement_rate` came back 0.7788 — byte-identical to the
+pre-LLM number — because the baseline recorder's `parser_full` call never passes `llm_parse=True`
+(it's LLM-blind by construction; see `docs/phase2_baselines/README.md`). The LLM audit did run for
+real (confirmed via non-trivial `stage_sec.parse` latency, 0.47–1.26s, across all 85 e2e queries —
+a deterministic-only parse is sub-millisecond), but its effect isn't visible in this metric; the
+plan's hoped-for 0.80–0.85 agreement was never actually measurable this way. Full details in
+`docs/tpc_phase2_implementation_plan.md` (Step 8).
+
 **2026-07-11 update — final-agent memory soak (single long-lived process, the actual competition
 path):** `python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 150
 --budget-sec 10 --method phase2_soak`, in-process (not chunked — this is the one runner mode Step

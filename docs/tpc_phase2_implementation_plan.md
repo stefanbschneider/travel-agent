@@ -325,6 +325,48 @@ fully deterministic fixes that landed before more LLM work:
 `tests/phase2/test_parser_accuracy.py` (hotel/attraction guards) and
 `tests/phase2/test_taxi_verifier_vacuity.py`. No LLM calls.
 
+### Step 8. Representative fold baseline (2026-07-11)
+
+Status: **DONE.**
+
+Full fold 0 of val (n=85, not a subset), `TPC_P2_LLM_BACKEND=infradeep make phase2-baseline FOLD=0
+P2_FOLDS=10 P2_BUDGET=60 P2_REPEATS=2 P2_LABEL=llmparse-disj-fullfold0-60s` — LLM corrective parse
+and disjunction assist both on, run `20260711T000602Z`. Ran ~2h (faster than the ~5.4h estimate).
+
+**Measured:**
+
+```
+FPR:          ceiling 100.0 | solver-only 94.12 | end-to-end 85.88  (headroom 5.88, parsing loss 8.24)
+overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.24, parsing loss 4.36)
+```
+
+- e2e FPR is flat vs the n=20 `20260710T144747Z` baseline (85.0 → 85.88) and *within* this row's own
+  repeat-to-repeat noise (`e2e_fpr_std=1.76` across 2 repeats) — not a regression, but also not the
+  clear win the plan hoped LLM-parse + full fold would show at this budget.
+- **`parser_full_behavioral_agreement_rate` = 0.7788 — byte-identical to the pre-LLM deterministic
+  number.** Root cause: the recorder's `parser_full` call never passes `llm_parse=True` (see
+  `docs/phase2_baselines/README.md`), so this headline signal is LLM-blind by construction. It does
+  NOT mean the LLM audit had no effect — it means this particular metric can't see it. Confirmed the
+  LLM genuinely ran (not silently falling back to deterministic-only): all 85 e2e-mode telemetry
+  records show `flags.llm_parse=true`, `llm_backend=infradeep`, and real network latency in
+  `stage_sec.parse` (0.47–1.26s, none near-zero — a deterministic-only parse is sub-millisecond).
+  The LLM's actual effect on the parser can only be seen in the e2e FPR/`overall_true` numbers above
+  (flat within noise at this n/budget) or via `scripts/parser_vs_oracle.py --llm-parse` directly.
+- Regression gate (`scripts/phase2_gate.py`) vs `20260710T144747Z`: **passed.** Compared on
+  `fpr` (85.0 → 85.88, up), `parse_failures` (0 → 0), and `timeouts` mapped to `budget_overruns`
+  (0 → 0) — the gate's literal `timeouts` field is solve-slice `timed_out` in the raw JSON, which we
+  deliberately did NOT feed it: baseline is n=20 and this row is n=85, so raw timeout *counts* are
+  not comparable across different n, and `timed_out` here is by-design solve-restart-until-budget
+  behavior (see "Resolved: in-process rehearsal memory growth" caveats), not a reliability failure —
+  `valid_output_rate=1.0` and `used_fallback` counts stayed flat/near-zero in both rows regardless.
+- Reliability: valid-output rate 1.0, 0/85 fallback, 0 parse failures, 0 budget overruns.
+
+Net: Steps 1–7's parser/memory/pipeline fixes hold up at full-fold scale with no regression, but this
+run does not demonstrate the plan's hoped-for 0.80–0.85 behavioral agreement from LLM-parse — that
+number was never actually exposed by `parser_full` in the first place. A follow-up measuring LLM
+audit impact should use `parser_vs_oracle.py --llm-parse` on the full val split directly rather than
+relying on a baseline row's `parser_full_*` columns.
+
 ### Step 9. Final-agent memory soak (2026-07-11)
 
 Status: **DONE.**

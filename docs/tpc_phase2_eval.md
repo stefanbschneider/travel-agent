@@ -123,6 +123,33 @@ overall_true: ceiling 100.0 | solver-only 93.28 | end-to-end 85.39  (headroom 6.
   writes. If a run dies mid-way, the per-uid result dirs survive and the aggregation can be
   replayed from disk.
 
+### Full-fold LLM-parse baseline (run `20260711T000602Z`, fold 0, n=85, 60s, LLM+disjunction on)
+
+```
+FPR:          ceiling 100.0 | solver-only 94.12 | end-to-end 85.88  (headroom 5.88, parsing loss 8.24)
+overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.24, parsing loss 4.36)
+```
+
+- First full-fold row (n=85, not a 20-uid subset) and first with LLM corrective parse
+  (`TPC_P2_LLM_BACKEND=infradeep`) and disjunction assist both on by default.
+- e2e FPR is flat vs the n=20 LLM-off baseline above (85.0 → 85.88) and inside this row's own
+  repeat-to-repeat noise (`e2e_fpr_std=1.76` across 2 repeats) — no regression, but not the clear
+  win the plan hoped for either at this budget/n.
+- **`parser_full_behavioral_agreement_rate` = 0.7788, byte-identical to the pre-LLM deterministic
+  number** — the recorder's `parser_full` call never passes `llm_parse=True` to
+  `parser_vs_oracle.run_report`, so this headline signal cannot see the LLM audit's effect by
+  construction (see `docs/phase2_baselines/README.md`). Confirmed the LLM genuinely ran (not a
+  silent fallback): all 85 e2e telemetry records show `flags.llm_parse=true` and real network
+  latency in `stage_sec.parse` (0.47–1.26s; a deterministic-only parse is sub-millisecond, as seen
+  in the n=20 row above). To measure the LLM audit's effect on parsing accuracy directly, use
+  `scripts/parser_vs_oracle.py --llm-parse` on the full val split rather than a baseline row.
+- Regression gate (`scripts/phase2_gate.py`) vs `20260710T144747Z`: **passed** on `fpr`
+  (85.0 → 85.88), `parse_failures` (0 → 0), and `timeouts` mapped to `budget_overruns` (0 → 0).
+  Deliberately did not gate on raw solve-slice `timed_out` counts (15 at n=20 vs 73 at n=85): these
+  are by-design solve-restart-until-budget events (see above), not failures, and are not
+  comparable as raw counts across different n.
+- Reliability: valid-output rate 1.0, 0/85 fallbacks, 0 parse failures, 0 budget overruns.
+
 ## Guiding Idea
 
 We hold the released oracle (`hard_logic_py`) **locally** for the 1000 Phase-1 queries. Phase 2 hides
