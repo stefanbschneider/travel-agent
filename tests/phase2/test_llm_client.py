@@ -200,6 +200,45 @@ def test_infradeep_backend_defaults_base_url(monkeypatch):
     assert captured["client_kwargs"]["base_url"] == "https://api.deepinfra.com/v1/openai"
 
 
+def test_infradeep_backend_default_model_is_a_real_deepinfra_id(monkeypatch):
+    """Regression test: the previous default ("qwen3.6-27b", no org prefix, lowercase) 404'd on
+    every real DeepInfra call ("model qwen3.6-27b does not exist"), silently swallowed by
+    parse_to_ir's fallback-on-exception -- every infradeep run without an explicit
+    TPC_P2_LLM_MODEL/INFRADEEP_MODEL override never actually called the LLM. DeepInfra model IDs
+    are case-sensitive "Org/Name"; verified "Qwen/Qwen3.6-27B" live 2026-07-11."""
+    captured = {}
+
+    class FakeMessage:
+        content = "ok"
+
+    class FakeChoice:
+        message = FakeMessage()
+
+    class FakeCompletion:
+        choices = [FakeChoice()]
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return FakeCompletion()
+
+    class FakeChat:
+        completions = FakeCompletions()
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            self.chat = FakeChat()
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+    monkeypatch.setenv("INFRADEEP_API_KEY", "idp-key")
+    monkeypatch.delenv("TPC_P2_LLM_MODEL", raising=False)
+    monkeypatch.delenv("INFRADEEP_MODEL", raising=False)
+
+    client = lc.build_llm_client({"backend": "infradeep", "cache": False})
+    client.complete("hi")
+    assert captured["model"] == lc.DEFAULT_INFRADEEP_MODEL == "Qwen/Qwen3.6-27B"
+
+
 # --- CachingLLMClient --------------------------------------------------------
 
 

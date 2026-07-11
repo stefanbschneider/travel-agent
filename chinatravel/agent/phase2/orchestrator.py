@@ -178,6 +178,7 @@ def solve_phase2(
         "used_fallback": False,
         "valid_output": False,
         "error": None,
+        "llm_parse_error": None,
         "variants_count": 0,
     }
 
@@ -185,6 +186,8 @@ def solve_phase2(
     t0 = time.perf_counter()
     try:
         ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags)
+        if ir.llm_parse_error:
+            telemetry["llm_parse_error"] = ir.llm_parse_error
         variants = normalize.ir_to_solver_variants(ir, query, env=env, flags=flags)
     except Exception as exc:  # parsing must never crash the harness
         variants = []

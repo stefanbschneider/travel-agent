@@ -39,6 +39,11 @@ class FixtureMissingError(LLMError):
 
 DEFAULT_BACKEND = "none"
 DEFAULT_INFRADEEP_BASE_URL = "https://api.deepinfra.com/v1/openai"
+# DeepInfra model IDs are case-sensitive "Org/Name" (verified live 2026-07-11); the previous
+# lowercase no-prefix default ("qwen3.6-27b") 404'd on every real call and was masked by
+# parse_to_ir's silent fallback-on-exception -- every infradeep run without an explicit
+# TPC_P2_LLM_MODEL/INFRADEEP_MODEL override silently never called the LLM at all.
+DEFAULT_INFRADEEP_MODEL = "Qwen/Qwen3.6-27B"
 
 
 def _find_project_root(start: Path | None = None) -> Path | None:
@@ -282,7 +287,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
                 config.get("model")
                 or os.environ.get("TPC_P2_LLM_MODEL")
                 or os.environ.get("INFRADEEP_MODEL")
-                or "qwen3.6-27b"
+                or DEFAULT_INFRADEEP_MODEL
             ),
             base_url=str(base_url),
             api_key=api_key,

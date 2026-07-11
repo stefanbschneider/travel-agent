@@ -113,6 +113,38 @@ def _fast_solve(query, variants, budget_sec):
     }
 
 
+def test_llm_parse_failed_counter_catches_a_broken_backend(tmp_path, monkeypatch):
+    """Regression test for the silent-fallback gap that let a broken DeepInfra model string
+    (2026-07-11: 'qwen3.6-27b' 404'd on every call) pass every baseline/gate check as green,
+    because parse_to_ir's fallback-on-exception (by design, for production robustness) left no
+    trace anywhere the summary or ledger could see. llm_parse_failed must count every query where
+    the LLM call itself raised, distinct from llm_fixture_missing (a different, expected case)."""
+    import solve_phase2 as runner
+
+    class RaisingLLM:
+        backend = "test-raising"
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            raise RuntimeError("simulated 404: model not found")
+
+    monkeypatch.setenv("TPC_P2_LLM_PARSE", "1")
+    monkeypatch.setattr(runner.p2_llm, "build_llm_client", lambda cfg: RaisingLLM())
+
+    summary = runner.run_split(
+        "tpc_phase1",
+        method="phase2_llmfailtest",
+        limit=2,
+        budget_sec=5.0,
+        results_dir=str(tmp_path / "results"),
+        work_dir=str(tmp_path / "runs"),
+        solve_fn=_fast_solve,
+    )
+
+    assert summary["llm_parse_attempts"] == 2
+    assert summary["llm_parse_failed"] == 2
+    assert summary["llm_fixture_missing"] == 0
+
+
 def test_rss_guard_warns_when_growth_exceeds_threshold(tmp_path, monkeypatch, capsys):
     """TPC_P2_MAX_RSS_MB is warn-only: it must never abort the run, only print a warning once
     per-query growth (since the first solved query in this process) exceeds the threshold."""

@@ -487,8 +487,8 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None) -> ParsedIR:
         # backend degrades to the deterministic parse rather than to no parse at all.
         try:
             ir = llm_parse_stub(ir, query, llm_client)
-        except Exception:
-            pass
+        except Exception as exc:
+            ir.llm_parse_error = repr(exc)
 
     return ir
 

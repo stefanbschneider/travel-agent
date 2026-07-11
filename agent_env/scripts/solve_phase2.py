@@ -190,6 +190,7 @@ def run_split(
     parse_failures = 0
     llm_parse_attempts = 0
     llm_fixture_missing = 0
+    llm_parse_failed = 0
     solved_evaluations: list[dict] = []
     rss_baseline_mb: float | None = None
 
@@ -244,6 +245,8 @@ def run_split(
             err = str(telemetry.get("error") or "")
             if "No fixture for key" in err:
                 llm_fixture_missing += 1
+            if telemetry.get("llm_parse_error"):
+                llm_parse_failed += 1
         done_uids.append(quid)
         print(
             f"[{idx}/{len(selected)}] {quid} "
@@ -317,6 +320,7 @@ def run_split(
         "llm_backend": getattr(llm_client, "backend", "none"),
         "llm_parse_attempts": llm_parse_attempts,
         "llm_fixture_missing": llm_fixture_missing,
+        "llm_parse_failed": llm_parse_failed,
         "selected": len(selected),
         "skipped": skipped,
         "uids": done_uids,

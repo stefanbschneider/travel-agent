@@ -34,6 +34,9 @@ class ParsedIR:
         spans: raw extracted text spans per field (empty in the skeleton).
         entity_candidates: entity-resolution candidates per mention (empty in the skeleton).
         hard_vs_soft: split of constraints into hard vs soft (empty in the skeleton).
+        llm_parse_error: set by parse_to_ir when the LLM corrective-audit call raised and it fell
+            back to the deterministic ir (never raises itself); telemetry-only, excluded from
+            equality so the documented "falls back to deterministic ir" tests still hold.
     """
 
     raw: dict = field(default_factory=dict)
@@ -44,3 +47,4 @@ class ParsedIR:
     spans: dict = field(default_factory=dict)
     entity_candidates: dict = field(default_factory=dict)
     hard_vs_soft: dict = field(default_factory=dict)
+    llm_parse_error: str | None = field(default=None, compare=False)
