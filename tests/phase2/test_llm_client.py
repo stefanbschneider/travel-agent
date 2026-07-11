@@ -239,6 +239,67 @@ def test_infradeep_backend_default_model_is_a_real_deepinfra_id(monkeypatch):
     assert captured["model"] == lc.DEFAULT_INFRADEEP_MODEL == "Qwen/Qwen3.6-27B"
 
 
+def _fake_openai_harness(monkeypatch):
+    captured = {}
+
+    class FakeMessage:
+        content = "ok"
+
+    class FakeChoice:
+        message = FakeMessage()
+
+    class FakeCompletion:
+        choices = [FakeChoice()]
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return FakeCompletion()
+
+    class FakeChat:
+        completions = FakeCompletions()
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            self.chat = FakeChat()
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+    monkeypatch.setenv("INFRADEEP_API_KEY", "idp-key")
+    return captured
+
+
+def test_infradeep_backend_disables_thinking_by_default(monkeypatch):
+    """Regression test: Qwen3-family "thinking mode" is on by default on DeepInfra and adds a
+    full chain-of-thought before the answer (verified live 2026-07-11: 10.6s with thinking vs
+    1.1s without, for the same trivial prompt) -- with it on, a full-val LLM-parse audit run
+    (850 uids) was projected to take ~9h instead of the plan's ~30-60min estimate. The infradeep
+    backend must pass chat_template_kwargs.enable_thinking=False unless explicitly overridden."""
+    captured = _fake_openai_harness(monkeypatch)
+    monkeypatch.delenv("TPC_P2_LLM_ENABLE_THINKING", raising=False)
+
+    client = lc.build_llm_client({"backend": "infradeep", "cache": False})
+    client.complete("hi")
+    assert captured["extra_body"] == {"chat_template_kwargs": {"enable_thinking": False}}
+
+
+def test_infradeep_backend_enable_thinking_override(monkeypatch):
+    captured = _fake_openai_harness(monkeypatch)
+
+    client = lc.build_llm_client({"backend": "infradeep", "cache": False, "enable_thinking": True})
+    client.complete("hi")
+    assert "extra_body" not in captured
+
+
+def test_infradeep_backend_extra_body_override_wins(monkeypatch):
+    captured = _fake_openai_harness(monkeypatch)
+
+    client = lc.build_llm_client(
+        {"backend": "infradeep", "cache": False, "extra_body": {"custom": "value"}}
+    )
+    client.complete("hi")
+    assert captured["extra_body"] == {"custom": "value"}
+
+
 # --- CachingLLMClient --------------------------------------------------------
 
 

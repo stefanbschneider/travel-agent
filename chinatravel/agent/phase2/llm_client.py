@@ -200,12 +200,14 @@ class OpenAILLMClient(LLMClient):
     backend = "openai"
 
     def __init__(self, *, model: str, base_url: str | None = None, api_key: str | None = None,
-                 temperature: float = 0.0, max_tokens: int | None = None):
+                 temperature: float = 0.0, max_tokens: int | None = None,
+                 extra_body: dict | None = None):
         if not model:
             raise ValueError("openai backend requires a 'model'.")
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.extra_body = extra_body
         openai_cls = _load_openai_class()
         client_kwargs: dict[str, Any] = {}
         if base_url:
@@ -226,6 +228,8 @@ class OpenAILLMClient(LLMClient):
         }
         if self.max_tokens is not None:
             kwargs["max_tokens"] = self.max_tokens
+        if self.extra_body:
+            kwargs["extra_body"] = self.extra_body
         completion = self._client.chat.completions.create(**kwargs)
         return completion.choices[0].message.content or ""
 
@@ -282,6 +286,21 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
             or os.environ.get("INFRADEEP_BASE_URL")
             or DEFAULT_INFRADEEP_BASE_URL
         )
+        # Qwen3-family "thinking mode" is on by default on DeepInfra and generates a full
+        # chain-of-thought (hundreds of tokens, ~10x the latency) before the final answer --
+        # verified live 2026-07-11 (10.6s with thinking vs 1.1s without, for the same trivial
+        # prompt). We only need the short structured JSON audit response, so default it off
+        # (config "enable_thinking": True, or TPC_P2_LLM_ENABLE_THINKING=1, to restore it; a raw
+        # "extra_body" config value always wins).
+        extra_body = config.get("extra_body")
+        if extra_body is None:
+            enable_thinking = config.get("enable_thinking")
+            if enable_thinking is None:
+                enable_thinking = str(os.environ.get("TPC_P2_LLM_ENABLE_THINKING", "")).lower() in (
+                    "1", "true", "yes",
+                )
+            if not enable_thinking:
+                extra_body = {"chat_template_kwargs": {"enable_thinking": False}}
         client = InfraDeepLLMClient(
             model=str(
                 config.get("model")
@@ -293,6 +312,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
             api_key=api_key,
             temperature=float(config.get("temperature", 0.0)),
             max_tokens=config.get("max_tokens"),
+            extra_body=extra_body,
         )
         return _maybe_wrap_cache(client, config)
 
