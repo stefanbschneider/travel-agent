@@ -558,6 +558,40 @@ matching the original estimate. Defaults on for the infradeep backend now
 (`chinatravel/agent/phase2/llm_client.py`); overridable via config/env if a future use case wants
 visible reasoning.
 
+**The genuine e2e re-run (2026-07-11, run `20260711T071751Z`) — the plan's thesis is not confirmed
+at a 60s budget; it's contradicted.** Same fold/n/budget as the Step 8 mislabeled row
+(`20260711T000602Z`), with a verified-genuine LLM backend
+(`timing_llm_parse_attempted=85`, `timing_llm_parse_failed=0`). End-to-end FPR **dropped**
+85.88 → 81.18; the regression gate (`scripts/phase2_gate.py`) against the mislabeled row
+**FAILED** (`score/fpr dropped: 81.18 < 85.88`). `e2e_fpr_std=0.0` across 2 repeats (same pass/fail
+set both times; `overall_true` still varies slightly, ruling out a broken/stuck cache).
+
+The parser-level win (behavioral agreement 0.7788 → 0.8694) measures something different from the
+e2e score: whether parsed constraints accept/reject a *fixed* plan like the oracle would, not
+whether a *freshly solved* plan under those constraints passes within a bounded time budget. This
+run is where the two diverge. Flipped-uid diagnosis (diffing `all_pass_ids` between the two runs;
+5 pass→fail, 1 fail→pass): 3/5 pass→fail uids `timed_out=true` (consistent with tighter/more-
+correct constraints shrinking the feasible region within 60s, compounded by
+`disjunction_flattened` dropping 134 → 80 — ~54 more queries now expand into multiple
+solver-searched branches competing for the same slice). But **2/5 did not time out**
+(`valid_output=true`, `commonsense_pass=true`, `logical_pass=false`) — ruling out "search
+difficulty" as the whole story. Traced one directly (uid `20250322103818184128`): the deterministic
+parser had extracted the same NL span twice (`required_attractions` + the redundant
+`required_attraction_types`, the exact proper-noun/type-keyword collision pattern from the Step 5
+fixes) — a directionally *correct* LLM removal. But CP-SAT runs single-worker
+(`num_search_workers=1`, `chinatravel/agent/tpc_agent/cp_solver.py:243`) with a fixed time budget,
+and is sensitive to the exact constraint formulation: dropping even a redundant constraint changes
+the search trajectory, and within the same wall-clock slice it converged to a *different* plan that
+failed a logical check the old (redundant-constraint) run's plan happened to pass.
+
+**Open, not resolved here:** whether this is specific to the 60s dev budget (more search headroom
+at the organizer's real ~900s budget might absorb these formulation-sensitivity effects) or a more
+fundamental interaction. A 900s re-run would answer this directly — feasible with `--parallel`
+(Step 10 below) but still ~15x this run's cost — a decision for the user, not made here. Similarly,
+whether `TPC_P2_LLM_PARSE` should remain default-on given a 60s-budget e2e regression, despite the
+genuine parsing-quality improvement, is a call about the real competition budget this session
+cannot resolve.
+
 ### 4. Extend evaluation to score variance, not only valid-output variance
 
 Status: **DONE (2026-07-10)** via `phase2_record_baseline.py --repeats N`, which reruns the fresh

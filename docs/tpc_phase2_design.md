@@ -78,6 +78,21 @@ agreement **0.7788 → 0.8694** (top of the plan's hoped-for 0.80–0.85 range),
 parsing-quality gain, an e2e re-run of Step 8 (same fold/n/budget as `20260711T000602Z`, this time
 with a genuinely working LLM backend) follows to see whether it moves the harness's own FPR.
 
+**2026-07-11 update — the genuine Step 8 e2e re-run (run `20260711T071751Z`) — regression, not a
+win.** Same fold/n/budget as the mislabeled row, this time verified genuine
+(`timing_llm_parse_failed=0`/85). **End-to-end FPR dropped 85.88 → 81.18; the regression gate vs
+the mislabeled row failed.** The parser-level win (behavioral agreement 0.87) does not transfer to
+the harness's own score at this 60s dev budget — those measure different things (parsed-vs-oracle
+acceptance on a fixed plan, vs. whether a freshly bounded-time solve passes). Flipped-uid
+diagnosis: some flips are timeout-driven (tighter/more-correct constraints, plus 54 more queries
+now expanding into multiple solver-searched branches via `disjunction_flattened` dropping
+134 → 80), but at least 2/5 pass→fail flips did **not** time out — CP-SAT's single-worker,
+fixed-budget search is sensitive to the exact constraint formulation handed to it, so even a
+*correct* simplification (removing a redundant constraint) can send the bounded search down a
+different, non-passing trajectory. Whether this is specific to the 60s dev budget (vs. the
+organizer's real ~900s) is unresolved and not something to test without authorization, given the
+cost. Full mechanism writeup in `docs/tpc_phase2_eval.md`.
+
 **2026-07-11 update — final-agent memory soak (single long-lived process, the actual competition
 path):** `python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 150
 --budget-sec 10 --method phase2_soak`, in-process (not chunked — this is the one runner mode Step

@@ -196,6 +196,60 @@ the plan's own condition means an e2e re-run of Step 8 (now cheap, since the thi
 speeds up the harness's own parse stage) is warranted to see whether this quality gain closes any
 of the e2e/solver-only gap. See the Step 8 section above once that row lands.
 
+### The genuine Step 8 e2e re-run (run `20260711T071751Z`, fold 0, n=85, 60s) — the parser win did not transfer
+
+Same fold/n/budget as the mislabeled `20260711T000602Z`, this time with a real, verified LLM
+backend. **Validation this row is genuine** (the exact check the mislabel above was missing):
+`timing_llm_parse_attempted=85`, `timing_llm_parse_failed=0` — every query's LLM audit call
+actually succeeded.
+
+```
+                            deterministic+disjunction    genuine LLM-parse
+                            (20260711T000602Z)           (20260711T071751Z)
+end_to_end_fpr:             85.88                         81.18
+end_to_end_overall_true:    87.40                         84.39 (repeat 2) / 84.78 (repeat 1)
+e2e_timed_out:               73                            80
+e2e_completed_without_timeout: 12                           5
+```
+
+**Regression gate vs `20260711T000602Z` (same n/fold/budget, differs only in whether the LLM
+genuinely ran): FAILED** — `score/fpr dropped: 81.18 < 85.88`. `e2e_fpr_std=0.0` across both
+repeats (identical pass/fail set both times, despite `e2e_overall_true` varying slightly —
+consistent with the cached, deterministic LLM output plus normal solver-continuous-score noise).
+
+**This is the honest headline: the plan's central thesis — better parsing closes the e2e gap — is
+not demonstrated at a 60s dev budget. It's contradicted.** Behavioral agreement 0.7788 → 0.8694
+measures whether the *parsed* constraints accept/reject a *fixed* plan the same way the oracle
+does; it says nothing about whether a *freshly solved* plan under those (now more correct)
+constraints comes out passing within a bounded time budget. Those are different questions, and
+this run is where they diverge.
+
+**Mechanism, from a flipped-uid diff** (`all_pass_ids` in the two runs' ledger records: 5 uids
+flip pass→fail, 1 flips fail→pass, net 73→69≈81.18%):
+
+- 3/5 pass→fail uids show `timed_out=true` — consistent with tighter/more-correct constraints
+  shrinking the feasible region and making the bounded-time search less likely to converge
+  (`disjunction_flattened` dropping 134→80 also means ~54 more queries now expand into multiple
+  solver-searched branches, each competing for the same 60s slice — a second, related mechanism).
+- **2/5 pass→fail uids do NOT time out** (`timed_out=false`, `valid_output=true`,
+  `commonsense_pass=true`, but `logical_pass=false`) — ruling out "search difficulty" as the whole
+  story. Traced one directly (uid `20250322103818184128`, "visit Cultural Tourism Area and Art
+  Museum ... only free attractions"): the deterministic parser had extracted the same NL span
+  twice, once as `required_attractions` (named POIs) and once as `required_attraction_types`
+  (the exact proper-noun/type-keyword collision pattern from the Step 5 fixes) — a directionally
+  *correct* simplification for the LLM to remove. But CP-SAT's single-worker (`num_search_workers`
+  = 1, chinatravel/agent/tpc_agent/cp_solver.py:243), fixed-time-budget search is sensitive to the
+  exact constraint formulation it's given: dropping a constraint (even a redundant one) changes the
+  solver's search trajectory, and within the same wall-clock slice it converged to a *different*
+  candidate plan this time — one that fails a logical check the old (redundant-constraint) run's
+  plan happened to pass. Correct parsing does not guarantee an equal-or-better bounded-time solve.
+
+**Open question, not resolved here:** whether this regression is specific to the 60s dev budget
+(more search headroom at the organizer's real ~900s budget might absorb these formulation-
+sensitivity effects) or a more fundamental interaction. A 900s-budget re-run would answer this
+directly but costs roughly 15x this run's wall time even with `--parallel` (Step 10) applied —
+worth doing, but a cost/authorization decision, not one to make unilaterally here.
+
 ## Guiding Idea
 
 We hold the released oracle (`hard_logic_py`) **locally** for the 1000 Phase-1 queries. Phase 2 hides
