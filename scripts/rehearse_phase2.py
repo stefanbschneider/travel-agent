@@ -49,6 +49,7 @@ if CHINATRAVEL_ROOT not in sys.path:
     sys.path.insert(0, CHINATRAVEL_ROOT)
 
 import make_phase2_splits as splits  # noqa: E402
+from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_SEED = 20260705
 DEFAULT_FOLDS = 10
@@ -444,7 +445,7 @@ def rehearse(
     fold=0,
     folds=DEFAULT_FOLDS,
     seed=DEFAULT_SEED,
-    budget_sec=900.0,
+    budget_sec=orch.DEFAULT_BUDGET_SEC,
     limit=None,
     lang="en",
     fresh=False,
@@ -517,9 +518,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--budget-sec",
         type=float,
-        default=900.0,
-        help="Per-query budget (default 900s = 15 min, TBC; 300s = 5 min alt). Use small values "
-        "with --limit/--folds for quick smoke runs.",
+        default=orch.DEFAULT_BUDGET_SEC,
+        help="Per-query budget (default 300s = 5 min, our working default; the organizers' stated "
+        "primary is 900s = 15 min, orch.PHASE2_ORGANIZER_BUDGET_SEC). Use small values with "
+        "--limit/--folds for quick smoke runs.",
     )
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--lang", default="en", choices=["en", "zh"])

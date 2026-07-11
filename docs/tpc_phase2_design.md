@@ -264,10 +264,12 @@ richer IR and disjunctive expansion are added later behind flags.
 
 ## Time Budgeting
 
-**Expected per-query budget: ~15 minutes (900s) primary, ~5 minutes (300s) alternative — to be
-confirmed with the organizers.** The default lives in `chinatravel/agent/phase2/orchestrator.py`
-(`PHASE2_DEFAULT_BUDGET_SEC = 900`, `PHASE2_ALT_BUDGET_SEC = 300`) and is overridable per query via the
-`TPC_P2_BUDGET_SEC` env var, the `budget_sec` argument, or `--budget-sec` on the runner/rehearsal.
+**Organizers' stated budget: ~15 minutes (900s) primary, ~5 minutes (300s) alternative — to be
+confirmed.** Our own working default (2026-07-11, chosen for baseline/CI iteration cost) is the
+300s alternative — `chinatravel/agent/phase2/orchestrator.py` has
+`DEFAULT_BUDGET_SEC = PHASE2_ALT_BUDGET_SEC` (300s); `PHASE2_ORGANIZER_BUDGET_SEC` (900s) remains
+available for a final pre-submission check. Overridable per query via the `TPC_P2_BUDGET_SEC` env
+var, the `budget_sec` argument, or `--budget-sec`/`P2_BUDGET` on the runner/rehearsal/Makefile.
 
 Budget the per-query timeout explicitly rather than spending it in one undifferentiated loop
 (`budget.py`). Suggested allocation:

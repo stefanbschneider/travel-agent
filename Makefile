@@ -61,11 +61,12 @@ help:
 # off by default. See docs/tpc_phase2_design.md and docs/tpc_phase2_eval.md.
 # ===========================================================================
 
-# Per-query budget: 15 min primary (TBC), 5 min alternative. Override with P2_BUDGET.
+# Per-query budget: our working default is 300s (5 min); the organizers' stated primary is 900s
+# (15 min, TBC) for a final pre-submission check. Override with P2_BUDGET.
 P2_SPLIT_SET ?= val
 FOLD ?= 0
 P2_FOLDS ?= 10
-P2_BUDGET ?= 900
+P2_BUDGET ?= 300
 P2_LIMIT ?=
 P2_METHOD ?= phase2_e2e_tpc_phase2_$(P2_SPLIT_SET)
 P2_SPLIT ?= tpc_phase2_$(P2_SPLIT_SET)

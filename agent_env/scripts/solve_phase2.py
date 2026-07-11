@@ -39,7 +39,7 @@ from chinatravel.agent.phase2 import llm_client as p2_llm  # noqa: E402
 from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_METHOD_PREFIX = "phase2_e2e_"
-DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
+DEFAULT_BUDGET_SEC = orch.DEFAULT_BUDGET_SEC  # 300s (our working default); override via --budget-sec
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
 # Warn-only guard: if set, print a warning (never raise/abort) when a single process's RSS grows
 # by more than this many MB since its first solved query. Catches leaks (e.g. func_timeout thread

@@ -25,11 +25,14 @@ from . import budget as budget_mod
 from . import fallback as fallback_mod
 from . import normalize
 
-# Expected Phase 2 per-query budget: 15 min primary (to be confirmed); 5 min alternative.
-# Override per query via the TPC_P2_BUDGET_SEC env var or the ``budget_sec`` argument.
-PHASE2_DEFAULT_BUDGET_SEC = 900.0  # 15 minutes (primary, TBC)
-PHASE2_ALT_BUDGET_SEC = 300.0      # 5 minutes (alternative)
-DEFAULT_BUDGET_SEC = PHASE2_DEFAULT_BUDGET_SEC
+# Expected Phase 2 per-query budget: 15 min per the organizers' stated primary (to be confirmed);
+# 5 min alternative. Override per query via the TPC_P2_BUDGET_SEC env var or the ``budget_sec``
+# argument. Our own working default is the 5-min alternative (2026-07-11): at 300s the harness
+# still shows plenty of solver headroom (see docs/phase2_baselines), and it keeps baseline/CI
+# iteration cost down; switch to PHASE2_ORGANIZER_BUDGET_SEC for a final pre-submission check.
+PHASE2_ORGANIZER_BUDGET_SEC = 900.0  # 15 minutes (organizers' stated primary, TBC)
+PHASE2_ALT_BUDGET_SEC = 300.0        # 5 minutes (our working default)
+DEFAULT_BUDGET_SEC = PHASE2_ALT_BUDGET_SEC
 DEFAULT_SOLVE_TIMEOUT_GRACE_SEC = 1.0
 
 

@@ -553,7 +553,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--folds", type=int, default=rehearse_mod.DEFAULT_FOLDS)
     p.add_argument("--seed", type=int, default=rehearse_mod.DEFAULT_SEED)
-    p.add_argument("--budget-sec", type=float, default=120.0)
+    p.add_argument("--budget-sec", type=float, default=rehearse_mod.orch.DEFAULT_BUDGET_SEC)
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--lang", choices=["en", "zh"], default="en")
     p.add_argument("--run-id", default=None)
