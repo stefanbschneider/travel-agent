@@ -12,8 +12,11 @@ Three query sources (mutually exclusive):
   the official score and parsing-vs-solving breakdown are computed too; otherwise only the
   estimated (oracle-free) score is reported.
 - ``--query-text "<...>"``: an ad hoc natural-language query with no backing file and no oracle.
-  Requires ``--start-city``/``--target-city``/``--days`` explicitly -- there is no NL field
-  extractor in this repo, those fields are hard-required by the solver. Estimated score only.
+  Requires ``--start-city``/``--target-city``/``--days`` explicitly. This matches the real Phase 2
+  contract, not a workaround: only ``hard_logic``/``hard_logic_py``/``hard_logic_nl`` (the oracle
+  verifier fields) are ever hidden from the agent (see ``docs/tpc_phase2_design.md``); trip
+  metadata is always given as structured fields alongside the free text, never something the agent
+  has to infer from prose. Estimated score only (no oracle).
 
 In every mode this runs the real Phase 2 orchestrator (deterministic TPCAgent, LLM parse/refine
 per the usual env/config flags) and writes the same artifacts a split run would:
@@ -88,9 +91,11 @@ def resolve_query(args: argparse.Namespace) -> tuple[str, dict[str, Any], str]:
     ]
     if missing_flags:
         raise SystemExit(
-            f"--query-text also requires {', '.join(missing_flags)} (there is no "
-            "natural-language field extractor in this repo; the solver hard-requires these "
-            "fields, so supply them explicitly)."
+            f"--query-text also requires {', '.join(missing_flags)}: real Phase 2 queries always "
+            "carry these as structured fields alongside the free text (only the oracle "
+            "hard_logic/hard_logic_py/hard_logic_nl fields are ever hidden -- see "
+            "docs/tpc_phase2_design.md), so the solver expects them explicitly rather than "
+            "inferring them from prose."
         )
     uid = args.query_uid or f"adhoc_{int(time.time())}"
     query = {
