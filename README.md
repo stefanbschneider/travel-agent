@@ -9,6 +9,7 @@
 - `docs/tpc_phase2_design.md` — Phase 2 rules interpretation, harness architecture, and no-oracle approach
 - `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (three axes, attribution, regression gate)
 - `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the Phase 2 skeleton harness + eval pipeline
+- `docs/tpc_phase2_sonnet_plan.md` — current prioritized improvement plan (2026-07-11 review; written for autonomous execution)
 - `docs/tpc_phase2_hf_dataset.md` — note on the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset vs local data
 - `AGENT_DESIGN.md` — shared overview of the current TPCAgent stack and how it bridges both phases
 - `IJCAI2026_competition.md` — source-based summary of the official competition pages
@@ -235,8 +236,11 @@ additionally computes the **official score** (`overall_true`) and a **parsing vs
 breakdown: whether the plan satisfies the constraints it was actually given (solving) vs. whether
 it also satisfies the oracle (parsing), plus a structural precision/recall/f1 diff against the
 oracle constraints. `--query-text` never has an oracle, so it is estimated-score-only by design.
-`--start-city`/`--target-city`/`--days` are required with `--query-text` since there is no
-natural-language field extractor — the solver hard-requires those fields.
+`--start-city`/`--target-city`/`--days` are required with `--query-text`. This mirrors the real
+Phase 2 contract, not a tool limitation: only `hard_logic`/`hard_logic_py`/`hard_logic_nl` (the
+oracle verifier fields) are ever hidden from the agent — trip metadata always arrives as
+structured fields alongside the free text, never something the agent has to infer from prose. See
+`docs/tpc_phase2_design.md` ("Official Execution Model").
 
 6. Full rehearsal + three-way attribution (`ceiling | solver-only | end-to-end`)
 

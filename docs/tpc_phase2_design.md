@@ -277,7 +277,22 @@ The harness always preserves a hard finalization buffer and returns before the t
 These are the extension points; the skeleton wires them as no-op stubs so improvements can be added and
 measured incrementally without destabilizing the deterministic baseline.
 
-## Current Gaps To Close (post-review, updated 2026-07-10)
+## Current Gaps To Close (post-review, updated 2026-07-11)
+
+> The prioritized closing plan for all gaps below is `docs/tpc_phase2_sonnet_plan.md`
+> (2026-07-11 review; written to be executable autonomously).
+
+0. **Two newly identified harness defects (2026-07-11 review):**
+   - **Static budget slices waste solve time.** `budget.py` reserves ~28% of the post-finalize
+     budget for parse and ~11% for improve, but deterministic parse takes ~1s and Stage 3 is a
+     stub; the orchestrator passes the static `b.solve_sec` to the solver regardless of what
+     earlier stages actually used. At 900s that discards roughly 300s of solve time per query.
+     Fix: dynamic reallocation (plan Step 1, `TPC_P2_DYNAMIC_BUDGET`, runner-default-on pattern).
+   - **No LLM request timeout; Stage 1 not deadline-enforced.** `llm_client.py` never sets an SDK
+     timeout and the orchestrator does not time-box the parse stage, so one hung LLM/network call
+     (a 116s outlier was observed live against DeepInfra) can consume most of a query's budget
+     before the solver starts. Fix: SDK-level timeout + skip-LLM-when-slice-too-small (plan
+     Step 2). The existing `parse_to_ir` fallback-on-exception already handles the raise safely.
 
 1. **Regex-only brittleness remains the main Phase 2 risk.** The live Stage 1 path still starts from
    `parse_query_no_oracle()`, so held-out phrasing robustness is still mostly bounded by the current

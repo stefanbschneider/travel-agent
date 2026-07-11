@@ -208,7 +208,45 @@ normalization logic.
 Rehearsal folds are drawn from the validation split only; `rehearse_phase2.py --split-set test`
 (with a warning) is required to touch the held-out set. See `docs/tpc_phase2_eval.md`.
 
+## Review and roadmap (2026-07-11)
+
+A full review of the current agent identified the following bottlenecks, in priority order. The
+detailed, autonomously implementable plan for closing them is
+**`docs/tpc_phase2_sonnet_plan.md`** — that file supersedes the older per-step roadmap sections
+below (which remain as build history).
+
+1. **Wasted per-query budget (deterministic, free win).** `budget.py` statically reserves ~28% of
+   the post-finalize budget for parse and ~11% for improve, but deterministic parse takes ~1s and
+   Stage 3 is a stub; `orchestrator.solve_phase2` passes the static `b.solve_sec` to the solver,
+   so at a 900s budget roughly 300s of solve time is thrown away per query (at the 60s dev budget
+   the solver gets ~33s of 60). → Plan Step 1: dynamic reallocation behind `TPC_P2_DYNAMIC_BUDGET`.
+2. **No LLM request timeout, parse stage not time-boxed.** `llm_client.py` sets no SDK timeout and
+   Stage 1 has no deadline enforcement; one hung call (a 116s outlier was observed live) can burn
+   most of a query's budget before the solver starts. → Plan Step 2.
+3. **The headline LLM-parse gain (behavioral 0.7788 → 0.8694) has never been measured e2e** —
+   the only ledger row labeled `llm_parse=true` was the silent-404 artifact (Step 8 below).
+   → Plan Step 3 (warm-cache re-run of the fold-0 n=85 baseline with a working backend).
+4. **All attribution rows used a 60s dev budget**; the competition budget is ~300–900s. → Plan
+   Step 4 (one 300s attribution row; also the decision point for whether Stage 3 refinement stays
+   deferred).
+5. **Localized parser family gaps** (full-val family stats, LLM-audit run):
+   `poi_distance_hotel` never extracted (0 matched / 32 missing); `hotel_amenity` spurious-only
+   (22 spurious / 0 matched); `required_hotel_all_types`, `excluded_cuisine_types`, `room_type`,
+   `stay_duration` are the other main recall sinks; 111/850 behavioral disagreements remain.
+   → Plan Step 5 (TDD family fixes, same recipe as Milestones 5/1c).
+6. **LLM-audit recall regression** (0.6977 → 0.6779, concentrated in `poi_distance_hotel` and the
+   hotel-type families — the audit removes real constraints). → Plan Step 6 (after Step 5).
+7. **SGLang endpoint parity** — the competition LLM is the organizers' SGLang endpoint, not
+   DeepInfra; a config preset + smoke script is missing. → Plan Step 7.
+
+Still deliberately deferred: Stage 3 LLM refinement (until Step 4 shows solver headroom
+exceeding parsing loss at a realistic budget) and full WorldEnv-backed entity resolution (bigger,
+less certain payoff than the targeted family fixes).
+
 ## Roadmap From Here (priority order)
+
+> **Superseded 2026-07-11** by the review above and `docs/tpc_phase2_sonnet_plan.md`; kept as
+> build history.
 
 ### 1. Establish the deterministic baseline on validation folds
 
