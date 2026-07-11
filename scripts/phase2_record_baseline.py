@@ -582,6 +582,14 @@ def parse_args() -> argparse.Namespace:
         help="Allow resuming stale end-to-end results instead of clearing them first. Off by "
         "default because stale plans from older code/budgets contaminate baseline rows.",
     )
+    p.add_argument(
+        "--parallel",
+        type=int,
+        default=rehearse_mod.DEFAULT_PARALLEL,
+        help="Chunk subprocesses to run concurrently (default from P2_PARALLEL env, else 1 = "
+        "sequential). Each query's CP-SAT solve uses 1 core by default, so size this to "
+        "(core count - 1); memory is usually not the limit (see docs/tpc_phase2_design.md).",
+    )
     return p.parse_args()
 
 
@@ -628,6 +636,7 @@ def main() -> None:
                 limit=args.limit,
                 lang=args.lang,
                 fresh=fresh,
+                parallel=args.parallel,
             )
         )
     rehearsal = rehearsals[-1]

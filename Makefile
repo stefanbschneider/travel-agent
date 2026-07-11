@@ -75,6 +75,10 @@ P2_SWEEP_JSON ?= cache/phase2_budget_sweep/budget_sweep.json
 P2_BRANCH_AWARE ?= 0
 P2_REPEATS ?= 1
 P2_LABEL ?=
+# Chunk subprocesses to run concurrently (1 = sequential, original behavior). Each query's
+# CP-SAT solve uses 1 core by default, so size this to (core count - 1); memory is usually not
+# the limit -- see docs/tpc_phase2_design.md for the per-process RSS floor (~250MB).
+P2_PARALLEL ?= 1
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
 P2_BRANCH_AWARE_FLAG = $(if $(filter 1,$(P2_BRANCH_AWARE)),--branch-aware,)
 P2_LABEL_FLAG = $(if $(P2_LABEL),--label $(P2_LABEL),)
@@ -97,7 +101,7 @@ phase2-help:
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_QUERY_ARGS="..."'
+	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:
@@ -121,7 +125,8 @@ phase2-query:
 phase2-rehearse:
 	@echo "=== [1/3] Rehearsal (end-to-end + solver-only), three-way attribution ==="
 	.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set $(P2_SPLIT_SET) \
-	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
+	  --parallel $(P2_PARALLEL)
 	@echo "=== [2/3] Parser-vs-oracle attribution (Axis 1) ==="
 	.venv/bin/python scripts/parser_vs_oracle.py --split-set $(P2_SPLIT_SET) --behavioral $(P2_LIMIT_FLAG)
 	@echo "=== [3/3] Timing + reliability telemetry (Axis 3) ==="
@@ -137,7 +142,7 @@ phase2-budget-sweep:
 phase2-baseline:
 	.venv/bin/python scripts/phase2_record_baseline.py --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
-	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG)
+	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG) --parallel $(P2_PARALLEL)
 
 # Parser-vs-oracle attribution only (Axis 1), incl. behavioral equivalence.
 phase2-parser-report:

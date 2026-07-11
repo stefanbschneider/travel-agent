@@ -31,6 +31,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import psutil
@@ -57,6 +58,14 @@ DEFAULT_FOLDS = 10
 # root cause. Override with the P2_CHUNK env var; <=0 disables chunking (single in-process run,
 # original behavior -- useful for short smoke runs where subprocess startup overhead dominates).
 DEFAULT_CHUNK = int(os.environ.get("P2_CHUNK", "5") or "5")
+# How many chunk subprocesses to run concurrently (each chunk subprocess still solves its own
+# queries sequentially; this parallelizes *across* chunks). Each query's CP-SAT solve defaults to
+# a single search worker (chinatravel/agent/tpc_agent/cp_solver.py), so N concurrent chunks uses
+# ~N cores; per-process RSS floor is ~250MB (see the soak measurement in
+# docs/tpc_phase2_design.md), so memory is not the limiting factor on a typical dev box -- size
+# this to (core count - 1), leaving a core for the OS/orchestrator. 1 (default) preserves the
+# original sequential-chunk behavior exactly. Override with the P2_PARALLEL env var.
+DEFAULT_PARALLEL = int(os.environ.get("P2_PARALLEL", "1") or "1")
 
 
 # --- Pure helpers (unit-tested) -------------------------------------------
@@ -345,56 +354,77 @@ def _split_set_for(split_name: str) -> str:
     return "test" if split_name == "tpc_phase2_test" else "val"
 
 
-def _run_end_to_end_chunked(split_name, fold_uids, *, budget_sec, lang, chunk_size):
+def _run_chunk_subprocess(cmd: list[str], uids_file: Path) -> None:
+    try:
+        subprocess.run(cmd, check=True, cwd=str(PROJECT_ROOT))
+    finally:
+        uids_file.unlink(missing_ok=True)
+
+
+def _run_chunks(chunks: list[list[str]], build_cmd, *, parallel: int) -> None:
+    """Dispatch one subprocess per chunk. ``parallel<=1`` runs them sequentially (original
+    behavior, byte-for-byte); ``parallel>1`` runs up to that many chunk subprocesses concurrently
+    via a thread pool (each thread just blocks in ``subprocess.run``, so this costs threads, not
+    extra memory). Safe because chunks partition ``fold_uids`` disjointly -- no two chunks ever
+    write the same per-uid result/telemetry/evaluation file, and the per-chunk method-level
+    summary.json a race could clobber is not read by the aggregation path (see
+    ``_evaluate_method``, which reads per-uid files directly)."""
+    jobs = []
+    for chunk in chunks:
+        uids_file = _write_uids_file(chunk)
+        jobs.append((build_cmd(uids_file), uids_file))
+
+    if parallel <= 1:
+        for cmd, uids_file in jobs:
+            _run_chunk_subprocess(cmd, uids_file)
+        return
+
+    with ThreadPoolExecutor(max_workers=parallel) as pool:
+        futures = [pool.submit(_run_chunk_subprocess, cmd, uids_file) for cmd, uids_file in jobs]
+        for f in futures:
+            f.result()  # surface the first exception (subprocess.run(check=True) raises)
+
+
+def _run_end_to_end_chunked(split_name, fold_uids, *, budget_sec, lang, chunk_size, parallel=1):
     """Same contract as ``_run_end_to_end`` (returns the method name), but runs each chunk of
     uids as its own ``solve_phase2.py`` subprocess so per-chunk memory is fully reclaimed."""
     method = f"phase2_e2e_{split_name}"
     solve_script = PROJECT_ROOT / "agent_env" / "scripts" / "solve_phase2.py"
-    for chunk in _split_into_chunks(fold_uids, chunk_size):
-        uids_file = _write_uids_file(chunk)
-        try:
-            subprocess.run(
-                [
-                    sys.executable,
-                    str(solve_script),
-                    "--split", split_name,
-                    "--method", method,
-                    "--uids-file", str(uids_file),
-                    "--budget-sec", str(budget_sec),
-                    "--lang", lang,
-                    "--resume",
-                ],
-                check=True,
-                cwd=str(PROJECT_ROOT),
-            )
-        finally:
-            uids_file.unlink(missing_ok=True)
+
+    def build_cmd(uids_file: Path) -> list[str]:
+        return [
+            sys.executable,
+            str(solve_script),
+            "--split", split_name,
+            "--method", method,
+            "--uids-file", str(uids_file),
+            "--budget-sec", str(budget_sec),
+            "--lang", lang,
+            "--resume",
+        ]
+
+    _run_chunks(_split_into_chunks(fold_uids, chunk_size), build_cmd, parallel=parallel)
     return method
 
 
-def _run_solver_only_chunked(split_name, fold_uids, *, budget_sec, lang, chunk_size):
+def _run_solver_only_chunked(split_name, fold_uids, *, budget_sec, lang, chunk_size, parallel=1):
     """Same contract as ``_run_solver_only``, but each chunk is a self-exec worker subprocess
     (``--worker solver-only``) so leaked func_timeout/CP-SAT threads die with the subprocess."""
     method = f"phase2_solver_only_{split_name}"
     this_script = Path(__file__).resolve()
-    for chunk in _split_into_chunks(fold_uids, chunk_size):
-        uids_file = _write_uids_file(chunk)
-        try:
-            subprocess.run(
-                [
-                    sys.executable,
-                    str(this_script),
-                    "--worker", "solver-only",
-                    "--uids-file", str(uids_file),
-                    "--split-set", _split_set_for(split_name),
-                    "--budget-sec", str(budget_sec),
-                    "--lang", lang,
-                ],
-                check=True,
-                cwd=str(PROJECT_ROOT),
-            )
-        finally:
-            uids_file.unlink(missing_ok=True)
+
+    def build_cmd(uids_file: Path) -> list[str]:
+        return [
+            sys.executable,
+            str(this_script),
+            "--worker", "solver-only",
+            "--uids-file", str(uids_file),
+            "--split-set", _split_set_for(split_name),
+            "--budget-sec", str(budget_sec),
+            "--lang", lang,
+        ]
+
+    _run_chunks(_split_into_chunks(fold_uids, chunk_size), build_cmd, parallel=parallel)
     return method
 
 
@@ -419,6 +449,7 @@ def rehearse(
     lang="en",
     fresh=False,
     chunk_size=DEFAULT_CHUNK,
+    parallel=DEFAULT_PARALLEL,
 ) -> dict:
     split_name, _is_test = resolve_split_set(split_set)
     uids = splits.read_split(split_name)
@@ -435,6 +466,7 @@ def rehearse(
         "n": len(fold_uids),
         "fresh": bool(fresh),
         "chunk_size": int(chunk_size),
+        "parallel": int(parallel),
         "modes": {},
     }
 
@@ -445,7 +477,8 @@ def rehearse(
                 print(f"fresh: cleared {removed} stale end-to-end result(s) for this fold")
         if chunk_size > 0:
             m = _run_end_to_end_chunked(
-                split_name, fold_uids, budget_sec=budget_sec, lang=lang, chunk_size=chunk_size
+                split_name, fold_uids, budget_sec=budget_sec, lang=lang, chunk_size=chunk_size,
+                parallel=parallel,
             )
         else:
             m = _run_end_to_end(split_name, fold_uids, budget_sec=budget_sec)
@@ -453,7 +486,8 @@ def rehearse(
     if "solver-only" in modes:
         if chunk_size > 0:
             m = _run_solver_only_chunked(
-                split_name, fold_uids, budget_sec=budget_sec, lang=lang, chunk_size=chunk_size
+                split_name, fold_uids, budget_sec=budget_sec, lang=lang, chunk_size=chunk_size,
+                parallel=parallel,
             )
         else:
             m = _run_solver_only(split_name, fold_uids, budget_sec=budget_sec, lang=lang)
@@ -503,6 +537,15 @@ def parse_args() -> argparse.Namespace:
         "in-process (original behavior, no subprocess isolation).",
     )
     p.add_argument(
+        "--parallel",
+        type=int,
+        default=DEFAULT_PARALLEL,
+        help="Chunk subprocesses to run concurrently (default from P2_PARALLEL env, else 1 = "
+        "sequential, original behavior). Each query's CP-SAT solve uses 1 core by default, so "
+        "size this to (core count - 1). Only applies when --chunk-size > 0. Memory is not "
+        "usually the limit -- see docs/tpc_phase2_design.md for the per-process RSS floor.",
+    )
+    p.add_argument(
         "--worker",
         choices=["solver-only"],
         default=None,
@@ -537,6 +580,7 @@ def main() -> None:
         lang=args.lang,
         fresh=args.fresh,
         chunk_size=args.chunk_size,
+        parallel=args.parallel,
     )
 
 
