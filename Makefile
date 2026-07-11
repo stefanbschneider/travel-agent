@@ -7,7 +7,7 @@ SPLIT ?= tpc_phase1
 # ===========================================================================
 
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
-	phase2-help phase2-test phase2-splits phase2-solve phase2-rehearse \
+	phase2-help phase2-test phase2-splits phase2-solve phase2-query phase2-rehearse \
 	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
 	phase2-baseline
 
@@ -78,6 +78,11 @@ P2_LABEL ?=
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
 P2_BRANCH_AWARE_FLAG = $(if $(filter 1,$(P2_BRANCH_AWARE)),--branch-aware,)
 P2_LABEL_FLAG = $(if $(P2_LABEL),--label $(P2_LABEL),)
+# Passed through verbatim to scripts/run_query.py, e.g.:
+#   make phase2-query P2_QUERY_ARGS="--uid 20250322063246301376 --budget-sec 60"
+#   make phase2-query P2_QUERY_ARGS="--query-file my_query.json --budget-sec 120"
+#   make phase2-query P2_QUERY_ARGS='--query-text "3 days Beijing to Chengdu, 2 people" --start-city Beijing --target-city Chengdu --days 3'
+P2_QUERY_ARGS ?=
 
 phase2-help:
 	@printf '%s\n' \
@@ -85,13 +90,14 @@ phase2-help:
 	  '  make phase2-test            - run the Phase 2 pytest suite (unit; add integration below)' \
 	  '  make phase2-splits          - (re)create tpc_phase2_val/test split files' \
 	  '  make phase2-solve           - run the no-oracle harness over a split (LLM off)' \
+	  '  make phase2-query           - run ONE query end to end: P2_QUERY_ARGS="--uid <id> | --query-file <path> | --query-text ..."' \
 	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
 	  '  make phase2-budget-sweep    - sweep budgets and export attribution CSV/JSON' \
 	  '  make phase2-baseline        - run deterministic baseline and append docs/phase2_baselines history' \
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1'
+	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:
@@ -106,6 +112,10 @@ phase2-splits:
 phase2-solve:
 	.venv/bin/python agent_env/scripts/solve_phase2.py --split $(P2_SPLIT) \
 	  --method $(P2_METHOD) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+
+# Run ONE query end to end (existing uid / a query file / raw NL text). See scripts/run_query.py.
+phase2-query:
+	.venv/bin/python scripts/run_query.py $(P2_QUERY_ARGS)
 
 # Full rehearsal dashboard: rehearse (both modes, three-way attribution) -> parser-vs-oracle -> timing.
 phase2-rehearse:

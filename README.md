@@ -208,7 +208,37 @@ Defaults used above: `--split tpc_phase2_val`, `--method phase2_e2e_tpc_phase2_v
 Outputs: `results/<method>/<uid>.json` and
 `agent_env/runs/<method>/<uid>/{output,telemetry,evaluation}.json`.
 
-5. Full rehearsal + three-way attribution (`ceiling | solver-only | end-to-end`)
+5. Run a single query (existing uid / your own query file / raw NL text)
+
+```bash
+# an existing benchmark query, by uid (always has the oracle -> official + estimated score)
+.venv/bin/python scripts/run_query.py --uid 20250322063246301376 --budget-sec 60
+
+# your own query file (same schema as chinatravel/data/en/**/*.json; include hard_logic_py
+# for an official score, omit it for an estimated-score-only run)
+.venv/bin/python scripts/run_query.py --query-file my_query.json --budget-sec 120
+
+# raw natural-language text, no file, no oracle -> estimated score only
+.venv/bin/python scripts/run_query.py --query-text \
+  "3 days in Chengdu from Beijing for 2 people, visit a panda base" \
+  --start-city Beijing --target-city Chengdu --days 3
+
+# equivalently, via make:
+make phase2-query P2_QUERY_ARGS="--uid 20250322063246301376 --budget-sec 60"
+```
+
+Always runs the real Phase 2 orchestrator end to end and prints the path to the written plan
+(`results/<method>/<uid>.json`, default method `phase2_query`) plus an **estimated score**
+(`overall_parsed`, computed from our own no-oracle parse — always available, no ground truth
+needed). If the query carries `hard_logic_py` (uid mode always does; a `--query-file` may), it
+additionally computes the **official score** (`overall_true`) and a **parsing vs. solving**
+breakdown: whether the plan satisfies the constraints it was actually given (solving) vs. whether
+it also satisfies the oracle (parsing), plus a structural precision/recall/f1 diff against the
+oracle constraints. `--query-text` never has an oracle, so it is estimated-score-only by design.
+`--start-city`/`--target-city`/`--days` are required with `--query-text` since there is no
+natural-language field extractor — the solver hard-requires those fields.
+
+6. Full rehearsal + three-way attribution (`ceiling | solver-only | end-to-end`)
 
 ```bash
 # quick smoke
@@ -217,7 +247,7 @@ Outputs: `results/<method>/<uid>.json` and
 
 Use `--split-set test` sparingly for held-out checks.
 
-6. Timing / reliability and monotonic regression gate
+7. Timing / reliability and monotonic regression gate
 
 ```bash
 .venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_e2e_tpc_phase2_val
@@ -227,7 +257,7 @@ Use `--split-set test` sparingly for held-out checks.
 **Generalization:**
 - Use held out test split
 - Compare against the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset. See `docs/tpc_phase2_hf_dataset.md`.
-- Try own custom queries and check results manually
+- Try own custom queries and check results manually — see step 5 above (`scripts/run_query.py`)
 
 
 

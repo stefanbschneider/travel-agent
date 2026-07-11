@@ -203,10 +203,15 @@ def evaluate_hard_constraints_v2(data_index, symbolic_input_dict, plan_json_dict
         #     print(plan_json)
 
     macro = macro_succ_count / macro_count
-    micro = micro_succ_count / micro_count
+    # micro_count is the total hard_logic_py clause count across the batch; zero iff every query
+    # in it has an empty (vacuously-true) hard_logic_py, which used to be unreachable when this
+    # was only called on real split data (every uid has >=1 clause) but is now reachable via a
+    # single ad hoc query with hard_logic_py=[]. Vacuous pass -> 1.0, matching macro_succ_count's
+    # own (succ_c_sum == len(dict_ii)) == (0 == 0) == True for that query.
+    micro = (micro_succ_count / micro_count) if micro_count else 1.0
 
     c_marco = conditional_macro_succ_count / macro_count
-    c_micro = conditional_micro_succ_count / micro_count
+    c_micro = (conditional_micro_succ_count / micro_count) if micro_count else 1.0
 
     print("conditional_micro_succ_count: ", conditional_micro_succ_count)
     print("conditional_macro_succ_count: ", conditional_macro_succ_count)

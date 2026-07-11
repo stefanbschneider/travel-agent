@@ -360,6 +360,7 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
 | Deterministic baseline ledger entry (full-val parser metrics always included) | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n> P2_REPEATS=<r> P2_LABEL=<tag>` |
 | Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>] [--repeats <r>] [--label <tag>]` |
 | Rehearsal chunk size (memory isolation; default 5) | env `P2_CHUNK=<n>` or `rehearse_phase2.py --chunk-size <n>` (`0` = old single-process behavior) |
+| Run one query end-to-end (uid / file / raw NL text); estimated score always, official score + parsing-vs-solving breakdown when an oracle is available | `python scripts/run_query.py --uid <id>` / `--query-file <path>` / `--query-text "..." --start-city <c> --target-city <c> --days <n>` (see README's Phase 2 Operations §5, or `make phase2-query P2_QUERY_ARGS="..."`) |
 
 Milestones 1 and 2 built `rehearse_phase2.py` (fold selection, both modes, three-way attribution),
 the `solve_phase2.py` runner, `parser_vs_oracle.py` (Axis 1), `phase2_timing.py` (Axis 3),

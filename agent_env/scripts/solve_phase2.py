@@ -94,6 +94,12 @@ def _phase2_llm_config() -> dict:
     return cfg
 
 
+def _fmt_score(value) -> str:
+    """Format a score for the per-uid log line; None (oracle-free query) prints as N/A rather
+    than a misleading 0.0000."""
+    return f"{float(value):.4f}" if value is not None else "N/A"
+
+
 def _score_stats(values: list[float]) -> dict:
     vals = [float(v) for v in values]
     if not vals:
@@ -108,9 +114,11 @@ def _score_stats(values: list[float]) -> dict:
 
 
 def _aggregate_overall_scores(evaluations: list[dict]) -> dict:
+    # overall_true is None (present key, no value) rather than absent for oracle-free queries
+    # (see evaluate_one's has_oracle gate), so `.get(key, 0.0)` alone would not catch it.
     return {
-        "overall_true": _score_stats([e.get("overall_true", 0.0) for e in evaluations]),
-        "overall_parsed": _score_stats([e.get("overall_parsed", 0.0) for e in evaluations]),
+        "overall_true": _score_stats([e.get("overall_true", 0.0) or 0.0 for e in evaluations]),
+        "overall_parsed": _score_stats([e.get("overall_parsed", 0.0) or 0.0 for e in evaluations]),
     }
 
 
@@ -123,6 +131,32 @@ def _load_queries(split: str, lang: str = "en"):
     if not query_ids:
         raise RuntimeError(f"No queries found for split: {split}")
     return query_ids, query_data
+
+
+def resolve_llm_client_and_flags():
+    """Build the LLM client + acceptance-gate flags exactly as ``run_split`` does.
+
+    Factored out so a caller running a single ad hoc query (e.g. ``scripts/run_query.py``) can
+    reproduce the same parse-time flags used inside a real ``run_split`` invocation -- e.g. to
+    diff the resulting parse against an oracle with ``parser_vs_oracle.compute_query_diff``.
+    """
+    llm_cfg = _phase2_llm_config()
+    llm_client = p2_llm.build_llm_client(llm_cfg)
+
+    # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
+    # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
+    # the deterministic byte-identical invariant tests are unaffected.
+    flags = orch.Flags.from_env()
+    if "TPC_P2_DISJUNCTION" not in os.environ:
+        flags.disjunction = True
+    # Same pattern for the LLM corrective parse audit: default it on once a usable backend is
+    # configured (the parse_to_ir fix keeps a deterministic fallback on any LLM failure, so this
+    # is safe to default on), unless the operator explicitly overrides TPC_P2_LLM_PARSE. Library
+    # Flags() and llm_backend="none" (nothing configured) both stay off.
+    if "TPC_P2_LLM_PARSE" not in os.environ and llm_client.backend != "none":
+        flags.llm_parse = True
+
+    return llm_client, flags
 
 
 def run_split(
@@ -139,8 +173,15 @@ def run_split(
     results_dir: str | None = None,
     env=None,
     solve_fn=None,
+    queries: dict | None = None,
 ) -> dict:
-    """Run the Phase 2 pipeline over a split. Returns a summary dict."""
+    """Run the Phase 2 pipeline over a split. Returns a summary dict.
+
+    ``queries``, when given, is used verbatim as ``{uid: query_dict}`` instead of loading
+    ``split`` from the on-disk dataset -- lets a caller (e.g. a single-query CLI) feed an
+    ad hoc or file-loaded query through the exact same solve/write/evaluate path used for
+    real splits. ``split`` still becomes a label on the written results/evaluation.
+    """
     method = method or _default_method_for_split(split)
     budget_sec = float(budget_sec if budget_sec is not None else DEFAULT_BUDGET_SEC)
     results_root = Path(results_dir) if results_dir else PROJECT_ROOT / "results"
@@ -148,7 +189,10 @@ def run_split(
     result_method_dir = results_root / method
     result_method_dir.mkdir(parents=True, exist_ok=True)
 
-    query_ids, query_data = _load_queries(split, lang=lang)
+    if queries is not None:
+        query_ids, query_data = list(queries.keys()), queries
+    else:
+        query_ids, query_data = _load_queries(split, lang=lang)
     if uids is not None:
         missing = [u for u in uids if u not in query_data]
         if missing:
@@ -169,21 +213,7 @@ def run_split(
             env = WorldEnv(lang=lang)
         solve_fn = orch.make_tpcagent_solve_fn(env, lang=lang)
 
-    llm_cfg = _phase2_llm_config()
-    llm_client = p2_llm.build_llm_client(llm_cfg)
-
-    # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
-    # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
-    # the deterministic byte-identical invariant tests are unaffected.
-    flags = orch.Flags.from_env()
-    if "TPC_P2_DISJUNCTION" not in os.environ:
-        flags.disjunction = True
-    # Same pattern for the LLM corrective parse audit: default it on once a usable backend is
-    # configured (the parse_to_ir fix keeps a deterministic fallback on any LLM failure, so this
-    # is safe to default on), unless the operator explicitly overrides TPC_P2_LLM_PARSE. Library
-    # Flags() and llm_backend="none" (nothing configured) both stay off.
-    if "TPC_P2_LLM_PARSE" not in os.environ and llm_client.backend != "none":
-        flags.llm_parse = True
+    llm_client, flags = resolve_llm_client_and_flags()
 
     done_uids: list[str] = []
     skipped = 0
@@ -252,8 +282,8 @@ def run_split(
             f"[{idx}/{len(selected)}] {quid} "
             f"valid={telemetry.get('valid_output')} fallback={telemetry.get('used_fallback')} "
             f"solve_sec={telemetry.get('stage_sec', {}).get('solve', 0):.2f} "
-            f"overall_true={float(evaluation.get('overall_true', 0.0)):.4f} "
-            f"overall_parsed={float(evaluation.get('overall_parsed', 0.0)):.4f}"
+            f"overall_true={_fmt_score(evaluation.get('overall_true'))} "
+            f"overall_parsed={_fmt_score(evaluation.get('overall_parsed'))}"
         )
 
     solved_overall_stats = _aggregate_overall_scores(solved_evaluations)
