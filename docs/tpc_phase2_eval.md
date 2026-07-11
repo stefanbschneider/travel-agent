@@ -152,16 +152,49 @@ overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.
   are by-design solve-restart-until-budget events (see above), not failures, and are not
   comparable as raw counts across different n. This gate result is unaffected by the mislabel
   above (it never depended on the LLM actually running).
-- **Measuring the real LLM-parse effect turned out to need a different approach than an e2e
-  baseline row.** Steady-state DeepInfra latency for this model/prompt is ~20–35s/call (one
-  observed outlier at 116s, likely a cold queue), so a full 850-uid audit takes on the order of
-  6-8h — the plan's "~30-60 min" estimate was based on the (unknowingly broken) fast-failing calls,
-  not real generations, and an e2e rehearsal re-run with a working LLM backend would cost even
-  more (8h+) for a 60s-budget harness that barely uses the parse-stage latency anyway. The
-  solver-free `scripts/parser_vs_oracle.py --llm-parse` full-val run is the right tool for this
-  measurement (see the next section once it lands); a further e2e re-run is not planned unless that
-  cheaper measurement shows the LLM meaningfully changes parsing quality.
 - Reliability: valid-output rate 1.0, 0/85 fallbacks, 0 parse failures, 0 budget overruns.
+
+### The actual LLM-parse measurement (2026-07-11) — and why it was initially projected at 9h
+
+Measuring the real LLM-parse effect turned out to need two more fixes before it was even
+practical, let alone conclusive:
+
+1. **Qwen3 "thinking mode."** DeepInfra's `Qwen/Qwen3.6-27B` generates a full chain-of-thought
+   before every answer by default — verified live: 10.6s / 232 completion tokens with thinking on
+   vs 1.1s / 9 tokens off, for the identical trivial prompt. With it on, real audit-prompt latency
+   was ~20–45s/call (one 116s outlier observed), projecting to ~9h for the 850-uid val split — the
+   plan's "~30–60 min" estimate had implicitly assumed the (unknowingly broken, fast-*failing*)
+   calls from the model-name bug above, not real generations. Fixed by passing
+   `extra_body: {"chat_template_kwargs": {"enable_thinking": false}}` (the vLLM/SGLang convention
+   DeepInfra honors) — default for the infradeep backend now. Real per-call latency dropped to
+   ~2–10s, and the full run completed in ~100 minutes.
+2. Cache had to be cleared first: the cache key doesn't include `extra_body`, so entries generated
+   with thinking on would have been silently reused, mixing two response conditions in one run.
+
+**Result (`scripts/parser_vs_oracle.py --split-set val --behavioral --disjunction --llm-parse`,
+n=850; warm-cache rerun byte-identical, confirming full determinism at temperature 0):**
+
+```
+                deterministic-only (post Step 5+7)   LLM corrective audit
+precision:      0.5565                                0.5786
+recall:         0.6977                                0.6779
+f1:             0.6191                                0.6243
+value_accuracy: 0.8072                                0.8270
+disjunction_flattened: 134                             80
+behavioral_agreement:  0.7788                          0.8694
+```
+
+Behavioral agreement reaches the **top of the plan's hoped-for 0.80–0.85 range**, and
+`disjunction_flattened` nearly halves. Precision, f1, and value_accuracy all improve.
+**Tradeoff:** recall drops 0.6977 → 0.6779 (216 → 289 `missing`, concentrated in
+`poi_distance_hotel`, `required_hotel_all_types`, `required_hotel_any_types`) — the corrective
+audit trades some recall for a larger precision/behavioral gain (spurious 649 → 540). Net strongly
+positive.
+
+This directly answers "does the LLM audit meaningfully change parsing quality" — yes — which per
+the plan's own condition means an e2e re-run of Step 8 (now cheap, since the thinking-mode fix also
+speeds up the harness's own parse stage) is warranted to see whether this quality gain closes any
+of the e2e/solver-only gap. See the Step 8 section above once that row lands.
 
 ## Guiding Idea
 

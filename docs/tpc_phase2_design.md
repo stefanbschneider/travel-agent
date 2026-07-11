@@ -65,6 +65,19 @@ string + a new `llm_parse_failed` telemetry counter so a broken backend shows up
 count instead of passing silently). See `docs/tpc_phase2_implementation_plan.md` (Step 8) for the
 full incident writeup and the corrected LLM-parse measurement once it lands.
 
+**2026-07-11 update — the corrected LLM-parse measurement:** `Qwen/Qwen3.6-27B` also runs in
+"thinking mode" by default on DeepInfra (a full chain-of-thought before every answer, verified
+live: 10.6s/232 tokens with thinking vs 1.1s/9 tokens without, same prompt) — with it on, a full
+850-uid val audit was projected at ~9h; disabling it (`extra_body:
+{"chat_template_kwargs": {"enable_thinking": false}}`, now the infradeep default) brought a real
+run down to ~100 minutes, matching the plan's original estimate. Result
+(`scripts/parser_vs_oracle.py --llm-parse`, n=850, warm-cache rerun byte-identical): behavioral
+agreement **0.7788 → 0.8694** (top of the plan's hoped-for 0.80–0.85 range),
+`disjunction_flattened` 134 → 80, precision/f1/value_accuracy all up; recall trades down slightly
+(0.6977 → 0.6779). Full numbers in `docs/tpc_phase2_eval.md`. Since this demonstrates a real
+parsing-quality gain, an e2e re-run of Step 8 (same fold/n/budget as `20260711T000602Z`, this time
+with a genuinely working LLM backend) follows to see whether it moves the harness's own FPR.
+
 **2026-07-11 update — final-agent memory soak (single long-lived process, the actual competition
 path):** `python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 150
 --budget-sec 10 --method phase2_soak`, in-process (not chunked — this is the one runner mode Step

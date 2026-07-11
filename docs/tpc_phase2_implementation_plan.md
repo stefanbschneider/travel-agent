@@ -483,6 +483,43 @@ behavioral agreement **0.7565 → 0.7788**, `disjunction_flattened` 140 → 134.
 
 The LLM still proposes and never decides; final authority stays with deterministic validation.
 
+**Step 6's own full-val verification, 2026-07-11 (`scripts/parser_vs_oracle.py --split-set val
+--behavioral --disjunction --llm-parse`, n=850, `Qwen/Qwen3.6-27B` via DeepInfra, thinking mode
+off — see below):** this is the measurement the plan asked for and had not actually been run
+before this date (the Step 8 baseline row's `llm_parse=true` label was a silent-fallback artifact,
+see that section). Warm-cache rerun byte-identical (fully deterministic at temperature 0).
+
+```
+                deterministic-only (post Step 5+7)   LLM corrective audit (this run)
+precision:      0.5565                                0.5786
+recall:         0.6977                                0.6779
+f1:             0.6191                                0.6243
+value_accuracy: 0.8072                                0.8270
+disjunction_flattened: 134                             80
+behavioral_agreement:  0.7788                          0.8694
+```
+
+**Behavioral agreement reaches the top of the plan's hoped-for 0.80–0.85 range (0.8694), and
+`disjunction_flattened` nearly halves (134 → 80)** — the LLM audit is a genuine, substantial win on
+parsing quality once it actually runs (see the thinking-mode fix below for why earlier attempts at
+this measurement were impractically slow). Precision, f1, and value_accuracy all improve too.
+**Tradeoff: recall drops 0.6977 → 0.6779** (216 → 289 `missing`), concentrated in
+`poi_distance_hotel`, `required_hotel_all_types`, and `required_hotel_any_types` per
+`family_stats` — the corrective audit trades some recall for a larger precision/behavioral gain
+(spurious count drops 649 → 540). Net strongly positive, but worth tracking if recall on those
+specific families becomes a problem later.
+
+**Practical blocker found and fixed along the way: Qwen3 "thinking mode."** The model generates a
+full chain-of-thought before every answer by default on DeepInfra (verified live: 10.6s/232
+completion tokens with thinking vs 1.1s/9 tokens without, for the same trivial prompt) — this made
+the first attempt at this measurement (using real audit prompts) run at ~20–45s/call
+(one 116s outlier), projecting to ~9h for 850 uids against the plan's ~30–60min estimate. Disabled
+via `extra_body: {"chat_template_kwargs": {"enable_thinking": false}}` (the vLLM/SGLang convention
+DeepInfra honors), dropping real per-call latency to ~2–10s and the full run to ~100 minutes —
+matching the original estimate. Defaults on for the infradeep backend now
+(`chinatravel/agent/phase2/llm_client.py`); overridable via config/env if a future use case wants
+visible reasoning.
+
 ### 4. Extend evaluation to score variance, not only valid-output variance
 
 Status: **DONE (2026-07-10)** via `phase2_record_baseline.py --repeats N`, which reruns the fresh
