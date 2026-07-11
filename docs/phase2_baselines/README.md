@@ -58,14 +58,24 @@ whole slice, in both end-to-end and solver-only modes).
   `parser_full_*`/FPR numbers.
 - **`parser_full_*` is LLM-blind, even when `llm_parse` is `true`.** The recorder's `parser_full`
   call (`parser_mod.run_report(..., uids=None)`) never passes `llm_parse=True`, so it always scores
-  the *deterministic* parser against the oracle regardless of the row's LLM config — confirmed
-  2026-07-11 (run `20260711T000602Z`, `llm_backend=infradeep`): `parser_full_behavioral_agreement_rate`
-  came back 0.7788, byte-identical to the deterministic-only number from the prior commit. This is
+  the *deterministic* parser against the oracle regardless of the row's LLM config. This is
   intentional (keeps the headline signal cheap and config-independent), but it means `parser_full_*`
   cannot be used to judge whether LLM-corrective parsing helped — only the row's e2e
-  FPR/`overall_true` (which do run the real `llm_parse=true` path end to end) can. To measure the
-  LLM audit's effect on parser accuracy directly, use `scripts/parser_vs_oracle.py --llm-parse`
-  (Step 6) separately.
+  FPR/`overall_true` (which run the real per-uid `llm_parse=true` path, when the backend actually
+  works) can. To measure the LLM audit's effect on parser accuracy directly, use
+  `scripts/parser_vs_oracle.py --llm-parse` (Step 6) separately.
+- **A `llm_backend`/`llm_parse=true` label does not by itself prove the LLM ran.** Row
+  `20260711T000602Z` (2026-07-11, `llm_backend=infradeep`) initially looked like confirmation of
+  the point above — `parser_full_behavioral_agreement_rate` came back 0.7788, byte-identical to the
+  deterministic-only number — but the real cause was a broken default model string
+  (`"qwen3.6-27b"` 404'd on DeepInfra; fixed to `Qwen/Qwen3.6-27B`) that made every LLM call in
+  that row silently fail and fall back to the deterministic parse. The row's own `stage_sec.parse`
+  latency looked like proof of a real call (0.47–1.26s, non-trivial) but a failing HTTP request
+  costs real latency too. A `llm_parse_failed` counter now exists
+  (`timing_llm_parse_attempted`/`timing_llm_parse_failed` in the ledger) specifically so this
+  doesn't recur silently — check it is 0 (or reasonably close to `timing_llm_parse_attempted`)
+  before trusting a row's `llm_parse=true` label. See `docs/tpc_phase2_implementation_plan.md`
+  (Step 8) for the full incident writeup.
 
 ## Notes
 

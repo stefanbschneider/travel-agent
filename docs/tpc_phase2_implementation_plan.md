@@ -327,11 +327,12 @@ fully deterministic fixes that landed before more LLM work:
 
 ### Step 8. Representative fold baseline (2026-07-11)
 
-Status: **DONE.**
+Status: **DONE**, but with a significant correction below — read it before trusting the
+`llm_parse`/`llm_backend` columns on run `20260711T000602Z`.
 
 Full fold 0 of val (n=85, not a subset), `TPC_P2_LLM_BACKEND=infradeep make phase2-baseline FOLD=0
-P2_FOLDS=10 P2_BUDGET=60 P2_REPEATS=2 P2_LABEL=llmparse-disj-fullfold0-60s` — LLM corrective parse
-and disjunction assist both on, run `20260711T000602Z`. Ran ~2h (faster than the ~5.4h estimate).
+P2_FOLDS=10 P2_BUDGET=60 P2_REPEATS=2 P2_LABEL=llmparse-disj-fullfold0-60s`, run `20260711T000602Z`.
+Ran ~2h (faster than the ~5.4h estimate).
 
 **Measured:**
 
@@ -341,17 +342,7 @@ overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.
 ```
 
 - e2e FPR is flat vs the n=20 `20260710T144747Z` baseline (85.0 → 85.88) and *within* this row's own
-  repeat-to-repeat noise (`e2e_fpr_std=1.76` across 2 repeats) — not a regression, but also not the
-  clear win the plan hoped LLM-parse + full fold would show at this budget.
-- **`parser_full_behavioral_agreement_rate` = 0.7788 — byte-identical to the pre-LLM deterministic
-  number.** Root cause: the recorder's `parser_full` call never passes `llm_parse=True` (see
-  `docs/phase2_baselines/README.md`), so this headline signal is LLM-blind by construction. It does
-  NOT mean the LLM audit had no effect — it means this particular metric can't see it. Confirmed the
-  LLM genuinely ran (not silently falling back to deterministic-only): all 85 e2e-mode telemetry
-  records show `flags.llm_parse=true`, `llm_backend=infradeep`, and real network latency in
-  `stage_sec.parse` (0.47–1.26s, none near-zero — a deterministic-only parse is sub-millisecond).
-  The LLM's actual effect on the parser can only be seen in the e2e FPR/`overall_true` numbers above
-  (flat within noise at this n/budget) or via `scripts/parser_vs_oracle.py --llm-parse` directly.
+  repeat-to-repeat noise (`e2e_fpr_std=1.76` across 2 repeats) — not a regression.
 - Regression gate (`scripts/phase2_gate.py`) vs `20260710T144747Z`: **passed.** Compared on
   `fpr` (85.0 → 85.88, up), `parse_failures` (0 → 0), and `timeouts` mapped to `budget_overruns`
   (0 → 0) — the gate's literal `timeouts` field is solve-slice `timed_out` in the raw JSON, which we
@@ -360,12 +351,44 @@ overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.
   behavior (see "Resolved: in-process rehearsal memory growth" caveats), not a reliability failure —
   `valid_output_rate=1.0` and `used_fallback` counts stayed flat/near-zero in both rows regardless.
 - Reliability: valid-output rate 1.0, 0/85 fallback, 0 parse failures, 0 budget overruns.
+- This row is a **valid deterministic + disjunction n=85 baseline** and the gate result above holds
+  regardless of the correction below (it never depended on the LLM actually running).
 
-Net: Steps 1–7's parser/memory/pipeline fixes hold up at full-fold scale with no regression, but this
-run does not demonstrate the plan's hoped-for 0.80–0.85 behavioral agreement from LLM-parse — that
-number was never actually exposed by `parser_full` in the first place. A follow-up measuring LLM
-audit impact should use `parser_vs_oracle.py --llm-parse` on the full val split directly rather than
-relying on a baseline row's `parser_full_*` columns.
+**Correction, found while investigating why the row's `parser_full_behavioral_agreement_rate` came
+back byte-identical to the pre-LLM number (0.7788):** the row's `llm_parse=true`/
+`llm_backend=infradeep` label is **materially misleading**. The infradeep backend's default model
+string was broken — `"qwen3.6-27b"` (no org prefix, lowercase) 404s on DeepInfra ("model ... does
+not exist"); the correct id is `Qwen/Qwen3.6-27B` (case-sensitive `Org/Name`, verified live). So
+every one of the 85 LLM audit calls in this run silently failed and fell back to the deterministic
+parse via `parse_to_ir`'s by-design fallback-on-exception (that fallback is correct production
+behavior — a flaky backend shouldn't crash the harness — but it also means nothing recorded the
+failure anywhere the ledger could see). The `stage_sec.parse` latency (0.47–1.26s, none near-zero)
+that was initially read as proof the LLM genuinely ran was, in hindsight, simply the round-trip
+time of a *failing* HTTP request — a 404 costs real network latency too, so "non-trivial latency"
+cannot distinguish success from failure. Only `scripts/phase2_llm_parse_probe.py` escaped this bug,
+because it hardcodes the correct model string directly rather than going through
+`build_llm_client(_phase2_llm_config())`'s default.
+
+Fixed in a follow-up commit: corrected `DEFAULT_INFRADEEP_MODEL` in `llm_client.py`, plus a new
+`llm_parse_failed` counter (threaded from `ParsedIR.llm_parse_error` through orchestrator telemetry
+into `solve_phase2.py`'s run summary and `phase2_timing.py`'s aggregate, surfaced as
+`timing_llm_parse_attempted`/`timing_llm_parse_failed` in the baseline ledger) so a broken backend
+now shows up as a nonzero count instead of a clean, silently-misleading pass. Regression test:
+`tests/phase2/test_llm_client.py::test_infradeep_backend_default_model_is_a_real_deepinfra_id` and
+`tests/phase2/test_solve_phase2_runner.py::test_llm_parse_failed_counter_catches_a_broken_backend`.
+
+**What this means for the plan's original question (does LLM-parse fix the parsing bottleneck):**
+still unanswered as of this writing — `parser_full_behavioral_agreement_rate` = 0.7788 measures the
+deterministic parser only (both because it's LLM-blind by construction, per
+`docs/phase2_baselines/README.md`, and because in this specific row the LLM never actually ran
+regardless). Re-running Step 8's e2e baseline with a working LLM backend is not the fix: steady-state
+DeepInfra latency for this model/prompt turned out to be ~20–35s/call (one 116s outlier observed,
+likely a cold queue) — at that rate a full 850-uid audit is ~6–8h, and an e2e rehearsal re-run would
+cost even more for a 60s-budget harness that barely benefits from the parse-stage time anyway. The
+plan's original "~30–60 min" full-val LLM-parse estimate was implicitly based on the (unknowingly
+broken) fast-failing calls, not real generations. The correct, cheaper tool for this measurement is
+the solver-free `scripts/parser_vs_oracle.py --llm-parse` on the full val split — see
+`docs/tpc_phase2_eval.md` for that measurement once it lands.
 
 ### Step 9. Final-agent memory soak (2026-07-11)
 
