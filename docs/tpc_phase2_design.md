@@ -373,6 +373,110 @@ measured incrementally without destabilizing the deterministic baseline.
      modest (~10-20MB per redundant build, not the several-hundred-MB hypothesized), but it's a
      real win regardless.
 
+## Step 5 parser-family diagnosis (2026-07-11, code-verified, not yet implemented)
+
+Done ahead of implementation while a solver eval (`llmparse-disj-fullfold0-300s`, ~9h) held the
+Phase 2 source frozen (chunked subprocesses re-import mid-run). Diagnosis only, read-only —
+`scripts/parser_vs_oracle.py --disjunction --branch-aware` full-val report plus direct NL/oracle
+inspection via `parser_vs_oracle.query_variants`/`load_datasets.load_query`. All six B5 families
+were root-caused to specific code locations; none need a from-scratch extractor.
+
+- **5a. `poi_distance_hotel` (missing 69, matched 0) — one-line fix, not a missing extractor.**
+  `parse_constraints.py::parse_hotel_nearby` already extracts `{reference, distance_km}` correctly
+  from "accommodation/hotel/stay within X km of Y" phrasing and stores it as `result["hotel_nearby"]`
+  (singular dict) in `parse_single_constraint_text` (~line 922-924). The oracle-side DSL converter
+  (`solver_constraints.py::_parse_hotel_distance`, oracle mode only) sets **both** `hotel_nearby` and
+  `poi_distance_hotel` (as `[hotel_near]`) when it recognizes the `poi_distance(...)` DSL call — the
+  no-oracle NL path never got the same list-mirroring. Fix: add
+  `result["poi_distance_hotel"] = [hotel_near]` next to the existing `result["hotel_nearby"] = hotel_near`
+  assignment. Secondary bug found in the same function: the reference-name capture sometimes keeps a
+  leading "the " (e.g. "the Great Hall of the People" vs oracle's "Great Hall of the People"),
+  which would show up as `wrong_value` once the list is populated — strip `^the\s+` from the
+  captured reference (mirror the `_loc()` helper already used in `parse_activity_time_windows`).
+
+- **5b. `hotel_amenity` (spurious 32) and `required_hotel_all_types` (missing 42, ~35 of them the
+  same root cause) — remap, not enforcement-guard.** The oracle **never** emits `hotel_amenity`;
+  amenity/facility preferences ("hotel with a swimming pool", "hotel with Free parking", "hotel with
+  an Executive Lounge") are encoded by the oracle as `required_hotel_all_types` (e.g.
+  `['Free parking']`, `['Swimming pool']`, `['Family Room']`) — literally the same string, just
+  routed through the wrong family. Root cause: `parse_required_hotel_types` (the function that feeds
+  `required_hotel_all_types`) only matches `hotel(s) of type X` / `hotel(s) that offer(s) X`; it has
+  no pattern for `hotel(s) with X`, so that phrasing falls through to the separate
+  `parse_hotel_amenity` function instead, which stores it under the dead-end `hotel_amenity` key.
+  Fix: add a `hotels?\s+with\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)` pattern to
+  `parse_required_hotel_types`'s `all_types` branch (reuse `_split_types`/`_cap_first`, plus strip a
+  leading `a `/`an ` article before capitalizing — "a Sunbathing area" → "Sunbathing area"); then
+  delete `parse_hotel_amenity` and its call site (`parse_constraints.py:974-976`) and the
+  `hotel_amenity` enforcement branch in `parsed_verifier.py:170-171` (verified dead once the
+  extractor is gone — it can only ever be populated by the function being deleted). Confirmed via
+  direct uid inspection that the `required_hotel_all_types` "missing" bucket and the `hotel_amenity`
+  "spurious" bucket are the same underlying queries (same "hotel with X" phrasing, same target
+  string) — one fix closes both.
+
+- **5c. `excluded_cuisine_types` (missing 30, wrong_value 5) — word-order gap + minor cleanup bugs.**
+  `parse_excluded_cuisine_types` only matches `restaurant(s) of type(s) X` / `X cuisine restaurants`;
+  the dominant missed phrasing is the reversed order `the following type(s) of restaurant(s): X`
+  ("do not want to try the following types of restaurants: A and B"), which needs its own pattern
+  (mirror `parse_cuisine_preference`'s already-correct `types?\s+of\s+restaurants?` pattern, negated).
+  `wrong_value` bugs, all minor: (1) the `X cuisine restaurants` pattern's capture group drops the
+  trailing word "cuisine" itself (`"fusion cuisine restaurants"` → captures `"fusion"`, oracle wants
+  `"fusion cuisine"`) — capture should include the anchor word when it's "cuisine", not just "type";
+  (2) split-on-comma doesn't also split on "and" before the last item (`"Bar/Pub, Other, and Halal
+  cuisine"` → last item keeps a stray leading `"and "`) — extend the split regex to `,\s*(?:and\s+)?`
+  like other extractors already do; (3) embedded double-quotes around quoted type names aren't
+  stripped (`"Other Chinese Cuisine"` → literal `'"Other Chinese Cuisine"'`) — strip `"` before
+  appending. One case (`"Bakery and Desserts"` split into `['Bakery', 'Desserts']`) needs a cuisine
+  vocabulary lookup to disambiguate "and"-as-separator vs "and"-in-name; not worth building for one
+  observed instance — leave as a known residual miss.
+
+- **5d. `room_type` (missing 29, wrong_value 19) — two independent bugs, one fixable, one not.**
+  (1) **Fixable, high-confidence:** the oracle's numeric `room_type` code → label mapping used in
+  both `parse_constraints.py::parse_hard_logic` (~line 1211-1219) and
+  `solver_constraints.py::_parse_room_type` (~line 280-286) is `{1: "single", 2: "double", 3:
+  "twin"}`. A full scan of every `hard_logic_py` in `chinatravel/data/en/TPC_IJCAI_2026_phase1_EN/`
+  shows **only codes 1 and 2 ever appear** (74× code 1, 35× code 2, zero code 3), and every NL query
+  whose oracle uses code 2 says "twin" ("twin beds room", "a twin room") — never "double bed". The
+  no-oracle NL parser (`parse_room_type` in `parse_constraints.py`) already returns the literal
+  `"twin"` for that phrasing, so today it disagrees with the oracle's (mislabeled) `"double"` on
+  every single one of these — a pure label bug, not a parsing gap. Fix: relabel code 2 as `"twin"` in
+  both places (code 3 can stay mapped to `"twin"` too, or be left/removed — it's never observed, so
+  it's moot either way). This alone should close most of the 19 `wrong_value` cases.
+  (2) **Not fixable from NL, don't chase:** a meaningful share of `missing` cases have **no room-type
+  mention anywhere in the NL** yet the oracle still constrains `room_type` (e.g. a 5-person, no-room-
+  mention query has oracle `room_type=single`) — evidently a hard_logic_py constraint independent of
+  the stated preference (unlike `taxi_cars_equals`, which *is* a deterministic function of party size
+  and is already defaulted). Checked whether the unstated default is at least people-count-driven:
+  among the "missing" uids, the oracle value split is single 22 / double(→twin, per the mapping fix
+  above) 13 / twin 3 — not a clean function of `people_number`, so no safe default exists. Leave
+  as-is; this is a real, roughly ~40%-of-missing ceiling on this family, not a bug.
+
+- **5e (bonus, found while diagnosing 5c-adjacent `stay_duration`, missing 4 / wrong_value 3).**
+  (1) `parse_stay_duration`'s `stay at X for (at least) N minutes` pattern doesn't accept "for no
+  less than N minutes" (only "for at least N minutes") — extend the optional-phrase group to
+  `(?:at\s+least\s+|no\s+less\s+than\s+)?`. It also has no pattern at all for "a stay of at least N
+  minutes at X" (reversed order) — needs a new `finditer` pattern. (2) The `"visit/be at X between A
+  and B"` pattern's location capture (`.+?`) is greedy across an earlier `visit` in the same
+  sentence when two visit-clauses are joined by a comma ("we wish to visit natural scenery, and we
+  wish to visit Feilaifeng Grottoes between 08:10 and 09:40" → captures the whole run-on instead of
+  just "Feilaifeng Grottoes") — change `.+?` to `[^,;]+?` so the match can't cross a clause boundary
+  (forces backtracking to the later, correct "visit" anchor). (3) One `wrong_value` case
+  (`"Peppa Pig's World of Fun"` vs oracle's truncated `"Peppa Pig"`) is an oracle-side data artifact —
+  the ground-truth DSL string literal itself is apostrophe-truncated (same class of issue already
+  noted for hotel names in `solver_constraints.py`'s oracle-mode comment). Our parser's extraction is
+  correct; this one is unfixable from our side and should be left as a known ceiling.
+
+**Net assessment:** 5a and 5b's `required_hotel_all_types` component are single, well-scoped,
+high-confidence fixes (schema-parity bug and a missing regex pattern + dead-family removal,
+respectively) expected to close ~140 of the ~850-query family-level gaps outright. 5c and 5e are
+small regex extensions plus 2-3 line cleanups each. 5d's fix is a one-token relabel with a clear
+falsifiable justification (zero code-3 occurrences, 100% code-2-implies-"twin" correlation in the
+sampled cases) but its `missing` bucket has a genuine, evidenced non-recoverable ceiling — don't
+spend further time trying to default it. Implementation is blocked until the
+`llmparse-disj-fullfold0-300s` job (see plan Step 4) releases the source freeze; then follow the
+plan's existing substep order (5a → 5b → 5c → 5d) with TDD per substep and a full-val
+`parser_vs_oracle` rerun after each to confirm the family's missing/spurious count actually falls
+before moving on.
+
 ## Design Rules For Phase 2
 
 1. Solver-first, not prompt-first.
