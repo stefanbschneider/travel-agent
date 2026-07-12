@@ -149,6 +149,10 @@ def resolve_llm_client_and_flags():
     flags = orch.Flags.from_env()
     if "TPC_P2_DISJUNCTION" not in os.environ:
         flags.disjunction = True
+    # Dynamic budget reallocation is a pure timing win (gives Stage 2 whatever Stage 1 -- and
+    # Stage 3 when off -- didn't use) with a floor at the static split, so default it on too.
+    if "TPC_P2_DYNAMIC_BUDGET" not in os.environ:
+        flags.dynamic_budget = True
     # Same pattern for the LLM corrective parse audit: default it on once a usable backend is
     # configured (the parse_to_ir fix keeps a deterministic fallback on any LLM failure, so this
     # is safe to default on), unless the operator explicitly overrides TPC_P2_LLM_PARSE. Library

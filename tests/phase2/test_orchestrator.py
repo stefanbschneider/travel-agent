@@ -125,6 +125,69 @@ def test_flags_default_all_off():
     assert flags.disjunction is False
     assert flags.llm_parse is False
     assert flags.llm_refine is False
+    assert flags.dynamic_budget is False
+
+
+def test_dynamic_budget_off_passes_static_solve_slice(one_query):
+    from chinatravel.agent.phase2 import budget as B
+
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    O.solve_phase2(one_query, budget_sec=300.0, solve_fn=spy_solve, flags=O.Flags())
+    assert seen["budget_sec"] == B.split_budget(300.0).solve_sec
+
+
+def test_dynamic_budget_on_gives_solver_the_unused_parse_slice(one_query):
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    plan, telemetry = O.solve_phase2(
+        one_query, budget_sec=300.0, solve_fn=spy_solve, flags=O.Flags(dynamic_budget=True),
+    )
+    # Parse of one_query is fast (deterministic, no LLM) -- solver should get most of the budget
+    # minus the finalize reserve, comfortably more than the static ~165s slice.
+    assert seen["budget_sec"] > 250.0
+    assert telemetry["flags"]["dynamic_budget"] is True
+    assert telemetry["dynamic_solve_sec"] == seen["budget_sec"]
+
+
+def test_dynamic_budget_on_withholds_improve_reserve_when_llm_refine_on(one_query, spy_llm):
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    O.solve_phase2(
+        one_query, budget_sec=300.0, solve_fn=spy_solve, llm_client=spy_llm,
+        flags=O.Flags(dynamic_budget=True, llm_refine=True),
+    )
+    # Improve slice (30s of 300s) must be withheld from the solver when Stage 3 will run.
+    assert seen["budget_sec"] < 270.0
+
+
+def test_dynamic_budget_floors_at_static_slice_on_tiny_budget(one_query):
+    """A total budget so small that parsing alone can plausibly eat past it must never push the
+    dynamic solve slice below what the static split would have given."""
+    from chinatravel.agent.phase2 import budget as B
+
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    O.solve_phase2(
+        one_query, budget_sec=0.05, solve_fn=spy_solve, flags=O.Flags(dynamic_budget=True),
+    )
+    assert seen["budget_sec"] >= B.split_budget(0.05).solve_sec - 1e-9
 
 
 def test_llm_parse_error_keeps_deterministic_parse_not_a_parse_failure(one_query):

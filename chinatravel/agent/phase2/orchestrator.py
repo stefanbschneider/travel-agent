@@ -73,6 +73,7 @@ class Flags:
     disjunction: bool = False
     llm_parse: bool = False
     llm_refine: bool = False
+    dynamic_budget: bool = False
 
     @classmethod
     def from_env(cls, env: Mapping[str, Any] | None = None) -> "Flags":
@@ -82,6 +83,7 @@ class Flags:
             disjunction=_truthy(env_map.get("TPC_P2_DISJUNCTION", "0")),
             llm_parse=_truthy(env_map.get("TPC_P2_LLM_PARSE", "0")),
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
+            dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
         )
 
 
@@ -170,6 +172,7 @@ def solve_phase2(
             "disjunction": flags.disjunction,
             "llm_parse": flags.llm_parse,
             "llm_refine": flags.llm_refine,
+            "dynamic_budget": flags.dynamic_budget,
         },
         "budget_sec": budget_sec,
         "stage_sec": {},
@@ -197,6 +200,12 @@ def solve_phase2(
         telemetry["error"] = f"parse: {exc}"
     telemetry["stage_sec"]["parse"] = time.perf_counter() - t0
     telemetry["variants_count"] = len(variants)
+
+    if flags.dynamic_budget:
+        b.solve_sec = budget_mod.dynamic_solve_sec(
+            b, telemetry["stage_sec"]["parse"], improve_reserved=flags.llm_refine
+        )
+        telemetry["dynamic_solve_sec"] = b.solve_sec
 
     # --- Stage 2: solve (time-boxed) --------------------------------------
     if solve_fn is None:
