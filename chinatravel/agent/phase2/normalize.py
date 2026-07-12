@@ -456,7 +456,7 @@ def _detect_or_groups(query: dict) -> list[dict]:
     return arms if len(arms) >= 2 else []
 
 
-def parse_to_ir(query: dict, *, llm_client=None, flags=None) -> ParsedIR:
+def parse_to_ir(query: dict, *, llm_client=None, flags=None, deadline: float | None = None) -> ParsedIR:
     """Parse a query into the parser IR.
 
     Wraps the deterministic no-oracle parse (source of truth for the flat single variant). When
@@ -465,6 +465,11 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None) -> ParsedIR:
     ``ir_to_solver_variants``). When ``flags.llm_parse`` is on, route through ``llm_parse_stub``
     for corrective/additive proposals. Off by default, so the LLM is never called here on the
     default path.
+
+    ``deadline``, when given, is the remaining parse-stage budget in seconds (the orchestrator's
+    static or dynamic parse slice). If it's below the LLM client's configured request timeout, the
+    call is guaranteed not to finish in time, so it's skipped entirely rather than started and
+    left to time out (``ir.llm_parse_skipped_deadline`` records this for telemetry).
     """
     raw = parse_constraints.parse_query_no_oracle(query)
     if not isinstance(raw, dict):
@@ -485,10 +490,14 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None) -> ParsedIR:
         # parse-stage exception, including a transient LLM failure that has nothing to do with
         # the deterministic parse already sitting in `ir`. Catch here instead, so a flaky LLM
         # backend degrades to the deterministic parse rather than to no parse at all.
-        try:
-            ir = llm_parse_stub(ir, query, llm_client)
-        except Exception as exc:
-            ir.llm_parse_error = repr(exc)
+        client_timeout = getattr(llm_client, "timeout", None)
+        if deadline is not None and client_timeout is not None and deadline < client_timeout:
+            ir.llm_parse_skipped_deadline = True
+        else:
+            try:
+                ir = llm_parse_stub(ir, query, llm_client)
+            except Exception as exc:
+                ir.llm_parse_error = repr(exc)
 
     return ir
 

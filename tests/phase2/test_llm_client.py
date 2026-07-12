@@ -98,6 +98,67 @@ def test_unknown_backend_raises():
         lc.build_llm_client({"backend": "nonsense"})
 
 
+def test_openai_client_sets_sdk_timeout_and_bounded_retries(monkeypatch):
+    captured = {}
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+
+    client = lc.build_llm_client(
+        {"backend": "openai", "model": "m", "cache": False, "timeout": 12.5}
+    )
+    assert captured["client_kwargs"]["timeout"] == 12.5
+    assert captured["client_kwargs"]["max_retries"] == 1
+    assert client.timeout == 12.5
+
+
+def test_openai_client_timeout_defaults_from_env(monkeypatch):
+    captured = {}
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+    monkeypatch.setenv("TPC_P2_LLM_TIMEOUT_SEC", "7")
+
+    client = lc.build_llm_client({"backend": "openai", "model": "m", "cache": False})
+    assert captured["client_kwargs"]["timeout"] == 7.0
+    assert client.timeout == 7.0
+
+
+def test_openai_client_timeout_falls_back_to_default(monkeypatch):
+    captured = {}
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+    monkeypatch.delenv("TPC_P2_LLM_TIMEOUT_SEC", raising=False)
+
+    client = lc.build_llm_client({"backend": "openai", "model": "m", "cache": False})
+    assert captured["client_kwargs"]["timeout"] == lc.DEFAULT_LLM_TIMEOUT_SEC
+    assert client.timeout == lc.DEFAULT_LLM_TIMEOUT_SEC
+
+
+def test_caching_client_proxies_inner_timeout(tmp_path, monkeypatch):
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            pass
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+
+    client = lc.build_llm_client(
+        {"backend": "openai", "model": "m", "timeout": 5.0, "cache_dir": str(tmp_path)}
+    )
+    assert isinstance(client, lc.CachingLLMClient)
+    assert client.timeout == 5.0
+
+
 def test_infradeep_backend_builds_openai_compatible_request(monkeypatch):
     captured = {}
 

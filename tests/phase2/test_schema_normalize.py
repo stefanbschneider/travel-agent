@@ -104,6 +104,71 @@ def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_exception(one_query):
     assert ir == deterministic
 
 
+def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_timeout(one_query):
+    """A client-level timeout (e.g. openai.APITimeoutError, or bare TimeoutError from a mock)
+    must degrade exactly like any other LLM failure -- caught by the same broad except in
+    parse_to_ir, never left to propagate or corrupt the deterministic ir."""
+    class TimingOutLLM:
+        timeout = 30.0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            raise TimeoutError("request timed out")
+
+    deterministic = normalize.parse_to_ir(one_query)
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=TimingOutLLM(), flags=flags)
+    assert ir == deterministic
+    assert ir.llm_parse_skipped_deadline is False
+
+
+def test_parse_to_ir_skips_llm_call_when_deadline_below_client_timeout(one_query):
+    """When the remaining parse-stage slice is shorter than the client's own request timeout, the
+    call can never finish in time -- skip it outright instead of starting a doomed request."""
+    class SlowLLM:
+        timeout = 30.0
+
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls += 1
+            return '{"constraint_text":"The budget for dining is 120."}'
+
+    llm = SlowLLM()
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    deterministic = normalize.parse_to_ir(one_query)
+    ir = normalize.parse_to_ir(one_query, llm_client=llm, flags=flags, deadline=5.0)
+    assert llm.calls == 0
+    assert ir.llm_parse_skipped_deadline is True
+    assert ir == deterministic
+
+
+def test_parse_to_ir_calls_llm_when_deadline_comfortably_above_timeout(one_query):
+    class FastLLM:
+        timeout = 30.0
+
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls += 1
+            return '{"constraint_text":"The budget for dining is 120."}'
+
+    llm = FastLLM()
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=llm, flags=flags, deadline=60.0)
+    assert llm.calls == 1
+    assert ir.llm_parse_skipped_deadline is False
+
+
+def test_parse_to_ir_deadline_check_ignored_without_client_timeout_attr(one_query, spy_llm):
+    """A backend with no timeout concept (e.g. the fixture client) must never be skipped by the
+    deadline check -- spy_llm has no ``timeout`` attribute, matching that shape."""
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=spy_llm, flags=flags, deadline=0.001)
+    assert ir.llm_parse_skipped_deadline is False
+
+
 def test_llm_parse_replace_can_correct_existing_value():
     class FakeLLM:
         def complete(self, prompt, *, system=None, cache_key=None):

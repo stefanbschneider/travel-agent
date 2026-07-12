@@ -38,6 +38,11 @@ class FixtureMissingError(LLMError):
 
 
 DEFAULT_BACKEND = "none"
+# Bounds any single network/LLM call. Without this, a hung request (a 116s outlier was observed
+# live against DeepInfra) can consume most of a query's budget before the solver ever starts --
+# the SDK-level timeout is the actual bound; the orchestrator's parse-stage deadline check (below)
+# additionally skips the call entirely when it can't possibly finish in the remaining slice.
+DEFAULT_LLM_TIMEOUT_SEC = 30.0
 DEFAULT_INFRADEEP_BASE_URL = "https://api.deepinfra.com/v1/openai"
 # DeepInfra model IDs are case-sensitive "Org/Name" (verified live 2026-07-11); the previous
 # lowercase no-prefix default ("qwen3.6-27b") 404'd on every real call and was masked by
@@ -165,6 +170,7 @@ class CachingLLMClient(LLMClient):
     def __init__(self, inner: LLMClient, cache_dir: str | os.PathLike):
         self.inner = inner
         self.backend = inner.backend
+        self.timeout = getattr(inner, "timeout", None)
         self.cache_dir = Path(cache_dir) / getattr(inner, "model", "unknown")
 
     def _cache_path(self, prompt: str, system: str | None, cache_key: str | None) -> Path:
@@ -201,15 +207,16 @@ class OpenAILLMClient(LLMClient):
 
     def __init__(self, *, model: str, base_url: str | None = None, api_key: str | None = None,
                  temperature: float = 0.0, max_tokens: int | None = None,
-                 extra_body: dict | None = None):
+                 extra_body: dict | None = None, timeout: float = DEFAULT_LLM_TIMEOUT_SEC):
         if not model:
             raise ValueError("openai backend requires a 'model'.")
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.extra_body = extra_body
+        self.timeout = timeout
         openai_cls = _load_openai_class()
-        client_kwargs: dict[str, Any] = {}
+        client_kwargs: dict[str, Any] = {"timeout": timeout, "max_retries": 1}
         if base_url:
             client_kwargs["base_url"] = base_url
         if api_key:
@@ -272,6 +279,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
             api_key=api_key,
             temperature=float(config.get("temperature", 0.0)),
             max_tokens=config.get("max_tokens"),
+            timeout=_resolve_timeout(config),
         )
         return _maybe_wrap_cache(client, config)
 
@@ -313,10 +321,18 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
             temperature=float(config.get("temperature", 0.0)),
             max_tokens=config.get("max_tokens"),
             extra_body=extra_body,
+            timeout=_resolve_timeout(config),
         )
         return _maybe_wrap_cache(client, config)
 
     raise ValueError(f"Unknown LLM backend: {backend!r} (expected none|fixture|openai|infradeep).")
+
+
+def _resolve_timeout(config: dict) -> float:
+    value = config.get("timeout")
+    if value is None:
+        value = os.environ.get("TPC_P2_LLM_TIMEOUT_SEC")
+    return float(value) if value is not None else DEFAULT_LLM_TIMEOUT_SEC
 
 
 def _maybe_wrap_cache(client: LLMClient, config: dict) -> LLMClient:

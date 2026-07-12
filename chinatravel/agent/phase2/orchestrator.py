@@ -185,15 +185,18 @@ def solve_phase2(
         "valid_output": False,
         "error": None,
         "llm_parse_error": None,
+        "llm_parse_skipped_deadline": False,
         "variants_count": 0,
     }
 
     # --- Stage 1: parse ---------------------------------------------------
     t0 = time.perf_counter()
     try:
-        ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags)
+        ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags, deadline=b.parse_sec)
         if ir.llm_parse_error:
             telemetry["llm_parse_error"] = ir.llm_parse_error
+        if ir.llm_parse_skipped_deadline:
+            telemetry["llm_parse_skipped_deadline"] = True
         variants = normalize.ir_to_solver_variants(ir, query, env=env, flags=flags)
     except Exception as exc:  # parsing must never crash the harness
         variants = []

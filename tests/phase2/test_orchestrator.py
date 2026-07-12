@@ -173,6 +173,31 @@ def test_dynamic_budget_on_withholds_improve_reserve_when_llm_refine_on(one_quer
     assert seen["budget_sec"] < 270.0
 
 
+def test_orchestrator_passes_parse_slice_as_llm_deadline(one_query, fast_solve_fn):
+    from chinatravel.agent.phase2 import budget as B
+
+    class SlowClient:
+        timeout = 30.0
+
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls += 1
+            return '{"constraint_text":"The budget for dining is 120."}'
+
+    llm = SlowClient()
+    # A total budget whose static parse slice (25% of post-finalize) is well under the client's
+    # 30s timeout -- the call must be skipped, and the skip must surface in telemetry.
+    plan, telemetry = O.solve_phase2(
+        one_query, budget_sec=10.0, solve_fn=fast_solve_fn, llm_client=llm,
+        flags=O.Flags(llm_parse=True),
+    )
+    assert llm.calls == 0
+    assert telemetry["llm_parse_skipped_deadline"] is True
+    assert B.split_budget(10.0).parse_sec < llm.timeout
+
+
 def test_dynamic_budget_floors_at_static_slice_on_tiny_budget(one_query):
     """A total budget so small that parsing alone can plausibly eat past it must never push the
     dynamic solve slice below what the static split would have given."""
