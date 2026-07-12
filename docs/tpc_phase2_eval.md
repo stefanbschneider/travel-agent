@@ -413,6 +413,7 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
 | Full dashboard | `make phase2-rehearse FOLD=<i> P2_FOLDS=<n> P2_BUDGET=900` |
 | Deterministic baseline ledger entry (full-val parser metrics always included) | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n> P2_REPEATS=<r> P2_LABEL=<tag>` |
 | Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>] [--repeats <r>] [--label <tag>]` |
+| Pinned-worktree baseline (no code freeze -- plan-2 Step 1) | `python scripts/phase2_eval_at.py --sha <ref> -- --split-set val --fold <i> --budget-sec <sec> ...` (same args as the direct form, after `--`) or `make phase2-baseline-at SHA=<ref> ...` |
 | Rehearsal chunk size (memory isolation; default 5) | env `P2_CHUNK=<n>` or `rehearse_phase2.py --chunk-size <n>` (`0` = old single-process behavior) |
 | Run one query end-to-end (uid / file / raw NL text); estimated score always, official score + parsing-vs-solving breakdown when an oracle is available | `python scripts/run_query.py --uid <id>` / `--query-file <path>` / `--query-text "..." --start-city <c> --target-city <c> --days <n>` (see README's Phase 2 Operations §5, or `make phase2-query P2_QUERY_ARGS="..."`) |
 
@@ -423,3 +424,17 @@ HF dataset compare are Milestone 3 (see `docs/tpc_phase2_implementation_plan.md`
 
 Baseline tracking automation (`scripts/phase2_record_baseline.py`, `make phase2-baseline`) was added
 after Milestone 7 to close roadmap Step 1 (establish deterministic baseline with committed history).
+
+**Code-freeze rule retired (2026-07-12, `tpc_phase2_sonnet_plan2.md` Step 1).** Previously, any
+long eval run directly from the main working tree required freezing commits for its duration
+(the rehearsal's chunked subprocesses re-import on-disk code mid-run, and the recorder's
+`_git_sha()` stamps `git rev-parse HEAD` at *write* time, so a mid-run commit silently produced a
+mixed-code, mislabeled row). `scripts/phase2_eval_at.py` runs the eval against an explicit `git
+worktree` checkout of a pinned sha instead, so the main tree is free to keep developing and the
+row's `git_sha` is truthful by construction. **Long evals should now use `phase2_eval_at.py` /
+`make phase2-baseline-at SHA=<ref>`, not the direct `phase2_record_baseline.py` / `make
+phase2-baseline` form, whenever the main tree needs to stay unfrozen.** Verified: a synthetic-repo
+integration test (`tests/phase2/test_eval_at.py`, `-m integration`) commits a change to the "main"
+repo *after* the worktree is created and confirms the recorded `git_sha` is still the pinned one;
+a real `--limit 2 --budget-sec 10` smoke run against this repo took ~1m52s wall-clock and produced
+a correctly-attributed row.

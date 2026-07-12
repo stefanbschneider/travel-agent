@@ -9,7 +9,7 @@ SPLIT ?= tpc_phase1
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
 	phase2-help phase2-test phase2-splits phase2-solve phase2-query phase2-rehearse \
 	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
-	phase2-baseline
+	phase2-baseline phase2-baseline-at
 
 # Run phase 1 evaluation
 p1eval:
@@ -99,6 +99,7 @@ phase2-help:
 	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
 	  '  make phase2-budget-sweep    - sweep budgets and export attribution CSV/JSON' \
 	  '  make phase2-baseline        - run deterministic baseline and append docs/phase2_baselines history' \
+	  '  make phase2-baseline-at     - same as phase2-baseline, but pinned to SHA=<ref> via a disposable git worktree' \
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
@@ -143,6 +144,14 @@ phase2-budget-sweep:
 # Run deterministic fold baseline and append trend files under docs/phase2_baselines.
 phase2-baseline:
 	.venv/bin/python scripts/phase2_record_baseline.py --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
+	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG) --parallel $(P2_PARALLEL)
+
+# Same as phase2-baseline, but runs against a pinned `git worktree` checkout of SHA (plan-2
+# Step 1): the main tree stays free for development mid-run, and the row's git_sha is truthful
+# by construction instead of whatever HEAD happens to be when the recorder finishes writing.
+phase2-baseline-at:
+	.venv/bin/python scripts/phase2_eval_at.py --sha $(SHA) -- --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
 	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG) --parallel $(P2_PARALLEL)
 
