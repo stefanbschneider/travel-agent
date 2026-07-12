@@ -612,6 +612,39 @@ ground-truth loop runs on a separate, larger eval VM — see the two-VM model in
   remain open — needed before Step 6 can conclude, and should come from the eval VM (Step 4's
   worker once it exists, or a manual overnight run there).
 
+## Plan 2 Step 2 status (2026-07-12, coding VM): implemented, integrated CLI verified end-to-end
+
+`scripts/phase2_diff_eval.py` (fingerprinting in `phase2_record_baseline.py`, splice math, the
+parse-only allowlist guard) was implemented and unit-tested earlier, plus a manual reconstruction
+of the splice math against two real historical baseline rows (`85.0 == 85.0`). That covered the
+math and the guard in isolation but never exercised `main()`'s actual glue: fingerprint recompute →
+guard → `_run_end_to_end_chunked` re-solve → `all_pass_ids` extraction from a *freshly recorded*
+row → splice. Closed that gap with a real run of the integrated CLI:
+
+1. Recorded a fresh fingerprinted baseline at HEAD (`79121a95`, val fold0/folds10, n=20,
+   budget-sec=20, scratch `--history-dir` so the real ledger wasn't touched) — `fpr=85.0`,
+   `20250321180120537534` among the 17 passing uids.
+2. In the working tree only (uncommitted), reverted `parse_constraints.py` to its pre-step5c/5d
+   state (`git show 93a95d03:parse_constraints.py`) — undoes the `excluded_cuisine_types`
+   word-order fix and the `room_type` numeric-code fix. `git diff --name-only <baseline_sha>`
+   confirmed only `parse_constraints.py` differed, so the allowlist guard should pass.
+3. Ran `scripts/phase2_diff_eval.py --baseline <that row>` for real (no code changes, no
+   reconstruction). Result: correctly detected `1/20 uid(s) have a changed solver input:
+   ['20250321180120537534']`, guard passed, cleared and re-solved only that uid,
+   spliced the other 19 from the baseline. `projected_fpr: 85.0` (`unchanged_passes=16 +
+   changed_passes=1`, `flips=[]` — the re-solved uid still passed under the reverted parser for
+   this particular plan). Since the re-solve was a genuine fresh solve (not spliced) and the
+   unchanged uids rely on the already-proven determinism property, this projected number is by
+   construction equal to what a full fresh 20-uid run under the reverted parser would report — the
+   plan's Step 2 acceptance criterion.
+4. Restored `parse_constraints.py` to HEAD exactly (`git checkout HEAD -- parse_constraints.py`,
+   diff-verified byte-identical) and left the working tree clean; the scratch baseline row/history
+   never touched `docs/phase2_baselines/`.
+
+Step 2 is now verified through the actual CLI entry point, not just its components. Total added
+wall-clock for this check: ~4 min (baseline) + ~15s (diff-eval re-solve of 1 uid) — well inside the
+coding VM's "no long evals" constraint.
+
 ## Plan 2 Step 6 status (2026-07-12, coding VM): implemented, e2e A/B pending
 
 `TPC_P2_LLM_PARSE_MODE=extract` is implemented and unit-tested (`normalize.llm_extract_stub` +
