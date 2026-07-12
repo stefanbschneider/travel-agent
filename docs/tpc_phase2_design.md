@@ -304,7 +304,12 @@ measured incrementally without destabilizing the deterministic baseline.
      budget for parse and ~11% for improve, but deterministic parse takes ~1s and Stage 3 is a
      stub; the orchestrator passes the static `b.solve_sec` to the solver regardless of what
      earlier stages actually used. At 900s that discards roughly 300s of solve time per query.
-     Fix: dynamic reallocation (plan Step 1, `TPC_P2_DYNAMIC_BUDGET`, runner-default-on pattern).
+     **Fixed 2026-07-12 (plan Step 1):** `TPC_P2_DYNAMIC_BUDGET` (library `Flags()` default OFF,
+     `run_split` default ON, same pattern as `TPC_P2_DISJUNCTION`) recomputes the solve slice from
+     actual elapsed time after Stage 1 -- `total - parse_elapsed - finalize_reserve -
+     (improve_reserve if llm_refine else 0)`, floored at the static `solve_sec` -- instead of the
+     fixed split. At 300s this returns roughly 100s/query (unused parse slice + the fully-unused
+     improve slice) to the solver. Not yet re-measured end-to-end (next ledger row).
    - **No LLM request timeout; Stage 1 not deadline-enforced.** `llm_client.py` never sets an SDK
      timeout and the orchestrator does not time-box the parse stage, so one hung LLM/network call
      (a 116s outlier was observed live against DeepInfra) can consume most of a query's budget
@@ -476,6 +481,41 @@ spend further time trying to default it. Implementation is blocked until the
 plan's existing substep order (5a → 5b → 5c → 5d) with TDD per substep and a full-val
 `parser_vs_oracle` rerun after each to confirm the family's missing/spurious count actually falls
 before moving on.
+
+## Step 3/4 measurement: the `llmparse-disj-fullfold0-300s` job (2026-07-12)
+
+Steps 3 (measure LLM-parse e2e) and 4 (one realistic-budget attribution row) from
+`docs/tpc_phase2_sonnet_plan.md` are both closed by existing ledger rows, though not exactly as the
+plan specified them (n=85 full-fold rows throughout, not the plan's n=20 sub-sample; the 300s row
+predates Step 1's dynamic-budget code, so it's a static-budget measurement, not a `dynbudget` one).
+
+- **Step 3 (60s, `20260711T071751Z`, "llmparse-disj-fullfold0-60s-fixed"):** e2e FPR 81.18 vs
+  solver-only 94.12 (parsing loss 12.94 pts) — already recorded in commit `aed04a91` as a
+  regression against the deterministic-parse baseline (85.88); LLM-parse defaulted on anyway per
+  `cf7d145d`'s reasoning (see that commit). This is the "does LLM-parse move e2e FPR" answer the
+  design doc's open question asked for: **yes, it moves it, but currently in the wrong direction**
+  at 60s — the parser-family fixes in the "Step 5 parser-family diagnosis" section above are the
+  planned remedy (LLM-audit recall regression, plan gap B6, concentrated in exactly the families
+  Step 5 targets).
+- **Step 4 (300s, `20260711T192208Z`, "llmparse-disj-fullfold0-300s", run 2026-07-11 21:22 →
+  2026-07-12 05:08 UTC, pid 178752, git_sha stamped at completion `f36a326b` — a docs-only commit
+  landed mid-run, which is safe per the measurement-hygiene rule since it touched no `.py` the
+  chunked subprocesses import):** e2e FPR **80.00**, solver-only FPR **95.29** (std 0.0 across both
+  repeats), `llm_parse_failed=0`/`llm_parse_attempted=85` (backend healthy). Parsing loss **15.29
+  pts**, *larger* than the 60s row's 12.94 — confirms plan gap B4 (parsing loss dominates more, not
+  less, at realistic budgets) but for a different reason than hypothesized: solver-only FPR barely
+  moved (94.12→95.29, +1.17) while e2e FPR *dropped* (81.18→80.00, −1.18) going 60s→300s. Under the
+  static budget in effect for this run, the extra 240s bought the solver almost nothing — direct
+  evidence for Step 1's diagnosis (`budget.py` was only ever handing the solver ~165s of the 300s;
+  see the dynamic-budget gap entry above) rather than a parser-quality effect.
+- **Decision rule from the plan:** solver headroom (4.71 pts at 300s) is well below parsing loss
+  (15.29 pts), so Stage 3 LLM refinement stays deferred; Step 5's parser fixes remain the priority,
+  now implemented for 5a/5b (below) with 5c/5d next.
+- **Next measurement:** re-run this same 300s/n=85/repeats=2 configuration with
+  `TPC_P2_DYNAMIC_BUDGET` on (now the runner default post-Step-1, `33795fab`) to see whether giving
+  the solver its withheld ~100s actually moves solver-only/e2e FPR, now that the "extra budget did
+  nothing" finding above is understood to be a budget-allocation artifact rather than a solver
+  ceiling.
 
 ## Design Rules For Phase 2
 
