@@ -1223,14 +1223,15 @@ def _parse_single_logic(logic):
             result["intercity_mode"] = intercity
 
     # --- Room type ---
-    m = re.search(r'room_type\(activity,\s*target_city\(plan\)\)\s*==\s*([\d]+)', logic)
+    # Real hard_logic_py uses "room_type(activity)!=N" (no target_city arg, "!="not "=="); a scan
+    # of every hard_logic_py in the dataset found only codes 1 and 2 ever appear, and every NL
+    # query using code 2 says "twin" ("twin beds room" / "a twin room") -- never "double bed".
+    m = re.search(r'room_type\(activity(?:,\s*target_city\(plan\))?\)\s*(?:==|!=)\s*([\d]+)', logic)
     if m:
         room_num = int(m.group(1))
         if room_num == 1:
             result["room_type"] = "single"
         elif room_num == 2:
-            result["room_type"] = "double"
-        elif room_num == 3:
             result["room_type"] = "twin"
 
     # --- Hotel nearby ---

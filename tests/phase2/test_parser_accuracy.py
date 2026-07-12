@@ -341,6 +341,45 @@ def test_oxford_comma_and_before_last_item_not_kept():
     assert raw.get("excluded_cuisine_types") == ["Bar/Pub", "Other", "Halal cuisine"], raw
 
 
+# --- 5d: oracle room_type numeric-code label fix (2 -> "twin", not "double") ---
+#
+# A full scan of every hard_logic_py in chinatravel/data/en/TPC_IJCAI_2026_phase1_EN/ found only
+# codes 1 and 2 ever appear (74x code 1, 35x code 2, zero code 3), and every NL query whose oracle
+# uses code 2 says "twin" ("twin beds room", "a twin room") -- never "double bed". Real val uids
+# 20250322201024175211 and 20250322213548089207 both have "room_type(activity)!=2" in
+# hard_logic_py with "twin" phrasing in the NL.
+
+def _oracle_query(hard_logic_snippet, nl="A trip."):
+    return {
+        "uid": "t",
+        "nature_language": nl,
+        "people_number": 2,
+        "days": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "hard_logic_py": [
+            "result=True\nfor activity in allactivities(plan):\n"
+            f"  if activity_type(activity)=='accommodation' and {hard_logic_snippet}: result=False"
+        ],
+    }
+
+
+def test_oracle_room_type_code_2_maps_to_twin_not_double():
+    query = _oracle_query("room_type(activity)!=2")
+    raw = pc.parse_query(query)
+    assert raw.get("room_type") == "twin", raw
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("room_type") == "twin", variants[0]
+
+
+def test_oracle_room_type_code_1_still_maps_to_single():
+    query = _oracle_query("room_type(activity)!=1")
+    raw = pc.parse_query(query)
+    assert raw.get("room_type") == "single", raw
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("room_type") == "single", variants[0]
+
+
 def test_embedded_quotes_stripped():
     raw = pc.parse_query_no_oracle(
         _q('We do not wish to try restaurants of the types "Other Chinese Cuisine" and '
