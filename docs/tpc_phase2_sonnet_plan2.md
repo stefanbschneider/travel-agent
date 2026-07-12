@@ -1,5 +1,15 @@
 # Phase 2 Plan 2: fast evaluation loop + parsing architecture (autonomous implementation)
 
+> **Status 2026-07-12:** Steps 0 (coding-VM parts), 1, 2, 3, and 5 are landed (`2fb808c4`,
+> `d6d45df3`, `4d88d459`); Step 4's worker code is landed (`e31ef2c2` — VM-2 deployment and
+> first ledger-branch rows pending); Step 6's extract mode is implemented and probe-tested
+> (`79121a95` — e2e A/B rungs 2–4 and the promotion/kill verdict pending). Step 3's calibration
+> run pair and Step 0.2's det-only anchor still need the eval VM. All remaining work — Step 4
+> deployment, Step 6's measurement, Step 7 — is **carried over into `docs/tpc_phase2_plan3.md`**
+> (as M1, M2, and N4/N6/L3 respectively), which is the plan to execute next — it reorders
+> priorities around the 2026-07-12 deep-review findings (see the gap map there) and inherits
+> this plan's ground rules verbatim.
+
 Self-contained follow-up to `docs/tpc_phase2_sonnet_plan.md` (plan 1), written for a Sonnet 5
 agent to execute without access to the conversation that produced it. Read this whole file before
 starting. Plan 1's steps 1–5 are landed (commits `33795fab`…`000b88a7`); its steps 6–7 are carried

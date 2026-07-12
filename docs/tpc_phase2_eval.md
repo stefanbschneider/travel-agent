@@ -250,6 +250,34 @@ sensitivity effects) or a more fundamental interaction. A 900s-budget re-run wou
 directly but costs roughly 15x this run's wall time even with `--parallel` (Step 10) applied —
 worth doing, but a cost/authorization decision, not one to make unilaterally here.
 
+### Two-sided behavioral proxy: first full-val numbers (2026-07-12, deterministic parser)
+
+Plan-2 Step 5's reject-side probes are live. Full val (n=850, LLM off, disjunction on):
+`accept_agreement` **0.7988** (171 disagreeing uids), `reject_agreement` **0.8277** (640/850 uids
+had at least one oracle-rejected probe; 164 uids let a bad probe through), `behavioral_balanced`
+**0.8133**. Note the coverage caveat: 210/850 uids produced no oracle-rejected probe plan (their
+constraints are loose enough that other cities' best-plans pass), so the reject side is silent on
+them — probe coverage is a known limitation, not a bug.
+
+### Known family_stats artifacts (2026-07-12 review; fix = plan-3 N1)
+
+Until plan-3 N1 lands, read `family_stats` with three corrections in mind:
+
+1. `taxi_cars_equals` accounts for 668 of 916 total `spurious` entries — that family is a
+   deliberate party-size default (vacuously true on taxi-free plans, mirroring the oracle), not
+   real over-extraction. Mentally exclude it from precision.
+2. `hotel_nearby` and `poi_distance_hotel` are one constraint mirrored into two families; their
+   defect counts double-count the same underlying misses.
+3. Counts are per branch-variant, so disjunctive uids inflate family totals.
+
+### Generalization anchor (planned, plan-3 N5): HF `default` as a held-out phrasing probe
+
+Every parser number so far is measured on val, which we have iterated against for weeks. The HF
+`LAMDA-NeSy/ChinaTravel` `default` subset (654 queries, uid-disjoint, with `hard_logic_py` and
+English NL — see `docs/tpc_phase2_hf_dataset.md`) supports the same solver-free parser-vs-oracle
+report and therefore gives an honest held-out-phrasing signal for free. It is a **measurement
+set, never a tuning set**. Numbers land here once plan-3 N5 runs.
+
 ## Guiding Idea
 
 We hold the released oracle (`hard_logic_py`) **locally** for the 1000 Phase-1 queries. Phase 2 hides

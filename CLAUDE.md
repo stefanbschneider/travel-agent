@@ -26,7 +26,9 @@ Authoritative docs, read these before non-trivial work:
 - `docs/tpc_phase1_playbook.md` — Phase 1 strategy/workflows
 - `docs/tpc_phase2_design.md` — **Phase 2 design (authoritative)**; module layout, feature flags, execution model
 - `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (the three measurement axes, attribution, regression gate)
-- `docs/tpc_phase2_sonnet_plan.md` / `_plan2.md` — the current prioritized improvement plans
+- `docs/tpc_phase2_plan3.md` — **the current prioritized improvement plan** (2026-07-12 gap map +
+  near/mid/long-term roadmap); `_sonnet_plan.md` / `_sonnet_plan2.md` are its landed predecessors
+  (ground rules in plan 2 still apply and are inherited by plan 3)
 
 ## Environment / running commands
 
@@ -63,8 +65,11 @@ make phase2-splits                                 # one-time: create val/test s
 .venv/bin/python scripts/parser_vs_oracle.py --split-set val --behavioral --disjunction --branch-aware
                                                    # Axis 1: parser-vs-oracle report (~20s, no solver) — the fast loop
 .venv/bin/python scripts/run_query.py --uid <id> --budget-sec 60     # run ONE query e2e (uid / --query-file / --query-text)
+.venv/bin/python scripts/phase2_diff_eval.py --baseline docs/phase2_baselines/runs/<id>.json
+                                                   # differential e2e: re-solve only uids whose parse changed (minutes)
 make phase2-rehearse FOLD=0 P2_FOLDS=10 P2_BUDGET=300   # full dashboard: 3-way attribution + parser report + timing
 make phase2-gate BASELINE=<base.json> CANDIDATE=<cand.json>   # monotonic regression gate
+make phase2-progress FOLD=<f> P2_FOLDS=<n>         # live progress counter for a running baseline job (read-only)
 ```
 
 Baseline ledger (committed trend history under `docs/phase2_baselines/`):
@@ -138,6 +143,13 @@ end-to-end (no-oracle, bounded)                 = what Phase 2 actually scores
 Current standing: parsing loss dominates solver headroom, so **Stage 1 parsing quality is the
 priority**, not the solver. `parser_vs_oracle.py`'s **behavioral agreement** on the full 850-uid val
 split is the fast, solver-free headline signal for parser changes.
+
+**The recall/precision asymmetry (2026-07-12, load-bearing for all parser work):** the oracle only
+checks *its own* constraints, so a plan solved under a superset of them still passes — spurious
+parsed constraints cost solve time at worst, while **missing or wrong-valued constraints cause e2e
+failures directly**. Optimize parser recall and value fidelity first; treat precision as a
+feasibility/latency concern. (This is why an LLM audit that deletes "unsupported" families
+regressed e2e despite better solver-free metrics.) See the gap map in `docs/tpc_phase2_plan3.md`.
 
 ## Working conventions (important)
 

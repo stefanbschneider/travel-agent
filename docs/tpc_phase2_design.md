@@ -653,6 +653,39 @@ made because they were concretely evidenced by the probe, not because of open-en
 winner). **No promotion/kill verdict yet** — `audit` stays the runner default until that evidence
 exists.
 
+## 2026-07-12 deep review: gap map and forward roadmap (plan 3)
+
+A full-repo deep review (code + ledger + per-uid failure census on the `20260712T060018Z` row)
+produced `docs/tpc_phase2_plan3.md` — **the current prioritized plan**, superseding plan 2's
+ordering (plan 2's remaining work — Step 4's VM-2 deployment, Step 6's pending e2e A/B
+measurement, Step 7 — is re-scoped there). Headline findings, details and evidence in the plan:
+
+1. **The precision/recall asymmetry (G1).** A plan solved under a *superset* of the oracle
+   constraints still passes the oracle check; missing or wrong-valued constraints fail it
+   directly. So spurious families only cost solve time, while recall and value fidelity are the
+   whole e2e game — which retroactively explains the 60s LLM-audit regression (the audit's prompt
+   optimizes precision, the direction that barely matters). Parser objectives are reordered
+   accordingly.
+2. **The dominant parse loss is one entity-handling cluster (G2).** 6–7 of the 11 fold-0
+   parsing-loss uids at 300s are label-prefix garbage in names, merged/truncated name lists,
+   type-vs-name collisions, and category misrouting — all fixable by the WorldEnv-backed entity
+   resolution layer that `normalize.py`'s `env` hook was designed for and never got. Highest-
+   leverage single item (plan-3 N2).
+3. **Disjunction arm-content loss (G3)** (134 flattened; numbered arms parsing to empty dicts)
+   and **intercity-negation polarity inversion (G4)** ("do not take the train" → requires train;
+   the binary mode domain admits complement inference) are the next two concrete buckets.
+4. **The parsed verifier's bidirectional substring matching (G5)** launders garbage entity names
+   into "accepted" plans — tighten only after entity resolution lands.
+5. **Metric artifacts (G6):** `taxi_cars_equals` default floods `spurious` (668/916), the
+   `hotel_nearby`/`poi_distance_hotel` mirror double-counts, and branch-variant inflation distort
+   `family_stats` — cheap reporting fixes first so the fast loop can be trusted.
+6. **Never-built design promises:** the constraint-light feasible fallback is still an empty
+   itinerary (G7); solver headroom is small and characterized — 4 uids, time-window-at-POI and
+   tight hotel-type queries (G8); held-out generalization has a free solver-free measurement via
+   the HF `default` subset that has never been run (G9); and the submission-facing ops tail
+   (max_retries=0 fix, SGLang parity, 900s row, cold-cache variance, eval-worker VM-2
+   deployment) is collected as G10.
+
 ## Design Rules For Phase 2
 
 1. Solver-first, not prompt-first.
