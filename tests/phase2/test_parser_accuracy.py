@@ -225,3 +225,43 @@ def test_positive_attraction_still_required():
         _q("We want to visit Xixi Paradise Commercial Street.")
     )
     assert raw.get("required_attractions") == ["Xixi Paradise Commercial Street"], raw
+
+
+# --- 5a: poi_distance_hotel schema parity (real val uids) ------------------
+#
+# The no-oracle NL path already extracts "accommodation within X km of Y" correctly via
+# parse_hotel_nearby, but only stored it as the singular `hotel_nearby` dict -- the oracle (and
+# the shared solver-dict schema) also expects a list-shaped `poi_distance_hotel` family, which the
+# oracle-mode DSL converter (solver_constraints.py::_parse_hotel_distance) already mirrors. Real
+# val uid 20250323092547439734 (oracle: [{"reference": "North Bund Riverside Green Space",
+# "distance_km": 8.851522495588497}]) was 100% missing on this family before the fix.
+
+def test_hotel_nearby_also_populates_poi_distance_hotel_list():
+    raw = pc.parse_query_no_oracle(
+        _q("Accommodation must be within 8.86 km of North Bund Riverside Green Space.")
+    )
+    assert raw.get("hotel_nearby") == {
+        "reference": "North Bund Riverside Green Space", "distance_km": 8.86,
+    }
+    assert raw.get("poi_distance_hotel") == [
+        {"reference": "North Bund Riverside Green Space", "distance_km": 8.86},
+    ]
+
+
+def test_hotel_nearby_strips_leading_the_from_reference():
+    # Real val uid 20250323092305147660 phrasing: "... within 2.11 km of the Great Hall of the
+    # People." Oracle reference is "Great Hall of the People" (no leading "the").
+    raw = pc.parse_query_no_oracle(
+        _q("We want accommodation within 2.11 km of the Great Hall of the People.")
+    )
+    assert raw["hotel_nearby"]["reference"] == "Great Hall of the People"
+    assert raw["poi_distance_hotel"][0]["reference"] == "Great Hall of the People"
+
+
+def test_hotel_nearby_variant_matches_solver_schema_family():
+    query = _q("We hope the accommodation is within 9.65 kilometers of Futian District Sports Park.")
+    raw = pc.parse_query_no_oracle(query)
+    variants = solver_constraint_variants(query, raw, use_oracle=False)
+    assert variants[0].get("poi_distance_hotel") == [
+        {"reference": "Futian District Sports Park", "distance_km": 9.65},
+    ]

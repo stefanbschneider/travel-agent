@@ -467,7 +467,8 @@ def parse_hotel_nearby(text):
     for pat in patterns:
         m = re.search(pat, text, re.I)
         if m:
-            return {"distance_km": float(m.group(1)), "reference": m.group(2).strip().rstrip(".")}
+            reference = re.sub(r"^the\s+", "", m.group(2).strip().rstrip("."), flags=re.I).strip()
+            return {"distance_km": float(m.group(1)), "reference": reference}
     return None
 
 
@@ -922,6 +923,10 @@ def parse_single_constraint_text(text):
     hotel_near = parse_hotel_nearby(text)
     if hotel_near:
         result["hotel_nearby"] = hotel_near
+        # Mirror solver_constraints.py::_parse_hotel_distance's oracle-mode behavior: the shared
+        # solver-dict schema also expects this as a list-shaped poi_distance_hotel family, which
+        # the no-oracle NL path previously never populated (100% missing on that family).
+        result["poi_distance_hotel"] = [hotel_near]
 
     req_attr = parse_required_attractions(text)
     if req_attr:
