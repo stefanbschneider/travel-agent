@@ -522,6 +522,20 @@ predates Step 1's dynamic-budget code, so it's a static-budget measurement, not 
 The 300s/n=85/repeats=2 full-fold row above took ~7h46m — too slow for iterating on individual
 fixes. Established convention going forward:
 
+**Progress visibility:** `make phase2-progress FOLD=<f> P2_FOLDS=<n> P2_REPEATS=<r> [P2_PROGRESS_ARGS=--watch]`
+(`scripts/phase2_progress.py`) gives a live progress counter for any running/just-launched
+`phase2-baseline` job. It's read-only (never touches code the harness imports or re-executes), so
+it's always safe to run, including mid-freeze while a baseline job holds the source frozen. It
+counts on-disk result-file *write events* rather than trusting the job's log line order (the
+parent process's own prints are fully buffered when stdout is redirected to a file, so chunk-
+subprocess output can appear before an earlier parent print that logically preceded it) or raw
+file counts alone (end-to-end results are cleared between repeats, but solver-only results are
+not, so a full n/n solver-only count can mean "just finished" or "leftover from repeats ago" --
+see the module docstring for the full reasoning). A tracker started mid-job seeds its event count
+from whatever already exists on disk as a floor, so the percentage shown is an estimate that can
+understate history it didn't observe (specifically, an earlier repeat's end-to-end writes that
+were already overwritten before the tracker started) -- start it at job launch for an exact count.
+
 - **Full fold (n=85), `TPC_P2_BUDGET_SEC`/`P2_BUDGET=100`, `P2_REPEATS=1`, `P2_PARALLEL=3-4`** —
   estimated 67-90 min (`repeats × n × 1.9 × budget_sec ÷ parallel`; the 300s job's actual 7h46m
   came in slightly under the parallel=3 formula estimate of ~9h, so real runs may run a bit faster

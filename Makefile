@@ -102,6 +102,7 @@ phase2-help:
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
+	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
 	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
@@ -156,3 +157,11 @@ phase2-timing:
 # Monotonic regression gate: fails if CANDIDATE is worse than BASELINE. Requires BASELINE/CANDIDATE.
 phase2-gate:
 	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)
+
+# Live progress counter for a running/just-launched phase2-baseline job. Read-only (never touches
+# code the harness imports), safe to run at any time including mid-freeze. Add --watch for a
+# live-updating view: make phase2-progress FOLD=0 P2_FOLDS=10 P2_REPEATS=2 P2_PROGRESS_ARGS=--watch
+P2_PROGRESS_ARGS ?=
+phase2-progress:
+	.venv/bin/python scripts/phase2_progress.py --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --repeats $(P2_REPEATS) $(P2_LIMIT_FLAG) $(P2_PROGRESS_ARGS)
