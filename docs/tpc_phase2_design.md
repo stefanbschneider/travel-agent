@@ -546,6 +546,28 @@ fixes. Established convention going forward:
   exception is validating budget-allocation changes themselves (Step 1's dynamic budget), where the
   realistic 300s (or 900s) run is the point and this fast loop doesn't substitute for it.
 
+## Plan 2 Step 0 status (2026-07-12, coding VM)
+
+Executing `docs/tpc_phase2_sonnet_plan2.md` from the coding VM (no long evals here; the 300s
+ground-truth loop runs on a separate, larger eval VM — see the two-VM model in that plan).
+
+- **Step 0.3 (parser behavioral re-run, solver-free, ~50s):** re-ran
+  `scripts/parser_vs_oracle.py --split-set val --behavioral --disjunction --branch-aware` on the
+  current tree (post step-5d, pre-plan-2 code). Result: n=850, precision 0.5725, recall 0.6814,
+  f1 0.6222, value_accuracy 0.8069, disjunction_flattened 134, **behavioral agreement_rate
+  0.7988** — confirms the plan's "last measured 0.7988 after 5c" number exactly (5d's room_type
+  fix didn't move behavioral agreement, consistent with it closing a `wrong_value` bucket the
+  behavioral check doesn't directly credit).
+- **Step 0.1 (confirm `dynbudget-step5-fullfold0-300s` job) / 0.2 (queue the det-only anchor):**
+  **not checkable from the coding VM.** `docs/phase2_baselines/history.jsonl` on this machine's
+  checkout has no row past `20260711T192208Z` (the pre-step-5, static-budget row already
+  documented above), and there is no local process for `record_baseline`/`rehearse_phase2`
+  running here (`ps aux` clean). The job launched 2026-07-12 ~08:00 UTC+2 either hasn't landed on
+  this branch yet or is running/queued on the eval VM. Both the "did dynamic budget + step-5
+  parser move 300s numbers" read and the deterministic-only `det-step5-dynbudget-300s` anchor
+  remain open — needed before Step 6 can conclude, and should come from the eval VM (Step 4's
+  worker once it exists, or a manual overnight run there).
+
 ## Design Rules For Phase 2
 
 1. Solver-first, not prompt-first.
