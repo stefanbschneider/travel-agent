@@ -167,8 +167,6 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
         ))
     for t in _as_list(constraints.get("hotel_type")):
         add(any(_match_text(ht, t) for ht in visited_hotel_types))
-    if constraints.get("hotel_amenity"):
-        add(any(_match_text(ht, constraints["hotel_amenity"]) for ht in visited_hotel_types))
 
     room_numbed = _room_type_to_numbed(constraints.get("room_type"))
     if room_numbed is not None and hotels:

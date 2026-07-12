@@ -525,16 +525,6 @@ def parse_excluded_hotels(text):
     return names if names else None
 
 
-def parse_hotel_amenity(text):
-    """Extract hotel amenity preference (free parking, 24-hour front desk, etc.)."""
-    m = re.search(r"(?:prefer|hope)\s+(?:to\s+stay\s+at\s+)?(?:a\s+)?hotel(?:s)?\s+(?:with|that\s+offer(?:s)?)\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)", text, re.I)
-    if not m:
-        m = re.search(r"(?:hotels?\s+with)\s+(.+?)(?:\.|;|$)", text, re.I)
-    if m:
-        return m.group(1).strip().rstrip(".")
-    return None
-
-
 def parse_stay_duration(text):
     """Extract minimum stay duration at a specific location."""
     constraints = []
@@ -738,6 +728,9 @@ def _cap_first(s):
 def _split_types(chunk):
     out = []
     for p in re.split(r"\s+and\s+|,\s*(?:and\s+|or\s+)?|\s+or\s+", chunk):
+        # Strip a leading article ("a Sunbathing area" -> "Sunbathing area") before
+        # capitalizing, so "hotel with a/an X" phrasing matches the oracle's bare-noun vocabulary.
+        p = re.sub(r"^(?:a|an)\s+", "", p.strip(), flags=re.I)
         p = _cap_first(p)
         if p and p.lower() not in {"the", "following", "these", "a", "an", ""}:
             if p not in out:
@@ -765,6 +758,7 @@ def parse_required_hotel_types(text):
             r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
             r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
             r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
+            r"hotels?\s+with\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
         ):
             m = re.search(pat, text, re.I)
             if m:
@@ -975,10 +969,6 @@ def parse_single_constraint_text(text):
     excl_hotels = parse_excluded_hotels(text)
     if excl_hotels:
         result["excluded_hotels"] = excl_hotels
-
-    hotel_amenity = parse_hotel_amenity(text)
-    if hotel_amenity:
-        result["hotel_amenity"] = hotel_amenity
 
     stay_dur = parse_stay_duration(text)
     if stay_dur:

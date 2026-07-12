@@ -265,3 +265,35 @@ def test_hotel_nearby_variant_matches_solver_schema_family():
     assert variants[0].get("poi_distance_hotel") == [
         {"reference": "Futian District Sports Park", "distance_km": 9.65},
     ]
+
+
+# --- 5b: "hotel with X" amenity phrasing -> required_hotel_all_types -------
+#
+# The oracle never has a `hotel_amenity` family; "hotel with a swimming pool" / "hotel with Free
+# parking" / "hotel with an Executive Lounge" are all encoded as required_hotel_all_types (e.g.
+# ['Swimming pool'], ['Free parking'], ['Executive Lounge']) -- literally the same string, just the
+# wrong family. `hotel_amenity` no longer exists as an output family at all: it was spurious-only
+# against the oracle (32/32 val queries) and could reject oracle-acceptable plans.
+
+@pytest.mark.parametrize("phrase,expected", [
+    ("we prefer to stay at a hotel that offers free parking.", "Free parking"),
+    ("we do not want to stay in hotels with a Sunbathing area.", "Sunbathing area"),
+    ("want to stay in a hotel with an Executive Lounge.", "Executive Lounge"),
+    ("we want to stay in a hotel with a Family Room.", "Family Room"),
+    ("we want to stay at a hotel with a swimming pool.", "Swimming pool"),
+    ("wish to stay in a hotel with Free parking.", "Free parking"),
+])
+def test_hotel_with_amenity_becomes_required_hotel_all_type(phrase, expected):
+    raw = pc.parse_query_no_oracle(_q(f"We are 2 people traveling for 3 days. {phrase}"))
+    assert expected in (raw.get("required_hotel_all_types") or []), raw
+    assert "hotel_amenity" not in raw
+
+
+def test_hotel_amenity_family_no_longer_produced():
+    assert not hasattr(pc, "parse_hotel_amenity")
+
+
+def test_parsed_verifier_no_longer_enforces_hotel_amenity():
+    import inspect
+    from chinatravel.agent.tpc_agent import parsed_verifier
+    assert "hotel_amenity" not in inspect.getsource(parsed_verifier)
