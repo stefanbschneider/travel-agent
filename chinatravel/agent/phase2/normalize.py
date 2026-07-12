@@ -13,6 +13,7 @@ When flags are off, neither hook runs and the LLM client is never called.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 from copy import deepcopy
@@ -428,6 +429,267 @@ def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
     return updated
 
 
+# --- LLM-first structured extraction (plan-2 Step 6) -----------------------
+#
+# Alternative to the corrective-audit stub above: one LLM call reads the NL query directly (no
+# deterministic parse in the prompt -- independence avoids anchoring on regex mistakes, and
+# decouples the LLM cache from regex changes: audit-mode embeds ir.raw in the prompt, so every
+# regex fix cold-starts the 850-uid cache; extract-mode's prompt depends only on query text).
+# Deterministic validation (whitelist + closed-vocabulary checks, no LLM) gates every field before
+# it can reach the solver; merge is additive-only -- a family only the deterministic parse found
+# is always kept (an invalid/absent LLM value must never delete real recall, the lesson of the
+# audit's B6 gap).
+
+_EXTRACT_ROOM_TYPES = frozenset({"single", "double", "twin"})
+_EXTRACT_CUISINE_FIELDS = {"cuisine_preference", "excluded_cuisine_types"}
+_EXTRACT_HOTEL_FEATURE_FIELDS = {"required_hotel_any_types", "required_hotel_all_types", "hotel_amenity"}
+_EXTRACT_RESTAURANTS_GLOB = "chinatravel/environment/database_en/restaurants/**/*.csv"
+_EXTRACT_ACCOMMODATIONS_GLOB = "chinatravel/environment/database_en/accommodations/**/*.csv"
+_EXTRACT_PROJECT_ROOT = None  # resolved lazily in _extract_vocab (import-time __file__ games are fragile)
+
+
+def _extract_project_root():
+    global _EXTRACT_PROJECT_ROOT
+    if _EXTRACT_PROJECT_ROOT is None:
+        from pathlib import Path
+
+        _EXTRACT_PROJECT_ROOT = Path(__file__).resolve().parents[3]
+    return _EXTRACT_PROJECT_ROOT
+
+
+_extract_vocab_cache: dict | None = None
+
+
+def _extract_vocab() -> dict[str, frozenset[str]]:
+    """Closed vocabularies derived once from the committed environment data: cuisine names
+    (restaurants CSVs' ``cuisine`` column) and hotel feature/type strings (accommodations CSVs'
+    ``featurehoteltype`` column, '/'-separated). Case-folded for matching. room_type's vocabulary
+    is the regex parser's own fixed 3-value set (``parse_constraints.parse_room_type``). Cached
+    process-wide (module-level dict, not functools.lru_cache, so tests can monkeypatch it)."""
+    global _extract_vocab_cache
+    if _extract_vocab_cache is not None:
+        return _extract_vocab_cache
+
+    root = _extract_project_root()
+    cuisines: set[str] = set()
+    for path in root.glob(_EXTRACT_RESTAURANTS_GLOB):
+        with open(path, encoding="utf-8", newline="") as f:
+            for row in csv.DictReader(f):
+                c = (row.get("cuisine") or "").strip()
+                if c:
+                    cuisines.add(c.lower())
+    hotel_features: set[str] = set()
+    for path in root.glob(_EXTRACT_ACCOMMODATIONS_GLOB):
+        with open(path, encoding="utf-8", newline="") as f:
+            for row in csv.DictReader(f):
+                for part in (row.get("featurehoteltype") or "").split("/"):
+                    part = part.strip()
+                    if part:
+                        hotel_features.add(part.lower())
+
+    _extract_vocab_cache = {
+        "cuisine": frozenset(cuisines),
+        "hotel_feature": frozenset(hotel_features),
+        "room_type": _EXTRACT_ROOM_TYPES,
+    }
+    return _extract_vocab_cache
+
+
+def _validate_extract_field(key: str, value, vocab: dict[str, frozenset[str]]):
+    """One field's deterministic validation. Returns the cleaned value, or None if nothing about
+    it survives validation (caller drops the key entirely in that case)."""
+    if key == "free_attractions_only":
+        return bool(value) if isinstance(value, bool) else None
+    if key == "room_type":
+        if isinstance(value, str) and value.strip().lower() in vocab["room_type"]:
+            return value.strip().lower()
+        return None
+    if key in _EXTRACT_CUISINE_FIELDS or key in _EXTRACT_HOTEL_FEATURE_FIELDS:
+        pool = vocab["cuisine"] if key in _EXTRACT_CUISINE_FIELDS else vocab["hotel_feature"]
+        candidates = value if isinstance(value, list) else [value]
+        items = [
+            v.strip() for v in candidates
+            if isinstance(v, str) and v.strip().lower() in pool
+        ]
+        return items or None
+    if key in _LLM_PARSE_LIST_KEYS:
+        if not isinstance(value, list):
+            return None
+        items = [v for v in value if isinstance(v, str) and v.strip()]
+        return items or None
+    if key in _LLM_PARSE_DICT_KEYS:
+        return value if isinstance(value, dict) and value else None
+    # Remaining scalar keys (none left unhandled today, but future _LLM_PARSE_ALLOWED_KEYS
+    # additions land here rather than being silently dropped by an exhaustive if/elif).
+    if key in _LLM_PARSE_SCALAR_KEYS:
+        return value if isinstance(value, str) and value.strip() else None
+    return None
+
+
+def validate_extract_families(raw_families, *, vocab: dict[str, frozenset[str]] | None = None) -> dict:
+    """Deterministic validation layer for an LLM extraction response's ``families`` object: key
+    whitelist (``_LLM_PARSE_ALLOWED_KEYS``) + type checks (the existing LIST/DICT/SCALAR key
+    sets) + closed-vocabulary checks for room_type/cuisine/hotel-feature fields. Never raises;
+    an invalid or unrecognized value is dropped, not guessed at."""
+    if not isinstance(raw_families, dict):
+        return {}
+    vocab = vocab if vocab is not None else _extract_vocab()
+    validated: dict = {}
+    for key, value in raw_families.items():
+        if key not in _LLM_PARSE_ALLOWED_KEYS:
+            continue
+        cleaned = _validate_extract_field(key, value, vocab)
+        if cleaned is not None:
+            validated[key] = cleaned
+    return validated
+
+
+_EXTRACT_FAMILY_SPEC = (
+    "budgets: object mapping cost category to a CNY amount, e.g. {\"total\": 3000} for an"
+    " overall trip budget, or {\"sightseeing\": 800} / {\"hotel\": ...} / {\"food\": ...} for a"
+    " category-specific budget. Use the category the traveler actually named -- only use"
+    " \"total\" when they said \"total\"/\"overall\"/\"the budget\" generically, not for a"
+    " named category like sightseeing.\n"
+    "free_attractions_only: boolean -- itinerary may only include free attractions.\n"
+    "intercity_mode: object {go?: string, back?: string} -- required intercity transport mode(s)"
+    " (e.g. \"train\", \"flight\").\n"
+    "excluded_inner_transport: array of strings -- in-city transport modes to avoid"
+    " (e.g. \"taxi\", \"metro\").\n"
+    "room_type: one of \"single\", \"double\", \"twin\" -- required hotel room type.\n"
+    "required_hotel_any_types/required_hotel_all_types: array of hotel feature/type strings from"
+    " the traveler's request (e.g. \"Hot spring bathing\", \"Family Room\") -- ANY-of vs ALL-of.\n"
+    "required_attractions/excluded_attractions: array of specific attraction names.\n"
+    "required_attraction_types/excluded_attraction_types: array of attraction category strings.\n"
+    "required_restaurants/excluded_restaurants: array of specific restaurant names.\n"
+    "cuisine_preference/excluded_cuisine_types: array of cuisine names from the traveler's"
+    " request (e.g. \"Hot pot\", \"Japanese cuisine\").\n"
+    "required_hotels/excluded_hotels: array of specific hotel names.\n"
+    "timing_constraints/activity_time_windows: array of {reference: string, ...time fields}"
+    " describing a stated visiting-time requirement.\n"
+    "conditional_transport: object describing a transport mode conditioned on some situation.\n"
+    "hotel_nearby: object {reference: string, distance_km: number} -- hotel proximity requirement.\n"
+    "stay_duration: array of {reference: string, minutes: number} -- minimum time to spend"
+    " somewhere.\n"
+    "position_presence: array of positional/ordering requirements.\n"
+)
+
+_EXTRACT_FEW_SHOT = (
+    "Example 1 (simple):\n"
+    "Query: \"3 days in Beijing, 2 people, budget 3000 CNY total, want to stay in a twin room, "
+    "must visit the Forbidden City.\"\n"
+    "Output: {\"families\": {\"budgets\": {\"total\": 3000}, \"room_type\": \"twin\", "
+    "\"required_attractions\": [\"Forbidden City\"]}, \"or_arms\": []}\n\n"
+    "Example 2 (negation -- do not invent a required_* family from a negated clause):\n"
+    "Query: \"2 days in Shanghai, 1 person, do not want to visit any Amusement Park.\"\n"
+    "Output: {\"families\": {\"excluded_attraction_types\": [\"Amusement Park\"]}, \"or_arms\": []}\n\n"
+    "Example 3 (disjunctive):\n"
+    "Query: \"4 days in Chengdu, 2 people. The itinerary must satisfy one of the following: "
+    "1. Stay in a hotel with Hot spring bathing. 2. Only visit free attractions.\"\n"
+    "Output: {\"families\": {}, \"or_arms\": [\"Stay in a hotel with Hot spring bathing\", "
+    "\"Only visit free attractions\"]}\n"
+)
+
+
+def build_llm_extract_prompt(query: dict) -> str:
+    """Prompt for LLM-first structured extraction. Deliberately does NOT include the
+    deterministic parse (see the module-docstring note above this section) -- independence from
+    regex mistakes, and it keeps the LLM cache stable across regex-only commits."""
+    visible = {
+        "uid": query.get("uid"),
+        "people_number": query.get("people_number"),
+        "start_city": query.get("start_city"),
+        "target_city": query.get("target_city"),
+        "days": query.get("days"),
+        "nature_language": query.get("nature_language", ""),
+    }
+    return (
+        "Extract structured travel-planning constraints from the traveler's request below.\n"
+        "Return STRICT JSON only (no markdown/code fences) with this schema:\n"
+        "{\"families\": {<field name>: <value>, ...}, \"or_arms\": [string, ...]}\n\n"
+        "FIELDS (use only these names; omit any field the request does not mention):\n"
+        f"{_EXTRACT_FAMILY_SPEC}\n"
+        "OR-ARMS: some requests are disjunctive -- the itinerary only needs to satisfy ONE of\n"
+        "several numbered/alternative conditions (phrasing varies: \"either X or Y\", \"at least\n"
+        "one of the following\", \"must satisfy one of the following conditions\", ...). If the\n"
+        "request IS disjunctive, set \"or_arms\" to one string per branch -- each string must be\n"
+        "the SELF-CONTAINED constraint text for that branch ALONE, as if it were the entire\n"
+        "request (strip the \"either/one of the following/...\" framing and numbering). If the\n"
+        "request is NOT disjunctive, leave \"or_arms\" empty and put everything in \"families\".\n\n"
+        f"{_EXTRACT_FEW_SHOT}\n"
+        "Rules:\n"
+        "- Use only facts stated in the request; never invent hotels, attractions, numbers, or\n"
+        "  cuisine/hotel-feature names not present in the text.\n"
+        "- Read negations carefully (\"do not\", \"don't\", \"no\", \"avoid\", \"without\",\n"
+        "  \"except\") -- a negated clause is an excluded_*/excluded_attraction_types family, NOT\n"
+        "  a required_* one.\n"
+        "- If the request states no constraints at all, return {\"families\": {}, \"or_arms\": []}.\n\n"
+        "Traveler's request JSON:\n"
+        f"{json.dumps(visible, ensure_ascii=False, indent=2)}"
+    )
+
+
+def llm_extract_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
+    """LLM-first structured extraction with strict deterministic fallback (same contract as
+    ``llm_parse_stub``: any error keeps ``ir`` unchanged by raising, so the orchestrator's
+    try/except degrades to the deterministic parse). Merge policy is additive-only:
+
+    - a validated LLM value overwrites the deterministic value for that family;
+    - an invalid/absent LLM value keeps the deterministic value if the deterministic parse found
+      one (the LLM can never silently delete a family the regex already recalled correctly --
+      plan-1 gap B6, the audit's failure mode);
+    - or_arms are only used when the deterministic splitter found fewer than 2 branches (same
+      precedence as the audit path).
+    """
+    if llm_client is None or not hasattr(llm_client, "complete"):
+        return ir
+
+    prompt = build_llm_extract_prompt(query)
+    cache_key = llm_parse_cache_key(query, prompt)
+    response = llm_client.complete(prompt, cache_key=cache_key)
+    payload = _parse_llm_json_blob(response)
+
+    validated = validate_extract_families(payload.get("families"))
+
+    updated = ParsedIR(
+        raw=dict(ir.raw),
+        variants=list(ir.variants),
+        or_groups=list(ir.or_groups),
+        confidence=dict(ir.confidence),
+        field_alternatives=deepcopy(ir.field_alternatives),
+        spans=dict(ir.spans),
+        entity_candidates=dict(ir.entity_candidates),
+        hard_vs_soft=dict(ir.hard_vs_soft),
+    )
+    # Additive merge: start from the deterministic raw parse, overwrite only with validated LLM
+    # values. Deterministic-only families (the LLM omitted or produced an invalid value for them)
+    # survive untouched. Dict-shaped families (budgets, ...) merge at the SUB-KEY level rather
+    # than a whole-value replace -- a whole-value replace would silently drop a deterministic
+    # sub-key the LLM's dict didn't happen to mention (observed live: NL "the budget for
+    # sightseeing is 800" parses deterministically to budgets={"sightseeing": 800}, but the LLM
+    # extracted budgets={"total": 800} -- a blind replace would have lost "sightseeing" entirely).
+    for key, value in validated.items():
+        if key in _LLM_PARSE_DICT_KEYS and isinstance(updated.raw.get(key), dict):
+            merged = dict(updated.raw[key])
+            merged.update(value)
+            updated.raw[key] = merged
+        else:
+            updated.raw[key] = value
+
+    arms = payload.get("or_arms")
+    if isinstance(arms, list) and len(updated.or_groups) < 2:
+        parsed_groups = []
+        for item in arms:
+            if not isinstance(item, str):
+                continue
+            part = _parse_constraint_text(item.strip())
+            if part:
+                parsed_groups.append(part)
+        if len(parsed_groups) >= 2:
+            updated.or_groups = parsed_groups
+
+    return updated
+
+
 def _detect_or_groups(query: dict) -> list[dict]:
     """Deterministically split a disjunctive query's NL into per-arm parsed constraint dicts.
 
@@ -462,9 +724,10 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None, deadline: float | N
     Wraps the deterministic no-oracle parse (source of truth for the flat single variant). When
     ``flags.disjunction`` is on and the query is NL-detectably disjunctive, also populate
     ``ir.or_groups`` with one parsed constraint dict per OR arm (consumed by
-    ``ir_to_solver_variants``). When ``flags.llm_parse`` is on, route through ``llm_parse_stub``
-    for corrective/additive proposals. Off by default, so the LLM is never called here on the
-    default path.
+    ``ir_to_solver_variants``). When ``flags.llm_parse`` is on, routes through ``llm_parse_stub``
+    (``flags.llm_parse_mode == "audit"``, the default) or ``llm_extract_stub``
+    (``"extract"``, plan-2 Step 6) for corrective/additive proposals. Off by default, so the LLM
+    is never called here on the default path.
 
     ``deadline``, when given, is the remaining parse-stage budget in seconds (the orchestrator's
     static or dynamic parse slice). If it's below the LLM client's configured request timeout, the
@@ -494,8 +757,10 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None, deadline: float | N
         if deadline is not None and client_timeout is not None and deadline < client_timeout:
             ir.llm_parse_skipped_deadline = True
         else:
+            mode = getattr(flags, "llm_parse_mode", "audit")
+            stub = llm_extract_stub if mode == "extract" else llm_parse_stub
             try:
-                ir = llm_parse_stub(ir, query, llm_client)
+                ir = stub(ir, query, llm_client)
             except Exception as exc:
                 ir.llm_parse_error = repr(exc)
 

@@ -101,6 +101,11 @@ def main() -> None:
     p.add_argument("--backend", default="infradeep")
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--lang", default="en", choices=["en", "zh"])
+    p.add_argument(
+        "--llm-parse-mode", default="audit", choices=["audit", "extract"],
+        help="Which LLM parse strategy to probe (plan-2 Step 6): 'audit' (default, today's "
+        "corrective-audit stub) or 'extract' (LLM-first structured extraction).",
+    )
     p.add_argument("--out", default=str(PROJECT_ROOT / "cache" / "phase2_llm_parse_probe.json"))
     args = p.parse_args()
 
@@ -111,7 +116,10 @@ def main() -> None:
     query_ids, query_data = runner._load_queries(args.split, lang=args.lang)
     llm_client = build_llm_client({"backend": args.backend, "model": args.model})
     det_flags = Flags(disjunction=True)
-    llm_flags = Flags(disjunction=True, llm_parse=True, llm_backend=args.backend)
+    llm_flags = Flags(
+        disjunction=True, llm_parse=True, llm_backend=args.backend,
+        llm_parse_mode=args.llm_parse_mode,
+    )
 
     if args.uids:
         probe_uids = list(args.uids)

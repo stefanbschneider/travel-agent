@@ -74,14 +74,21 @@ class Flags:
     llm_parse: bool = False
     llm_refine: bool = False
     dynamic_budget: bool = False
+    # Master switch stays llm_parse; this only selects the strategy once it's on (plan-2 Step 6).
+    # "audit" (default): today's corrective-audit stub, everything round-trips through the regex.
+    # "extract": LLM-first structured extraction + deterministic validation/merge, independent of
+    # the regex parse. Any other value falls back to "audit".
+    llm_parse_mode: str = "audit"
 
     @classmethod
     def from_env(cls, env: Mapping[str, Any] | None = None) -> "Flags":
         env_map = os.environ if env is None else env
+        raw_mode = str(env_map.get("TPC_P2_LLM_PARSE_MODE", "audit") or "audit").lower()
         return cls(
             llm_backend=str(env_map.get("TPC_P2_LLM_BACKEND", "none") or "none").lower(),
             disjunction=_truthy(env_map.get("TPC_P2_DISJUNCTION", "0")),
             llm_parse=_truthy(env_map.get("TPC_P2_LLM_PARSE", "0")),
+            llm_parse_mode=raw_mode if raw_mode in ("audit", "extract") else "audit",
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
             dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
         )
@@ -171,6 +178,7 @@ def solve_phase2(
         "flags": {
             "disjunction": flags.disjunction,
             "llm_parse": flags.llm_parse,
+            "llm_parse_mode": flags.llm_parse_mode,
             "llm_refine": flags.llm_refine,
             "dynamic_budget": flags.dynamic_budget,
         },

@@ -287,7 +287,8 @@ The harness always preserves a hard finalization buffer and returns before the t
 | -------------- | ------- | -------------- |
 | `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai` / `infradeep`. |
 | `TPC_P2_DISJUNCTION` | `0` | Enable true no-oracle disjunctive branch generation (Stage 1). Implemented (Milestone 4); deterministic NL splitting, one branch-local variant per OR arm. |
-| `TPC_P2_LLM_PARSE` | `0` (library `Flags()`); **effectively `1`** in `solve_phase2.py::run_split` once a usable `TPC_P2_LLM_BACKEND` is configured, unless this var is set explicitly | Enable the LLM corrective-audit second-pass parse (Stage 1). Implemented; falls back to the deterministic parse on any LLM failure (see "Current Gaps To Close"). |
+| `TPC_P2_LLM_PARSE` | `0` (library `Flags()`); **effectively `1`** in `solve_phase2.py::run_split` once a usable `TPC_P2_LLM_BACKEND` is configured, unless this var is set explicitly | Enable the LLM parse second pass (Stage 1); which strategy is picked by `TPC_P2_LLM_PARSE_MODE`. Falls back to the deterministic parse on any LLM failure (see "Current Gaps To Close"). |
+| `TPC_P2_LLM_PARSE_MODE` | `audit` | Only matters when `TPC_P2_LLM_PARSE` is on. `audit` (default): corrective-audit stub, every LLM proposal round-trips through the regex parser (`normalize.llm_parse_stub`). `extract` (plan-2 Step 6): LLM-first structured extraction independent of the regex parse, deterministic whitelist/type/vocab validation, additive merge (`normalize.llm_extract_stub`). Not the runner default — implemented and unit-tested, e2e A/B not yet run (see "Plan 2 Step 6 status" below). |
 | `TPC_P2_LLM_REFINE` | `0` | Enable bounded LLM-guided plan refinement (Stage 3). Stub in skeleton. |
 | `TPC_P2_BUDGET_SEC` | inherits per-query timeout | Total per-query time budget the orchestrator splits across stages. |
 
@@ -610,6 +611,47 @@ ground-truth loop runs on a separate, larger eval VM — see the two-VM model in
   parser move 300s numbers" read and the deterministic-only `det-step5-dynbudget-300s` anchor
   remain open — needed before Step 6 can conclude, and should come from the eval VM (Step 4's
   worker once it exists, or a manual overnight run there).
+
+## Plan 2 Step 6 status (2026-07-12, coding VM): implemented, e2e A/B pending
+
+`TPC_P2_LLM_PARSE_MODE=extract` is implemented and unit-tested (`normalize.llm_extract_stub` +
+`build_llm_extract_prompt` + `validate_extract_families`, `tests/phase2/test_normalize_extract.py`,
+34 tests). Not the runner default; `audit` remains default per the master `TPC_P2_LLM_PARSE`
+switch being unaffected. Per the plan's coding-VM cut-line, only the measurement ladder's cheapest
+rung was run here — the e2e rungs (fastfpr fold row per arm, canonical 300s via VM 2) are deferred.
+
+**Rung 1 (fixture tests + `scripts/phase2_llm_parse_probe.py --llm-parse-mode extract`, ~40 paid
+calls, no solver):** first pass (limit=60, max-probes=20 → 1 disagreement + 20 control uids)
+found two real bugs, both fixed before the second pass:
+
+1. **Dict-family merge silently dropped a deterministic sub-key.** NL "the budget for sightseeing
+   is 800" parses deterministically to `budgets={"sightseeing": 800}`; the LLM extracted
+   `budgets={"total": 800}` (mislabeling the category). The original merge did a whole-value
+   replace for dict-shaped families, so the correct `sightseeing` key was silently lost — exactly
+   the kind of recall loss the plan's merge-policy design says must never happen. Fixed: dict
+   families now merge at the sub-key level (LLM sub-key wins on conflict, deterministic sub-keys
+   the LLM didn't mention survive). Regression tests added.
+2. **`budgets`'s prompt spec biased the model toward "total".** The family spec only gave a
+   `{"total": ...}` example; fixed to list category examples (`sightseeing`, `hotel`, `food`) and
+   state explicitly not to use `"total"` for a named category.
+
+Second pass (same scan, fresh cache): **broke 0/20** control uids (down from 3/20 pre-fix),
+**fixed 0/1** disagreements. The one disagreement in this small sample
+(`20250321062622488462`, a "stay at X for at least 60 minutes" `stay_duration` constraint) exposed
+a **known v1 validation gap, not fixed here**: `stay_duration`/`timing_constraints`/
+`activity_time_windows` are list-of-*structured-dict* families (`{reference, minutes}` etc.), but
+`validate_extract_families`'s generic list-key branch only accepts string items — any dict-shaped
+item is silently dropped (safe: never corrupts the deterministic parse; but these three families
+currently can never be populated by extract mode, only by the deterministic parser). A natural
+follow-up if extract mode is promoted past the A/B; not chased further here per the plan's
+"don't spiral tuning a prompt you can't measure this session" guidance — the fixes above were
+made because they were concretely evidenced by the probe, not because of open-ended tuning.
+
+**Not run here (deferred to VM 2 per the coding-VM cut-line):** rung 2 (full-val
+`parser_vs_oracle --llm-parse --llm-parse-mode extract`, ~100 min paid, cold cache), rung 3
+(fastfpr 100s fold-0 row per arm: det-only / audit / extract), rung 4 (canonical 300s row for the
+winner). **No promotion/kill verdict yet** — `audit` stays the runner default until that evidence
+exists.
 
 ## Design Rules For Phase 2
 
