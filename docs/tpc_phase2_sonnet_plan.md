@@ -1,5 +1,10 @@
 # Phase 2 Improvement Plan (autonomous implementation)
 
+> **Status 2026-07-12:** Steps 1–5 are landed (commits `33795fab`, `eb3732e7`, `14e9472c`,
+> `50c2a240`…`000b88a7`); Steps 6–7 are carried over into the successor plan
+> `docs/tpc_phase2_sonnet_plan2.md` (fast evaluation loop + parsing architecture), which is the
+> plan to execute next.
+
 This is a self-contained, step-by-step plan for improving the Phase 2 agent. It is written so a
 separate agent (Sonnet 5) can execute it autonomously, without access to the conversation that
 produced it. Read this whole file before starting. Background docs (read as needed, not required
