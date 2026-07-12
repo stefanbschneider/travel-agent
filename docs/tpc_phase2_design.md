@@ -517,6 +517,35 @@ predates Step 1's dynamic-budget code, so it's a static-budget measurement, not 
   nothing" finding above is understood to be a budget-allocation artifact rather than a solver
   ceiling.
 
+## Fast e2e iteration loop (2026-07-12)
+
+The 300s/n=85/repeats=2 full-fold row above took ~7h46m — too slow for iterating on individual
+fixes. Established convention going forward:
+
+- **Full fold (n=85), `TPC_P2_BUDGET_SEC`/`P2_BUDGET=100`, `P2_REPEATS=1`, `P2_PARALLEL=3-4`** —
+  estimated 67-90 min (`repeats × n × 1.9 × budget_sec ÷ parallel`; the 300s job's actual 7h46m
+  came in slightly under the parallel=3 formula estimate of ~9h, so real runs may run a bit faster
+  than this predicts). Not under the original 1h ask but close, and a ~6x speedup over the 300s
+  loop with no new infrastructure.
+- **100s, not 60s:** 60s produced too many solver timeouts to be a reliable signal (the reason the
+  default was raised to 300s in the first place, see `cf7d145d`); 100s is the chosen compromise.
+- **repeats=1, not 2:** every repeat-pair measured so far has std=0.0 (temp-0 LLM + warm cache +
+  deterministic CP-SAT) -- that's solver determinism, not measurement precision, so a second repeat
+  currently just redoes identical work. Keep `repeats>=2` for a final submission-facing
+  characterization of the organizers' 5-run averaging (a different, later concern), not for
+  iteration.
+- **Full n, not a subset:** FPR here is an integer count over n, so at n=85 the resolution is
+  ~1.2pts; shrinking to a hand-picked or even random n=20 subset raises that to 5pts -- the ~1-2pt
+  effects this project cares about would fall between grid lines. A curated/stratified subset is
+  additionally *non-comparable* to the full-fold baselines and to itself across changes (it
+  deliberately over- or under-weights families) -- don't build one. Per-family coverage (which a
+  subset would otherwise be for) is already served for free by `parser_vs_oracle.py`
+  (~20s, no solver) -- that's the actual fast loop for parser-only changes.
+- **Budget mostly doesn't matter for parser changes:** e2e FPR was 81.18@60s vs 80.00@300s, nearly
+  flat -- parsing correctness is an accept/reject property, not a function of solve time. The one
+  exception is validating budget-allocation changes themselves (Step 1's dynamic budget), where the
+  realistic 300s (or 900s) run is the point and this fast loop doesn't substitute for it.
+
 ## Design Rules For Phase 2
 
 1. Solver-first, not prompt-first.
