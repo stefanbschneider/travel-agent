@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -80,6 +81,33 @@ def _git_sha() -> str:
 
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def compute_fingerprint(query: dict[str, Any], *, flags, llm_client) -> str:
+    """Hash the solver-facing input for one query (plan-2 Step 2).
+
+    A parser change alters the solver's input only for the uids whose parse actually changed;
+    the solver is deterministic given its variants (temp-0 LLM + warm disk cache + pure regex),
+    so hashing ``parser_vs_oracle.query_variants``'s return value (parsed + oracle variants, the
+    same flag config the real run used) lets a later run detect exactly which uids need
+    re-solving instead of re-solving everything (``scripts/phase2_diff_eval.py``).
+    """
+    variants = parser_mod.query_variants(
+        query, disjunction=flags.disjunction, llm_parse=flags.llm_parse, llm_client=llm_client,
+    )
+    payload = json.dumps(variants, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def compute_fingerprints(
+    query_data: dict[str, Any], uids: list[str], *, flags, llm_client
+) -> dict[str, str]:
+    fingerprints: dict[str, str] = {}
+    for uid in uids:
+        q = query_data[uid]
+        q.setdefault("uid", uid)
+        fingerprints[uid] = compute_fingerprint(q, flags=flags, llm_client=llm_client)
+    return fingerprints
 
 
 def _resolve_fold(split_set: str, fold: int, folds: int, seed: int, limit: int | None) -> FoldSelection:
@@ -603,6 +631,14 @@ def parse_args() -> argparse.Namespace:
         "sequential). Each query's CP-SAT solve uses 1 core by default, so size this to "
         "(core count - 1); memory is usually not the limit (see docs/tpc_phase2_design.md).",
     )
+    p.add_argument(
+        "--fast-fpr",
+        action="store_true",
+        help="Eval-tooling only (plan-2 Step 3): each query's solve stops at the first accepted "
+        "plan (TPC_SOLVE_STOP_AT_ACCEPT) instead of spending the full budget on preference "
+        "polishing. The resulting FPR is a different, uncalibrated metric -- the row is forced "
+        "to a 'fastfpr-' label prefix and must never be gate-compared against normal rows.",
+    )
     return p.parse_args()
 
 
@@ -628,6 +664,8 @@ def main() -> None:
     fresh = not args.reuse_existing
     repeats = max(int(args.repeats), 1)
     label = args.label or ("smoke" if len(fold_info.uids) < 10 else "")
+    if args.fast_fpr and not label.startswith("fastfpr-"):
+        label = f"fastfpr-{label}" if label else "fastfpr"
     if len(fold_info.uids) < 10:
         print(
             f"WARNING: n={len(fold_info.uids)} < 10 — this row is a smoke run, not a baseline "
@@ -650,6 +688,7 @@ def main() -> None:
                 lang=args.lang,
                 fresh=fresh,
                 parallel=args.parallel,
+                fast_fpr=args.fast_fpr,
             )
         )
     rehearsal = rehearsals[-1]
@@ -681,6 +720,15 @@ def main() -> None:
 
     llm_cfg = runner_mod._phase2_llm_config()
 
+    # Solver-input fingerprints (plan-2 Step 2): recomputed with the exact flags/client the real
+    # e2e run used, so a later `phase2_diff_eval.py` run can detect which uids' solver input
+    # actually changed instead of re-solving the whole fold.
+    llm_client, run_flags = runner_mod.resolve_llm_client_and_flags()
+    _, fingerprint_query_data = rehearse_mod.runner_load(fold_info.split_name, args.lang)
+    fingerprints = compute_fingerprints(
+        fingerprint_query_data, fold_info.uids, flags=run_flags, llm_client=llm_client
+    )
+
     e2e_method = f"phase2_e2e_{fold_info.split_name}"
     solver_method = f"phase2_solver_only_{fold_info.split_name}"
     e2e_telemetries, e2e_missing = _collect_selected_telemetry(e2e_method, fold_info.uids)
@@ -709,10 +757,12 @@ def main() -> None:
         "label": label,
         "repeats": repeats,
         "fresh": fresh,
+        "fast_fpr": bool(args.fast_fpr),
         "variance": variance,
         "rehearsal": rehearsal,
         "parser": parser,
         "parser_full": parser_full,
+        "fingerprints": fingerprints,
         "llm_config": {
             "backend": llm_cfg.get("backend", "none"),
             "model": llm_cfg.get("model"),

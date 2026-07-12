@@ -451,6 +451,7 @@ def rehearse(
     fresh=False,
     chunk_size=DEFAULT_CHUNK,
     parallel=DEFAULT_PARALLEL,
+    fast_fpr=False,
 ) -> dict:
     split_name, _is_test = resolve_split_set(split_set)
     uids = splits.read_split(split_name)
@@ -468,9 +469,37 @@ def rehearse(
         "fresh": bool(fresh),
         "chunk_size": int(chunk_size),
         "parallel": int(parallel),
+        "fast_fpr": bool(fast_fpr),
         "modes": {},
     }
 
+    # Eval-tooling only (plan-2 Step 3): never set by run_split, never a library default -- see
+    # TPC_SOLVE_STOP_AT_ACCEPT in tpc_agent.py. Chunk subprocesses inherit this process's
+    # environment, so setting it here before dispatching them is sufficient; restored afterward
+    # so it never leaks into an unrelated call in the same process.
+    _FAST_FPR_ENV = "TPC_SOLVE_STOP_AT_ACCEPT"
+    _prev_fast_fpr_env = os.environ.get(_FAST_FPR_ENV)
+    if fast_fpr:
+        os.environ[_FAST_FPR_ENV] = "1"
+
+    try:
+        return _rehearse_body(
+            report, split_name=split_name, fold_uids=fold_uids, query_data=query_data,
+            modes=modes, budget_sec=budget_sec, lang=lang, fresh=fresh, chunk_size=chunk_size,
+            parallel=parallel, fold=fold, folds=folds,
+        )
+    finally:
+        if fast_fpr:
+            if _prev_fast_fpr_env is None:
+                os.environ.pop(_FAST_FPR_ENV, None)
+            else:
+                os.environ[_FAST_FPR_ENV] = _prev_fast_fpr_env
+
+
+def _rehearse_body(
+    report, *, split_name, fold_uids, query_data, modes, budget_sec, lang, fresh, chunk_size,
+    parallel, fold, folds,
+) -> dict:
     if "end-to-end" in modes:
         if fresh:
             removed = clear_method_outputs(f"phase2_e2e_{split_name}", fold_uids)
@@ -554,6 +583,15 @@ def parse_args() -> argparse.Namespace:
         help=argparse.SUPPRESS,  # internal: self-exec entry point used by _run_solver_only_chunked
     )
     p.add_argument("--uids-file", default=None, help=argparse.SUPPRESS)  # internal, with --worker
+    p.add_argument(
+        "--fast-fpr",
+        action="store_true",
+        help="Eval-tooling only (plan-2 Step 3, never set by the real harness): stop each "
+        "query's solve as soon as an accepted plan is found instead of spending the rest of the "
+        "budget polishing preference score (TPC_SOLVE_STOP_AT_ACCEPT). Cuts iteration cost but "
+        "the resulting FPR is a different, uncalibrated metric -- never compare its rows "
+        "directly against normal ones.",
+    )
     return p.parse_args()
 
 
@@ -583,6 +621,7 @@ def main() -> None:
         fresh=args.fresh,
         chunk_size=args.chunk_size,
         parallel=args.parallel,
+        fast_fpr=args.fast_fpr,
     )
 
 

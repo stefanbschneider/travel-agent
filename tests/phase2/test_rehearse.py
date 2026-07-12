@@ -6,6 +6,8 @@ the deterministic fold selection, the held-out-test guard, and attribution forma
 
 from __future__ import annotations
 
+import os
+
 import pytest
 
 import rehearse_phase2 as R
@@ -203,3 +205,53 @@ def test_run_end_to_end_chunked_defaults_parallel_to_1(monkeypatch):
     monkeypatch.setattr(R, "_run_chunks", fake_run_chunks)
     R._run_end_to_end_chunked("tpc_phase2_val", ["a"], budget_sec=10.0, lang="en", chunk_size=2)
     assert captured["parallel"] == 1
+
+
+# --- --fast-fpr env plumbing (plan-2 Step 3) -- TPCAgent._solve behavior itself is covered by
+# tests/phase2/test_solve_early_exit.py; here we only check rehearse() sets/restores the env var
+# around the chunk-dispatching body without touching real solves. ---------------------------
+
+
+def _stub_rehearse_deps(monkeypatch, *, capture_env_into=None):
+    monkeypatch.setattr(R.splits, "read_split", lambda name: ["a", "b"])
+    monkeypatch.setattr(R, "runner_load", lambda split_name, lang: ([], {}))
+
+    def fake_body(report, **kwargs):
+        if capture_env_into is not None:
+            capture_env_into["env_during"] = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT")
+        return report
+
+    monkeypatch.setattr(R, "_rehearse_body", fake_body)
+
+
+def test_fast_fpr_sets_env_during_body_and_clears_after(monkeypatch):
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT", raising=False)
+    captured = {}
+    _stub_rehearse_deps(monkeypatch, capture_env_into=captured)
+
+    report = R.rehearse(split_set="val", fold=0, folds=2, fast_fpr=True)
+
+    assert captured["env_during"] == "1"
+    assert os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT") is None
+    assert report["fast_fpr"] is True
+
+
+def test_fast_fpr_restores_a_preexisting_env_value(monkeypatch):
+    monkeypatch.setenv("TPC_SOLVE_STOP_AT_ACCEPT", "prior-value")
+    _stub_rehearse_deps(monkeypatch)
+
+    R.rehearse(split_set="val", fold=0, folds=2, fast_fpr=True)
+
+    assert os.environ["TPC_SOLVE_STOP_AT_ACCEPT"] == "prior-value"
+
+
+def test_fast_fpr_off_never_touches_env(monkeypatch):
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT", raising=False)
+    captured = {}
+    _stub_rehearse_deps(monkeypatch, capture_env_into=captured)
+
+    report = R.rehearse(split_set="val", fold=0, folds=2, fast_fpr=False)
+
+    assert captured["env_during"] is None
+    assert os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT") is None
+    assert report["fast_fpr"] is False
