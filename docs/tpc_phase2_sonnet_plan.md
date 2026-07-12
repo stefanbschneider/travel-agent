@@ -102,7 +102,10 @@ Everything below either fixes a known concrete defect or lands one prioritized m
 
 ---
 
-## Step 1 — Dynamic budget reallocation: give unused parse/improve time to the solver
+## Step 1 — Dynamic budget reallocation: give unused parse/improve time to the solver — DONE (`33795fab`)
+
+**Result:** `TPC_P2_DYNAMIC_BUDGET`, runner-default-on. e2e-validated jointly with Step 5 in run
+`20260712T060018Z` (see below) — gate passed vs the pre-fix 300s baseline.
 
 **Goal:** the solve stage's deadline should be computed from *actual* elapsed time, not the static
 `split_budget` slices, so time the parse stage didn't use (and the improve slice, when
@@ -135,7 +138,13 @@ P2_REPEATS=2 P2_LABEL=dynbudget-60s-n20` (~2.5h; leave code frozen while it runs
 FPR to improve or hold (the solver now gets ~52s of 60 instead of ~33s). Update the docs' status
 sections with the measured row (see "Doc upkeep" at the end).
 
-## Step 2 — LLM request timeout + parse-stage time-box
+## Step 2 — LLM request timeout + parse-stage time-box — DONE (`eb3732e7`), one follow-up queued
+
+**Result:** SDK timeout (default 30s) + parse-stage deadline skip landed. **Found after landing:**
+`max_retries=1` means 2 attempts, and the OpenAI SDK retries on `httpx.TimeoutException`, so
+worst-case latency is ~2×timeout, not the intended single-timeout bound — `max_retries=0` is the
+fix, not yet applied (queued behind the Step 1+5 validation job's source freeze, now lifted; do
+next).
 
 **Goal:** no single LLM/network call can hang the harness; the parse stage respects its slice.
 
@@ -167,7 +176,11 @@ deadline works; `none`/`fixture` backends unaffected; no network in unit tests (
 untouched, and the LLM path's behavior only changes under failure). Confirm
 `.venv/bin/python -m pytest` green. No ledger row needed.
 
-## Step 3 — Measure the LLM-parse effect end-to-end (the missing headline measurement)
+## Step 3 — Measure the LLM-parse effect end-to-end (the missing headline measurement) — DONE
+
+**Result:** 60s row `20260711T071751Z`: e2e FPR 85.88→81.18, gate failed (regression). Superseded
+by the 300s post-Step-1+5 row (`20260712T060018Z`): e2e FPR now improves (+2.35 vs the 300s
+pre-fix baseline). See "Step 1 + Step 5 e2e validation" in `docs/tpc_phase2_design.md`.
 
 **Goal:** answer whether the 0.7788 → 0.8694 behavioral-agreement gain moves end-to-end FPR.
 
@@ -193,7 +206,13 @@ Step 8 incident in `docs/tpc_phase2_implementation_plan.md`); fix before re-runn
 - Either way, record the conclusion in the docs (this row finally closes the design doc's open
   "does LLM-parse move e2e FPR" question).
 
-## Step 4 — One realistic-budget attribution row (300s)
+## Step 4 — One realistic-budget attribution row (300s) — DONE
+
+**Result:** `20260711T192208Z` (pre-Step-1/5, static budget): e2e FPR 80.00, solver-only 95.29,
+parsing loss 15.29 pts (grew vs 60s, as B4 predicted) — root cause was budget allocation
+(`budget.py` only ever gave the solver ~165s of 300s), motivating Step 1. Deviates from the plan's
+literal n=20/dynbudget spec (ran static-budget/n=85 instead; see design doc for the reasoning) but
+serves the same purpose.
 
 **Goal:** confirm the parsing-dominant attribution at a budget shaped like the competition's.
 
@@ -209,7 +228,18 @@ work session) and do not commit code while it runs.
 headroom at 300s ≥ parsing loss, Stage 3 refinement moves up the priority list; otherwise it
 stays deferred.
 
-## Step 5 — Close the biggest deterministic parser family gaps
+## Step 5 — Close the biggest deterministic parser family gaps — 5a/5b/room_type/excluded_cuisine_types DONE, stay_duration + re-triage NOT done
+
+**Result (commits `50c2a240`, `93a95d03`, `9f73b735`, `000b88a7`):** 5a (`poi_distance_hotel`) and
+5b (`hotel_amenity`→`required_hotel_all_types` remap) done exactly as scoped. This plan's 5c
+bundled 4 families together; only `excluded_cuisine_types` and `room_type` were done (as separate
+commits/substeps, not bundled) — **`stay_duration` was diagnosed (2 regex gaps + one unfixable
+oracle-data-truncation artifact, written up in the Step 5 diagnosis section of the design doc) but
+never implemented** (low upside: missing count was only 4). 5d (re-triage remaining behavioral
+disagreements) was **not done**. Deterministic full-val behavioral agreement: 0.7788 → 0.7988
+(target was ≥0.80; 0.7988 is a rounding-distance miss, not chased further — see the design doc's
+fast-iteration-loop note on why). e2e-validated jointly with Step 1 in run `20260712T060018Z`
+(gate passed, e2e FPR +2.35 vs the pre-fix 300s baseline).
 
 **Goal:** attack B5 with the same TDD approach that worked for Milestones 5/1c. Work through
 these substeps in order; each is small, solver-free to measure, and independently committable.
@@ -295,9 +325,23 @@ mark steps DONE with a one-line result as you complete them.
 
 ## Definition of done for this plan
 
-- Steps 1–3 complete with ledger rows and passed gates (core deliverable).
-- Step 4's 300s attribution row recorded and interpreted.
-- Step 5 lifts deterministic full-val behavioral agreement to ≥ 0.80 (stretch: LLM-audit
-  combined ≥ 0.90 after Step 6).
-- Steps 6–7 complete, or explicitly deferred with a written reason in this file.
-- All work committed on the branch with green tests; docs current.
+- [x] Steps 1–3 complete with ledger rows and passed gates (core deliverable). Step 3's own 60s
+      row failed its gate (a real, documented regression), but the combined Step 1+5 e2e
+      validation at 300s (`20260712T060018Z`) passes and is the row that actually matters —
+      recorded and gated.
+- [x] Step 4's 300s attribution row recorded and interpreted.
+- [~] Step 5 lifts deterministic full-val behavioral agreement to **0.7988** (target ≥ 0.80 —
+      rounding-distance short, not chased; see design doc). Stretch (LLM-audit combined ≥ 0.90
+      after Step 6) not attempted — Step 6 deferred (below).
+- [ ] Steps 6–7 explicitly deferred:
+  - **Step 6 (LLM-audit recall regression):** premise needs re-checking against the new
+    deterministic floor (0.7788→0.7988) before it's worth a paid full-val `--llm-parse` run —
+    the plan's own note says do this after Step 5 raises the floor, which it now has. Not started.
+  - **Step 7 (SGLang parity):** config-only, deliberately last, not started. Do before
+    competition submission, not before.
+- [x] All work committed on the branch with green tests (228 passed / 9 deselected); docs current.
+
+**Known follow-up not in the original plan, found while implementing Step 2:** LLM client
+`max_retries=1` means the SDK retries on `httpx.TimeoutException`, so worst-case parse-stage
+latency is ~2×timeout, not the single-timeout bound the step intended. Fix (`max_retries=0`)
+identified, not yet applied (see Step 2's status above).

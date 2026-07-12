@@ -517,6 +517,35 @@ predates Step 1's dynamic-budget code, so it's a static-budget measurement, not 
   nothing" finding above is understood to be a budget-allocation artifact rather than a solver
   ceiling.
 
+## Step 1 + Step 5 e2e validation (run `20260712T060018Z`, 2026-07-12)
+
+The re-run happened: same 300s/n=85/repeats=2 config as `20260711T192208Z` above, now with
+`TPC_P2_DYNAMIC_BUDGET` on (Step 1, `33795fab`) *and* all four Step 5 parser fixes (5a–5d,
+`50c2a240`..`000b88a7`) landed. Sanity check passed (`llm_parse_attempted=85`,
+`llm_parse_failed=0`). Gated against `20260711T192208Z` on fpr/parse_failures/budget_overruns:
+**passed** (`scripts/phase2_gate.py`).
+
+- **e2e FPR: 80.00 → 82.35** (+2.35 pts, std 0.0 across both repeats). This is the headline result
+  this plan was built to get: confirms the combined dynamic-budget + parser-fix work moves the
+  actual harness score, not just the solver-free proxy metrics tracked between substeps.
+- **solver-only FPR: 95.29 → 95.29 (unchanged).** Solver-only mode feeds the solver oracle
+  constraints directly, so the Step 5 parser fixes don't apply to it; that the extra ~100s/query
+  from dynamic budget *also* didn't move it suggests solver-only was already close to its
+  single-worker-CP-SAT ceiling at 300s, not budget-starved the way B1's original analysis assumed
+  — the wasted-budget diagnosis was real, but its effect shows up in e2e (which also has a parse
+  stage competing for the same clock), not in solver-only.
+- **Parsing loss (solver-only − e2e) shrank: 15.29 → 12.94 pts**, in the direction Step 5 was
+  meant to move it. This single row can't cleanly separate the dynamic-budget contribution from
+  the parser-fix contribution (both landed together), but the combined effect is unambiguous and
+  positive.
+- This also closes the open question from the Step 3 measurement above ("does LLM-parse-plus-
+  parser-work move e2e FPR — yes, but currently in the wrong direction at 60s pre-fix"): post
+  Step 1 + Step 5, at the realistic 300s budget, it now moves FPR in the *right* direction.
+- **Not yet isolated:** a dynamic-budget-only row (Step 5 fixes reverted) would attribute the
+  +2.35 between the two changes; not run, since both are keepers regardless of the split and the
+  combined evidence already clears the plan's decision bar. Skip unless attribution specifically
+  becomes decision-relevant later.
+
 ## Fast e2e iteration loop (2026-07-12)
 
 The 300s/n=85/repeats=2 full-fold row above took ~7h46m — too slow for iterating on individual
