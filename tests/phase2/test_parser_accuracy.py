@@ -297,3 +297,55 @@ def test_parsed_verifier_no_longer_enforces_hotel_amenity():
     import inspect
     from chinatravel.agent.tpc_agent import parsed_verifier
     assert "hotel_amenity" not in inspect.getsource(parsed_verifier)
+
+
+# --- 5c: excluded_cuisine_types word-order gap + cleanup bugs --------------
+
+def test_reversed_word_order_type_of_restaurant_singular():
+    # Real val phrasing: "type of restaurant" (singular), not "restaurant of type".
+    raw = pc.parse_query_no_oracle(
+        _q("2. Do not want to try the following type of restaurant: Hot pot")
+    )
+    assert raw.get("excluded_cuisine_types") == ["Hot pot"], raw
+
+
+def test_reversed_word_order_types_of_restaurants_plural_multi():
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to try the following types of restaurants: Middle Eastern cuisine "
+           "and Northwestern Chinese cuisine.")
+    )
+    assert raw.get("excluded_cuisine_types") == [
+        "Middle Eastern cuisine", "Northwestern Chinese cuisine",
+    ], raw
+
+
+def test_restaurants_serving_x_phrasing():
+    raw = pc.parse_query_no_oracle(
+        _q("2. Do not want to try restaurants serving fusion cuisine.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["fusion cuisine"], raw
+
+
+def test_cuisine_suffix_kept_in_x_cuisine_restaurants_phrasing():
+    # Previously dropped the word "cuisine" itself: captured "fusion" instead of "fusion cuisine".
+    raw = pc.parse_query_no_oracle(
+        _q("2. Do not want to try fusion cuisine restaurants.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["fusion cuisine"], raw
+
+
+def test_oxford_comma_and_before_last_item_not_kept():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not want to try restaurants of types Bar/Pub, Other, and Halal cuisine.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["Bar/Pub", "Other", "Halal cuisine"], raw
+
+
+def test_embedded_quotes_stripped():
+    raw = pc.parse_query_no_oracle(
+        _q('We do not wish to try restaurants of the types "Other Chinese Cuisine" and '
+           '"Jiangsu-Zhejiang cuisine."')
+    )
+    assert raw.get("excluded_cuisine_types") == [
+        "Other Chinese Cuisine", "Jiangsu-Zhejiang cuisine",
+    ], raw

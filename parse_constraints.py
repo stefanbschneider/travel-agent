@@ -644,7 +644,7 @@ def parse_cuisine_preference(text):
 
     # "try one of these restaurant types: Beijing cuisine, Barbecue, or Japanese cuisine"
     m = re.search(r"(?:try|visit)\s+(?:one\s+of\s+)?(?:these|the\s+following)\s+restaurant\s+types?[:\s]+(.+?)(?:\.|;|$)", text, re.I)
-    if m:
+    if m and not _negated_before(text, m.start()):
         chunk = m.group(1).strip().rstrip(".")
         parts = re.split(r",\s*(?:or\s+)?|\s+or\s+", chunk)
         for p in parts:
@@ -652,9 +652,11 @@ def parse_cuisine_preference(text):
             if p and p.lower() not in {"the", "following", "these"}:
                 cuisines.append(p)
 
-    # "try the following types of restaurants: Hot pot and Western cuisine"
+    # "try the following types of restaurants: Hot pot and Western cuisine". Negated phrasing
+    # ("do not want to try the following types of restaurants: X") maps to excluded_cuisine_types,
+    # not here -- same guard as the "restaurants of type" pattern below.
     m = re.search(r"(?:try|visit)\s+(?:the\s+following\s+)?types?\s+of\s+restaurants?[:\s]+(.+?)(?:\.|;|$)", text, re.I)
-    if m:
+    if m and not _negated_before(text, m.start()):
         chunk = m.group(1).strip().rstrip(".")
         parts = re.split(r"\s+and\s+|,\s*(?:or\s+)?|\s+or\s+", chunk)
         for p in parts:
@@ -681,7 +683,7 @@ def parse_cuisine_preference(text):
 
     # "Try a Southeast Asian cuisine restaurant"
     m = re.search(r"[Tt]ry\s+(?:a\s+)?(.+?)\s+cuisine\s+restaurant", text, re.I)
-    if m:
+    if m and not _negated_before(text, m.start()):
         c = m.group(1).strip()
         full = c + " cuisine"
         if full not in cuisines:
@@ -694,26 +696,39 @@ def parse_cuisine_preference(text):
     return None
 
 
+_NEG_TRY = (
+    r"(?:do\s+not|don't|didn't|does\s+not|not|avoid|never)\s+(?:want|wish|hope)?\s*(?:to\s+)?"
+    r"(?:try|dine\s+at|eat|visit|have)\s+(?:at\s+)?"
+)
+
+
 def parse_excluded_cuisine_types(text):
     """Extract cuisine/restaurant TYPES the traveler wants to avoid.
 
     Handles negated type phrasing such as "do not want to try restaurants of the type Snacks"
-    (-> ["Snacks"]). Restaurant *names* under negation are handled by parse_excluded_restaurants.
+    (-> ["Snacks"]), the reversed word order "the following type(s) of restaurant(s): X", and
+    "restaurants serving X". Restaurant *names* under negation are handled by
+    parse_excluded_restaurants.
     """
     types = []
     patterns = [
         # "do not want to try (restaurants) of the type X (and Y)"
-        r"(?:do\s+not|don't|didn't|does\s+not|not|avoid|never)\s+(?:want|wish|hope)?\s*(?:to\s+)?"
-        r"(?:try|dine\s+at|eat|visit|have)\s+(?:at\s+)?(?:restaurants?\s+)?of\s+(?:the\s+)?types?\s+(.+?)(?:\.|;|$)",
-        # "do not want ... X-type restaurants" / "X cuisine restaurants"
-        r"(?:do\s+not|don't|not|avoid|never)\s+(?:want|wish|hope)?\s*(?:to\s+)?"
-        r"(?:try|dine\s+at|eat|visit|have)\s+(?:at\s+)?(?:the\s+)?(.+?)\s+(?:type|cuisine)\s+restaurants?",
+        _NEG_TRY + r"(?:restaurants?\s+)?of\s+(?:the\s+)?types?\s+(.+?)(?:\.|;|$)",
+        # "do not want to try the following type(s) of restaurant(s): X (and Y)" (reversed order)
+        _NEG_TRY + r"(?:the\s+following\s+)?types?\s+of\s+restaurants?[:\s]+(.+?)(?:\.|;|$)",
+        # "do not want to try restaurants serving X"
+        _NEG_TRY + r"restaurants?\s+serving\s+(.+?)(?:\.|;|$)",
+        # "do not want ... X-type restaurants" (anchor word dropped -- it's not part of the value)
+        _NEG_TRY + r"(?:the\s+)?(.+?)\s+type\s+restaurants?",
+        # "do not want ... X cuisine restaurants" (anchor word "cuisine" IS part of the value, so
+        # it stays inside the capture group instead of being consumed as a separator)
+        _NEG_TRY + r"(?:the\s+)?(.+?\s+cuisine)\s+restaurants?",
     ]
     for pat in patterns:
         for m in re.finditer(pat, text, re.I):
             chunk = m.group(1).strip().rstrip(".")
-            for p in re.split(r"\s+and\s+|,\s*(?:or\s+)?|\s+or\s+", chunk):
-                p = p.strip()
+            for p in re.split(r"\s+and\s+|,\s*(?:and\s+|or\s+)?|\s+or\s+", chunk):
+                p = p.strip().strip('"').strip()
                 if p and p.lower() not in {"the", "following", "these", "a"}:
                     if p not in types:
                         types.append(p)
