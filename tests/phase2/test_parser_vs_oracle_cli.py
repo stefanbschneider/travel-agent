@@ -29,6 +29,26 @@ def test_run_report_behavioral(tmp_path):
 
 
 @pytest.mark.integration
+def test_run_report_behavioral_two_sided_metrics(tmp_path):
+    """plan-2 Step 5: accept_agreement/reject_agreement/behavioral_balanced show up alongside the
+    legacy agreement_rate column, using a large-enough limit that at least one (target_city, days)
+    group has >=2 members so the reject-side probe set isn't trivially empty."""
+    agg = pvo.run_report(
+        "tpc_phase2_val", limit=40, behavioral=True, disjunction=True, out_dir=str(tmp_path)
+    )
+    behavioral = agg["behavioral"]
+    assert behavioral["agreement_rate"] == behavioral["accept_agreement"]
+    assert behavioral["reject_probes_n"] == agg["n"]
+    if behavioral["reject_probes_kept_n"] > 0:
+        assert behavioral["reject_agreement"] is not None
+        assert 0.0 <= behavioral["reject_agreement"] <= 1.0
+        assert 0.0 <= behavioral["behavioral_balanced"] <= 1.0
+    else:
+        assert behavioral["reject_agreement"] is None
+        assert behavioral["behavioral_balanced"] == behavioral["accept_agreement"]
+
+
+@pytest.mark.integration
 def test_run_report_llm_parse_uses_none_backend_by_default(tmp_path, monkeypatch):
     """No TPC_P2_LLM_BACKEND configured -> the auto-built client is NoneLLMClient, so
     llm_parse_stub's early-return (llm_client without a usable complete()) keeps every query on

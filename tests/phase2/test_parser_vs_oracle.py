@@ -7,6 +7,8 @@ missing, spurious, wrong_value, disjunction_flattened. Pure function on curated 
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import parser_vs_oracle as pvo
 
 
@@ -121,3 +123,113 @@ def test_aggregate_family_stats_sorts_by_spurious_count_desc():
     # sorted descending by spurious count
     assert [s["family"] for s in stats][0] == "a"
     assert by_family["a"]["example_spurious_uids"] == ["u1", "u1", "u2"]
+
+
+# --- Two-sided behavioral proxy: reject-side probes (plan-2 Step 5) ----------
+
+
+def _q(uid, target_city="Beijing", days=3):
+    return {"uid": uid, "target_city": target_city, "days": days}
+
+
+def test_group_key_is_target_city_and_days():
+    assert pvo._group_key(_q("a", "Beijing", 3)) == ("Beijing", 3)
+    assert pvo._group_key(_q("a", "Beijing", 4)) != pvo._group_key(_q("b", "Beijing", 3))
+
+
+def test_select_reject_probes_filters_by_group_key_and_existing_plan(tmp_path):
+    query_data = {
+        "u1": _q("u1", "Beijing", 3),
+        "u2": _q("u2", "Beijing", 3),  # same group, has a plan
+        "u3": _q("u3", "Beijing", 3),  # same group, NO plan on disk
+        "u4": _q("u4", "Shanghai", 3),  # different city
+        "u5": _q("u5", "Beijing", 5),  # different days
+    }
+    (tmp_path / "u2.json").write_text("{}")
+    probes = pvo.select_reject_probes("u1", query_data["u1"], query_data, results_best=tmp_path)
+    assert probes == ["u2"]
+
+
+def test_select_reject_probes_deterministic_sort_and_k_limit(tmp_path):
+    query_data = {"u1": _q("u1")}
+    for i in range(2, 8):
+        uid = f"u{i}"
+        query_data[uid] = _q(uid)
+        (tmp_path / f"{uid}.json").write_text("{}")
+    probes = pvo.select_reject_probes("u1", query_data["u1"], query_data, results_best=tmp_path, k=4)
+    assert probes == ["u2", "u3", "u4", "u5"]  # sorted, first k, deterministic
+
+
+def test_select_reject_probes_excludes_self():
+    query_data = {"u1": _q("u1")}
+    probes = pvo.select_reject_probes("u1", query_data["u1"], query_data, results_best=Path("/nonexistent"))
+    assert probes == []
+
+
+def test_reject_probe_check_keeps_only_oracle_rejected_probes(tmp_path, monkeypatch):
+    # p1: oracle accepts (not a valid reject probe) -> dropped.
+    # p2, p3: oracle rejects -> kept; parsed also rejects p2 (agree), but accepts p3 (miss).
+    for uid in ("p1", "p2", "p3"):
+        (tmp_path / f"{uid}.json").write_text(f'{{"itinerary": [], "_uid": "{uid}"}}')
+
+    def fake_oracle_pass(query, plan):
+        return plan["_uid"] == "p1"
+
+    def fake_parsed_pass(parsed_variants, plan, target_city, *, disjunction):
+        return plan["_uid"] == "p3"
+
+    monkeypatch.setattr(pvo, "_oracle_pass", fake_oracle_pass)
+    monkeypatch.setattr(pvo, "_parsed_pass", fake_parsed_pass)
+
+    row = pvo.reject_probe_check(
+        _q("u1"), parsed_variants=[{}], probe_uids=["p1", "p2", "p3"], results_best=tmp_path,
+    )
+    assert row["kept_probe_uids"] == ["p2", "p3"]
+    assert row["n_kept"] == 2
+    assert row["reject_agree"] == 1  # only p2
+    assert row["reject_agreement"] == 0.5
+
+
+def test_reject_probe_check_no_kept_probes_yields_none_agreement(tmp_path, monkeypatch):
+    (tmp_path / "p1.json").write_text('{"itinerary": []}')
+    monkeypatch.setattr(pvo, "_oracle_pass", lambda query, plan: True)  # oracle accepts everything
+    row = pvo.reject_probe_check(
+        _q("u1"), parsed_variants=[{}], probe_uids=["p1"], results_best=tmp_path,
+    )
+    assert row["n_kept"] == 0
+    assert row["reject_agreement"] is None
+
+
+def test_reject_probe_check_missing_plan_file_is_skipped(tmp_path):
+    row = pvo.reject_probe_check(
+        _q("u1"), parsed_variants=[{}], probe_uids=["does-not-exist"], results_best=tmp_path,
+    )
+    assert row["n_probes"] == 1
+    assert row["kept_probe_uids"] == []
+    assert row["reject_agreement"] is None
+
+
+def test_attribute_reject_misses_credits_missing_families():
+    family_stats = [
+        {"family": "required_attractions", "matched": 0, "missing": 1, "spurious": 0,
+         "wrong_value": 0, "reject_miss": 0},
+        {"family": "budgets", "matched": 1, "missing": 0, "spurious": 0, "wrong_value": 0,
+         "reject_miss": 0},
+    ]
+    rows_by_uid = {
+        "u1": {"uid": "u1", "buckets": {"missing": ["required_attractions"], "matched": [],
+                                        "spurious": [], "wrong_value": []}},
+    }
+    pvo._attribute_reject_misses(
+        family_stats, rows_by_uid=rows_by_uid, reject_miss_uids=["u1"],
+    )
+    by_family = {s["family"]: s for s in family_stats}
+    assert by_family["required_attractions"]["reject_miss"] == 1
+    assert by_family["budgets"]["reject_miss"] == 0
+
+
+def test_attribute_reject_misses_ignores_unknown_uid():
+    family_stats = [{"family": "x", "matched": 0, "missing": 0, "spurious": 0, "wrong_value": 0,
+                     "reject_miss": 0}]
+    pvo._attribute_reject_misses(family_stats, rows_by_uid={}, reject_miss_uids=["ghost"])
+    assert family_stats[0]["reject_miss"] == 0

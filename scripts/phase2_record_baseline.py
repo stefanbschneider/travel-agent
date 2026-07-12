@@ -304,6 +304,16 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "parser_full_behavioral_agreement_rate": float(
             parser_full_behavioral.get("agreement_rate", 0.0)
         ),
+        # Two-sided proxy (plan-2 Step 5): the accept-side agreement_rate above is blind to
+        # *missing* constraints (both sides accept the same oracle-optimal plan regardless of
+        # what the parser dropped); behavioral_balanced folds in the reject-side probe check,
+        # which a missing-constraint parser fails visibly. None (no valid reject probes for any
+        # uid in this split/fold) collapses to the accept-only number, same as the metric itself.
+        "parser_full_behavioral_balanced": float(
+            parser_full_behavioral.get("behavioral_balanced")
+            if parser_full_behavioral.get("behavioral_balanced") is not None
+            else parser_full_behavioral.get("agreement_rate", 0.0)
+        ),
         "llm_backend": llm_backend,
         "llm_parse": llm_backend != "none",
         "timing_total_p50": float(timing.get("total_p50", 0.0)),
@@ -391,6 +401,7 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "parser_full_value_accuracy",
         "parser_full_disjunction_flattened",
         "parser_full_behavioral_agreement_rate",
+        "parser_full_behavioral_balanced",
         "llm_backend",
         "llm_parse",
         "timing_total_p50",
@@ -513,7 +524,9 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- f1: {float(parser_full.get('f1', 0.0)):.4f}",
         f"- value_accuracy: {float(parser_full.get('value_accuracy', 0.0)):.4f}",
         f"- disjunction_flattened: {int(parser_full.get('disjunction_flattened', 0))}",
-        f"- behavioral_agreement_rate: {float(parser_full_behavioral.get('agreement_rate', 0.0)):.4f}",
+        f"- behavioral_agreement_rate (accept-side): {float(parser_full_behavioral.get('agreement_rate', 0.0)):.4f}",
+        f"- reject_agreement (reject-side probes): {parser_full_behavioral.get('reject_agreement')}",
+        f"- behavioral_balanced: {float(parser_full_behavioral.get('behavioral_balanced') if parser_full_behavioral.get('behavioral_balanced') is not None else parser_full_behavioral.get('agreement_rate', 0.0)):.4f}",
         "",
         "## LLM Parse Config",
         "",

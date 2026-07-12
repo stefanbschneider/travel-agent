@@ -274,38 +274,114 @@ def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: 
     return row
 
 
-def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False,
-                     llm_parse: bool = False, llm_client=None) -> dict:
-    """Do parsed vs oracle constraints accept/reject the plan identically?
-
-    With ``disjunction=True`` the parsed side uses OR semantics over disjunction-expanded variants
-    (accept if ANY branch's constraints all pass) — matching how the agent actually accepts plans
-    (``TPCAgent._solve`` keeps a plan that satisfies any one variant). The flat default ANDs OR-arm
-    constraints and therefore under-reports agreement on disjunctive queries.
-    """
+def _parsed_pass(parsed_variants: list[dict], plan: dict, target_city: str, *,
+                 disjunction: bool) -> bool:
+    """Do the parsed constraints accept ``plan``? OR semantics over disjunction-expanded variants
+    when ``disjunction=True`` (accept if ANY branch's constraints all pass), matching how the
+    agent actually accepts plans (``TPCAgent._solve`` keeps a plan that satisfies any one
+    variant). Never raises -- a verifier exception is treated as a reject (conservative)."""
     from chinatravel.agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
+
+    try:
+        if disjunction:
+            return any(
+                all(evaluate_parsed_constraints(v, plan, target_city)) for v in parsed_variants
+            )
+        return all(evaluate_parsed_constraints(parsed_variants[0], plan, target_city))
+    except Exception:
+        return False
+
+
+def _oracle_pass(query: dict, plan: dict) -> bool:
+    """Do this query's oracle (``hard_logic_py``) constraints accept ``plan``? Never raises."""
     from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
 
+    try:
+        oracle_res = evaluate_constraints_py(query.get("hard_logic_py", []) or [], plan, verbose=False)
+        return all(bool(r) for r in oracle_res)
+    except Exception:
+        return False
+
+
+def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False,
+                     llm_parse: bool = False, llm_client=None) -> dict:
+    """Do parsed vs oracle constraints accept/reject the plan identically? (the "accept-side"
+    check: one plan per uid, the oracle-optimal ``results/best/<uid>.json`` -- see
+    ``reject_probe_check`` for the complementary reject-side probe, plan-2 Step 5).
+    """
     parsed_variants, _ = query_variants(
         query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
     )
     target_city = query.get("target_city", "")
-    try:
-        if disjunction:
-            parsed_pass = any(
-                all(evaluate_parsed_constraints(v, plan, target_city)) for v in parsed_variants
-            )
-        else:
-            parsed_pass = all(evaluate_parsed_constraints(parsed_variants[0], plan, target_city))
-    except Exception:
-        parsed_pass = False
-    try:
-        oracle_res = evaluate_constraints_py(query.get("hard_logic_py", []) or [], plan, verbose=False)
-        oracle_pass = all(bool(r) for r in oracle_res)
-    except Exception:
-        oracle_pass = False
+    parsed_pass = _parsed_pass(parsed_variants, plan, target_city, disjunction=disjunction)
+    oracle_pass = _oracle_pass(query, plan)
     return {"uid": query.get("uid"), "oracle_pass": oracle_pass, "parsed_pass": parsed_pass,
             "agree": oracle_pass == parsed_pass}
+
+
+# --- Two-sided behavioral proxy: reject-side probes (plan-2 Step 5) --------
+#
+# The accept-side check above is structurally blind to *missing* constraints: both the parsed and
+# oracle sides accept the same oracle-optimal plan regardless of what the parser missed, so a
+# parser that silently drops constraints looks perfect on this check alone (this is exactly what
+# let the LLM audit look +9 behavioral pts better while e2e FPR got worse -- see docs/
+# tpc_phase2_eval.md, "the parser win did not transfer"). The reject side closes that blind spot:
+# feed each uid *other* uids' oracle-optimal plans (its "reject probes") -- plans that legitimately
+# violate this uid's required-attraction/hotel/cuisine families -- and check whether the parsed
+# constraints reject them too. A parser missing a family will wrongly *accept* a probe the oracle
+# rejects, which this check -- and only this check -- can catch.
+
+
+def _group_key(query: dict) -> tuple:
+    return (query.get("target_city"), query.get("days"))
+
+
+def select_reject_probes(
+    uid: str, query: dict, query_data: dict[str, dict], *, results_best: Path, k: int = 4,
+) -> list[str]:
+    """Deterministic candidate probe uids: other uids in ``query_data`` sharing (target_city,
+    days) with ``query``, restricted to ones with an existing ``results/best`` plan, sorted, first
+    ``k``. Determinism (sort, don't sample) keeps the metric comparable across runs."""
+    key = _group_key(query)
+    candidates = sorted(
+        u for u, q in query_data.items()
+        if u != uid and _group_key(q) == key and (results_best / f"{u}.json").exists()
+    )
+    return candidates[:k]
+
+
+def reject_probe_check(
+    query: dict, parsed_variants: list[dict], probe_uids: list[str], *,
+    results_best: Path, disjunction: bool = False,
+) -> dict:
+    """Run the reject-side probe check for one uid: for each candidate probe plan, keep it only
+    if this uid's *oracle* constraints reject it (a probe the oracle happens to accept -- e.g. a
+    uid with no hard constraints at all -- carries no reject-side signal and is dropped); among
+    kept probes, count how many the *parsed* constraints also reject."""
+    target_city = query.get("target_city", "")
+    kept: list[str] = []
+    reject_agree = 0
+    for probe_uid in probe_uids:
+        plan_path = results_best / f"{probe_uid}.json"
+        try:
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if _oracle_pass(query, plan):
+            continue  # oracle doesn't reject this probe -- no reject-side signal
+        kept.append(probe_uid)
+        if not _parsed_pass(parsed_variants, plan, target_city, disjunction=disjunction):
+            reject_agree += 1
+    n_kept = len(kept)
+    return {
+        "uid": query.get("uid"),
+        "probe_uids": probe_uids,
+        "kept_probe_uids": kept,
+        "n_probes": len(probe_uids),
+        "n_kept": n_kept,
+        "reject_agree": reject_agree,
+        "reject_agreement": (reject_agree / n_kept) if n_kept else None,
+    }
 
 
 def _mean(xs):
@@ -337,6 +413,7 @@ def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5) -> list[
                         "missing": 0,
                         "spurious": 0,
                         "wrong_value": 0,
+                        "reject_miss": 0,
                         "example_missing_uids": [],
                         "example_spurious_uids": [],
                         "example_wrong_value_uids": [],
@@ -347,6 +424,25 @@ def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5) -> list[
                 if example_key in fam_stats and len(fam_stats[example_key]) < max_examples:
                     fam_stats[example_key].append(uid)
     return sorted(stats.values(), key=lambda s: (-s["spurious"], -s["missing"], s["family"]))
+
+
+def _attribute_reject_misses(
+    family_stats: list[dict], *, rows_by_uid: dict[str, dict], reject_miss_uids: list[str],
+) -> None:
+    """For each uid where a reject-probe was wrongly accepted by the parsed constraints, credit
+    the "why" to whichever of that uid's oracle families the parser is missing (plan-2 Step 5:
+    "per-family attribution of reject-misses"). Mutates ``family_stats`` in place; a family that
+    only ever appears as a reject-miss cause (never matched/missing/spurious/wrong_value in the
+    accept-side diff) can't happen here since a reject-miss's cause is by definition drawn from
+    that same uid's ``missing`` bucket, which ``_aggregate_family_stats`` already seeded."""
+    by_family = {s["family"]: s for s in family_stats}
+    for uid in reject_miss_uids:
+        row = rows_by_uid.get(uid)
+        if not row:
+            continue
+        for fam in row.get("buckets", {}).get("missing", []):
+            if fam in by_family:
+                by_family[fam]["reject_miss"] += 1
 
 
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
@@ -371,6 +467,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
 
     rows = []
     behav_rows = []
+    reject_rows = []
     results_best = Path(results_best) if results_best else PROJECT_ROOT / "results" / "best"
     for uid in selected:
         q = query_data[uid]
@@ -387,6 +484,18 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
                 behav_rows.append(behavioral_check(
                     q, plan, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
                 ))
+            # Reject-side probe (plan-2 Step 5): closes the accept-side check's blind spot to
+            # *missing* constraints (both sides accept the same oracle-optimal plan regardless of
+            # what the parser dropped -- see F4 in docs/tpc_phase2_sonnet_plan2.md). Probes come
+            # from the whole split (``query_data``), not just ``selected``, so the metric is
+            # stable across differently-scoped reports (fold-limited vs full-val).
+            probe_uids = select_reject_probes(uid, q, query_data, results_best=results_best)
+            parsed_variants, _ = query_variants(
+                q, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+            )
+            reject_rows.append(reject_probe_check(
+                q, parsed_variants, probe_uids, results_best=results_best, disjunction=disjunction,
+            ))
 
     mean_precision = _mean(r["precision"] for r in rows)
     mean_recall = _mean(r["recall"] for r in rows)
@@ -402,10 +511,32 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         "family_stats": _aggregate_family_stats(rows),
     }
     if behavioral:
+        accept_agreement = round(_mean(1.0 if b["agree"] else 0.0 for b in behav_rows), 4)
+        kept_rows = [r for r in reject_rows if r["n_kept"] > 0]
+        total_kept = sum(r["n_kept"] for r in kept_rows)
+        total_reject_agree = sum(r["reject_agree"] for r in kept_rows)
+        reject_agreement = round(total_reject_agree / total_kept, 4) if total_kept else None
+        behavioral_balanced = (
+            round((accept_agreement + reject_agreement) / 2.0, 4)
+            if reject_agreement is not None else accept_agreement
+        )
+        reject_miss_uids = sorted(
+            r["uid"] for r in kept_rows if r["reject_agree"] < r["n_kept"]
+        )
+        rows_by_uid = {r["uid"]: r for r in rows}
+        _attribute_reject_misses(
+            agg["family_stats"], rows_by_uid=rows_by_uid, reject_miss_uids=reject_miss_uids,
+        )
         agg["behavioral"] = {
             "n": len(behav_rows),
-            "agreement_rate": round(_mean(1.0 if b["agree"] else 0.0 for b in behav_rows), 4),
+            "agreement_rate": accept_agreement,  # kept for row continuity (plan-2 Step 5)
+            "accept_agreement": accept_agreement,
             "disagreements": [b["uid"] for b in behav_rows if not b["agree"]],
+            "reject_agreement": reject_agreement,
+            "reject_probes_n": len(reject_rows),
+            "reject_probes_kept_n": len(kept_rows),
+            "reject_miss_uids": reject_miss_uids,
+            "behavioral_balanced": behavioral_balanced,
         }
 
     if out_dir:

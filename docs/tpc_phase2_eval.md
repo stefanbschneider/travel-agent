@@ -402,7 +402,7 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
 | Three-way attribution | `python scripts/rehearse_phase2.py --mode both --fold <i> --folds <n>` (prints ceiling/solver/end-to-end) |
 | Held-out test (sparingly) | add `--split-set test` to any rehearse command |
 | Parsing precision/recall + buckets (full val, headline signal) | `python scripts/parser_vs_oracle.py --split-set val --behavioral --disjunction --branch-aware` |
-| Behavioral equivalence | `python scripts/parser_vs_oracle.py --split-set val --behavioral` |
+| Behavioral equivalence (accept-side + reject-side probes, plan-2 Step 5) | `python scripts/parser_vs_oracle.py --split-set val --behavioral` — reports `accept_agreement` (the old one-sided `agreement_rate`, kept for row continuity), `reject_agreement` (fraction of oracle-rejected cross-uid probe plans the parsed constraints also reject -- catches *missing* constraints the accept-side check is blind to), and `behavioral_balanced` (mean of the two) |
 | Per-family loss attribution (top spurious/missing families + example uids) | same as above; read the `family_stats` field of the JSON output |
 | Same, with the LLM corrective audit applied | add `--llm-parse` (uses `TPC_P2_LLM_BACKEND`/`agent_env/config.toml`; responses cached by default) |
 | Per-stage timing p50/p95 + reliability | `python scripts/phase2_timing.py --work-dir agent_env/runs/<method>` |
