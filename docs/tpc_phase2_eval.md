@@ -414,6 +414,9 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
 | Deterministic baseline ledger entry (full-val parser metrics always included) | `make phase2-baseline FOLD=<i> P2_FOLDS=<n> P2_BUDGET=<sec> P2_LIMIT=<n> P2_REPEATS=<r> P2_LABEL=<tag>` |
 | Baseline tracker (direct) | `python scripts/phase2_record_baseline.py --split-set val --fold <i> --folds <n> --budget-sec <sec> [--limit <n>] [--repeats <r>] [--label <tag>]` |
 | Pinned-worktree baseline (no code freeze -- plan-2 Step 1) | `python scripts/phase2_eval_at.py --sha <ref> -- --split-set val --fold <i> --budget-sec <sec> ...` (same args as the direct form, after `--`) or `make phase2-baseline-at SHA=<ref> ...` |
+| Differential e2e (plan-2 Step 2): re-solve only the uids whose solver input changed since a baseline row, splice the rest | `python scripts/phase2_diff_eval.py --baseline docs/phase2_baselines/runs/<run_id>.json` (baseline row must have been recorded with fingerprint support; refuses -- "full run required" -- unless every file changed since the baseline sha is parse-only, override with `--unsafe-allow-solver-drift` for exploratory use) |
+| Fast-FPR early-exit solve mode (plan-2 Step 3, eval-tooling only, uncalibrated metric -- never gate-compare against normal rows) | add `--fast-fpr` to `rehearse_phase2.py` or `phase2_record_baseline.py` (forces a `fastfpr-` label prefix; sets `TPC_SOLVE_STOP_AT_ACCEPT` for the solve subprocesses) |
+| Continuous eval worker (plan-2 Step 4, VM 2): turns every pushed commit into one canonical ledger row on the `phase2-eval-ledger` branch | `python scripts/phase2_eval_worker.py` (loop; `nohup ... &` for unattended use) / `--once` for a single iteration / `--dry-run` to print the plan without running or pushing anything |
 | Rehearsal chunk size (memory isolation; default 5) | env `P2_CHUNK=<n>` or `rehearse_phase2.py --chunk-size <n>` (`0` = old single-process behavior) |
 | Run one query end-to-end (uid / file / raw NL text); estimated score always, official score + parsing-vs-solving breakdown when an oracle is available | `python scripts/run_query.py --uid <id>` / `--query-file <path>` / `--query-text "..." --start-city <c> --target-city <c> --days <n>` (see README's Phase 2 Operations §5, or `make phase2-query P2_QUERY_ARGS="..."`) |
 
@@ -438,3 +441,38 @@ integration test (`tests/phase2/test_eval_at.py`, `-m integration`) commits a ch
 repo *after* the worktree is created and confirms the recorded `git_sha` is still the pinned one;
 a real `--limit 2 --budget-sec 10` smoke run against this repo took ~1m52s wall-clock and produced
 a correctly-attributed row.
+
+## Continuous eval worker (plan-2 Step 4, VM 2 ops)
+
+`scripts/phase2_eval_worker.py` is a dumb loop for the dedicated eval machine: fetch
+`origin/stefan/phase2`, resolve the newest sha, and (unless a ledger row already exists for that
+exact `(git_sha, label)` pair) run one canonical 300s/fold-0/n=85/repeats=1/parallel=3 row via
+`phase2_eval_at.py`, labeled `ci-300s`. If the sha touched a parse-only module (same allowlist as
+Step 2's diff-eval guard) it also runs a `TPC_P2_LLM_PARSE=0` row labeled `ci-300s-det`, keeping
+the deterministic-vs-LLM A/B fresh for Step 6. Only the newest sha is ever evaluated — commits
+pushed mid-run are skipped (latest-wins).
+
+Publication never races the coding VM: the worker keeps its own persistent worktree checked out to
+a dedicated `phase2-eval-ledger` branch (created from `origin/stefan/phase2` the first time),
+passes that worktree's `docs/phase2_baselines` as `phase2_eval_at.py --ledger-dir`, and commits +
+pushes there with a `pull --rebase` retry loop (row files are uniquely named and `history.jsonl` is
+append-only, so a rebase is always clean as long as only the worker writes this branch). The coding
+VM consumes via `git fetch origin phase2-eval-ledger && git merge --no-edit
+origin/phase2-eval-ledger` — local rows recorded directly on the coding VM merge fine too, since
+run ids are UTC timestamps.
+
+Ops (VM 2):
+```
+nohup .venv/bin/python scripts/phase2_eval_worker.py >> ~/phase2_eval_worker.log 2>&1 &
+```
+Refuses to start a second instance while a pidfile (`/tmp/phase2_eval_worker.pid` by default) names
+a live PID. `--once` runs a single iteration and exits (used for the acceptance check and for
+manual/CI invocation); `--dry-run` prints the plan (sha, which labels would run) without running or
+pushing anything, e.g. for a quick "is there new work" check from either VM.
+
+**Not yet run on VM 2** (this doc is written from the coding VM, which is instructed to avoid long
+evals): the script, its pure-function tests (sha-already-evaluated / label-construction / the
+allowlist-touch check via a real tmp git repo), and a `--once --dry-run` smoke check against this
+repo's real `origin/stefan/phase2` are done and green here. The plan's actual acceptance
+criterion — a real `--once` run producing a ledger-branch row with a truthful `git_sha`, and a
+second `--once` being a no-op — needs VM 2's long-eval budget and is deferred there.
