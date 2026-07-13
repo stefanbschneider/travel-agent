@@ -136,11 +136,16 @@ def build_llm_parse_prompt(query: dict, deterministic_raw: dict, *, or_groups_co
         else ""
     )
     return (
-        "You are auditing the output of a deterministic (regex) travel-constraint parser.\n"
-        "The regex parser is known to OVER-EXTRACT: it emits spurious constraint families that the\n"
-        "traveler's request does not actually support (for example a negated \"do not want to visit\n"
-        "X\" clause wrongly producing a `required_*` family, or a phrase captured under the wrong\n"
-        "family). Your job is to catch those errors.\n\n"
+        "You are auditing the output of a deterministic (regex) travel-constraint parser against\n"
+        "the traveler's original request. Your job, in priority order: (1) find constraints the\n"
+        "parser MISSED entirely -- these are the costly errors, since an unenforced constraint the\n"
+        "traveler actually stated will make the resulting plan violate their real request; (2) find\n"
+        "constraints extracted with a WRONG VALUE (right family, wrong name/number/type); (3) find\n"
+        "constraints extracted with the WRONG POLARITY (e.g. a negated \"do not want to visit X\"\n"
+        "clause wrongly captured as a `required_*` family instead of `excluded_*`). A family that is\n"
+        "merely extra (spurious, not actively contradicted by the text) is comparatively harmless --\n"
+        "do not remove a family just because it seems unnecessary; only remove when you have a quoted\n"
+        "NL span that actively contradicts it, and only alongside the correct replacement.\n\n"
         "Return STRICT JSON only (no markdown/code fences) with this schema:\n"
         "{\n"
         "  \"patches\": [\n"
@@ -152,23 +157,32 @@ def build_llm_parse_prompt(query: dict, deterministic_raw: dict, *, or_groups_co
         "}\n"
         "AUDIT PROCEDURE (do this for EVERY extracted family, do not skip any):\n"
         f"  Extracted families to audit: {audit_list}\n"
-        "  1. For each extracted family, find the exact span of the natural-language request that\n"
+        "  1. First, re-read the whole request for any constraint the parser MISSED entirely --\n"
+        "     emit an `add` patch with literal constraint_text for each one you find.\n"
+        "  2. For each extracted family, find the exact span of the natural-language request that\n"
         "     supports it. Read the surrounding words, especially negations (\"do not\", \"don't\",\n"
         "     \"no\", \"avoid\", \"without\", \"except\").\n"
-        "  2. If the quoted text does NOT support the extracted family, or supports the OPPOSITE\n"
-        "     polarity (e.g. it is an exclusion mis-labeled as a requirement, or vice versa), emit a\n"
-        "     `remove` patch naming that field. When the correct family is the opposite polarity,\n"
-        "     also emit an `add`/`replace` patch with literal constraint_text for the correct family.\n"
-        "  3. If the quoted text DOES support the extracted family, leave it untouched (no patch).\n"
-        "  4. Add families only when the request clearly states a constraint the parser missed.\n\n"
+        "  3. If the quoted text supports the OPPOSITE polarity (e.g. it is an exclusion\n"
+        "     mis-labeled as a requirement, or vice versa), emit BOTH a `remove` patch for the wrong\n"
+        "     field AND an `add`/`replace` patch with literal constraint_text for the correct,\n"
+        "     opposite family -- a bare `remove` with no corrected replacement is discarded and has\n"
+        "     no effect, so always pair them.\n"
+        "  4. If the extracted value is wrong (wrong name/number/type, but the family and polarity\n"
+        "     are right), emit a `replace` patch with the corrected constraint_text.\n"
+        "  5. If the quoted text supports the extracted family as-is, leave it untouched (no patch).\n\n"
         f"{or_arm_section}"
         "Rules:\n"
         "- Use only facts inferable from the visible query; never invent hotels, attractions, or numbers.\n"
         "- Keep wording concise and literal; constraint_text must be parseable deterministically.\n"
         "- A `remove` patch must set \"fields\" to the exact family name(s) to drop; \"constraint_text\"\n"
-        "  may quote the NL span that proves the family is wrong.\n"
-        "- Prefer removing a demonstrably spurious family over leaving it in. Returning an empty\n"
-        "  patch list asserts that EVERY extracted family is correct -- only do so after auditing all.\n"
+        "  should quote the NL span that actively contradicts the family. Unless the field is on a\n"
+        "  short pre-approved over-extractor list, a bare `remove` with no accompanying `add`/\n"
+        "  `replace` for the same field is discarded before being applied and has no effect -- so\n"
+        "  removing a family without also supplying its correct replacement accomplishes nothing.\n"
+        "- Do not remove a family just because it seems extra or unnecessary; only remove when the\n"
+        "  text actively contradicts it, and always pair the removal with the correct replacement.\n"
+        "  Returning an empty patch list asserts that EVERY extracted family is correct -- only do\n"
+        "  so after auditing all.\n"
         "- If, after auditing, nothing needs to change, return\n"
         "  {\"patches\":[],\"or_arms\":[],\"field_alternatives\":{},\"field_confidence\":{}}.\n"
         "Visible query JSON:\n"
@@ -234,6 +248,81 @@ def _dedupe_json_items(values: list) -> list:
         seen.add(marker)
         out.append(item)
     return out
+
+
+# N4 recall-first merge guard: families demonstrated (with cited uid evidence) to be reliable
+# over-extractors, where a bare `remove` patch is trusted without a paired opposite-polarity
+# correction. Empty until a family earns a place here with cited evidence -- per G1
+# (docs/tpc_phase2_plan3.md), missing/wrong-value constraints cost e2e directly while spurious
+# ones only cost solve time, so the default posture is to distrust bare removes.
+_LLM_REMOVE_WHITELIST: frozenset[str] = frozenset()
+
+# A polarity flip swaps *field names* (required_X <-> excluded_X), so pairing a `remove` with its
+# justifying correction means checking for the OPPOSITE field, not the same one. Only pairs with an
+# unambiguous opposite are listed; a field with no listed opposite can only be removed via the
+# whitelist above, never via generic pairing.
+_LLM_REMOVE_POLARITY_OPPOSITE: dict[str, str] = {
+    "required_attractions": "excluded_attractions",
+    "excluded_attractions": "required_attractions",
+    "required_attraction_types": "excluded_attraction_types",
+    "excluded_attraction_types": "required_attraction_types",
+    "required_restaurants": "excluded_restaurants",
+    "excluded_restaurants": "required_restaurants",
+    "cuisine_preference": "excluded_cuisine_types",
+    "excluded_cuisine_types": "cuisine_preference",
+    "required_hotels": "excluded_hotels",
+    "excluded_hotels": "required_hotels",
+}
+
+
+def _guard_remove_patches(patches: list) -> list:
+    """Reject `remove` patches unless paired with a same-batch opposite-polarity add/replace, or
+    the family is in ``_LLM_REMOVE_WHITELIST`` (plan3 N4).
+
+    A `remove`-only claim is a precision judgment ("this family is spurious") which G1 says barely
+    matters for e2e outcomes; a `remove` paired with a correcting `add`/`replace` for the opposite
+    family is instead a recall/polarity correction ("this family is the wrong polarity, here is the
+    right one"), which does matter. Fields on a rejected remove patch are dropped from that patch;
+    the patch itself is dropped entirely if no fields survive.
+    """
+    corrected_fields: set[str] = set()
+    for patch in patches:
+        if not isinstance(patch, dict):
+            continue
+        mode = str(patch.get("mode") or "add").lower().strip()
+        if mode not in {"add", "replace"}:
+            continue
+        constraint_text = str(patch.get("constraint_text") or "").strip()
+        if constraint_text:
+            corrected_fields.update(_parse_constraint_text(constraint_text).keys())
+
+    guarded = []
+    for patch in patches:
+        if not isinstance(patch, dict):
+            guarded.append(patch)
+            continue
+        mode = str(patch.get("mode") or "add").lower().strip()
+        if mode != "remove":
+            guarded.append(patch)
+            continue
+        fields = patch.get("fields")
+        if not isinstance(fields, list):
+            guarded.append(patch)
+            continue
+        allowed = []
+        for f in fields:
+            if not isinstance(f, str):
+                continue
+            if f in _LLM_REMOVE_WHITELIST:
+                allowed.append(f)
+                continue
+            opposite = _LLM_REMOVE_POLARITY_OPPOSITE.get(f)
+            if opposite is not None and opposite in corrected_fields:
+                allowed.append(f)
+        if allowed:
+            guarded.append({**patch, "fields": allowed})
+        # else: drop the whole remove patch -- nothing in it survives the guard.
+    return guarded
 
 
 def _apply_patch(base: dict, patch: dict, *, mode: str) -> dict:
@@ -372,6 +461,7 @@ def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
 
     patches = payload.get("patches")
     if isinstance(patches, list):
+        patches = _guard_remove_patches(patches)
         for patch in patches:
             if not isinstance(patch, dict):
                 continue

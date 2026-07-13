@@ -286,7 +286,7 @@ N2.
    Measure via reject-side proxy + the `hotel_nearby` wrong_value bucket; if data shows NL values
    are sometimes rounded *down*, drop this substep and document why.
 
-### N4 — Recall-first LLM audit (rewrite the merge policy + prompt around G1)
+### N4 — Recall-first LLM audit (rewrite the merge policy + prompt around G1) [merge guard + prompt landed 2026-07-13; paid measurement rungs not run, see below]
 
 Do after N2/N3 (each regex change cold-starts the audit's LLM cache anyway; batch them).
 
@@ -306,6 +306,28 @@ DeepInfra smoke under the N7 `llm` marker.
   then one paid full-val `--llm-parse` run (~100 min, cold cache — budget for it once, after N2/N3
   are stable): recall must recover to ≥ the deterministic parser's recall, `behavioral_balanced`
   ≥ deterministic. Then the standard e2e ladder. This also refreshes the stale 0.8694 number.
+
+**Landed 2026-07-13 (code-only; paid rungs deferred):** `chinatravel/agent/phase2/normalize.py` —
+`_guard_remove_patches` (a deterministic `_LLM_REMOVE_POLARITY_OPPOSITE` mapping of `required_X
+<-> excluded_X` pairs; a `remove` patch for field F only survives if F is in the still-empty
+`_LLM_REMOVE_WHITELIST` or F's *opposite* field was corrected via an `add`/`replace` in the same
+batch — polarity flips swap field names, so pairing on the same field name is wrong, an initial
+implementation mistake caught and fixed by a failing test), wired into `llm_parse_stub` right
+before patches are applied. `build_llm_parse_prompt` reframed away from "the regex is known to
+OVER-EXTRACT" toward the G1 priority order (missed constraints first, wrong values second, wrong
+polarity third; spurious-but-uncontradicted families are declared harmless and left alone).
+Fixture-backed tests: `test_schema_normalize.py` (`_guard_remove_patches` unit tests +
+`test_llm_parse_removes_spurious_required_family_when_paired_with_correction` +
+`test_llm_parse_bare_remove_without_correction_is_discarded`, replacing a now-obsolete test that
+asserted a *bare* remove succeeded — exactly the behavior this guard exists to stop). One live
+DeepInfra smoke (`test_llm_parse_remove_guard_holds_against_live_response`, Tier 2) verifies the
+guard's invariant end to end against a real nondeterministic response: any family missing from the
+post-LLM IR that the deterministic parser emitted must be whitelisted or have its opposite present
+— passed. **Not run in this session (out of scope for the coding VM, per the two-VM rule and LLM
+cost):** the cheap `phase2_llm_parse_probe.py` disagreement-uid probe and the paid full-val
+`--llm-parse` report — both still needed before promoting `TPC_P2_LLM_PARSE` on by default, since
+this change only makes bare removes harder to apply; it does not by itself prove recall recovers
+to ≥ the deterministic parser's on the full val set.
 
 ### N5 — Generalization probe on the HF dataset (read-only, ~an hour of work) [landed 2026-07-13 — trigger fired, see below]
 

@@ -62,3 +62,22 @@ def test_llm_parse_stub_on_canonical_query_stays_within_allowed_keys(one_query, 
     variants = normalize.ir_to_solver_variants(ir, one_query, flags=flags)
     assert isinstance(variants, list)
     assert len(variants) >= 1
+
+
+def test_llm_parse_remove_guard_holds_against_live_response(one_query, live_deepinfra_client):
+    # N4 merge guard, exercised end to end against a real (nondeterministic) model response: any
+    # family the deterministic parser emitted that is absent from the final IR must have been
+    # removed either via the small whitelist or paired with its opposite-polarity correction --
+    # never via a bare "this looks spurious" claim (G1: that precision judgment barely matters for
+    # e2e outcomes and isn't trusted alone).
+    flags = O.Flags(llm_backend="deepinfra", llm_parse=True)
+    deterministic_raw = normalize.parse_to_ir(one_query, llm_client=None, flags=O.Flags())
+    ir = normalize.parse_to_ir(one_query, llm_client=live_deepinfra_client, flags=flags)
+    assert ir.llm_parse_error is None
+
+    removed = set(deterministic_raw.raw) - set(ir.raw)
+    for field in removed:
+        opposite = normalize._LLM_REMOVE_POLARITY_OPPOSITE.get(field)
+        assert field in normalize._LLM_REMOVE_WHITELIST or (
+            opposite is not None and opposite in ir.raw
+        ), f"{field} was removed without a whitelist entry or an opposite-polarity correction"

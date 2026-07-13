@@ -305,17 +305,23 @@ def test_or_arm_section_defaults_to_present_when_count_unspecified():
     assert "OR-ARM RECOVERY" in prompt
 
 
-def test_llm_parse_removes_spurious_required_family():
-    # The deterministic parse contains a spurious required_attractions family; the audit prompt
-    # should let the LLM remove it via a remove patch (fields=[...]).
-    class RemovingLLM:
+def test_llm_parse_removes_spurious_required_family_when_paired_with_correction():
+    # N4 recall-first merge guard: a `remove` only takes effect when paired, in the same batch,
+    # with an opposite-polarity `add`/`replace` for the same field (the model asserts *why* the
+    # family is wrong by supplying the correct replacement).
+    class PairedLLM:
         def complete(self, prompt, *, system=None, cache_key=None):
             # Sanity: the family we want removed is presented for audit.
             assert "required_attractions" in prompt
             return (
-                '{"patches":[{"mode":"remove","fields":["required_attractions"],'
+                '{"patches":['
+                '{"mode":"remove","fields":["required_attractions"],'
                 '"constraint_text":"the request only says do NOT visit that place",'
-                '"confidence":0.9}],"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+                '"confidence":0.9},'
+                '{"mode":"add","fields":["excluded_attractions"],'
+                '"constraint_text":"We do not want to visit the Confucius Temple.",'
+                '"confidence":0.9}'
+                '],"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
             )
 
     query = {
@@ -331,8 +337,56 @@ def test_llm_parse_removes_spurious_required_family():
     ir.raw["required_attractions"] = ["Confucius Temple"]
 
     # Re-run only the llm parse stub over the seeded IR.
-    updated = normalize.llm_parse_stub(ir, query, RemovingLLM())
+    updated = normalize.llm_parse_stub(ir, query, PairedLLM())
     assert "required_attractions" not in updated.raw, updated.raw
+    assert updated.raw.get("excluded_attractions"), updated.raw
+
+
+def test_llm_parse_bare_remove_without_correction_is_discarded():
+    # N4 guard: an unpaired `remove` (no accompanying add/replace for the same field, and the
+    # field is not on the small pre-approved whitelist) has no effect -- G1 says a bare
+    # "this family is spurious" claim barely matters for e2e outcomes, so it isn't trusted alone.
+    class BareRemoveLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[{"mode":"remove","fields":["required_attractions"],'
+                '"constraint_text":"seems unnecessary","confidence":0.9}],'
+                '"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+            )
+
+    query = {
+        "uid": "q_bare_remove",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "nature_language": "Some unrelated request text.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, flags=flags)
+    ir.raw["required_attractions"] = ["Some Place"]
+
+    updated = normalize.llm_parse_stub(ir, query, BareRemoveLLM())
+    assert updated.raw.get("required_attractions") == ["Some Place"], updated.raw
+
+
+def test_guard_remove_patches_drops_unpaired_field_but_keeps_paired_one():
+    # required_attractions's opposite (excluded_attractions) IS corrected in this batch, so its
+    # removal is allowed; required_restaurants has no corresponding correction, so it is dropped.
+    patches = [
+        {"mode": "remove", "fields": ["required_attractions", "required_restaurants"]},
+        {"mode": "add", "constraint_text": "We do not want to visit Confucius Temple."},
+    ]
+    guarded = normalize._guard_remove_patches(patches)
+    remove_patches = [p for p in guarded if p.get("mode") == "remove"]
+    assert len(remove_patches) == 1
+    assert remove_patches[0]["fields"] == ["required_attractions"]
+    assert any(p.get("mode") == "add" for p in guarded)
+
+
+def test_guard_remove_patches_drops_patch_entirely_when_no_fields_survive():
+    patches = [{"mode": "remove", "fields": ["required_attractions"]}]
+    guarded = normalize._guard_remove_patches(patches)
+    assert guarded == []
 
 
 def test_llm_parse_empty_patches_keep_parse_unchanged():
