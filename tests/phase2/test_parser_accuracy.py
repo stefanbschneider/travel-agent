@@ -388,3 +388,53 @@ def test_embedded_quotes_stripped():
     assert raw.get("excluded_cuisine_types") == [
         "Other Chinese Cuisine", "Jiangsu-Zhejiang cuisine",
     ], raw
+
+
+# --- plan3 N3.2/N3.3: intercity_mode negation -> complement + coverage gaps -
+
+def test_negated_outbound_train_with_the_resolves_to_airplane():
+    # uid 20250322204425912419: "We do not want to take the train to the destination, and we do
+    # not want to take the train for the return trip." Oracle: outbound != train (-> airplane),
+    # return != airplane (-> train). Previously the outbound negative regex required "take a/an
+    # train" (no "the"), so it silently missed this phrasing (missing, not wrong-value).
+    raw = pc.parse_query_no_oracle(_q(
+        "We do not want to take the train to the destination, and we do not want to "
+        "take the train for the return trip."
+    ))
+    assert raw.get("intercity_mode") == {"outbound": "airplane", "return": "airplane"}, raw
+
+
+def test_negated_outbound_train_no_the_resolves_to_airplane():
+    # uid 20250324210212304930: "do not want to take a train to the destination" -- previously a
+    # positive pattern ("take a train to the destination") matched this substring first (ignoring
+    # the negation prefix) and set outbound=train, the exact opposite of what the sentence says.
+    raw = pc.parse_query_no_oracle(_q(
+        "do not want to take a train to the destination, do not want to fly back, and want to "
+        "stay in a single-bed room."
+    ))
+    assert raw.get("intercity_mode") == {"outbound": "airplane", "return": "train"}, raw
+
+
+def test_positive_take_train_to_destination_and_back_unaffected():
+    # uid 20250321032641509206: "take the train to the destination and take the train back" is
+    # genuinely positive (no negation) -- must still resolve to train/train, not be swept up by
+    # the negation-first ordering.
+    raw = pc.parse_query_no_oracle(_q(
+        "The requirement is to take the train to the destination and take the train back."
+    ))
+    assert raw.get("intercity_mode") == {"outbound": "train", "return": "train"}, raw
+
+
+def test_negated_fly_back_resolves_return_to_train():
+    raw = pc.parse_query_no_oracle(_q("We do not want to fly back for the return trip."))
+    assert raw.get("intercity_mode", {}).get("return") == "train", raw
+
+
+def test_multi_mode_exclusion_list_captures_all_modes():
+    # uid 20250322035350348919: "we do not want to use walking or taxi as means of transportation
+    # within the city" -- previously only "walk" was captured, "taxi" was dropped.
+    raw = pc.parse_query_no_oracle(_q(
+        "We do not want to use walking or taxi as means of transportation within the city."
+    ))
+    excluded = raw.get("excluded_inner_transport") or []
+    assert set(excluded) == {"walk", "taxi"}, raw

@@ -124,43 +124,73 @@ def parse_budget(text):
 
 
 def parse_intercity_mode(text):
-    """Extract intercity transport mode requirements."""
+    """Extract intercity transport mode requirements.
+
+    The mode domain is binary (train/airplane), so a negated mode resolves to its complement --
+    the oracle does the same. Negation patterns are checked *before* the corresponding positive
+    pattern (plan3 G4/N3.2): a negated sentence like "do not want to take the train to the
+    destination" contains "take the train to the destination" as a literal substring, so checking
+    positive patterns first would match it and read the sentence as an affirmative -- exactly
+    backwards from what it says.
+    """
     outbound = None
     ret = None
 
-    # "take a train to the destination and return by train"
-    m = re.search(r"(?:take\s+(?:a\s+)?|go\s+by\s+|travel\s+(?:to\s+\w+\s+)?by\s+)(train|airplane|plane|flight)\s+to\s+(?:the\s+)?destination", text, re.I)
+    # --- negative outbound: "do not want to take the/a(n) train to the destination" ---
+    m = re.search(
+        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?take\s+(?:the\s+|an?\s+)?(airplane|plane|flight|train)\s+to\s+(?:the\s+)?destination",
+        text, re.I,
+    )
     if m:
-        outbound = "train" if "train" in m.group(1).lower() else "airplane"
+        excluded = m.group(1).lower()
+        outbound = "train" if excluded in ("airplane", "plane", "flight") else "airplane"
 
-    m = re.search(r"(?:return|back)\s+by\s+(train|airplane|plane|flight)", text, re.I)
-    if not m:
-        m = re.search(r"(?:take\s+(?:the\s+|a\s+)?)(train|airplane|plane|flight)\s+(?:back|for\s+the\s+return)", text, re.I)
+    # --- negative outbound, "fly" verb: "do not want to fly to the destination" ---
+    if outbound is None:
+        m = re.search(r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?fly\s+to\s+(?:the\s+)?destination", text, re.I)
+        if m:
+            outbound = "train"  # negated "fly" (airplane) -> complement
+
+    # --- negative return: "do not want to take the/a(n) train back / for the return trip" ---
+    m = re.search(
+        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?take\s+(?:the\s+|an?\s+)?(airplane|plane|flight|train)\s+(?:for\s+the\s+return|back|for\s+return)",
+        text, re.I,
+    )
     if m:
-        ret = "train" if "train" in m.group(1).lower() else "airplane"
+        excluded = m.group(1).lower()
+        ret = "train" if excluded in ("airplane", "plane", "flight") else "airplane"
 
-    # "Travel to the destination by train and return by train"
-    if not outbound:
+    # --- negative return, "fly" verb: "do not want to fly back" ---
+    if ret is None:
+        m = re.search(r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?fly\s+(?:for\s+the\s+return|back|for\s+return)", text, re.I)
+        if m:
+            ret = "train"
+
+    # --- positive outbound: "take a/the train to the destination" ---
+    if outbound is None:
+        m = re.search(
+            r"(?:take\s+(?:the\s+|a\s+)?|go\s+by\s+|travel\s+(?:to\s+\w+\s+)?by\s+)(train|airplane|plane|flight)\s+to\s+(?:the\s+)?destination",
+            text, re.I,
+        )
+        if m:
+            outbound = "train" if "train" in m.group(1).lower() else "airplane"
+
+    # --- positive return: "return by X" / "take the X back" ---
+    if ret is None:
+        m = re.search(r"(?:return|back)\s+by\s+(train|airplane|plane|flight)", text, re.I)
+        if not m:
+            m = re.search(r"(?:take\s+(?:the\s+|a\s+)?)(train|airplane|plane|flight)\s+(?:back|for\s+the\s+return)", text, re.I)
+        if m:
+            ret = "train" if "train" in m.group(1).lower() else "airplane"
+
+    # --- positive outbound, alt phrasing: "travel to the destination by X" ---
+    if outbound is None:
         m = re.search(r"(?:travel|go)\s+to\s+(?:the\s+)?destination\s+by\s+(train|airplane|plane|flight)", text, re.I)
         if m:
             outbound = "train" if "train" in m.group(1).lower() else "airplane"
 
-    # "do not want to take an airplane to the destination" (negative)
-    if not outbound:
-        m = re.search(r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?take\s+(?:an?\s+)?(airplane|plane|flight|train)\s+to\s+(?:the\s+)?destination", text, re.I)
-        if m:
-            # Negate: if they don't want airplane, they want train (and vice versa)
-            excluded = m.group(1).lower()
-            outbound = "train" if excluded in ("airplane", "plane", "flight") else "airplane"
-
-    if not ret:
-        m = re.search(r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?take\s+(?:an?\s+)?(airplane|plane|flight|train)\s+(?:for\s+the\s+return|back|for\s+return)", text, re.I)
-        if m:
-            excluded = m.group(1).lower()
-            ret = "train" if excluded in ("airplane", "plane", "flight") else "airplane"
-
-    # Simpler: "by train" / "by airplane" without direction context
-    if not outbound and not ret:
+    # Fallback: bare "by train" / "by airplane" without direction context.
+    if outbound is None and ret is None:
         m = re.search(r"(?:take|by|use)\s+(?:a\s+|the\s+)?(train|airplane|plane|flight)", text, re.I)
         if m:
             mode = "train" if "train" in m.group(1).lower() else "airplane"
@@ -199,6 +229,21 @@ def parse_inner_transport_restrictions(text):
     if m:
         for g in [m.group(1), m.group(2)]:
             mode = g.lower().replace("walking", "walk")
+            if mode not in excluded:
+                excluded.append(mode)
+
+    # General multi-mode exclusion list: "do not want to use walking or taxi (as means of
+    # transportation) within the city" -- any ,/or/and-separated run of mode words after a
+    # negated "use", in any order/count (plan3 G4/N3.3; the earlier patterns above only fire when
+    # the negation cue is directly adjacent to a single mode word).
+    m = re.search(
+        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?use\s+"
+        r"((?:taxis?|walking|walk|metro)(?:\s*(?:,|or|and)\s*(?:taxis?|walking|walk|metro))*)",
+        text, re.I,
+    )
+    if m:
+        for word in re.findall(r"taxis?|walking|walk|metro", m.group(1), re.I):
+            mode = word.lower().replace("walking", "walk").replace("taxis", "taxi")
             if mode not in excluded:
                 excluded.append(mode)
 
