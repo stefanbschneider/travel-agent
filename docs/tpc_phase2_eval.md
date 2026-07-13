@@ -321,13 +321,32 @@ flag-off byte-identity verified by `tests/phase2/test_flags.py` and
 
 The wrong_value drop is concentrated exactly where G2 predicted: `required_hotels` (46→9),
 `required_restaurants` (46→12), `excluded_attractions` (9→5). `required_hotels` also gains 41
-matched (22→63) — the family the plan called "the highest-leverage single item," confirmed. The
-solver-free behavioral proxy moves only marginally (as expected — it's a different, noisier
-signal than the structural diff; the diff numbers are the primary evidence for this step).
+matched (22→63) — the family the plan called "the highest-leverage single item," confirmed.
 
-**Measurement ladder status:** rung (a) [full-val solver-free report] done above. Rungs (b)–(d)
-(`phase2_diff_eval.py` splice, fastfpr fold row, canonical 300s row gated vs `20260712T060018Z`)
-are **not run on this coding VM** — `phase2_diff_eval.py`'s parse-only-changed-file guard would
+**Read this cautiously, not as a win yet: `behavioral_balanced` — the metric N2's own accept
+criterion names ("expect ... `behavioral_balanced` up") — is flat (0.8133→0.8134), and
+`reject_agreement` actually dipped (0.8277→0.8243).** Per the "recall/precision asymmetry" (G1)
+and the standing lesson recorded above ("the parser win did not transfer" — structural
+precision/recall improving while e2e regressed), **the behavioral proxy is the trustworthy
+predictor here, and the precision/recall/f1 diff is the diagnostic breakdown, not the reverse.**
+The likely reason the proxy didn't move is G5: `parsed_verifier._match_text` already does
+bidirectional substring matching, so garbage-prefixed names like `"one of the following hotels: X
+or Y"` were *already* substring-matching a plan at hotel X before N2 — cleaning the name to just
+`"X"` doesn't change an accept decision the verifier was already laundering. N2 likely still helps
+e2e concretely on the cases substring-matching couldn't launder (list-splitting recovery, e.g.
+"Zhongshan Park, Venice Town" now requiring both names instead of accidentally matching on one;
+category-misrouting, e.g. an unsatisfiable `required_hotels` entry converted to a satisfiable
+`position_presence` fact) — but that gain is a subset of the full diff swing, not the whole of it,
+and **the VM 2 e2e gate is the decider for this step, not the diff table above.** This also
+sharpens the plan's existing M3 sequencing ("verifier fidelity pass, after N2 lands"): tightening
+`_match_text` toward exact matching on resolved names may be necessary to let N2's structural gain
+actually reach the proxy and e2e, not just optional cleanup.
+
+**Measurement ladder status:** rung (a) [full-val solver-free report] done above; its own
+behavioral-proxy expectation was not met (see above), so this is not yet "landed and confirmed
+positive," only "landed and measured." Rungs (b)–(d) (`phase2_diff_eval.py` splice, fastfpr fold
+row, canonical 300s row gated vs `20260712T060018Z`) are **not run on this coding VM** —
+`phase2_diff_eval.py`'s parse-only-changed-file guard would
 also need `--unsafe-allow-solver-drift` right now, since this step also touched
 `chinatravel/agent/phase2/orchestrator.py` (new `entity_resolution` `Flags` field, behaviorally
 inert when off) and `agent_env/scripts/solve_phase2.py` (default-on wiring), neither on the

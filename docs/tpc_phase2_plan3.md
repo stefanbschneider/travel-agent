@@ -184,19 +184,24 @@ hour; do it alongside the first parser fix).
 
 **Accept:** unit tests for the three rules; corrected report committed; no solver metrics touched.
 
-### N2 — Deterministic entity-resolution layer in `normalize.py` (the main event) [landed 2026-07-13; solver-free measurement done, VM2 gate pending]
+### N2 — Deterministic entity-resolution layer in `normalize.py` (the main event) [code landed 2026-07-13; rung-(a) behavioral proxy flat, VM2 gate is the decider — see below]
 
 **Goal:** every name-bearing family (`required_/excluded_ attractions|restaurants|hotels`,
 `position_presence`, `hotel_nearby.reference`, `stay_duration[].location`,
 `activity_time_windows[].location`) is canonicalized against the target city's POI catalog before
 it reaches the solver or the verifier.
 
-**Landed 2026-07-13:** full-val solver-free report moves precision 0.7356→0.7794, recall
-0.6903→0.7322, f1 0.7122→0.7551, value_accuracy 0.8156→0.8614 (vs the N1-corrected baseline) —
-see the table in `docs/tpc_phase2_eval.md`. `required_hotels` wrong_value drops 46→9 and gains 41
-matched, confirming this was the highest-leverage item. Rungs (b)-(d) of the measurement ladder
-(diff-eval splice, fastfpr row, canonical 300s row gated vs `20260712T060018Z`) are pending on
-VM 2 — not run here per the two-VM rule (this step also touched `orchestrator.py`'s `Flags` and
+**Landed 2026-07-13, code + rung (a) only — not yet a confirmed win:** full-val solver-free report
+moves precision 0.7356→0.7794, recall 0.6903→0.7322, f1 0.7122→0.7551 (vs the N1-corrected
+baseline); `required_hotels` wrong_value drops 46→9 with +41 matched. **But `behavioral_balanced`
+— the metric this step's own accept criterion names — is flat (0.8133→0.8134) and
+`reject_agreement` dipped (0.8277→0.8243).** Per G1/G5, the diff table is diagnostic, not
+predictive; likely cause is `parsed_verifier._match_text`'s substring matching already laundering
+garbage-prefixed names into accept-side passes before N2, so cleaning the name doesn't change the
+accept decision (M3's verifier-fidelity pass may be needed to cash in the structural gain). Full
+reasoning in `docs/tpc_phase2_eval.md`. Rungs (b)-(d) of the measurement ladder (diff-eval splice,
+fastfpr row, canonical 300s row gated vs `20260712T060018Z`) are pending on VM 2 and are the real
+decider — not run here per the two-VM rule (this step also touched `orchestrator.py`'s `Flags` and
 `solve_phase2.py`'s default wiring, which aren't on `phase2_diff_eval.py`'s parse-only allowlist).
 
 **Files:** `chinatravel/agent/phase2/normalize.py` (new `resolve_entities(ir, query, catalog)`
