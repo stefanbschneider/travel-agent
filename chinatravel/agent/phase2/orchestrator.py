@@ -25,11 +25,14 @@ from . import budget as budget_mod
 from . import fallback as fallback_mod
 from . import normalize
 
-# Expected Phase 2 per-query budget: 15 min primary (to be confirmed); 5 min alternative.
-# Override per query via the TPC_P2_BUDGET_SEC env var or the ``budget_sec`` argument.
-PHASE2_DEFAULT_BUDGET_SEC = 900.0  # 15 minutes (primary, TBC)
-PHASE2_ALT_BUDGET_SEC = 300.0      # 5 minutes (alternative)
-DEFAULT_BUDGET_SEC = PHASE2_DEFAULT_BUDGET_SEC
+# Expected Phase 2 per-query budget: 15 min per the organizers' stated primary (to be confirmed);
+# 5 min alternative. Override per query via the TPC_P2_BUDGET_SEC env var or the ``budget_sec``
+# argument. Our own working default is the 5-min alternative (2026-07-11): at 300s the harness
+# still shows plenty of solver headroom (see docs/phase2_baselines), and it keeps baseline/CI
+# iteration cost down; switch to PHASE2_ORGANIZER_BUDGET_SEC for a final pre-submission check.
+PHASE2_ORGANIZER_BUDGET_SEC = 900.0  # 15 minutes (organizers' stated primary, TBC)
+PHASE2_ALT_BUDGET_SEC = 300.0        # 5 minutes (our working default)
+DEFAULT_BUDGET_SEC = PHASE2_ALT_BUDGET_SEC
 DEFAULT_SOLVE_TIMEOUT_GRACE_SEC = 1.0
 
 
@@ -70,15 +73,26 @@ class Flags:
     disjunction: bool = False
     llm_parse: bool = False
     llm_refine: bool = False
+    dynamic_budget: bool = False
+    entity_resolution: bool = False
+    # Master switch stays llm_parse; this only selects the strategy once it's on (plan-2 Step 6).
+    # "audit" (default): today's corrective-audit stub, everything round-trips through the regex.
+    # "extract": LLM-first structured extraction + deterministic validation/merge, independent of
+    # the regex parse. Any other value falls back to "audit".
+    llm_parse_mode: str = "audit"
 
     @classmethod
     def from_env(cls, env: Mapping[str, Any] | None = None) -> "Flags":
         env_map = os.environ if env is None else env
+        raw_mode = str(env_map.get("TPC_P2_LLM_PARSE_MODE", "audit") or "audit").lower()
         return cls(
             llm_backend=str(env_map.get("TPC_P2_LLM_BACKEND", "none") or "none").lower(),
             disjunction=_truthy(env_map.get("TPC_P2_DISJUNCTION", "0")),
             llm_parse=_truthy(env_map.get("TPC_P2_LLM_PARSE", "0")),
+            llm_parse_mode=raw_mode if raw_mode in ("audit", "extract") else "audit",
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
+            dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
+            entity_resolution=_truthy(env_map.get("TPC_P2_ENTITY_RESOLUTION", "0")),
         )
 
 
@@ -166,7 +180,10 @@ def solve_phase2(
         "flags": {
             "disjunction": flags.disjunction,
             "llm_parse": flags.llm_parse,
+            "llm_parse_mode": flags.llm_parse_mode,
             "llm_refine": flags.llm_refine,
+            "dynamic_budget": flags.dynamic_budget,
+            "entity_resolution": flags.entity_resolution,
         },
         "budget_sec": budget_sec,
         "stage_sec": {},
@@ -178,19 +195,31 @@ def solve_phase2(
         "used_fallback": False,
         "valid_output": False,
         "error": None,
+        "llm_parse_error": None,
+        "llm_parse_skipped_deadline": False,
         "variants_count": 0,
     }
 
     # --- Stage 1: parse ---------------------------------------------------
     t0 = time.perf_counter()
     try:
-        ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags)
+        ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags, deadline=b.parse_sec)
+        if ir.llm_parse_error:
+            telemetry["llm_parse_error"] = ir.llm_parse_error
+        if ir.llm_parse_skipped_deadline:
+            telemetry["llm_parse_skipped_deadline"] = True
         variants = normalize.ir_to_solver_variants(ir, query, env=env, flags=flags)
     except Exception as exc:  # parsing must never crash the harness
         variants = []
         telemetry["error"] = f"parse: {exc}"
     telemetry["stage_sec"]["parse"] = time.perf_counter() - t0
     telemetry["variants_count"] = len(variants)
+
+    if flags.dynamic_budget:
+        b.solve_sec = budget_mod.dynamic_solve_sec(
+            b, telemetry["stage_sec"]["parse"], improve_reserved=flags.llm_refine
+        )
+        telemetry["dynamic_solve_sec"] = b.solve_sec
 
     # --- Stage 2: solve (time-boxed) --------------------------------------
     if solve_fn is None:

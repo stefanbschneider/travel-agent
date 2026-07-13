@@ -125,9 +125,106 @@ def test_flags_default_all_off():
     assert flags.disjunction is False
     assert flags.llm_parse is False
     assert flags.llm_refine is False
+    assert flags.dynamic_budget is False
 
 
-def test_llm_parse_error_degrades_to_fallback(one_query):
+def test_dynamic_budget_off_passes_static_solve_slice(one_query):
+    from chinatravel.agent.phase2 import budget as B
+
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    O.solve_phase2(one_query, budget_sec=300.0, solve_fn=spy_solve, flags=O.Flags())
+    assert seen["budget_sec"] == B.split_budget(300.0).solve_sec
+
+
+def test_dynamic_budget_on_gives_solver_the_unused_parse_slice(one_query):
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    plan, telemetry = O.solve_phase2(
+        one_query, budget_sec=300.0, solve_fn=spy_solve, flags=O.Flags(dynamic_budget=True),
+    )
+    # Parse of one_query is fast (deterministic, no LLM) -- solver should get most of the budget
+    # minus the finalize reserve, comfortably more than the static ~165s slice.
+    assert seen["budget_sec"] > 250.0
+    assert telemetry["flags"]["dynamic_budget"] is True
+    assert telemetry["dynamic_solve_sec"] == seen["budget_sec"]
+
+
+def test_dynamic_budget_on_withholds_improve_reserve_when_llm_refine_on(one_query, spy_llm):
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    O.solve_phase2(
+        one_query, budget_sec=300.0, solve_fn=spy_solve, llm_client=spy_llm,
+        flags=O.Flags(dynamic_budget=True, llm_refine=True),
+    )
+    # Improve slice (30s of 300s) must be withheld from the solver when Stage 3 will run.
+    assert seen["budget_sec"] < 270.0
+
+
+def test_orchestrator_passes_parse_slice_as_llm_deadline(one_query, fast_solve_fn):
+    from chinatravel.agent.phase2 import budget as B
+
+    class SlowClient:
+        timeout = 30.0
+
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls += 1
+            return '{"constraint_text":"The budget for dining is 120."}'
+
+    llm = SlowClient()
+    # A total budget whose static parse slice (25% of post-finalize) is well under the client's
+    # 30s timeout -- the call must be skipped, and the skip must surface in telemetry.
+    plan, telemetry = O.solve_phase2(
+        one_query, budget_sec=10.0, solve_fn=fast_solve_fn, llm_client=llm,
+        flags=O.Flags(llm_parse=True),
+    )
+    assert llm.calls == 0
+    assert telemetry["llm_parse_skipped_deadline"] is True
+    assert B.split_budget(10.0).parse_sec < llm.timeout
+
+
+def test_dynamic_budget_floors_at_static_slice_on_tiny_budget(one_query):
+    """A total budget so small that parsing alone can plausibly eat past it must never push the
+    dynamic solve slice below what the static split would have given."""
+    from chinatravel.agent.phase2 import budget as B
+
+    seen = {}
+
+    def spy_solve(query, variants, budget_sec):
+        seen["budget_sec"] = budget_sec
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    O.solve_phase2(
+        one_query, budget_sec=0.05, solve_fn=spy_solve, flags=O.Flags(dynamic_budget=True),
+    )
+    assert seen["budget_sec"] >= B.split_budget(0.05).solve_sec - 1e-9
+
+
+def test_llm_parse_error_keeps_deterministic_parse_not_a_parse_failure(one_query):
+    """A flaky LLM backend must degrade to the deterministic parse, not to zero variants.
+
+    Previously parse_to_ir let llm_parse_stub's raise propagate, and this whole function wraps
+    parse_to_ir in a try/except that discards ir entirely (variants=[]) on ANY parse-stage
+    exception -- so an LLM hiccup was indistinguishable from a genuine parse bug. solve_fn is
+    None here (no WorldEnv in this unit test), so used_fallback is still True for an unrelated
+    reason (nothing can actually solve) -- but telemetry["error"] must not say "parse:", and the
+    deterministic variant must have survived into variants_count.
+    """
     class BadLLM:
         def complete(self, prompt, *, system=None, cache_key=None):
             return "{not-json}"
@@ -140,5 +237,5 @@ def test_llm_parse_error_degrades_to_fallback(one_query):
         flags=O.Flags(llm_parse=True),
     )
     jsonschema.validate(plan, SCHEMA)
-    assert telemetry["used_fallback"] is True
-    assert "parse:" in str(telemetry.get("error", ""))
+    assert "parse:" not in str(telemetry.get("error", ""))
+    assert telemetry["variants_count"] == 1

@@ -42,9 +42,10 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q -m 'not integration'"
+addopts = "-q -m 'not integration and not llm'"
 markers = [
     "integration: slower tests that touch WorldEnv / the real solver (opt-in: run with -m integration)",
+    "llm: live-LLM smokes against a real endpoint (opt-in: run with -m llm; skips at collection if no API key)",
 ]
 
 [tool.setuptools]

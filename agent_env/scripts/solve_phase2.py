@@ -19,8 +19,11 @@ import argparse
 import json
 import os
 import sys
+import tomllib
 from pathlib import Path
 from statistics import mean, pstdev
+
+import psutil
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -36,7 +39,12 @@ from chinatravel.agent.phase2 import llm_client as p2_llm  # noqa: E402
 from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_METHOD_PREFIX = "phase2_e2e_"
-DEFAULT_BUDGET_SEC = orch.PHASE2_DEFAULT_BUDGET_SEC  # 15 min (TBC); override via --budget-sec
+DEFAULT_BUDGET_SEC = orch.DEFAULT_BUDGET_SEC  # 300s (our working default); override via --budget-sec
+DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
+# Warn-only guard: if set, print a warning (never raise/abort) when a single process's RSS grows
+# by more than this many MB since its first solved query. Catches leaks (e.g. func_timeout thread
+# accumulation on timeouts) during long single-process runs; unset by default (opt-in via env).
+MAX_RSS_GROWTH_MB = float(os.environ.get("TPC_P2_MAX_RSS_MB", "0") or "0")
 
 
 def _default_method_for_split(split: str) -> str:
@@ -44,16 +52,52 @@ def _default_method_for_split(split: str) -> str:
     return f"{DEFAULT_METHOD_PREFIX}{split}"
 
 
-def _phase2_llm_config_from_env() -> dict:
-    cfg = {
-        "backend": os.environ.get("TPC_P2_LLM_BACKEND", "none"),
+def _read_local_config(path: Path = DEFAULT_CONFIG_PATH) -> dict:
+    if not path.exists():
+        return {}
+    with path.open("rb") as f:
+        return tomllib.load(f)
+
+
+def _phase2_llm_config() -> dict:
+    cfg: dict = {}
+
+    local_cfg = _read_local_config()
+    phase2_cfg = local_cfg.get("phase2") if isinstance(local_cfg, dict) else None
+    if isinstance(phase2_cfg, dict):
+        llm_cfg = phase2_cfg.get("llm")
+        if isinstance(llm_cfg, dict):
+            cfg.update({k: v for k, v in llm_cfg.items() if v not in (None, "")})
+
+    env_cfg = {
+        "backend": os.environ.get("TPC_P2_LLM_BACKEND"),
         "fixtures_dir": os.environ.get("TPC_P2_LLM_FIXTURES"),
         "model": os.environ.get("TPC_P2_LLM_MODEL"),
         "base_url": os.environ.get("TPC_P2_LLM_BASE_URL"),
         "api_key_env": os.environ.get("TPC_P2_LLM_API_KEY_ENV"),
         "api_key": os.environ.get("TPC_P2_LLM_API_KEY"),
+        "temperature": os.environ.get("TPC_P2_LLM_TEMPERATURE"),
+        "max_tokens": os.environ.get("TPC_P2_LLM_MAX_TOKENS"),
     }
-    return {k: v for k, v in cfg.items() if v not in (None, "")}
+    cfg.update({k: v for k, v in env_cfg.items() if v not in (None, "")})
+
+    backend = str(cfg.get("backend") or "none").lower()
+    cfg["backend"] = backend
+
+    if backend == "deepinfra":
+        cfg.setdefault("api_key_env", "DEEPINFRA_API_KEY")
+        if "base_url" not in cfg and os.environ.get("DEEPINFRA_BASE_URL"):
+            cfg["base_url"] = os.environ["DEEPINFRA_BASE_URL"]
+        if "model" not in cfg and os.environ.get("DEEPINFRA_MODEL"):
+            cfg["model"] = os.environ["DEEPINFRA_MODEL"]
+
+    return cfg
+
+
+def _fmt_score(value) -> str:
+    """Format a score for the per-uid log line; None (oracle-free query) prints as N/A rather
+    than a misleading 0.0000."""
+    return f"{float(value):.4f}" if value is not None else "N/A"
 
 
 def _score_stats(values: list[float]) -> dict:
@@ -70,9 +114,11 @@ def _score_stats(values: list[float]) -> dict:
 
 
 def _aggregate_overall_scores(evaluations: list[dict]) -> dict:
+    # overall_true is None (present key, no value) rather than absent for oracle-free queries
+    # (see evaluate_one's has_oracle gate), so `.get(key, 0.0)` alone would not catch it.
     return {
-        "overall_true": _score_stats([e.get("overall_true", 0.0) for e in evaluations]),
-        "overall_parsed": _score_stats([e.get("overall_parsed", 0.0) for e in evaluations]),
+        "overall_true": _score_stats([e.get("overall_true", 0.0) or 0.0 for e in evaluations]),
+        "overall_parsed": _score_stats([e.get("overall_parsed", 0.0) or 0.0 for e in evaluations]),
     }
 
 
@@ -85,6 +131,42 @@ def _load_queries(split: str, lang: str = "en"):
     if not query_ids:
         raise RuntimeError(f"No queries found for split: {split}")
     return query_ids, query_data
+
+
+def resolve_llm_client_and_flags():
+    """Build the LLM client + acceptance-gate flags exactly as ``run_split`` does.
+
+    Factored out so a caller running a single ad hoc query (e.g. ``scripts/run_query.py``) can
+    reproduce the same parse-time flags used inside a real ``run_split`` invocation -- e.g. to
+    diff the resulting parse against an oracle with ``parser_vs_oracle.compute_query_diff``.
+    """
+    llm_cfg = _phase2_llm_config()
+    llm_client = p2_llm.build_llm_client(llm_cfg)
+
+    # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
+    # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
+    # the deterministic byte-identical invariant tests are unaffected.
+    flags = orch.Flags.from_env()
+    if "TPC_P2_DISJUNCTION" not in os.environ:
+        flags.disjunction = True
+    # Dynamic budget reallocation is a pure timing win (gives Stage 2 whatever Stage 1 -- and
+    # Stage 3 when off -- didn't use) with a floor at the static split, so default it on too.
+    if "TPC_P2_DYNAMIC_BUDGET" not in os.environ:
+        flags.dynamic_budget = True
+    # Same pattern for the LLM corrective parse audit: default it on once a usable backend is
+    # configured (the parse_to_ir fix keeps a deterministic fallback on any LLM failure, so this
+    # is safe to default on), unless the operator explicitly overrides TPC_P2_LLM_PARSE. Library
+    # Flags() and llm_backend="none" (nothing configured) both stay off.
+    if "TPC_P2_LLM_PARSE" not in os.environ and llm_client.backend != "none":
+        flags.llm_parse = True
+    # Deterministic entity resolution (plan3 N2) is pure recall/precision cleanup against the
+    # committed POI catalogs -- no LLM/network dependency, so default it on unconditionally
+    # (same pattern as disjunction/dynamic_budget) unless the operator overrides
+    # TPC_P2_ENTITY_RESOLUTION. Library Flags() stays off for the byte-identical invariant tests.
+    if "TPC_P2_ENTITY_RESOLUTION" not in os.environ:
+        flags.entity_resolution = True
+
+    return llm_client, flags
 
 
 def run_split(
@@ -101,8 +183,15 @@ def run_split(
     results_dir: str | None = None,
     env=None,
     solve_fn=None,
+    queries: dict | None = None,
 ) -> dict:
-    """Run the Phase 2 pipeline over a split. Returns a summary dict."""
+    """Run the Phase 2 pipeline over a split. Returns a summary dict.
+
+    ``queries``, when given, is used verbatim as ``{uid: query_dict}`` instead of loading
+    ``split`` from the on-disk dataset -- lets a caller (e.g. a single-query CLI) feed an
+    ad hoc or file-loaded query through the exact same solve/write/evaluate path used for
+    real splits. ``split`` still becomes a label on the written results/evaluation.
+    """
     method = method or _default_method_for_split(split)
     budget_sec = float(budget_sec if budget_sec is not None else DEFAULT_BUDGET_SEC)
     results_root = Path(results_dir) if results_dir else PROJECT_ROOT / "results"
@@ -110,7 +199,10 @@ def run_split(
     result_method_dir = results_root / method
     result_method_dir.mkdir(parents=True, exist_ok=True)
 
-    query_ids, query_data = _load_queries(split, lang=lang)
+    if queries is not None:
+        query_ids, query_data = list(queries.keys()), queries
+    else:
+        query_ids, query_data = _load_queries(split, lang=lang)
     if uids is not None:
         missing = [u for u in uids if u not in query_data]
         if missing:
@@ -131,22 +223,16 @@ def run_split(
             env = WorldEnv(lang=lang)
         solve_fn = orch.make_tpcagent_solve_fn(env, lang=lang)
 
-    # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
-    # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
-    # the deterministic byte-identical invariant tests are unaffected.
-    flags = orch.Flags.from_env()
-    if "TPC_P2_DISJUNCTION" not in os.environ:
-        flags.disjunction = True
+    llm_client, flags = resolve_llm_client_and_flags()
 
     done_uids: list[str] = []
     skipped = 0
     parse_failures = 0
     llm_parse_attempts = 0
     llm_fixture_missing = 0
+    llm_parse_failed = 0
     solved_evaluations: list[dict] = []
-
-    llm_cfg = _phase2_llm_config_from_env()
-    llm_client = p2_llm.build_llm_client(llm_cfg)
+    rss_baseline_mb: float | None = None
 
     for idx, quid in enumerate(selected, start=1):
         result_path = result_method_dir / f"{quid}.json"
@@ -170,6 +256,18 @@ def run_split(
 
         hb.write_json(result_path, plan)
 
+        rss_mb = psutil.Process().memory_info().rss / (1024 * 1024)
+        telemetry["rss_mb"] = rss_mb
+        if MAX_RSS_GROWTH_MB > 0:
+            if rss_baseline_mb is None:
+                rss_baseline_mb = rss_mb
+            elif rss_mb - rss_baseline_mb > MAX_RSS_GROWTH_MB:
+                print(
+                    f"[rss-warn] {quid}: RSS grew {rss_mb - rss_baseline_mb:.0f} MB since first "
+                    f"query ({rss_baseline_mb:.0f} -> {rss_mb:.0f} MB), exceeds "
+                    f"TPC_P2_MAX_RSS_MB={MAX_RSS_GROWTH_MB:.0f} (warn-only, continuing)"
+                )
+
         run_dir = work_root / quid
         hb.write_json(run_dir / "output.json", plan)
         hb.write_json(run_dir / "telemetry.json", telemetry)
@@ -187,13 +285,15 @@ def run_split(
             err = str(telemetry.get("error") or "")
             if "No fixture for key" in err:
                 llm_fixture_missing += 1
+            if telemetry.get("llm_parse_error"):
+                llm_parse_failed += 1
         done_uids.append(quid)
         print(
             f"[{idx}/{len(selected)}] {quid} "
             f"valid={telemetry.get('valid_output')} fallback={telemetry.get('used_fallback')} "
             f"solve_sec={telemetry.get('stage_sec', {}).get('solve', 0):.2f} "
-            f"overall_true={float(evaluation.get('overall_true', 0.0)):.4f} "
-            f"overall_parsed={float(evaluation.get('overall_parsed', 0.0)):.4f}"
+            f"overall_true={_fmt_score(evaluation.get('overall_true'))} "
+            f"overall_parsed={_fmt_score(evaluation.get('overall_parsed'))}"
         )
 
     solved_overall_stats = _aggregate_overall_scores(solved_evaluations)
@@ -260,6 +360,7 @@ def run_split(
         "llm_backend": getattr(llm_client, "backend", "none"),
         "llm_parse_attempts": llm_parse_attempts,
         "llm_fixture_missing": llm_fixture_missing,
+        "llm_parse_failed": llm_parse_failed,
         "selected": len(selected),
         "skipped": skipped,
         "uids": done_uids,
@@ -276,6 +377,13 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--split", default="tpc_phase2_val")
     p.add_argument("--uid", default=None)
+    p.add_argument(
+        "--uids-file",
+        default=None,
+        help="Path to a file with one uid per line (blank lines ignored); feeds run_split's "
+        "uids= param, overriding --limit/--uid. Used by rehearse_phase2.py's chunked subprocess "
+        "workers to bound each process to a small uid set.",
+    )
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--method", default=None)
     p.add_argument("--resume", action="store_true")
@@ -289,11 +397,19 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     method = args.method or _default_method_for_split(args.split)
+    uids = None
+    if args.uids_file:
+        uids = [
+            line.strip()
+            for line in Path(args.uids_file).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
     summary = run_split(
         args.split,
         method=method,
         limit=args.limit,
         uid=args.uid,
+        uids=uids,
         resume=args.resume,
         budget_sec=args.budget_sec,
         lang=args.lang,

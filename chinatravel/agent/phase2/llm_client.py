@@ -1,6 +1,6 @@
 """LLM client abstraction for the Phase 2 harness.
 
-Three backends, selected by config / the ``TPC_P2_LLM_BACKEND`` env var:
+Backends, selected by config / the ``TPC_P2_LLM_BACKEND`` env var:
 
 - ``none``    : default. No LLM. Calling ``complete`` raises ``LLMDisabledError`` — the
                 deterministic path must never call it. Guarantees zero network locally.
@@ -8,6 +8,7 @@ Three backends, selected by config / the ``TPC_P2_LLM_BACKEND`` env var:
                 (or a hash of the prompt). Zero network. For dev (hand-produced parses) + tests.
 - ``openai``  : OpenAI-compatible endpoint (SGLang, OpenRouter, local Qwen, ...). Reuses the
                 ``openai`` package. OpenRouter is just a ``base_url`` + ``api_key`` preset.
+- ``deepinfra``: DeepInfra preset over the same OpenAI-compatible wire protocol.
 
 Config keys (dict or ``[phase2.llm]`` in agent_env/config.toml):
     backend, model, base_url, api_key, api_key_env, fixtures_dir, temperature, max_tokens.
@@ -37,6 +38,73 @@ class FixtureMissingError(LLMError):
 
 
 DEFAULT_BACKEND = "none"
+# Bounds any single network/LLM call. Without this, a hung request (a 116s outlier was observed
+# live against DeepInfra) can consume most of a query's budget before the solver ever starts --
+# the SDK-level timeout is the actual bound; the orchestrator's parse-stage deadline check (below)
+# additionally skips the call entirely when it can't possibly finish in the remaining slice.
+DEFAULT_LLM_TIMEOUT_SEC = 30.0
+DEFAULT_DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
+# DeepInfra model IDs are case-sensitive "Org/Name" (verified live 2026-07-11); the previous
+# lowercase no-prefix default ("qwen3.6-27b") 404'd on every real call and was masked by
+# parse_to_ir's silent fallback-on-exception -- every deepinfra run without an explicit
+# TPC_P2_LLM_MODEL/DEEPINFRA_MODEL override silently never called the LLM at all.
+DEFAULT_DEEPINFRA_MODEL = "Qwen/Qwen3.6-27B"
+
+
+def _find_project_root(start: Path | None = None) -> Path | None:
+    here = (start or Path(__file__).resolve()).parent
+    for candidate in [here, *here.parents]:
+        if (candidate / "pyproject.toml").exists():
+            return candidate
+    return None
+
+
+def _parse_env_line(line: str) -> tuple[str, str] | None:
+    text = line.strip()
+    if not text or text.startswith("#"):
+        return None
+    if text.startswith("export "):
+        text = text[len("export "):].strip()
+    if "=" not in text:
+        return None
+    key, value = text.split("=", 1)
+    key = key.strip()
+    value = value.strip()
+    if not key:
+        return None
+    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+        value = value[1:-1]
+    return key, value
+
+
+def load_local_env(env_file: str | os.PathLike | None = None, *, overwrite: bool = False) -> dict[str, str]:
+    """Load local .env entries into os.environ.
+
+    - If ``env_file`` is omitted, reads ``<project_root>/.env`` when available.
+    - By default does not overwrite already-set environment variables.
+    - Returns the key/value pairs loaded into the process environment.
+    """
+    path: Path | None
+    if env_file is None:
+        root = _find_project_root()
+        path = (root / ".env") if root else None
+    else:
+        path = Path(env_file)
+
+    if path is None or not path.exists():
+        return {}
+
+    loaded: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        parsed = _parse_env_line(line)
+        if not parsed:
+            continue
+        key, value = parsed
+        if key in os.environ and not overwrite:
+            continue
+        os.environ[key] = value
+        loaded[key] = value
+    return loaded
 
 
 def _hash_prompt(prompt: str, system: str | None) -> str:
@@ -63,7 +131,7 @@ class NoneLLMClient(LLMClient):
     def complete(self, prompt: str, *, system: str | None = None, cache_key: str | None = None) -> str:
         raise LLMDisabledError(
             "LLM backend is 'none'; the deterministic path must not call the LLM. "
-            "Set TPC_P2_LLM_BACKEND=fixture|openai (and the relevant feature flag) to enable it."
+            "Set TPC_P2_LLM_BACKEND=fixture|openai|deepinfra (and the relevant feature flag) to enable it."
         )
 
 
@@ -89,6 +157,45 @@ class FixtureLLMClient(LLMClient):
         raise FixtureMissingError(f"Fixture {path} must be a string or an object with a 'response' key.")
 
 
+class CachingLLMClient(LLMClient):
+    """Wraps another client with an on-disk response cache, keyed by ``cache_key`` (falling back
+    to a hash of prompt+system when the caller doesn't supply one).
+
+    Warm evals become free and byte-deterministic: a repeat run over the same uids issues zero
+    network calls and returns the exact same response, which both keeps DeepInfra usage
+    economical and satisfies the organizers' 5-run-averaging stability concern (temperature is
+    already 0, so a cached response is what a live call would return anyway).
+    """
+
+    def __init__(self, inner: LLMClient, cache_dir: str | os.PathLike):
+        self.inner = inner
+        self.backend = inner.backend
+        self.timeout = getattr(inner, "timeout", None)
+        self.cache_dir = Path(cache_dir) / getattr(inner, "model", "unknown")
+
+    def _cache_path(self, prompt: str, system: str | None, cache_key: str | None) -> Path:
+        key = cache_key or _hash_prompt(prompt, system)
+        # cache_key values (e.g. "parse_<uid>_<hash>") are already filesystem-safe; hash anyway
+        # to tolerate arbitrary caller-supplied keys.
+        safe_key = key if key.replace("_", "").replace("-", "").isalnum() else _hash_prompt(key, None)
+        return self.cache_dir / f"{safe_key}.json"
+
+    def complete(self, prompt: str, *, system: str | None = None, cache_key: str | None = None) -> str:
+        path = self._cache_path(prompt, system, cache_key)
+        if path.exists():
+            data = json.loads(path.read_text(encoding="utf-8"))
+            return str(data["response"])
+
+        response = self.inner.complete(prompt, system=system, cache_key=cache_key)
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"cache_key": cache_key, "response": response}, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        return response
+
+
 def _load_openai_class():  # pragma: no cover - trivial import indirection (mocked in tests)
     from openai import OpenAI
 
@@ -99,14 +206,17 @@ class OpenAILLMClient(LLMClient):
     backend = "openai"
 
     def __init__(self, *, model: str, base_url: str | None = None, api_key: str | None = None,
-                 temperature: float = 0.0, max_tokens: int | None = None):
+                 temperature: float = 0.0, max_tokens: int | None = None,
+                 extra_body: dict | None = None, timeout: float = DEFAULT_LLM_TIMEOUT_SEC):
         if not model:
             raise ValueError("openai backend requires a 'model'.")
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.extra_body = extra_body
+        self.timeout = timeout
         openai_cls = _load_openai_class()
-        client_kwargs: dict[str, Any] = {}
+        client_kwargs: dict[str, Any] = {"timeout": timeout, "max_retries": 0}
         if base_url:
             client_kwargs["base_url"] = base_url
         if api_key:
@@ -125,8 +235,14 @@ class OpenAILLMClient(LLMClient):
         }
         if self.max_tokens is not None:
             kwargs["max_tokens"] = self.max_tokens
+        if self.extra_body:
+            kwargs["extra_body"] = self.extra_body
         completion = self._client.chat.completions.create(**kwargs)
         return completion.choices[0].message.content or ""
+
+
+class DeepInfraLLMClient(OpenAILLMClient):
+    backend = "deepinfra"
 
 
 def build_llm_client(config: dict | None = None) -> LLMClient:
@@ -137,6 +253,11 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
     """
     config = dict(config or {})
     backend = str(config.get("backend") or os.environ.get("TPC_P2_LLM_BACKEND") or DEFAULT_BACKEND).lower()
+
+    # Convenience: allow scripts to run without an explicit shell `source .env`.
+    # Existing exported env vars still win unless overwrite=True is requested via direct call.
+    if backend in {"openai", "deepinfra"}:
+        load_local_env()
 
     if backend == "none":
         return NoneLLMClient()
@@ -152,12 +273,79 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
         api_key_env = config.get("api_key_env")
         if not api_key and api_key_env:
             api_key = os.environ.get(str(api_key_env))
-        return OpenAILLMClient(
+        client = OpenAILLMClient(
             model=str(config.get("model") or os.environ.get("TPC_P2_LLM_MODEL") or ""),
             base_url=config.get("base_url") or os.environ.get("TPC_P2_LLM_BASE_URL"),
             api_key=api_key,
             temperature=float(config.get("temperature", 0.0)),
             max_tokens=config.get("max_tokens"),
+            timeout=_resolve_timeout(config),
         )
+        return _maybe_wrap_cache(client, config)
 
-    raise ValueError(f"Unknown LLM backend: {backend!r} (expected none|fixture|openai).")
+    if backend == "deepinfra":
+        api_key = config.get("api_key") or os.environ.get("DEEPINFRA_API_KEY")
+        api_key_env = config.get("api_key_env") or "DEEPINFRA_API_KEY"
+        if not api_key and api_key_env:
+            api_key = os.environ.get(str(api_key_env))
+        base_url = (
+            config.get("base_url")
+            or os.environ.get("TPC_P2_LLM_BASE_URL")
+            or os.environ.get("DEEPINFRA_BASE_URL")
+            or DEFAULT_DEEPINFRA_BASE_URL
+        )
+        # Qwen3-family "thinking mode" is on by default on DeepInfra and generates a full
+        # chain-of-thought (hundreds of tokens, ~10x the latency) before the final answer --
+        # verified live 2026-07-11 (10.6s with thinking vs 1.1s without, for the same trivial
+        # prompt). We only need the short structured JSON audit response, so default it off
+        # (config "enable_thinking": True, or TPC_P2_LLM_ENABLE_THINKING=1, to restore it; a raw
+        # "extra_body" config value always wins).
+        extra_body = config.get("extra_body")
+        if extra_body is None:
+            enable_thinking = config.get("enable_thinking")
+            if enable_thinking is None:
+                enable_thinking = str(os.environ.get("TPC_P2_LLM_ENABLE_THINKING", "")).lower() in (
+                    "1", "true", "yes",
+                )
+            if not enable_thinking:
+                extra_body = {"chat_template_kwargs": {"enable_thinking": False}}
+        client = DeepInfraLLMClient(
+            model=str(
+                config.get("model")
+                or os.environ.get("TPC_P2_LLM_MODEL")
+                or os.environ.get("DEEPINFRA_MODEL")
+                or DEFAULT_DEEPINFRA_MODEL
+            ),
+            base_url=str(base_url),
+            api_key=api_key,
+            temperature=float(config.get("temperature", 0.0)),
+            max_tokens=config.get("max_tokens"),
+            extra_body=extra_body,
+            timeout=_resolve_timeout(config),
+        )
+        return _maybe_wrap_cache(client, config)
+
+    raise ValueError(f"Unknown LLM backend: {backend!r} (expected none|fixture|openai|deepinfra).")
+
+
+def _resolve_timeout(config: dict) -> float:
+    value = config.get("timeout")
+    if value is None:
+        value = os.environ.get("TPC_P2_LLM_TIMEOUT_SEC")
+    return float(value) if value is not None else DEFAULT_LLM_TIMEOUT_SEC
+
+
+def _maybe_wrap_cache(client: LLMClient, config: dict) -> LLMClient:
+    """Wrap a network-backed client in CachingLLMClient unless disabled via
+    TPC_P2_LLM_CACHE=0 or config['cache'] is False. Enabled by default: temperature is always 0
+    for these backends, so a cached response is exactly what a live call would return."""
+    cache_flag = config.get("cache")
+    if cache_flag is None:
+        cache_flag = os.environ.get("TPC_P2_LLM_CACHE", "1")
+    if str(cache_flag) in ("0", "false", "False"):
+        return client
+    cache_dir = config.get("cache_dir") or os.environ.get("TPC_P2_LLM_CACHE_DIR")
+    if not cache_dir:
+        root = _find_project_root() or Path.cwd()
+        cache_dir = root / "cache" / "phase2_llm_parse"
+    return CachingLLMClient(client, cache_dir)

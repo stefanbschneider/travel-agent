@@ -51,3 +51,33 @@ wire_api = "responses"
 [codex.extra_config]
 model_reasoning_effort = "low"
 model_verbosity = "low"
+
+[deepinfra]
+# Optional DeepInfra endpoint settings (OpenAI-compatible wire format).
+# Use with local agent_env/config.toml (untracked) + source .env before runs.
+model = "Qwen/Qwen3.6-27B-Instruct"
+timeout = 900
+sandbox = "workspace-write"
+output_schema = false
+require_output_tags = true
+api_key = ""
+api_key_env = "DEEPINFRA_API_KEY"
+
+[deepinfra.provider]
+id = "deepinfra_api"
+name = "DeepInfra API"
+base_url = "https://api.deepinfra.com/v1/openai"
+env_key = "DEEPINFRA_API_KEY"
+wire_api = "responses"
+
+[phase2.llm]
+# Phase 2 parser/refinement LLM (optional; deterministic default is backend="none").
+# Supported backends: none | fixture | openai | deepinfra
+backend = "none"
+model = ""
+base_url = ""
+api_key = ""
+api_key_env = "DEEPINFRA_API_KEY"
+fixtures_dir = ""
+temperature = 0.0
+max_tokens = 1024

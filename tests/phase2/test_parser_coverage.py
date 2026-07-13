@@ -79,6 +79,29 @@ def test_visit_between_sets_window_and_stay_duration():
     ], raw.get("stay_duration")
 
 
+# --- Step 5 (val-split family_stats triage): timing_constraints removed ----
+#
+# parse_timing_constraints matched exactly two of activity_time_windows's patterns
+# ("arrive at X no later than T", "leave X no earlier than T") but the oracle never uses this
+# family (0/850 matched on the val split; it was pure over-extraction). Both NL patterns are
+# still fully covered by activity_time_windows above.
+
+
+def test_arrive_no_later_than_does_not_emit_timing_constraints():
+    raw = pc.parse_query_no_oracle(
+        _q("We need to arrive at Southern Song Dynasty Imperial City Ruins no later than 08:00.")
+    )
+    assert "timing_constraints" not in raw
+    assert not hasattr(pc, "parse_timing_constraints")
+
+
+def test_leave_no_earlier_than_does_not_emit_timing_constraints():
+    raw = pc.parse_query_no_oracle(
+        _q("Hope to leave Big Pear Roast Duck no earlier than 12:00.")
+    )
+    assert "timing_constraints" not in raw
+
+
 # --- position_presence -----------------------------------------------------
 
 def test_position_presence_from_time_constrained_locations():

@@ -36,7 +36,6 @@ _BRANCH_LOCAL_KEYS = {
     "intercity_mode",
     "taxi_cars_equals",
     "excluded_inner_transport",
-    "timing_constraints",
     "position_presence",
 }
 
@@ -285,7 +284,11 @@ def _parse_room_type(logic: str, result: dict[str, Any]) -> None:
     if not match:
         return
     room_num = int(match.group(1))
-    room_map = {1: "single", 2: "double", 3: "twin"}
+    # A full scan of every hard_logic_py in the dataset found only codes 1 and 2 ever appear, and
+    # every NL query using code 2 says "twin" ("twin beds room" / "a twin room") -- never "double
+    # bed". Code 3 is unobserved; kept mapped to "twin" too rather than left undefined, since
+    # nothing distinguishes it from code 2 in the data we've seen.
+    room_map = {1: "single", 2: "twin", 3: "twin"}
     result["room_type"] = room_map.get(room_num, room_num)
 
 

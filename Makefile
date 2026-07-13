@@ -7,8 +7,9 @@ SPLIT ?= tpc_phase1
 # ===========================================================================
 
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
-	phase2-help phase2-test phase2-splits phase2-solve phase2-rehearse \
-	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep
+	phase2-help phase2-test phase2-splits phase2-solve phase2-query phase2-rehearse \
+	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
+	phase2-baseline phase2-baseline-at
 
 # Run phase 1 evaluation
 p1eval:
@@ -60,18 +61,37 @@ help:
 # off by default. See docs/tpc_phase2_design.md and docs/tpc_phase2_eval.md.
 # ===========================================================================
 
-# Per-query budget: 15 min primary (TBC), 5 min alternative. Override with P2_BUDGET.
+# Per-query budget: our working default is 300s (5 min); the organizers' stated primary is 900s
+# (15 min, TBC) for a final pre-submission check. Override with P2_BUDGET.
 P2_SPLIT_SET ?= val
 FOLD ?= 0
 P2_FOLDS ?= 10
-P2_BUDGET ?= 900
+P2_BUDGET ?= 300
 P2_LIMIT ?=
 P2_METHOD ?= phase2_e2e_tpc_phase2_$(P2_SPLIT_SET)
 P2_SPLIT ?= tpc_phase2_$(P2_SPLIT_SET)
 P2_BUDGETS ?= 30,60,120,300,900
 P2_SWEEP_CSV ?= cache/phase2_budget_sweep/budget_sweep.csv
 P2_SWEEP_JSON ?= cache/phase2_budget_sweep/budget_sweep.json
+P2_BRANCH_AWARE ?= 0
+P2_REPEATS ?= 1
+P2_LABEL ?=
+# Chunk subprocesses to run concurrently (1 = sequential, original behavior). Each query's
+# CP-SAT solve uses 1 core by default, so size this to (core count - 1); memory is usually not
+# the limit -- see docs/tpc_phase2_design.md for the per-process RSS floor (~250MB).
+P2_PARALLEL ?= 1
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
+P2_BRANCH_AWARE_FLAG = $(if $(filter 1,$(P2_BRANCH_AWARE)),--branch-aware,)
+P2_LABEL_FLAG = $(if $(P2_LABEL),--label $(P2_LABEL),)
+# Eval-tooling only (plan-2 Step 3): stop each query's solve at the first accepted plan instead
+# of spending the full budget on preference polishing. Never set by the real harness.
+P2_FAST_FPR ?= 0
+P2_FAST_FPR_FLAG = $(if $(filter 1,$(P2_FAST_FPR)),--fast-fpr,)
+# Passed through verbatim to scripts/run_query.py, e.g.:
+#   make phase2-query P2_QUERY_ARGS="--uid 20250322063246301376 --budget-sec 60"
+#   make phase2-query P2_QUERY_ARGS="--query-file my_query.json --budget-sec 120"
+#   make phase2-query P2_QUERY_ARGS='--query-text "3 days Beijing to Chengdu, 2 people" --start-city Beijing --target-city Chengdu --days 3'
+P2_QUERY_ARGS ?=
 
 phase2-help:
 	@printf '%s\n' \
@@ -79,12 +99,16 @@ phase2-help:
 	  '  make phase2-test            - run the Phase 2 pytest suite (unit; add integration below)' \
 	  '  make phase2-splits          - (re)create tpc_phase2_val/test split files' \
 	  '  make phase2-solve           - run the no-oracle harness over a split (LLM off)' \
+	  '  make phase2-query           - run ONE query end to end: P2_QUERY_ARGS="--uid <id> | --query-file <path> | --query-text ..."' \
 	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
 	  '  make phase2-budget-sweep    - sweep budgets and export attribution CSV/JSON' \
+	  '  make phase2-baseline        - run deterministic baseline and append docs/phase2_baselines history' \
+	  '  make phase2-baseline-at     - same as phase2-baseline, but pinned to SHA=<ref> via a disposable git worktree' \
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)'
+	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
+	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:
@@ -100,11 +124,16 @@ phase2-solve:
 	.venv/bin/python agent_env/scripts/solve_phase2.py --split $(P2_SPLIT) \
 	  --method $(P2_METHOD) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
 
+# Run ONE query end to end (existing uid / a query file / raw NL text). See scripts/run_query.py.
+phase2-query:
+	.venv/bin/python scripts/run_query.py $(P2_QUERY_ARGS)
+
 # Full rehearsal dashboard: rehearse (both modes, three-way attribution) -> parser-vs-oracle -> timing.
 phase2-rehearse:
 	@echo "=== [1/3] Rehearsal (end-to-end + solver-only), three-way attribution ==="
 	.venv/bin/python scripts/rehearse_phase2.py --mode both --split-set $(P2_SPLIT_SET) \
-	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
+	  --parallel $(P2_PARALLEL) $(P2_FAST_FPR_FLAG)
 	@echo "=== [2/3] Parser-vs-oracle attribution (Axis 1) ==="
 	.venv/bin/python scripts/parser_vs_oracle.py --split-set $(P2_SPLIT_SET) --behavioral $(P2_LIMIT_FLAG)
 	@echo "=== [3/3] Timing + reliability telemetry (Axis 3) ==="
@@ -115,6 +144,22 @@ phase2-budget-sweep:
 	.venv/bin/python scripts/phase2_budget_sweep.py --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budgets "$(P2_BUDGETS)" $(P2_LIMIT_FLAG) \
 	  --out-csv $(P2_SWEEP_CSV) --out-json $(P2_SWEEP_JSON)
+
+# Run deterministic fold baseline and append trend files under docs/phase2_baselines.
+phase2-baseline:
+	.venv/bin/python scripts/phase2_record_baseline.py --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
+	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG) --parallel $(P2_PARALLEL) \
+	  $(P2_FAST_FPR_FLAG)
+
+# Same as phase2-baseline, but runs against a pinned `git worktree` checkout of SHA (plan-2
+# Step 1): the main tree stays free for development mid-run, and the row's git_sha is truthful
+# by construction instead of whatever HEAD happens to be when the recorder finishes writing.
+phase2-baseline-at:
+	.venv/bin/python scripts/phase2_eval_at.py --sha $(SHA) -- --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
+	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG) --parallel $(P2_PARALLEL) \
+	  $(P2_FAST_FPR_FLAG)
 
 # Parser-vs-oracle attribution only (Axis 1), incl. behavioral equivalence.
 phase2-parser-report:
@@ -127,3 +172,11 @@ phase2-timing:
 # Monotonic regression gate: fails if CANDIDATE is worse than BASELINE. Requires BASELINE/CANDIDATE.
 phase2-gate:
 	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)
+
+# Live progress counter for a running/just-launched phase2-baseline job. Read-only (never touches
+# code the harness imports), safe to run at any time including mid-freeze. Add --watch for a
+# live-updating view: make phase2-progress FOLD=0 P2_FOLDS=10 P2_REPEATS=2 P2_PROGRESS_ARGS=--watch
+P2_PROGRESS_ARGS ?=
+phase2-progress:
+	.venv/bin/python scripts/phase2_progress.py --split-set $(P2_SPLIT_SET) \
+	  --fold $(FOLD) --folds $(P2_FOLDS) --repeats $(P2_REPEATS) $(P2_LIMIT_FLAG) $(P2_PROGRESS_ARGS)

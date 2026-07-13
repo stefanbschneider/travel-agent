@@ -96,6 +96,35 @@ def test_negated_the_restaurant_singular_is_excluded():
     assert raw.get("excluded_restaurants") == ["Cloud View Hotel Diner"], raw
 
 
+# --- Step 5 (val-split family_stats triage): "restaurants of the following type" ------------
+
+
+def test_restaurant_of_the_following_type_is_not_a_required_restaurant_name():
+    # Regression: the "of (the) type(s)" guard didn't account for "of the FOLLOWING type", so
+    # this leaked through as a bogus required_restaurants entry (val-split top spurious family).
+    raw = pc.parse_query_no_oracle(
+        _q("We hope to try restaurants of the following type: Shanghai cuisine.")
+    )
+    assert not raw.get("required_restaurants"), raw.get("required_restaurants")
+
+
+def test_restaurant_of_the_following_type_is_cuisine_preference():
+    raw = pc.parse_query_no_oracle(
+        _q("We hope to try restaurants of the following type: Shanghai cuisine.")
+    )
+    assert raw.get("cuisine_preference") == "Shanghai cuisine", raw
+
+
+def test_negated_restaurant_of_the_following_type_is_excluded_not_preferred():
+    # The new "restaurants of (the) (following) type(s)" cuisine_preference pattern must respect
+    # negation (the trigger sits ~15 chars before "restaurants", outside a naive adjacent check).
+    raw = pc.parse_query_no_oracle(
+        _q("Do not want to try restaurants of the type Sichuan cuisine.")
+    )
+    assert raw.get("cuisine_preference") in (None, [], ""), raw.get("cuisine_preference")
+    assert raw.get("excluded_cuisine_types") == ["Sichuan cuisine"], raw
+
+
 # --- A3: budget category disambiguation ------------------------------------
 
 def test_cross_city_budget_does_not_leak_into_inner_transport():
@@ -122,3 +151,351 @@ def test_genuine_inner_transport_budget_still_parsed():
     )
     b = raw.get("budgets") or {}
     assert b.get("inner_transport") == 150.0, b
+
+
+# --- 1c: negation guard extended to hotels ---------------------------------
+
+def test_negated_hotels_are_excluded_not_required():
+    # Real val query 20250320230800586344 shape: "Do not wish to stay at the
+    # following hotels: X and Y" previously also emitted a spurious required_hotels.
+    raw = pc.parse_query_no_oracle(
+        _q("Do not wish to stay at the following hotels: Yucheng Hotel (Wuhan) "
+           "and All Seasons Hotel (Wuhan).")
+    )
+    assert not raw.get("required_hotels"), raw.get("required_hotels")
+    assert raw.get("excluded_hotels") == [
+        "Yucheng Hotel (Wuhan)",
+        "All Seasons Hotel (Wuhan)",
+    ], raw.get("excluded_hotels")
+
+
+def test_negated_hotels_short_form_excluded():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not want to stay at Modern Classic Hotel and Holiday Inn Express Dongmen.")
+    )
+    assert not raw.get("required_hotels"), raw.get("required_hotels")
+    assert raw.get("excluded_hotels") == [
+        "Modern Classic Hotel",
+        "Holiday Inn Express Dongmen",
+    ], raw.get("excluded_hotels")
+
+
+def test_positive_hotel_still_required():
+    raw = pc.parse_query_no_oracle(
+        _q("We want to stay at one of the following hotels: Huayueju Serviced Apartment.")
+    )
+    # The negation guard must not suppress a positive hotel requirement: the clean
+    # hotel name is still present (a pre-existing "one of the following hotels:" prefix
+    # over-extraction is out of scope here and harmless -- the verifier matches by `any`).
+    req = raw.get("required_hotels") or []
+    assert "Huayueju Serviced Apartment" in req, req
+    assert not raw.get("excluded_hotels"), raw.get("excluded_hotels")
+
+
+# --- 1c: negation guard extended to attractions ----------------------------
+
+def test_negated_attraction_types_do_not_leak_into_required():
+    # Real val query 20250321111720443608: a positive "visit X" clause followed by
+    # a negated "do not want to visit any Museum/... or university campus" clause.
+    raw = pc.parse_query_no_oracle(
+        _q("We want to visit Xixi Paradise Commercial Street and do not want to "
+           "visit any Museum/Memorial Hall or university campus.")
+    )
+    # positive name survives ...
+    assert raw.get("required_attractions") == ["Xixi Paradise Commercial Street"], raw
+    # ... but the negated types must NOT be required
+    req_types = raw.get("required_attraction_types") or []
+    assert "Museum/Memorial Hall" not in req_types, raw
+    assert "university campus" not in req_types, raw
+    # they belong to the excluded set instead
+    excl_types = raw.get("excluded_attraction_types") or []
+    assert "Museum/Memorial Hall" in excl_types, raw
+    assert "university campus" in excl_types, raw
+
+
+def test_negated_attraction_name_not_required():
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to visit West Yellow Temple and Hall of Benevolent Longevity.")
+    )
+    assert not raw.get("required_attractions"), raw.get("required_attractions")
+
+
+def test_positive_attraction_still_required():
+    raw = pc.parse_query_no_oracle(
+        _q("We want to visit Xixi Paradise Commercial Street.")
+    )
+    assert raw.get("required_attractions") == ["Xixi Paradise Commercial Street"], raw
+
+
+# --- 5a: poi_distance_hotel schema parity (real val uids) ------------------
+#
+# The no-oracle NL path already extracts "accommodation within X km of Y" correctly via
+# parse_hotel_nearby, but only stored it as the singular `hotel_nearby` dict -- the oracle (and
+# the shared solver-dict schema) also expects a list-shaped `poi_distance_hotel` family, which the
+# oracle-mode DSL converter (solver_constraints.py::_parse_hotel_distance) already mirrors. Real
+# val uid 20250323092547439734 (oracle: [{"reference": "North Bund Riverside Green Space",
+# "distance_km": 8.851522495588497}]) was 100% missing on this family before the fix.
+
+def test_hotel_nearby_also_populates_poi_distance_hotel_list():
+    raw = pc.parse_query_no_oracle(
+        _q("Accommodation must be within 8.86 km of North Bund Riverside Green Space.")
+    )
+    assert raw.get("hotel_nearby") == {
+        "reference": "North Bund Riverside Green Space", "distance_km": 8.86,
+    }
+    assert raw.get("poi_distance_hotel") == [
+        {"reference": "North Bund Riverside Green Space", "distance_km": 8.86},
+    ]
+
+
+def test_hotel_nearby_strips_leading_the_from_reference():
+    # Real val uid 20250323092305147660 phrasing: "... within 2.11 km of the Great Hall of the
+    # People." Oracle reference is "Great Hall of the People" (no leading "the").
+    raw = pc.parse_query_no_oracle(
+        _q("We want accommodation within 2.11 km of the Great Hall of the People.")
+    )
+    assert raw["hotel_nearby"]["reference"] == "Great Hall of the People"
+    assert raw["poi_distance_hotel"][0]["reference"] == "Great Hall of the People"
+
+
+def test_hotel_nearby_variant_matches_solver_schema_family():
+    query = _q("We hope the accommodation is within 9.65 kilometers of Futian District Sports Park.")
+    raw = pc.parse_query_no_oracle(query)
+    variants = solver_constraint_variants(query, raw, use_oracle=False)
+    assert variants[0].get("poi_distance_hotel") == [
+        {"reference": "Futian District Sports Park", "distance_km": 9.65},
+    ]
+
+
+# --- 5b: "hotel with X" amenity phrasing -> required_hotel_all_types -------
+#
+# The oracle never has a `hotel_amenity` family; "hotel with a swimming pool" / "hotel with Free
+# parking" / "hotel with an Executive Lounge" are all encoded as required_hotel_all_types (e.g.
+# ['Swimming pool'], ['Free parking'], ['Executive Lounge']) -- literally the same string, just the
+# wrong family. `hotel_amenity` no longer exists as an output family at all: it was spurious-only
+# against the oracle (32/32 val queries) and could reject oracle-acceptable plans.
+
+@pytest.mark.parametrize("phrase,expected", [
+    ("we prefer to stay at a hotel that offers free parking.", "Free parking"),
+    ("we do not want to stay in hotels with a Sunbathing area.", "Sunbathing area"),
+    ("want to stay in a hotel with an Executive Lounge.", "Executive Lounge"),
+    ("we want to stay in a hotel with a Family Room.", "Family Room"),
+    ("we want to stay at a hotel with a swimming pool.", "Swimming pool"),
+    ("wish to stay in a hotel with Free parking.", "Free parking"),
+])
+def test_hotel_with_amenity_becomes_required_hotel_all_type(phrase, expected):
+    raw = pc.parse_query_no_oracle(_q(f"We are 2 people traveling for 3 days. {phrase}"))
+    assert expected in (raw.get("required_hotel_all_types") or []), raw
+    assert "hotel_amenity" not in raw
+
+
+def test_hotel_amenity_family_no_longer_produced():
+    assert not hasattr(pc, "parse_hotel_amenity")
+
+
+def test_parsed_verifier_no_longer_enforces_hotel_amenity():
+    import inspect
+    from chinatravel.agent.tpc_agent import parsed_verifier
+    assert "hotel_amenity" not in inspect.getsource(parsed_verifier)
+
+
+# --- 5c: excluded_cuisine_types word-order gap + cleanup bugs --------------
+
+def test_reversed_word_order_type_of_restaurant_singular():
+    # Real val phrasing: "type of restaurant" (singular), not "restaurant of type".
+    raw = pc.parse_query_no_oracle(
+        _q("2. Do not want to try the following type of restaurant: Hot pot")
+    )
+    assert raw.get("excluded_cuisine_types") == ["Hot pot"], raw
+
+
+def test_reversed_word_order_types_of_restaurants_plural_multi():
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to try the following types of restaurants: Middle Eastern cuisine "
+           "and Northwestern Chinese cuisine.")
+    )
+    assert raw.get("excluded_cuisine_types") == [
+        "Middle Eastern cuisine", "Northwestern Chinese cuisine",
+    ], raw
+
+
+def test_restaurants_serving_x_phrasing():
+    raw = pc.parse_query_no_oracle(
+        _q("2. Do not want to try restaurants serving fusion cuisine.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["fusion cuisine"], raw
+
+
+def test_cuisine_suffix_kept_in_x_cuisine_restaurants_phrasing():
+    # Previously dropped the word "cuisine" itself: captured "fusion" instead of "fusion cuisine".
+    raw = pc.parse_query_no_oracle(
+        _q("2. Do not want to try fusion cuisine restaurants.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["fusion cuisine"], raw
+
+
+def test_oxford_comma_and_before_last_item_not_kept():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not want to try restaurants of types Bar/Pub, Other, and Halal cuisine.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["Bar/Pub", "Other", "Halal cuisine"], raw
+
+
+# --- 5d: oracle room_type numeric-code label fix (2 -> "twin", not "double") ---
+#
+# A full scan of every hard_logic_py in chinatravel/data/en/TPC_IJCAI_2026_phase1_EN/ found only
+# codes 1 and 2 ever appear (74x code 1, 35x code 2, zero code 3), and every NL query whose oracle
+# uses code 2 says "twin" ("twin beds room", "a twin room") -- never "double bed". Real val uids
+# 20250322201024175211 and 20250322213548089207 both have "room_type(activity)!=2" in
+# hard_logic_py with "twin" phrasing in the NL.
+
+def _oracle_query(hard_logic_snippet, nl="A trip."):
+    return {
+        "uid": "t",
+        "nature_language": nl,
+        "people_number": 2,
+        "days": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "hard_logic_py": [
+            "result=True\nfor activity in allactivities(plan):\n"
+            f"  if activity_type(activity)=='accommodation' and {hard_logic_snippet}: result=False"
+        ],
+    }
+
+
+def test_oracle_room_type_code_2_maps_to_twin_not_double():
+    query = _oracle_query("room_type(activity)!=2")
+    raw = pc.parse_query(query)
+    assert raw.get("room_type") == "twin", raw
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("room_type") == "twin", variants[0]
+
+
+def test_oracle_room_type_code_1_still_maps_to_single():
+    query = _oracle_query("room_type(activity)!=1")
+    raw = pc.parse_query(query)
+    assert raw.get("room_type") == "single", raw
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("room_type") == "single", variants[0]
+
+
+def test_embedded_quotes_stripped():
+    raw = pc.parse_query_no_oracle(
+        _q('We do not wish to try restaurants of the types "Other Chinese Cuisine" and '
+           '"Jiangsu-Zhejiang cuisine."')
+    )
+    assert raw.get("excluded_cuisine_types") == [
+        "Other Chinese Cuisine", "Jiangsu-Zhejiang cuisine",
+    ], raw
+
+
+# --- plan3 N3.2/N3.3: intercity_mode negation -> complement + coverage gaps -
+
+def test_negated_outbound_train_with_the_resolves_to_airplane():
+    # uid 20250322204425912419: "We do not want to take the train to the destination, and we do
+    # not want to take the train for the return trip." Oracle: outbound != train (-> airplane),
+    # return != airplane (-> train). Previously the outbound negative regex required "take a/an
+    # train" (no "the"), so it silently missed this phrasing (missing, not wrong-value).
+    raw = pc.parse_query_no_oracle(_q(
+        "We do not want to take the train to the destination, and we do not want to "
+        "take the train for the return trip."
+    ))
+    assert raw.get("intercity_mode") == {"outbound": "airplane", "return": "airplane"}, raw
+
+
+def test_negated_outbound_train_no_the_resolves_to_airplane():
+    # uid 20250324210212304930: "do not want to take a train to the destination" -- previously a
+    # positive pattern ("take a train to the destination") matched this substring first (ignoring
+    # the negation prefix) and set outbound=train, the exact opposite of what the sentence says.
+    raw = pc.parse_query_no_oracle(_q(
+        "do not want to take a train to the destination, do not want to fly back, and want to "
+        "stay in a single-bed room."
+    ))
+    assert raw.get("intercity_mode") == {"outbound": "airplane", "return": "train"}, raw
+
+
+def test_positive_take_train_to_destination_and_back_unaffected():
+    # uid 20250321032641509206: "take the train to the destination and take the train back" is
+    # genuinely positive (no negation) -- must still resolve to train/train, not be swept up by
+    # the negation-first ordering.
+    raw = pc.parse_query_no_oracle(_q(
+        "The requirement is to take the train to the destination and take the train back."
+    ))
+    assert raw.get("intercity_mode") == {"outbound": "train", "return": "train"}, raw
+
+
+def test_negated_fly_back_resolves_return_to_train():
+    raw = pc.parse_query_no_oracle(_q("We do not want to fly back for the return trip."))
+    assert raw.get("intercity_mode", {}).get("return") == "train", raw
+
+
+def test_multi_mode_exclusion_list_captures_all_modes():
+    # uid 20250322035350348919: "we do not want to use walking or taxi as means of transportation
+    # within the city" -- previously only "walk" was captured, "taxi" was dropped.
+    raw = pc.parse_query_no_oracle(_q(
+        "We do not want to use walking or taxi as means of transportation within the city."
+    ))
+    excluded = raw.get("excluded_inner_transport") or []
+    assert set(excluded) == {"walk", "taxi"}, raw
+
+
+# --- plan3 N3.1: OR-arm bare-imperative + arm-local budget recovery --------
+
+
+def test_bare_imperative_visit_extracts_attraction_name():
+    # uid 20250321152015286634 arm 1: "Visit Shenzhen Art Museum (East Lake Branch)" -- a bare
+    # imperative with no "want to"/"must" framing (typical OR-arm bullet text). Oracle wants the
+    # specific attraction name, not the "Art Museum" type substring.
+    assert pc.parse_required_attractions("Visit Shenzhen Art Museum (East Lake Branch)") == [
+        "Shenzhen Art Museum (East Lake Branch)"
+    ]
+
+
+def test_bare_imperative_try_restaurants_extracts_name():
+    # uid 20250321152015286634 arm 2: "Try one of these restaurants: gaga (Joy Hub City Store)".
+    assert pc.parse_required_restaurants(
+        "Try one of these restaurants: gaga (Joy Hub City Store)"
+    ) == ["gaga (Joy Hub City Store)"]
+
+
+def test_arm_local_intra_city_travel_budget_wording():
+    # uid 20250323010100845247 arm 1: "Intra-city travel budget of 50.0" -- the intra-city budget
+    # regex previously required "transportation", missing the "travel" synonym.
+    budgets = pc.parse_budget("Intra-city travel budget of 50.0")
+    assert budgets.get("inner_transport") == 50.0, budgets
+
+
+def test_arm_local_total_trip_budget_wording():
+    # uid 20250323010100845247 arm 2: "Total trip budget of 9600.0" -- the total-budget regex
+    # previously only allowed an optional "travel" word, missing "trip".
+    budgets = pc.parse_budget("Total trip budget of 9600.0")
+    assert budgets.get("total") == 9600.0, budgets
+
+
+def test_or_arm_bare_imperative_and_budget_uids_produce_two_nonempty_arms():
+    from chinatravel.agent.phase2 import normalize as N
+
+    q1 = _q(
+        "Please meet at least one of the following requirements:\n"
+        "1. Visit Shenzhen Art Museum (East Lake Branch)\n"
+        "2. Try one of these restaurants: gaga (Joy Hub City Store)",
+        people=3, days=4,
+    )
+    arms = N._detect_or_groups(q1)
+    assert len(arms) == 2
+    assert all(arms), arms  # both non-empty
+    assert arms[0].get("required_attractions") == ["Shenzhen Art Museum (East Lake Branch)"]
+    assert arms[1].get("required_restaurants") == ["gaga (Joy Hub City Store)"]
+
+    q2 = _q(
+        "with either of the following requirements:\n"
+        "1. Intra-city travel budget of 50.0\n"
+        "2. Total trip budget of 9600.0",
+        people=1, days=5,
+    )
+    arms2 = N._detect_or_groups(q2)
+    assert len(arms2) == 2
+    assert all(arms2), arms2
+    assert arms2[0].get("budgets") == {"inner_transport": 50.0}
+    assert arms2[1].get("budgets") == {"total": 9600.0}

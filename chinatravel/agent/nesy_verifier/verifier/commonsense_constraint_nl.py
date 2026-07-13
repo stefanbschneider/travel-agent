@@ -2,11 +2,14 @@
 import sys
 
 
+from functools import lru_cache
+
 from chinatravel.environment.tools.accommodations.apis import Accommodations
 from chinatravel.environment.tools.restaurants.apis import Restaurants
 from chinatravel.environment.tools.attractions.apis import Attractions
 from chinatravel.environment.tools.intercity_transport.apis import IntercityTransport
 from chinatravel.environment.tools.transportation.apis import Transportation
+from chinatravel.environment.tools._lazy import LazyTool
 # from env.tools.transportation.apis import GoTo
 # from envs import goto
 import json
@@ -15,14 +18,14 @@ import sys
 from tqdm import tqdm
 import math
 from chinatravel.evaluation.utils import load_json_file
-    
+
 import pandas as pd
 
-accommodation = Accommodations()
-restaurants = Restaurants()
-attractions = Attractions()
-intercity_transport=IntercityTransport()
-innercity_transport=Transportation()
+accommodation = LazyTool(lru_cache(maxsize=1)(Accommodations))
+restaurants = LazyTool(lru_cache(maxsize=1)(Restaurants))
+attractions = LazyTool(lru_cache(maxsize=1)(Attractions))
+intercity_transport = LazyTool(lru_cache(maxsize=1)(IntercityTransport))
+innercity_transport = LazyTool(lru_cache(maxsize=1)(Transportation))
 
 
 '''

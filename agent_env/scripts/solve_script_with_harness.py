@@ -457,6 +457,13 @@ def evaluate_one(
         str(PROJECT_ROOT / "chinatravel" / "evaluation" / "output_schema.json")
     )
 
+    # Official (oracle) scoring needs hard_logic_py, which is only present for benchmark queries
+    # (always true for split-loaded oracle_translation=True queries, but not for a caller-supplied
+    # query file/NL string without it). Gate the true-side computation on the *key's presence*, not
+    # truthiness: a query with hard_logic_py=[] still has an oracle (a vacuously-true one) and must
+    # keep scoring that way, matching pre-existing split-run behavior exactly.
+    has_oracle = "hard_logic_py" in query
+
     schema_rate, schema_result_agg, schema_pass_id = evaluate_schema_constraints(
         query_index, result_data, schema=schema
     )
@@ -465,20 +472,25 @@ def evaluate_one(
             query_index, query_data, result_data, verbose=False
         )
     )
-    (
-        macro_logi,
-        micro_logi,
-        conditional_macro_logi,
-        conditional_micro_logi,
-        logi_result_agg,
-        logi_pass_id,
-    ) = evaluate_hard_constraints_v2(
-        query_index,
-        query_data,
-        result_data,
-        env_pass_id=commonsense_pass_id,
-        verbose=False,
-    )
+    if has_oracle:
+        (
+            macro_logi,
+            micro_logi,
+            conditional_macro_logi,
+            conditional_micro_logi,
+            logi_result_agg,
+            logi_pass_id,
+        ) = evaluate_hard_constraints_v2(
+            query_index,
+            query_data,
+            result_data,
+            env_pass_id=commonsense_pass_id,
+            verbose=False,
+        )
+    else:
+        macro_logi = micro_logi = conditional_macro_logi = conditional_micro_logi = None
+        logi_result_agg = None
+        logi_pass_id = []
 
     parsed_raw = parse_constraints.parse_query_no_oracle(query)
     parsed_variants = solver_constraint_variants(query, parsed_raw, use_oracle=False)
@@ -498,8 +510,10 @@ def evaluate_one(
     parsed_logical_pass = parsed_succ == parsed_total
 
     schema_pass = uid in schema_pass_id
-    true_logical_pass = uid in logi_pass_id
-    all_pass_true = schema_pass and commonsense_pass and true_logical_pass
+    true_logical_pass = (uid in logi_pass_id) if has_oracle else None
+    all_pass_true = (
+        (schema_pass and commonsense_pass and true_logical_pass) if has_oracle else None
+    )
     all_pass_parsed = schema_pass and commonsense_pass and parsed_logical_pass
 
     def _default_pr_scores(is_all_pass: bool) -> tuple[float, float, float]:
@@ -552,22 +566,25 @@ result=res_count/3
                 scores.append(0.0)
         return scores[0] * 100.0, scores[1] * 100.0, scores[2] * 100.0
 
-    dav_true, att_true, ddr_true = _default_pr_scores(all_pass_true)
+    if has_oracle:
+        dav_true, att_true, ddr_true = _default_pr_scores(all_pass_true)
+        fpr_true = 100.0 if all_pass_true else 0.0
+        # Aligned with eval_tpc.py: 0.1*MicEPR + 0.1*MacEPR + 0.25*C-LPR + 0.05*DAV + 0.05*ATT + 0.05*DDR + 0.4*FPR
+        overall_true = (
+            0.1 * micro_comm
+            + 0.1 * macro_comm
+            + 0.25 * conditional_micro_logi
+            + 0.05 * dav_true
+            + 0.05 * att_true
+            + 0.05 * ddr_true
+            + 0.4 * fpr_true
+        )
+    else:
+        dav_true = att_true = ddr_true = fpr_true = overall_true = None
     dav_parsed, att_parsed, ddr_parsed = _default_pr_scores(all_pass_parsed)
 
-    fpr_true = 100.0 if all_pass_true else 0.0
     fpr_parsed = 100.0 if all_pass_parsed else 0.0
 
-    # Aligned with eval_tpc.py: 0.1*MicEPR + 0.1*MacEPR + 0.25*C-LPR + 0.05*DAV + 0.05*ATT + 0.05*DDR + 0.4*FPR
-    overall_true = (
-        0.1 * micro_comm
-        + 0.1 * macro_comm
-        + 0.25 * conditional_micro_logi
-        + 0.05 * dav_true
-        + 0.05 * att_true
-        + 0.05 * ddr_true
-        + 0.4 * fpr_true
-    )
     overall_parsed = (
         0.1 * micro_comm
         + 0.1 * macro_comm
@@ -581,6 +598,7 @@ result=res_count/3
     return {
         "split": split,
         "uid": uid,
+        "has_oracle": has_oracle,
         "schema_pass": schema_pass,
         "commonsense_pass": commonsense_pass,
         "logical_pass": true_logical_pass,
@@ -612,7 +630,9 @@ result=res_count/3
         "overall_parsed": overall_parsed,
         "schema_details": schema_result_agg.to_dict(orient="records"),
         "commonsense_details": common_result_agg.to_dict(orient="records"),
-        "logical_details": logi_result_agg.to_dict(orient="records"),
+        "logical_details": (
+            logi_result_agg.to_dict(orient="records") if has_oracle else []
+        ),
         "parsed_constraints_eval": {
             "checks": [bool(r) for r in parsed_results],
             "constraints": parsed_constraints,

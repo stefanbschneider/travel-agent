@@ -60,15 +60,349 @@ def test_llm_parse_adds_missing_constraint_without_overwriting_existing(one_quer
     assert budgets.get("dining") == 120.0
 
 
-def test_llm_parse_invalid_json_raises(one_query):
+def test_llm_parse_stub_invalid_json_raises(one_query):
+    """llm_parse_stub itself still raises on a malformed response (its own documented contract:
+    "Any error keeps ir unchanged by raising, so the orchestrator can degrade safely")."""
     class BadLLM:
         def complete(self, prompt, *, system=None, cache_key=None):
             return "not-json"
 
-    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query)  # deterministic ir, llm_parse off
     try:
-        normalize.parse_to_ir(one_query, llm_client=BadLLM(), flags=flags)
+        normalize.llm_parse_stub(ir, one_query, BadLLM())
     except ValueError as exc:
         assert "llm_parse invalid JSON" in str(exc)
     else:
         raise AssertionError("Expected llm_parse invalid JSON to raise")
+
+
+def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_failure(one_query):
+    """parse_to_ir must catch llm_parse_stub's raise and keep the deterministic ir -- previously
+    the exception propagated out of parse_to_ir, and orchestrator.solve_phase2's broad
+    try/except around the whole parse stage discarded the (perfectly good) deterministic parse
+    entirely (variants=[]) on any LLM hiccup, not just genuine parse bugs."""
+    class BadLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return "not-json"
+
+    deterministic = normalize.parse_to_ir(one_query)  # llm_parse off -> no LLM call
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=BadLLM(), flags=flags)
+    assert ir == deterministic
+
+
+def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_exception(one_query):
+    """Same contract, but for a client that raises outright (e.g. a network error) rather than
+    returning malformed JSON."""
+    class RaisingLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            raise RuntimeError("connection reset")
+
+    deterministic = normalize.parse_to_ir(one_query)
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=RaisingLLM(), flags=flags)
+    assert ir == deterministic
+
+
+def test_parse_to_ir_falls_back_to_deterministic_ir_on_llm_timeout(one_query):
+    """A client-level timeout (e.g. openai.APITimeoutError, or bare TimeoutError from a mock)
+    must degrade exactly like any other LLM failure -- caught by the same broad except in
+    parse_to_ir, never left to propagate or corrupt the deterministic ir."""
+    class TimingOutLLM:
+        timeout = 30.0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            raise TimeoutError("request timed out")
+
+    deterministic = normalize.parse_to_ir(one_query)
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=TimingOutLLM(), flags=flags)
+    assert ir == deterministic
+    assert ir.llm_parse_skipped_deadline is False
+
+
+def test_parse_to_ir_skips_llm_call_when_deadline_below_client_timeout(one_query):
+    """When the remaining parse-stage slice is shorter than the client's own request timeout, the
+    call can never finish in time -- skip it outright instead of starting a doomed request."""
+    class SlowLLM:
+        timeout = 30.0
+
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls += 1
+            return '{"constraint_text":"The budget for dining is 120."}'
+
+    llm = SlowLLM()
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    deterministic = normalize.parse_to_ir(one_query)
+    ir = normalize.parse_to_ir(one_query, llm_client=llm, flags=flags, deadline=5.0)
+    assert llm.calls == 0
+    assert ir.llm_parse_skipped_deadline is True
+    assert ir == deterministic
+
+
+def test_parse_to_ir_calls_llm_when_deadline_comfortably_above_timeout(one_query):
+    class FastLLM:
+        timeout = 30.0
+
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, prompt, *, system=None, cache_key=None):
+            self.calls += 1
+            return '{"constraint_text":"The budget for dining is 120."}'
+
+    llm = FastLLM()
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=llm, flags=flags, deadline=60.0)
+    assert llm.calls == 1
+    assert ir.llm_parse_skipped_deadline is False
+
+
+def test_parse_to_ir_deadline_check_ignored_without_client_timeout_attr(one_query, spy_llm):
+    """A backend with no timeout concept (e.g. the fixture client) must never be skipped by the
+    deadline check -- spy_llm has no ``timeout`` attribute, matching that shape."""
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(one_query, llm_client=spy_llm, flags=flags, deadline=0.001)
+    assert ir.llm_parse_skipped_deadline is False
+
+
+def test_llm_parse_replace_can_correct_existing_value():
+    class FakeLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[{"mode":"replace",'
+                '"constraint_text":"The budget for dining is 120.",'
+                '"confidence":0.91}],"field_confidence":{"budgets":0.91}}'
+            )
+
+    query = {
+        "uid": "q_replace_budget",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Shanghai",
+        "nature_language": "The budget for dining is 100.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, llm_client=FakeLLM(), flags=flags)
+
+    assert ir.raw.get("budgets", {}).get("dining") == 120.0
+    assert ir.confidence.get("budgets") == 0.91
+
+
+def test_llm_parse_or_arm_recovery_when_deterministic_split_missing():
+    class FakeLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[],"or_arms":['
+                '"I want to visit West Lake.",'
+                "\"I want to try Grandma's Home restaurant.\""
+                '],"field_alternatives":{},"field_confidence":{}}'
+            )
+
+    query = {
+        "uid": "q_or_recover",
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Hangzhou",
+        "nature_language": "Visit West Lake or try Grandma's Home restaurant.",
+    }
+    flags = type("Flags", (), {"disjunction": True, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, llm_client=FakeLLM(), flags=flags)
+    variants = normalize.ir_to_solver_variants(ir, query, flags=flags)
+
+    assert len(ir.or_groups) >= 2
+    assert len(variants) >= 2
+
+
+def test_llm_parse_field_alternatives_expand_solver_variants():
+    class FakeLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[],"or_arms":[],"field_alternatives":{'
+                '"budgets":['
+                '{"constraint_text":"The budget for dining is 80.","confidence":0.40},'
+                '{"constraint_text":"The budget for dining is 120.","confidence":0.80}'
+                ']},"field_confidence":{"budgets":0.55}}'
+            )
+
+    query = {
+        "uid": "q_alt_budget",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Shanghai",
+        "nature_language": "The budget for dining is 100.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, llm_client=FakeLLM(), flags=flags)
+    variants = normalize.ir_to_solver_variants(ir, query, flags=flags)
+
+    dining_values = {
+        float(v.get("budgets", {}).get("dining"))
+        for v in variants
+        if isinstance(v.get("budgets", {}).get("dining"), (int, float))
+    }
+    assert {80.0, 100.0, 120.0}.issubset(dining_values)
+
+
+# --- Step 2: corrective audit prompt ---------------------------------------
+
+def test_build_llm_parse_prompt_audits_each_extracted_family():
+    query = {
+        "uid": "q_audit",
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Wuhan",
+        "nature_language": "Do not wish to stay at the following hotels: Yucheng Hotel.",
+    }
+    raw = {"excluded_hotels": ["Yucheng Hotel"], "required_attractions": ["Bogus Place"]}
+    prompt = normalize.build_llm_parse_prompt(query, raw)
+    # The prompt must frame the task as an audit (confirm-or-remove), not optional refinement.
+    assert "audit" in prompt.lower()
+    assert "remove" in prompt.lower()
+    assert "negation" in prompt.lower() or "do not" in prompt.lower()
+    # Every extracted family must be listed for the model to audit.
+    assert "excluded_hotels" in prompt
+    assert "required_attractions" in prompt
+    # It must NOT invite the old passive "if no useful refinement" opt-out as the primary framing.
+    assert "no useful refinement" not in prompt.lower()
+
+
+# --- Step 7: OR-arm recovery prompt section ---------------------------------
+
+def _q_or(nl):
+    return {
+        "uid": "q_or",
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Wuhan",
+        "nature_language": nl,
+    }
+
+
+def test_or_arm_section_present_when_deterministic_split_missing():
+    prompt = normalize.build_llm_parse_prompt(
+        _q_or("Must satisfy one of the following: 1. X. 2. Y."), {}, or_groups_count=0
+    )
+    assert "OR-ARM RECOVERY" in prompt
+    assert "or_arms" in prompt
+    # A worked example, not just the bare instruction, per the plan's "one worked or_arms example".
+    assert "Worked example" in prompt
+
+
+def test_or_arm_section_omitted_when_deterministic_split_already_found_2_arms():
+    prompt = normalize.build_llm_parse_prompt(
+        _q_or("Must satisfy one of the following: 1. X. 2. Y."), {}, or_groups_count=2
+    )
+    assert "OR-ARM RECOVERY" not in prompt
+
+
+def test_or_arm_section_defaults_to_present_when_count_unspecified():
+    # Backward-compat default (0): callers that don't pass or_groups_count still get the section.
+    prompt = normalize.build_llm_parse_prompt(_q_or("Some non-disjunctive query."), {})
+    assert "OR-ARM RECOVERY" in prompt
+
+
+def test_llm_parse_removes_spurious_required_family_when_paired_with_correction():
+    # N4 recall-first merge guard: a `remove` only takes effect when paired, in the same batch,
+    # with an opposite-polarity `add`/`replace` for the same field (the model asserts *why* the
+    # family is wrong by supplying the correct replacement).
+    class PairedLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            # Sanity: the family we want removed is presented for audit.
+            assert "required_attractions" in prompt
+            return (
+                '{"patches":['
+                '{"mode":"remove","fields":["required_attractions"],'
+                '"constraint_text":"the request only says do NOT visit that place",'
+                '"confidence":0.9},'
+                '{"mode":"add","fields":["excluded_attractions"],'
+                '"constraint_text":"We do not want to visit the Confucius Temple.",'
+                '"confidence":0.9}'
+                '],"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+            )
+
+    query = {
+        "uid": "q_remove_spurious",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "nature_language": "We do not want to visit the Confucius Temple.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    # Seed a spurious family so we can assert removal deterministically.
+    ir = normalize.parse_to_ir(query, flags=flags)
+    ir.raw["required_attractions"] = ["Confucius Temple"]
+
+    # Re-run only the llm parse stub over the seeded IR.
+    updated = normalize.llm_parse_stub(ir, query, PairedLLM())
+    assert "required_attractions" not in updated.raw, updated.raw
+    assert updated.raw.get("excluded_attractions"), updated.raw
+
+
+def test_llm_parse_bare_remove_without_correction_is_discarded():
+    # N4 guard: an unpaired `remove` (no accompanying add/replace for the same field, and the
+    # field is not on the small pre-approved whitelist) has no effect -- G1 says a bare
+    # "this family is spurious" claim barely matters for e2e outcomes, so it isn't trusted alone.
+    class BareRemoveLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return (
+                '{"patches":[{"mode":"remove","fields":["required_attractions"],'
+                '"constraint_text":"seems unnecessary","confidence":0.9}],'
+                '"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+            )
+
+    query = {
+        "uid": "q_bare_remove",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "nature_language": "Some unrelated request text.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, flags=flags)
+    ir.raw["required_attractions"] = ["Some Place"]
+
+    updated = normalize.llm_parse_stub(ir, query, BareRemoveLLM())
+    assert updated.raw.get("required_attractions") == ["Some Place"], updated.raw
+
+
+def test_guard_remove_patches_drops_unpaired_field_but_keeps_paired_one():
+    # required_attractions's opposite (excluded_attractions) IS corrected in this batch, so its
+    # removal is allowed; required_restaurants has no corresponding correction, so it is dropped.
+    patches = [
+        {"mode": "remove", "fields": ["required_attractions", "required_restaurants"]},
+        {"mode": "add", "constraint_text": "We do not want to visit Confucius Temple."},
+    ]
+    guarded = normalize._guard_remove_patches(patches)
+    remove_patches = [p for p in guarded if p.get("mode") == "remove"]
+    assert len(remove_patches) == 1
+    assert remove_patches[0]["fields"] == ["required_attractions"]
+    assert any(p.get("mode") == "add" for p in guarded)
+
+
+def test_guard_remove_patches_drops_patch_entirely_when_no_fields_survive():
+    patches = [{"mode": "remove", "fields": ["required_attractions"]}]
+    guarded = normalize._guard_remove_patches(patches)
+    assert guarded == []
+
+
+def test_llm_parse_empty_patches_keep_parse_unchanged():
+    class NoopLLM:
+        def complete(self, prompt, *, system=None, cache_key=None):
+            return '{"patches":[],"or_arms":[],"field_alternatives":{},"field_confidence":{}}'
+
+    query = {
+        "uid": "q_noop",
+        "people_number": 2,
+        "start_city": "Shanghai",
+        "target_city": "Nanjing",
+        "nature_language": "The budget for dining is 100.",
+    }
+    flags = type("Flags", (), {"disjunction": False, "llm_parse": True})()
+    ir = normalize.parse_to_ir(query, flags=flags)
+    before = dict(ir.raw)
+    updated = normalize.llm_parse_stub(ir, query, NoopLLM())
+    assert updated.raw == before

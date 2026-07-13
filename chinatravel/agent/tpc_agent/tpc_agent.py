@@ -66,6 +66,13 @@ def is_open_during(attr, start_time, end_time):
     return ot_min <= st_min and ed_min <= et_min
 
 
+class _AcceptedEarlyStop(BaseException):
+    """Unwinds every nested loop in ``_solve`` as soon as an accepted plan is found, when
+    ``TPC_SOLVE_STOP_AT_ACCEPT`` is on (plan-2 Step 3, eval-tooling only). Subclasses
+    ``BaseException`` (not ``Exception``) so it passes through the ``except Exception`` handlers
+    already guarding each ``consider()`` call in ``_solve`` instead of being swallowed by them."""
+
+
 class TPCAgent(BaseAgent):
     def __init__(self, **kwargs):
         super().__init__(name="TPC", **kwargs)
@@ -552,8 +559,15 @@ class TPCAgent(BaseAgent):
 
     def _solve(self, query):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
-        keeping the best accepted plan found within budget; finally pack it."""
+        keeping the best accepted plan found within budget; finally pack it.
+
+        ``TPC_SOLVE_STOP_AT_ACCEPT`` (eval-tooling only, default off -- see ``_AcceptedEarlyStop``)
+        returns as soon as any accepted plan is found instead of spending the rest of the budget
+        polishing preference score, for a much cheaper (but preference-uncalibrated) FPR signal
+        during iteration (plan-2 Step 3). Off, this method's behavior is unchanged.
+        """
         self.reset_timeout_recovery_plan()
+        stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         init_key = (-1, float("-inf"), float("-inf"))
@@ -593,71 +607,76 @@ class TPCAgent(BaseAgent):
             if updated:
                 best_now = best_accepted["plan"] if best_accepted["plan"] is not None else best["plan"]
                 self._set_timeout_recovery_plan(best_now)
+            if accepted and stop_at_accept:
+                raise _AcceptedEarlyStop()
             return accepted
 
         def out_of_budget():
             return time.time() - self.start_clock > self.solve_budget_sec
 
         restarts = 0
-        for variant in variants:
-            if out_of_budget():
-                break
-            constraints = deepcopy(variant or {})
-            check = self._make_checker(query, constraints)
-            accepted_base = False
-            try:
-                accepted_base = consider(self._build_plan(query, constraints=constraints), constraints, check, {})
-            except Exception:
-                import traceback
-                traceback.print_exc()
-
-            run_cp_after_pass = os.environ.get("TPC_CP_AFTER_PASS", "1") != "0"
-            run_cp = (
-                os.environ.get("TPC_USE_CP_SOLVER", "1") != "0"
-                and not out_of_budget()
-                and (os.environ.get("TPC_CP_FORCE") == "1" or run_cp_after_pass or not accepted_base)
-            )
-            if run_cp:
-                try:
-                    from agent.tpc_agent.cp_solver import solve_with_cp_sat
-
-                    elapsed = time.time() - self.start_clock
-                    remaining = max(1.0, self.solve_budget_sec - elapsed)
-                    default_limit = min(30.0, remaining / 2.0)
-                    cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
-                    cp_limit = max(1.0, min(cp_limit, remaining))
-                    cp_plan = solve_with_cp_sat(
-                        self,
-                        query,
-                        constraints,
-                        check,
-                        cp_limit,
-                        self._visit_minutes_candidates(constraints),
-                    )
-                    if cp_plan is not None:
-                        consider(cp_plan, constraints, check, {"solver": "cp_sat"})
-                except Exception:
-                    pass
-
-            for params in self._repair_params(constraints):
+        try:
+            for variant in variants:
                 if out_of_budget():
                     break
+                constraints = deepcopy(variant or {})
+                check = self._make_checker(query, constraints)
+                accepted_base = False
                 try:
-                    consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
+                    accepted_base = consider(self._build_plan(query, constraints=constraints), constraints, check, {})
                 except Exception:
-                    continue
+                    import traceback
+                    traceback.print_exc()
 
-            while restarts < self.max_restarts and not out_of_budget():
-                restarts += 1
-                params = self._random_params(rng, constraints)
-                try:
-                    consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
-                except Exception:
-                    continue
+                run_cp_after_pass = os.environ.get("TPC_CP_AFTER_PASS", "1") != "0"
+                run_cp = (
+                    os.environ.get("TPC_USE_CP_SOLVER", "1") != "0"
+                    and not out_of_budget()
+                    and (os.environ.get("TPC_CP_FORCE") == "1" or run_cp_after_pass or not accepted_base)
+                )
+                if run_cp:
+                    try:
+                        from agent.tpc_agent.cp_solver import solve_with_cp_sat
+
+                        elapsed = time.time() - self.start_clock
+                        remaining = max(1.0, self.solve_budget_sec - elapsed)
+                        default_limit = min(30.0, remaining / 2.0)
+                        cp_limit = float(os.environ.get("TPC_CP_TIME_LIMIT_SEC", str(default_limit)))
+                        cp_limit = max(1.0, min(cp_limit, remaining))
+                        cp_plan = solve_with_cp_sat(
+                            self,
+                            query,
+                            constraints,
+                            check,
+                            cp_limit,
+                            self._visit_minutes_candidates(constraints),
+                        )
+                        if cp_plan is not None:
+                            consider(cp_plan, constraints, check, {"solver": "cp_sat"})
+                    except Exception:
+                        pass
+
+                for params in self._repair_params(constraints):
+                    if out_of_budget():
+                        break
+                    try:
+                        consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
+                    except Exception:
+                        continue
+
+                while restarts < self.max_restarts and not out_of_budget():
+                    restarts += 1
+                    params = self._random_params(rng, constraints)
+                    try:
+                        consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
+                    except Exception:
+                        continue
+        except _AcceptedEarlyStop:
+            pass
 
         chosen = best_accepted if best_accepted["plan"] is not None else best
 
-        if chosen["plan"] is not None and chosen["check"] is not None:
+        if chosen["plan"] is not None and chosen["check"] is not None and not stop_at_accept:
             packed = self._pack_plan(chosen["plan"], query, chosen["constraints"], chosen["check"], chosen["params"])
             if packed is not None:
                 chosen["plan"] = packed

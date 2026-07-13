@@ -52,3 +52,17 @@ def split_budget(total_sec: float) -> Budget:
         improve_sec=improve,
         finalize_sec=finalize,
     )
+
+
+def dynamic_solve_sec(b: Budget, elapsed_sec: float, *, improve_reserved: bool) -> float:
+    """Recompute the solve slice from actual elapsed time instead of the static split.
+
+    Stage 1 (parse) typically finishes in a fraction of its static slice, and the improve slice
+    is unused whenever Stage 3 (``llm_refine``) is off -- both flow to the solver instead of being
+    thrown away. ``elapsed_sec`` is the wall-clock time actually spent before Stage 2 starts (i.e.
+    Stage 1's duration). The finalize reserve is always withheld. Never returns less than the
+    static ``b.solve_sec`` would have given (a floor, not just a reallocation).
+    """
+    improve_reserve = b.improve_sec if improve_reserved else 0.0
+    dynamic = b.total_sec - max(elapsed_sec, 0.0) - b.finalize_sec - improve_reserve
+    return max(dynamic, b.solve_sec)

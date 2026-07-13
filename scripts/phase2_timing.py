@@ -59,6 +59,8 @@ def aggregate_timings(telemetries: list[dict], *, budget_sec: float | None = Non
         "timed_out": sum(1 for t in telemetries if t.get("timed_out")),
         "used_fallback": sum(1 for t in telemetries if t.get("used_fallback")),
         "valid_output_rate": (valid / n) if n else 0.0,
+        "llm_parse_attempted": sum(1 for t in telemetries if t.get("flags", {}).get("llm_parse")),
+        "llm_parse_failed": sum(1 for t in telemetries if t.get("llm_parse_error")),
     }
 
 
