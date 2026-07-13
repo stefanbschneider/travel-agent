@@ -459,19 +459,30 @@ the diff can't currently separate the two. `intercity_mode` (matched 0, spurious
 different, genuine bug: mode words are English on both sides, so this is real over-firing of the
 bare "by train"/"by airplane" fallback (N3.1) on HF's phrasing, not a scheme confound.
 
-**The unconfounded families are where the real signal lives**, and they still collapse hard:
-`budgets` (matched 4, missing 249 — HF phrases budgets as "with a budget of 1500 RMB", a wording
-`parse_budget` doesn't cover), `cuisine_preference` (matched 0, missing 90 — the extractor doesn't
-fire on this phrasing at all), `room_type` (matched 7, missing 146), `required_attraction_types`
-(matched 0, missing 98 — closed vocabulary, shared between datasets, still a near-total miss).
-These are numeric or closed-vocab families immune to the name-scheme issue, and their collapse is
-real, unconfounded phrasing-recall evidence.
+`required_attraction_types` (matched 0, spurious 12, wrong_value 23) looked at first like a clean,
+unconfounded family too (closed vocabulary, seemingly shared between datasets), but applying the
+same discriminator caught it as **also confounded**: a family that *produces values* which never
+match (spurious/wrong_value > 0 alongside matched = 0) has the same signature as the name-scheme
+artifact, vs. a family that simply never fires (spurious = wrong_value = 0 alongside matched = 0,
+or matched > 0) is genuine non-extraction. Confirmed directly: HF's `hard_logic_py` keeps
+attraction-type labels in Chinese too (`自然风光`, `历史古迹`, `公园`, `游乐园/体育娱乐`,
+`博物馆/纪念馆`), so it has the identical untranslated-oracle-vs-English-catalog mismatch, not a
+real recall gap.
+
+**The genuinely unconfounded families are narrower than first stated, but still collapse hard:**
+`budgets` (matched 4, missing 249, spurious 0 — HF phrases budgets as "with a budget of 1500 RMB",
+a wording `parse_budget` doesn't cover), `cuisine_preference` (matched 0, missing 90, spurious 0,
+wrong_value 0 — the extractor never fires on this phrasing, a clean non-extraction signature),
+`room_type` (matched 7, missing 146 — matching some cases proves the vocabulary is genuinely shared
+across datasets, so this family's collapse is real). These three are immune to the name/type-scheme
+issue, and their collapse is real, unconfounded phrasing-recall evidence.
 
 **Decision input for M2 (parsing-architecture A/B):** the escalation still stands, but on
-narrower, correct grounds — rest it on the numeric/closed-vocab family collapse (`budgets`,
-`cuisine_preference`, `room_type`, `required_attraction_types`), not on the raw 0.51 recall figure
-or the name-family matched=0 pattern, which is confounded by the loader comparing untranslated
-Chinese oracle names against English-resolved parsed names. The regex parser's near-zero recall on
+narrower, correct grounds — rest it on `budgets`/`cuisine_preference`/`room_type` alone (missing
+249/90/146 respectively), not on the raw 0.51 recall figure or the matched=0 pattern in any family
+whose values are compared against HF's untranslated Chinese oracle strings (`required_attractions`,
+`required_restaurants`, `required_hotels`, `required_hotel_all_types`, `position_presence`,
+`required_attraction_types`). The regex parser's near-zero recall on
 stylistically different phrasing for these clean families is still a genuine risk if Phase 2's
 held-out test queries diverge from val's phrasing the way HF does. This doesn't mean N1-N3's
 val-measured gains are wrong (they're real, targeted, evidenced fixes); it means the *architecture*

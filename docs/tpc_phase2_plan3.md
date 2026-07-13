@@ -344,18 +344,20 @@ drop (> ~10 behavioral pts) escalates M2 (LLM-first extraction) from "A/B worth 
 corrected before acting on it.** Recall dropped 26 points (0.7723→0.5106), f1 20 points
 (0.7880→0.5879) on HF `default` (n=604) vs the post-N3 val numbers; genuine, not a loader bug
 (`taxi_cars_equals`, phrasing-independent, still matches 597/604). But post-landing inspection
-found HF's oracle `hard_logic_py` keeps untranslated Chinese POI names while our parser resolves
-names against the English catalog (N2) — so name families (`required_attractions`,
-`required_restaurants`, `required_hotels`, `required_hotel_all_types`, `position_presence`)
-structurally can never register `matched` regardless of parse quality, and their matched=0 is not
-clean evidence. `intercity_mode`'s collapse (spurious 106) is real and unrelated to this (mode
-words are English on both sides — the bare-fallback regex over-fires on HF phrasing). The
-**unconfounded** families still collapse hard and are the real basis for escalation: `budgets`
-(matched 4/253), `cuisine_preference` (matched 0/90), `room_type` (matched 7/153),
-`required_attraction_types` (matched 0/98, closed vocab shared across datasets). Full breakdown
-and the corrected framing in `docs/tpc_phase2_eval.md`. **M2 is still "likely necessary," not just
-"worth an A/B," but on the narrower unconfounded-family evidence, not the raw 0.51 recall
-figure.**
+found HF's oracle `hard_logic_py` keeps untranslated Chinese POI names (and, caught on a second
+pass, Chinese *type* labels too) while our parser resolves both against English vocab (N2) — so
+`required_attractions`/`required_restaurants`/`required_hotels`/`required_hotel_all_types`/
+`position_presence`/`required_attraction_types` structurally can never register `matched`
+regardless of parse quality; the discriminator is matched=0 *with* spurious/wrong_value>0 (produces
+values that can't match = confounded) vs. matched=0 with spurious=wrong_value=0, or matched>0
+(genuinely doesn't fire, or fires and matches = real signal). `intercity_mode`'s collapse (spurious
+106) is real and unrelated (mode words are English on both sides — the bare-fallback regex
+over-fires on HF phrasing). The **genuinely unconfounded** families are narrower but still collapse
+hard and are the real basis for escalation: `budgets` (matched 4/253), `cuisine_preference` (matched
+0/90, spurious/wrong_value both 0), `room_type` (matched 7/153 — some matches prove the vocab is
+shared, so this collapse is real). Full breakdown and the corrected framing in
+`docs/tpc_phase2_eval.md`. **M2 is still "likely necessary," not just "worth an A/B," but on
+budgets/cuisine_preference/room_type alone, not the raw 0.51 recall figure.**
 
 ### N6 — `max_retries=0` (two-line fix + test; close plan-1's known follow-up) [landed 2026-07-13]
 
@@ -435,8 +437,8 @@ extract mode yet — fine for the A/B, fix only on promotion. Decision inputs no
 generalization verdict and the corrected (N1) family stats. **N5 landed 2026-07-13; the raw
 26-point recall drop on held-out HF phrasing is partly a name-scheme measurement artifact
 (corrected post-landing — see the N5 section above and `docs/tpc_phase2_eval.md`), but the
-unconfounded numeric/closed-vocab families (`budgets`, `cuisine_preference`, `room_type`,
-`required_attraction_types`) still collapse hard** — the escalation trigger still fires on that
+genuinely unconfounded families (`budgets`, `cuisine_preference`, `room_type` — `required_attraction_types`
+turned out to be confounded too, same Chinese-vocab-vs-English issue) still collapse hard** — the escalation trigger still fires on that
 narrower evidence, so this A/B is no longer optional polish; it's the standing architecture-risk
 question the project should resolve before the Phase 2 submission freeze, since Phase 2's actual
 held-out test queries are the real-world analog of what HF `default` simulates here. If killed,
