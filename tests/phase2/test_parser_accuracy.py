@@ -438,3 +438,64 @@ def test_multi_mode_exclusion_list_captures_all_modes():
     ))
     excluded = raw.get("excluded_inner_transport") or []
     assert set(excluded) == {"walk", "taxi"}, raw
+
+
+# --- plan3 N3.1: OR-arm bare-imperative + arm-local budget recovery --------
+
+
+def test_bare_imperative_visit_extracts_attraction_name():
+    # uid 20250321152015286634 arm 1: "Visit Shenzhen Art Museum (East Lake Branch)" -- a bare
+    # imperative with no "want to"/"must" framing (typical OR-arm bullet text). Oracle wants the
+    # specific attraction name, not the "Art Museum" type substring.
+    assert pc.parse_required_attractions("Visit Shenzhen Art Museum (East Lake Branch)") == [
+        "Shenzhen Art Museum (East Lake Branch)"
+    ]
+
+
+def test_bare_imperative_try_restaurants_extracts_name():
+    # uid 20250321152015286634 arm 2: "Try one of these restaurants: gaga (Joy Hub City Store)".
+    assert pc.parse_required_restaurants(
+        "Try one of these restaurants: gaga (Joy Hub City Store)"
+    ) == ["gaga (Joy Hub City Store)"]
+
+
+def test_arm_local_intra_city_travel_budget_wording():
+    # uid 20250323010100845247 arm 1: "Intra-city travel budget of 50.0" -- the intra-city budget
+    # regex previously required "transportation", missing the "travel" synonym.
+    budgets = pc.parse_budget("Intra-city travel budget of 50.0")
+    assert budgets.get("inner_transport") == 50.0, budgets
+
+
+def test_arm_local_total_trip_budget_wording():
+    # uid 20250323010100845247 arm 2: "Total trip budget of 9600.0" -- the total-budget regex
+    # previously only allowed an optional "travel" word, missing "trip".
+    budgets = pc.parse_budget("Total trip budget of 9600.0")
+    assert budgets.get("total") == 9600.0, budgets
+
+
+def test_or_arm_bare_imperative_and_budget_uids_produce_two_nonempty_arms():
+    from chinatravel.agent.phase2 import normalize as N
+
+    q1 = _q(
+        "Please meet at least one of the following requirements:\n"
+        "1. Visit Shenzhen Art Museum (East Lake Branch)\n"
+        "2. Try one of these restaurants: gaga (Joy Hub City Store)",
+        people=3, days=4,
+    )
+    arms = N._detect_or_groups(q1)
+    assert len(arms) == 2
+    assert all(arms), arms  # both non-empty
+    assert arms[0].get("required_attractions") == ["Shenzhen Art Museum (East Lake Branch)"]
+    assert arms[1].get("required_restaurants") == ["gaga (Joy Hub City Store)"]
+
+    q2 = _q(
+        "with either of the following requirements:\n"
+        "1. Intra-city travel budget of 50.0\n"
+        "2. Total trip budget of 9600.0",
+        people=1, days=5,
+    )
+    arms2 = N._detect_or_groups(q2)
+    assert len(arms2) == 2
+    assert all(arms2), arms2
+    assert arms2[0].get("budgets") == {"inner_transport": 50.0}
+    assert arms2[1].get("budgets") == {"total": 9600.0}

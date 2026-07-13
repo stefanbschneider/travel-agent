@@ -99,7 +99,7 @@ def parse_budget(text):
     # that by rejecting a match whose token is immediately preceded by a hyphen (A3 fix).
     m = None
     for cand in re.finditer(
-        r"(?:intra-city|inner-city|city|intra\s*city|local)\s*transportation\s*(?:budget|is)[^0-9]*?([\d]+(?:\.[\d]+)?)",
+        r"(?:intra-city|inner-city|city|intra\s*city|local)\s*(?:transportation|travel)\s*(?:budget|is)[^0-9]*?([\d]+(?:\.[\d]+)?)",
         text, re.I,
     ):
         if cand.start() > 0 and (text[cand.start() - 1] == "-" or text[cand.start() - 1].isalnum()):
@@ -116,7 +116,7 @@ def parse_budget(text):
         budgets["inner_transport"] = float(m.group(1))
 
     # Total travel budget
-    m = re.search(r"total\s*(?:travel\s*)?budget[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
+    m = re.search(r"total\s*(?:travel\s*|trip\s*)?budget[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
     if m:
         budgets["total"] = float(m.group(1))
 
@@ -268,6 +268,10 @@ def parse_required_attractions(text):
     patterns = [
         r"(?:want|wish|hope)\s+to\s+visit\s+(.+?)(?:\.|;|,\s*(?:and|we|the|do|hope|want|with|stay|if)|$)",
         r"must\s+visit\s+(.+?)(?:\.|;|,\s*(?:and|we|the|do)|$)",
+        # Bare imperative ("Visit X"), common in OR-arm bullet text with no surrounding
+        # "we want to"/"must" framing (plan3 G3/N3.1) -- anchored to the start of the text so it
+        # doesn't also fire mid-sentence.
+        r"^visit\s+(.+?)(?:\.|;|,\s*(?:and|we|the|do|hope|want|with|stay|if)|$)",
     ]
 
     for pat in patterns:
@@ -618,6 +622,9 @@ def parse_required_restaurants(text):
     patterns = [
         r"(?:want|wish|hope)\s+to\s+(?:try|dine\s+at)\s+(?:the\s+following\s+)?(?:restaurants?[:\s]+)?(.+?)(?:\.|;|$)",
         r"(?:want|wish|hope)\s+to\s+(?:try|dine\s+at)\s+(?:these\s+)?restaurants?[:\s]+(.+?)(?:\.|;|$)",
+        # Bare imperative ("Try one of these restaurants: X"), common in OR-arm bullet text with
+        # no surrounding "we want to" framing (plan3 G3/N3.1) -- anchored to the start of the text.
+        r"^try\s+(?:one\s+of\s+(?:the\s+following|these)\s+)?restaurants?[:\s]+(.+?)(?:\.|;|$)",
     ]
 
     for pat in patterns:
