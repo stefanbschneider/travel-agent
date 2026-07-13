@@ -11,6 +11,8 @@ check are added in Task 8b.
 
 from __future__ import annotations
 
+import math
+
 
 def _present(value) -> bool:
     """A constraint family counts as present only if it carries a non-empty value."""
@@ -36,19 +38,58 @@ def _families(d: dict) -> set:
     return {k for k, v in d.items() if _present(v)}
 
 
-def diff_constraints(parsed: dict, oracle: dict) -> dict:
+def _taxi_cars_default(people_number) -> int | None:
+    """The party-size-derived default parse_query_no_oracle always fills in for
+    taxi_cars_equals (ceil(people/4), matching the oracle's own formula). It's a deliberate,
+    vacuously-true-on-taxi-free-plans default (plan3 G6a) -- not a real over-extraction -- so it
+    shouldn't count against precision when the oracle never mentions taxi count at all."""
+    if people_number is None:
+        return None
+    try:
+        people = int(people_number)
+    except (TypeError, ValueError):
+        return None
+    return max(1, math.ceil(people / 4))
+
+
+def _canonicalize_hotel_distance(d: dict) -> dict:
+    """hotel_nearby (dict) and poi_distance_hotel (list-of-dict) encode the same hotel-distance
+    constraint in two schema shapes -- the no-oracle parser always mirrors one into the other, and
+    the oracle sometimes does too (plan3 G6b), which double-counts the same defect under two family
+    names. Canonicalize to poi_distance_hotel only for diff purposes."""
+    if not isinstance(d, dict):
+        return d
+    nearby = d.get("hotel_nearby")
+    if not _present(nearby):
+        return d
+    out = dict(d)
+    out.pop("hotel_nearby", None)
+    if not _present(out.get("poi_distance_hotel")):
+        out["poi_distance_hotel"] = [nearby]
+    return out
+
+
+def diff_constraints(parsed: dict, oracle: dict, *, people_number=None) -> dict:
     """Structural diff of one parsed vs one oracle solver-constraint dict.
 
-    Returns counts, per-bucket family lists, and precision/recall/value-accuracy.
+    Returns counts, per-bucket family lists, and precision/recall/value-accuracy. ``defaulted``
+    families (currently just a party-size-matching ``taxi_cars_equals``) are excluded from
+    ``spurious``/precision -- they're a deliberate always-on default, not an extraction defect.
     """
+    parsed = _canonicalize_hotel_distance(parsed)
+    oracle = _canonicalize_hotel_distance(oracle)
     p_fams = _families(parsed)
     o_fams = _families(oracle)
+    taxi_default = _taxi_cars_default(people_number)
 
-    missing, spurious, wrong_value, matched = [], [], [], []
+    missing, spurious, wrong_value, matched, defaulted = [], [], [], [], []
     for fam in o_fams - p_fams:
         missing.append(fam)
     for fam in p_fams - o_fams:
-        spurious.append(fam)
+        if fam == "taxi_cars_equals" and taxi_default is not None and parsed.get(fam) == taxi_default:
+            defaulted.append(fam)
+        else:
+            spurious.append(fam)
     for fam in p_fams & o_fams:
         if _canon(parsed.get(fam)) == _canon(oracle.get(fam)):
             matched.append(fam)
@@ -59,6 +100,7 @@ def diff_constraints(parsed: dict, oracle: dict) -> dict:
     n_missing = len(missing)
     n_spurious = len(spurious)
     n_wrong = len(wrong_value)
+    n_defaulted = len(defaulted)
 
     predicted = n_matched + n_spurious + n_wrong
     relevant = n_matched + n_missing + n_wrong
@@ -73,12 +115,14 @@ def diff_constraints(parsed: dict, oracle: dict) -> dict:
             "missing": n_missing,
             "spurious": n_spurious,
             "wrong_value": n_wrong,
+            "defaulted": n_defaulted,
         },
         "buckets": {
             "matched": sorted(matched),
             "missing": sorted(missing),
             "spurious": sorted(spurious),
             "wrong_value": sorted(wrong_value),
+            "defaulted": sorted(defaulted),
         },
         "precision": precision,
         "recall": recall,
@@ -119,7 +163,8 @@ def _match_pairs(parsed_variants: list[dict], oracle_variants: list[dict]):
     return pairs, unmatched_o, unmatched_p
 
 
-def _branch_aware_diff(parsed_variants: list[dict], oracle_variants: list[dict]) -> dict:
+def _branch_aware_diff(parsed_variants: list[dict], oracle_variants: list[dict], *,
+                       people_number=None) -> dict:
     """Matched-pair diff aggregated across all OR branches (micro-averaged counts).
 
     Each oracle branch is matched to a distinct parsed branch; per-pair family counts are summed.
@@ -128,21 +173,27 @@ def _branch_aware_diff(parsed_variants: list[dict], oracle_variants: list[dict])
     multi-branch parsing that the single-branch diff (parsed_variants[0] only) cannot.
     """
     pairs, unmatched_o, unmatched_p = _match_pairs(parsed_variants, oracle_variants)
-    tot = {"matched": 0, "missing": 0, "spurious": 0, "wrong_value": 0}
-    buckets = {"matched": [], "missing": [], "spurious": [], "wrong_value": []}
+    tot = {"matched": 0, "missing": 0, "spurious": 0, "wrong_value": 0, "defaulted": 0}
+    buckets = {"matched": [], "missing": [], "spurious": [], "wrong_value": [], "defaulted": []}
     for oi, pj in pairs:
-        d = diff_constraints(parsed_variants[pj], oracle_variants[oi])
+        d = diff_constraints(parsed_variants[pj], oracle_variants[oi], people_number=people_number)
         for k in tot:
             tot[k] += d["counts"][k]
             buckets[k].extend(d["buckets"][k])
     for oi in unmatched_o:  # whole oracle branch missing from the parse
-        fams = sorted(_families(oracle_variants[oi]))
+        fams = sorted(_families(_canonicalize_hotel_distance(oracle_variants[oi])))
         tot["missing"] += len(fams)
         buckets["missing"].extend(fams)
     for pj in unmatched_p:  # extra parsed branch the oracle does not have
-        fams = sorted(_families(parsed_variants[pj]))
-        tot["spurious"] += len(fams)
-        buckets["spurious"].extend(fams)
+        canon_pv = _canonicalize_hotel_distance(parsed_variants[pj])
+        taxi_default = _taxi_cars_default(people_number)
+        for fam in sorted(_families(canon_pv)):
+            if fam == "taxi_cars_equals" and taxi_default is not None and canon_pv.get(fam) == taxi_default:
+                tot["defaulted"] += 1
+                buckets["defaulted"].append(fam)
+            else:
+                tot["spurious"] += 1
+                buckets["spurious"].append(fam)
 
     predicted = tot["matched"] + tot["spurious"] + tot["wrong_value"]
     relevant = tot["matched"] + tot["missing"] + tot["wrong_value"]
@@ -157,7 +208,7 @@ def _branch_aware_diff(parsed_variants: list[dict], oracle_variants: list[dict])
 
 
 def diff_variants(*, parsed_variants: list[dict], oracle_variants: list[dict],
-                  branch_aware: bool = False) -> dict:
+                  branch_aware: bool = False, people_number=None) -> dict:
     """Diff parsed vs oracle at the variant-list level, flagging disjunction flattening.
 
     ``disjunction_flattened`` is True when the oracle encodes multiple OR branches but the parser
@@ -178,11 +229,11 @@ def diff_variants(*, parsed_variants: list[dict], oracle_variants: list[dict],
     flattened = len(oracle_variants) > 1 and len(parsed_variants) < len(oracle_variants)
 
     if branch_aware:
-        diff = _branch_aware_diff(parsed_variants, oracle_variants)
+        diff = _branch_aware_diff(parsed_variants, oracle_variants, people_number=people_number)
     else:
         pv = parsed_variants[0]
         oi = _best_oracle_index(pv, oracle_variants)
-        diff = diff_constraints(pv, oracle_variants[oi])
+        diff = diff_constraints(pv, oracle_variants[oi], people_number=people_number)
 
     return {
         "disjunction_flattened": flattened,
@@ -253,7 +304,7 @@ def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: 
         query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
     )
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants,
-                       branch_aware=branch_aware)
+                       branch_aware=branch_aware, people_number=query.get("people_number"))
     precision = dv["diff"]["precision"]
     recall = dv["diff"]["recall"]
     row = {
@@ -261,7 +312,7 @@ def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: 
         "oracle_branches": dv["oracle_branches"],
         "parsed_branches": dv["parsed_branches"],
         "disjunction_flattened": dv["disjunction_flattened"],
-        **{k: dv["diff"]["counts"][k] for k in ("matched", "missing", "spurious", "wrong_value")},
+        **{k: dv["diff"]["counts"][k] for k in ("matched", "missing", "spurious", "wrong_value", "defaulted")},
         "precision": round(precision, 4),
         "recall": round(recall, 4),
         "f1": round(_f1(precision, recall), 4),
@@ -394,17 +445,27 @@ def _f1(precision: float, recall: float) -> float:
     return (2.0 * precision * recall / denom) if denom else 0.0
 
 
-def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5) -> list[dict]:
+def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5,
+                            per_variant: bool = False) -> list[dict]:
     """Roll the per-uid bucket membership up to per-family counts, sorted by spurious count
     (the dominant loss per docs/tpc_phase2_eval.md) so the top of the list is where to look first
     for regex over-extraction fixes. Each family also carries a few example uids per failure
-    bucket to jump straight to a repro."""
+    bucket to jump straight to a repro.
+
+    By default (``per_variant=False``) counts are de-duplicated per (uid, family, bucket): a
+    family that appears in the same bucket across multiple OR branches of one uid (branch-aware
+    diff) counts once, not once per branch (plan3 G6c -- OR-heavy uids otherwise inflate family
+    totals). Pass ``per_variant=True`` for the raw per-branch-occurrence view.
+    """
     stats: dict[str, dict] = {}
     for row in rows:
         uid = row.get("uid")
         buckets = row.get("buckets", {})
-        for bucket in ("matched", "missing", "spurious", "wrong_value"):
-            for fam in buckets.get(bucket, []):
+        for bucket in ("matched", "missing", "spurious", "wrong_value", "defaulted"):
+            fams = buckets.get(bucket, [])
+            if not per_variant:
+                fams = sorted(set(fams))
+            for fam in fams:
                 fam_stats = stats.setdefault(
                     fam,
                     {
@@ -413,6 +474,7 @@ def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5) -> list[
                         "missing": 0,
                         "spurious": 0,
                         "wrong_value": 0,
+                        "defaulted": 0,
                         "reject_miss": 0,
                         "example_missing_uids": [],
                         "example_spurious_uids": [],
@@ -447,7 +509,7 @@ def _attribute_reject_misses(
 
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
                results_best=None, out_dir=None, disjunction=False, branch_aware=False,
-               llm_parse=False, llm_client=None) -> dict:
+               llm_parse=False, llm_client=None, per_variant_family_stats=False) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
     selected = list(uids) if uids else (query_ids[: int(limit)] if limit else query_ids)
 
@@ -507,8 +569,8 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         "f1": round(_f1(mean_precision, mean_recall), 4),
         "value_accuracy": round(_mean(r["value_accuracy"] for r in rows), 4),
         "disjunction_flattened": sum(1 for r in rows if r["disjunction_flattened"]),
-        "totals": {k: sum(r[k] for r in rows) for k in ("matched", "missing", "spurious", "wrong_value")},
-        "family_stats": _aggregate_family_stats(rows),
+        "totals": {k: sum(r[k] for r in rows) for k in ("matched", "missing", "spurious", "wrong_value", "defaulted")},
+        "family_stats": _aggregate_family_stats(rows, per_variant=per_variant_family_stats),
     }
     if behavioral:
         accept_agreement = round(_mean(1.0 if b["agree"] else 0.0 for b in behav_rows), 4)
@@ -574,6 +636,10 @@ def parse_args() -> argparse.Namespace:
                         "(same backend solve_phase2.py would use, per TPC_P2_LLM_BACKEND / "
                         "agent_env/config.toml). Responses are cached by default (TPC_P2_LLM_CACHE), "
                         "so a warm rerun is free and byte-deterministic.")
+    p.add_argument("--per-variant-family-stats", action="store_true",
+                   help="Count family_stats occurrences once per OR-branch variant instead of "
+                        "once per (uid, family, bucket) -- the raw pre-dedup view (plan3 N1/G6c). "
+                        "Default is de-duplicated, which is the trustworthy signal.")
     return p.parse_args()
 
 
@@ -582,7 +648,8 @@ def main() -> None:
     split = args.split or ("tpc_phase2_test" if args.split_set == "test" else "tpc_phase2_val")
     agg = run_report(split, limit=args.limit, behavioral=args.behavioral, lang=args.lang,
                      out_dir=args.out_dir, disjunction=args.disjunction,
-                     branch_aware=args.branch_aware, llm_parse=args.llm_parse)
+                     branch_aware=args.branch_aware, llm_parse=args.llm_parse,
+                     per_variant_family_stats=args.per_variant_family_stats)
     print(json.dumps(agg, ensure_ascii=False, indent=2))
 
 

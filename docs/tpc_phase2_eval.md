@@ -259,16 +259,35 @@ had at least one oracle-rejected probe; 164 uids let a bad probe through), `beha
 constraints are loose enough that other cities' best-plans pass), so the reject side is silent on
 them — probe coverage is a known limitation, not a bug.
 
-### Known family_stats artifacts (2026-07-12 review; fix = plan-3 N1)
+### family_stats metric hygiene (plan-3 N1, landed 2026-07-13)
 
-Until plan-3 N1 lands, read `family_stats` with three corrections in mind:
+The three artifacts identified in the 2026-07-12 review are now fixed in `parser_vs_oracle.py`
+(`diff_constraints`/`_aggregate_family_stats`), not just mentally corrected by the reader:
 
-1. `taxi_cars_equals` accounts for 668 of 916 total `spurious` entries — that family is a
-   deliberate party-size default (vacuously true on taxi-free plans, mirroring the oracle), not
-   real over-extraction. Mentally exclude it from precision.
-2. `hotel_nearby` and `poi_distance_hotel` are one constraint mirrored into two families; their
-   defect counts double-count the same underlying misses.
-3. Counts are per branch-variant, so disjunctive uids inflate family totals.
+1. `taxi_cars_equals` no longer counts as `spurious` when the parsed value equals the party-size
+   default (`ceil(people/4)`, matching the oracle's own formula) and the oracle doesn't mention it
+   at all — it lands in a new `defaulted` bucket/count instead (excluded from precision).
+2. `hotel_nearby` (dict) and `poi_distance_hotel` (list-of-dict) — the same hotel-distance
+   constraint mirrored into two family names by both the parser and (sometimes) the oracle — are
+   canonicalized to `poi_distance_hotel` before diffing, so the same defect is no longer counted
+   twice.
+3. `_aggregate_family_stats` de-duplicates per (uid, family, bucket) by default, so a family
+   repeated across a disjunctive uid's OR branches counts once, not once per branch. The raw
+   per-branch-occurrence view is still available via `--per-variant-family-stats` /
+   `_aggregate_family_stats(rows, per_variant=True)`.
+
+**Corrected full-val headline (2026-07-13, `--behavioral --disjunction --branch-aware`, n=850):**
+`precision` 0.7356, `recall` 0.6903, `f1` 0.7122, `value_accuracy` 0.8156, `disjunction_flattened`
+134 (unchanged — a disjunction-detection number, not a family-stats artifact). Totals: `matched`
+1555, `missing` 299, `spurious` 235 (was 916 pre-fix — the 668-entry drop is exactly the
+now-separately-tracked `taxi_cars_equals` `defaulted` count), `wrong_value` 355, `defaulted` 668.
+Top spurious/wrong_value families after the fix: `required_restaurants` (42 spurious / 46
+wrong_value), `required_hotels` (26/46), `required_attractions` (21/24), `cuisine_preference`
+(28/32) — these are the real G2 entity-handling defects N2 targets, no longer buried under the
+taxi/mirror/dedup noise. `poi_distance_hotel` now reports a single wrong_value count (54, not
+54+54). The behavioral proxy numbers (`accept_agreement`/`reject_agreement`/`behavioral_balanced`)
+are **unaffected** by this fix, as expected — it only corrects the diagnostic diff report, not the
+verifier-based accept/reject checks.
 
 ### Generalization anchor (planned, plan-3 N5): HF `default` as a held-out phrasing probe
 

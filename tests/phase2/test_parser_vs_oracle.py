@@ -51,6 +51,65 @@ def test_wrong_value_is_flagged():
     assert "budgets" in d["buckets"]["wrong_value"]
 
 
+# --- plan3 N1/G6: metric hygiene (taxi default, hotel-distance mirror, branch dedup) --------
+
+
+def test_taxi_cars_equals_matching_party_size_default_is_not_spurious():
+    # parse_query_no_oracle always fills taxi_cars_equals = ceil(people/4); when the oracle never
+    # mentions it, that deliberate default must not count against precision (plan3 G6a).
+    oracle = {"budgets": {"total": 1500.0}}
+    parsed = {"budgets": {"total": 1500.0}, "taxi_cars_equals": 2}  # ceil(5/4) == 2
+    d = pvo.diff_constraints(parsed, oracle, people_number=5)
+    assert d["counts"]["spurious"] == 0
+    assert d["counts"]["defaulted"] == 1
+    assert "taxi_cars_equals" in d["buckets"]["defaulted"]
+    assert d["precision"] == 1.0
+
+
+def test_taxi_cars_equals_not_matching_default_still_spurious():
+    # A non-default value (e.g. an explicit NL override) is a real extraction, not the vacuous
+    # default -- still counts as spurious/precision loss when the oracle doesn't have it.
+    oracle = {"budgets": {"total": 1500.0}}
+    parsed = {"budgets": {"total": 1500.0}, "taxi_cars_equals": 3}  # ceil(5/4) == 2, not 3
+    d = pvo.diff_constraints(parsed, oracle, people_number=5)
+    assert d["counts"]["spurious"] == 1
+    assert d["counts"]["defaulted"] == 0
+
+
+def test_taxi_cars_equals_spurious_without_people_number():
+    # No people_number context (e.g. a raw curated dict in a unit test) -> can't compute the
+    # default, so falls back to counting as spurious (conservative, matches pre-N1 behavior).
+    oracle = {"budgets": {"total": 1500.0}}
+    parsed = {"budgets": {"total": 1500.0}, "taxi_cars_equals": 2}
+    d = pvo.diff_constraints(parsed, oracle)
+    assert d["counts"]["spurious"] == 1
+    assert d["counts"]["defaulted"] == 0
+
+
+def test_hotel_nearby_and_poi_distance_hotel_mirror_counted_once():
+    # Both parser and oracle may mirror the same hotel-distance constraint into hotel_nearby
+    # (dict) and poi_distance_hotel (list); must diff as one family, not two (plan3 G6b).
+    item = {"reference": "Some POI", "distance_km": 1.0}
+    oracle = {"hotel_nearby": item, "poi_distance_hotel": [item]}
+    parsed = {"hotel_nearby": item, "poi_distance_hotel": [item]}
+    d = pvo.diff_constraints(parsed, oracle)
+    assert d["counts"]["matched"] == 1
+    assert "hotel_nearby" not in d["buckets"]["matched"]
+    assert "poi_distance_hotel" in d["buckets"]["matched"]
+
+
+def test_hotel_nearby_only_oracle_canonicalized_to_poi_distance_hotel():
+    # Oracle's accommodation_distance pattern sets only hotel_nearby (no poi_distance_hotel list);
+    # canonicalization must still compare it head-to-head with the parser's always-mirrored value.
+    item = {"reference": "Some POI", "distance_km": 1.0}
+    oracle = {"hotel_nearby": item}
+    parsed = {"hotel_nearby": item, "poi_distance_hotel": [item]}
+    d = pvo.diff_constraints(parsed, oracle)
+    assert d["counts"]["matched"] == 1
+    assert d["counts"]["spurious"] == 0
+    assert d["counts"]["missing"] == 0
+
+
 def test_disjunction_flattened_detected():
     # Oracle has 2 branches; parsed has 1 -> the OR was flattened.
     d = pvo.diff_variants(
@@ -107,22 +166,35 @@ def test_compute_query_diff_includes_buckets_for_family_stats():
         "target_city": "B",
     })
     assert "buckets" in row
-    assert set(row["buckets"].keys()) == {"matched", "missing", "spurious", "wrong_value"}
+    assert set(row["buckets"].keys()) == {"matched", "missing", "spurious", "wrong_value", "defaulted"}
 
 
 def test_aggregate_family_stats_sorts_by_spurious_count_desc():
     rows = [
-        {"uid": "u1", "buckets": {"matched": [], "missing": [], "spurious": ["a", "a", "b"], "wrong_value": []}},
+        {"uid": "u1", "buckets": {"matched": [], "missing": [], "spurious": ["a", "b"], "wrong_value": []}},
         {"uid": "u2", "buckets": {"matched": ["c"], "missing": [], "spurious": ["a"], "wrong_value": []}},
     ]
     stats = pvo._aggregate_family_stats(rows)
     by_family = {s["family"]: s for s in stats}
-    assert by_family["a"]["spurious"] == 3
+    assert by_family["a"]["spurious"] == 2
     assert by_family["b"]["spurious"] == 1
     assert by_family["c"]["matched"] == 1
     # sorted descending by spurious count
     assert [s["family"] for s in stats][0] == "a"
-    assert by_family["a"]["example_spurious_uids"] == ["u1", "u1", "u2"]
+    assert by_family["a"]["example_spurious_uids"] == ["u1", "u2"]
+
+
+def test_aggregate_family_stats_dedupes_per_uid_family_bucket_by_default():
+    # plan3 N1/G6c: a family appearing in the same bucket across multiple OR branches of one uid
+    # (branch-aware diff) must count once per uid, not once per branch occurrence.
+    rows = [
+        {"uid": "u1", "buckets": {"matched": [], "missing": [], "spurious": ["a", "a", "a"], "wrong_value": []}},
+    ]
+    deduped = pvo._aggregate_family_stats(rows)
+    assert {s["family"]: s["spurious"] for s in deduped}["a"] == 1
+
+    raw = pvo._aggregate_family_stats(rows, per_variant=True)
+    assert {s["family"]: s["spurious"] for s in raw}["a"] == 3
 
 
 # --- Two-sided behavioral proxy: reject-side probes (plan-2 Step 5) ----------
