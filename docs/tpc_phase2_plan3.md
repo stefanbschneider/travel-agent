@@ -307,7 +307,7 @@ DeepInfra smoke under the N7 `llm` marker.
   are stable): recall must recover to ≥ the deterministic parser's recall, `behavioral_balanced`
   ≥ deterministic. Then the standard e2e ladder. This also refreshes the stale 0.8694 number.
 
-### N5 — Generalization probe on the HF dataset (read-only, ~an hour of work)
+### N5 — Generalization probe on the HF dataset (read-only, ~an hour of work) [landed 2026-07-13 — trigger fired, see below]
 
 Wire `scripts/parser_vs_oracle.py` to accept the HF `default` subset (654 queries; map
 `nature_language_en` → `nature_language`, Chinese city names → English per
@@ -317,6 +317,14 @@ report (deterministic first; LLM-audit run optional/paid). Record val-vs-HF delt
 drop (> ~10 behavioral pts) escalates M2 (LLM-first extraction) from "A/B worth running" to
 "likely necessary". Do not fix anything HF-specific — it's a measurement set, not a tuning set
 (tuning on it would burn our only generalization signal).
+
+**Landed 2026-07-13. The escalation trigger fired, decisively:** recall dropped 26 points
+(0.7723→0.5106), f1 20 points (0.7880→0.5879) on HF `default` (n=604) vs the post-N3 val numbers.
+Verified genuine (not a loader bug) via `taxi_cars_equals`, a phrasing-independent family, which
+still matches 597/604. Every phrasing-dependent family (`budgets`, `required_attractions`,
+`intercity_mode`, `room_type`, `cuisine_preference`) collapsed to near-zero matched. Full
+breakdown and family-level evidence in `docs/tpc_phase2_eval.md`. **M2 is now "likely necessary,"
+not just "worth an A/B"** — see the M2 section below.
 
 ### N6 — `max_retries=0` (two-line fix + test; close plan-1's known follow-up) [landed 2026-07-13]
 
@@ -393,8 +401,13 @@ never silently drop deterministic recall — the dict-family fix suggests this l
 partly absorbed; audit the list/scalar paths too); (b) note the known v1 gap that structured-dict
 families (`stay_duration`, `activity_time_windows`, `timing_constraints`) cannot be populated by
 extract mode yet — fine for the A/B, fix only on promotion. Decision inputs now include N5's
-generalization verdict and the corrected (N1) family stats. If killed, the negative result plus
-N4's guarded audit is the shipped architecture.
+generalization verdict and the corrected (N1) family stats. **N5 landed 2026-07-13 with a
+26-point recall drop on held-out HF phrasing** (see the N5 section above and
+`docs/tpc_phase2_eval.md`) — the escalation trigger fired, so this A/B is no longer optional
+polish; it's the standing architecture-risk question the project should resolve before the
+Phase 2 submission freeze, since Phase 2's actual held-out test queries are the real-world
+analog of what HF `default` simulates here. If killed, the negative result plus N4's guarded
+audit is the shipped architecture.
 
 ### M3 — Verifier fidelity pass (after N2 lands)
 

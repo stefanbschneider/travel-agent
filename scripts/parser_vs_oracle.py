@@ -264,6 +264,55 @@ def _load_queries(split: str, lang: str = "en"):
     return load_query(args)
 
 
+def _hf_city_lookup() -> dict[str, str]:
+    """Chinese city name -> English city name (matches ``target_city``/``start_city`` in the
+    local en data), by CITY_SLUGS index -- see ``chinatravel/environment/language.py``."""
+    from chinatravel.environment.language import CITY_NAMES
+
+    return dict(zip(CITY_NAMES["zh"], CITY_NAMES["en"]))
+
+
+def load_hf_queries(config: str = "default", splits: list[str] | None = None):
+    """Load the HF ``LAMDA-NeSy/ChinaTravel`` dataset (plan3 N5, docs/tpc_phase2_hf_dataset.md) in
+    the same ``(query_ids, query_data)`` shape ``_load_queries`` returns, normalized to what the
+    local pipeline expects: ``nature_language_en`` -> ``nature_language``, Chinese city names ->
+    English, ``hard_logic_py`` literal-eval'd if it arrived as a string. A **measurement set**,
+    never tuned against (uid-disjoint from ``tpc_phase1`` per the compare-script findings) --
+    read-only by design, see docs/tpc_phase2_hf_dataset.md.
+    """
+    import ast
+
+    from datasets import load_dataset
+
+    ds = load_dataset("LAMDA-NeSy/ChinaTravel", name=config)
+    splits = splits or list(ds.keys())
+    city_lookup = _hf_city_lookup()
+
+    query_ids = []
+    query_data = {}
+    for sp in splits:
+        for row in ds[sp].to_list():
+            uid = row.get("uid")
+            if not uid or uid in query_data:
+                continue
+            q = dict(row)
+            nl_en = q.pop("nature_language_en", None)
+            if nl_en:
+                q["nature_language"] = nl_en
+            q["start_city"] = city_lookup.get(q.get("start_city"), q.get("start_city"))
+            q["target_city"] = city_lookup.get(q.get("target_city"), q.get("target_city"))
+            hlp = q.get("hard_logic_py")
+            if isinstance(hlp, str):
+                try:
+                    q["hard_logic_py"] = ast.literal_eval(hlp)
+                except (ValueError, SyntaxError):
+                    q["hard_logic_py"] = []
+            q.setdefault("uid", uid)
+            query_ids.append(uid)
+            query_data[uid] = q
+    return query_ids, query_data
+
+
 def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = False, llm_client=None,
                    entity_resolution: bool = False):
     """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema.
@@ -516,8 +565,12 @@ def _attribute_reject_misses(
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
                results_best=None, out_dir=None, disjunction=False, branch_aware=False,
                llm_parse=False, llm_client=None, per_variant_family_stats=False,
-               entity_resolution=False) -> dict:
-    query_ids, query_data = _load_queries(split, lang=lang)
+               entity_resolution=False, hf_config=None, hf_splits=None) -> dict:
+    if hf_config:
+        query_ids, query_data = load_hf_queries(hf_config, hf_splits)
+        split = f"hf:{hf_config}:{'+'.join(hf_splits) if hf_splits else 'all'}"
+    else:
+        query_ids, query_data = _load_queries(split, lang=lang)
     selected = list(uids) if uids else (query_ids[: int(limit)] if limit else query_ids)
 
     if llm_parse and llm_client is None:
@@ -653,6 +706,14 @@ def parse_args() -> argparse.Namespace:
                    help="Route the parsed side through the deterministic entity-resolution layer "
                         "(TPC_P2_ENTITY_RESOLUTION, plan3 N2) that canonicalizes name-bearing "
                         "families against the target city's POI catalog.")
+    p.add_argument("--hf-config", default=None, choices=["default", "preference"],
+                   help="Measure against the HF LAMDA-NeSy/ChinaTravel dataset instead of a local "
+                        "split (plan3 N5, docs/tpc_phase2_hf_dataset.md) -- a held-out phrasing "
+                        "generalization probe, uid-disjoint from tpc_phase1. Overrides --split/"
+                        "--split-set. A measurement set only -- never tune the parser against it.")
+    p.add_argument("--hf-splits", nargs="*", default=None,
+                   help="HF config splits to include (default: all splits in --hf-config, e.g. "
+                        "easy/medium/human for the 'default' config).")
     return p.parse_args()
 
 
@@ -663,7 +724,8 @@ def main() -> None:
                      out_dir=args.out_dir, disjunction=args.disjunction,
                      branch_aware=args.branch_aware, llm_parse=args.llm_parse,
                      per_variant_family_stats=args.per_variant_family_stats,
-                     entity_resolution=args.entity_resolution)
+                     entity_resolution=args.entity_resolution,
+                     hf_config=args.hf_config, hf_splits=args.hf_splits)
     print(json.dumps(agg, ensure_ascii=False, indent=2))
 
 

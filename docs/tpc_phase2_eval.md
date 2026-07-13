@@ -412,13 +412,49 @@ unaffected — `evaluate_parsed_constraints` is only ever called in no-oracle mo
 **Measurement ladder status:** same as N2 — rung (a) done (numbers above); rungs (b)-(d) pending
 on VM 2.
 
-### Generalization anchor (planned, plan-3 N5): HF `default` as a held-out phrasing probe
+### Generalization anchor (plan-3 N5, landed 2026-07-13): a large, real gap on held-out phrasing
 
-Every parser number so far is measured on val, which we have iterated against for weeks. The HF
-`LAMDA-NeSy/ChinaTravel` `default` subset (654 queries, uid-disjoint, with `hard_logic_py` and
-English NL — see `docs/tpc_phase2_hf_dataset.md`) supports the same solver-free parser-vs-oracle
-report and therefore gives an honest held-out-phrasing signal for free. It is a **measurement
-set, never a tuning set**. Numbers land here once plan-3 N5 runs.
+`scripts/parser_vs_oracle.py::load_hf_queries` (new `--hf-config default [--hf-splits ...]`)
+loads the HF `LAMDA-NeSy/ChinaTravel` `default` subset (uid-disjoint from `tpc_phase1`; see
+`docs/tpc_phase2_hf_dataset.md`), normalizing `nature_language_en` → `nature_language` and
+Chinese city names → English so it runs through the exact same solver-free report as val. It is a
+**measurement set, never a tuning set** — nothing below fed back into the parser.
+
+**Result (n=604 of 654 — some uids share a uid across splits and dedupe;
+`--disjunction --branch-aware --entity-resolution`, no `--behavioral` since HF has no local
+`results/best` plans to probe against), vs the post-N3 val numbers:**
+
+| metric | val (post-N3) | HF `default` | Δ |
+| --- | --- | --- | --- |
+| precision | 0.8043 | 0.6928 | -0.1115 |
+| recall | 0.7723 | 0.5106 | **-0.2617** |
+| f1 | 0.7880 | 0.5879 | **-0.2001** |
+| value_accuracy | 0.8861 | 0.9029 | +0.0168 |
+| disjunction_flattened | 113 | 0 | n/a (HF `default` has no disjunctive queries in-sample) |
+
+**This is the plan's own escalation trigger** ("a big drop (> ~10 behavioral pts) escalates M2
+... from 'A/B worth running' to 'likely necessary'") — recall alone dropped 26 points, f1 20.
+Verified this is a genuine phrasing gap, not a loader bug: `taxi_cars_equals` (computed purely
+from `people_number`, independent of NL phrasing) matches 597/604 — the loader's city/field
+mapping is sound. The collapse is concentrated exactly where regex phrasing-matching would be
+expected to fail on a stylistically different corpus: `budgets` (matched 4, missing 249 — HF
+phrases budgets as "with a budget of 1500 RMB", not "total budget of 1500.0"),
+`required_attractions` (matched **0**, spurious 155 — the regex hallucinates attraction names on
+unfamiliar sentence shapes far more than it correctly extracts them), `intercity_mode` (matched 0,
+spurious 106 — likely the bare-fallback "by train" pattern firing on HF phrasing it wasn't tuned
+for), `room_type`/`cuisine_preference` (matched 0 or near-0, both almost entirely missing). Every
+name/type/preference family that depends on matching specific NL phrasing shows matched≈0 on HF,
+while purely-derived families (`taxi_cars_equals`) are fine — this is a **regex-overfit-to-val-
+phrasing** signature, not a broken loader or a broken oracle side.
+
+**Decision input for M2 (parsing-architecture A/B):** per the plan's own rule, this result moves
+M2 from "worth an A/B" to a real open question the project should resolve before submission —
+the regex parser's near-zero recall on stylistically different phrasing is a genuine risk if the
+Phase 2 held-out test queries turn out to differ from val's phrasing conventions the way HF does.
+This doesn't mean N1-N3's val-measured gains are wrong (they're real, targeted, evidenced fixes);
+it means the *architecture* question (regex-first vs LLM-first extraction) is more urgent than
+"A/B worth running" suggested. Not resolved in this session — M2's measurement ladder needs a
+paid LLM run, out of scope for the coding VM.
 
 ## Guiding Idea
 

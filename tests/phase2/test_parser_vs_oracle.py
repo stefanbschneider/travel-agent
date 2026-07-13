@@ -305,3 +305,50 @@ def test_attribute_reject_misses_ignores_unknown_uid():
                      "reject_miss": 0}]
     pvo._attribute_reject_misses(family_stats, rows_by_uid={}, reject_miss_uids=["ghost"])
     assert family_stats[0]["reject_miss"] == 0
+
+
+# --- plan3 N5: HF dataset loader (generalization probe) --------------------
+
+
+class _FakeSplit:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def to_list(self):
+        return self._rows
+
+
+def test_load_hf_queries_normalizes_language_and_city(monkeypatch):
+    rows = {
+        "easy": _FakeSplit([
+            {
+                "uid": "e1", "start_city": "上海", "target_city": "杭州", "days": 1,
+                "people_number": 1, "nature_language": "zh text",
+                "nature_language_en": "Travel from Shanghai to Hangzhou.",
+                "hard_logic_py": "['result=(day_count(plan)==1)']",
+            },
+        ]),
+    }
+    monkeypatch.setattr("datasets.load_dataset", lambda path, **kw: rows)
+
+    ids, data = pvo.load_hf_queries("default")
+    assert ids == ["e1"]
+    q = data["e1"]
+    assert q["nature_language"] == "Travel from Shanghai to Hangzhou."
+    assert q["start_city"] == "Shanghai"
+    assert q["target_city"] == "Hangzhou"
+    assert q["hard_logic_py"] == ["result=(day_count(plan)==1)"]
+
+
+def test_load_hf_queries_dedupes_across_splits(monkeypatch):
+    row = {
+        "uid": "e1", "start_city": "上海", "target_city": "杭州", "days": 1,
+        "people_number": 1, "nature_language_en": "text",
+        "hard_logic_py": [],
+    }
+    rows = {"easy": _FakeSplit([row]), "medium": _FakeSplit([dict(row)])}
+    monkeypatch.setattr("datasets.load_dataset", lambda path, **kw: rows)
+
+    ids, data = pvo.load_hf_queries("default", splits=["easy", "medium"])
+    assert ids == ["e1"]
+    assert len(data) == 1
