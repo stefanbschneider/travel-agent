@@ -165,7 +165,9 @@ packaging + variance).
 ## Near-term (days; the current week's work — highest FPR return per hour)
 
 Recommended order: N1 → N2 → N3 → N4, with N5/N6 slotted anywhere (N5 is read-only; N6 is a
-two-line diff). N2 is the big one; if only one thing gets done, do N2.
+two-line diff). N2 is the big one; if only one thing gets done, do N2. N7 is not a slot in the
+order — it's the standing test-first rule applied throughout N2/N3/N4 (its one-off setup is ~an
+hour; do it alongside the first parser fix).
 
 ### N1 — Make the family-level diff trustworthy (metric hygiene)
 
@@ -235,7 +237,8 @@ the 11 fold-0 parse-loss uids flip to pass.
 ### N3 — Targeted extractor fixes (four small, evidenced substeps, TDD each)
 
 **Files:** `parse_constraints.py`, `tests/phase2/test_parser_accuracy.py`; same measurement
-ladder as N2 (they share one diff-eval/300s row at the end; commit per substep).
+ladder as N2 (they share one diff-eval/300s row at the end; commit per substep). Each substep's
+failing test goes in first, per N7 Tier 1.
 
 1. **OR-arm content recovery (G3):** make the numbered/bare-imperative arm texts parseable —
    extend the relevant extractors to accept leading bare verbs ("Visit X", "Try one of these
@@ -261,7 +264,8 @@ ladder as N2 (they share one diff-eval/300s row at the end; commit per substep).
 Do after N2/N3 (each regex change cold-starts the audit's LLM cache anyway; batch them).
 
 **Files:** `chinatravel/agent/phase2/normalize.py` (`build_llm_parse_prompt`, `_apply_patch` /
-patch acceptance), fixture-backed tests.
+patch acceptance), fixture-backed tests for the merge guard (default suite) plus one live
+DeepInfra smoke under the N7 `llm` marker.
 
 - **Deterministic merge guard (the part that doesn't trust the model):** reject `remove` patches
   outright unless (a) accompanied by an opposite-polarity `add`/`replace` for the same span
@@ -291,6 +295,50 @@ drop (> ~10 behavioral pts) escalates M2 (LLM-first extraction) from "A/B worth 
 
 `chinatravel/agent/phase2/llm_client.py:219` — `max_retries: 1 → 0`, assert single-attempt in a
 test with a mocked transport. Unit-test only change.
+
+### N7 — Parser regression harness: a fast pytest test for every parsing bug (TDD + stays-fixed guarantee)
+
+**Rationale:** `tests/phase2/test_parser_accuracy.py` already does exactly this for plan-1's three
+fixes ("Phase A": taxi derivation, restaurant negation, budget disambiguation) — frozen NL snippet
+in, asserted constraints out, milliseconds per test. Generalize that into a standing rule so every
+gap-map bug gets a failing test *before* its fix and can never silently regress, and add an opt-in
+live-LLM tier so the DeepInfra-facing plumbing is also covered (calls are cheap enough that a
+handful per run is fine).
+
+**Two tiers:**
+
+**Tier 1 — deterministic (default suite; no network; runs in `make phase2-test`).**
+- For each bug in G2/G3/G4 (and every parser bug found later): write the test first, quoting the
+  evidencing NL verbatim from the val uid (uid in a comment), then fix. Home:
+  `test_parser_accuracy.py` for `parse_constraints.py` fixes, `test_entity_resolution.py` (N2) for
+  the normalize-layer resolution pipeline — test the layer that owns the fix (raw
+  `parse_query_no_oracle` output vs. `parse_to_ir` + `ir_to_solver_variants` variants).
+- **Assert recall-style, per G1:** the expected constraints are *present with correct values*;
+  don't assert the absence of extras unless the bug itself is a polarity inversion or misrouting.
+  Asserting exact full-dict equality would make every test brittle against unrelated recall
+  improvements — the failure mode G1 says we should welcome.
+- Green-before-commit applies to this tier as to everything else in the default suite.
+
+**Tier 2 — live-LLM smokes (new opt-in pytest marker `llm`; DeepInfra; ~cents per run).**
+- Register the `llm` marker in `pyproject.toml` and exclude it by default
+  (`addopts = "-q -m 'not integration and not llm'"`). Tests `pytest.skip` at collection when
+  `INFRADEEP_API_KEY` is unset; they must **not** use the `no_network` fixture. Run with
+  `.venv/bin/python -m pytest tests/phase2 -m llm`.
+- Scope: guard the real-endpoint plumbing and merge policy, not model quality — e.g. one
+  unambiguous canonical query through the Stage-1 LLM path asserting
+  `llm_parse_attempted and not llm_parse_failed`, the patch parses and touches only
+  `_LLM_PARSE_ALLOWED_KEYS`, and (after N4) the merge guard's remove-rejection semantics hold
+  against a live response. Keep it to ≤ ~5 calls per run.
+- Model output is nondeterministic: assert **properties any correct response satisfies**
+  (schema-validity, whitelisted keys, an unambiguous constraint present), never exact strings.
+- Flake policy: Tier 2 is a pre-flight signal, not a commit gate — run it before paid full-val
+  LLM runs and before any change to `llm_client.py` / the parse prompts ships, not on every
+  commit.
+
+**Accept:** marker registered + default suite still hermetic (SpyLLMClient/`no_network` invariants
+untouched); every N2/N3 substep lands with its Tier-1 test; ≥1 Tier-2 smoke exists and passes
+against DeepInfra; CLAUDE.md's Tests section updated to document the `llm` marker alongside
+`integration` (do this in the same commit the marker lands, so fresh agents see it).
 
 ---
 
@@ -400,13 +448,13 @@ not before.
 | N2 entity resolution | 3–7 pts of the 12.9 parsing loss | 2–3 days | low (flag-gated, deterministic) |
 | N3 extractor fixes | 2–4 pts (OR-arms + negation uids) | 1–2 days | low |
 | N4 recall-first audit | 1–3 pts (stops LLM-side recall loss) | 1 day + 1 paid run | medium (prompt iteration) |
-| N1/N5/N6 | 0 direct; unblock decisions | hours | none |
+| N1/N5/N6/N7 | 0 direct; unblock decisions + lock fixes in | hours | none |
 | M1–M5 | characterization + ≤4.7 pts solver | days | medium |
 | L1–L5 | robustness/preference tail | week 3 | — |
 
 ## Definition of done (plan level)
 
-- N1–N6 landed with their measured acceptance checks; at least one post-N2/N3 canonical 300s row
+- N1–N7 landed with their measured acceptance checks; at least one post-N2/N3 canonical 300s row
   gated green vs `20260712T060018Z` and recorded in the ledger.
 - M1's worker producing rows; 900s + det-anchor + fastfpr-calibration rows exist.
 - M2 concluded with a written promotion/kill verdict (the standing architecture question closed).
