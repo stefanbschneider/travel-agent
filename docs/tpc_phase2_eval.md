@@ -433,28 +433,54 @@ Chinese city names → English so it runs through the exact same solver-free rep
 | disjunction_flattened | 113 | 0 | n/a (HF `default` has no disjunctive queries in-sample) |
 
 **This is the plan's own escalation trigger** ("a big drop (> ~10 behavioral pts) escalates M2
-... from 'A/B worth running' to 'likely necessary'") — recall alone dropped 26 points, f1 20.
-Verified this is a genuine phrasing gap, not a loader bug: `taxi_cars_equals` (computed purely
-from `people_number`, independent of NL phrasing) matches 597/604 — the loader's city/field
-mapping is sound. The collapse is concentrated exactly where regex phrasing-matching would be
-expected to fail on a stylistically different corpus: `budgets` (matched 4, missing 249 — HF
-phrases budgets as "with a budget of 1500 RMB", not "total budget of 1500.0"),
-`required_attractions` (matched **0**, spurious 155 — the regex hallucinates attraction names on
-unfamiliar sentence shapes far more than it correctly extracts them), `intercity_mode` (matched 0,
-spurious 106 — likely the bare-fallback "by train" pattern firing on HF phrasing it wasn't tuned
-for), `room_type`/`cuisine_preference` (matched 0 or near-0, both almost entirely missing). Every
-name/type/preference family that depends on matching specific NL phrasing shows matched≈0 on HF,
-while purely-derived families (`taxi_cars_equals`) are fine — this is a **regex-overfit-to-val-
-phrasing** signature, not a broken loader or a broken oracle side.
+... from 'A/B worth running' to 'likely necessary'") — recall dropped 26 points, f1 20. Verified
+this is a genuine measurement (not a loader bug) via `taxi_cars_equals` (computed purely from
+`people_number`, independent of NL phrasing and of any name scheme): matches 597/604, so the
+loader's city/field mapping is sound.
 
-**Decision input for M2 (parsing-architecture A/B):** per the plan's own rule, this result moves
-M2 from "worth an A/B" to a real open question the project should resolve before submission —
-the regex parser's near-zero recall on stylistically different phrasing is a genuine risk if the
-Phase 2 held-out test queries turn out to differ from val's phrasing conventions the way HF does.
-This doesn't mean N1-N3's val-measured gains are wrong (they're real, targeted, evidenced fixes);
-it means the *architecture* question (regex-first vs LLM-first extraction) is more urgent than
-"A/B worth running" suggested. Not resolved in this session — M2's measurement ladder needs a
-paid LLM run, out of scope for the coding VM.
+**Correction (caught post-landing, before acting on the raw numbers): the name-family collapse is
+substantially a cross-dataset name-scheme artifact, not a clean phrasing-recall signal, and the
+headline "26-point recall drop" overstates the real gap.** `load_hf_queries` translates the NL
+query text and city names, but does **not** touch `hard_logic_py` — HF's oracle keeps its
+original, untranslated Chinese POI strings (e.g. `'人民大礼堂'`), while our parser's entity
+resolution (N2) canonicalizes parsed names against the English `database_en` catalog. For any
+name-comparison family, this means a **structurally correct** parse can never register as
+`matched` — the two sides are never in the same alphabet, let alone the same string. Manually
+inspecting 8 HF uids with oracle `required_attractions` confirmed this isn't hypothetical: oracle
+values are raw Chinese (`人民大礼堂`, `青溪老街`, `奎星楼街`, ...); the parser mostly returned
+`None` (a real recall miss — a separate, genuine bug: the bare-imperative "visit X" extractor from
+N3.3 doesn't fire on this phrasing) but the handful of non-`None` cases were mis-scoped spans
+("Chongqing for 2 days", "would like to go to the Great Hall of the People" — a wrong-span
+extraction bug, not a translation issue) that *also* could never have string-matched even if
+perfectly resolved. So `required_attractions`/`required_restaurants`/`required_hotels`/
+`required_hotel_all_types`/`position_presence` all showing matched=0 is expected by construction
+for the language-mismatch reason alone, on top of whatever real extraction bugs exist underneath —
+the diff can't currently separate the two. `intercity_mode` (matched 0, spurious 106) is a
+different, genuine bug: mode words are English on both sides, so this is real over-firing of the
+bare "by train"/"by airplane" fallback (N3.1) on HF's phrasing, not a scheme confound.
+
+**The unconfounded families are where the real signal lives**, and they still collapse hard:
+`budgets` (matched 4, missing 249 — HF phrases budgets as "with a budget of 1500 RMB", a wording
+`parse_budget` doesn't cover), `cuisine_preference` (matched 0, missing 90 — the extractor doesn't
+fire on this phrasing at all), `room_type` (matched 7, missing 146), `required_attraction_types`
+(matched 0, missing 98 — closed vocabulary, shared between datasets, still a near-total miss).
+These are numeric or closed-vocab families immune to the name-scheme issue, and their collapse is
+real, unconfounded phrasing-recall evidence.
+
+**Decision input for M2 (parsing-architecture A/B):** the escalation still stands, but on
+narrower, correct grounds — rest it on the numeric/closed-vocab family collapse (`budgets`,
+`cuisine_preference`, `room_type`, `required_attraction_types`), not on the raw 0.51 recall figure
+or the name-family matched=0 pattern, which is confounded by the loader comparing untranslated
+Chinese oracle names against English-resolved parsed names. The regex parser's near-zero recall on
+stylistically different phrasing for these clean families is still a genuine risk if Phase 2's
+held-out test queries diverge from val's phrasing the way HF does. This doesn't mean N1-N3's
+val-measured gains are wrong (they're real, targeted, evidenced fixes); it means the *architecture*
+question (regex-first vs LLM-first extraction) is more urgent than "A/B worth running" suggested —
+just not by the inflated margin the raw aggregate numbers first suggested. Not resolved in this
+session — M2's measurement ladder needs a paid LLM run, out of scope for the coding VM. A follow-up
+worth scoping before spending on M2: teach `load_hf_queries` (or the diff) to translate/normalize
+`hard_logic_py` POI names too, so the name-family numbers become trustworthy instead of
+structurally zero.
 
 ## Guiding Idea
 
