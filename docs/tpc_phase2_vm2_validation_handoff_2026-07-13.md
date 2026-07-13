@@ -45,8 +45,11 @@ the batch here.
 ```
 .venv/bin/python scripts/phase2_diff_eval.py \
   --baseline docs/phase2_baselines/runs/20260712T060018Z.json \
-  --unsafe-allow-solver-drift --parallel 3
+  --unsafe-allow-solver-drift --parallel 4
 ```
+
+(`--parallel 4` uses all 4 cores — this run isn't being compared against a fixed-parallelism
+baseline, it's exploratory, so there's no reason to hold a core back.)
 
 `--unsafe-allow-solver-drift` is required: N3.4 touched `chinatravel/agent/tpc_agent/parsed_verifier.py`
 and the N2 wiring touched `orchestrator.py`/`solve_phase2.py`, both outside `phase2_diff_eval.py`'s
@@ -58,14 +61,17 @@ uids whose parse changed and is fast (minutes). Report the projected FPR delta a
 
 **2. Canonical 300s gate row (rung d) — the real gate.**
 
-Match the baseline row `docs/phase2_baselines/runs/20260712T060018Z.json` exactly: split=val, fold=0,
-folds=10, budget=300s, repeats=2, branch_aware=false, n=85, parallel=3 (that row was itself produced
-at parallel=3 — match it for apples-to-apples timing and to avoid introducing a second variable).
+Match the baseline row `docs/phase2_baselines/runs/20260712T060018Z.json` on everything that
+affects the *result*: split=val, fold=0, folds=10, budget=300s, repeats=2, branch_aware=false,
+n=85. That row was itself produced at `parallel=3` (one core deliberately left free); use
+`parallel=4` instead to use all 4 cores on this box. Parallelism is a pure throughput knob — each
+worker still gets its own CP-SAT process on its own core either way — so it doesn't change what's
+being measured (unlike budget_sec, flags, or fold selection, which do), it just finishes faster.
 Use the pinned-worktree variant so the row's `git_sha` is truthful and your main tree stays free:
 
 ```
 make phase2-baseline-at SHA=be037f37 FOLD=0 P2_FOLDS=10 P2_BUDGET=300 P2_REPEATS=2 \
-  P2_PARALLEL=3 P2_LABEL=plan3-n1n7-gate
+  P2_PARALLEL=4 P2_LABEL=plan3-n1n7-gate
 ```
 
 This takes hours — use `make phase2-progress FOLD=0 P2_FOLDS=10 P2_REPEATS=2
@@ -127,20 +133,32 @@ For each run: what you ran, the exact command, the resulting numbers, and — fo
 with reasons. If anything is ambiguous (e.g. you can't tell what flag config produced the 2026-07-12
 baseline), say so explicitly rather than guessing silently.
 
-## Estimated timing (4 CPUs, `parallel=3`)
+## Estimated timing (4 CPUs on VM2)
 
-| Step | Estimate | Basis |
-| --- | --- | --- |
-| 1. Diff-eval splice | 15-45 min | Only uids whose parse fingerprint changed get re-solved (a subset of the 85-uid fold), each up to the baseline's 300s budget, at parallel=3. Exact time scales with how many of the 85 uids N1-N4 actually touched. |
-| 2. Canonical 300s gate row | ~7-8 h | This exact config (fold 0, 85 uids, 2 repeats, both end-to-end + solver-only modes, parallel=3) is what produced the `20260712T060018Z` baseline, which CLAUDE.md documents as taking ~7.5h — same hardware profile, so expect the same order of magnitude. |
-| 3. N4 cheap probe | 10-20 min | ~80 total LLM calls (40 disagreement + 40 control), no solver time at all — bounded by DeepInfra request latency, not compute. |
-| 4. Paid full-val `--llm-parse` (conditional) | ~100 min | Stated directly in `docs/tpc_phase2_plan3.md`'s N4/M2 sections (cold cache, one call per val uid). |
-| **Total (steps 1-3 only)** | **~8-9 h** | Sequential sum; step 2 dominates. |
-| **Total (all four)** | **~9.5-10.5 h** | Only if step 4 is triggered. |
+**Only steps 1 and 2 actually use multiple cores.** Both spawn one CP-SAT/TPCAgent solve process
+per `--parallel`/`P2_PARALLEL` worker, so throughput scales with cores. Steps 3 and 4 are plain
+sequential Python scripts making one LLM API call at a time — neither `phase2_llm_parse_probe.py`
+nor `parser_vs_oracle.py --llm-parse` has a `--parallel` flag, and there's nothing to solve, so
+they run on a single core regardless of how many are free; their wall-clock time is bounded by
+DeepInfra request latency, not local compute. (Adding concurrency to those two scripts would be a
+real speedup opportunity, but it's a code change — out of scope for a measurement-only VM2 run;
+flag it back to the coding VM if steps 3/4 latency becomes a bottleneck worth fixing.)
 
-Step 2 is the long pole by a wide margin — if wall-clock matters, kick it off first and run steps 1
-and 3 while it's in flight (they don't touch the same run directory, so nothing conflicts), rather
-than running everything strictly in the priority order above.
+| Step | Cores used | Estimate | Basis |
+| --- | --- | --- | --- |
+| 1. Diff-eval splice | 4 (`--parallel 4`) | 10-35 min | Only uids whose parse fingerprint changed get re-solved (a subset of the 85-uid fold), each up to the baseline's 300s budget. Exact time scales with how many of the 85 uids N1-N4 actually touched. |
+| 2. Canonical 300s gate row | 4 (`P2_PARALLEL=4`) | ~5.5-6.5 h | The `20260712T060018Z` baseline (same config, both end-to-end + solver-only modes, 85 uids x 2 repeats) took ~7.5h at `parallel=3`; using all 4 cores instead of 3 is a ~25% throughput gain (near-linear for independent CPU-bound solve processes with no other load on the box), so expect roughly 3/4 of that wall-clock time. |
+| 3. N4 cheap probe | 1 (no parallel option) | 10-20 min | ~80 total LLM calls (40 disagreement + 40 control), sequential, bounded by DeepInfra request latency, not compute. |
+| 4. Paid full-val `--llm-parse` (conditional) | 1 (no parallel option) | ~100 min | Stated directly in `docs/tpc_phase2_plan3.md`'s N4/M2 sections (cold cache, one call per val uid, sequential). |
+| **Total (steps 1-3 only)** | | **~6-7.5 h** | Sequential sum; step 2 dominates. |
+| **Total (all four)** | | **~7.5-9 h** | Only if step 4 is triggered. |
+
+Step 2 is the long pole by a wide margin. Steps 3 and 4 are single-core/network-bound, so there's
+no resource conflict running either of them **concurrently with step 2** in another shell — kick
+off step 2 first, then run step 3 (and step 4, if triggered) alongside it, since neither competes
+for CPU in any way that matters. Step 1 also wants all 4 cores (`--parallel 4`), so don't run it
+concurrently with step 2 — either run it first (it's short) or drop it to `--parallel 1` if you do
+want it running in the background while step 2 has the other cores.
 
 ---
 
