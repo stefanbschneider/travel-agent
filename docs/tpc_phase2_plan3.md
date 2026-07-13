@@ -247,11 +247,25 @@ files); (c) one fastfpr fold-0 row if the diff is too wide; (d) canonical 300s r
 (via `make phase2-baseline-at`), gated vs `20260712T060018Z`. **Accept:** gate passes and ≥3 of
 the 11 fold-0 parse-loss uids flip to pass.
 
-### N3 — Targeted extractor fixes (four small, evidenced substeps, TDD each)
+### N3 — Targeted extractor fixes (four small, evidenced substeps, TDD each) [landed 2026-07-13; behavioral_balanced up, see below]
 
 **Files:** `parse_constraints.py`, `tests/phase2/test_parser_accuracy.py`; same measurement
 ladder as N2 (they share one diff-eval/300s row at the end; commit per substep). Each substep's
 failing test goes in first, per N7 Tier 1.
+
+**Landed 2026-07-13, all 4 substeps.** Unlike N2, this one moved the metric its own accept
+criteria name: combined with N3.2/N3.3, `behavioral_balanced` (the corrected primary signal —
+see the N2 framing-correction note above) went **0.8134 → 0.8246** (`accept_agreement`
+0.8024→0.8176, `reject_agreement` 0.8243→0.8315), and `disjunction_flattened` dropped 134→113
+(short of the ≤100 target — the remaining flattened uids include at least one genuinely
+unparseable case, `20250322123458076116`, whose second OR arm is truncated in the raw dataset
+NL itself ("Total budget for" with no number — verified against the source JSON, not a parser
+bug). N3.4's fix doesn't move the diff/proxy by design (it only tightens solver-internal
+acceptance, not the parsed value) — validated instead by an empirical investigation (31 val
+samples, gap always in `[0, 0.00991]` km, confirming the NL-states-a-ceiling hypothesis) plus 3
+unit tests with a mocked distance function. Full writeup and numbers in
+`docs/tpc_phase2_eval.md`. Rungs (b)-(d) of the measurement ladder are pending on VM 2, same as
+N2.
 
 1. **OR-arm content recovery (G3):** make the numbered/bare-imperative arm texts parseable —
    extend the relevant extractors to accept leading bare verbs ("Visit X", "Try one of these

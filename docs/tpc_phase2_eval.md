@@ -352,6 +352,66 @@ also need `--unsafe-allow-solver-drift` right now, since this step also touched
 inert when off) and `agent_env/scripts/solve_phase2.py` (default-on wiring), neither on the
 `PARSE_ONLY_ALLOWLIST`. Per the two-VM rule, rungs (b)-(d) are pending on VM 2.
 
+### Targeted extractor fixes (plan-3 N3, landed 2026-07-13) — behavioral_balanced actually moves
+
+Four small `parse_constraints.py` fixes, each TDD'd against a real val uid:
+
+1. **N3.1 OR-arm content recovery:** bare-imperative arm text ("Visit X", "Try one of these
+   restaurants: Y") and arm-local budget phrasing ("Intra-city **travel** budget", "Total **trip**
+   budget") weren't recognized by extractors that only matched "want to visit"/"total travel
+   budget" framing.
+2. **N3.2 intercity-mode negation-first ordering:** `parse_intercity_mode` checked positive
+   patterns before negative ones, so "do not want to take the train to the destination" — which
+   contains "take the train to the destination" as a literal substring — matched the positive
+   pattern first and was read as an affirmative, inverting the requirement. Negative checks now
+   run first (the mode domain is binary, so a negated mode always resolves to its complement).
+3. **N3.3 coverage gaps:** the outbound/return mode patterns required "take a/an train", silently
+   missing "take **the** train"; neither positive nor negative patterns recognized "fly" as an
+   airplane-verb synonym ("do not want to fly back"); the multi-mode exclusion parser only
+   captured one mode from "do not want to use walking **or** taxi" (dropped whichever mode wasn't
+   directly adjacent to "use").
+4. **N3.4 tighter-or-equal hotel distance:** see below.
+
+**Full-val measurement (N3.1-N3.3 combined, `--behavioral --disjunction --branch-aware
+--entity-resolution`, n=850), vs the post-N2 numbers:**
+
+| metric | post-N2 | + N3.1-N3.3 | Δ |
+| --- | --- | --- | --- |
+| precision | 0.7794 | 0.8043 | +0.0249 |
+| recall | 0.7322 | 0.7723 | +0.0401 |
+| f1 | 0.7551 | 0.7880 | +0.0329 |
+| value_accuracy | 0.8614 | 0.8861 | +0.0247 |
+| disjunction_flattened | 134 | 113 | -21 |
+| accept_agreement | 0.8024 | 0.8176 | +0.0152 |
+| reject_agreement | 0.8243 | 0.8315 | +0.0072 |
+| **behavioral_balanced** | **0.8134** | **0.8246** | **+0.0112** |
+
+Unlike N2, `behavioral_balanced` — the metric this family of fixes should move, per the N2
+framing correction above — actually moved, and by a meaningful margin. This is consistent with
+G1: N3.2/N3.3 fix missing/wrong-polarity constraints (the direct e2e-failure-causing category),
+not just precision.
+
+`disjunction_flattened` (113) missed the plan's ≤100 target. Investigated the remainder: at least
+one flattened uid (`20250322123458076116`) is not a parser bug — its second OR arm's raw NL text
+is genuinely truncated in the source dataset ("... 2. Total budget for" with no number, verified
+against the committed JSON), so no extractor fix can recover it. The other 134→113 drop is real
+recovered arms (bare imperatives + budget wording).
+
+**N3.4 (hotel_nearby tightening)** doesn't move the diff or the behavioral proxy by design — it
+only tightens the *solver-internal* acceptance threshold, leaving the parsed/diffed value
+unchanged. Validated instead by direct investigation: across 31 val-split hotel_nearby/
+poi_distance_hotel pairs where the NL-parsed reference matches the oracle's raw `hard_logic_py`
+reference, the parsed distance was **always ≥ the oracle's true (unrounded) value**, with the gap
+always in `[0, 0.00991]` km — e.g. parsed `8.86` vs oracle's raw `8.851522495588497` — confirming
+the NL text states a 2-decimal **ceiling** of the true geodesic distance. `parsed_verifier.py`'s
+hotel-proximity check now uses `distance_km - 0.01` as the threshold, so a hotel whose true
+distance sits in that gap is correctly rejected instead of silently passing our internal check
+and then failing the real oracle's threshold at evaluation time. Oracle-mode (Phase 1) is
+unaffected — `evaluate_parsed_constraints` is only ever called in no-oracle mode.
+
+**Measurement ladder status:** same as N2 — rung (a) done (numbers above); rungs (b)-(d) pending
+on VM 2.
+
 ### Generalization anchor (planned, plan-3 N5): HF `default` as a held-out phrasing probe
 
 Every parser number so far is measured on val, which we have iterated against for weeks. The HF
