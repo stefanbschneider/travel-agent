@@ -629,7 +629,7 @@ _ENTITY_TRAILING_NUMBER_RE = re.compile(r"\s+\d+$")
 _ENTITY_SPLIT_RE = re.compile(r"\s*(?:,|\band\b|\bor\b)\s*", re.IGNORECASE)
 
 _entity_catalog_cache: dict[str, dict[str, list[str]]] = {}
-_attraction_type_vocab_cache: dict[str, str] | None = None
+_attraction_type_vocab_cache: dict[str, dict[str, str]] = {}
 
 
 def _city_slug(city) -> str | None:
@@ -667,23 +667,31 @@ def load_city_entity_catalog(city) -> dict[str, list[str]]:
     return catalog
 
 
-def _attraction_type_vocab() -> dict[str, str]:
+def _attraction_type_vocab(slug: str | None) -> dict[str, str]:
     """normalized type string -> canonical (CSV-literal) type string, e.g. 'amusement
     park/sports entertainment' -> 'Amusement Park/Sports Entertainment'. The CSV 'type' column is
     used verbatim (not split on '/') -- the solver's own type matcher already does segment-level
-    matching against a compound type at evaluation time."""
-    global _attraction_type_vocab_cache
-    if _attraction_type_vocab_cache is not None:
-        return _attraction_type_vocab_cache
+    matching against a compound type at evaluation time. Scoped per-city (like
+    ``load_city_entity_catalog``): different cities' CSVs occasionally disagree on casing for the
+    same type (e.g. Shanghai's 'Art museum' vs every other city's 'Art Museum'), so a vocab pooled
+    across all cities would pick an arbitrary casing depending on glob order -- scoping to the
+    target city keeps the resolved value consistent with that city's own catalog."""
+    cache_key = slug or ""
+    if cache_key in _attraction_type_vocab_cache:
+        return _attraction_type_vocab_cache[cache_key]
     root = _extract_project_root()
+    pattern = (
+        f"chinatravel/environment/database_en/attractions/{slug}/attractions.csv"
+        if slug else "chinatravel/environment/database_en/attractions/*/attractions.csv"
+    )
     vocab: dict[str, str] = {}
-    for path in root.glob("chinatravel/environment/database_en/attractions/*/attractions.csv"):
+    for path in root.glob(pattern):
         with open(path, encoding="utf-8", newline="") as f:
             for row in csv.DictReader(f):
                 t = (row.get("type") or "").strip()
                 if t:
                     vocab.setdefault(_norm_entity_key(t), t)
-    _attraction_type_vocab_cache = vocab
+    _attraction_type_vocab_cache[cache_key] = vocab
     return vocab
 
 
@@ -773,8 +781,8 @@ def _segment_entity_list(text: str, catalog_names: list[str]) -> list[str] | Non
     return _dedupe_preserve_order(resolved)
 
 
-def _match_type_vocab(text: str) -> str | None:
-    vocab = _attraction_type_vocab()
+def _match_type_vocab(text: str, slug: str | None) -> str | None:
+    vocab = _attraction_type_vocab(slug)
     norm = _norm_entity_key(text)
     if norm in vocab:
         return vocab[norm]
@@ -813,7 +821,7 @@ def _resolve_generic_location(text: str, catalog: dict[str, list[str]]) -> str:
     return cleaned
 
 
-def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[str]]) -> dict:
+def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[str]], slug: str | None) -> dict:
     """Steps 1-6 of the resolution pipeline for one entry of a required_/excluded_ name family.
     Returns a tagged outcome so the caller can route the result into the right constraint family."""
     category = _ENTITY_CATEGORY_FOR_FIELD[field]
@@ -832,7 +840,7 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
         return {"kind": "names", "value": segments}
 
     if field in _ENTITY_TYPE_FIELD_FOR:
-        type_match = _match_type_vocab(cleaned)
+        type_match = _match_type_vocab(cleaned, slug)
         if type_match:
             return {"kind": "type", "value": type_match}
 
@@ -860,6 +868,7 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
         catalog = load_city_entity_catalog(query.get("target_city"))
     if not any(catalog.get(c) for c in ("attraction", "restaurant", "hotel")):
         return variant  # unknown city / no catalog -- nothing to resolve against
+    slug = _city_slug(query.get("target_city"))
 
     out = dict(variant)
 
@@ -874,7 +883,7 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
             if not isinstance(raw, str):
                 new_names.append(raw)
                 continue
-            outcome = _resolve_one_required_name(raw, field, catalog)
+            outcome = _resolve_one_required_name(raw, field, catalog, slug)
             kind = outcome["kind"]
             if kind == "name":
                 new_names.append(outcome["value"])
