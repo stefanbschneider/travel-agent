@@ -57,8 +57,8 @@ Everything below either fixes a known concrete defect or lands one prioritized m
      produces a mixed-code, mislabeled row. Docs-only commits are fine.
    - Runtime scales ≈ `repeats × n × 1.9 × budget_sec` (the solve loop deliberately exhausts its
      slice in both modes). The machine has 4 cores — do not run two solver evals concurrently.
-5. **LLM economics:** DeepInfra is paid. The API key is `INFRADEEP_API_KEY` in `.env` (backend
-   name `infradeep`, model `Qwen/Qwen3.6-27B`; connectivity check: `python scripts/try_deepinfra.py`).
+5. **LLM economics:** DeepInfra is paid. The API key is `DEEPINFRA_API_KEY` in `.env` (backend
+   name `deepinfra`, model `Qwen/Qwen3.6-27B`; connectivity check: `python scripts/try_deepinfra.py`).
    Responses are disk-cached under `cache/phase2_llm_parse/` keyed by prompt hash, so re-running
    an *unchanged* prompt over val is free; **any prompt change invalidates the cache and a full
    850-uid run costs ~100 minutes of real API calls**. For prompt iterations, always measure first
@@ -189,7 +189,7 @@ Verify DeepInfra connectivity (`python scripts/try_deepinfra.py`) and that
 `cache/phase2_llm_parse/` is populated (it is, from the full-val audit run — warm cache means the
 e2e run's LLM calls are mostly free and byte-deterministic).
 
-**Run:** `TPC_P2_LLM_BACKEND=infradeep make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=60
+**Run:** `TPC_P2_LLM_BACKEND=deepinfra make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=60
 P2_REPEATS=2 P2_LABEL=llmparse-real-dynbudget-fullfold0-60s` (~5.5h at n=85; freeze code while it
 runs). **Sanity-check the row before trusting it:** `timing_llm_parse_attempted` must be ~85·2 and
 `timing_llm_parse_failed` must be ~0 — if failures are high, the backend is broken again (see the
@@ -216,7 +216,7 @@ serves the same purpose.
 
 **Goal:** confirm the parsing-dominant attribution at a budget shaped like the competition's.
 
-**Run:** `TPC_P2_LLM_BACKEND=infradeep make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=300
+**Run:** `TPC_P2_LLM_BACKEND=deepinfra make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=300
 P2_LIMIT=20 P2_REPEATS=2 P2_LABEL=llmparse-dynbudget-300s-n20` — estimate ~6.5h
 (2 × 20 × 1.9 × 300s ÷ [some parallelism from `P2_PARALLEL` chunk workers; check
 `scripts/rehearse_phase2.py` — with 4 cores and chunked subprocesses the wall clock may be

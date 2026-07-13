@@ -8,7 +8,7 @@ Backends, selected by config / the ``TPC_P2_LLM_BACKEND`` env var:
                 (or a hash of the prompt). Zero network. For dev (hand-produced parses) + tests.
 - ``openai``  : OpenAI-compatible endpoint (SGLang, OpenRouter, local Qwen, ...). Reuses the
                 ``openai`` package. OpenRouter is just a ``base_url`` + ``api_key`` preset.
-- ``infradeep``: InfraDeep preset over the same OpenAI-compatible wire protocol.
+- ``deepinfra``: DeepInfra preset over the same OpenAI-compatible wire protocol.
 
 Config keys (dict or ``[phase2.llm]`` in agent_env/config.toml):
     backend, model, base_url, api_key, api_key_env, fixtures_dir, temperature, max_tokens.
@@ -43,12 +43,12 @@ DEFAULT_BACKEND = "none"
 # the SDK-level timeout is the actual bound; the orchestrator's parse-stage deadline check (below)
 # additionally skips the call entirely when it can't possibly finish in the remaining slice.
 DEFAULT_LLM_TIMEOUT_SEC = 30.0
-DEFAULT_INFRADEEP_BASE_URL = "https://api.deepinfra.com/v1/openai"
+DEFAULT_DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
 # DeepInfra model IDs are case-sensitive "Org/Name" (verified live 2026-07-11); the previous
 # lowercase no-prefix default ("qwen3.6-27b") 404'd on every real call and was masked by
-# parse_to_ir's silent fallback-on-exception -- every infradeep run without an explicit
-# TPC_P2_LLM_MODEL/INFRADEEP_MODEL override silently never called the LLM at all.
-DEFAULT_INFRADEEP_MODEL = "Qwen/Qwen3.6-27B"
+# parse_to_ir's silent fallback-on-exception -- every deepinfra run without an explicit
+# TPC_P2_LLM_MODEL/DEEPINFRA_MODEL override silently never called the LLM at all.
+DEFAULT_DEEPINFRA_MODEL = "Qwen/Qwen3.6-27B"
 
 
 def _find_project_root(start: Path | None = None) -> Path | None:
@@ -131,7 +131,7 @@ class NoneLLMClient(LLMClient):
     def complete(self, prompt: str, *, system: str | None = None, cache_key: str | None = None) -> str:
         raise LLMDisabledError(
             "LLM backend is 'none'; the deterministic path must not call the LLM. "
-            "Set TPC_P2_LLM_BACKEND=fixture|openai|infradeep (and the relevant feature flag) to enable it."
+            "Set TPC_P2_LLM_BACKEND=fixture|openai|deepinfra (and the relevant feature flag) to enable it."
         )
 
 
@@ -241,8 +241,8 @@ class OpenAILLMClient(LLMClient):
         return completion.choices[0].message.content or ""
 
 
-class InfraDeepLLMClient(OpenAILLMClient):
-    backend = "infradeep"
+class DeepInfraLLMClient(OpenAILLMClient):
+    backend = "deepinfra"
 
 
 def build_llm_client(config: dict | None = None) -> LLMClient:
@@ -256,7 +256,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
 
     # Convenience: allow scripts to run without an explicit shell `source .env`.
     # Existing exported env vars still win unless overwrite=True is requested via direct call.
-    if backend in {"openai", "infradeep"}:
+    if backend in {"openai", "deepinfra"}:
         load_local_env()
 
     if backend == "none":
@@ -283,16 +283,16 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
         )
         return _maybe_wrap_cache(client, config)
 
-    if backend == "infradeep":
-        api_key = config.get("api_key") or os.environ.get("INFRADEEP_API_KEY")
-        api_key_env = config.get("api_key_env") or "INFRADEEP_API_KEY"
+    if backend == "deepinfra":
+        api_key = config.get("api_key") or os.environ.get("DEEPINFRA_API_KEY")
+        api_key_env = config.get("api_key_env") or "DEEPINFRA_API_KEY"
         if not api_key and api_key_env:
             api_key = os.environ.get(str(api_key_env))
         base_url = (
             config.get("base_url")
             or os.environ.get("TPC_P2_LLM_BASE_URL")
-            or os.environ.get("INFRADEEP_BASE_URL")
-            or DEFAULT_INFRADEEP_BASE_URL
+            or os.environ.get("DEEPINFRA_BASE_URL")
+            or DEFAULT_DEEPINFRA_BASE_URL
         )
         # Qwen3-family "thinking mode" is on by default on DeepInfra and generates a full
         # chain-of-thought (hundreds of tokens, ~10x the latency) before the final answer --
@@ -309,12 +309,12 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
                 )
             if not enable_thinking:
                 extra_body = {"chat_template_kwargs": {"enable_thinking": False}}
-        client = InfraDeepLLMClient(
+        client = DeepInfraLLMClient(
             model=str(
                 config.get("model")
                 or os.environ.get("TPC_P2_LLM_MODEL")
-                or os.environ.get("INFRADEEP_MODEL")
-                or DEFAULT_INFRADEEP_MODEL
+                or os.environ.get("DEEPINFRA_MODEL")
+                or DEFAULT_DEEPINFRA_MODEL
             ),
             base_url=str(base_url),
             api_key=api_key,
@@ -325,7 +325,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
         )
         return _maybe_wrap_cache(client, config)
 
-    raise ValueError(f"Unknown LLM backend: {backend!r} (expected none|fixture|openai|infradeep).")
+    raise ValueError(f"Unknown LLM backend: {backend!r} (expected none|fixture|openai|deepinfra).")
 
 
 def _resolve_timeout(config: dict) -> float:

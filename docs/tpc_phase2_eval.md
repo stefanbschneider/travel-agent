@@ -133,8 +133,8 @@ overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.
 - First full-fold row (n=85, not a 20-uid subset). Disjunction assist on by default. e2e FPR is
   flat vs the n=20 baseline above (85.0 → 85.88) and inside this row's own repeat-to-repeat noise
   (`e2e_fpr_std=1.76` across 2 repeats) — no regression.
-- **This row's `llm_parse=true`/`llm_backend=infradeep` label is misleading — it is really a
-  deterministic+disjunction row.** Root cause: the infradeep backend's default model string was
+- **This row's `llm_parse=true`/`llm_backend=deepinfra` label is misleading — it is really a
+  deterministic+disjunction row.** Root cause: the deepinfra backend's default model string was
   broken (`"qwen3.6-27b"`, no org prefix — 404s on DeepInfra; correct id is `Qwen/Qwen3.6-27B`,
   verified live), so every LLM audit call silently failed and fell back to the deterministic parse
   via `parse_to_ir`'s by-design fallback-on-exception. `parser_full_behavioral_agreement_rate` =
@@ -166,7 +166,7 @@ practical, let alone conclusive:
    plan's "~30–60 min" estimate had implicitly assumed the (unknowingly broken, fast-*failing*)
    calls from the model-name bug above, not real generations. Fixed by passing
    `extra_body: {"chat_template_kwargs": {"enable_thinking": false}}` (the vLLM/SGLang convention
-   DeepInfra honors) — default for the infradeep backend now. Real per-call latency dropped to
+   DeepInfra honors) — default for the deepinfra backend now. Real per-call latency dropped to
    ~2–10s, and the full run completed in ~100 minutes.
 2. Cache had to be cleared first: the cache key doesn't include `extra_body`, so entries generated
    with thinking on would have been silently reused, mixing two response conditions in one run.

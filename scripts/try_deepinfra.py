@@ -6,10 +6,10 @@ from chinatravel.agent.phase2.llm_client import load_local_env
 
 load_local_env()
 
-api_key = os.getenv("INFRADEEP_API_KEY")
+api_key = os.getenv("DEEPINFRA_API_KEY")
 if not api_key:
     raise RuntimeError(
-        "INFRADEEP_API_KEY is not set. Put it in .env or export it in your shell before running."
+        "DEEPINFRA_API_KEY is not set. Put it in .env or export it in your shell before running."
     )
 
 openai = OpenAI(

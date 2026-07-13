@@ -53,8 +53,8 @@ fix:**
 ceiling 100 — flat vs the n=20 baseline (85.0) and within this row's own repeat noise
 (`e2e_fpr_std=1.76`); regression gate vs `20260710T144747Z` passed
 (fpr/parse_failures/budget_overruns all held or improved). This row is a **valid deterministic +
-disjunction baseline**, but its `llm_parse=true`/`llm_backend=infradeep` label is misleading: the
-infradeep backend's default model string was broken (`"qwen3.6-27b"`, no org prefix — DeepInfra
+disjunction baseline**, but its `llm_parse=true`/`llm_backend=deepinfra` label is misleading: the
+deepinfra backend's default model string was broken (`"qwen3.6-27b"`, no org prefix — DeepInfra
 404'd it as "model ... does not exist"; correct id is `Qwen/Qwen3.6-27B`), so every LLM audit call
 in this run silently failed and fell back to the deterministic parse via `parse_to_ir`'s
 by-design fallback-on-exception. The non-trivial `stage_sec.parse` latency (0.47–1.26s) that was
@@ -69,7 +69,7 @@ full incident writeup and the corrected LLM-parse measurement once it lands.
 "thinking mode" by default on DeepInfra (a full chain-of-thought before every answer, verified
 live: 10.6s/232 tokens with thinking vs 1.1s/9 tokens without, same prompt) — with it on, a full
 850-uid val audit was projected at ~9h; disabling it (`extra_body:
-{"chat_template_kwargs": {"enable_thinking": false}}`, now the infradeep default) brought a real
+{"chat_template_kwargs": {"enable_thinking": false}}`, now the deepinfra default) brought a real
 run down to ~100 minutes, matching the plan's original estimate. Result
 (`scripts/parser_vs_oracle.py --llm-parse`, n=850, warm-cache rerun byte-identical): behavioral
 agreement **0.7788 → 0.8694** (top of the plan's hoped-for 0.80–0.85 range),
@@ -207,7 +207,7 @@ last-resort floor.
 
 The Phase 2 harness lives in its own package so it can evolve without touching the shared solver:
 
-- `chinatravel/agent/phase2/llm_client.py` — LLM client abstraction (backends: `none`/`fixture`/`openai`/`infradeep`)
+- `chinatravel/agent/phase2/llm_client.py` — LLM client abstraction (backends: `none`/`fixture`/`openai`/`deepinfra`)
 - `chinatravel/agent/phase2/schema.py` — two-layer schema: parser IR + solver constraint dict
 - `chinatravel/agent/phase2/normalize.py` — IR → branch-local solver variants (currently mostly a
    deterministic passthrough plus disjunction expansion; full WorldEnv-backed validation/entity
@@ -285,7 +285,7 @@ The harness always preserves a hard finalization buffer and returns before the t
 
 | Flag (env var) | Default | Effect when ON |
 | -------------- | ------- | -------------- |
-| `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai` / `infradeep`. |
+| `TPC_P2_LLM_BACKEND` | `none` | Select LLM backend: `none` / `fixture` / `openai` / `deepinfra`. |
 | `TPC_P2_DISJUNCTION` | `0` | Enable true no-oracle disjunctive branch generation (Stage 1). Implemented (Milestone 4); deterministic NL splitting, one branch-local variant per OR arm. |
 | `TPC_P2_LLM_PARSE` | `0` (library `Flags()`); **effectively `1`** in `solve_phase2.py::run_split` once a usable `TPC_P2_LLM_BACKEND` is configured, unless this var is set explicitly | Enable the LLM parse second pass (Stage 1); which strategy is picked by `TPC_P2_LLM_PARSE_MODE`. Falls back to the deterministic parse on any LLM failure (see "Current Gaps To Close"). |
 | `TPC_P2_LLM_PARSE_MODE` | `audit` | Only matters when `TPC_P2_LLM_PARSE` is on. `audit` (default): corrective-audit stub, every LLM proposal round-trips through the regex parser (`normalize.llm_parse_stub`). `extract` (plan-2 Step 6): LLM-first structured extraction independent of the regex parse, deterministic whitelist/type/vocab validation, additive merge (`normalize.llm_extract_stub`). Not the runner default — implemented and unit-tested, e2e A/B not yet run (see "Plan 2 Step 6 status" below). |

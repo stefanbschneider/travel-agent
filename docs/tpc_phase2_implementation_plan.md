@@ -368,7 +368,7 @@ fully deterministic fixes that landed before more LLM work:
 Status: **DONE**, but with a significant correction below — read it before trusting the
 `llm_parse`/`llm_backend` columns on run `20260711T000602Z`.
 
-Full fold 0 of val (n=85, not a subset), `TPC_P2_LLM_BACKEND=infradeep make phase2-baseline FOLD=0
+Full fold 0 of val (n=85, not a subset), `TPC_P2_LLM_BACKEND=deepinfra make phase2-baseline FOLD=0
 P2_FOLDS=10 P2_BUDGET=60 P2_REPEATS=2 P2_LABEL=llmparse-disj-fullfold0-60s`, run `20260711T000602Z`.
 Ran ~2h (faster than the ~5.4h estimate).
 
@@ -394,7 +394,7 @@ overall_true: ceiling 100.0 | solver-only 91.76 | end-to-end 87.40  (headroom 8.
 
 **Correction, found while investigating why the row's `parser_full_behavioral_agreement_rate` came
 back byte-identical to the pre-LLM number (0.7788):** the row's `llm_parse=true`/
-`llm_backend=infradeep` label is **materially misleading**. The infradeep backend's default model
+`llm_backend=deepinfra` label is **materially misleading**. The deepinfra backend's default model
 string was broken — `"qwen3.6-27b"` (no org prefix, lowercase) 404s on DeepInfra ("model ... does
 not exist"); the correct id is `Qwen/Qwen3.6-27B` (case-sensitive `Org/Name`, verified live). So
 every one of the 85 LLM audit calls in this run silently failed and fell back to the deterministic
@@ -407,12 +407,12 @@ cannot distinguish success from failure. Only `scripts/phase2_llm_parse_probe.py
 because it hardcodes the correct model string directly rather than going through
 `build_llm_client(_phase2_llm_config())`'s default.
 
-Fixed in a follow-up commit: corrected `DEFAULT_INFRADEEP_MODEL` in `llm_client.py`, plus a new
+Fixed in a follow-up commit: corrected `DEFAULT_DEEPINFRA_MODEL` in `llm_client.py`, plus a new
 `llm_parse_failed` counter (threaded from `ParsedIR.llm_parse_error` through orchestrator telemetry
 into `solve_phase2.py`'s run summary and `phase2_timing.py`'s aggregate, surfaced as
 `timing_llm_parse_attempted`/`timing_llm_parse_failed` in the baseline ledger) so a broken backend
 now shows up as a nonzero count instead of a clean, silently-misleading pass. Regression test:
-`tests/phase2/test_llm_client.py::test_infradeep_backend_default_model_is_a_real_deepinfra_id` and
+`tests/phase2/test_llm_client.py::test_deepinfra_backend_default_model_is_a_real_deepinfra_id` and
 `tests/phase2/test_solve_phase2_runner.py::test_llm_parse_failed_counter_catches_a_broken_backend`.
 
 **What this means for the plan's original question (does LLM-parse fix the parsing bottleneck):**
@@ -495,7 +495,7 @@ not family auditing.
   (network error, malformed JSON) was therefore indistinguishable from a genuine parse bug and
   forced the query to fallback. Fixed: `parse_to_ir` now catches `llm_parse_stub`'s exception
   itself and keeps the pre-call deterministic `ir`.
-- **`CachingLLMClient`** (`chinatravel/agent/phase2/llm_client.py`) wraps openai/infradeep clients
+- **`CachingLLMClient`** (`chinatravel/agent/phase2/llm_client.py`) wraps openai/deepinfra clients
   with an on-disk response cache under `cache/phase2_llm_parse/<model>/<key>.json`, keyed by the
   existing `cache_key` plumbing. Warm evals are free and byte-deterministic (temperature is
   already 0). On by default; `TPC_P2_LLM_CACHE=0` disables it.
@@ -554,7 +554,7 @@ the first attempt at this measurement (using real audit prompts) run at ~20–45
 (one 116s outlier), projecting to ~9h for 850 uids against the plan's ~30–60min estimate. Disabled
 via `extra_body: {"chat_template_kwargs": {"enable_thinking": false}}` (the vLLM/SGLang convention
 DeepInfra honors), dropping real per-call latency to ~2–10s and the full run to ~100 minutes —
-matching the original estimate. Defaults on for the infradeep backend now
+matching the original estimate. Defaults on for the deepinfra backend now
 (`chinatravel/agent/phase2/llm_client.py`); overridable via config/env if a future use case wants
 visible reasoning.
 
@@ -637,7 +637,7 @@ larger-fold / 300s end-to-end attribution confirms parser loss is no longer the 
 
 | Flag | Default | Meaning |
 | ---- | ------- | ------- |
-| `TPC_P2_LLM_BACKEND` | `none` | `none` / `fixture` / `openai` / `infradeep` |
+| `TPC_P2_LLM_BACKEND` | `none` | `none` / `fixture` / `openai` / `deepinfra` |
 | `TPC_P2_DISJUNCTION` | `0` | true no-oracle disjunctive branch generation (implemented, Milestone 4) |
 | `TPC_P2_LLM_PARSE` | `0` | LLM-assisted second-pass parse (stub) |
 | `TPC_P2_LLM_REFINE` | `0` | bounded LLM plan refinement (stub) |

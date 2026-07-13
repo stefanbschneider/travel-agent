@@ -84,12 +84,12 @@ def _phase2_llm_config() -> dict:
     backend = str(cfg.get("backend") or "none").lower()
     cfg["backend"] = backend
 
-    if backend == "infradeep":
-        cfg.setdefault("api_key_env", "INFRADEEP_API_KEY")
-        if "base_url" not in cfg and os.environ.get("INFRADEEP_BASE_URL"):
-            cfg["base_url"] = os.environ["INFRADEEP_BASE_URL"]
-        if "model" not in cfg and os.environ.get("INFRADEEP_MODEL"):
-            cfg["model"] = os.environ["INFRADEEP_MODEL"]
+    if backend == "deepinfra":
+        cfg.setdefault("api_key_env", "DEEPINFRA_API_KEY")
+        if "base_url" not in cfg and os.environ.get("DEEPINFRA_BASE_URL"):
+            cfg["base_url"] = os.environ["DEEPINFRA_BASE_URL"]
+        if "model" not in cfg and os.environ.get("DEEPINFRA_MODEL"):
+            cfg["model"] = os.environ["DEEPINFRA_MODEL"]
 
     return cfg
 

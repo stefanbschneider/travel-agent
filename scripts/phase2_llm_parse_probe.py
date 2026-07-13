@@ -98,7 +98,7 @@ def main() -> None:
                    help="LLM-call cap per group (disagreements and control each).")
     p.add_argument("--uids", nargs="*", default=None,
                    help="Probe exactly these uids instead of scanning.")
-    p.add_argument("--backend", default="infradeep")
+    p.add_argument("--backend", default="deepinfra")
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--lang", default="en", choices=["en", "zh"])
     p.add_argument(

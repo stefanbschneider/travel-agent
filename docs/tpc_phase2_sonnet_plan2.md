@@ -150,7 +150,7 @@ parser remaining the always-computed fallback either way → Step 6.
    commits while a baseline job runs from the main tree — check `ps aux | grep record_baseline`
    first); after Step 1, run all long evals via pinned worktrees and the freeze rule is retired
    (update the docs and the memory note when you retire it).
-5. **LLM economics:** DeepInfra is paid (`INFRADEEP_API_KEY` in `.env`, backend `infradeep`,
+5. **LLM economics:** DeepInfra is paid (`DEEPINFRA_API_KEY` in `.env`, backend `deepinfra`,
    model `Qwen/Qwen3.6-27B`, connectivity `python scripts/try_deepinfra.py`). Responses are
    disk-cached under `cache/phase2_llm_parse/` keyed by prompt hash; **any prompt change cold-
    starts the cache and a full 850-uid run costs ~100 min of real calls.** Probe first

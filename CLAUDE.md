@@ -102,7 +102,7 @@ Our harness **owns the control loop** and calls the LLM only for targeted subpro
 Stage 1 hybrid parse → IR → `normalize.py` → branch-local variants → Stage 2 deterministic `TPCAgent`
 → Stage 3 gated improvement (stub) → Stage 4 finalize (**always returns a schema-valid plan before
 timeout**, never a bare parse-failure zero). Supporting modules: `llm_client.py` (backends
-`none`/`fixture`/`openai`/`infradeep`), `schema.py`, `budget.py`, `fallback.py`.
+`none`/`fixture`/`openai`/`deepinfra`), `schema.py`, `budget.py`, `fallback.py`.
 
 **Iron rule: the deterministic path must be byte-identical when all LLM/improvement flags are off.**
 Feature flags (all default OFF in the library `Flags()`; see the table in `docs/tpc_phase2_design.md`):

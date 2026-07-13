@@ -24,7 +24,7 @@ def _record(**overrides):
             "disjunction_flattened": 137,
             "behavioral": {"agreement_rate": 0.7565},
         },
-        "llm_config": {"backend": "infradeep", "model": "Qwen/Qwen3.6-27B"},
+        "llm_config": {"backend": "deepinfra", "model": "Qwen/Qwen3.6-27B"},
     }
     record.update(overrides)
     return record
@@ -43,7 +43,7 @@ def test_to_history_row_projects_full_val_parser_columns():
 
 def test_to_history_row_projects_llm_config_columns():
     row = B._to_history_row(_record())
-    assert row["llm_backend"] == "infradeep"
+    assert row["llm_backend"] == "deepinfra"
     assert row["llm_parse"] is True
 
 

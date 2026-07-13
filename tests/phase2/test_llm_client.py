@@ -159,11 +159,11 @@ def test_caching_client_proxies_inner_timeout(tmp_path, monkeypatch):
     assert client.timeout == 5.0
 
 
-def test_infradeep_backend_builds_openai_compatible_request(monkeypatch):
+def test_deepinfra_backend_builds_openai_compatible_request(monkeypatch):
     captured = {}
 
     class FakeMessage:
-        content = "infradeep-answer"
+        content = "deepinfra-answer"
 
     class FakeChoice:
         message = FakeMessage()
@@ -188,47 +188,47 @@ def test_infradeep_backend_builds_openai_compatible_request(monkeypatch):
 
     client = lc.build_llm_client(
         {
-            "backend": "infradeep",
+            "backend": "deepinfra",
             "model": "qwen3.6-27b",
-            "base_url": "https://api.infradeep.example/v1",
+            "base_url": "https://api.deepinfra.example/v1",
             "api_key": "idp-key",
             "cache": False,
         }
     )
     out = client.complete("hi")
-    assert out == "infradeep-answer"
-    assert client.backend == "infradeep"
+    assert out == "deepinfra-answer"
+    assert client.backend == "deepinfra"
     assert captured["model"] == "qwen3.6-27b"
-    assert captured["client_kwargs"]["base_url"] == "https://api.infradeep.example/v1"
+    assert captured["client_kwargs"]["base_url"] == "https://api.deepinfra.example/v1"
 
 
 def test_load_local_env_parses_export_lines(tmp_path, monkeypatch):
     env_file = tmp_path / ".env"
     env_file.write_text(
         "# comment\n"
-        "export INFRADEEP_API_KEY=abc123\n"
+        "export DEEPINFRA_API_KEY=abc123\n"
         "TPC_P2_LLM_MODEL='Qwen/Qwen3.6-27B-Instruct'\n",
         encoding="utf-8",
     )
-    monkeypatch.delenv("INFRADEEP_API_KEY", raising=False)
+    monkeypatch.delenv("DEEPINFRA_API_KEY", raising=False)
     monkeypatch.delenv("TPC_P2_LLM_MODEL", raising=False)
 
     loaded = lc.load_local_env(str(env_file))
-    assert loaded["INFRADEEP_API_KEY"] == "abc123"
+    assert loaded["DEEPINFRA_API_KEY"] == "abc123"
     assert loaded["TPC_P2_LLM_MODEL"] == "Qwen/Qwen3.6-27B-Instruct"
 
 
 def test_load_local_env_does_not_override_existing_by_default(tmp_path, monkeypatch):
     env_file = tmp_path / ".env"
-    env_file.write_text('export INFRADEEP_API_KEY="file-value"\n', encoding="utf-8")
-    monkeypatch.setenv("INFRADEEP_API_KEY", "existing-value")
+    env_file.write_text('export DEEPINFRA_API_KEY="file-value"\n', encoding="utf-8")
+    monkeypatch.setenv("DEEPINFRA_API_KEY", "existing-value")
 
     loaded = lc.load_local_env(str(env_file))
     assert loaded == {}
-    assert lc.os.environ["INFRADEEP_API_KEY"] == "existing-value"
+    assert lc.os.environ["DEEPINFRA_API_KEY"] == "existing-value"
 
 
-def test_infradeep_backend_defaults_base_url(monkeypatch):
+def test_deepinfra_backend_defaults_base_url(monkeypatch):
     captured = {}
 
     class FakeMessage:
@@ -254,18 +254,18 @@ def test_infradeep_backend_defaults_base_url(monkeypatch):
             self.chat = FakeChat()
 
     monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
-    monkeypatch.setenv("INFRADEEP_API_KEY", "idp-key")
+    monkeypatch.setenv("DEEPINFRA_API_KEY", "idp-key")
 
-    client = lc.build_llm_client({"backend": "infradeep", "model": "qwen3.6-27b", "cache": False})
-    assert client.backend == "infradeep"
+    client = lc.build_llm_client({"backend": "deepinfra", "model": "qwen3.6-27b", "cache": False})
+    assert client.backend == "deepinfra"
     assert captured["client_kwargs"]["base_url"] == "https://api.deepinfra.com/v1/openai"
 
 
-def test_infradeep_backend_default_model_is_a_real_deepinfra_id(monkeypatch):
+def test_deepinfra_backend_default_model_is_a_real_deepinfra_id(monkeypatch):
     """Regression test: the previous default ("qwen3.6-27b", no org prefix, lowercase) 404'd on
     every real DeepInfra call ("model qwen3.6-27b does not exist"), silently swallowed by
-    parse_to_ir's fallback-on-exception -- every infradeep run without an explicit
-    TPC_P2_LLM_MODEL/INFRADEEP_MODEL override never actually called the LLM. DeepInfra model IDs
+    parse_to_ir's fallback-on-exception -- every deepinfra run without an explicit
+    TPC_P2_LLM_MODEL/DEEPINFRA_MODEL override never actually called the LLM. DeepInfra model IDs
     are case-sensitive "Org/Name"; verified "Qwen/Qwen3.6-27B" live 2026-07-11."""
     captured = {}
 
@@ -291,13 +291,13 @@ def test_infradeep_backend_default_model_is_a_real_deepinfra_id(monkeypatch):
             self.chat = FakeChat()
 
     monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
-    monkeypatch.setenv("INFRADEEP_API_KEY", "idp-key")
+    monkeypatch.setenv("DEEPINFRA_API_KEY", "idp-key")
     monkeypatch.delenv("TPC_P2_LLM_MODEL", raising=False)
-    monkeypatch.delenv("INFRADEEP_MODEL", raising=False)
+    monkeypatch.delenv("DEEPINFRA_MODEL", raising=False)
 
-    client = lc.build_llm_client({"backend": "infradeep", "cache": False})
+    client = lc.build_llm_client({"backend": "deepinfra", "cache": False})
     client.complete("hi")
-    assert captured["model"] == lc.DEFAULT_INFRADEEP_MODEL == "Qwen/Qwen3.6-27B"
+    assert captured["model"] == lc.DEFAULT_DEEPINFRA_MODEL == "Qwen/Qwen3.6-27B"
 
 
 def _fake_openai_harness(monkeypatch):
@@ -325,37 +325,37 @@ def _fake_openai_harness(monkeypatch):
             self.chat = FakeChat()
 
     monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
-    monkeypatch.setenv("INFRADEEP_API_KEY", "idp-key")
+    monkeypatch.setenv("DEEPINFRA_API_KEY", "idp-key")
     return captured
 
 
-def test_infradeep_backend_disables_thinking_by_default(monkeypatch):
+def test_deepinfra_backend_disables_thinking_by_default(monkeypatch):
     """Regression test: Qwen3-family "thinking mode" is on by default on DeepInfra and adds a
     full chain-of-thought before the answer (verified live 2026-07-11: 10.6s with thinking vs
     1.1s without, for the same trivial prompt) -- with it on, a full-val LLM-parse audit run
-    (850 uids) was projected to take ~9h instead of the plan's ~30-60min estimate. The infradeep
+    (850 uids) was projected to take ~9h instead of the plan's ~30-60min estimate. The deepinfra
     backend must pass chat_template_kwargs.enable_thinking=False unless explicitly overridden."""
     captured = _fake_openai_harness(monkeypatch)
     monkeypatch.delenv("TPC_P2_LLM_ENABLE_THINKING", raising=False)
 
-    client = lc.build_llm_client({"backend": "infradeep", "cache": False})
+    client = lc.build_llm_client({"backend": "deepinfra", "cache": False})
     client.complete("hi")
     assert captured["extra_body"] == {"chat_template_kwargs": {"enable_thinking": False}}
 
 
-def test_infradeep_backend_enable_thinking_override(monkeypatch):
+def test_deepinfra_backend_enable_thinking_override(monkeypatch):
     captured = _fake_openai_harness(monkeypatch)
 
-    client = lc.build_llm_client({"backend": "infradeep", "cache": False, "enable_thinking": True})
+    client = lc.build_llm_client({"backend": "deepinfra", "cache": False, "enable_thinking": True})
     client.complete("hi")
     assert "extra_body" not in captured
 
 
-def test_infradeep_backend_extra_body_override_wins(monkeypatch):
+def test_deepinfra_backend_extra_body_override_wins(monkeypatch):
     captured = _fake_openai_harness(monkeypatch)
 
     client = lc.build_llm_client(
-        {"backend": "infradeep", "cache": False, "extra_body": {"custom": "value"}}
+        {"backend": "deepinfra", "cache": False, "extra_body": {"custom": "value"}}
     )
     client.complete("hi")
     assert captured["extra_body"] == {"custom": "value"}

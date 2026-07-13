@@ -65,7 +65,7 @@ whole slice, in both end-to-end and solver-only modes).
   works) can. To measure the LLM audit's effect on parser accuracy directly, use
   `scripts/parser_vs_oracle.py --llm-parse` (Step 6) separately.
 - **A `llm_backend`/`llm_parse=true` label does not by itself prove the LLM ran.** Row
-  `20260711T000602Z` (2026-07-11, `llm_backend=infradeep`) initially looked like confirmation of
+  `20260711T000602Z` (2026-07-11, `llm_backend=deepinfra`) initially looked like confirmation of
   the point above — `parser_full_behavioral_agreement_rate` came back 0.7788, byte-identical to the
   deterministic-only number — but the real cause was a broken default model string
   (`"qwen3.6-27b"` 404'd on DeepInfra; fixed to `Qwen/Qwen3.6-27B`) that made every LLM call in

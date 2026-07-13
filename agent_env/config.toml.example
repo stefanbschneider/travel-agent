@@ -61,23 +61,23 @@ sandbox = "workspace-write"
 output_schema = false
 require_output_tags = true
 api_key = ""
-api_key_env = "INFRADEEP_API_KEY"
+api_key_env = "DEEPINFRA_API_KEY"
 
 [deepinfra.provider]
 id = "deepinfra_api"
 name = "DeepInfra API"
 base_url = "https://api.deepinfra.com/v1/openai"
-env_key = "INFRADEEP_API_KEY"
+env_key = "DEEPINFRA_API_KEY"
 wire_api = "responses"
 
 [phase2.llm]
 # Phase 2 parser/refinement LLM (optional; deterministic default is backend="none").
-# Supported backends: none | fixture | openai | infradeep
+# Supported backends: none | fixture | openai | deepinfra
 backend = "none"
 model = ""
 base_url = ""
 api_key = ""
-api_key_env = "INFRADEEP_API_KEY"
+api_key_env = "DEEPINFRA_API_KEY"
 fixtures_dir = ""
 temperature = 0.0
 max_tokens = 1024
