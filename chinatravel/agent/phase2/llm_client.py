@@ -216,7 +216,7 @@ class OpenAILLMClient(LLMClient):
         self.extra_body = extra_body
         self.timeout = timeout
         openai_cls = _load_openai_class()
-        client_kwargs: dict[str, Any] = {"timeout": timeout, "max_retries": 1}
+        client_kwargs: dict[str, Any] = {"timeout": timeout, "max_retries": 0}
         if base_url:
             client_kwargs["base_url"] = base_url
         if api_key:

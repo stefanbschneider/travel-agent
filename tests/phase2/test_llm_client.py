@@ -98,7 +98,9 @@ def test_unknown_backend_raises():
         lc.build_llm_client({"backend": "nonsense"})
 
 
-def test_openai_client_sets_sdk_timeout_and_bounded_retries(monkeypatch):
+def test_openai_client_sets_sdk_timeout_and_zero_retries(monkeypatch):
+    # SDK-level retries double worst-case parse-stage latency on timeout (plan3 N6); the harness's
+    # own budget/timeout logic owns retry decisions, not the SDK.
     captured = {}
 
     class FakeOpenAI:
@@ -111,8 +113,33 @@ def test_openai_client_sets_sdk_timeout_and_bounded_retries(monkeypatch):
         {"backend": "openai", "model": "m", "cache": False, "timeout": 12.5}
     )
     assert captured["client_kwargs"]["timeout"] == 12.5
-    assert captured["client_kwargs"]["max_retries"] == 1
+    assert captured["client_kwargs"]["max_retries"] == 0
     assert client.timeout == 12.5
+
+
+def test_openai_client_makes_single_attempt_on_timeout(monkeypatch):
+    # Mocked transport: a timing-out completions.create must be called exactly once, proving the
+    # SDK is not silently retrying underneath us.
+    attempts = {"count": 0}
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            attempts["count"] += 1
+            raise TimeoutError("simulated network timeout")
+
+    class FakeChat:
+        completions = FakeCompletions()
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            self.chat = FakeChat()
+
+    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+
+    client = lc.build_llm_client({"backend": "openai", "model": "m", "cache": False})
+    with pytest.raises(TimeoutError):
+        client.complete("hi")
+    assert attempts["count"] == 1
 
 
 def test_openai_client_timeout_defaults_from_env(monkeypatch):
