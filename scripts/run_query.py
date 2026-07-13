@@ -155,11 +155,12 @@ def run_query(args: argparse.Namespace, *, env=None, solve_fn=None) -> dict[str,
         plan = hb.read_json(result_path)
         llm_client, flags = runner.resolve_llm_client_and_flags()
         diff = pvo.compute_query_diff(
-            query, disjunction=flags.disjunction, llm_parse=flags.llm_parse, llm_client=llm_client
+            query, disjunction=flags.disjunction, llm_parse=flags.llm_parse, llm_client=llm_client,
+            entity_resolution=flags.entity_resolution,
         )
         behavior = pvo.behavioral_check(
             query, plan, disjunction=flags.disjunction, llm_parse=flags.llm_parse,
-            llm_client=llm_client,
+            llm_client=llm_client, entity_resolution=flags.entity_resolution,
         )
         report["parsing_vs_oracle"] = {
             "precision": diff["precision"],

@@ -7,6 +7,8 @@ use_oracle=False)``.
 Flag hooks (all OFF by default):
 - ``TPC_P2_LLM_PARSE``  : LLM-assisted second-pass parse (corrective/additive proposals).
 - ``TPC_P2_DISJUNCTION``: true no-oracle disjunctive branch generation (implemented below).
+- ``TPC_P2_ENTITY_RESOLUTION``: deterministic name-entity canonicalization against the target
+  city's POI catalog (implemented below, plan3 N2).
 
 When flags are off, neither hook runs and the LLM client is never called.
 """
@@ -14,8 +16,10 @@ When flags are off, neither hook runs and the LLM client is never called.
 from __future__ import annotations
 
 import csv
+import difflib
 import hashlib
 import json
+import re
 from copy import deepcopy
 
 import parse_constraints
@@ -495,6 +499,358 @@ def _extract_vocab() -> dict[str, frozenset[str]]:
     return _extract_vocab_cache
 
 
+# --- Deterministic entity resolution (plan3 N2) -----------------------------
+#
+# Canonicalizes name-bearing constraint families against the target city's POI catalog before they
+# reach the solver/verifier, closing the G2 defect cluster (label-prefix garbage kept in names,
+# list-splitting failures, type-vs-name collisions, category misrouting -- see docs/tpc_phase2_plan3.md).
+# Env-less (same lazy/cached CSV-glob pattern as ``_extract_vocab`` above) so ``parser_vs_oracle.py``
+# sees identical behavior to the harness. Recall-preserving per G1: an unresolved string is kept as
+# cleaned text, never dropped.
+
+_ENTITY_CSV_GLOBS = {
+    "attraction": "chinatravel/environment/database_en/attractions/{slug}/*.csv",
+    "restaurant": "chinatravel/environment/database_en/restaurants/{slug}/*.csv",
+    "hotel": "chinatravel/environment/database_en/accommodations/{slug}/*.csv",
+}
+_ENTITY_CATEGORY_FOR_FIELD = {
+    "required_attractions": "attraction",
+    "excluded_attractions": "attraction",
+    "required_restaurants": "restaurant",
+    "excluded_restaurants": "restaurant",
+    "required_hotels": "hotel",
+    "excluded_hotels": "hotel",
+}
+_ENTITY_TYPE_FIELD_FOR = {
+    "required_attractions": "required_attraction_types",
+    "excluded_attractions": "excluded_attraction_types",
+}
+_ENTITY_FUZZY_THRESHOLD = 0.85
+
+_ENTITY_LABEL_PREFIX_RES = [
+    re.compile(r"^one of (?:the following|these)\s*(?:restaurants|hotels|attractions)?\s*:?\s*", re.IGNORECASE),
+    re.compile(r"^the\s+(?:restaurant|hotel|attraction)s?\s+", re.IGNORECASE),
+]
+_ENTITY_LABEL_SUFFIX_RES = [
+    re.compile(r"\s+for no less than\b.*$", re.IGNORECASE),
+]
+_ENTITY_PUNCT_RE = re.compile(r"[·\-_/,():;!?\"'’‘“”]")
+_ENTITY_TRAILING_NUMBER_RE = re.compile(r"\s+\d+$")
+_ENTITY_SPLIT_RE = re.compile(r"\s*(?:,|\band\b|\bor\b)\s*", re.IGNORECASE)
+
+_entity_catalog_cache: dict[str, dict[str, list[str]]] = {}
+_attraction_type_vocab_cache: dict[str, str] | None = None
+
+
+def _city_slug(city) -> str | None:
+    if not city or not isinstance(city, str):
+        return None
+    from chinatravel.environment.language import CITY_SLUGS, city_names
+
+    lookup = {name.lower(): slug for slug, name in zip(CITY_SLUGS, city_names("en"))}
+    return lookup.get(city.strip().lower())
+
+
+def load_city_entity_catalog(city) -> dict[str, list[str]]:
+    """Lazy, process-cached per-city name catalog: attraction/restaurant/hotel names read
+    directly from the committed database_en CSVs (the same source WorldEnv loads), so this works
+    without a live ``env`` object -- ``parser_vs_oracle.py`` and the real harness see identical
+    resolution behavior. Unknown/unmapped city -> empty catalog (resolution is then a no-op)."""
+    slug = _city_slug(city)
+    if slug is None:
+        return {"attraction": [], "restaurant": [], "hotel": []}
+    if slug in _entity_catalog_cache:
+        return _entity_catalog_cache[slug]
+
+    root = _extract_project_root()
+    catalog: dict[str, list[str]] = {}
+    for category, glob_pattern in _ENTITY_CSV_GLOBS.items():
+        names: list[str] = []
+        for path in root.glob(glob_pattern.format(slug=slug)):
+            with open(path, encoding="utf-8", newline="") as f:
+                for row in csv.DictReader(f):
+                    n = (row.get("name") or "").strip()
+                    if n:
+                        names.append(n)
+        catalog[category] = names
+    _entity_catalog_cache[slug] = catalog
+    return catalog
+
+
+def _attraction_type_vocab() -> dict[str, str]:
+    """normalized type string -> canonical (CSV-literal) type string, e.g. 'amusement
+    park/sports entertainment' -> 'Amusement Park/Sports Entertainment'. The CSV 'type' column is
+    used verbatim (not split on '/') -- the solver's own type matcher already does segment-level
+    matching against a compound type at evaluation time."""
+    global _attraction_type_vocab_cache
+    if _attraction_type_vocab_cache is not None:
+        return _attraction_type_vocab_cache
+    root = _extract_project_root()
+    vocab: dict[str, str] = {}
+    for path in root.glob("chinatravel/environment/database_en/attractions/*/attractions.csv"):
+        with open(path, encoding="utf-8", newline="") as f:
+            for row in csv.DictReader(f):
+                t = (row.get("type") or "").strip()
+                if t:
+                    vocab.setdefault(_norm_entity_key(t), t)
+    _attraction_type_vocab_cache = vocab
+    return vocab
+
+
+def _norm_entity_key(text: str) -> str:
+    s = text.strip().lower()
+    s = _ENTITY_PUNCT_RE.sub(" ", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _strip_entity_label(text: str) -> str:
+    """Step 1 of the resolution pipeline: strip label-prefix/suffix garbage the regex parser
+    swept up along with the real name (e.g. 'one of the following hotels: X', 'the restaurant Y',
+    'X for no less than 60 minutes')."""
+    s = text.strip()
+    changed = True
+    while changed:
+        changed = False
+        for pat in _ENTITY_LABEL_PREFIX_RES:
+            new_s = pat.sub("", s)
+            if new_s != s:
+                s, changed = new_s, True
+        for pat in _ENTITY_LABEL_SUFFIX_RES:
+            new_s = pat.sub("", s)
+            if new_s != s:
+                s, changed = new_s, True
+    return s.strip()
+
+
+def _match_catalog_name(text: str, catalog_names: list[str]) -> str | None:
+    """Steps 2-3: exact match, then containment (catalog name is a substring of ``text`` -- fixes
+    prefix garbage in one step), then fuzzy match (unique best above threshold)."""
+    text = text.strip()
+    if not text or not catalog_names:
+        return None
+    norm_text = _norm_entity_key(text)
+    if not norm_text:
+        return None
+    norm_to_orig: dict[str, str] = {}
+    for name in catalog_names:
+        norm_to_orig.setdefault(_norm_entity_key(name), name)
+
+    if norm_text in norm_to_orig:
+        return norm_to_orig[norm_text]
+
+    # Containment only fires when the catalog name covers most of the candidate text (residual
+    # label garbage, not a genuine multi-entity string) -- otherwise a short catalog name that
+    # happens to be a substring of a longer ", "/" and "/" or "-joined list (e.g. "Zhongshan Park"
+    # inside "Zhongshan Park, Venice Town") would hijack the match and starve segmentation
+    # (_segment_entity_list) of a chance to recover every name in the list.
+    contained = sorted(
+        (orig for norm, orig in norm_to_orig.items()
+         if norm and norm in norm_text and len(norm) >= 0.6 * len(norm_text)),
+        key=len, reverse=True,
+    )
+    if len(contained) == 1:
+        return contained[0]
+    if len(contained) > 1 and len(contained[0]) > len(contained[1]):
+        return contained[0]  # unambiguous longest/most-specific containment
+    if contained:
+        return None  # tie -- ambiguous, don't guess
+
+    scored = sorted(
+        ((difflib.SequenceMatcher(None, norm_text, norm).ratio(), orig) for norm, orig in norm_to_orig.items()),
+        key=lambda t: -t[0],
+    )
+    best_score, best_orig = scored[0]
+    if best_score < _ENTITY_FUZZY_THRESHOLD:
+        return None
+    if len(scored) > 1 and scored[1][0] >= best_score:
+        return None  # tie -- ambiguous, don't guess
+    return best_orig
+
+
+def _segment_entity_list(text: str, catalog_names: list[str]) -> list[str] | None:
+    """Step 4: when a single string actually names multiple catalog entries (','/'and'/'or'
+    -separated), split and resolve each segment. Only returns a result when every non-empty
+    segment resolves -- a partial split is worse than leaving the original string alone."""
+    parts = [p.strip() for p in _ENTITY_SPLIT_RE.split(text) if p.strip()]
+    if len(parts) < 2:
+        return None
+    resolved = []
+    for part in parts:
+        match = _match_catalog_name(part, catalog_names)
+        if not match:
+            return None
+        resolved.append(match)
+    return _dedupe_preserve_order(resolved)
+
+
+def _match_type_vocab(text: str) -> str | None:
+    vocab = _attraction_type_vocab()
+    norm = _norm_entity_key(text)
+    if norm in vocab:
+        return vocab[norm]
+    # Numbered-list artifact: an OR-arm number glued onto the type string ("... Entertainment 2").
+    stripped = _ENTITY_TRAILING_NUMBER_RE.sub("", text).strip()
+    if stripped != text:
+        norm2 = _norm_entity_key(stripped)
+        if norm2 in vocab:
+            return vocab[norm2]
+    return None
+
+
+def _dedupe_preserve_order(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out = []
+    for item in items:
+        key = _norm_entity_key(item) if isinstance(item, str) else item
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+    return out
+
+
+def _resolve_generic_location(text: str, catalog: dict[str, list[str]]) -> str:
+    """Resolve a single free-standing location reference (position_presence entry,
+    hotel_nearby/poi_distance_hotel reference, stay_duration/activity_time_windows location) --
+    no family to reroute to, so just clean the label and canonicalize against any category."""
+    cleaned = _strip_entity_label(text)
+    if not cleaned:
+        return text
+    for category in ("attraction", "restaurant", "hotel"):
+        match = _match_catalog_name(cleaned, catalog.get(category, []))
+        if match:
+            return match
+    return cleaned
+
+
+def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[str]]) -> dict:
+    """Steps 1-6 of the resolution pipeline for one entry of a required_/excluded_ name family.
+    Returns a tagged outcome so the caller can route the result into the right constraint family."""
+    category = _ENTITY_CATEGORY_FOR_FIELD[field]
+    cleaned = _strip_entity_label(text)
+    if not cleaned:
+        return {"kind": "keep", "value": text}
+
+    own_catalog = catalog.get(category, [])
+
+    match = _match_catalog_name(cleaned, own_catalog)
+    if match:
+        return {"kind": "name", "value": match}
+
+    segments = _segment_entity_list(cleaned, own_catalog)
+    if segments:
+        return {"kind": "names", "value": segments}
+
+    if field in _ENTITY_TYPE_FIELD_FOR:
+        type_match = _match_type_vocab(cleaned)
+        if type_match:
+            return {"kind": "type", "value": type_match}
+
+    for other_category in ("attraction", "restaurant", "hotel"):
+        if other_category == category:
+            continue
+        other_match = _match_catalog_name(cleaned, catalog.get(other_category, []))
+        if other_match:
+            # Step 6: category misrouting -- e.g. a required_hotels entry that's actually an
+            # attraction/restaurant. No other family fits a bare POI-presence fact, so reroute to
+            # position_presence (any stay_duration the parser separately extracted is untouched).
+            return {"kind": "reroute_position", "value": other_match}
+
+    return {"kind": "keep", "value": cleaned}
+
+
+def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] | None = None) -> dict:
+    """Canonicalize name-bearing constraint families in one solver-constraint dict against the
+    target city's POI catalog (plan3 N2). Operates on a single variant so it composes cleanly with
+    OR-branch expansion and LLM-alternative expansion -- ``ir_to_solver_variants`` applies it to
+    every variant in the already-expanded list, covering OR arms and alternatives generically."""
+    if not isinstance(variant, dict):
+        return variant
+    if catalog is None:
+        catalog = load_city_entity_catalog(query.get("target_city"))
+    if not any(catalog.get(c) for c in ("attraction", "restaurant", "hotel")):
+        return variant  # unknown city / no catalog -- nothing to resolve against
+
+    out = dict(variant)
+
+    for field, category in _ENTITY_CATEGORY_FOR_FIELD.items():
+        values = out.get(field)
+        if not isinstance(values, list) or not values:
+            continue
+        new_names: list[str] = []
+        type_additions: list[str] = []
+        position_additions: list[str] = []
+        for raw in values:
+            if not isinstance(raw, str):
+                new_names.append(raw)
+                continue
+            outcome = _resolve_one_required_name(raw, field, catalog)
+            kind = outcome["kind"]
+            if kind == "name":
+                new_names.append(outcome["value"])
+            elif kind == "names":
+                new_names.extend(outcome["value"])
+            elif kind == "type":
+                type_additions.append(outcome["value"])
+            elif kind == "reroute_position":
+                position_additions.append(outcome["value"])
+            else:
+                new_names.append(outcome["value"])
+
+        if new_names:
+            out[field] = _dedupe_preserve_order(new_names)
+        else:
+            out.pop(field, None)
+
+        if type_additions:
+            type_field = _ENTITY_TYPE_FIELD_FOR.get(field)
+            if type_field:
+                existing = out.get(type_field) or []
+                out[type_field] = _dedupe_preserve_order(list(existing) + type_additions)
+
+        if position_additions:
+            existing = out.get("position_presence") or []
+            out["position_presence"] = _dedupe_preserve_order(list(existing) + position_additions)
+
+    pp = out.get("position_presence")
+    if isinstance(pp, list) and pp:
+        out["position_presence"] = _dedupe_preserve_order([
+            _resolve_generic_location(v, catalog) if isinstance(v, str) else v
+            for v in pp
+        ])
+
+    hn = out.get("hotel_nearby")
+    if isinstance(hn, dict) and isinstance(hn.get("reference"), str):
+        resolved_ref = _resolve_generic_location(hn["reference"], catalog)
+        if resolved_ref != hn["reference"]:
+            hn = dict(hn)
+            hn["reference"] = resolved_ref
+            out["hotel_nearby"] = hn
+
+    pdh = out.get("poi_distance_hotel")
+    if isinstance(pdh, list) and pdh:
+        new_pdh = []
+        for item in pdh:
+            if isinstance(item, dict) and isinstance(item.get("reference"), str):
+                item = dict(item)
+                item["reference"] = _resolve_generic_location(item["reference"], catalog)
+            new_pdh.append(item)
+        out["poi_distance_hotel"] = new_pdh
+
+    for loc_field in ("stay_duration", "activity_time_windows"):
+        items = out.get(loc_field)
+        if isinstance(items, list) and items:
+            new_items = []
+            for item in items:
+                if isinstance(item, dict) and isinstance(item.get("location"), str):
+                    item = dict(item)
+                    item["location"] = _resolve_generic_location(item["location"], catalog)
+                new_items.append(item)
+            out[loc_field] = new_items
+
+    return out
+
+
 def _validate_extract_field(key: str, value, vocab: dict[str, frozenset[str]]):
     """One field's deterministic validation. Returns the cleaned value, or None if nothing about
     it survives validation (caller drops the key entirely in that case)."""
@@ -850,8 +1206,11 @@ def ir_to_solver_variants(ir: ParsedIR, query: dict, *, env=None, flags=None) ->
 
     Default: exactly reproduce the current no-oracle single variant. When ``flags.disjunction`` is
     on, route through ``disjunction_stub``, which expands ``ir.or_groups`` into one branch-local
-    variant per OR arm (and is a no-op for non-disjunctive queries). ``env`` is the hook for
-    WorldEnv-based validation/entity resolution (pass-through for now).
+    variant per OR arm (and is a no-op for non-disjunctive queries). When
+    ``flags.entity_resolution`` is on, every resulting variant (including OR arms and LLM
+    alternatives) is canonicalized against the target city's POI catalog via ``resolve_entities``
+    (plan3 N2). ``env`` is unused by entity resolution (it's env-less by design, see
+    ``load_city_entity_catalog``) -- kept as a pass-through hook for future WorldEnv-based checks.
     """
     variants = solver_constraint_variants(query, ir.raw, use_oracle=False)
 
@@ -860,5 +1219,9 @@ def ir_to_solver_variants(ir: ParsedIR, query: dict, *, env=None, flags=None) ->
 
     if flags is not None and getattr(flags, "llm_parse", False):
         variants = alternatives_stub(variants, ir, query, flags=flags)
+
+    if flags is not None and getattr(flags, "entity_resolution", False):
+        catalog = load_city_entity_catalog(query.get("target_city"))
+        variants = [resolve_entities(v, query, catalog) for v in variants]
 
     return variants

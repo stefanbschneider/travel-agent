@@ -289,6 +289,50 @@ taxi/mirror/dedup noise. `poi_distance_hotel` now reports a single wrong_value c
 are **unaffected** by this fix, as expected — it only corrects the diagnostic diff report, not the
 verifier-based accept/reject checks.
 
+### Deterministic entity resolution (plan-3 N2, landed 2026-07-13)
+
+`chinatravel/agent/phase2/normalize.py::resolve_entities` canonicalizes name-bearing constraint
+families (`required_/excluded_ attractions|restaurants|hotels`, `position_presence`,
+`hotel_nearby`/`poi_distance_hotel` references, `stay_duration`/`activity_time_windows`
+locations) against the target city's POI catalog (env-less, lazy-cached CSV read from
+`database_en/`, same source `WorldEnv` uses -- `load_city_entity_catalog`), closing the G2 defect
+cluster: label-prefix garbage kept in names, list-splitting failures, type-vs-name collisions,
+category misrouting. Gated by `TPC_P2_ENTITY_RESOLUTION` (library `Flags()` default OFF,
+`run_split`/`resolve_llm_client_and_flags()` default ON — the `TPC_P2_DISJUNCTION` pattern;
+flag-off byte-identity verified by `tests/phase2/test_flags.py` and
+`test_entity_resolution.py::test_entity_resolution_off_by_default_byte_identical`).
+
+**Full-val measurement (2026-07-13, `--behavioral --disjunction --branch-aware
+--entity-resolution`, n=850), vs the N1-corrected baseline:**
+
+| metric | N1 baseline | + entity resolution | Δ |
+| --- | --- | --- | --- |
+| precision | 0.7356 | 0.7794 | +0.0438 |
+| recall | 0.6903 | 0.7322 | +0.0419 |
+| f1 | 0.7122 | 0.7551 | +0.0429 |
+| value_accuracy | 0.8156 | 0.8614 | +0.0458 |
+| matched | 1555 | 1641 | +86 |
+| missing | 299 | 296 | -3 |
+| spurious | 235 | 226 | -9 |
+| wrong_value | 355 | 272 | -83 |
+| accept_agreement | 0.7988 | 0.8024 | +0.0036 |
+| reject_agreement | 0.8277 | 0.8243 | -0.0034 |
+| behavioral_balanced | 0.8133 | 0.8134 | +0.0001 |
+
+The wrong_value drop is concentrated exactly where G2 predicted: `required_hotels` (46→9),
+`required_restaurants` (46→12), `excluded_attractions` (9→5). `required_hotels` also gains 41
+matched (22→63) — the family the plan called "the highest-leverage single item," confirmed. The
+solver-free behavioral proxy moves only marginally (as expected — it's a different, noisier
+signal than the structural diff; the diff numbers are the primary evidence for this step).
+
+**Measurement ladder status:** rung (a) [full-val solver-free report] done above. Rungs (b)–(d)
+(`phase2_diff_eval.py` splice, fastfpr fold row, canonical 300s row gated vs `20260712T060018Z`)
+are **not run on this coding VM** — `phase2_diff_eval.py`'s parse-only-changed-file guard would
+also need `--unsafe-allow-solver-drift` right now, since this step also touched
+`chinatravel/agent/phase2/orchestrator.py` (new `entity_resolution` `Flags` field, behaviorally
+inert when off) and `agent_env/scripts/solve_phase2.py` (default-on wiring), neither on the
+`PARSE_ONLY_ALLOWLIST`. Per the two-VM rule, rungs (b)-(d) are pending on VM 2.
+
 ### Generalization anchor (planned, plan-3 N5): HF `default` as a held-out phrasing probe
 
 Every parser number so far is measured on val, which we have iterated against for weeks. The HF

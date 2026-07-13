@@ -159,6 +159,12 @@ def resolve_llm_client_and_flags():
     # Flags() and llm_backend="none" (nothing configured) both stay off.
     if "TPC_P2_LLM_PARSE" not in os.environ and llm_client.backend != "none":
         flags.llm_parse = True
+    # Deterministic entity resolution (plan3 N2) is pure recall/precision cleanup against the
+    # committed POI catalogs -- no LLM/network dependency, so default it on unconditionally
+    # (same pattern as disjunction/dynamic_budget) unless the operator overrides
+    # TPC_P2_ENTITY_RESOLUTION. Library Flags() stays off for the byte-identical invariant tests.
+    if "TPC_P2_ENTITY_RESOLUTION" not in os.environ:
+        flags.entity_resolution = True
 
     return llm_client, flags
 

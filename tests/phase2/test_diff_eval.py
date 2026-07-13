@@ -15,8 +15,8 @@ import phase2_diff_eval as de
 import phase2_record_baseline as recorder_mod
 
 
-def _flags(*, disjunction=True, llm_parse=False):
-    return SimpleNamespace(disjunction=disjunction, llm_parse=llm_parse)
+def _flags(*, disjunction=True, llm_parse=False, entity_resolution=False):
+    return SimpleNamespace(disjunction=disjunction, llm_parse=llm_parse, entity_resolution=entity_resolution)
 
 
 # --- fingerprint stability (real val queries -- a hand-fabricated query dict skips the fields

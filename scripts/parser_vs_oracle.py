@@ -264,7 +264,8 @@ def _load_queries(split: str, lang: str = "en"):
     return load_query(args)
 
 
-def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = False, llm_client=None):
+def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = False, llm_client=None,
+                   entity_resolution: bool = False):
     """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema.
 
     When ``disjunction`` is True, the parsed side is produced through the Phase 2 normalize layer
@@ -277,15 +278,18 @@ def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = 
     measures the same parse path ``solve_phase2.py`` uses when a backend is configured, not just
     the deterministic fallback. A failing/misconfigured client degrades to the deterministic parse
     (see the parse_to_ir fix), never raises.
+
+    When ``entity_resolution`` is True, routes through the deterministic entity-resolution layer
+    (``normalize.resolve_entities`` via ``TPC_P2_ENTITY_RESOLUTION``, plan3 N2).
     """
     import parse_constraints
     from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
 
-    if disjunction or llm_parse:
+    if disjunction or llm_parse or entity_resolution:
         from chinatravel.agent.phase2 import normalize
         from chinatravel.agent.phase2.orchestrator import Flags
 
-        flags = Flags(disjunction=disjunction, llm_parse=llm_parse)
+        flags = Flags(disjunction=disjunction, llm_parse=llm_parse, entity_resolution=entity_resolution)
         ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags)
         parsed = normalize.ir_to_solver_variants(ir, query, flags=flags)
     else:
@@ -299,9 +303,10 @@ def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = 
 
 
 def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: bool = False,
-                       llm_parse: bool = False, llm_client=None) -> dict:
+                       llm_parse: bool = False, llm_client=None, entity_resolution: bool = False) -> dict:
     parsed_variants, oracle_variants = query_variants(
-        query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+        query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
+        entity_resolution=entity_resolution,
     )
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants,
                        branch_aware=branch_aware, people_number=query.get("people_number"))
@@ -355,13 +360,14 @@ def _oracle_pass(query: dict, plan: dict) -> bool:
 
 
 def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False,
-                     llm_parse: bool = False, llm_client=None) -> dict:
+                     llm_parse: bool = False, llm_client=None, entity_resolution: bool = False) -> dict:
     """Do parsed vs oracle constraints accept/reject the plan identically? (the "accept-side"
     check: one plan per uid, the oracle-optimal ``results/best/<uid>.json`` -- see
     ``reject_probe_check`` for the complementary reject-side probe, plan-2 Step 5).
     """
     parsed_variants, _ = query_variants(
-        query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+        query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
+        entity_resolution=entity_resolution,
     )
     target_city = query.get("target_city", "")
     parsed_pass = _parsed_pass(parsed_variants, plan, target_city, disjunction=disjunction)
@@ -509,7 +515,8 @@ def _attribute_reject_misses(
 
 def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en",
                results_best=None, out_dir=None, disjunction=False, branch_aware=False,
-               llm_parse=False, llm_client=None, per_variant_family_stats=False) -> dict:
+               llm_parse=False, llm_client=None, per_variant_family_stats=False,
+               entity_resolution=False) -> dict:
     query_ids, query_data = _load_queries(split, lang=lang)
     selected = list(uids) if uids else (query_ids[: int(limit)] if limit else query_ids)
 
@@ -536,7 +543,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         q.setdefault("uid", uid)
         row = compute_query_diff(
             q, disjunction=disjunction, branch_aware=branch_aware,
-            llm_parse=llm_parse, llm_client=llm_client,
+            llm_parse=llm_parse, llm_client=llm_client, entity_resolution=entity_resolution,
         )
         rows.append(row)
         if behavioral:
@@ -544,7 +551,8 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
             if plan_path.exists():
                 plan = json.loads(plan_path.read_text(encoding="utf-8"))
                 behav_rows.append(behavioral_check(
-                    q, plan, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+                    q, plan, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
+                    entity_resolution=entity_resolution,
                 ))
             # Reject-side probe (plan-2 Step 5): closes the accept-side check's blind spot to
             # *missing* constraints (both sides accept the same oracle-optimal plan regardless of
@@ -553,7 +561,8 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
             # stable across differently-scoped reports (fold-limited vs full-val).
             probe_uids = select_reject_probes(uid, q, query_data, results_best=results_best)
             parsed_variants, _ = query_variants(
-                q, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client
+                q, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
+                entity_resolution=entity_resolution,
             )
             reject_rows.append(reject_probe_check(
                 q, parsed_variants, probe_uids, results_best=results_best, disjunction=disjunction,
@@ -640,6 +649,10 @@ def parse_args() -> argparse.Namespace:
                    help="Count family_stats occurrences once per OR-branch variant instead of "
                         "once per (uid, family, bucket) -- the raw pre-dedup view (plan3 N1/G6c). "
                         "Default is de-duplicated, which is the trustworthy signal.")
+    p.add_argument("--entity-resolution", action="store_true",
+                   help="Route the parsed side through the deterministic entity-resolution layer "
+                        "(TPC_P2_ENTITY_RESOLUTION, plan3 N2) that canonicalizes name-bearing "
+                        "families against the target city's POI catalog.")
     return p.parse_args()
 
 
@@ -649,7 +662,8 @@ def main() -> None:
     agg = run_report(split, limit=args.limit, behavioral=args.behavioral, lang=args.lang,
                      out_dir=args.out_dir, disjunction=args.disjunction,
                      branch_aware=args.branch_aware, llm_parse=args.llm_parse,
-                     per_variant_family_stats=args.per_variant_family_stats)
+                     per_variant_family_stats=args.per_variant_family_stats,
+                     entity_resolution=args.entity_resolution)
     print(json.dumps(agg, ensure_ascii=False, indent=2))
 
 

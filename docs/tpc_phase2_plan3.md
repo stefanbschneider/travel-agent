@@ -169,7 +169,7 @@ two-line diff). N2 is the big one; if only one thing gets done, do N2. N7 is not
 order — it's the standing test-first rule applied throughout N2/N3/N4 (its one-off setup is ~an
 hour; do it alongside the first parser fix).
 
-### N1 — Make the family-level diff trustworthy (metric hygiene)
+### N1 — Make the family-level diff trustworthy (metric hygiene) [landed 2026-07-13]
 
 **Files:** `scripts/parser_vs_oracle.py`, its tests, `docs/tpc_phase2_eval.md`.
 
@@ -184,12 +184,20 @@ hour; do it alongside the first parser fix).
 
 **Accept:** unit tests for the three rules; corrected report committed; no solver metrics touched.
 
-### N2 — Deterministic entity-resolution layer in `normalize.py` (the main event)
+### N2 — Deterministic entity-resolution layer in `normalize.py` (the main event) [landed 2026-07-13; solver-free measurement done, VM2 gate pending]
 
 **Goal:** every name-bearing family (`required_/excluded_ attractions|restaurants|hotels`,
 `position_presence`, `hotel_nearby.reference`, `stay_duration[].location`,
 `activity_time_windows[].location`) is canonicalized against the target city's POI catalog before
 it reaches the solver or the verifier.
+
+**Landed 2026-07-13:** full-val solver-free report moves precision 0.7356→0.7794, recall
+0.6903→0.7322, f1 0.7122→0.7551, value_accuracy 0.8156→0.8614 (vs the N1-corrected baseline) —
+see the table in `docs/tpc_phase2_eval.md`. `required_hotels` wrong_value drops 46→9 and gains 41
+matched, confirming this was the highest-leverage item. Rungs (b)-(d) of the measurement ladder
+(diff-eval splice, fastfpr row, canonical 300s row gated vs `20260712T060018Z`) are pending on
+VM 2 — not run here per the two-VM rule (this step also touched `orchestrator.py`'s `Flags` and
+`solve_phase2.py`'s default wiring, which aren't on `phase2_diff_eval.py`'s parse-only allowlist).
 
 **Files:** `chinatravel/agent/phase2/normalize.py` (new `resolve_entities(ir, query, catalog)`
 stage inside `ir_to_solver_variants`, applied to every variant including OR arms and
@@ -291,12 +299,12 @@ drop (> ~10 behavioral pts) escalates M2 (LLM-first extraction) from "A/B worth 
 "likely necessary". Do not fix anything HF-specific — it's a measurement set, not a tuning set
 (tuning on it would burn our only generalization signal).
 
-### N6 — `max_retries=0` (two-line fix + test; close plan-1's known follow-up)
+### N6 — `max_retries=0` (two-line fix + test; close plan-1's known follow-up) [landed 2026-07-13]
 
 `chinatravel/agent/phase2/llm_client.py:219` — `max_retries: 1 → 0`, assert single-attempt in a
 test with a mocked transport. Unit-test only change.
 
-### N7 — Parser regression harness: a fast pytest test for every parsing bug (TDD + stays-fixed guarantee)
+### N7 — Parser regression harness: a fast pytest test for every parsing bug (TDD + stays-fixed guarantee) [landed 2026-07-13]
 
 **Rationale:** `tests/phase2/test_parser_accuracy.py` already does exactly this for plan-1's three
 fixes ("Phase A": taxi derivation, restaurant negation, budget disambiguation) — frozen NL snippet

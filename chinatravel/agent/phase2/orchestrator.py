@@ -74,6 +74,7 @@ class Flags:
     llm_parse: bool = False
     llm_refine: bool = False
     dynamic_budget: bool = False
+    entity_resolution: bool = False
     # Master switch stays llm_parse; this only selects the strategy once it's on (plan-2 Step 6).
     # "audit" (default): today's corrective-audit stub, everything round-trips through the regex.
     # "extract": LLM-first structured extraction + deterministic validation/merge, independent of
@@ -91,6 +92,7 @@ class Flags:
             llm_parse_mode=raw_mode if raw_mode in ("audit", "extract") else "audit",
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
             dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
+            entity_resolution=_truthy(env_map.get("TPC_P2_ENTITY_RESOLUTION", "0")),
         )
 
 
@@ -181,6 +183,7 @@ def solve_phase2(
             "llm_parse_mode": flags.llm_parse_mode,
             "llm_refine": flags.llm_refine,
             "dynamic_budget": flags.dynamic_budget,
+            "entity_resolution": flags.entity_resolution,
         },
         "budget_sec": budget_sec,
         "stage_sec": {},

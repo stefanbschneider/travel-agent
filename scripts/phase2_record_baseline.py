@@ -94,6 +94,7 @@ def compute_fingerprint(query: dict[str, Any], *, flags, llm_client) -> str:
     """
     variants = parser_mod.query_variants(
         query, disjunction=flags.disjunction, llm_parse=flags.llm_parse, llm_client=llm_client,
+        entity_resolution=flags.entity_resolution,
     )
     payload = json.dumps(variants, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()

@@ -121,6 +121,7 @@ def _family_context(query: dict, *, flags, llm_client) -> dict[str, Any]:
         row = parser_mod.compute_query_diff(
             query, disjunction=flags.disjunction, branch_aware=True,
             llm_parse=flags.llm_parse, llm_client=llm_client,
+            entity_resolution=flags.entity_resolution,
         )
     except Exception as exc:  # never let context-gathering fail the whole report
         return {"error": str(exc)}
