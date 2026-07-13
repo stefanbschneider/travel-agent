@@ -24,6 +24,13 @@ packaging and freeze.
   60s pre-fix, net-positive in the combined 300s row. `llm_parse_failed=0` telemetry healthy.
 - Fold-0 failure census at 300s: **11 uids fail e2e but pass solver-only** (parsing loss),
   **4 fail both** (solver headroom), 70 pass both.
+- **VM2 gate row in flight (2026-07-13):** `plan3-n1n7-gate`, pinned to `ace69b66` (HEAD after
+  N1-N4 landed), same config as `20260712T060018Z` (fold 0, n=85, budget 300s, repeats=2) but
+  `parallel=4`, launched ~15:01 CEST. This is the shared accept-criterion row for N2 and N3
+  ("gate passes vs `20260712T060018Z`") and doubles as N4's still-outstanding "standard e2e
+  ladder" rung (`TPC_P2_ENTITY_RESOLUTION`/`TPC_P2_LLM_PARSE` are both default-on together in
+  `run_split`, so one row validates all three). ETA ~4-6h from launch. See "Next steps once the
+  VM2 gate row lands" after N4 for what's unblocked either way.
 
 ## The gap map (evidence-backed findings, ranked by expected FPR impact)
 
@@ -323,11 +330,64 @@ asserted a *bare* remove succeeded — exactly the behavior this guard exists to
 DeepInfra smoke (`test_llm_parse_remove_guard_holds_against_live_response`, Tier 2) verifies the
 guard's invariant end to end against a real nondeterministic response: any family missing from the
 post-LLM IR that the deterministic parser emitted must be whitelisted or have its opposite present
-— passed. **Not run in this session (out of scope for the coding VM, per the two-VM rule and LLM
-cost):** the cheap `phase2_llm_parse_probe.py` disagreement-uid probe and the paid full-val
-`--llm-parse` report — both still needed before promoting `TPC_P2_LLM_PARSE` on by default, since
-this change only makes bare removes harder to apply; it does not by itself prove recall recovers
-to ≥ the deterministic parser's on the full val set.
+— passed.
+
+**Paid measurement rungs landed 2026-07-13 (VM2):** `phase2_llm_parse_probe.py` (40 disagreement
++ 40 matched-control uids, live DeepInfra): **5/40 disagreements fixed, 0/40 controls broke**, 0
+LLM errors — clean safety result for the merge guard. Paid full-val `--llm-parse` report (n=850):
+`recall` 0.7707, `behavioral_balanced` 0.8347, `accept_agreement` 0.8341, `reject_agreement`
+0.8353. Compared against a **freshly-measured deterministic-only baseline from the same moment**
+(not the stale pre-cycle numbers, which predate N1-N3 and make the comparison meaningless):
+`recall` 0.7635, `behavioral_balanced` 0.8245, `accept_agreement` 0.8141, `reject_agreement`
+0.8348. **Both of N4's stated promotion criteria pass** (recall 0.7707 ≥ 0.7635; balanced 0.8347
+≥ 0.8245). This also refreshes the stale 0.8694 number — the fresh accept-side figure (0.8341) is
+*lower* than 0.8694, which looks like a regression but isn't: the deterministic baseline itself
+improved substantially this cycle (0.7988 → 0.8141 accept-side per N1-N3), closing much of the gap
+the old LLM audit used to cover. The only remaining item is the **standard e2e ladder**, which N4
+shares with N2/N3 as the single VM2 gate row described above (`entity_resolution` and `llm_parse`
+are both default-on together in `run_split`, so this one row validates all three at once).
+
+### Next steps once the VM2 gate row (step 2) lands
+
+The row described under "Current measured state" is the single remaining gate for N2, N3, and
+N4. What it unblocks, either way:
+
+**If the gate passes vs `20260712T060018Z`:**
+- Flip N2 and N3's status from "code landed, rung (a) only" to **confirmed win**; N4's status
+  closes out entirely (probe + full-val already passed above; this row is its last criterion).
+- The new row becomes the **canonical baseline** superseding `20260712T060018Z` for all future
+  gates (update "Current measured state" and any doc that cites the old ceiling/FPR numbers).
+- **Diff-eval becomes usable for the first time.** `20260712T060018Z` predates the fingerprinting
+  feature (`phase2_diff_eval.py` needs it; confirmed via `git merge-base --is-ancestor` — no
+  historical ledger row has ever had a `fingerprints` field), so rung (b) was skipped this whole
+  cycle. This new row is recorded with a fingerprinting-capable recorder, so it's the first row
+  future parser changes can splice against instead of a full re-solve.
+- **M3 (verifier fidelity pass)** is unblocked — its stated precondition is "after N2 lands."
+  With canonical entity names confirmed working end-to-end, tighten
+  `parsed_verifier._match_text` per M3's plan.
+- **M1** (deploy eval worker, fastfpr calibration pair, 900s row, det-only anchor) can proceed
+  against a validated, current baseline instead of a stale one.
+- **M2** (LLM-first extraction A/B) can proceed — N5's generalization verdict (the decision input
+  M2 was waiting on) already landed; a confirmed N2/N3/N4 baseline is the fair comparison point
+  for the extract-mode arm.
+- Consider whether `TPC_P2_LLM_PARSE`'s default should move from "on inside `run_split`" to on in
+  the library `Flags()` default too, now that all three of N4's criteria are satisfied — flag for
+  a decision, not an automatic change (the library default intentionally lags the runner default
+  per CLAUDE.md's feature-flag table).
+
+**If the gate fails:**
+- N2, N3, and N4 are all bundled into this one row (`entity_resolution` and `llm_parse` are both
+  default-on together in `run_split`), so a regression here can't be attributed to a single change
+  from the row alone. Next step is per-flag ablation rows (e.g. `TPC_P2_ENTITY_RESOLUTION=0` or
+  `TPC_P2_LLM_PARSE=0` against the same fold/budget) to isolate which change regressed — cheaper
+  once the fingerprinted row exists, since `phase2_diff_eval.py` can splice each ablation against
+  it instead of a full re-solve.
+- Pull the specific failing-family list from the gate's diff output and re-open those as new
+  near-term items (same triage pattern as the original gap map: rank by expected FPR impact).
+- Do not revert N2/N3/N4 wholesale before isolating the cause — N1-N3's solver-free numbers moved
+  in the right direction and N4's paid rungs passed independently; the regression, if real, is
+  more likely a narrow interaction (e.g. M3's still-open verifier-fidelity gap between N2's
+  cleaned names and `_match_text`'s substring matching) than a flaw in any single landed step.
 
 ### N5 — Generalization probe on the HF dataset (read-only, ~an hour of work) [landed 2026-07-13 — trigger fired, see below]
 
