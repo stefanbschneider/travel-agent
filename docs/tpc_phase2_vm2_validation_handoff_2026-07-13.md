@@ -33,31 +33,40 @@ measurement ladder — diff-eval splice, fastfpr row, canonical 300s row — wer
 you. Read `docs/tpc_phase2_eval.md` and `docs/tpc_phase2_plan3.md` (N1-N7 sections, all tagged
 `[landed 2026-07-13...]`) for full detail before you start; don't just trust this summary.
 
-Note: per CLAUDE.md, differential eval and tiny-budget smokes are actually permitted on the coding
-VM too — routing steps 1 and 3 below to VM2 as well is a convenience (one agent runs the whole
-validation batch end to end), not a hard requirement. Don't worry about this either way; just run
-the batch here.
+Note: per CLAUDE.md, tiny-budget smokes like step 3 are actually permitted on the coding VM too —
+routing it to VM2 as well is a convenience (one agent runs the whole validation batch end to end),
+not a hard requirement. Don't worry about this either way; just run it here.
+
+**Update, mid-cycle:** step 1 (diff-eval splice) turned out not to be runnable this cycle — see the
+note under "Runs" below before you start. Steps 2 and 3 are unaffected and are the actual
+validation for this batch.
 
 ## Runs, in priority order
 
-**1. Differential e2e splice (rung b) — cheapest, do this first.**
+**1. Differential e2e splice (rung b) — SKIP THIS CYCLE, do not attempt.**
 
-```
-.venv/bin/python scripts/phase2_diff_eval.py \
-  --baseline docs/phase2_baselines/runs/20260712T060018Z.json \
-  --unsafe-allow-solver-drift --parallel 4
-```
+Found (2026-07-13, mid-run) not to be runnable against `20260712T060018Z.json`: that row's
+`git_sha` (`170b460c`) genuinely predates the fingerprinting feature (`4d88d459`) that
+`phase2_diff_eval.py` needs (`git merge-base --is-ancestor` confirms it both directions) — and
+*no* historical row under `docs/phase2_baselines/runs/` has ever had a `fingerprints` field, so
+there's no other row to point at instead.
 
-(`--parallel 4` uses all 4 cores — this run isn't being compared against a fixed-parallelism
-baseline, it's exploratory, so there's no reason to hold a core back.)
+**Do not backfill fingerprints onto the old row.** It looked tempting (`compute_fingerprint` is
+solver-free, just hashes `query_variants` output) but it's a trap: that baseline ran with the
+LLM-audit on, and N4 just reframed the parse prompt — so reconstructing "what it would have
+parsed" today runs against a cold cache with different cache keys, capturing fresh LLM
+nondeterminism rather than the real N1-N7 parser delta. Even if it were faithful, this run already
+needs `--unsafe-allow-solver-drift` (N3.4 and the N2 wiring touch files outside
+`phase2_diff_eval.py`'s `PARSE_ONLY_ALLOWLIST`), so the result was only ever going to be
+exploratory, not gate-quality — not worth manufacturing a precise-looking but unfaithful number to
+get it.
 
-`--unsafe-allow-solver-drift` is required: N3.4 touched `chinatravel/agent/tpc_agent/parsed_verifier.py`
-and the N2 wiring touched `orchestrator.py`/`solve_phase2.py`, both outside `phase2_diff_eval.py`'s
-`PARSE_ONLY_ALLOWLIST` (only `parse_constraints.py`/`normalize.py`/`schema.py` are in it), so the
-splice's "unchanged uids reproduce byte-for-byte" assumption is not guaranteed — treat this run's
-projected FPR as **exploratory/directional, not gate-quality**. It's still useful: it re-solves only
-uids whose parse changed and is fast (minutes). Report the projected FPR delta and the list of flips
-(which uids flipped pass/fail and why, from the per-uid family-diff context it prints).
+Nothing is actually lost: the trustworthy fast signal for this cycle is the solver-free
+`parser_vs_oracle.py --behavioral` report (rung a), which already ran during development (see
+`docs/tpc_phase2_eval.md`). Diff-eval becomes usable **next** cycle, once step 2 below produces the
+first-ever fingerprinted baseline row to splice future changes against.
+
+Validation this cycle is **steps 2 and 3 only.**
 
 **2. Canonical 300s gate row (rung d) — the real gate.**
 
@@ -135,30 +144,29 @@ baseline), say so explicitly rather than guessing silently.
 
 ## Estimated timing (4 CPUs on VM2)
 
-**Only steps 1 and 2 actually use multiple cores.** Both spawn one CP-SAT/TPCAgent solve process
-per `--parallel`/`P2_PARALLEL` worker, so throughput scales with cores. Steps 3 and 4 are plain
-sequential Python scripts making one LLM API call at a time — neither `phase2_llm_parse_probe.py`
-nor `parser_vs_oracle.py --llm-parse` has a `--parallel` flag, and there's nothing to solve, so
-they run on a single core regardless of how many are free; their wall-clock time is bounded by
-DeepInfra request latency, not local compute. (Adding concurrency to those two scripts would be a
-real speedup opportunity, but it's a code change — out of scope for a measurement-only VM2 run;
-flag it back to the coding VM if steps 3/4 latency becomes a bottleneck worth fixing.)
+Step 1 is skipped this cycle (see above), so only step 2 uses multiple cores: it spawns one
+CP-SAT/TPCAgent solve process per `P2_PARALLEL` worker, so throughput scales with cores. Steps 3
+and 4 are plain sequential Python scripts making one LLM API call at a time — neither
+`phase2_llm_parse_probe.py` nor `parser_vs_oracle.py --llm-parse` has a `--parallel` flag, and
+there's nothing to solve, so they run on a single core regardless of how many are free; their
+wall-clock time is bounded by DeepInfra request latency, not local compute. (Adding concurrency to
+those two scripts would be a real speedup opportunity, but it's a code change — out of scope for a
+measurement-only VM2 run; flag it back to the coding VM if steps 3/4 latency becomes a bottleneck
+worth fixing.)
 
 | Step | Cores used | Estimate | Basis |
 | --- | --- | --- | --- |
-| 1. Diff-eval splice | 4 (`--parallel 4`) | 10-35 min | Only uids whose parse fingerprint changed get re-solved (a subset of the 85-uid fold), each up to the baseline's 300s budget. Exact time scales with how many of the 85 uids N1-N4 actually touched. |
+| 1. Diff-eval splice | n/a (skipped) | — | Not runnable this cycle, see above. |
 | 2. Canonical 300s gate row | 4 (`P2_PARALLEL=4`) | ~5.5-6.5 h | The `20260712T060018Z` baseline (same config, both end-to-end + solver-only modes, 85 uids x 2 repeats) took ~7.5h at `parallel=3`; using all 4 cores instead of 3 is a ~25% throughput gain (near-linear for independent CPU-bound solve processes with no other load on the box), so expect roughly 3/4 of that wall-clock time. |
 | 3. N4 cheap probe | 1 (no parallel option) | 10-20 min | ~80 total LLM calls (40 disagreement + 40 control), sequential, bounded by DeepInfra request latency, not compute. |
 | 4. Paid full-val `--llm-parse` (conditional) | 1 (no parallel option) | ~100 min | Stated directly in `docs/tpc_phase2_plan3.md`'s N4/M2 sections (cold cache, one call per val uid, sequential). |
-| **Total (steps 1-3 only)** | | **~6-7.5 h** | Sequential sum; step 2 dominates. |
-| **Total (all four)** | | **~7.5-9 h** | Only if step 4 is triggered. |
+| **Total (steps 2-3 only)** | | **~5.5-7 h** | Sequential sum; step 2 dominates. |
+| **Total (2, 3, and 4)** | | **~7-8.5 h** | Only if step 4 is triggered. |
 
 Step 2 is the long pole by a wide margin. Steps 3 and 4 are single-core/network-bound, so there's
 no resource conflict running either of them **concurrently with step 2** in another shell — kick
 off step 2 first, then run step 3 (and step 4, if triggered) alongside it, since neither competes
-for CPU in any way that matters. Step 1 also wants all 4 cores (`--parallel 4`), so don't run it
-concurrently with step 2 — either run it first (it's short) or drop it to `--parallel 1` if you do
-want it running in the background while step 2 has the other cores.
+for CPU in any way that matters.
 
 ---
 
