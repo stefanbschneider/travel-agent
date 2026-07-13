@@ -41,11 +41,13 @@ Authoritative docs, read these before non-trivial work:
 ## Tests
 
 Config lives in `pyproject.toml` (`[tool.pytest.ini_options]`). Default run **excludes** the
-`integration` marker (slower tests that touch `WorldEnv` / the real solver).
+`integration` and `llm` markers (slower tests that touch `WorldEnv`/the real solver, and live-LLM
+smokes, respectively).
 
 ```bash
 .venv/bin/python -m pytest tests/phase2            # fast unit suite (no solver/LLM)
 .venv/bin/python -m pytest -m integration tests/phase2   # opt-in slower tests
+.venv/bin/python -m pytest tests/phase2 -m llm      # opt-in live-LLM smokes (DeepInfra, ~cents/run)
 .venv/bin/python -m pytest tests/phase2/test_orchestrator.py::test_name   # single test
 make phase2-test                                   # runs the unit suite
 ```
@@ -54,6 +56,18 @@ The suite defends the core Phase 2 invariant (see `tests/phase2/conftest.py`): a
 asserts the deterministic path **never touches the LLM** when flags are off, and `no_network`
 monkeypatches sockets to fail loudly. **`.venv/bin/python -m pytest` must be green before every
 commit.**
+
+**Parser regression rule (plan3 N7):** every parsing bug (regex extractor or entity-resolution
+layer) gets a Tier-1 deterministic test *before* its fix — frozen NL snippet in, asserted
+constraints out, no network, home in `test_parser_accuracy.py` (regex) or
+`test_entity_resolution.py` (normalize-layer resolution). Assert recall-style (expected
+constraints present with correct values); don't assert the absence of extras unless the bug
+itself is a polarity/misrouting defect — see the recall/precision asymmetry below. The `llm`
+marker (`tests/phase2/test_llm_parse_live.py`) is Tier 2: opt-in live smokes that guard the real
+DeepInfra endpoint + merge-policy plumbing (not model quality), skip at collection when
+`DEEPINFRA_API_KEY` is unset, and must not use the `no_network` fixture. Run Tier 2 before paid
+full-val LLM runs and before shipping any change to `llm_client.py` or the parse prompts — it is a
+pre-flight signal, not a per-commit gate.
 
 ## Phase 2 workflow commands
 
