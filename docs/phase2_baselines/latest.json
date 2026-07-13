@@ -1,7 +1,7 @@
 {
-  "run_id": "20260712T060018Z",
-  "timestamp_utc": "2026-07-12T06:00:18+00:00",
-  "git_sha": "170b460ca1559c564e60edf8fe01aa4b37a07d72",
+  "run_id": "20260713T130105Z",
+  "timestamp_utc": "2026-07-13T13:01:05+00:00",
+  "git_sha": "ace69b66869fb6ff881c0a3e925fd04292d279e4",
   "split_set": "val",
   "split_name": "tpc_phase2_val",
   "fold": 0,
@@ -12,33 +12,34 @@
   "n": 85,
   "lang": "en",
   "branch_aware": false,
-  "label": "dynbudget-step5-fullfold0-300s",
+  "label": "plan3-n1n7-gate",
   "repeats": 2,
   "fresh": true,
+  "fast_fpr": false,
   "variance": {
     "repeats": 2,
     "per_repeat": [
       {
-        "e2e_fpr": 82.3529411764706,
+        "e2e_fpr": 56.470588235294116,
         "solver_only_fpr": 95.29411764705883,
-        "e2e_overall_true": 86.39859437877297,
-        "solver_only_overall_true": 94.43174879789194
+        "e2e_overall_true": 88.01805132684946,
+        "solver_only_overall_true": 94.40277443442696
       },
       {
-        "e2e_fpr": 82.3529411764706,
+        "e2e_fpr": 85.88235294117646,
         "solver_only_fpr": 95.29411764705883,
-        "e2e_overall_true": 86.4587582753442,
-        "solver_only_overall_true": 94.39639828884005
+        "e2e_overall_true": 88.38210260987768,
+        "solver_only_overall_true": 94.06473654795386
       }
     ],
-    "e2e_fpr_mean": 82.3529411764706,
-    "e2e_fpr_std": 0.0,
+    "e2e_fpr_mean": 71.17647058823529,
+    "e2e_fpr_std": 14.705882352941174,
     "solver_only_fpr_mean": 95.29411764705883,
     "solver_only_fpr_std": 0.0,
-    "e2e_overall_true_mean": 86.42867632705858,
-    "e2e_overall_true_std": 0.030081948285612725,
-    "solver_only_overall_true_mean": 94.41407354336599,
-    "solver_only_overall_true_std": 0.017675254525947537
+    "e2e_overall_true_mean": 88.20007696836356,
+    "e2e_overall_true_std": 0.18202564151410883,
+    "solver_only_overall_true_mean": 94.23375549119041,
+    "solver_only_overall_true_std": 0.16901894323655142
   },
   "rehearsal": {
     "split_name": "tpc_phase2_val",
@@ -47,10 +48,11 @@
     "n": 85,
     "fresh": true,
     "chunk_size": 5,
-    "parallel": 3,
+    "parallel": 4,
+    "fast_fpr": false,
     "modes": {
       "end-to-end": {
-        "fpr": 82.3529411764706,
+        "fpr": 85.88235294117646,
         "raw": {
           "split": "tpc_phase2_val",
           "method": "phase2_e2e_tpc_phase2_val",
@@ -58,24 +60,26 @@
           "parsed_evaluated": 85,
           "parse_failures": 0,
           "schema_pass_count": 85,
-          "commonsense_pass_count": 85,
-          "logical_pass_count": 70,
-          "all_pass_count": 70,
+          "commonsense_pass_count": 84,
+          "logical_pass_count": 73,
+          "all_pass_count": 73,
           "all_pass_ids": [
             "20250320181941699936",
             "20250320215352718167",
             "20250321003712724064",
             "20250321044403903740",
             "20250321103053313408",
-            "20250321124425303150",
             "20250321131332451466",
+            "20250321152015286634",
             "20250321180120537534",
             "20250322011802244738",
             "20250322100019318103",
             "20250322102815686483",
+            "20250322103818184128",
             "20250322111939921656",
             "20250322114351029690",
             "20250322122622396942",
+            "20250322123458076116",
             "20250322130011008904",
             "20250322130904243309",
             "20250322132432715549",
@@ -93,9 +97,9 @@
             "20250322173253258437",
             "20250322175253813994",
             "20250322181854861575",
-            "20250322182151167242",
             "20250322184309052283",
             "20250322190653673035",
+            "20250322191742398051",
             "20250322194549339903",
             "20250322200056826857",
             "20250322200527074495",
@@ -110,6 +114,7 @@
             "20250322234741492984",
             "20250323005705150367",
             "20250323005900216547",
+            "20250323010100845247",
             "20250323010244610768",
             "20250323024344482329",
             "20250323032758971559",
@@ -121,10 +126,10 @@
             "20250324195543368143",
             "20250324205935312282",
             "20250324210121516169",
+            "20250324210212304930",
             "20250324210613031537",
             "20250324212103777137",
             "20250324212406371235",
-            "20250324212515606510",
             "20250324212544556327",
             "20250324213027524346",
             "20250324220050355278",
@@ -134,12 +139,12 @@
             "20250325022704913446"
           ],
           "schema_rate": 100.0,
-          "commonsense_micro": 100.0,
-          "commonsense_macro": 100.0,
-          "logical_micro": 94.84536082474226,
-          "logical_macro": 82.35294117647058,
-          "conditional_logical_micro": 94.84536082474226,
-          "conditional_logical_macro": 82.35294117647058,
+          "commonsense_micro": 99.95475113122171,
+          "commonsense_macro": 98.82352941176471,
+          "logical_micro": 95.87628865979381,
+          "logical_macro": 85.88235294117646,
+          "conditional_logical_micro": 94.15807560137456,
+          "conditional_logical_macro": 85.88235294117646,
           "schema_details": [
             {
               "data_id": "20250320181941699936",
@@ -2511,7 +2516,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "20250324195543368143",
@@ -2997,7 +3002,7 @@
             },
             {
               "data_id": "20250321124425303150",
-              "logic_py_0": 1,
+              "logic_py_0": 0,
               "logic_py_1": NaN,
               "logic_py_2": NaN,
               "logic_py_3": NaN,
@@ -3024,7 +3029,7 @@
             },
             {
               "data_id": "20250321152015286634",
-              "logic_py_0": 0,
+              "logic_py_0": 1,
               "logic_py_1": NaN,
               "logic_py_2": NaN,
               "logic_py_3": NaN,
@@ -3078,7 +3083,7 @@
             },
             {
               "data_id": "20250322103818184128",
-              "logic_py_0": 0,
+              "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
@@ -3114,7 +3119,7 @@
             },
             {
               "data_id": "20250322123458076116",
-              "logic_py_0": 0,
+              "logic_py_0": 1,
               "logic_py_1": NaN,
               "logic_py_2": NaN,
               "logic_py_3": NaN,
@@ -3286,7 +3291,7 @@
             {
               "data_id": "20250322182151167242",
               "logic_py_0": 1,
-              "logic_py_1": 1,
+              "logic_py_1": 0,
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
@@ -3322,7 +3327,7 @@
             {
               "data_id": "20250322191742398051",
               "logic_py_0": 1,
-              "logic_py_1": 0,
+              "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
@@ -3483,7 +3488,7 @@
             },
             {
               "data_id": "20250323010100845247",
-              "logic_py_0": 0,
+              "logic_py_0": 1,
               "logic_py_1": NaN,
               "logic_py_2": NaN,
               "logic_py_3": NaN,
@@ -3609,7 +3614,7 @@
             },
             {
               "data_id": "20250324210212304930",
-              "logic_py_0": 0,
+              "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
@@ -3646,7 +3651,7 @@
             {
               "data_id": "20250324212515606510",
               "logic_py_0": 1,
-              "logic_py_1": 1,
+              "logic_py_1": 0,
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
@@ -3725,31 +3730,31 @@
           "eval_failed": 0,
           "overall_true": {
             "count": 85,
-            "mean": 86.4587582753442,
-            "min": 20.0,
+            "mean": 88.38210260987768,
+            "min": 9.615384615384617,
             "max": 99.615873015873,
-            "std": 23.328202767138137
+            "std": 21.390863827814908
           },
           "overall_parsed": {
             "count": 85,
-            "mean": 72.42288669618517,
-            "min": 25.0,
+            "mean": 69.84399783130036,
+            "min": 9.615384615384617,
             "max": 99.615873015873,
-            "std": 30.364905723503313
+            "std": 31.10385580056056
           },
           "fpr_true": {
             "count": 85,
-            "mean": 82.3529411764706,
+            "mean": 85.88235294117646,
             "min": 0.0,
             "max": 100.0,
-            "std": 38.12200410828153
+            "std": 34.82034961634998
           },
           "fpr_parsed": {
             "count": 85,
-            "mean": 60.0,
+            "mean": 56.470588235294116,
             "min": 0.0,
             "max": 100.0,
-            "std": 48.98979485566356
+            "std": 49.57954707224818
           }
         }
       },
@@ -3762,7 +3767,7 @@
           "parsed_evaluated": 85,
           "parse_failures": 0,
           "schema_pass_count": 85,
-          "commonsense_pass_count": 85,
+          "commonsense_pass_count": 84,
           "logical_pass_count": 81,
           "all_pass_count": 81,
           "all_pass_ids": [
@@ -3849,11 +3854,11 @@
             "20250325022704913446"
           ],
           "schema_rate": 100.0,
-          "commonsense_micro": 100.0,
-          "commonsense_macro": 100.0,
+          "commonsense_micro": 99.95475113122171,
+          "commonsense_macro": 98.82352941176471,
           "logical_micro": 98.62542955326461,
           "logical_macro": 95.29411764705881,
-          "conditional_logical_micro": 98.62542955326461,
+          "conditional_logical_micro": 96.90721649484536,
           "conditional_logical_macro": 95.29411764705881,
           "schema_details": [
             {
@@ -4601,7 +4606,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -7440,17 +7445,17 @@
           "eval_failed": 0,
           "overall_true": {
             "count": 85,
-            "mean": 94.39639828884005,
-            "min": 40.833333333333336,
+            "mean": 94.06473654795386,
+            "min": 9.615384615384617,
             "max": 100.0,
-            "std": 11.96786859409212
+            "std": 13.929451080358843
           },
           "overall_parsed": {
             "count": 85,
-            "mean": 69.41855868062572,
-            "min": 25.0,
+            "mean": 69.26818844936035,
+            "min": 9.615384615384617,
             "max": 100.0,
-            "std": 30.860319589148357
+            "std": 31.23464293621071
           },
           "fpr_true": {
             "count": 85,
@@ -11167,10 +11172,10 @@
         },
         "overall_parsed": {
           "count": 85,
-          "mean": 77.11274509803921,
+          "mean": 76.4656862745098,
           "min": 25.0,
           "max": 100.0,
-          "std": 31.073112985897815
+          "std": 31.14755179302158
         },
         "fpr_true": {
           "count": 85,
@@ -11181,10 +11186,10 @@
         },
         "fpr_parsed": {
           "count": 85,
-          "mean": 64.70588235294117,
+          "mean": 63.529411764705884,
           "min": 0.0,
           "max": 100.0,
-          "std": 47.788461203740944
+          "std": 48.13475893053832
         }
       }
     }
@@ -11192,43 +11197,29 @@
   "parser": {
     "split": "tpc_phase2_val",
     "n": 85,
-    "precision": 0.5534,
-    "recall": 0.7314,
-    "f1": 0.6301,
-    "value_accuracy": 0.8196,
-    "disjunction_flattened": 16,
+    "precision": 0.7584,
+    "recall": 0.7839,
+    "f1": 0.771,
+    "value_accuracy": 0.8526,
+    "disjunction_flattened": 12,
     "totals": {
-      "matched": 126,
-      "missing": 15,
-      "spurious": 67,
-      "wrong_value": 27
+      "matched": 133,
+      "missing": 13,
+      "spurious": 24,
+      "wrong_value": 21,
+      "defaulted": 43
     },
     "family_stats": [
       {
-        "family": "taxi_cars_equals",
-        "matched": 42,
-        "missing": 0,
-        "spurious": 43,
-        "wrong_value": 0,
-        "example_missing_uids": [],
-        "example_spurious_uids": [
-          "20250321103053313408",
-          "20250321124425303150",
-          "20250321131332451466",
-          "20250321152015286634",
-          "20250321180120537534"
-        ],
-        "example_wrong_value_uids": []
-      },
-      {
         "family": "required_attractions",
-        "matched": 0,
-        "missing": 2,
+        "matched": 1,
+        "missing": 1,
         "spurious": 5,
         "wrong_value": 2,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
-          "20250321124425303150",
-          "20250321152015286634"
+          "20250321124425303150"
         ],
         "example_spurious_uids": [
           "20250322102815686483",
@@ -11248,6 +11239,8 @@
         "missing": 1,
         "spurious": 3,
         "wrong_value": 5,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250322204425912419"
         ],
@@ -11265,11 +11258,51 @@
         ]
       },
       {
+        "family": "required_attraction_types",
+        "matched": 4,
+        "missing": 0,
+        "spurious": 3,
+        "wrong_value": 2,
+        "defaulted": 0,
+        "reject_miss": 0,
+        "example_missing_uids": [],
+        "example_spurious_uids": [
+          "20250321124425303150",
+          "20250321152015286634",
+          "20250324090426203118"
+        ],
+        "example_wrong_value_uids": [
+          "20250322123458076116",
+          "20250324223731849667"
+        ]
+      },
+      {
+        "family": "budgets",
+        "matched": 35,
+        "missing": 1,
+        "spurious": 2,
+        "wrong_value": 1,
+        "defaulted": 0,
+        "reject_miss": 0,
+        "example_missing_uids": [
+          "20250324195543368143"
+        ],
+        "example_spurious_uids": [
+          "20250322132432715549",
+          "20250322234741492984"
+        ],
+        "example_wrong_value_uids": [
+          "20250322184309052283"
+        ]
+      },
+      {
         "family": "cuisine_preference",
         "matched": 0,
         "missing": 1,
         "spurious": 2,
         "wrong_value": 3,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
           "20250322182151167242"
         ],
@@ -11289,6 +11322,8 @@
         "missing": 1,
         "spurious": 2,
         "wrong_value": 5,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250323190632128860"
         ],
@@ -11309,49 +11344,16 @@
         "matched": 2,
         "missing": 0,
         "spurious": 2,
-        "wrong_value": 3,
+        "wrong_value": 1,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [
           "20250322132807023622",
           "20250322225031233560"
         ],
         "example_wrong_value_uids": [
-          "20250322194549339903",
-          "20250322204425912419",
-          "20250324210212304930"
-        ]
-      },
-      {
-        "family": "required_attraction_types",
-        "matched": 4,
-        "missing": 0,
-        "spurious": 2,
-        "wrong_value": 2,
-        "example_missing_uids": [],
-        "example_spurious_uids": [
-          "20250321124425303150",
-          "20250324090426203118"
-        ],
-        "example_wrong_value_uids": [
-          "20250322123458076116",
-          "20250324223731849667"
-        ]
-      },
-      {
-        "family": "budgets",
-        "matched": 33,
-        "missing": 2,
-        "spurious": 1,
-        "wrong_value": 1,
-        "example_missing_uids": [
-          "20250323010100845247",
-          "20250324195543368143"
-        ],
-        "example_spurious_uids": [
-          "20250322132432715549"
-        ],
-        "example_wrong_value_uids": [
-          "20250322184309052283"
+          "20250322194549339903"
         ]
       },
       {
@@ -11360,6 +11362,8 @@
         "missing": 2,
         "spurious": 1,
         "wrong_value": 1,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250322201135018625",
           "20250322213751617575"
@@ -11372,29 +11376,13 @@
         ]
       },
       {
-        "family": "excluded_inner_transport",
-        "matched": 3,
-        "missing": 1,
-        "spurious": 1,
-        "wrong_value": 3,
-        "example_missing_uids": [
-          "20250322190653673035"
-        ],
-        "example_spurious_uids": [
-          "20250322234741492984"
-        ],
-        "example_wrong_value_uids": [
-          "20250322114351029690",
-          "20250322213751617575",
-          "20250322231454231922"
-        ]
-      },
-      {
         "family": "excluded_restaurants",
         "matched": 0,
         "missing": 1,
         "spurious": 1,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
           "20250323102914854881"
         ],
@@ -11409,6 +11397,8 @@
         "missing": 0,
         "spurious": 1,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [
           "20250322114351029690"
@@ -11416,25 +11406,13 @@
         "example_wrong_value_uids": []
       },
       {
-        "family": "hotel_nearby",
-        "matched": 0,
-        "missing": 0,
-        "spurious": 1,
-        "wrong_value": 1,
-        "example_missing_uids": [],
-        "example_spurious_uids": [
-          "20250323102914854881"
-        ],
-        "example_wrong_value_uids": [
-          "20250323140629198648"
-        ]
-      },
-      {
         "family": "poi_distance_hotel",
         "matched": 0,
         "missing": 0,
         "spurious": 1,
         "wrong_value": 1,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [
           "20250323102914854881"
@@ -11449,6 +11427,8 @@
         "missing": 0,
         "spurious": 1,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [
           "20250322213751617575"
@@ -11461,8 +11441,24 @@
         "missing": 1,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250322194549339903"
+        ],
+        "example_spurious_uids": [],
+        "example_wrong_value_uids": []
+      },
+      {
+        "family": "excluded_inner_transport",
+        "matched": 7,
+        "missing": 1,
+        "spurious": 0,
+        "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 1,
+        "example_missing_uids": [
+          "20250322190653673035"
         ],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -11473,6 +11469,8 @@
         "missing": 1,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
           "20250322190941974828"
         ],
@@ -11485,6 +11483,8 @@
         "missing": 1,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250324212515606510"
         ],
@@ -11497,6 +11497,8 @@
         "missing": 1,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
           "20250322190941974828"
         ],
@@ -11509,6 +11511,8 @@
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -11519,6 +11523,8 @@
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -11529,6 +11535,8 @@
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -11539,6 +11547,8 @@
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -11549,6 +11559,20 @@
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
+        "example_missing_uids": [],
+        "example_spurious_uids": [],
+        "example_wrong_value_uids": []
+      },
+      {
+        "family": "taxi_cars_equals",
+        "matched": 42,
+        "missing": 0,
+        "spurious": 0,
+        "wrong_value": 0,
+        "defaulted": 43,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -11556,7 +11580,8 @@
     ],
     "behavioral": {
       "n": 85,
-      "agreement_rate": 0.7647,
+      "agreement_rate": 0.7882,
+      "accept_agreement": 0.7882,
       "disagreements": [
         "20250321144415070996",
         "20250322102815686483",
@@ -11574,50 +11599,56 @@
         "20250322190941974828",
         "20250322194549339903",
         "20250322201135018625",
-        "20250322204425912419",
         "20250322225031233560",
-        "20250323140629198648",
-        "20250324210212304930"
-      ]
+        "20250323140629198648"
+      ],
+      "reject_agreement": 0.8447,
+      "reject_probes_n": 85,
+      "reject_probes_kept_n": 65,
+      "reject_miss_uids": [
+        "20250320181941699936",
+        "20250322114351029690",
+        "20250322151907102144",
+        "20250322190653673035",
+        "20250322194549339903",
+        "20250322204425912419",
+        "20250322213751617575",
+        "20250323094506224861",
+        "20250323190632128860",
+        "20250324212103777137",
+        "20250324212406371235",
+        "20250324212515606510",
+        "20250324220218634426",
+        "20250324223731849667",
+        "20250325013053234810"
+      ],
+      "behavioral_balanced": 0.8165
     }
   },
   "parser_full": {
     "split": "tpc_phase2_val",
     "n": 850,
-    "precision": 0.5713,
-    "recall": 0.7269,
-    "f1": 0.6398,
-    "value_accuracy": 0.8091,
-    "disjunction_flattened": 134,
+    "precision": 0.7587,
+    "recall": 0.7635,
+    "f1": 0.7611,
+    "value_accuracy": 0.8363,
+    "disjunction_flattened": 113,
     "totals": {
-      "matched": 1327,
-      "missing": 155,
-      "spurious": 628,
-      "wrong_value": 323
+      "matched": 1377,
+      "missing": 140,
+      "spurious": 212,
+      "wrong_value": 255,
+      "defaulted": 401
     },
     "family_stats": [
       {
-        "family": "taxi_cars_equals",
-        "matched": 449,
-        "missing": 0,
-        "spurious": 401,
-        "wrong_value": 0,
-        "example_missing_uids": [],
-        "example_spurious_uids": [
-          "20250321103053313408",
-          "20250321112144748433",
-          "20250321114418474179",
-          "20250321124345084418",
-          "20250321124425303150"
-        ],
-        "example_wrong_value_uids": []
-      },
-      {
         "family": "required_restaurants",
-        "matched": 4,
-        "missing": 14,
+        "matched": 5,
+        "missing": 13,
         "spurious": 36,
         "wrong_value": 44,
+        "defaulted": 0,
+        "reject_miss": 4,
         "example_missing_uids": [
           "20250321142505901653",
           "20250321155107635610",
@@ -11646,6 +11677,8 @@
         "missing": 9,
         "spurious": 26,
         "wrong_value": 28,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
           "20250322115403572263",
           "20250322140220957562",
@@ -11674,6 +11707,8 @@
         "missing": 1,
         "spurious": 25,
         "wrong_value": 9,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [
           "20250321151937732597"
         ],
@@ -11693,17 +11728,46 @@
         ]
       },
       {
+        "family": "required_attraction_types",
+        "matched": 33,
+        "missing": 2,
+        "spurious": 22,
+        "wrong_value": 17,
+        "defaulted": 0,
+        "reject_miss": 1,
+        "example_missing_uids": [
+          "20250321114239878527",
+          "20250322123503517813"
+        ],
+        "example_spurious_uids": [
+          "20250321124425303150",
+          "20250321131454214158",
+          "20250321142505901653",
+          "20250321152015286634",
+          "20250321155107635610"
+        ],
+        "example_wrong_value_uids": [
+          "20250321110628326429",
+          "20250321114538807334",
+          "20250322100414149753",
+          "20250322104924634145",
+          "20250322112816780235"
+        ]
+      },
+      {
         "family": "required_attractions",
-        "matched": 20,
-        "missing": 12,
+        "matched": 23,
+        "missing": 10,
         "spurious": 21,
-        "wrong_value": 24,
+        "wrong_value": 26,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250321124425303150",
           "20250321144722221081",
-          "20250321152015286634",
           "20250321162658913613",
-          "20250321210015834839"
+          "20250321210015834839",
+          "20250322001041444207"
         ],
         "example_spurious_uids": [
           "20250322102204487574",
@@ -11721,36 +11785,13 @@
         ]
       },
       {
-        "family": "required_attraction_types",
-        "matched": 34,
-        "missing": 2,
-        "spurious": 21,
-        "wrong_value": 17,
-        "example_missing_uids": [
-          "20250321114239878527",
-          "20250322123503517813"
-        ],
-        "example_spurious_uids": [
-          "20250321124425303150",
-          "20250321131454214158",
-          "20250321142505901653",
-          "20250321155107635610",
-          "20250321180055038088"
-        ],
-        "example_wrong_value_uids": [
-          "20250321110628326429",
-          "20250321114538807334",
-          "20250322100414149753",
-          "20250322104924634145",
-          "20250322112816780235"
-        ]
-      },
-      {
         "family": "required_hotels",
         "matched": 15,
         "missing": 2,
         "spurious": 21,
-        "wrong_value": 42,
+        "wrong_value": 41,
+        "defaulted": 0,
+        "reject_miss": 2,
         "example_missing_uids": [
           "20250322204425912419",
           "20250324225955755391"
@@ -11776,6 +11817,8 @@
         "missing": 8,
         "spurious": 14,
         "wrong_value": 2,
+        "defaulted": 0,
+        "reject_miss": 4,
         "example_missing_uids": [
           "20250322213744013202",
           "20250322223251089155",
@@ -11796,33 +11839,13 @@
         ]
       },
       {
-        "family": "hotel_nearby",
-        "matched": 2,
-        "missing": 0,
-        "spurious": 13,
-        "wrong_value": 30,
-        "example_missing_uids": [],
-        "example_spurious_uids": [
-          "20250323095507986694",
-          "20250323095837195053",
-          "20250323101412557140",
-          "20250323101817003697",
-          "20250323102250721169"
-        ],
-        "example_wrong_value_uids": [
-          "20250323092547439734",
-          "20250323093105778939",
-          "20250323094542801626",
-          "20250323094757562230",
-          "20250323095128258988"
-        ]
-      },
-      {
         "family": "poi_distance_hotel",
         "matched": 2,
         "missing": 0,
-        "spurious": 13,
+        "spurious": 11,
         "wrong_value": 30,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [
           "20250323095507986694",
@@ -11841,23 +11864,25 @@
       },
       {
         "family": "budgets",
-        "matched": 319,
-        "missing": 20,
-        "spurious": 9,
+        "matched": 330,
+        "missing": 10,
+        "spurious": 10,
         "wrong_value": 10,
+        "defaulted": 0,
+        "reject_miss": 4,
         "example_missing_uids": [
           "20250322120805197568",
-          "20250322161842269069",
           "20250322164349699070",
-          "20250322210810442265",
-          "20250322220507563597"
+          "20250323000311170013",
+          "20250323000409867390",
+          "20250323002030174014"
         ],
         "example_spurious_uids": [
           "20250322102322142139",
           "20250322115606690734",
           "20250322132432715549",
           "20250322163013425443",
-          "20250323002819854165"
+          "20250322234741492984"
         ],
         "example_wrong_value_uids": [
           "20250322132938348367",
@@ -11873,6 +11898,8 @@
         "missing": 14,
         "spurious": 9,
         "wrong_value": 3,
+        "defaulted": 0,
+        "reject_miss": 4,
         "example_missing_uids": [
           "20250322192236455047",
           "20250322201135018625",
@@ -11895,10 +11922,12 @@
       },
       {
         "family": "intercity_mode",
-        "matched": 34,
+        "matched": 47,
         "missing": 5,
-        "spurious": 9,
-        "wrong_value": 25,
+        "spurious": 8,
+        "wrong_value": 11,
+        "defaulted": 0,
+        "reject_miss": 4,
         "example_missing_uids": [
           "20250322145007913202",
           "20250322214018148712",
@@ -11909,24 +11938,26 @@
         "example_spurious_uids": [
           "20250322132807023622",
           "20250322133725159261",
-          "20250322154800701199",
           "20250322170301188396",
-          "20250322225031233560"
+          "20250322225031233560",
+          "20250322232117477314"
         ],
         "example_wrong_value_uids": [
-          "20250321032641509206",
-          "20250322065454280715",
-          "20250322070224631864",
-          "20250322153449598961",
-          "20250322160425828478"
+          "20250322160425828478",
+          "20250322194549339903",
+          "20250322213250485143",
+          "20250322220725934667",
+          "20250322235020671280"
         ]
       },
       {
         "family": "excluded_inner_transport",
-        "matched": 35,
-        "missing": 15,
-        "spurious": 4,
-        "wrong_value": 26,
+        "matched": 62,
+        "missing": 14,
+        "spurious": 2,
+        "wrong_value": 2,
+        "defaulted": 0,
+        "reject_miss": 6,
         "example_missing_uids": [
           "20250322042822097592",
           "20250322190653673035",
@@ -11936,30 +11967,27 @@
         ],
         "example_spurious_uids": [
           "20250322182535301328",
-          "20250322234741492984",
-          "20250323011042997296",
-          "20250323191102916438"
+          "20250323011042997296"
         ],
         "example_wrong_value_uids": [
-          "20250322035350348919",
-          "20250322041029588242",
-          "20250322114351029690",
-          "20250322123436596017",
-          "20250322144156863023"
+          "20250322235559436781",
+          "20250323005159144588"
         ]
       },
       {
         "family": "excluded_restaurants",
         "matched": 18,
-        "missing": 7,
+        "missing": 6,
         "spurious": 2,
         "wrong_value": 3,
+        "defaulted": 0,
+        "reject_miss": 2,
         "example_missing_uids": [
           "20250322144805453117",
           "20250322145458685184",
           "20250322151107979476",
           "20250322153449598961",
-          "20250322154800701199"
+          "20250323102914854881"
         ],
         "example_spurious_uids": [
           "20250322175253813994",
@@ -11972,11 +12000,40 @@
         ]
       },
       {
+        "family": "excluded_attraction_types",
+        "matched": 24,
+        "missing": 5,
+        "spurious": 2,
+        "wrong_value": 9,
+        "defaulted": 0,
+        "reject_miss": 4,
+        "example_missing_uids": [
+          "20250322095607541179",
+          "20250322103211479606",
+          "20250322110951534516",
+          "20250322120414354584",
+          "20250324000345677129"
+        ],
+        "example_spurious_uids": [
+          "20250321114418474179",
+          "20250323191102916438"
+        ],
+        "example_wrong_value_uids": [
+          "20250322103006447860",
+          "20250322111042021223",
+          "20250322113139133769",
+          "20250322113930457460",
+          "20250322114446122642"
+        ]
+      },
+      {
         "family": "position_presence",
-        "matched": 47,
+        "matched": 46,
         "missing": 9,
         "spurious": 1,
         "wrong_value": 4,
+        "defaulted": 0,
+        "reject_miss": 5,
         "example_missing_uids": [
           "20250322124519692875",
           "20250322190941974828",
@@ -11995,35 +12052,13 @@
         ]
       },
       {
-        "family": "excluded_attraction_types",
-        "matched": 24,
-        "missing": 5,
-        "spurious": 1,
-        "wrong_value": 10,
-        "example_missing_uids": [
-          "20250322095607541179",
-          "20250322103211479606",
-          "20250322110951534516",
-          "20250322120414354584",
-          "20250324000345677129"
-        ],
-        "example_spurious_uids": [
-          "20250321114418474179"
-        ],
-        "example_wrong_value_uids": [
-          "20250322103006447860",
-          "20250322111042021223",
-          "20250322113139133769",
-          "20250322113930457460",
-          "20250322114446122642"
-        ]
-      },
-      {
         "family": "activity_time_windows",
-        "matched": 41,
+        "matched": 40,
         "missing": 3,
         "spurious": 1,
         "wrong_value": 4,
+        "defaulted": 0,
+        "reject_miss": 3,
         "example_missing_uids": [
           "20250323123346808089",
           "20250323140133824332",
@@ -12045,6 +12080,8 @@
         "missing": 0,
         "spurious": 1,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [
           "20250322111449530318"
@@ -12057,6 +12094,8 @@
         "missing": 13,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 6,
         "example_missing_uids": [
           "20250322163122317844",
           "20250322180805384621",
@@ -12073,6 +12112,8 @@
         "missing": 9,
         "spurious": 0,
         "wrong_value": 1,
+        "defaulted": 0,
+        "reject_miss": 2,
         "example_missing_uids": [
           "20250322163920766320",
           "20250322170301188396",
@@ -12091,6 +12132,8 @@
         "missing": 4,
         "spurious": 0,
         "wrong_value": 3,
+        "defaulted": 0,
+        "reject_miss": 1,
         "example_missing_uids": [
           "20250322190941974828",
           "20250322233622180048",
@@ -12110,6 +12153,8 @@
         "missing": 3,
         "spurious": 0,
         "wrong_value": 8,
+        "defaulted": 0,
+        "reject_miss": 3,
         "example_missing_uids": [
           "20250322120805197568",
           "20250322194549339903",
@@ -12130,6 +12175,20 @@
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
+        "defaulted": 0,
+        "reject_miss": 0,
+        "example_missing_uids": [],
+        "example_spurious_uids": [],
+        "example_wrong_value_uids": []
+      },
+      {
+        "family": "taxi_cars_equals",
+        "matched": 449,
+        "missing": 0,
+        "spurious": 0,
+        "wrong_value": 0,
+        "defaulted": 401,
+        "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": []
@@ -12137,21 +12196,18 @@
     ],
     "behavioral": {
       "n": 850,
-      "agreement_rate": 0.7988,
+      "agreement_rate": 0.8141,
+      "accept_agreement": 0.8141,
       "disagreements": [
         "20250321062622488462",
         "20250321141840877581",
         "20250321144415070996",
         "20250321144722221081",
         "20250321164659059698",
-        "20250321210116163263",
         "20250321221347058179",
         "20250321225327900119",
         "20250321225614363808",
         "20250322002915208287",
-        "20250322054227934054",
-        "20250322065454280715",
-        "20250322070224631864",
         "20250322100414149753",
         "20250322102204487574",
         "20250322102322142139",
@@ -12197,7 +12253,6 @@
         "20250322152526227216",
         "20250322153344702263",
         "20250322153429009474",
-        "20250322153449598961",
         "20250322153546525570",
         "20250322154633397704",
         "20250322154800701199",
@@ -12218,6 +12273,7 @@
         "20250322164043272813",
         "20250322165301153800",
         "20250322165303032171",
+        "20250322165435882231",
         "20250322165556942772",
         "20250322165852544268",
         "20250322170043869372",
@@ -12236,7 +12292,6 @@
         "20250322182151167242",
         "20250322183029000145",
         "20250322183118666614",
-        "20250322183453762488",
         "20250322185026590450",
         "20250322190341790638",
         "20250322190624067329",
@@ -12244,10 +12299,8 @@
         "20250322192126120666",
         "20250322192555845893",
         "20250322194549339903",
-        "20250322195527737080",
         "20250322200540485890",
         "20250322201135018625",
-        "20250322204425912419",
         "20250322204641477657",
         "20250322205724212077",
         "20250322213218594958",
@@ -12257,7 +12310,6 @@
         "20250322220725934667",
         "20250322225031233560",
         "20250322230555476611",
-        "20250322231032581051",
         "20250322232117477314",
         "20250322232258168762",
         "20250322233622180048",
@@ -12272,9 +12324,7 @@
         "20250323005729070302",
         "20250323005751679419",
         "20250323010327713880",
-        "20250323011029779178",
         "20250323011042997296",
-        "20250323011619245148",
         "20250323014205999250",
         "20250323021020885787",
         "20250323031255302334",
@@ -12291,7 +12341,6 @@
         "20250324195556585555",
         "20250324195627168986",
         "20250324200212786306",
-        "20250324210212304930",
         "20250324213439013487",
         "20250324214412717795",
         "20250324214846150403",
@@ -12301,54 +12350,305 @@
         "20250324221337458084",
         "20250324221956345687",
         "20250324222558888505",
-        "20250324222807389444",
         "20250324222928925906",
         "20250324223323157898",
         "20250324223916776179",
-        "20250324230340923488",
         "20250324231203179035",
         "20250325000928313864",
         "20250325011544460956",
         "20250325014353614690"
-      ]
+      ],
+      "reject_agreement": 0.8348,
+      "reject_probes_n": 850,
+      "reject_probes_kept_n": 640,
+      "reject_miss_uids": [
+        "20250320181941699936",
+        "20250320191245902804",
+        "20250320191503128305",
+        "20250320192106788056",
+        "20250320192920748239",
+        "20250320193635303157",
+        "20250320194255414830",
+        "20250320200003918420",
+        "20250320204322338631",
+        "20250320210351777022",
+        "20250320233037024077",
+        "20250321005208588573",
+        "20250321022513013696",
+        "20250321032641509206",
+        "20250321034945017550",
+        "20250321040152778630",
+        "20250321043213392345",
+        "20250321050543586542",
+        "20250321050822092894",
+        "20250321090441108070",
+        "20250321114239878527",
+        "20250322001041444207",
+        "20250322002943090144",
+        "20250322022134656894",
+        "20250322064704661291",
+        "20250322095607541179",
+        "20250322103211479606",
+        "20250322104526339045",
+        "20250322104918986172",
+        "20250322110951534516",
+        "20250322112901255153",
+        "20250322114351029690",
+        "20250322114713495527",
+        "20250322115441990976",
+        "20250322115620363469",
+        "20250322115634478659",
+        "20250322120046083322",
+        "20250322120414354584",
+        "20250322120805197568",
+        "20250322121036006093",
+        "20250322121819113054",
+        "20250322123436596017",
+        "20250322123719497159",
+        "20250322131339902505",
+        "20250322132938348367",
+        "20250322135119159910",
+        "20250322135241053546",
+        "20250322140148179364",
+        "20250322144156863023",
+        "20250322144805453117",
+        "20250322151907102144",
+        "20250322152143121701",
+        "20250322153449598961",
+        "20250322155912761646",
+        "20250322161001966540",
+        "20250322164349699070",
+        "20250322172128066076",
+        "20250322181526790790",
+        "20250322183205470139",
+        "20250322184657638740",
+        "20250322184848430405",
+        "20250322190653673035",
+        "20250322192126120666",
+        "20250322192813986756",
+        "20250322194549339903",
+        "20250322204425912419",
+        "20250322213744013202",
+        "20250322213751617575",
+        "20250322214018148712",
+        "20250322220125307788",
+        "20250322220759086673",
+        "20250322223251089155",
+        "20250322225224917558",
+        "20250322230225203985",
+        "20250322231053737176",
+        "20250322233142794003",
+        "20250322233735562347",
+        "20250322235020671280",
+        "20250322235422616103",
+        "20250323000253558023",
+        "20250323000311170013",
+        "20250323002030174014",
+        "20250323003957311718",
+        "20250323011236001922",
+        "20250323021033039890",
+        "20250323023934229609",
+        "20250323024151697807",
+        "20250323032331347378",
+        "20250323035748912560",
+        "20250323092305147660",
+        "20250323093209441807",
+        "20250323094506224861",
+        "20250323094525024116",
+        "20250323094542801626",
+        "20250323094757562230",
+        "20250323095354874423",
+        "20250323095548797024",
+        "20250323100629700752",
+        "20250323101110788086",
+        "20250323102650410293",
+        "20250323103059082237",
+        "20250323105153221012",
+        "20250323105430745790",
+        "20250323110259102371",
+        "20250323111047892296",
+        "20250323111100667956",
+        "20250323111609286639",
+        "20250323111611781799",
+        "20250323111946521607",
+        "20250323112243256120",
+        "20250323113356209931",
+        "20250323113838714458",
+        "20250323114351049842",
+        "20250323115217637961",
+        "20250323115531566412",
+        "20250323121026096475",
+        "20250323123346808089",
+        "20250323123608743337",
+        "20250323130321920602",
+        "20250323133346744540",
+        "20250323134308470571",
+        "20250323135039668314",
+        "20250323135305015682",
+        "20250323140133824332",
+        "20250323140826274523",
+        "20250323142154223430",
+        "20250323143649687803",
+        "20250323190632128860",
+        "20250324000430460073",
+        "20250324093806811344",
+        "20250324200015696860",
+        "20250324205827860288",
+        "20250324210312186598",
+        "20250324210728912485",
+        "20250324212103777137",
+        "20250324212220275360",
+        "20250324212240978128",
+        "20250324212406371235",
+        "20250324212431639809",
+        "20250324212515606510",
+        "20250324213114489746",
+        "20250324215156257522",
+        "20250324215933039183",
+        "20250324220218634426",
+        "20250324221115065158",
+        "20250324222155061941",
+        "20250324222219025219",
+        "20250324223731849667",
+        "20250324225441069035",
+        "20250324225955755391",
+        "20250324230340923488",
+        "20250324230442721134",
+        "20250324231432431007",
+        "20250324233046137212",
+        "20250325010714662958",
+        "20250325011235324568",
+        "20250325013053234810",
+        "20250325013440022985",
+        "20250325015445733845",
+        "20250325015641074558"
+      ],
+      "behavioral_balanced": 0.8245
     }
   },
+  "fingerprints": {
+    "20250320181941699936": "e4c028aef7825c2e01eb72b0d9d3d5a64e6f1829beb288d54180d886cc120f4a",
+    "20250320215352718167": "cc528c8abd035396bff8700bc16e20ab9074495eab334238b2f49b30cdd21a78",
+    "20250321003712724064": "cb7de0acfe9c1e565288d2cfea1a082720516bf3dab46281d24208293cd4d371",
+    "20250321044403903740": "1aa0a59d599cd5e3d52d05db2dee4fe8958a7a65cbf8d1bc2618fe1c65a90d25",
+    "20250321103053313408": "c9449cf0fb5fa3dd515e5baed6a0b897f4fe7479f681b8114a4593c7c326b535",
+    "20250321124425303150": "b6d646c01fa14e7bcb51d22842c04a35c99f499ef8191e1e6952bf85791e890c",
+    "20250321131332451466": "a52bc40ca3ed1ac70f851f01e5692c16875468829e1e4c5ba8c684b8a7dbb77c",
+    "20250321144415070996": "6d3a4d60d7170ddee767b0800dc942abd9ed09e6435d7dbfdb99ebef2c6d67a4",
+    "20250321152015286634": "ecc0a1d3d022d636b76ee31a34f0034d44633722d96eff780691c69a30810f36",
+    "20250321180120537534": "18c53b26e1db2bb0e61fb020e8c48796062b9001ae9302b783317c58b0bff9d1",
+    "20250322011802244738": "6b1ace254ce2d2d44a3a100c17885a4e4b10420a060d6ec417f6130f5263cc72",
+    "20250322100019318103": "398730eda0ceb69e91bf3113c528e19a1a1c7e2b81133ab6a11d2bfee318affc",
+    "20250322102815686483": "2d2be2d3d69f3c2c74dcf0441289e9f17b5d1660f1d34368739b85fdc974b838",
+    "20250322103116580364": "396b6e1cc97f868be93496ae6d4a034de6ba864c1035b127ea18385c0a9c708b",
+    "20250322103818184128": "c23b72e99a005aa8fb02ebeb4ffeadd507dd1ae05b9c90d2f7e543311e9ddbe3",
+    "20250322111939921656": "6d57857248003bbde51c52b63cbd4c26beb093fe15af2ba6362923a43f4740a6",
+    "20250322114351029690": "1c2a1788a9475c3265c44295f4e80ef99fdcc4147db2a812315b6de242690f68",
+    "20250322122622396942": "1c5922b1f9a44f5bedda2bd058cd54a9318bf15e925a8e5f621355739ca4299b",
+    "20250322123458076116": "ea452337250d974b1a17794a5b7a7bdf0dad9ed4ad63ec2a64842e987aea08c1",
+    "20250322130011008904": "d0e894b0fb9ccffbbc61b9aeddb189c62d0d53639482406301e31c1e401c072d",
+    "20250322130904243309": "b854cf9c5ef33b12cc293ab620cd54d90c9a165cd6913e7f2b430584ae44792d",
+    "20250322132432715549": "f65320d3e4bbfdbb95299519f73db2d116023be6760c3c929bfc85dcc2c58ab5",
+    "20250322132807023622": "cc051597ed26b34f49c40539617e6c1a72231db3ef3e7d54106fd1407e84a25b",
+    "20250322133429276131": "e02b285900893d6a70b2af18aea488937de7f9d6a154691e66cb43d281ed5da5",
+    "20250322142536766430": "83fbfd8e46c62f17af7e94b4ff2a74713bad9a0cc8fb74a4087c0b1144b3384a",
+    "20250322150251571734": "c35215a658bc7262360a4b4aa8190755a82877f564643cc1bd4d4db62596496c",
+    "20250322151246790518": "a75cf19ff81a0e288270cd43e22489b0c44b466934e257041a79effed3d1f316",
+    "20250322151907102144": "a6e5f9b40aee9a5674a5d0161a159876e4e5d387cfbeb5126d2d0b069e17c740",
+    "20250322161446645703": "d983fa9db4a02c31ea6cf6fd4af2692d5266942b843eb1651de56e73256da98a",
+    "20250322162950781977": "45a84314c13389b91889f48200116ccca781b503fe8bdef7e370268333944297",
+    "20250322165852544268": "208ca974d3ffeeb5f730470f383e361e39e4d6a70261cb5e47cc71b4d50917ad",
+    "20250322170959500916": "0ff3811e120b8a30b97ae5ec5c4e73b2608dd8a17d4d5a6a0e85e4535b49dd2f",
+    "20250322171448202901": "728bf5f44f83bc8fc52e3334c3947c9eb158cef02694fd49b0072a105127f9cd",
+    "20250322173114414187": "fbbb25b56f378bd65bfafa1f51a2160d3f2d006c471360b5a34ddf1507e2449b",
+    "20250322173253258437": "dadb589493ea8a16a21f2aea4db338fc9e3fbf26c4c72f8b0fe8fab572cabbfe",
+    "20250322175253813994": "4ea2e8b7f70742f800a07f8037c81912ae88000c5e45dc5354c202060ba0efc1",
+    "20250322181854861575": "8ce4b7cc3289d9be807559d0ac061b49b131aa1253ff1c81fd3cc117e30a5b24",
+    "20250322182151167242": "c0be0b84d82f4c27dca306aaafed4ae1fcf8384019630d6d400b55fc7842dd08",
+    "20250322184309052283": "e48008c31ef8e1ec882a9bc5fcbb081f90004d92901bc6ec841a1edb8a4b03bc",
+    "20250322190653673035": "c900ac513cb00afebe3ab9365912a727e72edfbb6f624c234d434d1b16423464",
+    "20250322190941974828": "8bfe2bfd65cf30007713f422f431917bf5fcba12005b4a06b924bf34ece3e497",
+    "20250322191742398051": "3b2d90f9055cce9d3c674d1cc7bf3adfd04db577858997cedc1b0cbe370544eb",
+    "20250322194549339903": "8db6adde44b573c8c3f762c65fdd7e595425d4a7b8c63bedcf692306b4ee2bfa",
+    "20250322200056826857": "475d3536a3d2f27a83d2e4cef30f103cf9db86968f0763f4003b7e25f31e8ed7",
+    "20250322200527074495": "bec3437d15b10070812e4359d58859e15f1993096a41d7053c215d09578cdbda",
+    "20250322201024175211": "40f6e4dcb62582d94fbdd76f5bf412d9797908203147f2d4a78da8cea0333b46",
+    "20250322201135018625": "452711c62d7bf35243db905106b1076750355f0af769342756d2a048dda56547",
+    "20250322203811815501": "967640027a4eb4a0226e73534a1e5f50bf05d0750306d6cc783e231fe5e13e33",
+    "20250322204425912419": "818f2f95b5b7e1b6549d304fd38b7a8e629c5fefa225c17bf66fd0df5f4803c7",
+    "20250322205142948496": "819ca17d0eec1cda7363e73583a1c6467d5094b9903696ba40a5153404ab6163",
+    "20250322213751617575": "451ecffe3d50e7ac40d79216a9605c626ce732ee9ff98d6a1b64da749a5b890f",
+    "20250322224723967549": "cd0b7ebfd7ea1b1432ebdcc12cd87c1fa6165c9007d1855ccc0c08fe9b1b6044",
+    "20250322225031233560": "a7337316f913d40f267cf5988eb2cad001d4244023cdfaef502577a94f077051",
+    "20250322230031550699": "27e8a4670a6d4da33a8ef329c2d8c5688cba2faa9515ce379a3b00cab9cee11d",
+    "20250322230855891785": "c15c79b121d034399383b6a89af81173e571d30f024b8568cd72f5cac17153b0",
+    "20250322231454231922": "bbb91c7cabedf2db15408cf71d7ca7f05f7d2138269df075fb8a1981021dda8a",
+    "20250322234741492984": "88f891f84baf7b6c7f40a3c1f53bee9c2d8a0e4e6f08eb080c3e9f56ac95a87c",
+    "20250323005705150367": "0064b546b6d6e4f71e54d0b09e1ea3c5b2ff9b1a2a34d8affa4e5156fee06720",
+    "20250323005900216547": "e9d0305860687910a8425e9eb403ccd57ad2868d0c3ddb6d52b82fd781f22c89",
+    "20250323010100845247": "b39aeda17862917109501cb5e1abc516d382cde28643c719e4c0925558efae0d",
+    "20250323010244610768": "b6324f550452633200f1af2573a5da12eba39c2f284a55b41b98150e08fd309b",
+    "20250323024344482329": "84e26a50f6fc93d169f2406716319845a0e7cdd65d2cd1c5d4ef0b4826a26025",
+    "20250323032758971559": "cb3b2c9030cb1618ef791f604aec18121d6ad611d15e536e8a7b107548203aaf",
+    "20250323094506224861": "cf44a1bc8736ba051ce561a26811b83c383f24a7cc27f982b617440408e0bde4",
+    "20250323102914854881": "bcd87a9563b33ac7a30a3a8addf853780754a560f4df097937651421838ebf65",
+    "20250323131446507863": "8781898b03135909e16f9e5acea38672f19b1826d2bc4684e2838de67f167acd",
+    "20250323140629198648": "f78e8e68827abfeeac22d875031708a719a1dfbffa2b38f4018d617655e80776",
+    "20250323190632128860": "93dd3cafb710d3f9ab4fa78c575d2a807823e6824560970a7de9d9d5cf37498c",
+    "20250323231203079565": "495e4e1a5e2fcfcf59af02fef6634d791b5084095f8ec7d72a2df04d1f40fdd1",
+    "20250324090426203118": "a676191b722ef52494ee822f67ef96d7757f10b05ad4088d6ddb981dc964dc06",
+    "20250324195543368143": "7f22050e92f8ad2c78a733ee64215ff3a0ffacf809138aed1da7688921afdc81",
+    "20250324205935312282": "750525e0b48f4cd33aaf8b40a89ab106ce9c7d83a031af6bdd299abd75bfd8f6",
+    "20250324210121516169": "89f0977bcecc2b7e911fafb7949e87dfa1ad7357f38ff795ff37978e254fab84",
+    "20250324210212304930": "333bec6c52191211cdf14b5dc5ab7c753f08e7d5cee8f976ba142252469bac00",
+    "20250324210613031537": "28e7eb7ec3cc1550b491d4884b4220322e8111a7b64e4eae0ce79d62306db9b3",
+    "20250324212103777137": "d0d6cb133e3dbf06fb38546a5a8eac893b1ead782b7239fc5c6da22af285b23d",
+    "20250324212406371235": "2705e8ffe70dea55b87b697384143a36a0ace94d9e051bc8dcebecd09e79b808",
+    "20250324212515606510": "99b22487b95f87b490fe712ee6aaef409753666be891c7a31b931b33d932bbe1",
+    "20250324212544556327": "e479a655a1e37d6e542ee943dfebeda3d18567f0c0bf673e9d466de0c86154d1",
+    "20250324213027524346": "ed600b2c9d81b9ef2f239896ac2336838007fd6d22cb8ca247d7035c531e6cf0",
+    "20250324220050355278": "8db964fb9cb901a33312b28b512474a55806884d0abe9329d7fc73c9cf7665c2",
+    "20250324220218634426": "4599df4be9cae5de5b8f6821ec5d23602d834eae15263db59478f98562e5dba7",
+    "20250324223731849667": "41fbf969193f1b63c79f4e28570eaaa7c781a5aefc816434fb92cd0a19a9399c",
+    "20250325013053234810": "1e7c1df584677095d62b6a953e746e7b0c0662e598835558da0a0e260635ede7",
+    "20250325022704913446": "bcebe11dfcc09a9072cef428acd5e9517fe858f9e0741705e86508cad275206a"
+  },
   "llm_config": {
-    "backend": "infradeep",
-    "model": "Qwen/Qwen3.6-27B"
+    "backend": "deepinfra",
+    "model": null
   },
   "timing": {
     "n": 85,
     "per_stage": {
       "parse": {
-        "p50": 0.001756580953951925,
-        "p95": 0.01799281898420304,
-        "mean": 0.005558657695484512,
-        "max": 0.022528749948833138
+        "p50": 0.007529469963628799,
+        "p95": 0.11625372380949556,
+        "mean": 0.02967697998700554,
+        "max": 0.41062109800986946
       },
       "solve": {
-        "p50": 271.0167574840016,
-        "p95": 271.12743225299056,
-        "mean": 264.0515796324129,
-        "max": 271.1486805229797
+        "p50": 271.0078508799779,
+        "p95": 271.1268254364375,
+        "mean": 264.4132103045909,
+        "max": 271.13869276898913
       },
       "improve": {
-        "p50": 1.541979145258665e-06,
-        "p95": 2.262834459543228e-06,
-        "mean": 1.8018236219444696e-06,
-        "max": 1.886498648673296e-05
+        "p50": 1.5529803931713104e-06,
+        "p95": 2.444232814013958e-06,
+        "mean": 1.829684547641698e-06,
+        "max": 1.74730084836483e-05
       },
       "finalize": {
-        "p50": 1.193024218082428e-06,
-        "p95": 3.418978303670883e-06,
-        "mean": 1.3526436626253759e-05,
-        "max": 0.0010255849920213223
+        "p50": 9.519862942397594e-07,
+        "p95": 3.344996366649866e-06,
+        "mean": 1.4699235394158784e-06,
+        "max": 7.25302379578352e-06
       }
     },
-    "total_p50": 271.0208196750027,
-    "total_p95": 271.13406201658074,
+    "total_p50": 271.01642664708197,
+    "total_p95": 271.13618385840675,
     "budget_overruns": 0,
-    "timed_out": 71,
+    "timed_out": 66,
     "used_fallback": 0,
     "valid_output_rate": 1.0,
     "llm_parse_attempted": 85,
@@ -12363,25 +12663,25 @@
     },
     "end_to_end": {
       "n": 85,
-      "completed_without_timeout": 14,
-      "interrupted": 71,
-      "timed_out": 71,
-      "recovered_from_timeout": 71,
+      "completed_without_timeout": 19,
+      "interrupted": 66,
+      "timed_out": 66,
+      "recovered_from_timeout": 66,
       "recovered_from_error": 0,
       "used_fallback": 0,
       "valid_output": 85,
-      "completed_without_timeout_rate": 0.16470588235294117
+      "completed_without_timeout_rate": 0.2235294117647059
     },
     "solver_only": {
       "n": 85,
-      "completed_without_timeout": 14,
-      "interrupted": 71,
-      "timed_out": 71,
-      "recovered_from_timeout": 71,
+      "completed_without_timeout": 15,
+      "interrupted": 70,
+      "timed_out": 70,
+      "recovered_from_timeout": 70,
       "recovered_from_error": 0,
       "used_fallback": 0,
       "valid_output": 85,
-      "completed_without_timeout_rate": 0.16470588235294117
+      "completed_without_timeout_rate": 0.17647058823529413
     }
   },
   "timing_source": {

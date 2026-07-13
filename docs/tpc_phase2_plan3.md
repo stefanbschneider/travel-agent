@@ -24,13 +24,24 @@ packaging and freeze.
   60s pre-fix, net-positive in the combined 300s row. `llm_parse_failed=0` telemetry healthy.
 - Fold-0 failure census at 300s: **11 uids fail e2e but pass solver-only** (parsing loss),
   **4 fail both** (solver headroom), 70 pass both.
-- **VM2 gate row in flight (2026-07-13):** `plan3-n1n7-gate`, pinned to `ace69b66` (HEAD after
-  N1-N4 landed), same config as `20260712T060018Z` (fold 0, n=85, budget 300s, repeats=2) but
-  `parallel=4`, launched ~15:01 CEST. This is the shared accept-criterion row for N2 and N3
-  ("gate passes vs `20260712T060018Z`") and doubles as N4's still-outstanding "standard e2e
-  ladder" rung (`TPC_P2_ENTITY_RESOLUTION`/`TPC_P2_LLM_PARSE` are both default-on together in
-  `run_split`, so one row validates all three). ETA ~4-6h from launch. See "Next steps once the
-  VM2 gate row lands" after N4 for what's unblocked either way.
+- **VM2 gate row landed (2026-07-13):** `20260713T130105Z` (`plan3-n1n7-gate`, pinned to
+  `ace69b66`, same config as `20260712T060018Z` but `parallel=4`). `phase2_gate.py` **passes**
+  comparing last-repeat FPR (85.88 vs baseline 82.35, +3.53 pts) — the documented convention, and
+  how the baseline itself was computed. **But this pass is not robust: read the two repeats
+  before trusting the FPR number.** Per-repeat e2e_fpr was `[56.47, 85.88]` (std 14.71 — the
+  baseline's own repeats were std 0.0). Gating on the *mean* (71.18) would **fail** against
+  82.35; the pass exists only because the better repeat happened to run last, and reverses on
+  repeat order. The continuous e2e score, by contrast, is stable across repeats (88.02 / 88.38,
+  std 0.18) and moved the same direction as everything else this cycle: **86.43 → 88.20 (+1.8
+  pts)**, converging with the solver-free rung-(a) gains, N4's probe (5 fixed / 0 broke), and the
+  full-val recall/balanced lift. Root cause of the FPR noise: only 19/85 e2e solves at this
+  budget finish without hitting the timeout-recovery path (66/85 are interrupted and recovered),
+  so a ~29-point FPR swing (~25 of 85 uids crossing the pass/fail line) between repeats reflects
+  broad, fold-wide threshold nondeterminism in *which* uids get cut off mid-search, not a solver
+  or parser regression — the plans themselves score almost identically either way. **Verdict:**
+  N1-N4 are non-regressive and mildly positive on the load-bearing (continuous) signal; the FPR
+  headline is too noisy at `repeats=2`/this budget/fold to carry the claim alone. Do not treat
+  85.88 as the new canonical FPR baseline without more repeats — see "Next steps" after N4.
 
 ## The gap map (evidence-backed findings, ranked by expected FPR impact)
 
@@ -347,47 +358,48 @@ the old LLM audit used to cover. The only remaining item is the **standard e2e l
 shares with N2/N3 as the single VM2 gate row described above (`entity_resolution` and `llm_parse`
 are both default-on together in `run_split`, so this one row validates all three at once).
 
-### Next steps once the VM2 gate row (step 2) lands
+### Next steps now that the VM2 gate row has landed
 
-The row described under "Current measured state" is the single remaining gate for N2, N3, and
-N4. What it unblocks, either way:
+The row landed 2026-07-13 (`20260713T130105Z`, see "Current measured state"): FPR gate passes on
+convention but is noise-dominated at `repeats=2`; the continuous score is the trustworthy signal
+and it's mildly positive. This is neither a clean pass nor a failure — treat it as **N1-N4
+non-regressive, provisionally positive, needs a higher-repeat confirmatory row before being
+trusted as the new FPR baseline**:
 
-**If the gate passes vs `20260712T060018Z`:**
-- Flip N2 and N3's status from "code landed, rung (a) only" to **confirmed win**; N4's status
-  closes out entirely (probe + full-val already passed above; this row is its last criterion).
-- The new row becomes the **canonical baseline** superseding `20260712T060018Z` for all future
-  gates (update "Current measured state" and any doc that cites the old ceiling/FPR numbers).
-- **Diff-eval becomes usable for the first time.** `20260712T060018Z` predates the fingerprinting
-  feature (`phase2_diff_eval.py` needs it; confirmed via `git merge-base --is-ancestor` — no
-  historical ledger row has ever had a `fingerprints` field), so rung (b) was skipped this whole
-  cycle. This new row is recorded with a fingerprinting-capable recorder, so it's the first row
-  future parser changes can splice against instead of a full re-solve.
-- **M3 (verifier fidelity pass)** is unblocked — its stated precondition is "after N2 lands."
-  With canonical entity names confirmed working end-to-end, tighten
-  `parsed_verifier._match_text` per M3's plan.
-- **M1** (deploy eval worker, fastfpr calibration pair, 900s row, det-only anchor) can proceed
-  against a validated, current baseline instead of a stale one.
-- **M2** (LLM-first extraction A/B) can proceed — N5's generalization verdict (the decision input
-  M2 was waiting on) already landed; a confirmed N2/N3/N4 baseline is the fair comparison point
-  for the extract-mode arm.
+- **Do not overwrite `20260712T060018Z` as "the" canonical baseline yet.** Its FPR is
+  well-characterized (std 0.0 across repeats, albeit likely a warm-cache artifact per G10, not
+  true determinism); `20260713T130105Z`'s FPR swung 29 points between two repeats. Keep both in
+  "Current measured state" until a higher-repeat row exists, and gate future changes on the
+  continuous score (or median-of-N FPR) rather than last-repeat FPR alone in the meantime.
+- **The real fix is methodological, not a re-run.** A single clean re-run won't be quiet either —
+  the noise source (66/85 e2e solves hit timeout-recovery; marginal uids' pass/fail depends on
+  exactly where the CP-SAT search was interrupted) is structural to this fold/budget, not a fluke
+  of this particular run. Options, roughly in cost order: (a) gate on the continuous score instead
+  of binary FPR for noisy folds/budgets, (b) `P2_REPEATS≥3-5` and gate on median FPR, (c) a larger
+  fold (n=85 means each uid is worth 1.18 FPR pts — a bigger n dilutes single-uid noise). Surface
+  this as a new near-term item (not yet numbered) rather than deciding unilaterally; it affects
+  every future gate, not just this one.
+- **Flip N2 and N3's status** from "code landed, rung (a) only" to **provisionally confirmed**
+  (not "confirmed win" outright — pending the higher-repeat row above). N4's remaining criterion
+  (the standard e2e ladder) is satisfied at the same confidence level: non-regressive, provisionally
+  positive.
+- **Diff-eval becomes usable for the first time regardless of the FPR verdict.**
+  `20260712T060018Z` predates the fingerprinting feature (`phase2_diff_eval.py` needs it;
+  confirmed via `git merge-base --is-ancestor` — no historical ledger row before this one has ever
+  had a `fingerprints` field), so rung (b) was skipped this whole cycle. `20260713T130105Z` is the
+  first row future parser changes (including any higher-repeat confirmatory run) can splice
+  against instead of a full re-solve.
+- **M3 (verifier fidelity pass)** can proceed — its stated precondition is "after N2 lands," and
+  N2's code + solver-free numbers are confirmed even though the e2e FPR confirmation is pending.
+- **M1** (deploy eval worker, fastfpr calibration pair, 900s row, det-only anchor) can proceed;
+  fold the repeats/gating-metric methodology fix into M1 if the eval worker is the natural home
+  for a `P2_REPEATS≥3` default on canonical rows.
+- **M2** (LLM-first extraction A/B) can proceed — N5's generalization verdict already landed;
+  gate the extract-mode arm on the continuous score too, for the same reason as above.
 - Consider whether `TPC_P2_LLM_PARSE`'s default should move from "on inside `run_split`" to on in
-  the library `Flags()` default too, now that all three of N4's criteria are satisfied — flag for
-  a decision, not an automatic change (the library default intentionally lags the runner default
-  per CLAUDE.md's feature-flag table).
-
-**If the gate fails:**
-- N2, N3, and N4 are all bundled into this one row (`entity_resolution` and `llm_parse` are both
-  default-on together in `run_split`), so a regression here can't be attributed to a single change
-  from the row alone. Next step is per-flag ablation rows (e.g. `TPC_P2_ENTITY_RESOLUTION=0` or
-  `TPC_P2_LLM_PARSE=0` against the same fold/budget) to isolate which change regressed — cheaper
-  once the fingerprinted row exists, since `phase2_diff_eval.py` can splice each ablation against
-  it instead of a full re-solve.
-- Pull the specific failing-family list from the gate's diff output and re-open those as new
-  near-term items (same triage pattern as the original gap map: rank by expected FPR impact).
-- Do not revert N2/N3/N4 wholesale before isolating the cause — N1-N3's solver-free numbers moved
-  in the right direction and N4's paid rungs passed independently; the regression, if real, is
-  more likely a narrow interaction (e.g. M3's still-open verifier-fidelity gap between N2's
-  cleaned names and `_match_text`'s substring matching) than a flaw in any single landed step.
+  the library `Flags()` default too, now that N4's probe/full-val criteria are satisfied and the
+  e2e ladder is non-regressive — flag for a decision, not an automatic change (the library default
+  intentionally lags the runner default per CLAUDE.md's feature-flag table).
 
 ### N5 — Generalization probe on the HF dataset (read-only, ~an hour of work) [landed 2026-07-13 — trigger fired, see below]
 
