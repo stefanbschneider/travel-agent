@@ -255,7 +255,7 @@ def run_once(
     for label in labels:
         env = {"TPC_P2_LLM_PARSE": "0"} if label == DET_LABEL else None
         cmd = build_eval_at_cmd(sha=sha, label=label, ledger_dir=ledger_dir, python_exe=python_exe)
-        rc = run_eval_at_fn(cmd, env)
+        rc = run_eval_at_fn(cmd, env=env)
         ran.append({"label": label, "returncode": rc})
         if rc == 0:
             commit_push_fn(ledger_worktree, f"phase2-eval: {label} @ {sha[:8]}")
