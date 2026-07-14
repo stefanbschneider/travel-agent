@@ -68,13 +68,21 @@ def guard_parser_only_changes(
     """Return the changed-file list; raise UnsafeDiffEvalError if any file outside the
     parse-only allowlist changed (unless ``unsafe`` overrides the guard).
 
-    Files under ``tests/`` are exempt from the allowlist check (though still returned in the
-    changed-file list): pytest is never imported by the solve path, so a test-only change cannot
-    affect solver/orchestrator behavior -- the property this guard actually protects.
+    Files under ``tests/`` or ``docs/`` are exempt from the allowlist check (though still
+    returned in the changed-file list): neither is imported by the solve path, so a change
+    confined to them cannot affect solver/orchestrator behavior -- the property this guard
+    actually protects. The ``docs/`` exemption matters in practice because recording a baseline
+    row is itself a commit under ``docs/phase2_baselines/`` -- without it, every ledger row would
+    poison itself as a diff-eval base the moment it's committed, even with zero solver-affecting
+    code changed (2026-07-13 VM2 finding).
     """
     changed = changed_files_since(sha, cwd=cwd)
     disallowed = [
-        f for f in changed if f not in PARSE_ONLY_ALLOWLIST and not f.startswith("tests/")
+        f
+        for f in changed
+        if f not in PARSE_ONLY_ALLOWLIST
+        and not f.startswith("tests/")
+        and not f.startswith("docs/")
     ]
     if disallowed and not unsafe:
         raise UnsafeDiffEvalError(

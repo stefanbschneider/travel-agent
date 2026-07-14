@@ -182,3 +182,40 @@ def test_guard_ignores_test_only_changes(tmp_path):
     (repo / "tests" / "phase2" / "test_x.py").write_text("v2\n")
     changed = de.guard_parser_only_changes(sha, cwd=repo)
     assert set(changed) == {"parse_constraints.py", "tests/phase2/test_x.py"}
+
+
+def test_guard_ignores_docs_only_changes(tmp_path):
+    """Recording a baseline row is itself a commit under docs/phase2_baselines/ -- without this
+    exemption, every ledger row would permanently poison itself as a diff-eval base the moment
+    it's committed, even with zero solver-affecting code changed (2026-07-13 VM2 finding)."""
+    repo = tmp_path / "repo"
+    sha = _init_repo_with_commit(
+        repo,
+        {
+            "parse_constraints.py": "v1\n",
+            "docs/tpc_phase2_plan3.md": "v1\n",
+            "docs/phase2_baselines/runs/20260101T000000Z.json": "{}\n",
+        },
+    )
+    (repo / "docs" / "tpc_phase2_plan3.md").write_text("v2\n")
+    (repo / "docs" / "phase2_baselines" / "runs" / "20260101T000000Z.json").write_text('{"x":1}\n')
+    changed = de.guard_parser_only_changes(sha, cwd=repo)
+    assert set(changed) == {
+        "docs/tpc_phase2_plan3.md",
+        "docs/phase2_baselines/runs/20260101T000000Z.json",
+    }
+
+
+def test_guard_still_refuses_non_allowlisted_changes_mixed_with_docs(tmp_path):
+    repo = tmp_path / "repo"
+    sha = _init_repo_with_commit(
+        repo, {"solver.py": "v1\n", "docs/tpc_phase2_plan3.md": "v1\n"}
+    )
+    (repo / "solver.py").write_text("v2\n")
+    (repo / "docs" / "tpc_phase2_plan3.md").write_text("v2\n")
+    try:
+        de.guard_parser_only_changes(sha, cwd=repo)
+        assert False, "expected UnsafeDiffEvalError"
+    except de.UnsafeDiffEvalError as exc:
+        assert "solver.py" in str(exc)
+        assert "docs/tpc_phase2_plan3.md" not in str(exc)
