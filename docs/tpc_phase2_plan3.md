@@ -25,23 +25,28 @@ packaging and freeze.
 - Fold-0 failure census at 300s: **11 uids fail e2e but pass solver-only** (parsing loss),
   **4 fail both** (solver headroom), 70 pass both.
 - **VM2 gate row landed (2026-07-13):** `20260713T130105Z` (`plan3-n1n7-gate`, pinned to
-  `ace69b66`, same config as `20260712T060018Z` but `parallel=4`). `phase2_gate.py` **passes**
-  comparing last-repeat FPR (85.88 vs baseline 82.35, +3.53 pts) — the documented convention, and
-  how the baseline itself was computed. **But this pass is not robust: read the two repeats
-  before trusting the FPR number.** Per-repeat e2e_fpr was `[56.47, 85.88]` (std 14.71 — the
-  baseline's own repeats were std 0.0). Gating on the *mean* (71.18) would **fail** against
-  82.35; the pass exists only because the better repeat happened to run last, and reverses on
-  repeat order. The continuous e2e score, by contrast, is stable across repeats (88.02 / 88.38,
-  std 0.18) and moved the same direction as everything else this cycle: **86.43 → 88.20 (+1.8
-  pts)**, converging with the solver-free rung-(a) gains, N4's probe (5 fixed / 0 broke), and the
-  full-val recall/balanced lift. Root cause of the FPR noise: only 19/85 e2e solves at this
+  `ace69b66`, same config as `20260712T060018Z` but `parallel=4`). Binary e2e FPR at this
+  budget/fold turned out to be noise-dominated: per-repeat e2e_fpr was `[56.47, 85.88]` (std
+  14.71, vs the baseline's own std 0.0), so gating on last-repeat FPR (the original convention)
+  is order-dependent — it happens to pass (85.88 vs 82.35) only because the better repeat ran
+  last, and would fail on the mean (71.18 < 82.35). Root cause: only 19/85 e2e solves at this
   budget finish without hitting the timeout-recovery path (66/85 are interrupted and recovered),
   so a ~29-point FPR swing (~25 of 85 uids crossing the pass/fail line) between repeats reflects
   broad, fold-wide threshold nondeterminism in *which* uids get cut off mid-search, not a solver
-  or parser regression — the plans themselves score almost identically either way. **Verdict:**
-  N1-N4 are non-regressive and mildly positive on the load-bearing (continuous) signal; the FPR
-  headline is too noisy at `repeats=2`/this budget/fold to carry the claim alone. Do not treat
-  85.88 as the new canonical FPR baseline without more repeats — see "Next steps" after N4.
+  or parser regression. The continuous e2e score, by contrast, is stable across repeats (mean
+  86.4287→88.2001, std 0.0301→0.1820) and moved the same direction as everything else this
+  cycle, converging with the solver-free rung-(a) gains, N4's probe (5 fixed / 0 broke), and the
+  full-val recall/balanced lift.
+  **2026-07-14: `phase2_gate.py` now blocks on `continuous_score` (mean across repeats) when
+  present, with `fpr` advisory-only — see `docs/tpc_phase2_eval.md`'s regression-gate section.**
+  Re-run under the corrected methodology: `phase2_gate.py` **passes cleanly**
+  (continuous_score 86.4287 → 88.2001, no reasons, no advisories — fpr happened to also improve
+  in this particular row so there's nothing even to flag as advisory). **This is now a
+  genuine, non-order-dependent pass**, not a "pass on convention" caveat. N1-N4 are confirmed
+  non-regressive and positive on the metric that's actually trustworthy at this budget/fold.
+  `20260713T130105Z` is promoted to the canonical baseline for continuous-score gating; its FPR
+  figure (85.88) should still not be treated as a precise number on its own (see the swing
+  above) — see "Next steps" after N4 for the (updated, lighter) remaining items.
 
 ## The gap map (evidence-backed findings, ranked by expected FPR impact)
 
@@ -360,45 +365,56 @@ are both default-on together in `run_split`, so this one row validates all three
 
 ### Next steps now that the VM2 gate row has landed
 
-The row landed 2026-07-13 (`20260713T130105Z`, see "Current measured state"): FPR gate passes on
-convention but is noise-dominated at `repeats=2`; the continuous score is the trustworthy signal
-and it's mildly positive. This is neither a clean pass nor a failure — treat it as **N1-N4
-non-regressive, provisionally positive, needs a higher-repeat confirmatory row before being
-trusted as the new FPR baseline**:
+The row landed 2026-07-13 (`20260713T130105Z`) and, after the 2026-07-14 gating-metric fix
+(`continuous_score` primary, `fpr` advisory — see "Current measured state" and
+`docs/tpc_phase2_eval.md`), **cleanly and non-order-dependently passes**. N1-N4 are confirmed:
 
-- **Do not overwrite `20260712T060018Z` as "the" canonical baseline yet.** Its FPR is
-  well-characterized (std 0.0 across repeats, albeit likely a warm-cache artifact per G10, not
-  true determinism); `20260713T130105Z`'s FPR swung 29 points between two repeats. Keep both in
-  "Current measured state" until a higher-repeat row exists, and gate future changes on the
-  continuous score (or median-of-N FPR) rather than last-repeat FPR alone in the meantime.
-- **The real fix is methodological, not a re-run.** A single clean re-run won't be quiet either —
-  the noise source (66/85 e2e solves hit timeout-recovery; marginal uids' pass/fail depends on
-  exactly where the CP-SAT search was interrupted) is structural to this fold/budget, not a fluke
-  of this particular run. Options, roughly in cost order: (a) gate on the continuous score instead
-  of binary FPR for noisy folds/budgets, (b) `P2_REPEATS≥3-5` and gate on median FPR, (c) a larger
-  fold (n=85 means each uid is worth 1.18 FPR pts — a bigger n dilutes single-uid noise). Surface
-  this as a new near-term item (not yet numbered) rather than deciding unilaterally; it affects
-  every future gate, not just this one.
-- **Flip N2 and N3's status** from "code landed, rung (a) only" to **provisionally confirmed**
-  (not "confirmed win" outright — pending the higher-repeat row above). N4's remaining criterion
-  (the standard e2e ladder) is satisfied at the same confidence level: non-regressive, provisionally
-  positive.
-- **Diff-eval becomes usable for the first time regardless of the FPR verdict.**
-  `20260712T060018Z` predates the fingerprinting feature (`phase2_diff_eval.py` needs it;
-  confirmed via `git merge-base --is-ancestor` — no historical ledger row before this one has ever
-  had a `fingerprints` field), so rung (b) was skipped this whole cycle. `20260713T130105Z` is the
-  first row future parser changes (including any higher-repeat confirmatory run) can splice
-  against instead of a full re-solve.
-- **M3 (verifier fidelity pass)** can proceed — its stated precondition is "after N2 lands," and
-  N2's code + solver-free numbers are confirmed even though the e2e FPR confirmation is pending.
-- **M1** (deploy eval worker, fastfpr calibration pair, 900s row, det-only anchor) can proceed;
-  fold the repeats/gating-metric methodology fix into M1 if the eval worker is the natural home
-  for a `P2_REPEATS≥3` default on canonical rows.
+- **N2 and N3's status flips** from "code landed, rung (a) only" to **confirmed win** (not just
+  provisional): the gate is no longer order-dependent, so there's no remaining caveat to wait
+  out. N4's remaining criterion (the standard e2e ladder) is satisfied at the same confidence
+  level.
+- **`20260713T130105Z` is the canonical baseline** for continuous-score gating going forward.
+  Its FPR figure (85.88) is real data and worth keeping in the row, but shouldn't be read as a
+  precise number on its own — see the swing documented above.
+- **Diff-eval works for the first time**, verified live: `phase2_diff_eval.py` against
+  `20260713T130105Z` (2026-07-14, no code changes since `ace69b66`) correctly found 0/85 changed
+  uids and spliced the projected FPR byte-identical to the baseline. A guard bug was found and
+  fixed in the same pass — `guard_parser_only_changes()` only exempted `tests/`, not `docs/`, so
+  every future baseline-recording commit (which necessarily writes into
+  `docs/phase2_baselines/`) would have permanently poisoned itself as a diff-eval base the
+  moment it was committed; `docs/` is now exempted the same way `tests/` already was.
+- **Deliberately not pursued this cycle** (explicit cost/benefit call, not an oversight): more
+  repeats (`P2_REPEATS≥3-5`), a bigger fold, or the 900s budget. These would attack the FPR
+  noise at its root but each costs many additional hours on VM2 for a metric (FPR) that's no
+  longer the gate's blocking criterion — not worth it unless a specific decision later needs a
+  precise FPR number rather than the continuous-score verdict already in hand. If that need
+  arises, the 900s budget is the better lever than more repeats at 300s: it attacks the timeout-
+  recovery root cause directly (fewer of the 66/85 interrupted solves) rather than averaging
+  around it, and it's needed eventually anyway as M1's 900s row.
+- **fastfpr (rung c) calibration was considered and explicitly deferred, not run.** The obvious
+  move — calibrate fastfpr against `continuous_score` now that it's stable — is a category error:
+  `TPC_SOLVE_STOP_AT_ACCEPT` is specifically designed to *skip* the preference-packing pass that
+  improves continuous score, so comparing continuous score between fastfpr and normal mode would
+  show a large, expected, uninformative gap by construction, not a bug. The metric fastfpr
+  actually needs to preserve is accept/reject fidelity (FPR), and validating that requires
+  distinguishing "fastfpr introduced a real divergence" from "this uid is just inherently noisy
+  regardless of mode" — which needs enough repeats/samples to characterize baseline noise, i.e.
+  the same "real fixes" just deferred above. Zero-cost architectural reassurance in the
+  meantime: `_solve()`'s search trajectory is byte-identical between fastfpr and normal mode up
+  to the first accepted plan (same seeded RNG, same restart order) — `TPC_SOLVE_STOP_AT_ACCEPT`
+  only changes what happens *after* acceptance (stop vs. keep polishing), so fastfpr's accept/
+  reject decision is plausible by construction, not just by policy. Still uncalibrated per
+  CLAUDE.md; revisit when a real repeats/fold-size investment is justified for other reasons.
+- **M3 (verifier fidelity pass)** can proceed — its stated precondition ("after N2 lands") is now
+  met without qualification.
+- **M1** (deploy eval worker, 900s row, det-only anchor) can proceed. Drop the fastfpr
+  calibration pair from M1's scope per the point above until a repeats/fold-size investment is
+  independently justified.
 - **M2** (LLM-first extraction A/B) can proceed — N5's generalization verdict already landed;
-  gate the extract-mode arm on the continuous score too, for the same reason as above.
+  gate the extract-mode arm on `continuous_score` too, for the same reason as above.
 - Consider whether `TPC_P2_LLM_PARSE`'s default should move from "on inside `run_split`" to on in
-  the library `Flags()` default too, now that N4's probe/full-val criteria are satisfied and the
-  e2e ladder is non-regressive — flag for a decision, not an automatic change (the library default
+  the library `Flags()` default too, now that N4's criteria are satisfied and the e2e ladder is
+  confirmed non-regressive — flag for a decision, not an automatic change (the library default
   intentionally lags the runner default per CLAUDE.md's feature-flag table).
 
 ### N5 — Generalization probe on the HF dataset (read-only, ~an hour of work) [landed 2026-07-13 — trigger fired, see below]

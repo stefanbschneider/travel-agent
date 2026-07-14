@@ -2,10 +2,20 @@
 """Phase 2 monotonic regression gate (docs/tpc_phase2_eval.md).
 
 Reuses the monotonic philosophy of scripts/merge.py: a candidate is promoted only if, on the
-rehearsal fold, it does NOT drop official score (FPR) or increase parse-failure / timeout counts
-vs the baseline.
+rehearsal fold, it does NOT drop the primary score metric or increase parse-failure / timeout
+counts vs the baseline.
 
-Metric dict shape: {"fpr": float, "parse_failures": int, "timeouts": int}.
+Metric dict shape: {"fpr": float, "continuous_score": float (optional), "parse_failures": int,
+"timeouts": int}.
+
+Primary score metric (2026-07-14): when ``continuous_score`` is present in *both* rows, it is
+the blocking check and ``fpr`` (if present) is reported as advisory-only, not gating. Binary FPR
+at a tight budget/small fold is dominated by timeout-boundary nondeterminism -- two repeats of an
+otherwise-identical row can swing FPR ~30 points while the continuous score barely moves (see
+docs/tpc_phase2_plan3.md's "Next steps" section, `20260713T130105Z` finding) -- so it cannot
+reliably gate a promotion decision on its own at those settings. When ``continuous_score`` is
+absent from either row (older ledger rows, or a caller that only has fpr), the gate falls back to
+the original fpr-blocking behavior unchanged.
 """
 
 from __future__ import annotations
@@ -17,13 +27,36 @@ from pathlib import Path
 
 
 def check_gate(baseline: dict, candidate: dict, *, tol: float = 0.0) -> dict:
-    """Return {'passed': bool, 'reasons': [...]}. Passes when candidate is no worse than baseline."""
-    reasons = []
+    """Return {'passed': bool, 'reasons': [...], 'advisories': [...]}.
 
-    base_fpr = float(baseline.get("fpr", 0.0))
-    cand_fpr = float(candidate.get("fpr", 0.0))
-    if cand_fpr < base_fpr - tol:
-        reasons.append(f"score/fpr dropped: {cand_fpr:.2f} < {base_fpr:.2f} (tol {tol})")
+    Passes when candidate is no worse than baseline on the blocking metrics. ``advisories``
+    holds non-blocking notes (e.g. an FPR move that isn't gating because continuous_score took
+    over as the primary metric) -- always present, may be empty.
+    """
+    reasons: list[str] = []
+    advisories: list[str] = []
+
+    use_continuous = "continuous_score" in baseline and "continuous_score" in candidate
+    if use_continuous:
+        base_cs = float(baseline["continuous_score"])
+        cand_cs = float(candidate["continuous_score"])
+        if cand_cs < base_cs - tol:
+            reasons.append(
+                f"continuous_score dropped: {cand_cs:.2f} < {base_cs:.2f} (tol {tol})"
+            )
+        if "fpr" in baseline and "fpr" in candidate:
+            base_fpr = float(baseline["fpr"])
+            cand_fpr = float(candidate["fpr"])
+            if cand_fpr < base_fpr - tol:
+                advisories.append(
+                    f"fpr dropped (advisory, not gating -- continuous_score is primary): "
+                    f"{cand_fpr:.2f} < {base_fpr:.2f} (tol {tol})"
+                )
+    else:
+        base_fpr = float(baseline.get("fpr", 0.0))
+        cand_fpr = float(candidate.get("fpr", 0.0))
+        if cand_fpr < base_fpr - tol:
+            reasons.append(f"score/fpr dropped: {cand_fpr:.2f} < {base_fpr:.2f} (tol {tol})")
 
     base_pf = int(baseline.get("parse_failures", 0))
     cand_pf = int(candidate.get("parse_failures", 0))
@@ -35,7 +68,7 @@ def check_gate(baseline: dict, candidate: dict, *, tol: float = 0.0) -> dict:
     if cand_to > base_to:
         reasons.append(f"more timeouts: {cand_to} > {base_to}")
 
-    return {"passed": not reasons, "reasons": reasons}
+    return {"passed": not reasons, "reasons": reasons, "advisories": advisories}
 
 
 def parse_args() -> argparse.Namespace:

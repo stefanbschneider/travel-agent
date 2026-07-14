@@ -629,12 +629,26 @@ Additionally, every rehearsal snapshot promoted for comparison should be recorde
   into one report over the current fold, printing the three-way attribution and the axis metrics.
 - **Regression gate:** reuse the monotonic philosophy of `scripts/merge.py`. A change is only promoted if,
   on the rehearsal fold, it does **not**:
-  - drop official score,
+  - drop the primary score metric,
   - increase parse-failure count,
   - increase timeout/crash count.
 
   The gate makes the "flags off ⇒ deterministic path unchanged" rule enforceable and lets us add each
   improvement (disjunction expansion, LLM parse, LLM refine) and immediately see its measured effect.
+
+  **Primary score metric (2026-07-14):** `phase2_gate.py` blocks on `continuous_score`
+  (mean end-to-end `overall_true` across repeats, i.e. `variance.e2e_overall_true_mean` in a
+  ledger row) when it's present in both the baseline and candidate metric dicts; `fpr` becomes
+  advisory-only in that case (still reported, never blocks). When `continuous_score` is absent
+  from either row, the gate falls back to blocking on `fpr` as before (old ledger rows, or a
+  caller that only has FPR). This switch exists because binary e2e FPR at a tight budget/small
+  fold is dominated by timeout-boundary nondeterminism — the `20260713T130105Z` row's two
+  repeats swung FPR `[56.47, 85.88]` (std 14.7) while `continuous_score` barely moved (std 0.18)
+  — see `docs/tpc_phase2_plan3.md`'s "Next steps" section for the full finding. Use the
+  across-repeats **mean**, not the last repeat's own value, when constructing the
+  `continuous_score` field — the last-repeat convention is exactly what made FPR
+  order-dependent in the first place, and continuous score's low variance means the mean is
+  cheap to compute and more robust for free.
 
 ## Metric → Command Map
 
