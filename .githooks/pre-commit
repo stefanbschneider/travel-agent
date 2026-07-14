@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+# The repository-root .env is local-only. Block additions, modifications,
+# deletions, and renames involving it without inspecting its contents.
+if ! git diff --cached --quiet -- ':(top).env'; then
+    printf '%s\n' \
+        'pre-commit: refusing to commit changes to repository-root .env.' \
+        'Unstage it with: git restore --staged -- .env' >&2
+    exit 1
+fi
