@@ -111,6 +111,22 @@ def compute_fingerprints(
     return fingerprints
 
 
+def _resolve_llm_model(llm_cfg: dict[str, Any], llm_client: Any) -> str | None:
+    """Return the model actually in play, not just what was explicitly configured.
+
+    ``llm_cfg["model"]`` (from ``_phase2_llm_config()``) is only set when
+    ``TPC_P2_LLM_MODEL``/config.toml explicitly overrides it -- backends like deepinfra silently
+    fall back to a hardcoded default model otherwise (``DEFAULT_DEEPINFRA_MODEL`` in
+    ``llm_client.py``), so a real run recorded ``"model": null`` even though it genuinely used a
+    concrete model, misleading for reproducibility (2026-07-14, Copilot review on PR #15). The
+    already-constructed client has the resolved model on ``.model``; prefer that.
+    """
+    client_model = getattr(llm_client, "model", None)
+    if client_model:
+        return str(client_model)
+    return llm_cfg.get("model")
+
+
 def _resolve_fold(split_set: str, fold: int, folds: int, seed: int, limit: int | None) -> FoldSelection:
     split_name, _is_test = rehearse_mod.resolve_split_set(split_set)
     uids = split_mod.read_split(split_name)
@@ -766,7 +782,7 @@ def main() -> None:
         "fingerprints": fingerprints,
         "llm_config": {
             "backend": llm_cfg.get("backend", "none"),
-            "model": llm_cfg.get("model"),
+            "model": _resolve_llm_model(llm_cfg, llm_client),
         },
         "timing": timing,
         "completion": completion,

@@ -60,7 +60,7 @@
 ## LLM Parse Config
 
 - backend: deepinfra
-- model: (n/a)
+- model: Qwen/Qwen3.6-27B
 
 ## Timing And Reliability
 

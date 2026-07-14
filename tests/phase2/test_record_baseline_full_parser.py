@@ -62,6 +62,38 @@ def test_to_history_row_defaults_are_safe_for_pre_step4_records():
     assert row["llm_parse"] is False
 
 
+# --- resolved model recording (2026-07-14, Copilot review on PR #15) ---------------------------
+#
+# llm_cfg["model"] is only set when TPC_P2_LLM_MODEL/config.toml explicitly overrides it; the
+# deepinfra client silently falls back to DEFAULT_DEEPINFRA_MODEL when neither is set, so a
+# real deepinfra run recorded "model": null even though it genuinely used a concrete model
+# (Qwen/Qwen3.6-27B as of this writing) -- misleading for reproducibility/comparability. The
+# already-constructed llm_client used for fingerprinting has the real resolved model on
+# ``.model``; prefer that over the raw config.
+
+
+class _FakeClientWithModel:
+    model = "Qwen/Qwen3.6-27B"
+
+
+class _FakeClientWithoutModel:
+    pass  # e.g. NoneLLMClient / FixtureLLMClient: no .model attribute
+
+
+def test_resolve_llm_model_prefers_clients_resolved_model_over_raw_config():
+    assert B._resolve_llm_model({"model": None}, _FakeClientWithModel()) == "Qwen/Qwen3.6-27B"
+
+
+def test_resolve_llm_model_falls_back_to_config_when_client_has_no_model_attr():
+    assert B._resolve_llm_model({"model": "explicit-override"}, _FakeClientWithoutModel()) == (
+        "explicit-override"
+    )
+
+
+def test_resolve_llm_model_none_when_neither_source_has_one():
+    assert B._resolve_llm_model({}, _FakeClientWithoutModel()) is None
+
+
 def test_full_val_parser_columns_present_in_csv_fieldnames(tmp_path):
     history_path = tmp_path / "history.jsonl"
     history_path.write_text("", encoding="utf-8")
