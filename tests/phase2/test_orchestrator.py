@@ -1,4 +1,4 @@
-"""Tests for the Phase 2 orchestrator skeleton (Task 5).
+"""Tests for the Phase 2 orchestrator skeleton.
 
 Uses an injected ``solve_fn`` so no real WorldEnv/solver is needed. Verifies:
 - normal solve returns the plan + populated telemetry,

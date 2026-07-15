@@ -1,9 +1,7 @@
-"""Unit + integration tests for scripts/phase2_eval_at.py (plan-2 Step 1).
+"""Unit and integration tests for scripts/phase2_eval_at.py.
 
-The integration test builds a throwaway synthetic git repo (not this project's real repo) with a
-fake recorder script, so it can commit-mid-run and assert git_sha truthfulness without mutating
-real project history -- see docs/tpc_phase2_sonnet_plan2.md Step 1's acceptance check, which
-additionally calls for one manual run against the real repo (recorded in the step's commit).
+The integration test builds a throwaway synthetic git repository with a fake recorder. It can
+commit during an evaluation and assert git-sha truthfulness without mutating real project history.
 """
 
 from __future__ import annotations
@@ -37,12 +35,12 @@ def test_build_recorder_cmd_injects_history_dir_when_absent():
         python_exe=Path("/venv/python"),
         worktree_dir=Path("/tmp/wt/abc123"),
         recorder_args=["--limit", "2"],
-        ledger_dir=Path("/repo/docs/phase2_baselines"),
+        ledger_dir=Path("/repo/results/phase2_baselines"),
     )
     assert cmd == [
         "/venv/python",
         "/tmp/wt/abc123/scripts/phase2_record_baseline.py",
-        "--history-dir", "/repo/docs/phase2_baselines",
+        "--history-dir", "/repo/results/phase2_baselines",
         "--limit", "2",
     ]
 
@@ -52,11 +50,11 @@ def test_build_recorder_cmd_respects_explicit_history_dir():
         python_exe=Path("/venv/python"),
         worktree_dir=Path("/tmp/wt/abc123"),
         recorder_args=["--history-dir", "/custom", "--limit", "2"],
-        ledger_dir=Path("/repo/docs/phase2_baselines"),
+        ledger_dir=Path("/repo/results/phase2_baselines"),
     )
     assert cmd.count("--history-dir") == 1
     assert "/custom" in cmd
-    assert "/repo/docs/phase2_baselines" not in cmd
+    assert "/repo/results/phase2_baselines" not in cmd
 
 
 def test_build_recorder_cmd_respects_history_dir_equals_form():
@@ -64,7 +62,7 @@ def test_build_recorder_cmd_respects_history_dir_equals_form():
         python_exe=Path("/venv/python"),
         worktree_dir=Path("/tmp/wt/abc123"),
         recorder_args=["--history-dir=/custom"],
-        ledger_dir=Path("/repo/docs/phase2_baselines"),
+        ledger_dir=Path("/repo/results/phase2_baselines"),
     )
     assert cmd.count("--history-dir") == 0  # folded into the "--history-dir=/custom" token
     assert "--history-dir=/custom" in cmd
@@ -183,8 +181,8 @@ ledger_dir.mkdir(parents=True, exist_ok=True)
 
 @pytest.mark.integration
 def test_eval_at_git_sha_is_pinned_sha_even_if_main_repo_advances(tmp_path):
-    """The core plan-2 Step 1 property: a commit landing in the main tree *after* the worktree
-    is created (simulating a mid-run commit) must not change the recorded git_sha."""
+    """A commit landing in the main tree after worktree creation must not change the recorded
+    pinned ``git_sha``."""
     repo = tmp_path / "repo"
     _init_repo(repo)
     (repo / "scripts").mkdir()

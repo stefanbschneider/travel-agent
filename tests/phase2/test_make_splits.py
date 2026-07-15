@@ -1,4 +1,4 @@
-"""Tests for the Phase 2 validation/held-out-test split helper (Task 2)."""
+"""Tests for the Phase 2 validation and held-out-test split helper."""
 
 from __future__ import annotations
 

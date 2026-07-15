@@ -1,11 +1,9 @@
-"""Tests for the hotel_nearby tighter-or-equal distance check (plan3 N3.4).
+"""Tests for the hotel_nearby tighter-or-equal distance check.
 
-NL-stated distances are display-rounded from the oracle's unrounded hard_logic_py float --
-empirically confirmed on the val split to always be a ceiling to 2 decimals (gap in
-[0, 0.00991] km, never negative -- see the parser_vs_oracle investigation in the N3.4 commit).
-The parsed_verifier check must therefore use a threshold 0.01 km tighter than the parsed value,
-or a hotel whose true distance is between (parsed - 0.01) and parsed could pass our internal
-check while failing the real oracle's unrounded threshold.
+Natural-language distance values are display-rounded from the oracle's unrounded threshold.
+The parsed verifier therefore uses a threshold 0.01 km tighter than the parsed value, preventing
+a hotel whose true distance lies just below the display value from passing internally while
+failing the oracle threshold.
 """
 
 from __future__ import annotations

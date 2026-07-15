@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Differential e2e evaluation (plan-2 Step 2): re-solve only the uids whose solver input
+"""Differential e2e evaluation: re-solve only the UIDs whose solver input
 changed since a baseline ledger row, and splice the rest from that row's recorded outcomes.
 
 A parser change alters the solver's input (the constraint variants fed to it) only for the uids
@@ -9,7 +9,7 @@ input is unchanged reproduces the baseline row byte-for-byte; this script skips 
 work and reports a projected FPR instead.
 
 Usage:
-    scripts/phase2_diff_eval.py --baseline docs/phase2_baselines/runs/<run_id>.json
+    .venv/bin/python scripts/phase2_diff_eval.py --baseline results/phase2_baselines/runs/<run_id>.json
 
 Validity: this is only sound if the solver/orchestrator code is unchanged vs the baseline sha --
 otherwise a "changed" uid's fresh solve wouldn't be comparable to an "unchanged" uid's spliced-in
@@ -68,13 +68,12 @@ def guard_parser_only_changes(
     """Return the changed-file list; raise UnsafeDiffEvalError if any file outside the
     parse-only allowlist changed (unless ``unsafe`` overrides the guard).
 
-    Files under ``tests/`` or ``docs/`` are exempt from the allowlist check (though still
-    returned in the changed-file list): neither is imported by the solve path, so a change
-    confined to them cannot affect solver/orchestrator behavior -- the property this guard
-    actually protects. The ``docs/`` exemption matters in practice because recording a baseline
-    row is itself a commit under ``docs/phase2_baselines/`` -- without it, every ledger row would
-    poison itself as a diff-eval base the moment it's committed, even with zero solver-affecting
-    code changed (2026-07-13 VM2 finding).
+    Files under ``tests/``, ``docs/``, or ``results/phase2_baselines/`` are exempt from the
+    allowlist check (though still returned in the changed-file list): none is imported by the
+    solve path, so a change confined to them cannot affect solver/orchestrator behavior -- the
+    property this guard actually protects. The ledger exemption matters because recording a
+    baseline row is itself a commit under ``results/phase2_baselines/``; without it, every row
+    would poison itself as a diff-eval base even with zero solver-affecting code changed.
     """
     changed = changed_files_since(sha, cwd=cwd)
     disallowed = [
@@ -83,6 +82,7 @@ def guard_parser_only_changes(
         if f not in PARSE_ONLY_ALLOWLIST
         and not f.startswith("tests/")
         and not f.startswith("docs/")
+        and not f.startswith("results/phase2_baselines/")
     ]
     if disallowed and not unsafe:
         raise UnsafeDiffEvalError(
@@ -138,7 +138,7 @@ def _family_context(query: dict, *, flags, llm_client) -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--baseline", required=True, help="Path to a docs/phase2_baselines/runs/<id>.json row.")
+    p.add_argument("--baseline", required=True, help="Path to a results/phase2_baselines/runs/<id>.json row.")
     p.add_argument(
         "--budget-sec", type=float, default=None,
         help="Budget for re-solved uids (default: the baseline row's own budget_sec, so spliced "
@@ -162,7 +162,7 @@ def main() -> int:
     if not fingerprints_baseline:
         print(
             "error: baseline row has no 'fingerprints' field -- record it with a recorder build "
-            "that supports plan-2 Step 2 fingerprinting.", file=sys.stderr,
+            "that supports solver-input fingerprinting.", file=sys.stderr,
         )
         return 2
 

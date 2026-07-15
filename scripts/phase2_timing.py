@@ -3,8 +3,8 @@
 
 Aggregates the per-stage timings the orchestrator emits (``telemetry.json`` per query) into
 per-stage p50/p95, flags budget overruns, and reports reliability counts (timed-out, used-fallback,
-valid-output rate). ``score_variance`` summarizes run-to-run variance across repeated runs (the
-organizers average 5 runs).
+valid-output rate). ``score_variance`` summarizes run-to-run variance across repeated local runs;
+record the repeat count with each measurement.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Tests for the Phase 2 per-query time budgeting (Task 5)."""
+"""Tests for Phase 2 per-query time budgeting."""
 
 from __future__ import annotations
 

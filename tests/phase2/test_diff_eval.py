@@ -1,7 +1,7 @@
-"""Unit tests for scripts/phase2_diff_eval.py and the fingerprinting it depends on
-(plan-2 Step 2). The measured, real-repo acceptance check (projected FPR byte-equal to a full
-fresh run on a real commit pair) is recorded in the step's commit message, not repeated here as
-an automated test (it needs a real solver + real git history to be meaningful).
+"""Unit tests for scripts/phase2_diff_eval.py and its fingerprinting dependency.
+
+The real-repository projection check needs a solver and meaningful git history, so this module
+keeps deterministic guard and fingerprint contracts isolated in synthetic repositories.
 """
 
 from __future__ import annotations
@@ -19,8 +19,7 @@ def _flags(*, disjunction=True, llm_parse=False, entity_resolution=False):
     return SimpleNamespace(disjunction=disjunction, llm_parse=llm_parse, entity_resolution=entity_resolution)
 
 
-# --- fingerprint stability (real val queries -- a hand-fabricated query dict skips the fields
-# the regex actually keys on, see the debugging note in the plan-2 Step 2 commit) -------------
+# --- Fingerprint stability: fabricated query dicts omit fields the regex uses ----------------
 
 
 def _load_two_real_queries():
@@ -184,38 +183,46 @@ def test_guard_ignores_test_only_changes(tmp_path):
     assert set(changed) == {"parse_constraints.py", "tests/phase2/test_x.py"}
 
 
-def test_guard_ignores_docs_only_changes(tmp_path):
-    """Recording a baseline row is itself a commit under docs/phase2_baselines/ -- without this
-    exemption, every ledger row would permanently poison itself as a diff-eval base the moment
-    it's committed, even with zero solver-affecting code changed (2026-07-13 VM2 finding)."""
+def test_guard_ignores_active_docs_and_ledger_only_changes(tmp_path):
+    """Active docs and the committed ledger do not affect the solve path."""
     repo = tmp_path / "repo"
     sha = _init_repo_with_commit(
         repo,
         {
             "parse_constraints.py": "v1\n",
-            "docs/tpc_phase2_plan3.md": "v1\n",
-            "docs/phase2_baselines/runs/20260101T000000Z.json": "{}\n",
+            "docs/tpc_phase2_roadmap.md": "v1\n",
+            "results/phase2_baselines/runs/20260101T000000Z.json": "{}\n",
         },
     )
-    (repo / "docs" / "tpc_phase2_plan3.md").write_text("v2\n")
-    (repo / "docs" / "phase2_baselines" / "runs" / "20260101T000000Z.json").write_text('{"x":1}\n')
+    (repo / "docs" / "tpc_phase2_roadmap.md").write_text("v2\n")
+    (repo / "results" / "phase2_baselines" / "runs" / "20260101T000000Z.json").write_text('{"x":1}\n')
     changed = de.guard_parser_only_changes(sha, cwd=repo)
     assert set(changed) == {
-        "docs/tpc_phase2_plan3.md",
-        "docs/phase2_baselines/runs/20260101T000000Z.json",
+        "docs/tpc_phase2_roadmap.md",
+        "results/phase2_baselines/runs/20260101T000000Z.json",
     }
+
+def test_guard_refuses_non_ledger_result_changes(tmp_path):
+    repo = tmp_path / "repo"
+    sha = _init_repo_with_commit(repo, {"results/other/snapshot.json": "v1\n"})
+    (repo / "results" / "other" / "snapshot.json").write_text("v2\n")
+    try:
+        de.guard_parser_only_changes(sha, cwd=repo)
+        assert False, "expected UnsafeDiffEvalError"
+    except de.UnsafeDiffEvalError as exc:
+        assert "results/other/snapshot.json" in str(exc)
 
 
 def test_guard_still_refuses_non_allowlisted_changes_mixed_with_docs(tmp_path):
     repo = tmp_path / "repo"
     sha = _init_repo_with_commit(
-        repo, {"solver.py": "v1\n", "docs/tpc_phase2_plan3.md": "v1\n"}
+        repo, {"solver.py": "v1\n", "docs/tpc_phase2_roadmap.md": "v1\n"}
     )
     (repo / "solver.py").write_text("v2\n")
-    (repo / "docs" / "tpc_phase2_plan3.md").write_text("v2\n")
+    (repo / "docs" / "tpc_phase2_roadmap.md").write_text("v2\n")
     try:
         de.guard_parser_only_changes(sha, cwd=repo)
         assert False, "expected UnsafeDiffEvalError"
     except de.UnsafeDiffEvalError as exc:
         assert "solver.py" in str(exc)
-        assert "docs/tpc_phase2_plan3.md" not in str(exc)
+        assert "docs/tpc_phase2_roadmap.md" not in str(exc)

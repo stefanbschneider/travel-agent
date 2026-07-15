@@ -103,7 +103,7 @@ def main() -> None:
     p.add_argument("--lang", default="en", choices=["en", "zh"])
     p.add_argument(
         "--llm-parse-mode", default="audit", choices=["audit", "extract"],
-        help="Which LLM parse strategy to probe (plan-2 Step 6): 'audit' (default, today's "
+        help="Which LLM parse strategy to probe: 'audit' (default, today's "
         "corrective-audit stub) or 'extract' (LLM-first structured extraction).",
     )
     p.add_argument("--out", default=str(PROJECT_ROOT / "cache" / "phase2_llm_parse_probe.json"))

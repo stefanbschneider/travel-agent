@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a Phase 2 eval command against a pinned git worktree checkout (plan-2 Step 1).
+"""Run a Phase 2 evaluation command against a pinned git worktree checkout.
 
 Long evals (``scripts/phase2_record_baseline.py``) re-import on-disk code mid-run in their
 chunked subprocesses, and the recorder's ``_git_sha()`` stamps ``git rev-parse HEAD`` at *write*
@@ -10,10 +10,10 @@ of a pinned sha fixes both problems: the main tree is free to keep developing, a
 against, not whatever HEAD happens to be when the recorder finishes writing).
 
 Usage:
-    scripts/phase2_eval_at.py --sha <ref> [--keep] -- <phase2_record_baseline.py args...>
+    .venv/bin/python scripts/phase2_eval_at.py --sha <ref> [--keep] -- <phase2_record_baseline.py args...>
 
 Example:
-    scripts/phase2_eval_at.py --sha HEAD -- --split-set val --fold 0 --budget-sec 100 \
+    .venv/bin/python scripts/phase2_eval_at.py --sha HEAD -- --split-set val --fold 0 --budget-sec 100 \
         --label fastfpr-mychange --parallel 3
 """
 
@@ -36,7 +36,7 @@ WORKTREE_ROOT = Path("/tmp/phase2_eval")
 # ``chinatravel/data/`` is fully committed, so the worktree already has it without symlinking.
 SHARED_RELPATHS = ["cache", "results", "agent_env/runs", ".env"]
 
-DEFAULT_LEDGER_DIR = PROJECT_ROOT / "docs" / "phase2_baselines"
+DEFAULT_LEDGER_DIR = PROJECT_ROOT / "results" / "phase2_baselines"
 
 
 def _git_output(*args: str, cwd: Path) -> str:
@@ -140,13 +140,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--ledger-dir", default=str(DEFAULT_LEDGER_DIR),
         help="Where the recorder writes history.jsonl/latest.*/runs/ (default: main repo's "
-        "docs/phase2_baselines, so pinned-worktree rows land alongside normal ones).",
+        "results/phase2_baselines, so pinned-worktree rows land alongside normal ones).",
     )
     p.add_argument(
         "recorder_args", nargs=argparse.REMAINDER,
         help="Args passed through to scripts/phase2_record_baseline.py -- prefix with `--` to "
         "separate them from this script's own flags, e.g.: "
-        "phase2_eval_at.py --sha HEAD -- --limit 2 --budget-sec 10",
+        ".venv/bin/python scripts/phase2_eval_at.py --sha HEAD -- --limit 2 --budget-sec 10",
     )
     return p.parse_args()
 

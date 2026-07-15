@@ -1,4 +1,4 @@
-"""Unit tests for TPCAgent._solve's TPC_SOLVE_STOP_AT_ACCEPT early-exit mode (plan-2 Step 3).
+"""Unit tests for TPCAgent._solve's TPC_SOLVE_STOP_AT_ACCEPT early-exit mode.
 
 Builds a *bare* TPCAgent (``__new__``, no WorldEnv/LLM) with every collaborator replaced by a
 spy/fake, the same pattern as ``test_agent_injection.py``, so ``_solve``'s real control flow runs

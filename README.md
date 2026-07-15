@@ -1,594 +1,69 @@
-**Important links:**
+# ChinaTravel TPC 2026 Entry
 
-- Competition website: https://chinatravel-competition.github.io/IJCAI2026/
-- ChinaTravel GitHub repo: https://github.com/LAMDA-NeSy/ChinaTravel
+This repository contains a solver-first travel-planning agent for the [Travel Planning Challenge at IJCAI 2026](https://chinatravel-competition.github.io/IJCAI2026/). It builds grounded, verifier-checked multi-day China itineraries from traveler requests. The shared deterministic solver is used in both competition phases; the trust boundary and delivery model differ.
 
-**Competition docs in this repo:**
+## Phase boundary
 
-- `docs/tpc_phase1_playbook.md` — Phase 1 public-leaderboard strategy, workflows, and operating commands
-- `docs/tpc_phase2_design.md` — Phase 2 rules interpretation, harness architecture, and no-oracle approach
-- `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (three axes, attribution, regression gate)
-- `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the Phase 2 skeleton harness + eval pipeline
-- `docs/tpc_phase2_sonnet_plan.md` — current prioritized improvement plan (2026-07-11 review; written for autonomous execution)
-- `docs/tpc_phase2_hf_dataset.md` — note on the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset vs local data
-- `AGENT_DESIGN.md` — shared overview of the current TPCAgent stack and how it bridges both phases
-- `IJCAI2026_competition.md` — source-based summary of the official competition pages
+| | Phase 1: public leaderboard | Phase 2: final harness |
+| --- | --- | --- |
+| Input | Released query set | One visible natural-language query at a time |
+| Oracle policy | Offline tooling may use released oracle fields locally | Oracle verifier fields are hidden from the agent |
+| Runtime | Local, resumable prediction generation | Organizer-run bounded harness |
+| Submission | Prediction zip | Self-contained code, prompts, and scaffolding |
+| Evaluation | Public leaderboard | Separate held-out set on Qwen3.6-27B via SGLang on 2 × A800 80 GB GPUs without NVLink |
 
-**Important commands:**
+## Setup
 
-The commands and score snapshots in the next section are primarily for **Phase 1** work.
-Phase 1 is an offline prediction-generation problem on the released dataset, where the
-current workflow intentionally uses oracle hard constraints (`hard_logic_py`) to maximize
-public leaderboard score. Phase 2 has a different execution model: per-query harness runs,
-held-out queries, no oracle verifier fields visible to the agent, and bounded runtime.
-
-## Phase 1 Operations
-
-`TPCAgent` runs a per-query oracle-guided search. Drive it with the resumable scripts in
-`scripts/` (run from the repo root); they wrap `run_tpc.py`/`eval_tpc.py` and keep all state on
-disk, so every step is kill/resume-safe.
-
-Heavy resumable search over the still-unsolved queries (stops when a round adds nothing).
-`--workers` defaults to all cores and runs that many `run_tpc.py` processes over disjoint
-query shards:
-```
-python scripts/iterate_unsolved.py --rounds 10 --restarts 800 --budget 240 --workers 8
-```
-
-Execution profiles (recommended):
-
-- Short local run (~10 min, M1 MacBook):
-```
-make short-local
-```
-
-- Long local overnight (~7 h, M1 MacBook):
-```
-make overnight-local
-```
-
-- Local preference-only optimization on already-valid plans:
-```
-make preference-local
-```
-
-- Quick local preference pass (single round):
-```
-make preference-quick
-```
-
-- Long overnight HPC run via SLURM:
-```
-make hpc-tail-submit
-```
-See `slurm/README_tail_hpc.md` for resource/profile overrides.
-
-- Two-phase HPC workflow (recommended for preference pushing):
-```
-# Phase A: solve unresolved hard-constraint tail
-make hpc-unsolved
-
-# Phase B: improve preference on already-solved plans (constraint-safe densify)
-make hpc-preference
-
-# Same Phase B submitted as one SLURM controller job
-make hpc-preference-submit
-```
-The two-phase split avoids spending all rounds on the same hard-unsolved IDs and
-lets preference optimization focus on accepted plans.
-
-Light pass + constraint-safe packing across all 1000 (lifts DAV/DDR; the monotonic merge keeps
-the heavy gains):
-```
-python scripts/solve.py --split tpc_phase1 --restarts 40 --budget 30 --workers 8
-python scripts/merge.py --split tpc_phase1
-```
-
-Tail-prioritized rerun queue (score gap + hard-logic failure signature), then solve/merge only
-the highest-leverage IDs:
-```
-python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 150 --min-score 99
-python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
-python scripts/merge.py --split tpc_phase1_tail_focus
-```
-`scripts/rank_tail.py` writes:
-- ranking report: `cache/tail_rankings/<split>_<method>_tail_ranking.csv`
-- focused split: `chinatravel/evaluation/default_splits/<split>_tail_focus.txt`
-- incremental scan cache: `cache/tail_rankings/<split>_<method>_ms<min_score>_rank_cache.json`
-
-`scripts/rank_tail.py` now supports explicit modes:
-- `--mode tail`: mixed low-score tail (legacy behavior)
-- `--mode unsolved`: prioritize unresolved hard-constraint failures
-- `--mode preference`: prioritize already-accepted plans with the most preference headroom
-
-`scripts/iterate_tail.py` can now run either solver search or preference densification per round:
-- `--runner solve`: call `scripts/solve.py` on the focused split
-- `--runner densify`: call `scripts/densify.py` on the focused split
-
-Recommended tail-optimization loop (repeat cached rank -> solve -> merge until progress flattens, then score the full set once):
-```
-# 1) Refresh the lowest-score queue from current results/best; unchanged plans reuse the rank cache
-python scripts/rank_tail.py --split tpc_phase1 --method best --top-k 120 --min-score 99
-
-# 2) Run heavier search only on this focused split
-python scripts/solve.py --split tpc_phase1_tail_focus --restarts 1200 --budget 300 --workers 8
-
-# 3) Monotonic merge; merge evaluates the focus split and appends per-round metrics
-python scripts/merge.py --split tpc_phase1_tail_focus
-
-# 4) After the loop, score results/best once on the base split
-python scripts/score.py --split tpc_phase1
-```
-
-How to read the ranking report (`cache/tail_rankings/...csv`):
-- `score`: current per-query `_eval_score` from `results/best/<uid>.json`.
-- `priority`: ranking objective used to build the focused split (higher means more leverage).
-- `failed_clauses`: number of failed `hard_logic_py` clauses under current plan.
-- `top_signature` / `top_failed_funcs`: dominant failure pattern for targeted repairs.
-
-Or run the default preference pipeline (preference optimize -> score -> zip) with one command
-(see the `Makefile` for tunable variables):
-```
-make
-```
-
-Print the headline metrics for `results/best`, build the submission zip, then upload it to the
-competition portal (Seafile at box.nju.edu.cn):
-```
-python scripts/score.py
-python scripts/assemble_submission.py   # build submissions/fabiundstefan_v<N>.zip
-python scripts/submit.py                # upload the newest built zip to the portal
-```
-Or with make: `make submission` then `make upload` (preview the target first with `make upload-check`).
-
-> After uploading `submissions/fabiundstefan_v<N>.zip`, freeze that version with a git tag so it is
-> never mutated again, then share it: `git tag v<N> && git push origin --tags`. Rebuild a previously
-> submitted version with `python scripts/assemble_submission.py --version v<N>`.
-
-Low-level equivalents (the scripts add the required flags for you). The oracle path MUST pass
-`--oracle_translation`, otherwise `run_tpc.py` strips `hard_logic_py` from the query dict and the
-search runs blind:
-```
-python run_tpc.py --splits tpc_phase1 --agent TPCAgent --llm TPCLLM --lang en --oracle_translation
-python eval_tpc.py --splits tpc_phase1 --method best --lang en
-```
-
-Knobs (env vars, read by `TPCAgent`): `TPC_MAX_RESTARTS`, `TPC_SOLVE_BUDGET_SEC`, `TPC_SEED_SALT`,
-`TPC_USE_ORACLE` (`0` enables the Phase-2 path: constraints parsed live from the query text and
-checked by `chinatravel/agent/tpc_agent/parsed_verifier.py`; `scripts/solve.py --no-oracle`).
-`scripts/diagnose_failures.py` (read-only) tallies which constraint clauses still fail.
-`scripts/rank_tail.py` (does not mutate `results/best`) ranks low-score queries by score gap + hard-logic failure
-signature, writes a focused split for targeted reruns, and caches per-query scan primitives in
-`cache/tail_rankings/<split>_<method>_ms<min_score>_rank_cache.json`.
-`scripts/slack_report.py` (read-only) estimates per-passing-plan DAV slack (idle daytime weighed
-against budget/time constraints) to show where more attractions can be packed safely.
-`eval_tpc.py` / `scripts/score.py` report two overall scores: `overall` (the current
-leaderboard formula, which still doubles EPR-micro) and `overall_official` (the documented
-10% EPR-micro + 10% EPR-macro).
-
-For the detailed Phase 1 operating model and what transfers cleanly to Phase 2, see
-`docs/tpc_phase1_playbook.md`.
-
-## Phase 2 Operations
-
-Phase 2 is the final harness: per-query, held-out queries, **no oracle**, bounded per-query budget,
-fixed Qwen model. Our harness does no-oracle parsing + orchestration around the deterministic
-TPCAgent. **The LLM is off by default, so none of these commands make API calls.**
-Use the venv interpreter directly (`.venv/bin/python`). See `docs/tpc_phase2_design.md`
-and `docs/tpc_phase2_eval.md` for full details.
-
-Suggested order: tests -> parser report -> small end-to-end solve -> rehearsal -> timing/gate.
-
-1. Tests (fast; no solver/LLM by default)
+Use Python 3.12 from the repository root:
 
 ```bash
-.venv/bin/python -m pytest tests/phase2
-# optional integration run (~1-2 min):
-.venv/bin/python -m pytest -m integration tests/phase2
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+make help
 ```
 
-2. Create validation / held-out split files (one-time, idempotent)
+The environment database remains a prerequisite for real environment lookups and solves. See the [agent-environment guide](agent_env/README.md) for its setup boundary.
+
+## Canonical workflows
+
+### Phase 1
+
+Run a resumable local solve, merge only accepted improvements, then score the merged result:
 
 ```bash
-.venv/bin/python scripts/make_phase2_splits.py
+.venv/bin/python scripts/solve.py --split tpc_phase1 --skip --restarts 120 --budget 60 --workers 1
+make merge SPLIT=tpc_phase1
+make p1eval SPLIT=tpc_phase1
 ```
 
-3. Parsing-quality report (fast, no solver)
+Use the [Phase 1 playbook](docs/tpc_phase1_playbook.md) for tail, preference, and HPC profiles.
+
+### Phase 2
+
+Run the no-oracle local harness on a small deterministic validation slice:
 
 ```bash
-.venv/bin/python scripts/parser_vs_oracle.py --limit 20 --behavioral
+make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 ```
 
-4. End-to-end harness (real solver; small local smoke)
+`300 s` is a local working assumption, not an organizer timeout. Use `make phase2-help` for recorder, pinned-evaluation, rehearsal, and gate commands.
 
-```bash
-.venv/bin/python agent_env/scripts/solve_phase2.py --limit 3 --budget-sec 60
-```
+## Current state
 
-Defaults used above: `--split tpc_phase2_val`, `--method phase2_e2e_tpc_phase2_val`, `--lang en`.
-Outputs: `results/<method>/<uid>.json` and
-`agent_env/runs/<method>/<uid>/{output,telemetry,evaluation}.json`.
+Phase 1 operations are mature. On 2026-07-15 the organizers released the Agent Environment Guide and familiar-100 development set. A familiar-100 baseline has not yet been measured locally. That development set is not the final held-out evaluation set.
 
-5. Run a single query (existing uid / your own query file / raw NL text)
+## Documentation
 
-```bash
-# an existing benchmark query, by uid (always has the oracle -> official + estimated score)
-.venv/bin/python scripts/run_query.py --uid 20250322063246301376 --budget-sec 60
+- [Phase 1 playbook](docs/tpc_phase1_playbook.md): operating flow and reusable solver lessons.
+- [Phase 2 design](docs/tpc_phase2_design.md): stable architecture and interfaces.
+- [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, and gates.
+- [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions and evidence-backed priorities.
+- [Dataset provenance](docs/tpc_phase2_hf_dataset.md): HF, local, familiar-100, and final-data boundaries.
+- [Baseline ledger guide](docs/phase2_baselines/README.md): how to compare generated rows in `results/phase2_baselines/`.
+- [Competition reference](docs/reference/competition.md): dated local summary of official facts.
+- [Agent design](AGENT_DESIGN.md): shared component and data-flow map.
+- [HPC workflows](slurm/README.md): Phase 1 resource profiles and resume behavior.
 
-# your own query file (same schema as chinatravel/data/en/**/*.json; include hard_logic_py
-# for an official score, omit it for an estimated-score-only run)
-.venv/bin/python scripts/run_query.py --query-file my_query.json --budget-sec 120
+## Sources
 
-# raw natural-language text, no file, no oracle -> estimated score only
-.venv/bin/python scripts/run_query.py --query-text \
-  "3 days in Chengdu from Beijing for 2 people, visit a panda base" \
-  --start-city Beijing --target-city Chengdu --days 3
-
-# equivalently, via make:
-make phase2-query P2_QUERY_ARGS="--uid 20250322063246301376 --budget-sec 60"
-```
-
-Always runs the real Phase 2 orchestrator end to end and prints the path to the written plan
-(`results/<method>/<uid>.json`, default method `phase2_query`) plus an **estimated score**
-(`overall_parsed`, computed from our own no-oracle parse — always available, no ground truth
-needed). If the query carries `hard_logic_py` (uid mode always does; a `--query-file` may), it
-additionally computes the **official score** (`overall_true`) and a **parsing vs. solving**
-breakdown: whether the plan satisfies the constraints it was actually given (solving) vs. whether
-it also satisfies the oracle (parsing), plus a structural precision/recall/f1 diff against the
-oracle constraints. `--query-text` never has an oracle, so it is estimated-score-only by design.
-`--start-city`/`--target-city`/`--days` are required with `--query-text`. This mirrors the real
-Phase 2 contract, not a tool limitation: only `hard_logic`/`hard_logic_py`/`hard_logic_nl` (the
-oracle verifier fields) are ever hidden from the agent — trip metadata always arrives as
-structured fields alongside the free text, never something the agent has to infer from prose. See
-`docs/tpc_phase2_design.md` ("Official Execution Model").
-
-6. Full rehearsal + three-way attribution (`ceiling | solver-only | end-to-end`)
-
-```bash
-# quick smoke
-.venv/bin/python scripts/rehearse_phase2.py --limit 1 --budget-sec 30
-```
-
-Use `--split-set test` sparingly for held-out checks.
-
-7. Timing / reliability and monotonic regression gate
-
-```bash
-.venv/bin/python scripts/phase2_timing.py --work-dir agent_env/runs/phase2_e2e_tpc_phase2_val
-.venv/bin/python scripts/phase2_gate.py --baseline base.json --candidate cand.json
-```
-
-**Generalization:**
-- Use held out test split
-- Compare against the Hugging Face `LAMDA-NeSy/ChinaTravel` dataset. See `docs/tpc_phase2_hf_dataset.md`.
-- Try own custom queries and check results manually — see step 5 above (`scripts/run_query.py`)
-
-
-
-<center>
-  <h1> [ICLR'26] ChinaTravel: A Real-World Benchmark for Language Agents in Chinese Travel Planning 
-</h1>
-</center>
-
-Official codebase for the paper "ChinaTravel: A Real-World Benchmark for Language Agents in Chinese Travel Planning".
-
-<!-- | [Webpage](https://www.lamda.nju.edu.cn/shaojj/chinatravel/) | [Paper](https://arxiv.org/abs/2412.13682) | [Dataset(Huggingface)](https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel)| -->
-
-[![Webpage](https://img.shields.io/badge/Webpage-Visit-blue)](https://www.lamda.nju.edu.cn/shaojj/chinatravel/)
-[![Paper](https://img.shields.io/badge/Paper-View-red)](https://arxiv.org/abs/2412.13682)
-[![Dataset(Huggingface)](https://img.shields.io/badge/Dataset-Huggingface-yellow)](https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel)
-[![Competition(TPC@IJCAI2025)](https://img.shields.io/badge/IJCAI%20Competition-TPC@IJCAI2025-green)](https://chinatravel-competition.github.io/IJCAI2025/)
-[![Competition(TPC@AIC2025)](https://img.shields.io/badge/AIC%20Competition-TPC@AIC2025-green)](TPC@AIC2025/readme.md)
-[![Competition(TPC@IJCAI2026)](https://img.shields.io/badge/IJCAI%20Competition-TPC@IJCAI2026-green)](https://chinatravel-competition.github.io/IJCAI2026/)
-
-
-<!-- 
-![Overview](images/overview.png) -->
-
-## 🏆 IJCAI 2026 Travel Planning Challenge (TPC@IJCAI)
-
-We are proud to announce that ChinaTravel has been selected as the official benchmark for the **Travel Planning Challenge (TPC) @ IJCAI 2026**!
-
-**Official Competition Website**:
-[https://chinatravel-competition.github.io/IJCAI2026/](https://chinatravel-competition.github.io/IJCAI2026/)
-
-Participants are invited to develop novel agentic system that can tackle real-world travel planning scenarios under practical requirements. This competition will showcase state-of-the-art approaches in agentic AI research.
-
-
-## 🏆 IJCAI 2025 Travel Planning Challenge (TPC@IJCAI)
-
-We are proud to announce that ChinaTravel has been selected as the official benchmark for the **Travel Planning Challenge (TPC) @ IJCAI 2025**!
-
-**Official Competition Website**:
-[https://chinatravel-competition.github.io/IJCAI2025/](https://chinatravel-competition.github.io/IJCAI2025/)
-
-Participants are invited to develop novel agents that can tackle real-world travel planning scenarios under complex constraints. This competition will showcase state-of-the-art approaches in language agent research.
-
-## 📝 ChangeLog
-
-### 2025.09
-1. Upload the champion solution of TPC@IJCAI2025 DSL track. Thanks the [@evergreenee](https://github.com/evergreenee) for their contributions.  
-
-
-### 2025.06
-
-1. Fix error collection in the evaluation code of commonsense. 
-2. Fix pure-neuro agent's pipeline
-3. Fix load_datasets from huggingface
-4. Update exception handling in syntax verification
-
-
-### 2025.05
-
-1. Update logs for the latest version.
-2. Provide the evaluation code for the TPC.
-
-### 2025.04
-
-1. Added local data loader. Users can now load custom queries locally. When specifying non-default splits_name values (e.g., "abc") for "run_exp.py", the system will automatically load corresponding files from evaluation/default_splits/abc.txt, where the TXT file contains the target query filenames.
-2. Detailed constraints classification. See detailed docs at [Evaluation README](chinatravel/symbol_verification/readme.md)
-3. Introduced LLM-modulo baseline
-   Implement the LLM-modulo pipeline with a ground-truth symbolic verifier.
-   Based on methodology from:
-   Paper: Robust Planning with Compound LLM Architectures: An LLM-Modulo Approach
-   Codebase: https://github.com/Atharva-Gundawar/LLM-Modulo-prompts
-4. Support local LLMs inference with Qwen3-8B/4B.
-
-## 🚀 Quick Start
-
-### ⚙️ Setup
-
-1. Create a conda environment and install dependencies:
-
-```bash
-conda create -n chinatravel python=3.9  
-conda activate chinatravel  
-pip install -r requirements.txt  
-```
-
-2. Download the database and unzip it to the "chinatravel/environment/" directory
-
-Download Links: [Google Drive](https://drive.google.com/drive/folders/1bJ7jA5cfExO_NKxKfi9qgcxEbkYeSdAU), [NJU Drive](https://box.nju.edu.cn/d/dd83e5a4a9e242ed8eb4/)
-
-3. Download the open-source LLMs (optional).
-
-```bash
-bash download_llm.sh
-```
-
-4. Download the tokenizers.
-
-```bash
-wget https://cdn.deepseek.com/api-docs/deepseek_v3_tokenizer.zip -P chinatravel/local_llm/
-unzip chinatravel/local_llm/deepseek_v3_tokenizer.zip -d chinatravel/local_llm/
-```
-
-### ▶️ Running
-
-We support the deepseek (offical API from deepseek), gpt-4o (chatgpt-4o-latest), glm4-plus, and local inferences with Qwen (Qwen3-8B), llama, mistral (Mistral-7B-Instruct-v0.3), etc.
-
-```bash
-export OPENAI_API_KEY=""
-
-python run_exp.py --splits easy --agent LLMNeSy --llm deepseek --oracle_translation
-python run_exp.py --splits medium --agent LLMNeSy --llm deepseek --oracle_translation
-python run_exp.py --splits human --agent LLMNeSy --llm deepseek --oracle_translation
-
-python run_exp.py --splits human --agent LLMNeSy --llm Qwen3-8B --oracle_translation
-
-
-python run_exp.py --splits human --agent LLMNeSy --llm deepseek 
-python run_exp.py --splits human --agent LLMNeSy --llm Qwen3-8B 
-
-
-python run_exp.py --splits human --agent LLM-modulo --llm deepseek --refine_steps 10 --oracle_translation
-python run_exp.py --splits human --agent LLM-modulo --llm Qwen3-8B --refine_steps 10 --oracle_translation
-```
-
-**Note**:
-
-- The `--oracle_translation` flag enables access to annotated ground truth including:
-
-  - `hard_logic_py`: Executable verification DSL code
-  - `hard_logic_nl`: The corrsponding constraint descriptions
-  - Example annotation structure:
-
-  ```python
-  {
-    "hard_logic_py": [
-      "
-      total_cost=0 
-      for activity in allactivities(plan):
-          total_cost+=activity_cost(activity)
-              total_cost += innercity_transport_cost(activity_transports(activity))
-      result=(total_cost<=1000)
-      ", 
-      "
-      innercity_transport_set=set()
-      for activity in allactivities(plan):
-          if activity_transports(activity)!=[]:              
-              innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))
-      result=(innercity_transport_set<={'taxi'})
-      "
-    ], 
-    "hard_logic_nl": ["总预算为1800元", "市内交通选择taxi"], 
-  }
-  ```
-- LLM-modulo method **requires** oracle_translation mode for its symbolic refinement process
-
-### 📊 Evaluation
-
-```bash
-python eval_exp.py --splits human --method LLMNeSy_deepseek_oracletranslation
-python eval_exp.py --splits human --method LLMNeSy_deepseek
-python eval_exp.py --splits human --method LLM-modulo_deepseek_10steps_oracletranslation
-python eval_exp.py --splits human --method LLM-modulo_Qwen3-8B_10steps_oracletranslation
-
-```
-
-In TPC@IJCAI2025, the evaluation code is provided in the `eval_tpc.py` file. You can run the evaluation code as follows:
-
-```bash
-python eval_tpc.py --splits tpc_phase1 --method YOUR_METHOD_NAME
-```
-
-### Evaluation Metrics
-
-The overall score is a weighted combination of the following metrics, evaluated in a cascading fashion (each level gates the next):
-
-#### 1. Schema Constraint (gate)
-
-Validates that the output JSON conforms to the expected structure (`chinatravel/evaluation/output_schema.json`). Plans that fail are immediately invalid and score 0 on all downstream metrics.
-
-#### 2. Commonsense Constraints — Mic.EPR / Mac.EPR (weight: 0.2)
-
-Checks that the plan is factually consistent with the environment database across 7 categories:
-
-| Check | What it verifies |
-|-------|-----------------|
-| Intercity transport | Flight/train ID exists with correct times and endpoints |
-| Attractions | Named attractions exist in the target city's database |
-| Hotels | Named hotel exists |
-| Restaurants | Named restaurant exists |
-| Inner-city transport | Metro/taxi/walk routes are valid |
-| Time | No overlapping activities, correct chronological ordering |
-| Space | Sequential locations are reachable from the prior position |
-
-- **Mic.EPR** (micro): percentage of individual constraint checks passed across all queries.
-- **Mac.EPR** (macro): average per-query pass rate.
-
-#### 3. Conditional Logical Pass Rate — C-LPR (weight: 0.25)
-
-Evaluates query-specific hard constraints (budget limits, required transport types, must-visit attractions, hotel/room requirements, etc.) encoded as executable DSL snippets in `hard_logic_py`. Only evaluated on queries that already pass all commonsense constraints.
-
-#### 4. Full Pass Rate — FPR (weight: 0.4)
-
-Percentage of queries that pass **all three** constraint levels (schema ∩ commonsense ∩ logical). This is the strictest and highest-weighted metric.
-
-#### 5. Preference / Quality Scores (weight: 0.05 each, only for fully-passing plans)
-
-| Metric | Formula | Interpretation |
-|--------|---------|----------------|
-| **DAV** (Daily Attraction Visits) | `attraction_count / (4 × days)` | Targets 4 attractions per day |
-| **ATT** (Average Transport Time) | `(-1/105) × avg_minutes + 8/7` | Penalizes long commutes; shorter is better |
-| **DDR** (Daily Dining Rate) | `(meals_per_day) / 3` | Targets 3 meals (breakfast + lunch + dinner) per day |
-
-All preference scores are clamped to [0, 1] then reported as percentages (0–100).
-
-#### Overall Score Formula
-
-```
-Overall = 0.1×Mic.EPR + 0.1×Mic.EPR + 0.25×C-LPR + 0.05×DAV + 0.05×ATT + 0.05×DDR + 0.4×FPR
-```
-
-> **Note:** The leaderboard formula double-counts Mic.EPR (0.1 + 0.1) instead of using 0.1×Mic.EPR + 0.1×Mac.EPR as documented. We replicate this for leaderboard parity. See "Current upstream evaluation state" at the top of this file.
-
-## 📚 Docs
-
-[Environment](chinatravel/environment/readme.md)
-[Constraints](chinatravel/symbol_verification/readme.md)
-
-## 🛠️ Advanced Development
-
-### 1. Develop Your Own Agent Algorithm
-
-To develop your own agent algorithm, you need to inherit the `BaseAgent` class from `chinatravel/agent/base.py` and add the logic for your algorithm to the `init_agent` function in `chinatravel/agent/load_model.py`. We provide an empty agent example named `TPCAgent`.
-
-Steps:
-
-- **Inherit the `BaseAgent` class**: Create a new Python file in the `chinatravel/agent` directory and define your own agent class, inheriting from `BaseAgent`.
-
-```python:chinatravel/agent/your_agent.py
-from .base import BaseAgent
-
-class YourAgent(BaseAgent):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Initialization logic
-
-    def act(self, observation):
-        # Implement the decision - making logic of the agent
-        pass
-```
-
-- **Add code to the init_agent function**: Open the chinatravel/agent/load_model.py file and add support for your new agent in the init_agent function.
-
-```python:
-def init_agent(kwargs):
-    # ... existing code ...
-    elif kwargs["method"] == "YourMethodName":
-        agent = YourAgent(
-            **kwargs
-        )
-    # ... existing code ...
-    return agent
-```
-
-### 2. Develop Your Own Local LLM
-
-To develop your own local large - language model (LLM), you need to inherit the AbstractLLM class from chinatravel/agent/llms.py and add the corresponding local LLM inference code in llms.py. We provide an empty LLM example named TPCLLM.
-Steps:
-
-- **Inherit the AbstractLLM class**:  Define your own LLM class in the chinatravel/agent/llms.py file, inheriting from AbstractLLM.
-
-```python
-class YourLLM(AbstractLLM):
-    def __init__(self):
-        super().__init__()
-        # Initialization logic
-        self.name = "YourLLMName"
-
-    def _get_response(self, messages, one_line, json_mode):
-        # Implement the response logic of the LLM
-        response = "Your LLM response"
-        if json_mode:
-            # Handle JSON mode
-            pass
-        elif one_line:
-            # Handle one - line mode
-            response = response.split("\n")[0]
-        return response
-```
-
-- **Add code to the init_agent function**: Open the chinatravel/agent/load_model.py file and add support for your new llm in the init_llm function.
-
-```python:
-def init_llm(kwargs):
-    # ... existing code ...
-    elif llm_name == "glm4-plus":
-        llm = YourLLM()
-    # ... existing code ...
-    return llm
-```
-
-### 3. Run Your Code Using Experiment Scripts
-
-After completing the above development, you can use the experiment scripts to run your code.
-
-Example of running:
-
-```bash
-python run_tpc.py --splits easy --agent TPCAgent --llm TPCLLM
-python run_exp.py --splits easy --agent YourMethodName --llm YourLLMName
-```
-
-The results will be saved in the `results/YourMethodName_YourLLMName_xxx` directory, e.g., `results/TPCAgent_TPCLLM`.
-
-## ✉️ Contact
-
-If you have any problems, please contact [Jie-Jing Shao](shaojj@lamda.nju.edu.cn), [Bo-Wen Zhang](221900200@smail.nju.edu.cn), [Xiao-Wen Yang](yangxw@lamda.nju.edu.cn).
-
-## 📌 Citation
-
-If our paper or related resources prove valuable to your research, we kindly ask for citation.
-
-```
-@inproceedings{
-shao2026chinatravel,
-title={ChinaTravel: An Open-Ended Travel Planning Benchmark with Compositional Constraint Validation for Language Agents},
-author={Jie-Jing Shao and Bo-Wen Zhang and Xiao-Wen Yang and Baizhi Chen and Siyu Han and Pang Jinghao and Wen-Da Wei and Guohao Cai and Zhenhua Dong and Lan-Zhe Guo and Yu-Feng Li},
-booktitle={The Fourteenth International Conference on Learning Representations},
-year={2026},
-url={https://openreview.net/forum?id=0YRVlxY9BH}
-}
-```
+The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative for rules and dates. The official [Agent Environment Guide](https://chinatravel-competition.github.io/IJCAI2026/agent-environment.html) defines the wrapper interface, and the [familiar-100 download](https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip) is development-only data. Upstream benchmark context is at [LAMDA-NeSy/ChinaTravel](https://github.com/LAMDA-NeSy/ChinaTravel).

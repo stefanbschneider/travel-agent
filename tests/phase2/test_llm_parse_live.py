@@ -1,4 +1,4 @@
-"""Tier 2 (plan3 N7): live-LLM smokes against the real DeepInfra endpoint.
+"""Live-LLM smoke tests against the real DeepInfra endpoint.
 
 Opt-in only (`pytest -m llm`); excluded from the default suite by `addopts` in pyproject.toml.
 These guard the real-endpoint plumbing and merge policy, not model quality: assert properties any
@@ -41,7 +41,7 @@ def test_deepinfra_client_completes_a_trivial_prompt(live_deepinfra_client):
 
 
 def test_llm_parse_stub_on_canonical_query_stays_within_allowed_keys(one_query, live_deepinfra_client):
-    # One unambiguous canonical query through the real Stage-1 LLM path (plan3 N7 Tier 2).
+    # One unambiguous canonical query through the real Stage-1 LLM path.
     flags = O.Flags(llm_backend="deepinfra", llm_parse=True)
     deterministic_raw = normalize.parse_to_ir(one_query, llm_client=None, flags=O.Flags())
     ir = normalize.parse_to_ir(one_query, llm_client=live_deepinfra_client, flags=flags)

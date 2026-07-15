@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-"""Continuous eval worker for VM 2 (plan-2 Step 4): turns every pushed commit on
-``origin/stefan/phase2`` into one canonical ground-truth ledger row, unattended.
+"""Continuous evaluation worker: turns every pushed commit on
+``origin/stefan/phase2`` into one canonical ledger row, unattended.
 
-A dumb loop -- no daemon framework: fetch, resolve the newest sha, check whether it already has
-a ledger row (skip if so), evaluate it via the pinned-worktree runner (``phase2_eval_at.py``,
-plan-2 Step 1), and publish the row to a dedicated ``phase2-eval-ledger`` branch via its own
-worktree (so publication never races the coding VM's ``stefan/phase2`` work).
+A simple loop: fetch, resolve the newest SHA, skip it if it already has a ledger row, evaluate it
+via the pinned-worktree runner (``phase2_eval_at.py``), and publish the row to the dedicated
+``phase2-eval-ledger`` branch through its own worktree so publication never races the coding VM.
 
 Usage (VM 2, unattended):
     nohup .venv/bin/python scripts/phase2_eval_worker.py >> ~/phase2_eval_worker.log 2>&1 &
 
 Usage (either VM, one-shot / inspection):
-    scripts/phase2_eval_worker.py --once --dry-run   # print the plan, run nothing
-    scripts/phase2_eval_worker.py --once             # evaluate the current newest sha once, exit
+    .venv/bin/python scripts/phase2_eval_worker.py --once --dry-run  # print the plan, run nothing
+    .venv/bin/python scripts/phase2_eval_worker.py --once            # evaluate newest SHA once, exit
 """
 
 from __future__ import annotations
@@ -44,7 +43,7 @@ DEFAULT_BUDGET_SEC = 300.0
 DEFAULT_FOLD = 0
 DEFAULT_FOLDS = 10  # n=85 at fold 0
 DEFAULT_PARALLEL = 3
-DEFAULT_REPEATS = 1  # every repeat pair measured so far had std 0.0 -- see plan-2 Step 4
+DEFAULT_REPEATS = 1  # canonical worker run; override when variance needs measurement
 DEFAULT_POLL_INTERVAL_SEC = 600
 DEFAULT_PIDFILE = Path("/tmp/phase2_eval_worker.pid")
 
@@ -65,9 +64,8 @@ def pick_labels_to_run(
     """Which canonical labels this sha still needs a ledger row for.
 
     Always wants ``ci-300s``. Wants ``ci-300s-det`` too, but only when the sha touched a
-    parse-only module (same allowlist as Step 2) -- an unattended worker with unbounded time
-    between pushes has "spare time before the next push" by construction, so plan-2 Step 4's
-    "if there is spare time" condition simplifies to just the touched-parsing check here.
+    parse-only module (the differential evaluator's allowlist). The unattended worker runs the
+    deterministic comparison whenever parsing changed; other commits need only the canonical row.
     """
     labels = []
     if not sha_already_evaluated(history_rows, sha=sha, label=CANONICAL_LABEL):
@@ -83,8 +81,8 @@ def changed_files_between(a: str, b: str, *, cwd: Path = PROJECT_ROOT) -> list[s
 
 
 def sha_touched_parsing(sha: str, *, cwd: Path = PROJECT_ROOT) -> bool:
-    """Did this commit (vs its parent) touch a parse-only module (Step 2's allowlist, minus the
-    tests/ exemption -- a test-only commit doesn't need a fresh det-vs-LLM anchor)."""
+    """Did this commit (vs its parent) touch a parse-only module in the differential evaluator's
+    allowlist? Test-only changes do not need a fresh deterministic-versus-LLM anchor."""
     try:
         changed = changed_files_between(f"{sha}^", sha, cwd=cwd)
     except subprocess.CalledProcessError:
@@ -242,7 +240,7 @@ def run_once(
     )
 
     sha = resolve_sha_fn()
-    ledger_dir = ensure_ledger_fn() / "docs" / "phase2_baselines"
+    ledger_dir = ensure_ledger_fn() / "results" / "phase2_baselines"
     history = read_history_jsonl(ledger_dir / "history.jsonl")
     touched_parsing = sha_touched_parsing(sha)
     labels = pick_labels_to_run(history, sha=sha, touched_parsing=touched_parsing)

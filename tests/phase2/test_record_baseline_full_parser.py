@@ -1,9 +1,8 @@
-"""Unit tests for the full-val parser + llm-config ledger columns (Phase 2 plan Step 4).
+"""Unit tests for full-split parser and LLM-config ledger columns.
 
-Fold-scoped parser metrics can miss whatever a parser fix touched if the small seeded fold
-doesn't happen to contain those uids (see roadmap-1c/step2: full-val behavioral agreement moved
-0.706->0.757 while an n=20 fold row stayed flat). ``parser_full`` runs the same solver-free
-diff over the entire val/test split so every ledger row carries the representative signal.
+Fold-scoped parser metrics can miss a parser fix when its affected UIDs are outside the seeded
+fold. ``parser_full`` runs the same solver-free diff over the full validation or test split, so
+every ledger row carries a broader parser signal.
 """
 
 from __future__ import annotations

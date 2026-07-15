@@ -96,7 +96,7 @@ def test_negated_the_restaurant_singular_is_excluded():
     assert raw.get("excluded_restaurants") == ["Cloud View Hotel Diner"], raw
 
 
-# --- Step 5 (val-split family_stats triage): "restaurants of the following type" ------------
+# --- Restaurant “following type” parsing -----------------------------------------------------
 
 
 def test_restaurant_of_the_following_type_is_not_a_required_restaurant_name():
@@ -390,7 +390,7 @@ def test_embedded_quotes_stripped():
     ], raw
 
 
-# --- plan3 N3.2/N3.3: intercity_mode negation -> complement + coverage gaps -
+# --- Intercity-mode negation complement and coverage cases -----------------------------------
 
 def test_negated_outbound_train_with_the_resolves_to_airplane():
     # uid 20250322204425912419: "We do not want to take the train to the destination, and we do
@@ -440,7 +440,7 @@ def test_multi_mode_exclusion_list_captures_all_modes():
     assert set(excluded) == {"walk", "taxi"}, raw
 
 
-# --- plan3 N3.1: OR-arm bare-imperative + arm-local budget recovery --------
+# --- OR-arm bare-imperative and arm-local budget recovery ------------------------------------
 
 
 def test_bare_imperative_visit_extracts_attraction_name():

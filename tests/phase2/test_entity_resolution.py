@@ -1,9 +1,9 @@
-"""Tests for the deterministic entity-resolution layer (plan3 N2).
+"""Tests for the deterministic entity-resolution layer.
 
-Table-driven from the real val uids that evidence the G2 defect cluster in
-docs/tpc_phase2_plan3.md (label-prefix garbage, list-splitting failures, type-vs-name collisions,
-category misrouting). Per N7 Tier 1: assert recall-style (expected constraints present with
-correct values), not full-dict equality -- unrelated recall improvements shouldn't break these.
+Table-driven from real validation UIDs covering label-prefix garbage, list-splitting failures,
+type-versus-name collisions, and category misrouting. Assert recall-style: expected constraints
+must be present with correct values, but unrelated recall improvements must not require
+full-dictionary equality.
 """
 
 from __future__ import annotations

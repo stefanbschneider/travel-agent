@@ -1,4 +1,4 @@
-"""Regression tests for the lazy tool singletons (Phase 2 plan Step 2).
+"""Regression tests for the lazy tool singletons.
 
 Accommodations/Restaurants/Attractions/... each read every city's CSV into a
 pandas DataFrame at construction time. hard_constraint/commonsense_constraint/

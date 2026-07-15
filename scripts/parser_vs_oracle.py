@@ -5,8 +5,8 @@ Compares the no-oracle parser output against the oracle constraints **in the sha
 schema** and reports, per constraint family: precision / recall / value-accuracy, with failure
 buckets: missing, spurious, wrong_value, disjunction_flattened.
 
-This module (Task 8a) provides the pure diff core. The CLI over a split + behavioral-equivalence
-check are added in Task 8b.
+This module provides the pure diff core. The CLI over a split and behavioral-equivalence check
+are available through the same module.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def _families(d: dict) -> set:
 def _taxi_cars_default(people_number) -> int | None:
     """The party-size-derived default parse_query_no_oracle always fills in for
     taxi_cars_equals (ceil(people/4), matching the oracle's own formula). It's a deliberate,
-    vacuously-true-on-taxi-free-plans default (plan3 G6a) -- not a real over-extraction -- so it
+    vacuously-true-on-taxi-free-plans default -- not a real over-extraction -- so it
     shouldn't count against precision when the oracle never mentions taxi count at all."""
     if people_number is None:
         return None
@@ -55,7 +55,7 @@ def _taxi_cars_default(people_number) -> int | None:
 def _canonicalize_hotel_distance(d: dict) -> dict:
     """hotel_nearby (dict) and poi_distance_hotel (list-of-dict) encode the same hotel-distance
     constraint in two schema shapes -- the no-oracle parser always mirrors one into the other, and
-    the oracle sometimes does too (plan3 G6b), which double-counts the same defect under two family
+    the oracle sometimes does too, which double-counts the same defect under two family
     names. Canonicalize to poi_distance_hotel only for diff purposes."""
     if not isinstance(d, dict):
         return d
@@ -273,7 +273,7 @@ def _hf_city_lookup() -> dict[str, str]:
 
 
 def load_hf_queries(config: str = "default", splits: list[str] | None = None):
-    """Load the HF ``LAMDA-NeSy/ChinaTravel`` dataset (plan3 N5, docs/tpc_phase2_hf_dataset.md) in
+    """Load the HF ``LAMDA-NeSy/ChinaTravel`` dataset (see ``docs/tpc_phase2_hf_dataset.md``) in
     the same ``(query_ids, query_data)`` shape ``_load_queries`` returns, normalized to what the
     local pipeline expects: ``nature_language_en`` -> ``nature_language``, Chinese city names ->
     English, ``hard_logic_py`` literal-eval'd if it arrived as a string. A **measurement set**,
@@ -329,7 +329,7 @@ def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = 
     (see the parse_to_ir fix), never raises.
 
     When ``entity_resolution`` is True, routes through the deterministic entity-resolution layer
-    (``normalize.resolve_entities`` via ``TPC_P2_ENTITY_RESOLUTION``, plan3 N2).
+    (``normalize.resolve_entities`` via ``TPC_P2_ENTITY_RESOLUTION``).
     """
     import parse_constraints
     from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
@@ -412,7 +412,7 @@ def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False,
                      llm_parse: bool = False, llm_client=None, entity_resolution: bool = False) -> dict:
     """Do parsed vs oracle constraints accept/reject the plan identically? (the "accept-side"
     check: one plan per uid, the oracle-optimal ``results/best/<uid>.json`` -- see
-    ``reject_probe_check`` for the complementary reject-side probe, plan-2 Step 5).
+    ``reject_probe_check`` for the complementary reject-side probe).
     """
     parsed_variants, _ = query_variants(
         query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
@@ -425,7 +425,7 @@ def behavioral_check(query: dict, plan: dict, *, disjunction: bool = False,
             "agree": oracle_pass == parsed_pass}
 
 
-# --- Two-sided behavioral proxy: reject-side probes (plan-2 Step 5) --------
+# --- Two-sided behavioral proxy: reject-side probes ------------------------
 #
 # The accept-side check above is structurally blind to *missing* constraints: both the parsed and
 # oracle sides accept the same oracle-optimal plan regardless of what the parser missed, so a
@@ -509,7 +509,7 @@ def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5,
 
     By default (``per_variant=False``) counts are de-duplicated per (uid, family, bucket): a
     family that appears in the same bucket across multiple OR branches of one uid (branch-aware
-    diff) counts once, not once per branch (plan3 G6c -- OR-heavy uids otherwise inflate family
+    diff) counts once, not once per branch; OR-heavy UIDs otherwise inflate family
     totals). Pass ``per_variant=True`` for the raw per-branch-occurrence view.
     """
     stats: dict[str, dict] = {}
@@ -546,12 +546,10 @@ def _aggregate_family_stats(rows: list[dict], *, max_examples: int = 5,
 def _attribute_reject_misses(
     family_stats: list[dict], *, rows_by_uid: dict[str, dict], reject_miss_uids: list[str],
 ) -> None:
-    """For each uid where a reject-probe was wrongly accepted by the parsed constraints, credit
-    the "why" to whichever of that uid's oracle families the parser is missing (plan-2 Step 5:
-    "per-family attribution of reject-misses"). Mutates ``family_stats`` in place; a family that
-    only ever appears as a reject-miss cause (never matched/missing/spurious/wrong_value in the
-    accept-side diff) can't happen here since a reject-miss's cause is by definition drawn from
-    that same uid's ``missing`` bucket, which ``_aggregate_family_stats`` already seeded."""
+    """For each UID where a reject probe was wrongly accepted by the parsed constraints, credit
+    its cause to an oracle family missing from that UID's parsed constraints. Mutates
+    ``family_stats`` in place. A family that appears only as a reject-miss cause still belongs to
+    that UID's ``missing`` bucket, which ``_aggregate_family_stats`` has already seeded."""
     by_family = {s["family"]: s for s in family_stats}
     for uid in reject_miss_uids:
         row = rows_by_uid.get(uid)
@@ -607,11 +605,10 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
                     q, plan, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
                     entity_resolution=entity_resolution,
                 ))
-            # Reject-side probe (plan-2 Step 5): closes the accept-side check's blind spot to
-            # *missing* constraints (both sides accept the same oracle-optimal plan regardless of
-            # what the parser dropped -- see F4 in docs/tpc_phase2_sonnet_plan2.md). Probes come
-            # from the whole split (``query_data``), not just ``selected``, so the metric is
-            # stable across differently-scoped reports (fold-limited vs full-val).
+            # Reject-side probes close the accept-side check's blind spot to *missing*
+            # constraints: both sides can accept the same oracle-optimal plan even when the
+            # parser dropped one. Probes come from the whole split (``query_data``), not just
+            # ``selected``, so the metric is stable across differently-scoped reports.
             probe_uids = select_reject_probes(uid, q, query_data, results_best=results_best)
             parsed_variants, _ = query_variants(
                 q, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
@@ -653,7 +650,7 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         )
         agg["behavioral"] = {
             "n": len(behav_rows),
-            "agreement_rate": accept_agreement,  # kept for row continuity (plan-2 Step 5)
+            "agreement_rate": accept_agreement,  # retained for row continuity
             "accept_agreement": accept_agreement,
             "disagreements": [b["uid"] for b in behav_rows if not b["agree"]],
             "reject_agreement": reject_agreement,
@@ -700,15 +697,15 @@ def parse_args() -> argparse.Namespace:
                         "so a warm rerun is free and byte-deterministic.")
     p.add_argument("--per-variant-family-stats", action="store_true",
                    help="Count family_stats occurrences once per OR-branch variant instead of "
-                        "once per (uid, family, bucket) -- the raw pre-dedup view (plan3 N1/G6c). "
+                        "once per (uid, family, bucket) -- the raw pre-dedup view. "
                         "Default is de-duplicated, which is the trustworthy signal.")
     p.add_argument("--entity-resolution", action="store_true",
                    help="Route the parsed side through the deterministic entity-resolution layer "
-                        "(TPC_P2_ENTITY_RESOLUTION, plan3 N2) that canonicalizes name-bearing "
+                        "(TPC_P2_ENTITY_RESOLUTION) that canonicalizes name-bearing "
                         "families against the target city's POI catalog.")
     p.add_argument("--hf-config", default=None, choices=["default", "preference"],
                    help="Measure against the HF LAMDA-NeSy/ChinaTravel dataset instead of a local "
-                        "split (plan3 N5, docs/tpc_phase2_hf_dataset.md) -- a held-out phrasing "
+                        "split (see docs/tpc_phase2_hf_dataset.md) -- a held-out phrasing "
                         "generalization probe, uid-disjoint from tpc_phase1. Overrides --split/"
                         "--split-set. A measurement set only -- never tune the parser against it.")
     p.add_argument("--hf-splits", nargs="*", default=None,

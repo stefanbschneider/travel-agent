@@ -79,7 +79,7 @@ def test_visit_between_sets_window_and_stay_duration():
     ], raw.get("stay_duration")
 
 
-# --- Step 5 (val-split family_stats triage): timing_constraints removed ----
+# --- Timing-constraint parsing regression ----------------------------------------------------
 #
 # parse_timing_constraints matched exactly two of activity_time_windows's patterns
 # ("arrive at X no later than T", "leave X no earlier than T") but the oracle never uses this

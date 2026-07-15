@@ -1,4 +1,4 @@
-"""Tests for the Phase 2 two-layer schema + normalization skeleton (Task 4).
+"""Tests for the Phase 2 two-layer schema and normalization skeleton.
 
 The skeleton must be a faithful passthrough: turning a query into a ParsedIR and back into solver
 constraint variants must equal exactly what the current no-oracle path produces today, i.e.

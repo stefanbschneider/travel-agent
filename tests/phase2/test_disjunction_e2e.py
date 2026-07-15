@@ -1,4 +1,4 @@
-"""Integration test for end-to-end no-oracle disjunction wiring (Task 5).
+"""Integration test for end-to-end no-oracle disjunction wiring.
 
 Opt-in (marked ``integration``): touches the real WorldEnv + TPCAgent. Run with:
     .venv/bin/python -m pytest -m integration tests/phase2/test_disjunction_e2e.py

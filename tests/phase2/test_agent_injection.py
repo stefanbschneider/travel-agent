@@ -1,4 +1,4 @@
-"""Unit tests for the TPCAgent variant-injection seam (Task 4).
+"""Unit tests for the TPCAgent variant-injection seam.
 
 The harness owns parsing: when ``agent._injected_variants`` is a non-empty list, the agent must use
 it directly instead of re-parsing the query. When it is ``None`` or empty, behavior is unchanged

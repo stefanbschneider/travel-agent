@@ -8,14 +8,12 @@ counts vs the baseline.
 Metric dict shape: {"fpr": float, "continuous_score": float (optional), "parse_failures": int,
 "timeouts": int}.
 
-Primary score metric (2026-07-14): when ``continuous_score`` is present in *both* rows, it is
-the blocking check and ``fpr`` (if present) is reported as advisory-only, not gating. Binary FPR
-at a tight budget/small fold is dominated by timeout-boundary nondeterminism -- two repeats of an
-otherwise-identical row can swing FPR ~30 points while the continuous score barely moves (see
-docs/tpc_phase2_plan3.md's "Next steps" section, `20260713T130105Z` finding) -- so it cannot
-reliably gate a promotion decision on its own at those settings. When ``continuous_score`` is
-absent from either row (older ledger rows, or a caller that only has fpr), the gate falls back to
-the original fpr-blocking behavior unchanged.
+Primary score metric: when ``continuous_score`` is present in *both* rows, it is the blocking
+check and ``fpr`` (if present) is advisory-only, not gating. Binary FPR can be dominated by
+timeout-boundary nondeterminism at tight budgets or small folds, so it is not a reliable sole
+promotion gate in that case. When ``continuous_score`` is absent from either row (older ledger
+rows, or a caller that only has FPR), the gate falls back to FPR blocking. See
+``docs/tpc_phase2_eval.md`` for the measurement contract.
 """
 
 from __future__ import annotations

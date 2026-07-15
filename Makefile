@@ -61,8 +61,8 @@ help:
 # off by default. See docs/tpc_phase2_design.md and docs/tpc_phase2_eval.md.
 # ===========================================================================
 
-# Per-query budget: our working default is 300s (5 min); the organizers' stated primary is 900s
-# (15 min, TBC) for a final pre-submission check. Override with P2_BUDGET.
+# Per-query budgets are local sensitivity settings; the official timeout/repeat contract is not
+# public. `300` is the working default and `900` is a longer sensitivity check. Override with P2_BUDGET.
 P2_SPLIT_SET ?= val
 FOLD ?= 0
 P2_FOLDS ?= 10
@@ -83,8 +83,8 @@ P2_PARALLEL ?= 1
 P2_LIMIT_FLAG = $(if $(P2_LIMIT),--limit $(P2_LIMIT),)
 P2_BRANCH_AWARE_FLAG = $(if $(filter 1,$(P2_BRANCH_AWARE)),--branch-aware,)
 P2_LABEL_FLAG = $(if $(P2_LABEL),--label $(P2_LABEL),)
-# Eval-tooling only (plan-2 Step 3): stop each query's solve at the first accepted plan instead
-# of spending the full budget on preference polishing. Never set by the real harness.
+# Evaluation tooling only: stop each query's solve at the first accepted plan instead of spending
+# the full budget on preference polishing. Never set by the real harness.
 P2_FAST_FPR ?= 0
 P2_FAST_FPR_FLAG = $(if $(filter 1,$(P2_FAST_FPR)),--fast-fpr,)
 # Passed through verbatim to scripts/run_query.py, e.g.:
@@ -95,14 +95,14 @@ P2_QUERY_ARGS ?=
 
 phase2-help:
 	@printf '%s\n' \
-	  'Phase 2 targets (docs/tpc_phase2_design.md, docs/tpc_phase2_eval.md):' \
+	  'Phase 2 targets (docs/tpc_phase2_design.md, docs/tpc_phase2_eval.md, docs/tpc_phase2_roadmap.md):' \
 	  '  make phase2-test            - run the Phase 2 pytest suite (unit; add integration below)' \
 	  '  make phase2-splits          - (re)create tpc_phase2_val/test split files' \
 	  '  make phase2-solve           - run the no-oracle harness over a split (LLM off)' \
 	  '  make phase2-query           - run ONE query end to end: P2_QUERY_ARGS="--uid <id> | --query-file <path> | --query-text ..."' \
 	  '  make phase2-rehearse        - end-to-end + solver-only rehearsal + attribution + timing' \
 	  '  make phase2-budget-sweep    - sweep budgets and export attribution CSV/JSON' \
-	  '  make phase2-baseline        - run deterministic baseline and append docs/phase2_baselines history' \
+	  '  make phase2-baseline        - run deterministic baseline and append results/phase2_baselines history' \
 	  '  make phase2-baseline-at     - same as phase2-baseline, but pinned to SHA=<ref> via a disposable git worktree' \
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
@@ -145,16 +145,15 @@ phase2-budget-sweep:
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budgets "$(P2_BUDGETS)" $(P2_LIMIT_FLAG) \
 	  --out-csv $(P2_SWEEP_CSV) --out-json $(P2_SWEEP_JSON)
 
-# Run deterministic fold baseline and append trend files under docs/phase2_baselines.
+# Run deterministic fold baseline and append trend files under results/phase2_baselines.
 phase2-baseline:
 	.venv/bin/python scripts/phase2_record_baseline.py --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \
 	  --repeats $(P2_REPEATS) $(P2_LABEL_FLAG) $(P2_BRANCH_AWARE_FLAG) --parallel $(P2_PARALLEL) \
 	  $(P2_FAST_FPR_FLAG)
 
-# Same as phase2-baseline, but runs against a pinned `git worktree` checkout of SHA (plan-2
-# Step 1): the main tree stays free for development mid-run, and the row's git_sha is truthful
-# by construction instead of whatever HEAD happens to be when the recorder finishes writing.
+# Same as phase2-baseline, but uses a pinned `git worktree` checkout of SHA. The main tree stays
+# free for development mid-run, and the row's git_sha is truthful by construction.
 phase2-baseline-at:
 	.venv/bin/python scripts/phase2_eval_at.py --sha $(SHA) -- --split-set $(P2_SPLIT_SET) \
 	  --fold $(FOLD) --folds $(P2_FOLDS) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG) \

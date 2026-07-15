@@ -1,4 +1,4 @@
-"""Tests for the Phase 2 LLM client abstraction (Task 3).
+"""Tests for the Phase 2 LLM client abstraction.
 
 The deterministic path must never hit the network. Backends:
 - none: default; refuses to produce output (must not be called on the default path).
@@ -99,8 +99,8 @@ def test_unknown_backend_raises():
 
 
 def test_openai_client_sets_sdk_timeout_and_zero_retries(monkeypatch):
-    # SDK-level retries double worst-case parse-stage latency on timeout (plan3 N6); the harness's
-    # own budget/timeout logic owns retry decisions, not the SDK.
+    # SDK-level retries double worst-case parse-stage latency on timeout; the harness's own
+    # budget and timeout logic owns retry decisions, not the SDK.
     captured = {}
 
     class FakeOpenAI:

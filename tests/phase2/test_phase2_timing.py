@@ -1,4 +1,4 @@
-"""Unit tests for phase2_timing (Task 9): per-stage p50/p95, budget overruns, variance."""
+"""Unit tests for phase2_timing: per-stage p50/p95, budget overruns, and variance."""
 
 from __future__ import annotations
 

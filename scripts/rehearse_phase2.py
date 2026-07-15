@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 2 rehearsal runner (Task 7, basic).
+"""Phase 2 rehearsal runner.
 
 Runs the no-oracle harness ("end-to-end") and/or the oracle-fed solver ("solver-only") over a
 deterministic fold and prints the three-way attribution against the aspirational ceiling
@@ -15,9 +15,9 @@ Folds are drawn from the **validation** split by default. Touching the frozen **
 split requires ``--split-set test`` and prints a warning (see docs/tpc_phase2_eval.md).
 
 Usage:
-    python scripts/rehearse_phase2.py                       # both modes, val fold 0
-    python scripts/rehearse_phase2.py --mode end-to-end --fold 0 --folds 10 --budget-sec 30
-    python scripts/rehearse_phase2.py --split-set test --limit 20   # sparingly!
+    .venv/bin/python scripts/rehearse_phase2.py                       # both modes, val fold 0
+    .venv/bin/python scripts/rehearse_phase2.py --mode end-to-end --fold 0 --folds 10 --budget-sec 30
+    .venv/bin/python scripts/rehearse_phase2.py --split-set test --limit 20   # sparingly!
 """
 
 from __future__ import annotations
@@ -53,11 +53,10 @@ from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_SEED = 20260705
 DEFAULT_FOLDS = 10
-# Queries per subprocess for the chunked rehearsal (Phase 2 plan Step 3). Each subprocess's
-# memory (and any thread func_timeout couldn't kill on a timeout) is fully reclaimed by the OS
-# when it exits, so a small chunk bounds cumulative growth across a large fold regardless of
-# root cause. Override with the P2_CHUNK env var; <=0 disables chunking (single in-process run,
-# original behavior -- useful for short smoke runs where subprocess startup overhead dominates).
+# Queries per subprocess for the chunked rehearsal. Each subprocess's memory (and any
+# ``func_timeout`` thread that survives a timeout) is fully reclaimed by the OS when it exits, so a
+# small chunk bounds cumulative growth across a large fold. Override with `P2_CHUNK`; <=0 disables
+# chunking for a single in-process run, useful for short smoke runs where startup overhead dominates.
 DEFAULT_CHUNK = int(os.environ.get("P2_CHUNK", "5") or "5")
 # How many chunk subprocesses to run concurrently (each chunk subprocess still solves its own
 # queries sequentially; this parallelizes *across* chunks). Each query's CP-SAT solve defaults to
@@ -329,7 +328,7 @@ def _run_solver_only(split_name, fold_uids, *, budget_sec, lang="en"):
     return method
 
 
-# --- Chunked subprocess execution (Step 3: unblocks larger e2e folds) -----
+# --- Chunked subprocess execution for larger end-to-end folds -------------------------------
 #
 # In-process, a large fold accumulates memory across queries: a timed-out solve's thread can't be
 # killed by func_timeout and keeps running in the background (verified: RSS grows and a stray
@@ -473,7 +472,7 @@ def rehearse(
         "modes": {},
     }
 
-    # Eval-tooling only (plan-2 Step 3): never set by run_split, never a library default -- see
+    # Eval-tooling only: never set by run_split and never a library default. See
     # TPC_SOLVE_STOP_AT_ACCEPT in tpc_agent.py. Chunk subprocesses inherit this process's
     # environment, so setting it here before dispatching them is sufficient; restored afterward
     # so it never leaks into an unrelated call in the same process.
@@ -548,9 +547,9 @@ def parse_args() -> argparse.Namespace:
         "--budget-sec",
         type=float,
         default=orch.DEFAULT_BUDGET_SEC,
-        help="Per-query budget (default 300s = 5 min, our working default; the organizers' stated "
-        "primary is 900s = 15 min, orch.PHASE2_ORGANIZER_BUDGET_SEC). Use small values with "
-        "--limit/--folds for quick smoke runs.",
+        help="Per-query local sensitivity budget (default: 300 s). 900 s is a longer local "
+        "setting, not an organizer-confirmed limit. Use small values with --limit/--folds for "
+        "quick smoke runs.",
     )
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--lang", default="en", choices=["en", "zh"])
@@ -586,7 +585,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--fast-fpr",
         action="store_true",
-        help="Eval-tooling only (plan-2 Step 3, never set by the real harness): stop each "
+        help="Eval-tooling only, never set by the real harness: stop each "
         "query's solve as soon as an accepted plan is found instead of spending the rest of the "
         "budget polishing preference score (TPC_SOLVE_STOP_AT_ACCEPT). Cuts iteration cost but "
         "the resulting FPR is a different, uncalibrated metric -- never compare its rows "

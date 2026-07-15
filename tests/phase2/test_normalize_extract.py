@@ -1,4 +1,4 @@
-"""Unit tests for LLM-first structured extraction (plan-2 Step 6).
+"""Unit tests for LLM-first structured extraction.
 
 Fixture-backend driven: no real network, no WorldEnv, no solver. Vocabulary-dependent tests use a
 small fixed vocab (monkeypatched) rather than the real CSV-derived one, so they don't depend on

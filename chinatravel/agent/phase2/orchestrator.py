@@ -25,13 +25,12 @@ from . import budget as budget_mod
 from . import fallback as fallback_mod
 from . import normalize
 
-# Expected Phase 2 per-query budget: 15 min per the organizers' stated primary (to be confirmed);
-# 5 min alternative. Override per query via the TPC_P2_BUDGET_SEC env var or the ``budget_sec``
-# argument. Our own working default is the 5-min alternative (2026-07-11): at 300s the harness
-# still shows plenty of solver headroom (see docs/phase2_baselines), and it keeps baseline/CI
-# iteration cost down; switch to PHASE2_ORGANIZER_BUDGET_SEC for a final pre-submission check.
-PHASE2_ORGANIZER_BUDGET_SEC = 900.0  # 15 minutes (organizers' stated primary, TBC)
-PHASE2_ALT_BUDGET_SEC = 300.0        # 5 minutes (our working default)
+# Local Phase 2 sensitivity budgets. Public competition material currently does not specify an
+# organizer-enforced per-query timeout or repeat count. Override per query via
+# ``TPC_P2_BUDGET_SEC`` or the ``budget_sec`` argument. ``300s`` is the working default; ``900s``
+# is a longer local sensitivity setting.
+PHASE2_ORGANIZER_BUDGET_SEC = 900.0  # Retained name; local sensitivity setting, not organizer-confirmed.
+PHASE2_ALT_BUDGET_SEC = 300.0        # Local working default.
 DEFAULT_BUDGET_SEC = PHASE2_ALT_BUDGET_SEC
 DEFAULT_SOLVE_TIMEOUT_GRACE_SEC = 1.0
 
@@ -75,7 +74,7 @@ class Flags:
     llm_refine: bool = False
     dynamic_budget: bool = False
     entity_resolution: bool = False
-    # Master switch stays llm_parse; this only selects the strategy once it's on (plan-2 Step 6).
+    # Master switch stays llm_parse; this selects the strategy only when it is enabled.
     # "audit" (default): today's corrective-audit stub, everything round-trips through the regex.
     # "extract": LLM-first structured extraction + deterministic validation/merge, independent of
     # the regex parse. Any other value falls back to "audit".

@@ -67,10 +67,9 @@ def is_open_during(attr, start_time, end_time):
 
 
 class _AcceptedEarlyStop(BaseException):
-    """Unwinds every nested loop in ``_solve`` as soon as an accepted plan is found, when
-    ``TPC_SOLVE_STOP_AT_ACCEPT`` is on (plan-2 Step 3, eval-tooling only). Subclasses
-    ``BaseException`` (not ``Exception``) so it passes through the ``except Exception`` handlers
-    already guarding each ``consider()`` call in ``_solve`` instead of being swallowed by them."""
+    """Unwinds every nested loop in ``_solve`` as soon as an accepted plan is found when
+    ``TPC_SOLVE_STOP_AT_ACCEPT`` is enabled for evaluation tooling. Subclass ``BaseException``
+    so it passes through the ``except Exception`` handlers guarding each ``consider()`` call."""
 
 
 class TPCAgent(BaseAgent):
@@ -561,10 +560,10 @@ class TPCAgent(BaseAgent):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
         keeping the best accepted plan found within budget; finally pack it.
 
-        ``TPC_SOLVE_STOP_AT_ACCEPT`` (eval-tooling only, default off -- see ``_AcceptedEarlyStop``)
-        returns as soon as any accepted plan is found instead of spending the rest of the budget
-        polishing preference score, for a much cheaper (but preference-uncalibrated) FPR signal
-        during iteration (plan-2 Step 3). Off, this method's behavior is unchanged.
+        ``TPC_SOLVE_STOP_AT_ACCEPT`` is evaluation-tooling only and defaults off. When enabled,
+        it returns as soon as any accepted plan is found instead of spending the remaining budget
+        polishing preference score, producing a cheaper but preference-uncalibrated FPR signal.
+        When off, this method's behavior is unchanged.
         """
         self.reset_timeout_recovery_plan()
         stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")

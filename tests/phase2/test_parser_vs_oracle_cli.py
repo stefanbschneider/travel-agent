@@ -1,4 +1,4 @@
-"""Integration test for the parser_vs_oracle split report + behavioral check (Task 8b).
+"""Integration test for the parser-versus-oracle split report and behavioral check.
 
 Opt-in (loads the dataset and results/best). Run with:
     .venv/bin/python -m pytest -m integration tests/phase2/test_parser_vs_oracle_cli.py
@@ -30,9 +30,9 @@ def test_run_report_behavioral(tmp_path):
 
 @pytest.mark.integration
 def test_run_report_behavioral_two_sided_metrics(tmp_path):
-    """plan-2 Step 5: accept_agreement/reject_agreement/behavioral_balanced show up alongside the
-    legacy agreement_rate column, using a large-enough limit that at least one (target_city, days)
-    group has >=2 members so the reject-side probe set isn't trivially empty."""
+    """Verify that accept, reject, and balanced behavioral metrics accompany the legacy
+    ``agreement_rate``. The limit must provide at least one `(target_city, days)` group with two
+    members so the reject-probe set is not trivially empty."""
     agg = pvo.run_report(
         "tpc_phase2_val", limit=40, behavioral=True, disjunction=True, out_dir=str(tmp_path)
     )

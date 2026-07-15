@@ -8,7 +8,7 @@ Flag hooks (all OFF by default):
 - ``TPC_P2_LLM_PARSE``  : LLM-assisted second-pass parse (corrective/additive proposals).
 - ``TPC_P2_DISJUNCTION``: true no-oracle disjunctive branch generation (implemented below).
 - ``TPC_P2_ENTITY_RESOLUTION``: deterministic name-entity canonicalization against the target
-  city's POI catalog (implemented below, plan3 N2).
+  city's POI catalog (implemented below).
 
 When flags are off, neither hook runs and the LLM client is never called.
 """
@@ -250,11 +250,10 @@ def _dedupe_json_items(values: list) -> list:
     return out
 
 
-# N4 recall-first merge guard: families demonstrated (with cited uid evidence) to be reliable
-# over-extractors, where a bare `remove` patch is trusted without a paired opposite-polarity
-# correction. Empty until a family earns a place here with cited evidence -- per G1
-# (docs/tpc_phase2_plan3.md), missing/wrong-value constraints cost e2e directly while spurious
-# ones only cost solve time, so the default posture is to distrust bare removes.
+# Recall-first merge guard: a bare `remove` patch is trusted only for demonstrated reliable
+# over-extractor families. The whitelist stays empty until evidence supports an exception.
+# Missing or wrong-value constraints can invalidate a plan, while spurious constraints normally
+# cost solve time; default conservatively and distrust bare removes.
 _LLM_REMOVE_WHITELIST: frozenset[str] = frozenset()
 
 # A polarity flip swaps *field names* (required_X <-> excluded_X), so pairing a `remove` with its
@@ -277,13 +276,11 @@ _LLM_REMOVE_POLARITY_OPPOSITE: dict[str, str] = {
 
 def _guard_remove_patches(patches: list) -> list:
     """Reject `remove` patches unless paired with a same-batch opposite-polarity add/replace, or
-    the family is in ``_LLM_REMOVE_WHITELIST`` (plan3 N4).
+    the family is in ``_LLM_REMOVE_WHITELIST``.
 
-    A `remove`-only claim is a precision judgment ("this family is spurious") which G1 says barely
-    matters for e2e outcomes; a `remove` paired with a correcting `add`/`replace` for the opposite
-    family is instead a recall/polarity correction ("this family is the wrong polarity, here is the
-    right one"), which does matter. Fields on a rejected remove patch are dropped from that patch;
-    the patch itself is dropped entirely if no fields survive.
+    A remove-only claim is a precision judgment: a paired correcting `add`/`replace` for the
+    opposite family is a recall/polarity correction and is safer to accept. Fields on a rejected
+    remove patch are dropped from that patch; the patch is dropped entirely if no fields survive.
     """
     corrected_fields: set[str] = set()
     for patch in patches:
@@ -523,7 +520,7 @@ def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
     return updated
 
 
-# --- LLM-first structured extraction (plan-2 Step 6) -----------------------
+# --- LLM-first structured extraction ---------------------------------------
 #
 # Alternative to the corrective-audit stub above: one LLM call reads the NL query directly (no
 # deterministic parse in the prompt -- independence avoids anchoring on regex mistakes, and
@@ -531,8 +528,7 @@ def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
 # regex fix cold-starts the 850-uid cache; extract-mode's prompt depends only on query text).
 # Deterministic validation (whitelist + closed-vocabulary checks, no LLM) gates every field before
 # it can reach the solver; merge is additive-only -- a family only the deterministic parse found
-# is always kept (an invalid/absent LLM value must never delete real recall, the lesson of the
-# audit's B6 gap).
+# is always kept: an invalid or absent LLM value must never delete deterministic recall.
 
 _EXTRACT_ROOM_TYPES = frozenset({"single", "double", "twin"})
 _EXTRACT_CUISINE_FIELDS = {"cuisine_preference", "excluded_cuisine_types"}
@@ -589,14 +585,12 @@ def _extract_vocab() -> dict[str, frozenset[str]]:
     return _extract_vocab_cache
 
 
-# --- Deterministic entity resolution (plan3 N2) -----------------------------
+# --- Deterministic entity resolution ---------------------------------------------------------
 #
 # Canonicalizes name-bearing constraint families against the target city's POI catalog before they
-# reach the solver/verifier, closing the G2 defect cluster (label-prefix garbage kept in names,
-# list-splitting failures, type-vs-name collisions, category misrouting -- see docs/tpc_phase2_plan3.md).
-# Env-less (same lazy/cached CSV-glob pattern as ``_extract_vocab`` above) so ``parser_vs_oracle.py``
-# sees identical behavior to the harness. Recall-preserving per G1: an unresolved string is kept as
-# cleaned text, never dropped.
+# reach the solver and verifier. It is environment-free (the same lazy, cached CSV-glob pattern as
+# ``_extract_vocab``) so ``parser_vs_oracle.py`` matches the harness. Preserve recall: keep an
+# unresolved string as cleaned text rather than dropping it.
 
 _ENTITY_CSV_GLOBS = {
     "attraction": "chinatravel/environment/database_en/attractions/{slug}/*.csv",
@@ -859,9 +853,9 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
 
 def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] | None = None) -> dict:
     """Canonicalize name-bearing constraint families in one solver-constraint dict against the
-    target city's POI catalog (plan3 N2). Operates on a single variant so it composes cleanly with
-    OR-branch expansion and LLM-alternative expansion -- ``ir_to_solver_variants`` applies it to
-    every variant in the already-expanded list, covering OR arms and alternatives generically."""
+    target city's POI catalog. Operate on a single variant so this composes cleanly with OR-branch
+    and LLM-alternative expansion; ``ir_to_solver_variants`` applies it to every expanded variant.
+    """
     if not isinstance(variant, dict):
         return variant
     if catalog is None:
@@ -1181,8 +1175,8 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None, deadline: float | N
     ``ir.or_groups`` with one parsed constraint dict per OR arm (consumed by
     ``ir_to_solver_variants``). When ``flags.llm_parse`` is on, routes through ``llm_parse_stub``
     (``flags.llm_parse_mode == "audit"``, the default) or ``llm_extract_stub``
-    (``"extract"``, plan-2 Step 6) for corrective/additive proposals. Off by default, so the LLM
-    is never called here on the default path.
+    (``"extract"``) for corrective/additive proposals. Off by default, so the LLM is never called
+    here on the default path.
 
     ``deadline``, when given, is the remaining parse-stage budget in seconds (the orchestrator's
     static or dynamic parse slice). If it's below the LLM client's configured request timeout, the
@@ -1307,9 +1301,9 @@ def ir_to_solver_variants(ir: ParsedIR, query: dict, *, env=None, flags=None) ->
     on, route through ``disjunction_stub``, which expands ``ir.or_groups`` into one branch-local
     variant per OR arm (and is a no-op for non-disjunctive queries). When
     ``flags.entity_resolution`` is on, every resulting variant (including OR arms and LLM
-    alternatives) is canonicalized against the target city's POI catalog via ``resolve_entities``
-    (plan3 N2). ``env`` is unused by entity resolution (it's env-less by design, see
-    ``load_city_entity_catalog``) -- kept as a pass-through hook for future WorldEnv-based checks.
+    alternatives) is canonicalized against the target city's POI catalog via ``resolve_entities``.
+    ``env`` is unused by entity resolution (it is environment-free by design; see
+    ``load_city_entity_catalog``) and remains a pass-through hook for future WorldEnv checks.
     """
     variants = solver_constraint_variants(query, ir.raw, use_oracle=False)
 

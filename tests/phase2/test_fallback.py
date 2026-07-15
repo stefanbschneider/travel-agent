@@ -1,4 +1,4 @@
-"""Tests for the Phase 2 guaranteed-valid fallback plan (Task 5)."""
+"""Tests for the Phase 2 guaranteed-valid fallback plan."""
 
 from __future__ import annotations
 

@@ -3,7 +3,7 @@
 """Run and persist a deterministic Phase 2 baseline snapshot.
 
 This script establishes a reproducible baseline run on a validation fold, then stores
-compact, commit-friendly trend artifacts under docs/phase2_baselines/:
+compact, commit-friendly trend artifacts under results/phase2_baselines/:
 
 - history.jsonl: append-only one JSON object per run
 - history.csv: tabular projection for quick diffing/plotting
@@ -52,7 +52,7 @@ rehearse_mod = _load_script_module("rehearse_phase2", "scripts/rehearse_phase2.p
 runner_mod = _load_script_module("solve_phase2", "agent_env/scripts/solve_phase2.py")
 
 
-DEFAULT_HISTORY_DIR = PROJECT_ROOT / "docs" / "phase2_baselines"
+DEFAULT_HISTORY_DIR = PROJECT_ROOT / "results" / "phase2_baselines"
 HISTORY_JSONL = "history.jsonl"
 HISTORY_CSV = "history.csv"
 LATEST_JSON = "latest.json"
@@ -84,7 +84,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def compute_fingerprint(query: dict[str, Any], *, flags, llm_client) -> str:
-    """Hash the solver-facing input for one query (plan-2 Step 2).
+    """Hash the solver-facing input for one query.
 
     A parser change alters the solver's input only for the uids whose parse actually changed;
     the solver is deterministic given its variants (temp-0 LLM + warm disk cache + pure regex),
@@ -349,7 +349,7 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "parser_full_behavioral_agreement_rate": float(
             parser_full_behavioral.get("agreement_rate", 0.0)
         ),
-        # Two-sided proxy (plan-2 Step 5): the accept-side agreement_rate above is blind to
+        # Two-sided proxy: the accept-side agreement_rate above is blind to
         # *missing* constraints (both sides accept the same oracle-optimal plan regardless of
         # what the parser dropped); behavioral_balanced folds in the reject-side probe check,
         # which a missing-constraint parser fails visibly. None (no valid reject probes for any
@@ -632,7 +632,7 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=1,
         help="Run the rehearsal N times (fresh each time) and record run-to-run score variance. "
-        "Organizers average 5 runs, so variance matters even on the deterministic path.",
+        "Record the local repeat count with the row; organizers have not published a repeat contract.",
     )
     p.add_argument(
         "--reuse-existing",
@@ -651,7 +651,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--fast-fpr",
         action="store_true",
-        help="Eval-tooling only (plan-2 Step 3): each query's solve stops at the first accepted "
+        help="Eval-tooling only: each query's solve stops at the first accepted "
         "plan (TPC_SOLVE_STOP_AT_ACCEPT) instead of spending the full budget on preference "
         "polishing. The resulting FPR is a different, uncalibrated metric -- the row is forced "
         "to a 'fastfpr-' label prefix and must never be gate-compared against normal rows.",
@@ -737,7 +737,7 @@ def main() -> None:
 
     llm_cfg = runner_mod._phase2_llm_config()
 
-    # Solver-input fingerprints (plan-2 Step 2): recomputed with the exact flags/client the real
+    # Solver-input fingerprints are recomputed with the exact flags/client the real
     # e2e run used, so a later `phase2_diff_eval.py` run can detect which uids' solver input
     # actually changed instead of re-solving the whole fold.
     llm_client, run_flags = runner_mod.resolve_llm_client_and_flags()

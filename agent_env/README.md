@@ -1,180 +1,55 @@
 # ChinaTravel Agent Environment
 
-This directory wraps the existing ChinaTravel environment for agent runtimes without
-modifying the benchmark package. Official running and evaluation scripts such as
-`run_exp.py`, `eval_exp.py`, and `eval_tpc.py` remain the source of truth.
-
-## What This Provides
-
-- `agent_env.adapter.ChinaTravelEnvAdapter`: Python API that lazily loads the official
-  `WorldEnv` and returns JSON-serializable results.
-- `agent_env.cli`: dependency-free command-line interface for one-shot calls and
-  interactive terminal use.
-- `agent_env.mcp_stdio`: dependency-free stdio MCP-style bridge for agent clients.
-- `agent_env.http_server`: dependency-free local HTTP JSON service for other agents or
-  scripts.
-- `agent_env/SKILL.md`: agent instructions for using the CLI to solve benchmark
-  queries.
-- `agent_env/scripts/solve_script_with_harness.py`: split harness that loads queries,
-  calls OpenCode or Codex, saves plans, and evaluates them.
+`agent_env` exposes the existing ChinaTravel environment to external agents without changing the benchmark package.
+The benchmark and the [official Agent Environment Guide](https://chinatravel-competition.github.io/IJCAI2026/agent-environment.html) remain authoritative.
 
 ## Prerequisites
 
-Install the original project requirements and download the official database as usual:
+Use the repository interpreter and install the project dependencies:
 
 ```bash
-pip install -r requirements.txt
-# unzip the database to chinatravel/environment/database/
+.venv/bin/python -m pip install -r requirements.txt
+# Install the official database at chinatravel/environment/database/.
 ```
 
-The wrapper itself can start without those dependencies, but environment tool calls will
-return initialization errors until the official prerequisites are present.
+The wrapper can start without the database, but any environment lookup or real solve needs it.
+Copy `agent_env/config.toml.example` to the ignored local `agent_env/config.toml` only when a harness or model backend needs configuration.
 
-## Agent/MCP-Style Usage
+## Interface categories
 
-Configure the agent client to run:
+- **Query:** list splits and load visible query metadata.
+- **World facts:** attraction, restaurant, and accommodation search; opening checks; nearby lookup; cuisine and feature lookup.
+- **Transport:** in-city `goto`, intercity selection, and POI-coordinate lookup.
+- **Raw compatibility:** a constrained `WorldEnv` command interface when no structured call covers the need.
+
+For exact tool names, request shapes, semantic itinerary rules, and output constraints, read [SKILL.md](SKILL.md).
+
+## One CLI example
 
 ```bash
-python -m agent_env.mcp_stdio
+.venv/bin/python -m agent_env.cli call attractions_keys '{"city":"上海"}'
 ```
 
-The server exposes tools such as:
+Run `.venv/bin/python -m agent_env.cli tools` to inspect the local tool catalog.
 
-- `attractions_keys`
-- `attractions_select`
-- `restaurants_nearby`
-- `goto`
-- `intercity_transport_select`
-- `poi_lat_lon_search`
-- `china_travel_load_query`
-- `china_travel_world_command`
-
-Prefer the structured tools first. Use `china_travel_world_command` only when an
-advanced query needs the original `WorldEnv` command-string surface.
-
-## CLI Usage
-
-List available tools:
+## Server and harness entry points
 
 ```bash
-python -m agent_env.cli tools
+# Stdio MCP-style server
+.venv/bin/python -m agent_env.mcp_stdio
+
+# Local HTTP service
+.venv/bin/python -m agent_env.http_server --host 127.0.0.1 --port 8765
+
+# Repository Phase 2 per-query runner
+.venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 1 --budget-sec 300
 ```
 
-Call a structured tool:
+`agent_env/scripts/solve_script_with_harness.py` is the generic OpenCode/Codex compatibility harness; `solve_phase2.py` is this repository's deterministic-orchestrator runner.
+Both must hide oracle-only fields before the agent path.
 
-```bash
-python -m agent_env.cli call attractions_keys '{"city":"上海"}'
-```
+## Outputs
 
-Call the original command-string interface:
-
-```bash
-python -m agent_env.cli world "attractions_keys('上海')"
-```
-
-Start an interactive prompt:
-
-```bash
-python -m agent_env.cli
-```
-
-Inside the prompt:
-
-```text
-tools
-splits
-call attractions_nearby {"city":"上海","point":"上海迪士尼度假区","topk":5,"dist":5}
-world attractions_keys('上海')
-quit
-```
-
-## Split Harness
-
-Create a local config from the tracked example:
-
-```bash
-cp agent_env/config.toml.example agent_env/config.toml
-```
-
-Edit `agent_env/config.toml` to set the split, harness, smoke-test limit,
-models, providers, and API key or API key env var. The local config is ignored
-by git because it may contain a secret.
-
-Run the configured harness non-interactively over the configured split and
-evaluate each output:
-
-```bash
-python agent_env/scripts/solve_script_with_harness.py
-```
-
-Smoke test the configured split with the config's `limit` value:
-
-```bash
-python agent_env/scripts/solve_script_with_harness.py
-```
-
-Use a specific query or override the configured model from the CLI:
-
-```bash
-python agent_env/scripts/solve_script_with_harness.py --uid <uid>
-python agent_env/scripts/solve_script_with_harness.py --harness opencode --model dashscope/qwen3.6-27b
-python agent_env/scripts/solve_script_with_harness.py --harness codex --model gpt-5.5
-python agent_env/scripts/solve_script_with_harness.py --resume
-```
-
-Unless `--method` or `[run].method` is set, result directories use
-`<model>-<split>-<harness>`, for example
-`qwen3.6-27b-generated_5000-opencode`.
-
-Set `resume = true` under `[run]` in `agent_env/config.toml` to skip queries
-that already have `results/<method>/<uid>.json`. Parse failures are saved as
-all-false one-query evaluations, and the run reports the parse failure count at
-the end.
-
-The harness writes:
-
-- prompt and raw harness logs under `agent_env/runs/<method>/<split>_<uid>/`
-- the itinerary under `results/<method>/<uid>.json`
-- the one-query evaluation under `agent_env/runs/<method>/<split>_<uid>/evaluation.json`
-- the split summary under `agent_env/runs/<method>/<split>_summary.json`
-
-It loads oracle fields internally for judging, but removes them from the query shown to
-the selected harness. OpenCode runs write a per-run `opencode.json`, capture
-JSONL events, and extract final text into `output.txt`; Codex runs use
-`--output-last-message` to write `output.txt` directly.
-
-## HTTP Usage
-
-Start the local server:
-
-```bash
-python -m agent_env.http_server --host 127.0.0.1 --port 8765
-```
-
-List tools:
-
-```bash
-curl http://127.0.0.1:8765/tools
-```
-
-Call a tool:
-
-```bash
-curl -X POST http://127.0.0.1:8765/call \
-  -H 'Content-Type: application/json' \
-  -d '{"tool":"attractions_keys","arguments":{"city":"上海"}}'
-```
-
-Call the original command-string interface:
-
-```bash
-curl -X POST http://127.0.0.1:8765/world-command \
-  -H 'Content-Type: application/json' \
-  -d '{"command":"attractions_keys(\"上海\")"}'
-```
-
-## Boundary
-
-This wrapper is for environment access and information lookup. It does not replace the
-official agent execution or evaluation pipeline. Use the original scripts for benchmark
-runs and scoring.
+The Phase 2 runner writes the plan to `results/<method>/<uid>.json`.
+It writes per-query `evaluation.json` and `telemetry.json` under `agent_env/runs/<method>/<uid>/`, plus `<split>_summary.json` in that method directory.
+Use [Phase 2 design](../docs/tpc_phase2_design.md) for the no-oracle architecture and [Phase 2 evaluation](../docs/tpc_phase2_eval.md) for measurement.

@@ -14,7 +14,7 @@ import sys
 import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ORDER = [("Overall", "overall"), ("Overall (official)", "overall_official"), ("FPR", "FPR"), ("C-LPR", "C-LPR"),
+ORDER = [("Overall", "overall"), ("FPR", "FPR"), ("C-LPR", "C-LPR"),
          ("MicEPR", "MicEPR"), ("MacEPR", "MacEPR"),
          ("DAV", "DAV"), ("ATT", "ATT"), ("DDR", "DDR")]
 SCORES_FILE = os.path.join(ROOT, "your_tpc_scores.json")

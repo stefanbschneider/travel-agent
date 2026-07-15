@@ -1,4 +1,4 @@
-"""Unit tests for rehearse_phase2 pure helpers (Task 7).
+"""Unit tests for rehearse_phase2 pure helpers.
 
 The heavy end-to-end / solver-only runs are exercised via an opt-in integration test; here we test
 the deterministic fold selection, the held-out-test guard, and attribution formatting.
@@ -207,9 +207,9 @@ def test_run_end_to_end_chunked_defaults_parallel_to_1(monkeypatch):
     assert captured["parallel"] == 1
 
 
-# --- --fast-fpr env plumbing (plan-2 Step 3) -- TPCAgent._solve behavior itself is covered by
-# tests/phase2/test_solve_early_exit.py; here we only check rehearse() sets/restores the env var
-# around the chunk-dispatching body without touching real solves. ---------------------------
+# --- --fast-fpr environment plumbing ----------------------------------------------------------
+# TPCAgent._solve behavior is covered by test_solve_early_exit.py; these tests only verify that
+# rehearse() sets and restores the environment around chunk dispatch without real solves.
 
 
 def _stub_rehearse_deps(monkeypatch, *, capture_env_into=None):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare the Hugging Face LAMDA-NeSy/ChinaTravel dataset against local tpc_phase1 (Task 12).
+"""Compare the Hugging Face LAMDA-NeSy/ChinaTravel dataset against local tpc_phase1.
 
 Answers: is HF a usable independent generalization/held-out rehearsal set? Reports uid overlap,
 field presence (esp. hard_logic_py / nature_language_en), city coverage vs local, and day/people

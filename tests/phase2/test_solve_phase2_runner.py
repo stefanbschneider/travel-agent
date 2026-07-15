@@ -1,4 +1,4 @@
-"""Integration test for the Phase 2 per-query runner (Task 6).
+"""Integration test for the Phase 2 per-query runner.
 
 Opt-in (marked ``integration``): touches the real WorldEnv + TPCAgent. Run with:
     .venv/bin/python -m pytest -m integration tests/phase2/test_solve_phase2_runner.py

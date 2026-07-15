@@ -1,4 +1,4 @@
-"""Tests for the flag-gated improvement stubs (Task 11).
+"""Tests for the flag-gated improvement stubs.
 
 All three flags default OFF and the deterministic path must be byte-identical to the current
 no-oracle baseline. When a flag is ON, the pipeline routes through a named no-op stub that does not

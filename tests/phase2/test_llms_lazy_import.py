@@ -1,4 +1,4 @@
-"""Regression test for the memory fix in chinatravel/agent/llms.py (Phase 2 plan Step 1).
+"""Regression test for the memory fix in ``chinatravel/agent/llms.py``.
 
 ``init_llm("TPCLLM")`` is on the hot path for every Phase 2 solve (deterministic
 orchestrator wires a stub backbone LLM). It must not pull in transformers/vllm/torch

@@ -1,4 +1,4 @@
-"""Unit tests for parser_vs_oracle structural diff core (Task 8a).
+"""Unit tests for the parser-versus-oracle structural diff core.
 
 The diff compares a parsed (no-oracle) solver-constraint dict against the oracle solver-constraint
 dict, per constraint family, producing precision/recall/value-accuracy and failure buckets:
@@ -51,12 +51,12 @@ def test_wrong_value_is_flagged():
     assert "budgets" in d["buckets"]["wrong_value"]
 
 
-# --- plan3 N1/G6: metric hygiene (taxi default, hotel-distance mirror, branch dedup) --------
+# --- Metric hygiene: taxi default, hotel-distance mirror, and branch de-duplication ----------
 
 
 def test_taxi_cars_equals_matching_party_size_default_is_not_spurious():
     # parse_query_no_oracle always fills taxi_cars_equals = ceil(people/4); when the oracle never
-    # mentions it, that deliberate default must not count against precision (plan3 G6a).
+    # mentions it, that deliberate default must not count against precision.
     oracle = {"budgets": {"total": 1500.0}}
     parsed = {"budgets": {"total": 1500.0}, "taxi_cars_equals": 2}  # ceil(5/4) == 2
     d = pvo.diff_constraints(parsed, oracle, people_number=5)
@@ -78,7 +78,7 @@ def test_taxi_cars_equals_not_matching_default_still_spurious():
 
 def test_taxi_cars_equals_spurious_without_people_number():
     # No people_number context (e.g. a raw curated dict in a unit test) -> can't compute the
-    # default, so falls back to counting as spurious (conservative, matches pre-N1 behavior).
+    # default, so it falls back to a conservative spurious classification.
     oracle = {"budgets": {"total": 1500.0}}
     parsed = {"budgets": {"total": 1500.0}, "taxi_cars_equals": 2}
     d = pvo.diff_constraints(parsed, oracle)
@@ -88,7 +88,7 @@ def test_taxi_cars_equals_spurious_without_people_number():
 
 def test_hotel_nearby_and_poi_distance_hotel_mirror_counted_once():
     # Both parser and oracle may mirror the same hotel-distance constraint into hotel_nearby
-    # (dict) and poi_distance_hotel (list); must diff as one family, not two (plan3 G6b).
+    # (dict) and poi_distance_hotel (list); the diff must count one family, not two.
     item = {"reference": "Some POI", "distance_km": 1.0}
     oracle = {"hotel_nearby": item, "poi_distance_hotel": [item]}
     parsed = {"hotel_nearby": item, "poi_distance_hotel": [item]}
@@ -127,7 +127,7 @@ def test_no_disjunction_when_branch_counts_match():
     assert d["disjunction_flattened"] is False
 
 
-# --- Step 5: branch_aware family buckets (previously always empty) --------
+# --- Branch-aware family buckets --------------------------------------------------------------
 #
 # _branch_aware_diff only accumulated counts, never family names, so run_report's family_stats
 # aggregation (which reads row["buckets"]) was silently vacuous whenever --branch-aware was used.
@@ -185,7 +185,7 @@ def test_aggregate_family_stats_sorts_by_spurious_count_desc():
 
 
 def test_aggregate_family_stats_dedupes_per_uid_family_bucket_by_default():
-    # plan3 N1/G6c: a family appearing in the same bucket across multiple OR branches of one uid
+    # A family appearing in the same bucket across multiple OR branches of one UID
     # (branch-aware diff) must count once per uid, not once per branch occurrence.
     rows = [
         {"uid": "u1", "buckets": {"matched": [], "missing": [], "spurious": ["a", "a", "a"], "wrong_value": []}},
@@ -197,7 +197,7 @@ def test_aggregate_family_stats_dedupes_per_uid_family_bucket_by_default():
     assert {s["family"]: s["spurious"] for s in raw}["a"] == 3
 
 
-# --- Two-sided behavioral proxy: reject-side probes (plan-2 Step 5) ----------
+# --- Two-sided behavioral proxy: reject-side probes -------------------------------------------
 
 
 def _q(uid, target_city="Beijing", days=3):
@@ -307,7 +307,7 @@ def test_attribute_reject_misses_ignores_unknown_uid():
     assert family_stats[0]["reject_miss"] == 0
 
 
-# --- plan3 N5: HF dataset loader (generalization probe) --------------------
+# --- HF dataset loader: generalization probe --------------------------------------------------
 
 
 class _FakeSplit:

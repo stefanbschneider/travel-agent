@@ -1,121 +1,71 @@
 ---
 name: chinatravel-agent-env
-description: Use when solving ChinaTravel benchmark queries with the local agent_env CLI, including loading benchmark queries, inspecting attractions/restaurants/hotels/transport, producing itinerary JSON, and evaluating one solved query.
+description: Use when solving or inspecting ChinaTravel queries through the local agent_env CLI, producing an evaluator-valid itinerary, or invoking the no-oracle Phase 2 harness.
 ---
 
 # ChinaTravel Agent Environment
 
-Use this skill when a task asks you to solve or inspect ChinaTravel benchmark
-queries with the local `agent_env` command-line interface.
-
-## Core Rule
-
-Use the structured CLI tools first. Use raw `world` commands only when the
-structured tool catalog does not cover the lookup.
-
-Run commands from the repository root:
+Use this skill for one query at a time from the repository root.
+Use the project interpreter for every command:
 
 ```bash
-python -m agent_env.cli tools
-python -m agent_env.cli splits
-python -m agent_env.cli call <tool_name> '<json_arguments>'
-python -m agent_env.cli world "<WorldEnv command>"
+.venv/bin/python -m agent_env.cli tools
+.venv/bin/python -m agent_env.cli call <tool_name> '<json_arguments>'
+.venv/bin/python -m agent_env.cli world '<WorldEnv command>'
 ```
 
-The CLI returns JSON. Check `success` before relying on `data`.
+## Query and tool workflow
 
-## Common Lookups
+1. Load the assigned query with `china_travel_load_query`; use only its visible fields in a Phase 2 solve.
+2. Inspect the structured tool catalog and the relevant table keys before filtering a city, POI, restaurant, accommodation, or transport route.
+3. Use structured calls first. Use `world` only when the catalog has no equivalent lookup.
+4. Check every response's `success` field before consuming `data`.
+5. Copy exact returned names, IDs, prices, times, distances, route segments, room metadata, and transport counts into the itinerary. Never invent an environment fact.
 
-List query splits:
+The Phase 2 agent path must not read, infer from, emit, or retain oracle verifier fields.
+The harness may keep those fields separately for evaluation; that does not authorize access by the agent.
+Phase 1 may use released oracle data only when its caller explicitly selects that offline workflow.
+
+## Output discipline
+
+Return one final JSON itinerary and no explanatory prose.
+When a harness requires wrapper tags, put only that JSON between its prescribed tags.
+The structural contract is [output_schema.json](../chinatravel/evaluation/output_schema.json).
+A schema-valid object is necessary but not sufficient: the semantic authority is [commonsense_constraint.py](../chinatravel/symbol_verification/commonsense_constraint.py), plus the hard-constraint evaluator used by the harness.
+
+Every activity has `type`, `start_time`, `end_time`, `price`, `cost`, and `transports`.
+Use `HH:MM` times and preserve activity order.
+
+| Activity | Required semantic fields and facts |
+| --- | --- |
+| `train` / `airplane` | Use the exact first outbound and final return service. Include `start`, `end`, `tickets`, the matching `TrainID` or `FlightID`, returned times and price, and `cost = price × tickets`. Do not provide `position`. |
+| `attraction` | Include exact `position`, `tickets`, returned price, and `cost = price × tickets`. Schedule entirely within the returned opening interval. Do not repeat an attraction. |
+| `breakfast` / `lunch` / `dinner` | Include exact restaurant or breakfast-hotel `position`, returned price, and `cost = price × people_number`. A hotel breakfast has price and cost zero. Do not repeat restaurants. Respect returned opening hours. Start meals in the inclusive planner windows: breakfast `07:00`–`09:00`, lunch `11:00`–`13:00`, dinner `17:00`–`20:00`. |
+| `accommodation` | Include exact `position`, returned `price` and `room_type`, `rooms`, and `cost = price × rooms`. A multi-day itinerary needs accommodation. |
+
+For each non-empty in-city `transports` route, preserve the exact tool-returned segments and their order.
+Do not synthesize a metro route: it has the returned walk–metro–walk segments.
+Walk and taxi are their returned single segments; use the returned fare, distance, times, tickets or cars, and matching cost formula.
+
+## Validate before delivery
+
+Check all visible hard requirements against the constructed itinerary before returning it.
+Then verify structure, semantic facts, timing, route continuity, and cost arithmetic against the sources above.
+If a requirement or verifier behavior is unclear, inspect the source or query the environment; do not guess.
+
+## Harness entry points
+
+Use the generic compatibility harness when a caller asks for OpenCode or Codex execution:
 
 ```bash
-python -m agent_env.cli call china_travel_list_splits
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split> --uid <uid>
 ```
 
-Load query metadata:
+Use the repository no-oracle implementation for Phase 2 orchestration:
 
 ```bash
-python -m agent_env.cli call china_travel_load_query '{"split":"easy"}'
-python -m agent_env.cli call china_travel_load_query '{"split":"easy","uid":"<uid>"}'
+.venv/bin/python agent_env/scripts/solve_phase2.py --split <split> --limit 1 --budget-sec 300
 ```
 
-Inspect available columns:
-
-```bash
-python -m agent_env.cli call attractions_keys '{"city":"上海"}'
-python -m agent_env.cli call restaurants_keys '{"city":"上海"}'
-python -m agent_env.cli call accommodations_keys '{"city":"上海"}'
-```
-
-Filter resources:
-
-```bash
-python -m agent_env.cli call attractions_select '{"city":"上海","key":"name","op":"contains","value":"博物馆"}'
-python -m agent_env.cli call restaurants_select '{"city":"上海","key":"cuisine","op":"eq","value":"本帮江浙菜"}'
-python -m agent_env.cli call accommodations_select '{"city":"上海","key":"price","op":"le","value":500}'
-```
-
-Find nearby resources:
-
-```bash
-python -m agent_env.cli call attractions_nearby '{"city":"上海","point":"上海迪士尼度假区","topk":5,"dist":5}'
-python -m agent_env.cli call restaurants_nearby '{"city":"上海","point":"上海迪士尼度假区","topk":5,"dist":2}'
-python -m agent_env.cli call accommodations_nearby '{"city":"上海","point":"上海迪士尼度假区","topk":5,"dist":5}'
-```
-
-Check transport:
-
-```bash
-python -m agent_env.cli call intercity_transport_select '{"start_city":"北京","end_city":"上海","intercity_type":"train","earliest_leave_time":"07:00"}'
-python -m agent_env.cli call goto '{"city":"上海","start":"上海站","end":"上海迪士尼度假区","start_time":"09:00","transport_type":"metro"}'
-```
-
-Use the exact values returned by the tools for prices, IDs, names, times,
-distances, and transport segments. Do not invent POI names or transport details.
-
-## Output Contract
-
-Return only a JSON itinerary matching `chinatravel/evaluation/output_schema.json`.
-The top-level object must include:
-
-- `people_number`
-- `start_city`
-- `target_city`
-- `itinerary`
-
-Each activity must include:
-
-- `type`
-- `start_time`
-- `end_time`
-- `price`
-- `cost`
-- `transports`
-
-Intercity activities also need `start`, `end`, `tickets`, and `TrainID` or
-`FlightID`. Attraction activities need `position` and `tickets`.
-Accommodation activities need `position`, `room_type`, and `rooms`.
-
-## Split Automation
-
-Use the bundled harness to load a configured split, call a harness non-interactively,
-save plans under `results/<method>/<uid>.json`, and evaluate them:
-
-```bash
-python agent_env/scripts/solve_script_with_harness.py --split easy
-```
-
-Useful options:
-
-```bash
-python agent_env/scripts/solve_script_with_harness.py --split easy --uid <uid>
-python agent_env/scripts/solve_script_with_harness.py --split easy --harness opencode --model dashscope/qwen3.6-27b
-python agent_env/scripts/solve_script_with_harness.py --split easy --harness codex --model gpt-5.5
-python agent_env/scripts/solve_script_with_harness.py --split easy --timeout 900
-python agent_env/scripts/solve_script_with_harness.py --split easy --limit 1
-python agent_env/scripts/solve_script_with_harness.py --split easy --no-run-harness
-```
-
-The harness hides oracle verifier fields from the selected model, but keeps them
-internally for hard-constraint evaluation. Result directories default to
-`<model>-<split>-<harness>` unless a method override is supplied.
+Both write plans to `results/<method>/<uid>.json`. The generic harness stores prompt, output, and evaluation artifacts under its configured run directory; the repository runner also stores `telemetry.json`.
+The budget is a local setting, not an organizer-confirmed timeout.

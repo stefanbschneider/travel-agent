@@ -1,92 +1,56 @@
-# Agent Design Overview
+# TPCAgent Architecture
 
-This file is the shared overview of the current TPCAgent stack.
+This is the stable component and data-flow map for the shared ChinaTravel planner.
+Use the phase documents for operations, evaluation, and priorities rather than adding status here.
 
-Phase-specific details now live in:
+## Ownership
 
-- `docs/tpc_phase1_playbook.md` — public leaderboard strategy and operating workflows
-- `docs/tpc_phase2_design.md` — final harness design, no-oracle parsing, and orchestration plan
-- `docs/tpc_phase2_eval.md` — Phase 2 evaluation methodology (three axes + attribution)
-- `docs/tpc_phase2_implementation_plan.md` — step-by-step build plan for the skeleton harness + eval
+| Component | Responsibility | Primary source |
+| --- | --- | --- |
+| Constraint extraction | Convert oracle logic or visible query text into solver-facing constraints and branch-local variants | `chinatravel/agent/tpc_agent/solver_constraints.py`, `parse_constraints.py` |
+| Deterministic planner | Build, repair, restart, rank, pack, and densify itinerary candidates | `chinatravel/agent/tpc_agent/tpc_agent.py` |
+| CP-SAT tier | Build deterministic candidate pools and solve hard residuals | `chinatravel/agent/tpc_agent/cp_candidates.py`, `chinatravel/agent/tpc_agent/cp_solver.py` |
+| Acceptance | Apply oracle logic in Phase 1 or parsed constraints in no-oracle mode, then schema and commonsense checks | `tpc_agent.py`, `parsed_verifier.py` |
+| Phase 2 orchestration | Normalize parsed input, allocate bounded work, call the shared planner, and finalize output | `chinatravel/agent/phase2/orchestrator.py` |
+| Harness boundary | Hide oracle-only fields, expose environment tools, and publish the official output layout | `agent_env/scripts/solve_phase2.py`, `agent_env/` |
+| World facts | Supply POIs, schedules, prices, restaurants, hotels, and transport | `chinatravel/environment/` and `WorldEnv` |
 
-## Competition Split
+## Shared flow
 
-- **Phase 1:** offline prediction generation on the released query set, with oracle constraints available locally when `--oracle_translation` is enabled
-- **Phase 2:** organizer-run per-query harness on held-out queries, with only visible natural-language input exposed to the agent
-
-The deterministic core below is shared across both phases, but the top-level control logic differs.
-
-## Current Agent (TPCAgent)
-
-`chinatravel/agent/tpc_agent/tpc_agent.py` — `TPCAgent`  
-`chinatravel/agent/tpc_agent/solver_constraints.py` — branch-local constraint variants  
-`chinatravel/agent/tpc_agent/cp_candidates.py` — candidate pool extraction  
-`chinatravel/agent/tpc_agent/cp_solver.py` — CP-SAT tier + reconstruction  
-`chinatravel/agent/tpc_agent/parsed_verifier.py` — no-oracle verifier
-
-### Architecture
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  1. CONSTRAINT EXTRACTION + VARIANTS                    │
-│  parse_constraints + branch-local hard-logic extraction │
-│  (one normalized constraint dict per OR branch)         │
-└───────────────────────┬──────────────────────────────────┘
-                        ▼
-┌──────────────────────────────────────────────────────────┐
-│  2. ACCEPTANCE CHECKER                                  │
-│  base: oracle hard_logic_py (or parsed verifier)        │
-│  gate: schema + commonsense once base is fully passed   │
-└───────────────────────┬──────────────────────────────────┘
-                        ▼
-┌──────────────────────────────────────────────────────────┐
-│  3. MULTI-TIER PLAN SEARCH                              │
-│  base build -> guided repair priors -> random restarts  │
-│  optional CP-SAT rescue for hard leftovers              │
-└───────────────────────┬──────────────────────────────────┘
-                        ▼
-┌──────────────────────────────────────────────────────────┐
-│  4. CONSTRAINT-SAFE PREFERENCE PACKING                  │
-│  pack + densify only when acceptance remains true       │
-│  monotonic best-of updates via eval_tpc --update_best   │
-└──────────────────────────────────────────────────────────┘
+```text
+query input
+  -> constraint source
+  -> normalized branch-local variants
+  -> deterministic base build
+  -> guided repair and deterministic restarts
+  -> optional CP-SAT rescue or refinement
+  -> full acceptance gate
+  -> acceptance-gated packing or densification
+  -> best accepted itinerary
 ```
 
-### Key Principles
+A candidate is never retained merely because it improves a proxy score.
+The acceptance gate controls every repair and preference lift.
+Environment facts are read from `WorldEnv`; the planner does not invent POI names, prices, schedules, or transport records.
+OR-style constraints stay branch-local until a candidate is checked.
 
-- **Constraint-first optimization.** Optimize the exact acceptance criterion (logic + schema + commonsense), not a proxy.
-- **Deterministic data grounding.** POIs, prices, schedules, and transport details are read from `WorldEnv`; no fabricated values.
-- **Branch-local correctness.** OR-style constraints are solved per branch to avoid cross-branch contamination.
-- **Any preference lift is gated by validity.** Packing/densification is accepted only when full checks still pass.
+## Phase boundary
 
-## What Is Shared Across Phases
+| | Phase 1 | Phase 2 |
+| --- | --- | --- |
+| Input | Released query data | Visible natural-language query and allowed tools |
+| Constraint source | Released oracle logic may be used locally | Parsed, normalized no-oracle constraints only |
+| Runtime model | Offline, resumable, per-query optimization | Per-query organizer harness with a bounded local allocation |
+| Acceptance path | Oracle logic, schema, and commonsense | Parsed verifier, schema, and commonsense locally; organizer evaluation remains authoritative |
+| Result handling | `scripts/merge.py` monotonically updates `results/best/` | Return one final output through the harness; do not rely on oracle fields |
 
-The following design choices remain correct in both phases:
+The common solver remains deterministic when optional features are off.
+Phase 2 may add bounded parsing or refinement around it, but must preserve a safe deterministic path and a final accepted fallback.
 
-- deterministic-first planning
-- branch-local constraint reasoning
-- environment-grounded costs, times, and transport
-- CP-SAT as a targeted rescue or refinement tier
-- acceptance-gated preference improvement
+## Related documents
 
-## What Changes Between Phases
-
-### Phase 1
-
-The system can optimize directly against released oracle hard logic and be rerun for as long as needed.
-
-### Phase 2
-
-The system must infer constraints from the visible natural-language query, run inside a bounded
-harness budget, and return a final result safely before timeout.
-
-That means Phase 2 is not primarily a new planning problem. It is a stronger **no-oracle parsing
-and orchestration** problem wrapped around the same deterministic planner.
-
-## Current Main Risk For Phase 2
-
-The core planner is already aligned with a Phase 2 direction, but parser parity is not. In the
-current no-oracle path, ambiguity and disjunctive branches are flattened too early, which is the
-highest-priority gap to close before final harness packaging.
-
-See `docs/tpc_phase2_design.md` for the recommended fix direction.
+- [Phase 1 playbook](docs/tpc_phase1_playbook.md): operating and merge workflow.
+- [Phase 2 design](docs/tpc_phase2_design.md): no-oracle interfaces and bounded flow.
+- [Phase 2 evaluation](docs/tpc_phase2_eval.md): measurement axes and regression gates.
+- [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions and priorities.
+- [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md): search tiers and primary knobs.

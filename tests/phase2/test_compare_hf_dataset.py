@@ -1,4 +1,4 @@
-"""Unit tests for the HF-vs-local dataset comparison core (Task 12).
+"""Unit tests for the HF-versus-local dataset comparison core.
 
 The comparison logic is pure over lists of query dicts, so we test it on small in-memory fixtures
 (no network / no datasets library). An opt-in integration test can load the real HF dataset.

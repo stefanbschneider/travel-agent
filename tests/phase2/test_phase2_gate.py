@@ -1,7 +1,7 @@
-"""Unit tests for the Phase 2 regression gate (Task 10).
+"""Unit tests for the Phase 2 regression gate.
 
-A change is promoted only if, on the fold, it does not drop official score (FPR) or increase
-parse-failure / timeout counts vs the baseline.
+A change is promoted only if its primary score does not drop and its parse-failure or timeout
+counts do not increase versus the baseline.
 """
 
 from __future__ import annotations
@@ -49,8 +49,7 @@ def test_gate_tolerance_allows_tiny_score_dip():
     assert G.check_gate(BASE, cand, tol=0.1)["passed"] is True
 
 
-# --- continuous_score as primary metric (2026-07-14: FPR found noise-dominated at repeats=2 on
-# a tight budget -- see docs/tpc_phase2_plan3.md's "Next steps" section) -------------------------
+# --- continuous_score is primary when both rows provide it; FPR remains advisory ------------
 
 BASE_CS = {"fpr": 82.35, "continuous_score": 86.43, "parse_failures": 0, "timeouts": 0}
 

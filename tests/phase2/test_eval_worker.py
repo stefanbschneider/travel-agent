@@ -1,8 +1,8 @@
-"""Unit tests for scripts/phase2_eval_worker.py (plan-2 Step 4).
+"""Unit tests for ``scripts/phase2_eval_worker.py``.
 
-Pure-function tests only, plus a dependency-injected ``run_once`` dry-run/no-op check -- no real
-git remote or solver eval (that's VM 2's job; see the plan's Step 4 acceptance note). Reuses the
-same fake-git-repo pattern as tests/phase2/test_diff_eval.py for the allowlist-touch check.
+Pure-function tests plus a dependency-injected ``run_once`` dry-run/no-op check. They use no
+real git remote or solver evaluation and reuse the fake-repository pattern from
+``tests/phase2/test_diff_eval.py`` for allowlist-touch checks.
 """
 
 from __future__ import annotations
@@ -211,8 +211,8 @@ def test_run_once_dry_run_reports_plan_without_running():
 
 def test_run_once_second_call_is_noop_when_already_evaluated(tmp_path):
     ledger_root = tmp_path / "ledger_wt"
-    (ledger_root / "docs" / "phase2_baselines").mkdir(parents=True)
-    history_path = ledger_root / "docs" / "phase2_baselines" / "history.jsonl"
+    (ledger_root / "results" / "phase2_baselines").mkdir(parents=True)
+    history_path = ledger_root / "results" / "phase2_baselines" / "history.jsonl"
     history_path.write_text(json.dumps({"git_sha": "deadbeef", "label": worker.CANONICAL_LABEL}) + "\n")
 
     calls = {"eval_at": 0, "commit_push": 0}
@@ -240,7 +240,7 @@ def test_run_once_second_call_is_noop_when_already_evaluated(tmp_path):
 
 def test_run_once_runs_and_publishes_missing_labels(tmp_path):
     ledger_root = tmp_path / "ledger_wt"
-    (ledger_root / "docs" / "phase2_baselines").mkdir(parents=True)
+    (ledger_root / "results" / "phase2_baselines").mkdir(parents=True)
 
     calls = {"eval_at": [], "commit_push": []}
 
@@ -267,7 +267,7 @@ def test_run_once_runs_and_publishes_missing_labels(tmp_path):
 
 def test_run_once_skips_push_on_eval_at_failure(tmp_path):
     ledger_root = tmp_path / "ledger_wt"
-    (ledger_root / "docs" / "phase2_baselines").mkdir(parents=True)
+    (ledger_root / "results" / "phase2_baselines").mkdir(parents=True)
 
     def failing_run_eval_at(cmd, env):
         return 1

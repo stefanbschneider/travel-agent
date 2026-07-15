@@ -173,11 +173,9 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
         add(all(room_type_fn(a) == room_numbed for a in hotels))
 
     # --- Hotel proximity ---------------------------------------------------
-    # NL-stated distances are display-rounded from the oracle's unrounded hard_logic_py float --
-    # empirically always a ceiling to 2 decimals (val split: gap in [0, 0.00991], never negative;
-    # plan3 G1 corollary/N3.4). Tighten by the 0.01 km rounding bound so our acceptance check is
-    # never looser than the true oracle threshold; keep the parsed value itself unchanged in the
-    # constraint dict (diffing/reporting still compares against the parsed display value).
+    # Display-rounded hotel-distance values can be up to 0.01 km looser than the oracle
+    # threshold. Tighten by that bound so this acceptance check is never looser; retain the
+    # parsed display value in the constraint dict for reporting and diffing.
     nearby = constraints.get("hotel_nearby")
     if isinstance(nearby, dict) and nearby.get("reference") and hotels:
         ref = nearby["reference"]
