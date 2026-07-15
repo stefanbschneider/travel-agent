@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 
 import phase2_record_baseline as baseline
+import rehearse_phase2
+import make_phase2_splits as splits_lib
 from agent_env.adapter import ChinaTravelEnvAdapter
 from chinatravel.data.load_datasets import load_query
 from solve_script_with_harness import load_queries as harness_load_queries
@@ -134,3 +136,27 @@ def test_familiar_source_metadata_is_written_to_history_csv(tmp_path: Path):
     assert row["data_source_id"] == source["id"]
     assert row["data_source_url"] == source["source_url"]
     assert row["data_source_archive_sha256"] == EXPECTED_ARCHIVE_SHA256
+
+
+def test_familiar_split_set_alias_resolves_without_heldout_warning(capsys):
+    name, is_test = rehearse_phase2.resolve_split_set("familiar_100")
+
+    assert name == SPLIT
+    assert is_test is False
+    # familiar-100 is development data, not the held-out test: no overfitting warning.
+    assert capsys.readouterr().out == ""
+
+
+def test_familiar_baseline_cli_accepts_split_set_alias():
+    args = baseline.parse_args(["--split-set", "familiar_100", "--folds", "1"])
+
+    assert args.split_set == "familiar_100"
+    assert args.folds == 1
+
+
+def test_familiar_single_fold_selects_all_records(project_root: Path):
+    uids = splits_lib.read_split(SPLIT)
+    selected = rehearse_phase2.select_fold(uids, fold=0, folds=1)
+
+    assert len(selected) == 100
+    assert set(selected) == set(uids)

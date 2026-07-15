@@ -692,7 +692,7 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--split-set", choices=["val", "test"], default="val")
+    p.add_argument("--split-set", choices=["val", "test", "familiar_100"], default="val")
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--folds", type=int, default=rehearse_mod.DEFAULT_FOLDS)
     p.add_argument("--seed", type=int, default=rehearse_mod.DEFAULT_SEED)

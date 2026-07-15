@@ -85,16 +85,24 @@ def select_fold(uids: list[str], *, fold: int, folds: int, seed: int = DEFAULT_S
 
 
 def resolve_split_set(split_set: str) -> tuple[str, bool]:
-    """Map 'val'/'test' to the split file name; warn (and flag) when the held-out test is used."""
+    """Map a split-set alias to its split file name; flag the held-out test when used.
+
+    ``val``/``test`` partition the repository-local tpc_phase1 queries. ``familiar_100`` selects
+    the organizers' imported official development set (tpc_phase2_familiar_100); it is drawn from
+    the final distribution but is development-only and is not the held-out test, so it carries no
+    overfitting warning (see docs/tpc_phase2_hf_dataset.md).
+    """
     if split_set == "val":
         return "tpc_phase2_val", False
+    if split_set == "familiar_100":
+        return "tpc_phase2_familiar_100", False
     if split_set == "test":
         print(
             "WARNING: using the HELD-OUT test split. Use this sparingly (final overfitting check "
             "only) — see docs/tpc_phase2_eval.md."
         )
         return "tpc_phase2_test", True
-    raise ValueError(f"split_set must be 'val' or 'test', got {split_set!r}")
+    raise ValueError(f"split_set must be 'val', 'test', or 'familiar_100', got {split_set!r}")
 
 
 def format_attribution(*, ceiling: float, solver_only: float, end_to_end: float) -> str:
@@ -539,7 +547,7 @@ def _rehearse_body(
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--mode", choices=["end-to-end", "solver-only", "both"], default="both")
-    p.add_argument("--split-set", choices=["val", "test"], default="val")
+    p.add_argument("--split-set", choices=["val", "test", "familiar_100"], default="val")
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--folds", type=int, default=DEFAULT_FOLDS)
     p.add_argument("--seed", type=int, default=DEFAULT_SEED)
