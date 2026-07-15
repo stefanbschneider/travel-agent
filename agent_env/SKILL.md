@@ -16,9 +16,9 @@ Use the project interpreter for every command:
 
 ## Query and tool workflow
 
-1. Load the assigned query with `china_travel_load_query`; use only its visible fields in a Phase 2 solve.
+1. Load the assigned query with `china_travel_load_query`; use only its visible fields in a Phase 2 solve. The tool rejects oracle-translation overrides and strips oracle verifier fields defensively.
 2. Inspect the structured tool catalog and the relevant table keys before filtering a city, POI, restaurant, accommodation, or transport route.
-3. Use structured calls first. Use `world` only when the catalog has no equivalent lookup.
+3. Use structured calls first. Use `world` only when the catalog has no equivalent lookup. It accepts direct calls to allowlisted `WorldEnv` functions with literal arguments or safe one-argument predicates; imports, attribute access, and arbitrary Python are rejected.
 4. Check every response's `success` field before consuming `data`.
 5. Copy exact returned names, IDs, prices, times, distances, route segments, room metadata, and transport counts into the itinerary. Never invent an environment fact.
 

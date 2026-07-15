@@ -112,8 +112,10 @@ def main() -> None:
         help='JSON object arguments, e.g. \'{"city":"上海"}\'.',
     )
 
-    world_parser = subparsers.add_parser("world", help="Call the raw WorldEnv command surface.")
-    world_parser.add_argument("world_command", help="WorldEnv command string.")
+    world_parser = subparsers.add_parser(
+        "world", help="Call an allowlisted WorldEnv function."
+    )
+    world_parser.add_argument("world_command", help="Constrained WorldEnv call string.")
 
     args = parser.parse_args()
     adapter = ChinaTravelEnvAdapter()

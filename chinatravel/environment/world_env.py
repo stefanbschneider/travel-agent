@@ -1,3 +1,4 @@
+import ast
 import os
 import sys
 
@@ -81,6 +82,123 @@ class EnvOutput:
         return self
 
 
+def _safe_compare(operator, left, right):
+    if isinstance(operator, ast.Eq):
+        return left == right
+    if isinstance(operator, ast.NotEq):
+        return left != right
+    if isinstance(operator, ast.Lt):
+        return left < right
+    if isinstance(operator, ast.LtE):
+        return left <= right
+    if isinstance(operator, ast.Gt):
+        return left > right
+    if isinstance(operator, ast.GtE):
+        return left >= right
+    if isinstance(operator, ast.In):
+        return left in right
+    if isinstance(operator, ast.NotIn):
+        return left not in right
+    if isinstance(operator, ast.Is):
+        return left is right
+    if isinstance(operator, ast.IsNot):
+        return left is not right
+    raise ValueError(f"Unsupported predicate comparison: {operator.__class__.__name__}.")
+
+
+def _safe_predicate_value(node, parameter, value):
+    try:
+        return ast.literal_eval(node)
+    except (TypeError, ValueError):
+        pass
+
+    if isinstance(node, ast.Name) and node.id == parameter:
+        return value
+    if isinstance(node, ast.Call):
+        if (
+            isinstance(node.func, ast.Name)
+            and node.func.id == "str"
+            and len(node.args) == 1
+            and not node.keywords
+        ):
+            return str(_safe_predicate_value(node.args[0], parameter, value))
+        raise ValueError("Only str(value) calls are allowed in predicates.")
+    if isinstance(node, ast.BoolOp):
+        if isinstance(node.op, ast.And):
+            return all(
+                bool(_safe_predicate_value(item, parameter, value))
+                for item in node.values
+            )
+        if isinstance(node.op, ast.Or):
+            return any(
+                bool(_safe_predicate_value(item, parameter, value))
+                for item in node.values
+            )
+        raise ValueError(f"Unsupported predicate boolean operator: {node.op.__class__.__name__}.")
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+        return not bool(_safe_predicate_value(node.operand, parameter, value))
+    if isinstance(node, ast.Compare):
+        left = _safe_predicate_value(node.left, parameter, value)
+        for operator, comparator in zip(node.ops, node.comparators):
+            right = _safe_predicate_value(comparator, parameter, value)
+            if not _safe_compare(operator, left, right):
+                return False
+            left = right
+        return True
+    raise ValueError(f"Unsupported predicate expression: {node.__class__.__name__}.")
+
+
+def _safe_predicate(node):
+    positional = [*node.args.posonlyargs, *node.args.args]
+    if (
+        len(positional) != 1
+        or node.args.vararg is not None
+        or node.args.kwarg is not None
+        or node.args.kwonlyargs
+        or node.args.defaults
+        or node.args.kw_defaults
+    ):
+        raise ValueError("Predicates must accept exactly one positional argument.")
+    parameter = positional[0].arg
+    return lambda value: bool(_safe_predicate_value(node.body, parameter, value))
+
+
+def _safe_command_argument(node):
+    if isinstance(node, ast.Lambda):
+        return _safe_predicate(node)
+    try:
+        return ast.literal_eval(node)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            "Command arguments must be literals or safe one-argument predicates."
+        ) from exc
+
+
+def _execute_world_command(command, handlers):
+    if not isinstance(command, str) or not command.strip():
+        raise ValueError("Command must be a non-empty string.")
+    if len(command) > 4096:
+        raise ValueError("Command exceeds the 4096-character limit.")
+
+    expression = ast.parse(command.strip(), mode="eval").body
+    if not isinstance(expression, ast.Call) or not isinstance(expression.func, ast.Name):
+        raise ValueError("Command must be a direct call to an allowed WorldEnv function.")
+
+    name = expression.func.id
+    if name not in handlers:
+        raise ValueError(f"Unsupported WorldEnv function: {name}.")
+
+    args = [_safe_command_argument(argument) for argument in expression.args]
+    kwargs = {}
+    for keyword in expression.keywords:
+        if keyword.arg is None:
+            raise ValueError("Expanded keyword arguments are not allowed.")
+        if keyword.arg in kwargs:
+            raise ValueError(f"Duplicate keyword argument: {keyword.arg}.")
+        kwargs[keyword.arg] = _safe_command_argument(keyword.value)
+    return handlers[name](*args, **kwargs)
+
+
 class WorldEnv:
     """
     World Environment
@@ -107,35 +225,31 @@ class WorldEnv:
         """
         Call the API by command string in the format of python function call.
         """
-        # init env to execute the command directly
-        attractions_keys = self.attractions.keys
-        attractions_types = self.attractions.get_type_list
-        attractions_select = self.attractions.select
-        attractions_id_is_open = self.attractions.id_is_open
-        attractions_nearby = self.attractions.nearby
-
-        accommodations_keys = self.accommodations.keys
-        accommodations_select = self.accommodations.select
-        accommodations_nearby = self.accommodations.nearby
-
-        restaurants_select = self.restaurants.select
-        restaurants_keys = self.restaurants.keys
-        restaurants_nearby = self.restaurants.nearby
-        restaurants_id_is_open = self.restaurants.id_is_open
-        restaurants_cuisine = self.restaurants.get_cuisine_list
-        restaurants_with_recommended_food = (
-            self.restaurants.restaurants_with_recommended_food
-        )
-
-        goto = self.transportation.goto
-        intercity_transport_select = self.intercitytransport.select
-        poi_lat_lon_search = self.poi.search
-
-        next_page = self.next_page
-        Results = self.results
+        handlers = {
+            "attractions_keys": self.attractions.keys,
+            "attractions_types": self.attractions.get_type_list,
+            "attractions_select": self.attractions.select,
+            "attractions_id_is_open": self.attractions.id_is_open,
+            "attractions_nearby": self.attractions.nearby,
+            "accommodations_keys": self.accommodations.keys,
+            "accommodations_select": self.accommodations.select,
+            "accommodations_nearby": self.accommodations.nearby,
+            "restaurants_select": self.restaurants.select,
+            "restaurants_keys": self.restaurants.keys,
+            "restaurants_nearby": self.restaurants.nearby,
+            "restaurants_id_is_open": self.restaurants.id_is_open,
+            "restaurants_cuisine": self.restaurants.get_cuisine_list,
+            "restaurants_with_recommended_food": (
+                self.restaurants.restaurants_with_recommended_food
+            ),
+            "goto": self.transportation.goto,
+            "intercity_transport_select": self.intercitytransport.select,
+            "poi_lat_lon_search": self.poi.search,
+            "next_page": self.next_page,
+        }
 
         try:
-            res = eval(cmd_str)
+            res = _execute_world_command(cmd_str, handlers)
             if not isinstance(res, EnvOutput):
                 res = EnvOutput(True, res)
         except Exception as e:
@@ -266,8 +380,8 @@ end_city: The end city name.
 intercity_type: The type of intercity transportation, must in ['train', 'airplane'].
 earliest_leave_time: The earliest leave time in the format 'HH:MM'.
 
-(17) Results[index] Results[index].next_page()
-Description: Get the result of the index or go to the next page of the result.
+(17) next_page()
+Description: Get the next page of the latest result. Command strings accept only direct calls to documented functions with literal arguments or safe one-argument predicates.
 """
 
 

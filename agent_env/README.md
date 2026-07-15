@@ -22,6 +22,9 @@ Copy `agent_env/config.toml.example` to the ignored local `agent_env/config.toml
 - **Transport:** in-city `goto`, intercity selection, and POI-coordinate lookup.
 - **Raw compatibility:** a constrained `WorldEnv` command interface when no structured call covers the need.
 
+Query loading is fixed to visible mode and defensively strips `hard_logic`, `hard_logic_py`, and `hard_logic_nl`.
+Raw commands accept only direct calls to allowlisted `WorldEnv` functions with literal arguments or safe one-argument predicates; arbitrary Python is rejected.
+
 For exact tool names, request shapes, semantic itinerary rules, and output constraints, read [SKILL.md](SKILL.md).
 
 ## One CLI example

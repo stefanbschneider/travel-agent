@@ -18,6 +18,7 @@ from typing import Any, Callable
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PAGE_SIZE = 10
+ORACLE_QUERY_KEYS = frozenset({"hard_logic", "hard_logic_py", "hard_logic_nl"})
 
 
 def _ensure_project_on_path() -> None:
@@ -136,7 +137,7 @@ def _select_call(api_name: str) -> Callable[[dict[str, Any]], str]:
 TOOL_SPECS: dict[str, ToolSpec] = {
     "china_travel_world_command": ToolSpec(
         "china_travel_world_command",
-        "Call the original ChinaTravel WorldEnv with a Python-call command string. Use only for advanced queries.",
+        "Call an allowlisted WorldEnv function with literal arguments or a safe one-argument predicate.",
         _schema(["command"], {"command": {"type": "string"}}),
     ),
     "china_travel_list_splits": ToolSpec(
@@ -152,7 +153,6 @@ TOOL_SPECS: dict[str, ToolSpec] = {
             {
                 "split": {"type": "string"},
                 "uid": {"type": "string"},
-                "oracle_translation": {"type": "boolean", "default": False},
             },
         ),
     ),
@@ -310,7 +310,22 @@ class ChinaTravelEnvAdapter:
         if name == "china_travel_list_splits":
             return self.list_splits()
         if name == "china_travel_load_query":
-            return self.load_query(**arguments)
+            unsupported = sorted(set(arguments) - {"split", "uid"})
+            if unsupported:
+                return {
+                    "success": False,
+                    "error": (
+                        "Unsupported arguments for china_travel_load_query: "
+                        + ", ".join(unsupported)
+                    ),
+                }
+            split = arguments.get("split")
+            uid = arguments.get("uid")
+            if not isinstance(split, str) or not split:
+                return {"success": False, "error": "split must be a non-empty string."}
+            if uid is not None and not isinstance(uid, str):
+                return {"success": False, "error": "uid must be a string when provided."}
+            return self.load_query(split=split, uid=uid)
         if name == "china_travel_world_command":
             return self.world_command(arguments.get("command", ""))
 
@@ -351,13 +366,12 @@ class ChinaTravelEnvAdapter:
         self,
         split: str,
         uid: str | None = None,
-        oracle_translation: bool = False,
     ) -> dict[str, Any]:
         try:
             _ensure_project_on_path()
             from chinatravel.data.load_datasets import load_query
 
-            args = argparse.Namespace(splits=split, oracle_translation=oracle_translation)
+            args = argparse.Namespace(splits=split, oracle_translation=False)
             query_ids, query_data = load_query(args)
             if uid is not None:
                 if uid not in query_data:
@@ -366,7 +380,13 @@ class ChinaTravelEnvAdapter:
                     "success": True,
                     "split": split,
                     "query_ids": [uid],
-                    "query": _jsonable(query_data[uid]),
+                    "query": _jsonable(
+                        {
+                            key: value
+                            for key, value in query_data[uid].items()
+                            if key not in ORACLE_QUERY_KEYS
+                        }
+                    ),
                 }
             return {
                 "success": True,
