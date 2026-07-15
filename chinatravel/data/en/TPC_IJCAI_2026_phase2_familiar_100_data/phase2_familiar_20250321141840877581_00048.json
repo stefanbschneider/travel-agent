@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250321141840877581_00048",
+  "start_city": "Nanjing",
+  "target_city": "Chongqing",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang\", \"Panna Flavor Restaurant at Chongqing Liangjiang New Area High-Tech Hilton Hotel\", \"Fan Ba Tuo (Proud World Branch)\"}&restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Chongqing Jianchuan Museum Cluster\":\n    if activity_start_time(activity)>=\"14:42\" and activity_end_time(activity)<=\"16:27\": result=True",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"natural scenery\"}&attraction_type_set)",
+    "total_cost=0\nfor activity in allactivities(plan):\n  total_cost+=activity_cost(activity)\n  total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=6436)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Swimming Pool\"}&accommodation_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Liziba Light Rail Station\", \"Two Rivers Ferry\", \"Chongqing Cloud Eye Observation Deck\"}&attraction_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"coffee shop\"}&restaurant_type_set)"
+  ],
+  "nature_language": "We are 4 people traveling from Nanjing to Chongqing for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these restaurants: Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang, Panna Flavor Restaurant at Chongqing Liangjiang New Area High-Tech Hilton Hotel, and Fan Ba Tuo (Proud World Branch).\n5. Visit Chongqing Jianchuan Museum Cluster between 14:42 and 16:27.\n6. Do not include any of these attraction types: natural scenery.\n7. Keep the total activity and in-city transportation cost within 6436.\n8. Do not include any of these hotel feature types: Swimming Pool.\n9. Do not include any of these attractions: Liziba Light Rail Station, Two Rivers Ferry, and Chongqing Cloud Eye Observation Deck.\n10. Do not include any of these restaurant types: coffee shop."
+}

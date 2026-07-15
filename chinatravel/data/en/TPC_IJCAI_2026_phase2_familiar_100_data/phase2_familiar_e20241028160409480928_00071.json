@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_e20241028160409480928_00071",
+  "start_city": "Hangzhou",
+  "target_city": "Wuhan",
+  "days": 1,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==1)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Xia's Clay Pot (Wansongyuan Branch)\", \"Eight Tiles Hot Pot (Huangpu Road Branch)\", \"Pompeii - Reservation-Only Western Restaurant\"}&restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Night Tour of Qingchuan Pavilion (The Legend of Yu the Great at Qingchuan)\":\n    if activity_start_time(activity)>=\"16:05\" and activity_end_time(activity)<=\"18:00\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Wuhan Chedu Kingdom Plaza Hotel (Zhuankou Sports Center)\"}&accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Red tourism sites\"}&attraction_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Great view from the window\", \"Parking lot\"}&accommodation_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"taxi\"}&inner_city_transportation_set)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\"}<=intercity_transport_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\"})",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Snacks\"}<=restaurant_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Han Show Theater\", \"Wuhan Cultural Tourism Group · Hanyangmen Pier (Yangtze River Night Cruise)\", \"Tanhualin\"}&attraction_name_set)"
+  ],
+  "nature_language": "I am traveling from Hangzhou to Wuhan for 1 day.\nRequirements:\n1. The trip must last 1 day.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these restaurants: Xia's Clay Pot (Wansongyuan Branch), Eight Tiles Hot Pot (Huangpu Road Branch), and Pompeii - Reservation-Only Western Restaurant.\n5. Visit Night Tour of Qingchuan Pavilion (The Legend of Yu the Great at Qingchuan) between 16:05 and 18:00.\n6. Do not include any of these hotels: Wuhan Chedu Kingdom Plaza Hotel (Zhuankou Sports Center).\n7. Do not include any of these attraction types: Red tourism sites.\n8. Do not include any of these hotel feature types: Great view from the window and Parking lot.\n9. Do not use taxi for transportation within the destination city.\n10. The intercity itinerary must include airplane.\n11. Use only metro for transportation within the destination city.\n12. Include the following restaurant types: Snacks.\n13. Do not include any of these attractions: Han Show Theater, Wuhan Cultural Tourism Group · Hanyangmen Pier (Yangtze River Night Cruise), and Tanhualin."
+}

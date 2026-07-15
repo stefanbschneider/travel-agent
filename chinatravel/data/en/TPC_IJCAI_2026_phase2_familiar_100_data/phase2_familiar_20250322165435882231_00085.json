@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250322165435882231_00085",
+  "start_city": "Wuhan",
+  "target_city": "Shenzhen",
+  "days": 3,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"historical site\"}<=attraction_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)\"}<=accommodation_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Shenzhen Hard Rock Hotel · SESSIONS All-Day Dining Restaurant\", \"Jun Ting Chinese Restaurant (Hua Qiang Road Branch)\", \"Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)\"}<=restaurant_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Shenzhen Convention and Exhibition Center (Futian Hall)\", \"Pingshan Park\", \"Guan Shanyue Art Museum\"}<=attraction_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"VON Hotel, Shenzhen Nanshan The MixC\", \"Mangonet Building, No. 3955 Baishi Road, Nanshan District, Shenzhen, Guangdong, China\"}&accommodation_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Instagrammable pool\", \"Family Room\"}&accommodation_type_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Wuhan to Shenzhen for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Include the following attraction types: historical site.\n5. Stay at the following hotels: Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop).\n6. Do not use walking for transportation within the destination city.\n7. Dine at the following restaurants: Shenzhen Hard Rock Hotel · SESSIONS All-Day Dining Restaurant, Jun Ting Chinese Restaurant (Hua Qiang Road Branch), and Xinyiwei Chaoshan Rice Noodle King (Meilin Branch).\n8. Visit the following attractions: Shenzhen Convention and Exhibition Center (Futian Hall), Pingshan Park, and Guan Shanyue Art Museum.\n9. Do not include any of these hotels: VON Hotel, Shenzhen Nanshan The MixC and Mangonet Building, No. 3955 Baishi Road, Nanshan District, Shenzhen, Guangdong, China.\n10. Do not include any of these hotel feature types: Instagrammable pool and Family Room."
+}

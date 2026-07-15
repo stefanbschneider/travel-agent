@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250322150346246439_00004",
+  "start_city": "Shanghai",
+  "target_city": "Shenzhen",
+  "days": 4,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Shenzhen Hui Hotel · Hui Chinese Restaurant · Cantonese Cuisine\", \"Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)\", \"Puyutang · Premium Hakka Cuisine (OCT Loft Creative Culture Park Branch)\"}<=restaurant_name_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"GENTLE L by AlanYU\", \"Xi Mansion (Ping An Finance Center Branch)\", \"Shenzhen Park Hyatt Hotel · Banyan Pavilion Chinese Restaurant\"}&restaurant_name_set)",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=2113)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Guanlan Ocean World\"}&attraction_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Pingshan Park\", \"Zhaojun Tomb\"}<=attraction_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Self-operated entertainment room\"}&accommodation_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Pingshan Park\":\n    if activity_start_time(activity)>=\"08:32\" and activity_end_time(activity)<=\"10:32\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)\"}<=accommodation_name_set)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\"}<=intercity_transport_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Shenzhen Book City (Central City Branch)\":\n    if activity_start_time(activity)>=\"19:36\" and activity_end_time(activity)<=\"21:31\": result=True"
+  ],
+  "nature_language": "We are 3 people traveling from Shanghai to Shenzhen for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Dine at the following restaurants: Shenzhen Hui Hotel · Hui Chinese Restaurant · Cantonese Cuisine, Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop), and Puyutang · Premium Hakka Cuisine (OCT Loft Creative Culture Park Branch).\n5. Do not include any of these restaurants: GENTLE L by AlanYU, Xi Mansion (Ping An Finance Center Branch), and Shenzhen Park Hyatt Hotel · Banyan Pavilion Chinese Restaurant.\n6. Keep the accommodation cost within 2113.\n7. Do not include any of these attractions: Guanlan Ocean World.\n8. Visit the following attractions: Pingshan Park and Zhaojun Tomb.\n9. Do not include any of these hotel feature types: Self-operated entertainment room.\n10. Visit Pingshan Park between 08:32 and 10:32.\n11. Stay at the following hotels: Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop).\n12. The intercity itinerary must include airplane.\n13. Visit Shenzhen Book City (Central City Branch) between 19:36 and 21:31."
+}

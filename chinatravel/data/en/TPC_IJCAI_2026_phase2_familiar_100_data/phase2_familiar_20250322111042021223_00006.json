@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250322111042021223_00006",
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "days": 3,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Shanghai Disneyland Hotel · Lumiere's Kitchen\", \"Imperial Banquet Chinese Restaurant\", \"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\"}<=restaurant_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Gokurakuyu Hot Spring Hotel Shanghai Chuansha\", \"Rezen Retreat(Shanghai Sanjia Xintiandi Tourism Resort)\"}&accommodation_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"taxi\"}&inner_city_transportation_set)",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=3592)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\"}<=intercity_transport_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Cantonese cuisine\"}&restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"14:30\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=1219)",
+    "attraction_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_cost+=activity_cost(activity)\nresult=(attraction_cost<=763)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Imperial Banquet Chinese Restaurant\":\n    if activity_start_time(activity)>=\"10:50\" and activity_end_time(activity)<=\"12:15\": result=True"
+  ],
+  "nature_language": "We are 4 people traveling from Shenzhen to Shanghai for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Dine at the following restaurants: Shanghai Disneyland Hotel · Lumiere's Kitchen, Imperial Banquet Chinese Restaurant, and Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station).\n5. Do not include any of these hotels: Gokurakuyu Hot Spring Hotel Shanghai Chuansha and Rezen Retreat(Shanghai Sanjia Xintiandi Tourism Resort).\n6. Do not use taxi for transportation within the destination city.\n7. Keep the dining cost within 3592.\n8. The intercity itinerary must include airplane.\n9. Do not include any of these restaurant types: Cantonese cuisine.\n10. Stay at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 14:30 and 24:00.\n11. Keep the accommodation cost within 1219.\n12. Keep the attraction ticket cost within 763.\n13. Dine at Imperial Banquet Chinese Restaurant between 10:50 and 12:15."
+}

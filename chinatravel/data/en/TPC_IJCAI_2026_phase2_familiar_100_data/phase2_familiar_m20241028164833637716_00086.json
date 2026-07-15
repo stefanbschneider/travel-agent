@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_m20241028164833637716_00086",
+  "start_city": "Nanjing",
+  "target_city": "Guangzhou",
+  "days": 3,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"GODIVA (Sun Hung Kai IGC Store)\", \"Canton Jade Hilton Hotel Xiangxue Tower Chinese Restaurant\"}<=restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Guangzhou Junye Hotel\":\n    if activity_start_time(activity)>=\"07:50\" and activity_end_time(activity)<=\"08:40\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Lotus Mountain Tourist Area\", \"Luogang Fragrant Snow Park\"}<=attraction_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Butler Service\"}&accommodation_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Guangzhou Panyu Wanbo Center Skanhem Hotel\", \"CityNote Hotel (Guangzhou Taikoo Hui Shipaiqiao Metro Station)\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"GODIVA (Sun Hung Kai IGC Store)\":\n    if activity_start_time(activity)>=\"12:11\" and activity_end_time(activity)<=\"13:26\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Pearl River Night Cruise\", \"Baishui Village Scenic Area\"}&attraction_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Snacks\", \"Sichuan cuisine\"}&restaurant_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"commercial district\"}&attraction_type_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"buffet\"}<=restaurant_type_set)"
+  ],
+  "nature_language": "I am traveling from Nanjing to Guangzhou for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Dine at the following restaurants: GODIVA (Sun Hung Kai IGC Store) and Canton Jade Hilton Hotel Xiangxue Tower Chinese Restaurant.\n5. Dine at Guangzhou Junye Hotel between 07:50 and 08:40.\n6. Visit the following attractions: Lotus Mountain Tourist Area and Luogang Fragrant Snow Park.\n7. Do not include any of these hotel feature types: Butler Service.\n8. Do not include any of these hotels: Guangzhou Panyu Wanbo Center Skanhem Hotel and CityNote Hotel (Guangzhou Taikoo Hui Shipaiqiao Metro Station).\n9. Dine at GODIVA (Sun Hung Kai IGC Store) between 12:11 and 13:26.\n10. Do not include any of these attractions: Pearl River Night Cruise and Baishui Village Scenic Area.\n11. Do not include any of these restaurant types: Snacks and Sichuan cuisine.\n12. Do not include any of these attraction types: commercial district.\n13. Include the following restaurant types: buffet."
+}

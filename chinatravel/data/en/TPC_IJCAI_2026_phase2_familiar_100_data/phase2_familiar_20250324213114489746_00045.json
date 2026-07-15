@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250324213114489746_00045",
+  "start_city": "Hangzhou",
+  "target_city": "Chengdu",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Baihua Tan Park\":\n    if activity_start_time(activity)>=\"09:31\" and activity_end_time(activity)<=\"11:16\": result=True",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=3: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Rongrong Peking University Bedspread Noodles (Main Store)\":\n    if activity_start_time(activity)>=\"17:40\" and activity_end_time(activity)<=\"18:55\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Chengdu Temple House · Tivano Italian Restaurant (Bitieshi Street Branch)\", \"Chengdu Ritz-Carlton Hotel · FLAIR Restaurant and Bar\", \"Tempura Tenyi (Taikoo Li Branch)\"}&restaurant_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Red tourism sites\"}&attraction_type_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Hangzhou to Chengdu for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Visit Baihua Tan Park between 09:31 and 11:16.\n5. Each accommodation stay must reserve 3 rooms.\n6. Dine at Rongrong Peking University Bedspread Noodles (Main Store) between 17:40 and 18:55.\n7. Do not use walking for transportation within the destination city.\n8. Do not include any of these restaurants: Chengdu Temple House · Tivano Italian Restaurant (Bitieshi Street Branch), Chengdu Ritz-Carlton Hotel · FLAIR Restaurant and Bar, and Tempura Tenyi (Taikoo Li Branch).\n9. Use only metro and taxi for transportation within the destination city.\n10. Do not include any of these attraction types: Red tourism sites."
+}

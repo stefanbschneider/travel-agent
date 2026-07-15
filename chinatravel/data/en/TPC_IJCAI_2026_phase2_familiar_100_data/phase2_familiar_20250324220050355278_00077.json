@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250324220050355278_00077",
+  "start_city": "Hangzhou",
+  "target_city": "Beijing",
+  "days": 2,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"CitiGO Hotel, Sanlitun, Beijing\":\n    if activity_start_time(activity)>=\"22:26\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=5224)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Creative Cuisine\"}&restaurant_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Media Room\"}&accommodation_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Crystal Orange Beijing Internatio管家服务nal Trade Heshenghui Hotel\", \"Scitech Hotel\", \"Qiuguo Hotel Smart Choice (Beijing Chaoyang High-speed Railway Station Dongba Middle Road)\"}&accommodation_name_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Summer Palace at China World Hotel, Beijing\"}&restaurant_name_set)",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=2298)"
+  ],
+  "nature_language": "We are 4 people traveling from Hangzhou to Beijing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Stay at CitiGO Hotel, Sanlitun, Beijing between 22:26 and 24:00.\n5. Do not use walking for transportation within the destination city.\n6. Keep the dining cost within 5224.\n7. Do not include any of these restaurant types: Creative Cuisine.\n8. Do not include any of these hotel feature types: Media Room.\n9. Do not include any of these hotels: Crystal Orange Beijing Internatio管家服务nal Trade Heshenghui Hotel, Scitech Hotel, and Qiuguo Hotel Smart Choice (Beijing Chaoyang High-speed Railway Station Dongba Middle Road).\n10. Do not include any of these restaurants: Summer Palace at China World Hotel, Beijing.\n11. Keep the accommodation cost within 2298."
+}

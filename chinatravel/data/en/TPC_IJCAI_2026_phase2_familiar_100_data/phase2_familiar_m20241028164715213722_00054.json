@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_m20241028164715213722_00054",
+  "start_city": "Beijing",
+  "target_city": "Hangzhou",
+  "days": 3,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=105)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Spa\", \"Robot Service\"}&accommodation_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"park\", \"Amusement Park/Sports Entertainment\"}<=attraction_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Lingqi Cave\"}&attraction_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Lakeside Tea House\":\n    if activity_start_time(activity)>=\"12:27\" and activity_end_time(activity)<=\"13:37\": result=True",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Lakeside Tea House\", \"Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Building 8 Cafe\", \"Baiye Homestay (West Lake Branch)\"}<=restaurant_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Art museum\"}&attraction_type_set)"
+  ],
+  "nature_language": "I am traveling from Beijing to Hangzhou for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Keep transportation within the destination city within 105.\n5. Do not include any of these hotel feature types: Spa and Robot Service.\n6. Include the following attraction types: park and Amusement Park/Sports Entertainment.\n7. Do not use walking for transportation within the destination city.\n8. Do not include any of these attractions: Lingqi Cave.\n9. Dine at Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Lakeside Tea House between 12:27 and 13:37.\n10. Dine at the following restaurants: Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Lakeside Tea House, Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Building 8 Cafe, and Baiye Homestay (West Lake Branch).\n11. Do not include any of these attraction types: Art museum."
+}

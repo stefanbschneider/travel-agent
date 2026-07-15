@@ -28,9 +28,10 @@ They remain useful only when the agent path hides `hard_logic_py` and other orac
 ## 3. Official familiar-100 development set
 
 The organizers released the [familiar-100 archive](https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip) on 2026-07-15 with the Agent Environment Guide.
-It contains 100 examples drawn from the same distribution as final evaluation and is intended for harness development.
-It is a preferred new development signal once imported, but it is not the final set.
-A familiar-100 result must identify the imported artifact and run configuration; it must not be presented as a final-evaluation estimate.
+The 100 source records are imported unchanged under `chinatravel/data/en/TPC_IJCAI_2026_phase2_familiar_100_data/` and selected by `tpc_phase2_familiar_100`.
+`_provenance.json` pins the source URL, release/retrieval dates, archive SHA-256, and every extracted member's size, CRC32, and SHA-256.
+The records contain `hard_logic_py`; loaders retain it only for scoring and attribution, while the adapter and both harnesses expose only `uid`, trip metadata, and `nature_language` to the agent path.
+A familiar-100 result must identify this imported artifact and run configuration; it must not be presented as a final-evaluation estimate.
 
 ## 4. Organizer final held-out set
 

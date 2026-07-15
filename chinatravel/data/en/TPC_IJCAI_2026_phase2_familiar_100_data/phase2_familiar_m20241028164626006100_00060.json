@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_m20241028164626006100_00060",
+  "start_city": "Beijing",
+  "target_city": "Chengdu",
+  "days": 2,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Bakery and Desserts\"}&restaurant_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"natural scenery\"}&attraction_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Lyhn International Hotel\", \"Holiday Inn Chengdu Oriental Plaza\"}&accommodation_name_set)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\"}<=intercity_transport_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill\", \"The Bridge Corridor\", \"Xu's Cuisine (Wangjiang Branch)\"}&restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Qingyang District Library\":\n    if activity_start_time(activity)>=\"12:10\" and activity_end_time(activity)<=\"13:55\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Guotu Six Doors (Huanhua North Road Branch)\":\n    if activity_start_time(activity)>=\"17:34\" and activity_end_time(activity)<=\"18:44\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)"
+  ],
+  "nature_language": "I am traveling from Beijing to Chengdu for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these restaurant types: Bakery and Desserts.\n5. Do not include any of these attraction types: natural scenery.\n6. Do not include any of these hotels: Lyhn International Hotel and Holiday Inn Chengdu Oriental Plaza.\n7. The intercity itinerary must include airplane.\n8. Do not include any of these restaurants: Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill, The Bridge Corridor, and Xu's Cuisine (Wangjiang Branch).\n9. Visit Qingyang District Library between 12:10 and 13:55.\n10. Dine at Guotu Six Doors (Huanhua North Road Branch) between 17:34 and 18:44.\n11. Do not use walking for transportation within the destination city."
+}

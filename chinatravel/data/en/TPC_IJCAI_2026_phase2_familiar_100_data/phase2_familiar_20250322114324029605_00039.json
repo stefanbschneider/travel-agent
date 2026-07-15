@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250322114324029605_00039",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Cantonese cuisine\"}&restaurant_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "total_cost=0\nfor activity in allactivities(plan):\n  total_cost+=activity_cost(activity)\n  total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=2837)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Baiye Homestay (West Lake Branch)\":\n    if activity_start_time(activity)>=\"08:25\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Shengli River Food Street\":\n    if activity_start_time(activity)>=\"15:47\" and activity_end_time(activity)<=\"17:32\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Runhexiang Small Pot Sweet Fermented Rice\":\n    if activity_start_time(activity)>=\"11:01\" and activity_end_time(activity)<=\"12:31\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these restaurant types: Cantonese cuisine.\n5. Use only metro and taxi for transportation within the destination city.\n6. Keep the total activity and in-city transportation cost within 2837.\n7. Stay at Baiye Homestay (West Lake Branch) between 08:25 and 24:00.\n8. Visit Shengli River Food Street between 15:47 and 17:32.\n9. Dine at Runhexiang Small Pot Sweet Fermented Rice between 11:01 and 12:31.\n10. Do not use walking for transportation within the destination city."
+}

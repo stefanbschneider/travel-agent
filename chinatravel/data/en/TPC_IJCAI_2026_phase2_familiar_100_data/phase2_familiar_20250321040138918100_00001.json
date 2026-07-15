@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250321040138918100_00001",
+  "start_city": "Nanjing",
+  "target_city": "Chongqing",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Golden Buddha Mountain\", \"Nanshan Scenic Area\"}&attraction_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Bear Grandma's Garden\":\n    if activity_start_time(activity)>=\"17:57\" and activity_end_time(activity)<=\"19:47\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Xinshan Hotel King Shinning (Chongqing Jiefangbei Hongyadong Shop)\"}&accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"historical site\"}&attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Wyndham Grand Plaza Royale Huayu Hotel's Grand Palace Chinese Restaurant\":\n    if activity_start_time(activity)>=\"16:55\" and activity_end_time(activity)<=\"18:10\": result=True",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Sichuan cuisine\"}<=restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Beicang Cultural and Creative Block\":\n    if activity_start_time(activity)>=\"19:46\" and activity_end_time(activity)<=\"21:36\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Nanjing to Chongqing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these attractions: Golden Buddha Mountain and Nanshan Scenic Area.\n5. Visit Bear Grandma's Garden between 17:57 and 19:47.\n6. Do not include any of these hotels: Xinshan Hotel King Shinning (Chongqing Jiefangbei Hongyadong Shop).\n7. Do not include any of these attraction types: historical site.\n8. Dine at Wyndham Grand Plaza Royale Huayu Hotel's Grand Palace Chinese Restaurant between 16:55 and 18:10.\n9. Include the following restaurant types: Sichuan cuisine.\n10. Visit Beicang Cultural and Creative Block between 19:46 and 21:36.\n11. Do not use walking for transportation within the destination city."
+}

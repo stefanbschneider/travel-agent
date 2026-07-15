@@ -33,8 +33,8 @@ Long runs should use `make phase2-baseline-at SHA=<ref> ...` so the recorded rev
 Record a local repeat count whenever variance matters.
 The public competition material does not specify a repeat count or per-query timeout; `300 s` and `900 s` remain local sensitivity settings.
 
-The official familiar-100 set is the preferred new development signal once imported.
-It is development-only and must be reported separately from repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
+The imported official familiar-100 set (`tpc_phase2_familiar_100`) is the preferred new development signal.
+Its ledger rows must carry the manifest-derived data-source ID and remain separate from repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
 See [dataset boundaries](tpc_phase2_hf_dataset.md).
 
 ## Ledger comparability

@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250322201024175211_00058",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Haiwaihai Crown Hotel\", \"Grand New Century Hotel Binjiang Hangzhou\", \"Landison hushan Resort Hangzhou\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Hundred Chicken Flavors Restaurant (Qingtai Branch)\":\n    if activity_start_time(activity)>=\"11:18\" and activity_end_time(activity)<=\"12:38\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Larvae Holiday Inn (Hangzhou East Railway Station)\":\n    if activity_start_time(activity)>=\"08:20\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({\"24-hour front desk\"}<=accommodation_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"train\"}<=intercity_transport_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Larvae Holiday Inn (Hangzhou East Railway Station)\":\n    if activity_start_time(activity)>=\"07:55\" and activity_end_time(activity)<=\"08:40\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1)\":\n    if activity_start_time(activity)>=\"16:45\" and activity_end_time(activity)<=\"18:05\": result=True",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Lake View Room\"}&accommodation_type_set)"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these hotels: Haiwaihai Crown Hotel, Grand New Century Hotel Binjiang Hangzhou, and Landison hushan Resort Hangzhou.\n5. Dine at Hundred Chicken Flavors Restaurant (Qingtai Branch) between 11:18 and 12:38.\n6. Stay at Larvae Holiday Inn (Hangzhou East Railway Station) between 08:20 and 24:00.\n7. Include the following hotel feature types: 24-hour front desk.\n8. Do not use walking for transportation within the destination city.\n9. The intercity itinerary must include train.\n10. Dine at Larvae Holiday Inn (Hangzhou East Railway Station) between 07:55 and 08:40.\n11. Dine at Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) between 16:45 and 18:05.\n12. Do not include any of these hotel feature types: Lake View Room."
+}

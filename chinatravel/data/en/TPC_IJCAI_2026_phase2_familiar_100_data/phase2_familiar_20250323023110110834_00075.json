@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250323023110110834_00075",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"University campus\"}&attraction_type_set)",
+    "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Baiye Homestay (West Lake Branch)\":\n    if activity_start_time(activity)>=\"08:25\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Baiye Homestay (West Lake Branch)\":\n    if activity_start_time(activity)>=\"13:57\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=129)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Hangzhou New Century Resort · Rainforest Restaurant\"}&restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Hangzhou Little Iceland\":\n    if activity_start_time(activity)>=\"13:12\" and activity_end_time(activity)<=\"15:02\": result=True"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these attraction types: University campus.\n5. Whenever taking a taxi, use 1 taxi.\n6. Stay at Baiye Homestay (West Lake Branch) between 08:25 and 24:00.\n7. Stay at Baiye Homestay (West Lake Branch) between 13:57 and 24:00.\n8. Keep the dining cost within 129.\n9. Do not include any of these restaurants: Hangzhou New Century Resort · Rainforest Restaurant.\n10. Visit Hangzhou Little Iceland between 13:12 and 15:02."
+}

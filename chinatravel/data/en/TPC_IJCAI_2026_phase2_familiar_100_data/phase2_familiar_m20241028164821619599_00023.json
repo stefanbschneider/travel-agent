@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_m20241028164821619599_00023",
+  "start_city": "Beijing",
+  "target_city": "Chongqing",
+  "days": 3,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=464)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Bakery and Desserts\"}<=restaurant_type_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Fast food and casual dining\"}&restaurant_type_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=521)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({\"Butler Service\"}<=accommodation_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Hanhai Ocean Park\", \"Qijiang Ancient Sword Mountain Scenic Area\", \"South Lake Colorful Botanical Garden\"}<=attraction_name_set)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\"}<=intercity_transport_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Chongqing Ximei Hotel\", \"Laizhu Qianxun Sky Hotel\", \"HC International Hotel\"}&accommodation_name_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Beijing to Chongqing for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Keep the accommodation cost within 464.\n5. Include the following restaurant types: Bakery and Desserts.\n6. Do not include any of these restaurant types: Fast food and casual dining.\n7. Keep transportation within the destination city within 521.\n8. Include the following hotel feature types: Butler Service.\n9. Visit the following attractions: Hanhai Ocean Park, Qijiang Ancient Sword Mountain Scenic Area, and South Lake Colorful Botanical Garden.\n10. The intercity itinerary must include airplane.\n11. Do not include any of these hotels: Chongqing Ximei Hotel, Laizhu Qianxun Sky Hotel, and HC International Hotel."
+}

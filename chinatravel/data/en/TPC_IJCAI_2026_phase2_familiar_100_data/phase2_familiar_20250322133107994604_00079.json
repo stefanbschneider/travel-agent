@@ -1,0 +1,19 @@
+{
+  "uid": "phase2_familiar_20250322133107994604_00079",
+  "start_city": "Shanghai",
+  "target_city": "Shenzhen",
+  "days": 4,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)\":\n    if activity_start_time(activity)>=\"17:55\" and activity_end_time(activity)<=\"19:15\": result=True",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"The St. Regis Hotel · Social Restaurant · Sky High Buffet · Overlooking the Bay Area\", \"Shenzhen Penghui Raffles Hotel · Cloud View\"}&restaurant_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Hongyuan Temple\", \"Happy Harbor\"}<=attraction_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Hunan cuisine\", \"Japanese cuisine\"}&restaurant_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Cultural Tourism Area\", \"Museum/Memorial Hall\"}&attraction_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({\"Mountain View Room\"}<=accommodation_type_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Shanghai to Shenzhen for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Dine at Xinyiwei Chaoshan Rice Noodle King (Meilin Branch) between 17:55 and 19:15.\n5. Do not include any of these restaurants: The St. Regis Hotel · Social Restaurant · Sky High Buffet · Overlooking the Bay Area and Shenzhen Penghui Raffles Hotel · Cloud View.\n6. Visit the following attractions: Hongyuan Temple and Happy Harbor.\n7. Do not include any of these restaurant types: Hunan cuisine and Japanese cuisine.\n8. Do not include any of these attraction types: Cultural Tourism Area and Museum/Memorial Hall.\n9. Include the following hotel feature types: Mountain View Room."
+}

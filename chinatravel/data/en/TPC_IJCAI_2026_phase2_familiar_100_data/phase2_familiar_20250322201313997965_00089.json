@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250322201313997965_00089",
+  "start_city": "Chongqing",
+  "target_city": "Chengdu",
+  "days": 5,
+  "people_number": 5,
+  "hard_logic_py": [
+    "result=(day_count(plan)==5)",
+    "result=(people_count(plan)==5)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=5: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=5: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Four Points by Sheraton Chengdu High-tech Zone Exhibition Center\":\n    if activity_start_time(activity)>=\"20:30\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Xiangyu Hotel\"}&accommodation_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Luodai Ancient Town\", \"Chengdu Polar Ocean Park\"}&attraction_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Three Saints Flower Village Tourist Area\", \"Nellie's Family Center (Chengdu Global Store)\"}<=attraction_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Barbecue\"}&restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"One Ear Pavilion\":\n    if activity_start_time(activity)>=\"18:20\" and activity_end_time(activity)<=\"20:00\": result=True",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Chengdu Temple House · Tivano Italian Restaurant (Bitieshi Street Branch)\", \"Minshan Hotel · The River House Western Restaurant\"}&restaurant_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=342)"
+  ],
+  "nature_language": "We are 5 people traveling from Chongqing to Chengdu for 5 days.\nRequirements:\n1. The trip must last 5 days.\n2. The plan must be for 5 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 5 travelers.\n4. Stay at Four Points by Sheraton Chengdu High-tech Zone Exhibition Center between 20:30 and 24:00.\n5. Do not include any of these hotels: Xiangyu Hotel.\n6. Do not include any of these attractions: Luodai Ancient Town and Chengdu Polar Ocean Park.\n7. Visit the following attractions: Three Saints Flower Village Tourist Area and Nellie's Family Center (Chengdu Global Store).\n8. Do not include any of these restaurant types: Barbecue.\n9. Visit One Ear Pavilion between 18:20 and 20:00.\n10. Do not include any of these restaurants: Chengdu Temple House · Tivano Italian Restaurant (Bitieshi Street Branch) and Minshan Hotel · The River House Western Restaurant.\n11. Keep transportation within the destination city within 342."
+}

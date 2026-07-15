@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250324205935312282_00020",
+  "start_city": "Nanjing",
+  "target_city": "Beijing",
+  "days": 2,
+  "people_number": 5,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==5)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=5: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=5: result=False",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Family Room\", \"Butler Service\"}&accommodation_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Mandarin Oriental Wangfujing, Beijing - Zi Restaurant\", \"Beijing Qiran Meisu · Dashan Coffee\"}&restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Qiuguo S Hotel (Beijing Capital Airport Second Branch)\":\n    if activity_start_time(activity)>=\"07:55\" and activity_end_time(activity)<=\"08:40\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Beijing Planetarium\", \"Beijing Wildlife Park\"}&attraction_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Snacks\", \"Fast food and casual dining\"}<=restaurant_type_set)",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=1606)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Western cuisine\", \"coffee shop\"}&restaurant_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\"})",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\", \"train\"}<=intercity_transport_set)"
+  ],
+  "nature_language": "We are 5 people traveling from Nanjing to Beijing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 5 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 5 travelers.\n4. Do not include any of these hotel feature types: Family Room and Butler Service.\n5. Do not include any of these restaurants: Mandarin Oriental Wangfujing, Beijing - Zi Restaurant and Beijing Qiran Meisu · Dashan Coffee.\n6. Dine at Qiuguo S Hotel (Beijing Capital Airport Second Branch) between 07:55 and 08:40.\n7. Do not include any of these attractions: Beijing Planetarium and Beijing Wildlife Park.\n8. Include the following restaurant types: Snacks and Fast food and casual dining.\n9. Keep the accommodation cost within 1606.\n10. Do not include any of these restaurant types: Western cuisine and coffee shop.\n11. Use only metro for transportation within the destination city.\n12. The intercity itinerary must include airplane and train."
+}

@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250322184829394258_00094",
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "days": 2,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"07:45\" and activity_end_time(activity)<=\"08:40\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Wassim Hotel (Shanghai Pudong Theme Park)\", \"Lestie Hotel  Hengshan Road, Xujiahui, Shanghai\", \"Crystal Orange Hotel (Shanghai International Tourist Resort Zhoupu Wanda Plaza)\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"07:50\" and activity_end_time(activity)<=\"08:35\": result=True",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Other\"}&attraction_type_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=36)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Jiangsu-Zhejiang cuisine\"}<=restaurant_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"taxi\"}&inner_city_transportation_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Cantonese cuisine\"}&restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Chuansha Park\":\n    if activity_start_time(activity)>=\"08:43\" and activity_end_time(activity)<=\"10:33\": result=True"
+  ],
+  "nature_language": "I am traveling from Shenzhen to Shanghai for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Dine at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 07:45 and 08:40.\n5. Do not include any of these hotels: Wassim Hotel (Shanghai Pudong Theme Park), Lestie Hotel  Hengshan Road, Xujiahui, Shanghai, and Crystal Orange Hotel (Shanghai International Tourist Resort Zhoupu Wanda Plaza).\n6. Dine at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 07:50 and 08:35.\n7. Do not include any of these attraction types: Other.\n8. Keep transportation within the destination city within 36.\n9. Include the following restaurant types: Jiangsu-Zhejiang cuisine.\n10. Do not use taxi for transportation within the destination city.\n11. Do not include any of these restaurant types: Cantonese cuisine.\n12. Visit Chuansha Park between 08:43 and 10:33."
+}

@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_m20241028164712892867_00073",
+  "start_city": "Beijing",
+  "target_city": "Chengdu",
+  "days": 3,
+  "people_number": 2,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==2)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"University campus\"}&attraction_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Wanghong Dingzhi Zhaiju Hotel\"}<=accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Wanghong Dingzhi Zhaiju Hotel\":\n    if activity_start_time(activity)>=\"15:31\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Sichuan cuisine\"}&restaurant_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Lyhn International Hotel\", \"Elegant Azure Hotel\", \"Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station)\"}&accommodation_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=109)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Wanghong Dingzhi Zhaiju Hotel\":\n    if activity_start_time(activity)>=\"07:50\" and activity_end_time(activity)<=\"08:35\": result=True",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Robot Service\", \"Mahjong and Card Game Room\"}&accommodation_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Qingyang District Library\":\n    if activity_start_time(activity)>=\"18:26\" and activity_end_time(activity)<=\"20:06\": result=True"
+  ],
+  "nature_language": "We are 2 people traveling from Beijing to Chengdu for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 2 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 2 travelers.\n4. Do not include any of these attraction types: University campus.\n5. Stay at the following hotels: Wanghong Dingzhi Zhaiju Hotel.\n6. Stay at Wanghong Dingzhi Zhaiju Hotel between 15:31 and 24:00.\n7. Do not include any of these restaurant types: Sichuan cuisine.\n8. Do not include any of these hotels: Lyhn International Hotel, Elegant Azure Hotel, and Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station).\n9. Keep transportation within the destination city within 109.\n10. Dine at Wanghong Dingzhi Zhaiju Hotel between 07:50 and 08:35.\n11. Do not include any of these hotel feature types: Robot Service and Mahjong and Card Game Room.\n12. Visit Qingyang District Library between 18:26 and 20:06."
+}

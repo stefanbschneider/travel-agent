@@ -10,6 +10,7 @@ Historical step plans, chronology, and superseded priorities are preserved in th
 - The harness records stage telemetry, recovers a best available solver plan after errors or timeouts, and has a schema-shaped fallback.
 - Rehearsal supports ceiling, solver-only, and end-to-end attribution; parser comparison and regression gates are available.
 - Baselines can run from a pinned source revision and publish committed rows under `results/phase2_baselines/`.
+- The official familiar-100 records are imported byte-for-byte with a pinned archive checksum, per-member manifest, dedicated split, and explicit no-oracle boundary.
 
 These capabilities are not evidence of final-evaluation performance.
 
@@ -18,6 +19,7 @@ These capabilities are not evidence of final-evaluation performance.
 The current local reference is [run `20260713T130105Z`](../results/phase2_baselines/runs/20260713T130105Z.json), with its configuration, attribution, repetitions, parser statistics, and telemetry preserved in the row.
 Use the [latest summary](../results/phase2_baselines/latest.md) only as a pointer; make decisions from the immutable run row and like-for-like comparisons.
 The row is repository-local evidence, not an organizer result and not a familiar-100 measurement.
+The familiar-100 import lives under `chinatravel/data/en/TPC_IJCAI_2026_phase2_familiar_100_data/`; no familiar-100 baseline row has been recorded yet.
 
 ## Operating rules
 
@@ -30,9 +32,9 @@ The row is repository-local evidence, not an organizer result and not a familiar
 
 ## Highest priority
 
-1. **Import familiar-100.** Retrieve the official archive, preserve source URL, date, checksum, member manifest, and an explicit no-oracle loading boundary.
-2. **Establish a pinned no-oracle Qwen baseline.** Run the imported familiar-100 path from a pinned revision, record all local runtime and repetition assumptions, and publish the resulting ledger evidence.
-3. **Re-rank failures from that evidence.** Separate parser/normalization failures from solver, timeout, and output failures before choosing a fix.
+1. **Establish a pinned no-oracle Qwen familiar-100 baseline.** Use `tpc_phase2_familiar_100`, record all local runtime and repetition assumptions, and publish the resulting ledger evidence.
+2. **Re-rank failures from that evidence.** Separate parser/normalization failures from solver, timeout, and output failures before choosing a fix.
+3. **Run the paired `900 s` sensitivity only if the `300 s` timeout/recovery mix still confounds attribution.** Keep source revision, data source, model, flags, repeats, and fresh-output policy fixed.
 
 Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.
 

@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250321032641509206_00005",
+  "start_city": "Chengdu",
+  "target_city": "Suzhou",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"commercial district\", \"Amusement Park/Sports Entertainment\"}&attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Maple Bridge Scenic Area\":\n    if activity_start_time(activity)>=\"08:15\" and activity_end_time(activity)<=\"10:05\": result=True",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Moon Pavilion (Guanqian Branch)\"}&restaurant_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=461)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Chuanfu Restaurant (Sanxiang Road Branch)\":\n    if activity_start_time(activity)>=\"16:55\" and activity_end_time(activity)<=\"18:10\": result=True",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=74)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Night Cruise on the Moat\", \"Suzhou Revolutionary Museum\", \"Sunset at the Mountain Gate\"}<=attraction_name_set)",
+    "attraction_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_cost+=activity_cost(activity)\nresult=(attraction_cost<=55)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"train\"}<=intercity_transport_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Chengdu to Suzhou for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these attraction types: commercial district and Amusement Park/Sports Entertainment.\n5. Visit Maple Bridge Scenic Area between 08:15 and 10:05.\n6. Do not include any of these restaurants: Moon Pavilion (Guanqian Branch).\n7. Use only metro and taxi for transportation within the destination city.\n8. Keep the accommodation cost within 461.\n9. Dine at Chuanfu Restaurant (Sanxiang Road Branch) between 16:55 and 18:10.\n10. Keep transportation within the destination city within 74.\n11. Visit the following attractions: Night Cruise on the Moat, Suzhou Revolutionary Museum, and Sunset at the Mountain Gate.\n12. Keep the attraction ticket cost within 55.\n13. The intercity itinerary must include train."
+}

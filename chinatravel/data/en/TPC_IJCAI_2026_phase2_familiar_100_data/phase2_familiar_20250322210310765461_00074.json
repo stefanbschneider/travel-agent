@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250322210310765461_00074",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 2,
+  "people_number": 2,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==2)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+    "attraction_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_cost+=activity_cost(activity)\nresult=(attraction_cost<=99)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Hundred Chicken Flavors Restaurant (Qingtai Branch)\":\n    if activity_start_time(activity)>=\"11:18\" and activity_end_time(activity)<=\"12:33\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Hangzhou Qianjiangwan New Century Grand Hotel\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Orioles Singing in the Willows\":\n    if activity_start_time(activity)>=\"13:49\" and activity_end_time(activity)<=\"15:34\": result=True",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Other\", \"University campus\"}&attraction_type_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=127)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Lakeside Tea House\":\n    if activity_start_time(activity)>=\"12:33\" and activity_end_time(activity)<=\"14:03\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Hangzhou Kaiyuan Senbo Resort\"}&attraction_name_set)"
+  ],
+  "nature_language": "We are 2 people traveling from Suzhou to Hangzhou for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 2 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 2 travelers.\n4. Keep the attraction ticket cost within 99.\n5. Dine at Hundred Chicken Flavors Restaurant (Qingtai Branch) between 11:18 and 12:33.\n6. Do not include any of these hotels: Hangzhou Qianjiangwan New Century Grand Hotel.\n7. Visit Orioles Singing in the Willows between 13:49 and 15:34.\n8. Do not include any of these attraction types: Other and University campus.\n9. Keep transportation within the destination city within 127.\n10. Dine at Hangzhou West Lake State Guesthouse · West Lake's Premier Garden · Lakeside Tea House between 12:33 and 14:03.\n11. Do not include any of these attractions: Hangzhou Kaiyuan Senbo Resort."
+}

@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250323024847827162_00069",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"University campus\"}&attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Larvae Holiday Inn (Hangzhou East Railway Station)\":\n    if activity_start_time(activity)>=\"07:45\" and activity_end_time(activity)<=\"08:45\": result=True",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"La Villa Restaurant\", \"Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant\"}&restaurant_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({\"24-hour front desk\"}<=accommodation_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Liangzhu Ancient City Ruins Park\", \"Qinghefang Street\"}&attraction_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Butler Service\"}&accommodation_type_set)",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=545)"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these attraction types: University campus.\n5. Dine at Larvae Holiday Inn (Hangzhou East Railway Station) between 07:45 and 08:45.\n6. Do not include any of these restaurants: La Villa Restaurant and Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant.\n7. Do not use walking for transportation within the destination city.\n8. Include the following hotel feature types: 24-hour front desk.\n9. Do not include any of these attractions: Liangzhu Ancient City Ruins Park and Qinghefang Street.\n10. Do not include any of these hotel feature types: Butler Service.\n11. Keep the dining cost within 545."
+}

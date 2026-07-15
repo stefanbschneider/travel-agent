@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250321171346047220_00011",
+  "start_city": "Shanghai",
+  "target_city": "Nanjing",
+  "days": 3,
+  "people_number": 2,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==2)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Barbecue\"}&restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Nanjing BuildHome Cinema apartment\":\n    if activity_start_time(activity)>=\"21:29\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=310)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Nanjing BuildHome Cinema apartment\":\n    if activity_start_time(activity)>=\"07:50\" and activity_end_time(activity)<=\"08:45\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Golden Eagle Art Museum\":\n    if activity_start_time(activity)>=\"14:44\" and activity_end_time(activity)<=\"16:34\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Golden Eagle Summit Hotel\", \"Suning Universal Hotel\", \"Holiday Inn Nanjing Harbour\"}&accommodation_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Sauna\"}&accommodation_type_set)"
+  ],
+  "nature_language": "We are 2 people traveling from Shanghai to Nanjing for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 2 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 2 travelers.\n4. Do not include any of these restaurant types: Barbecue.\n5. Stay at Nanjing BuildHome Cinema apartment between 21:29 and 24:00.\n6. Keep the accommodation cost within 310.\n7. Dine at Nanjing BuildHome Cinema apartment between 07:50 and 08:45.\n8. Visit Golden Eagle Art Museum between 14:44 and 16:34.\n9. Do not use walking for transportation within the destination city.\n10. Do not include any of these hotels: Golden Eagle Summit Hotel, Suning Universal Hotel, and Holiday Inn Nanjing Harbour.\n11. Do not include any of these hotel feature types: Sauna."
+}

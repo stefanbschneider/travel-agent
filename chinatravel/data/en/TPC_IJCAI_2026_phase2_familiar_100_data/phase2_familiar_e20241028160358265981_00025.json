@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_e20241028160358265981_00025",
+  "start_city": "Chongqing",
+  "target_city": "Nanjing",
+  "days": 1,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==1)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Lu's Plum Blossom Cake (Laomendong Branch)\":\n    if activity_start_time(activity)>=\"11:55\" and activity_end_time(activity)<=\"13:20\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Xu Family Courtyard\", \"Jiangning Museum\", \"Confucius Temple\"}<=attraction_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Sauna\"}&accommodation_type_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Bakery and Desserts\"}<=restaurant_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Snacks\"}&restaurant_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Art museum\"}&attraction_type_set)"
+  ],
+  "nature_language": "I am traveling from Chongqing to Nanjing for 1 day.\nRequirements:\n1. The trip must last 1 day.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not use walking for transportation within the destination city.\n5. Dine at Lu's Plum Blossom Cake (Laomendong Branch) between 11:55 and 13:20.\n6. Visit the following attractions: Xu Family Courtyard, Jiangning Museum, and Confucius Temple.\n7. Do not include any of these hotel feature types: Sauna.\n8. Include the following restaurant types: Bakery and Desserts.\n9. Use only metro and taxi for transportation within the destination city.\n10. Do not include any of these restaurant types: Snacks.\n11. Do not include any of these attraction types: Art museum."
+}

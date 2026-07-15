@@ -1,0 +1,19 @@
+{
+  "uid": "phase2_familiar_m20241028164758041148_00040",
+  "start_city": "Guangzhou",
+  "target_city": "Shanghai",
+  "days": 3,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Jing'an Sculpture Park\", \"Shanghai Zoo\", \"City Sightseeing Bus\"}&attraction_name_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Oriental Pearl Tower Revolving Restaurant\", \"Fu 1015 (Yuyuan Road Branch)\"}&restaurant_name_set)",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=1244)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Pudong Airport Museum\":\n    if activity_start_time(activity)>=\"15:50\" and activity_end_time(activity)<=\"17:35\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"20:48\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Snacks\"}&restaurant_type_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Guangzhou to Shanghai for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these attractions: Jing'an Sculpture Park, Shanghai Zoo, and City Sightseeing Bus.\n5. Do not include any of these restaurants: Oriental Pearl Tower Revolving Restaurant and Fu 1015 (Yuyuan Road Branch).\n6. Keep the accommodation cost within 1244.\n7. Visit Pudong Airport Museum between 15:50 and 17:35.\n8. Stay at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 20:48 and 24:00.\n9. Do not include any of these restaurant types: Snacks."
+}

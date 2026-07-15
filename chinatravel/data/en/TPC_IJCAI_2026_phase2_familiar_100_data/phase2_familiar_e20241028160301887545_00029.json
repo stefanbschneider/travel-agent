@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_e20241028160301887545_00029",
+  "start_city": "Shenzhen",
+  "target_city": "Guangzhou",
+  "days": 1,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==1)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Spa\"}&accommodation_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Guangzhou Wanfu Hilton Hotel - The China Club Banquet Hall\"}&restaurant_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Ausotel Smart Hotel Guangzhou Zhujiang New Town , Canton Fair Free Shuttle\", \"VLAMHOO HOTEL\"}&accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"park\", \"Red tourism sites\"}&attraction_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Danggong Dessert Shop (Lujiang Branch)\"}<=restaurant_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Guangzhou Sunac Land\", \"Guangzhou Museum\"}&attraction_name_set)",
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({\"airplane\", \"train\"}<=intercity_transport_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})"
+  ],
+  "nature_language": "I am traveling from Shenzhen to Guangzhou for 1 day.\nRequirements:\n1. The trip must last 1 day.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these hotel feature types: Spa.\n5. Do not include any of these restaurants: Guangzhou Wanfu Hilton Hotel - The China Club Banquet Hall.\n6. Do not include any of these hotels: Ausotel Smart Hotel Guangzhou Zhujiang New Town , Canton Fair Free Shuttle and VLAMHOO HOTEL.\n7. Do not include any of these attraction types: park and Red tourism sites.\n8. Dine at the following restaurants: Danggong Dessert Shop (Lujiang Branch).\n9. Do not include any of these attractions: Guangzhou Sunac Land and Guangzhou Museum.\n10. The intercity itinerary must include airplane and train.\n11. Use only metro and taxi for transportation within the destination city."
+}

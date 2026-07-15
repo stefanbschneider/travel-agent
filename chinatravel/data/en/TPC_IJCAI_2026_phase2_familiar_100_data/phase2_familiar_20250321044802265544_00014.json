@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250321044802265544_00014",
+  "start_city": "Beijing",
+  "target_city": "Chongqing",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Fresh Longjing Hot Pot Park (Nanshan Branch)\", \"Lakeview No. 3 Garden Restaurant (Fortune Center Branch)\"}&restaurant_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"Red tourism sites\", \"park\"}<=attraction_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Lavande Hotel (Chongqing Yuelai International Expo Center Central Park)\"}&accommodation_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Chongqing WFC Xianlai Tower Observation Deck\", \"Chiyou Jiuli City\"}&attraction_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=165)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Mountain City Trail\", \"Chongqing Unicorn Starry Sky Art Museum\"}<=attraction_name_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Beijing to Chongqing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these restaurants: Fresh Longjing Hot Pot Park (Nanshan Branch) and Lakeview No. 3 Garden Restaurant (Fortune Center Branch).\n5. Include the following attraction types: Red tourism sites and park.\n6. Do not include any of these hotels: Lavande Hotel (Chongqing Yuelai International Expo Center Central Park).\n7. Do not include any of these attractions: Chongqing WFC Xianlai Tower Observation Deck and Chiyou Jiuli City.\n8. Keep transportation within the destination city within 165.\n9. Do not use walking for transportation within the destination city.\n10. Whenever taking a taxi, use 1 taxi.\n11. Visit the following attractions: Mountain City Trail and Chongqing Unicorn Starry Sky Art Museum."
+}

@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250323001701860855_00088",
+  "start_city": "Suzhou",
+  "target_city": "Nanjing",
+  "days": 3,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Fang Fang Casual Dining (New Town Plaza Branch)\":\n    if activity_start_time(activity)>=\"12:04\" and activity_end_time(activity)<=\"13:24\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"taxi\", \"walk\"}&inner_city_transportation_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Sichuan cuisine\"}&restaurant_type_set)",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=470)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Shence Gate\":\n    if activity_start_time(activity)>=\"15:34\" and activity_end_time(activity)<=\"17:05\": result=True",
+    "attraction_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_cost+=activity_cost(activity)\nresult=(attraction_cost<=235)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Crab Three Treasures (Nanjing Xinjiekou Branch)\"}&restaurant_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=157)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"KOMO COFFEE (Stone City Branch)\", \"Nanjing Shangri-La Hotel · Jiangnan Kitchen · Yun Mansion\", \"Nanjing BuildHome Cinema apartment\"}<=restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Pearl Spring Scenic Area\":\n    if activity_start_time(activity)>=\"09:27\" and activity_end_time(activity)<=\"11:17\": result=True"
+  ],
+  "nature_language": "We are 3 people traveling from Suzhou to Nanjing for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Dine at Fang Fang Casual Dining (New Town Plaza Branch) between 12:04 and 13:24.\n5. Do not use taxi and walking for transportation within the destination city.\n6. Do not include any of these restaurant types: Sichuan cuisine.\n7. Keep the accommodation cost within 470.\n8. Visit Shence Gate between 15:34 and 17:05.\n9. Keep the attraction ticket cost within 235.\n10. Do not include any of these restaurants: Crab Three Treasures (Nanjing Xinjiekou Branch).\n11. Keep transportation within the destination city within 157.\n12. Dine at the following restaurants: KOMO COFFEE (Stone City Branch), Nanjing Shangri-La Hotel · Jiangnan Kitchen · Yun Mansion, and Nanjing BuildHome Cinema apartment.\n13. Visit Pearl Spring Scenic Area between 09:27 and 11:17."
+}

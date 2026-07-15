@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250325015820363948_00047",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Cantonese cuisine\"}&restaurant_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Other\"}&attraction_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"Museum/Memorial Hall\"}<=attraction_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Mountain Lodge Teahouse · Crab Cuisine\"}&restaurant_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Lingyin Temple\":\n    if activity_start_time(activity)>=\"07:17\" and activity_end_time(activity)<=\"08:57\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Fuyang Dragon Scale Dam Scenic Area\":\n    if activity_start_time(activity)>=\"09:26\" and activity_end_time(activity)<=\"11:21\": result=True"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these restaurant types: Cantonese cuisine.\n5. Do not include any of these attraction types: Other.\n6. Include the following attraction types: Museum/Memorial Hall.\n7. Do not include any of these restaurants: Mountain Lodge Teahouse · Crab Cuisine.\n8. Do not use walking for transportation within the destination city.\n9. Visit Lingyin Temple between 07:17 and 08:57.\n10. Visit Fuyang Dragon Scale Dam Scenic Area between 09:26 and 11:21."
+}

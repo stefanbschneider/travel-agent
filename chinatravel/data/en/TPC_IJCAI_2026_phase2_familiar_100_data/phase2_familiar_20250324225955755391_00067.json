@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250324225955755391_00067",
+  "start_city": "Chongqing",
+  "target_city": "Shanghai",
+  "days": 3,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"07:45\" and activity_end_time(activity)<=\"08:45\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Pudong Art Museum\", \"Shanghai Ocean Aquarium\"}&attraction_name_set)",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=623)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"The Kitchen Table at W Shanghai - The Bund\"}&restaurant_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Hot pot\"}&restaurant_type_set)",
+    "total_cost=0\nfor activity in allactivities(plan):\n  total_cost+=activity_cost(activity)\n  total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4592)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"21:49\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Lestie Hotel  Hengshan Road, Xujiahui, Shanghai\", \"Atour Hotel\"}&accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Red tourism sites\"}&attraction_type_set)"
+  ],
+  "nature_language": "I am traveling from Chongqing to Shanghai for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Dine at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 07:45 and 08:45.\n5. Do not include any of these attractions: Pudong Art Museum and Shanghai Ocean Aquarium.\n6. Keep the accommodation cost within 623.\n7. Do not include any of these restaurants: The Kitchen Table at W Shanghai - The Bund.\n8. Do not include any of these restaurant types: Hot pot.\n9. Keep the total activity and in-city transportation cost within 4592.\n10. Stay at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 21:49 and 24:00.\n11. Do not include any of these hotels: Lestie Hotel  Hengshan Road, Xujiahui, Shanghai and Atour Hotel.\n12. Do not include any of these attraction types: Red tourism sites."
+}

@@ -58,6 +58,16 @@ HISTORY_CSV = "history.csv"
 LATEST_JSON = "latest.json"
 LATEST_MD = "latest.md"
 
+FAMILIAR_SPLIT_NAME = "tpc_phase2_familiar_100"
+FAMILIAR_PROVENANCE_PATH = (
+    PROJECT_ROOT
+    / "chinatravel"
+    / "data"
+    / "en"
+    / "TPC_IJCAI_2026_phase2_familiar_100_data"
+    / "_provenance.json"
+)
+
 
 @dataclass
 class FoldSelection:
@@ -81,6 +91,66 @@ def _git_sha() -> str:
 
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _data_source_metadata(split_name: str) -> dict[str, Any]:
+    if split_name == FAMILIAR_SPLIT_NAME:
+        manifest = _load_json(FAMILIAR_PROVENANCE_PATH)
+        if manifest.get("split_name") != FAMILIAR_SPLIT_NAME:
+            raise RuntimeError(
+                f"Familiar provenance split mismatch: {manifest.get('split_name')!r}"
+            )
+        if int(manifest.get("record_count", 0)) != 100:
+            raise RuntimeError(
+                f"Familiar provenance must describe 100 records, got "
+                f"{manifest.get('record_count')!r}"
+            )
+        archive = manifest.get("archive", {})
+        archive_sha256 = str(archive.get("sha256") or "")
+        if not archive_sha256:
+            raise RuntimeError("Familiar provenance is missing archive.sha256")
+        dataset_id = str(manifest.get("dataset_id") or "")
+        if not dataset_id:
+            raise RuntimeError("Familiar provenance is missing dataset_id")
+        return {
+            "id": f"{dataset_id}@sha256:{archive_sha256}",
+            "kind": "official_archive",
+            "dataset_id": dataset_id,
+            "split_name": FAMILIAR_SPLIT_NAME,
+            "language": str(manifest.get("language") or ""),
+            "source_url": str(manifest.get("source_url") or ""),
+            "release_date": str(manifest.get("release_date") or ""),
+            "retrieved_date": str(manifest.get("retrieved_date") or ""),
+            "archive_filename": str(archive.get("filename") or ""),
+            "archive_size_bytes": int(archive.get("size_bytes", 0)),
+            "archive_sha256": archive_sha256,
+            "record_count": int(manifest["record_count"]),
+            "manifest_path": FAMILIAR_PROVENANCE_PATH.relative_to(PROJECT_ROOT).as_posix(),
+        }
+
+    source_id = f"repository_local:{split_name}" if split_name else "unknown"
+    source = {
+        "id": source_id,
+        "kind": "repository_local_split" if split_name else "unknown",
+        "dataset_id": split_name or "unknown",
+        "split_name": split_name,
+    }
+    if split_name in {split_mod.VAL_NAME, split_mod.TEST_NAME}:
+        source.update(
+            {
+                "kind": "repository_derived_split",
+                "dataset_id": "tpc_phase1_en",
+                "parent_split": split_mod.SOURCE_SPLIT,
+            }
+        )
+    return source
+
+
+def _record_data_source(record: dict[str, Any]) -> dict[str, Any]:
+    source = record.get("data_source")
+    if isinstance(source, dict) and source.get("id"):
+        return source
+    return _data_source_metadata(str(record.get("split_name") or ""))
 
 
 def compute_fingerprint(query: dict[str, Any], *, flags, llm_client) -> str:
@@ -290,6 +360,7 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
 
     llm_config = record.get("llm_config", {}) if isinstance(record, dict) else {}
     llm_backend = str(llm_config.get("backend") or "none")
+    data_source = _record_data_source(record)
 
     timing = record.get("timing", {})
     stage = timing.get("per_stage", {}) if isinstance(timing, dict) else {}
@@ -313,6 +384,11 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "solver_only_overall_true_std": float(variance.get("solver_only_overall_true_std", 0.0)),
         "split_set": record.get("split_set", ""),
         "split_name": record.get("split_name", ""),
+        "data_source_id": str(data_source.get("id") or "unknown"),
+        "data_source_kind": str(data_source.get("kind") or "unknown"),
+        "data_source_dataset_id": str(data_source.get("dataset_id") or "unknown"),
+        "data_source_url": str(data_source.get("source_url") or ""),
+        "data_source_archive_sha256": str(data_source.get("archive_sha256") or ""),
         "fold": int(record.get("fold", 0)),
         "folds": int(record.get("folds", 0)),
         "seed": int(record.get("seed", 0)),
@@ -412,6 +488,11 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "solver_only_overall_true_std",
         "split_set",
         "split_name",
+        "data_source_id",
+        "data_source_kind",
+        "data_source_dataset_id",
+        "data_source_url",
+        "data_source_archive_sha256",
         "fold",
         "folds",
         "seed",
@@ -504,6 +585,7 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         parser_full.get("behavioral", {}) if isinstance(parser_full, dict) else {}
     )
     llm_config = record.get("llm_config", {}) if isinstance(record, dict) else {}
+    data_source = _record_data_source(record)
     timing = record.get("timing", {})
     variance = record.get("variance", {}) if isinstance(record, dict) else {}
     completion = record.get("completion", {}) if isinstance(record, dict) else {}
@@ -518,6 +600,9 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- timestamp_utc: {record.get('timestamp_utc', '')}",
         f"- git_sha: {record.get('git_sha', '')}",
         f"- split: {record.get('split_name', '')} (set={record.get('split_set', '')}, fold={record.get('fold', 0)}/{record.get('folds', 0)}, n={record.get('n', 0)})",
+        f"- data_source_id: {data_source.get('id', 'unknown')}",
+        f"- data_source_url: {data_source.get('source_url') or '(repository-local)'}",
+        f"- data_source_archive_sha256: {data_source.get('archive_sha256') or '(n/a)'}",
         f"- budget_sec: {record.get('budget_sec', 0.0)}",
         f"- label: {record.get('label', '') or '(none)'}",
         f"- repeats: {int(record.get('repeats', 1) or 1)} (fresh={bool(record.get('fresh', False))})",
@@ -763,6 +848,7 @@ def main() -> None:
         "git_sha": _git_sha(),
         "split_set": args.split_set,
         "split_name": fold_info.split_name,
+        "data_source": _data_source_metadata(fold_info.split_name),
         "fold": args.fold,
         "folds": args.folds,
         "seed": args.seed,

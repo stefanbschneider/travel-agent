@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250321225327900119_00027",
+  "start_city": "Chengdu",
+  "target_city": "Shenzhen",
+  "days": 2,
+  "people_number": 2,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==2)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Beijing cuisine\", \"Barbecue\"}&restaurant_type_set)",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=1161)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Fei Hotel\":\n    if activity_start_time(activity)>=\"07:45\" and activity_end_time(activity)<=\"08:45\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Dapeng Ancient City\"}&attraction_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Fei Hotel\"}<=accommodation_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Museum/Memorial Hall\"}&attraction_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)"
+  ],
+  "nature_language": "We are 2 people traveling from Chengdu to Shenzhen for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 2 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 2 travelers.\n4. Do not include any of these restaurant types: Beijing cuisine and Barbecue.\n5. Keep the dining cost within 1161.\n6. Dine at Fei Hotel between 07:45 and 08:45.\n7. Do not include any of these attractions: Dapeng Ancient City.\n8. Stay at the following hotels: Fei Hotel.\n9. Use only metro and taxi for transportation within the destination city.\n10. Do not include any of these attraction types: Museum/Memorial Hall.\n11. Do not use walking for transportation within the destination city."
+}

@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250322235422616103_00030",
+  "start_city": "Guangzhou",
+  "target_city": "Hangzhou",
+  "days": 3,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Robot Service\"}&accommodation_type_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Korean cuisine\", \"Farmhouse cuisine\"}&restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Spring Dawn at Su Causeway Stele Pavilion\":\n    if activity_start_time(activity)>=\"21:03\" and activity_end_time(activity)<=\"22:58\": result=True",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"commercial district\"}&attraction_type_set)",
+    "total_cost=0\nfor activity in allactivities(plan):\n  total_cost+=activity_cost(activity)\n  total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=2227)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Baiye Homestay (West Lake Branch)\"}<=accommodation_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Longjing Village\"}&attraction_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=44)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\", \"taxi\"}&inner_city_transportation_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({\"Other Chinese Cuisine\", \"Jiangsu-Zhejiang cuisine\"}<=restaurant_type_set)"
+  ],
+  "nature_language": "I am traveling from Guangzhou to Hangzhou for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these hotel feature types: Robot Service.\n5. Do not include any of these restaurant types: Korean cuisine and Farmhouse cuisine.\n6. Visit Spring Dawn at Su Causeway Stele Pavilion between 21:03 and 22:58.\n7. Do not include any of these attraction types: commercial district.\n8. Keep the total activity and in-city transportation cost within 2227.\n9. Stay at the following hotels: Baiye Homestay (West Lake Branch).\n10. Do not include any of these attractions: Longjing Village.\n11. Keep transportation within the destination city within 44.\n12. Do not use walking and taxi for transportation within the destination city.\n13. Include the following restaurant types: Other Chinese Cuisine and Jiangsu-Zhejiang cuisine."
+}

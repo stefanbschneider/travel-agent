@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250322203108551201_00010",
+  "start_city": "Wuhan",
+  "target_city": "Beijing",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=4: result=False",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Beijing Blues Manor\", \"Beijing (Tongzhou) Grand Canal Cultural Tourism Area\"}<=attraction_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Qiuguo S Hotel (Beijing Capital Airport Second Branch)\":\n    if activity_start_time(activity)>=\"22:29\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=3939)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Xin Rong Ji (Xinyuan South Road Branch)\"}&restaurant_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Sauna\"}&accommodation_type_set)"
+  ],
+  "nature_language": "We are 4 people traveling from Wuhan to Beijing for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Each accommodation stay must reserve 4 rooms.\n5. Visit the following attractions: Beijing Blues Manor and Beijing (Tongzhou) Grand Canal Cultural Tourism Area.\n6. Do not use walking for transportation within the destination city.\n7. Stay at Qiuguo S Hotel (Beijing Capital Airport Second Branch) between 22:29 and 24:00.\n8. Keep the accommodation cost within 3939.\n9. Do not include any of these restaurants: Xin Rong Ji (Xinyuan South Road Branch).\n10. Do not include any of these hotel feature types: Sauna."
+}

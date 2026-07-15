@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_e20241028160444030851_00066",
+  "start_city": "Shenzhen",
+  "target_city": "Hangzhou",
+  "days": 1,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==1)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Lingyin Temple\":\n    if activity_start_time(activity)>=\"08:35\" and activity_end_time(activity)<=\"10:25\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Southern Eclectic Buns (Lakeside Branch)\":\n    if activity_start_time(activity)>=\"10:50\" and activity_end_time(activity)<=\"12:10\": result=True",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Hot pot\"}&restaurant_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\", \"taxi\"}&inner_city_transportation_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant\", \"Hangzhou New Century Resort · Rainforest Restaurant\"}&restaurant_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Other\"}&attraction_type_set)",
+    "total_cost=0\nfor activity in allactivities(plan):\n  total_cost+=activity_cost(activity)\n  total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=1271)"
+  ],
+  "nature_language": "I am traveling from Shenzhen to Hangzhou for 1 day.\nRequirements:\n1. The trip must last 1 day.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Visit Lingyin Temple between 08:35 and 10:25.\n5. Dine at Southern Eclectic Buns (Lakeside Branch) between 10:50 and 12:10.\n6. Do not include any of these restaurant types: Hot pot.\n7. Do not use walking and taxi for transportation within the destination city.\n8. Do not include any of these restaurants: Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant and Hangzhou New Century Resort · Rainforest Restaurant.\n9. Do not include any of these attraction types: Other.\n10. Keep the total activity and in-city transportation cost within 1271."
+}

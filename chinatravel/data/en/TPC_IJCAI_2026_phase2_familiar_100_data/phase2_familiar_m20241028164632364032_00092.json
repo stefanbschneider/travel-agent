@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_m20241028164632364032_00092",
+  "start_city": "Chongqing",
+  "target_city": "Shanghai",
+  "days": 3,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Shanghai Gongqing Forest Park\":\n    if activity_start_time(activity)>=\"14:32\" and activity_end_time(activity)<=\"16:12\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\":\n    if activity_start_time(activity)>=\"20:38\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Shanghai Haichang Ocean Park\", \"City God Temple\", \"Venice Town\"}&attraction_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)\"}<=accommodation_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Lestie Hotel  Hengshan Road, Xujiahui, Shanghai\", \"Wassim Hotel (Shanghai Pudong Theme Park)\"}&accommodation_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Mickey Avenue\":\n    if activity_start_time(activity)>=\"08:38\" and activity_end_time(activity)<=\"10:38\": result=True"
+  ],
+  "nature_language": "I am traveling from Chongqing to Shanghai for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Visit Shanghai Gongqing Forest Park between 14:32 and 16:12.\n5. Stay at Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station) between 20:38 and 24:00.\n6. Do not include any of these attractions: Shanghai Haichang Ocean Park, City God Temple, and Venice Town.\n7. Stay at the following hotels: Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station).\n8. Do not include any of these hotels: Lestie Hotel  Hengshan Road, Xujiahui, Shanghai and Wassim Hotel (Shanghai Pudong Theme Park).\n9. Use only metro and taxi for transportation within the destination city.\n10. Do not use walking for transportation within the destination city.\n11. Visit Mickey Avenue between 08:38 and 10:38."
+}

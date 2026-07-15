@@ -21,6 +21,12 @@ DEFAULT_PAGE_SIZE = 10
 ORACLE_QUERY_KEYS = frozenset({"hard_logic", "hard_logic_py", "hard_logic_nl"})
 
 
+def _is_oracle_query_key(key: object) -> bool:
+    return isinstance(key, str) and (
+        key in ORACLE_QUERY_KEYS or key.startswith("hard_logic")
+    )
+
+
 def _ensure_project_on_path() -> None:
     root = str(PROJECT_ROOT)
     if root not in sys.path:
@@ -371,7 +377,11 @@ class ChinaTravelEnvAdapter:
             _ensure_project_on_path()
             from chinatravel.data.load_datasets import load_query
 
-            args = argparse.Namespace(splits=split, oracle_translation=False)
+            args = argparse.Namespace(
+                splits=split,
+                lang="en" if split == "tpc_phase2_familiar_100" else None,
+                oracle_translation=False,
+            )
             query_ids, query_data = load_query(args)
             if uid is not None:
                 if uid not in query_data:
@@ -384,7 +394,7 @@ class ChinaTravelEnvAdapter:
                         {
                             key: value
                             for key, value in query_data[uid].items()
-                            if key not in ORACLE_QUERY_KEYS
+                            if not _is_oracle_query_key(key)
                         }
                     ),
                 }

@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250322122010666557_00070",
+  "start_city": "Chongqing",
+  "target_city": "Suzhou",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Ban Yuan Private Kitchen (Pingjiang Road Main Store)\", \"Xinzhenyuan Suzhou-Style Prawn Pan-Fried Buns (Shantang Street Branch)\"}&restaurant_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=58)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Fast food and casual dining\", \"Hot pot\"}&restaurant_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Parking lot\"}&accommodation_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Wang's Linji Baked Pancake (Shuangta Main Store)\":\n    if activity_start_time(activity)>=\"17:48\" and activity_end_time(activity)<=\"18:05\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"New City Grand Rezen Hotel\", \"Citadines Suzhou Jinji Lake\", \"Holiday Inn Express Suzhou East Taihu\"}&accommodation_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Maple Bridge Scenic Area\", \"East Taihu Ecological Park\"}<=attraction_name_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Chongqing to Suzhou for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these restaurants: Ban Yuan Private Kitchen (Pingjiang Road Main Store) and Xinzhenyuan Suzhou-Style Prawn Pan-Fried Buns (Shantang Street Branch).\n5. Keep transportation within the destination city within 58.\n6. Do not include any of these restaurant types: Fast food and casual dining and Hot pot.\n7. Do not include any of these hotel feature types: Parking lot.\n8. Dine at Wang's Linji Baked Pancake (Shuangta Main Store) between 17:48 and 18:05.\n9. Do not include any of these hotels: New City Grand Rezen Hotel, Citadines Suzhou Jinji Lake, and Holiday Inn Express Suzhou East Taihu.\n10. Visit the following attractions: Maple Bridge Scenic Area and East Taihu Ecological Park."
+}

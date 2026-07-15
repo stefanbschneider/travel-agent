@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250322195527737080_00002",
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "days": 2,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Spa\", \"River view room\"}&accommodation_type_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"Museum/Memorial Hall\", \"Amusement Park/Sports Entertainment\"}<=attraction_type_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Bakery and Desserts\", \"Sichuan cuisine\"}&restaurant_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Shanghai Tower Observation Deck\", \"Jing'an Temple\"}&attraction_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=5088)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Shanghai Dungeon\"}<=attraction_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"natural scenery\", \"University campus\"}&attraction_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False"
+  ],
+  "nature_language": "I am traveling from Shenzhen to Shanghai for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these hotel feature types: Spa and River view room.\n5. Include the following attraction types: Museum/Memorial Hall and Amusement Park/Sports Entertainment.\n6. Do not include any of these restaurant types: Bakery and Desserts and Sichuan cuisine.\n7. Do not include any of these attractions: Shanghai Tower Observation Deck and Jing'an Temple.\n8. Use only metro and taxi for transportation within the destination city.\n9. Keep the accommodation cost within 5088.\n10. Visit the following attractions: Shanghai Dungeon.\n11. Do not include any of these attraction types: natural scenery and University campus.\n12. Do not use walking for transportation within the destination city.\n13. Each accommodation stay must use twin-bed rooms."
+}

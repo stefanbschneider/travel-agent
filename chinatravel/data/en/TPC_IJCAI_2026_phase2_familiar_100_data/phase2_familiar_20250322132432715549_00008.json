@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250322132432715549_00008",
+  "start_city": "Suzhou",
+  "target_city": "Nanjing",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Nanjing BuildHome Cinema apartment\":\n    if activity_start_time(activity)>=\"22:30\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Nanjing BuildHome Cinema apartment\"}<=accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"commercial district\", \"Museum/Memorial Hall\"}&attraction_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Zhonghua Gate Barbican\", \"Qinhuai River Painted Boat\", \"Zhongshan Scenic Area\"}&attraction_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Celebrity City Hotel Nanjing\", \"Wonderland  Resort Nan Jing\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Zhuoyue Rice Noodle Rolls (Hongmiao Branch)\":\n    if activity_start_time(activity)>=\"10:45\" and activity_end_time(activity)<=\"12:10\": result=True",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=232)"
+  ],
+  "nature_language": "We are 3 people traveling from Suzhou to Nanjing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Stay at Nanjing BuildHome Cinema apartment between 22:30 and 24:00.\n5. Stay at the following hotels: Nanjing BuildHome Cinema apartment.\n6. Do not include any of these attraction types: commercial district and Museum/Memorial Hall.\n7. Do not include any of these attractions: Zhonghua Gate Barbican, Qinhuai River Painted Boat, and Zhongshan Scenic Area.\n8. Do not include any of these hotels: Celebrity City Hotel Nanjing and Wonderland  Resort Nan Jing.\n9. Dine at Zhuoyue Rice Noodle Rolls (Hongmiao Branch) between 10:45 and 12:10.\n10. Keep the accommodation cost within 232."
+}

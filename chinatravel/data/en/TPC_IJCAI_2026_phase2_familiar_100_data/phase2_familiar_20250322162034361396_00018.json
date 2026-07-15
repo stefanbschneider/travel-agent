@@ -1,0 +1,23 @@
+{
+  "uid": "phase2_familiar_20250322162034361396_00018",
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "days": 2,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"buffet\"}&restaurant_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Peacock Sichuan Cuisine (Changning Raffles City Branch)\", \"Sheraton Shanghai Hongkou Hotel · Miyabi · Elegant Japanese Restaurant & Bar\", \"Jardine 1915 (Binjiang International Plaza Branch)\"}<=restaurant_name_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"City God Temple\", \"Huangpu River Cruise\"}&attraction_name_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Good Fellas (Yan'an East Road Branch)\", \"EILEEN (Global Financial Center Branch)\"}&restaurant_name_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Designer hotel\"}&accommodation_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({\"Free parking\"}<=accommodation_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Eileen Chang's Former Residence\":\n    if activity_start_time(activity)>=\"09:16\" and activity_end_time(activity)<=\"11:01\": result=True",
+    "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+  ],
+  "nature_language": "I am traveling from Shenzhen to Shanghai for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these restaurant types: buffet.\n5. Dine at the following restaurants: Peacock Sichuan Cuisine (Changning Raffles City Branch), Sheraton Shanghai Hongkou Hotel · Miyabi · Elegant Japanese Restaurant & Bar, and Jardine 1915 (Binjiang International Plaza Branch).\n6. Do not include any of these attractions: City God Temple and Huangpu River Cruise.\n7. Do not include any of these restaurants: Good Fellas (Yan'an East Road Branch) and EILEEN (Global Financial Center Branch).\n8. Do not use walking for transportation within the destination city.\n9. Do not include any of these hotel feature types: Designer hotel.\n10. Include the following hotel feature types: Free parking.\n11. Use only metro and taxi for transportation within the destination city.\n12. Visit Eileen Chang's Former Residence between 09:16 and 11:01.\n13. Whenever taking a taxi, use 1 taxi."
+}

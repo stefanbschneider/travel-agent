@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250324212447508195_00007",
+  "start_city": "Hangzhou",
+  "target_city": "Beijing",
+  "days": 2,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Red tourism sites\"}&attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Bird's Nest (National Stadium)\":\n    if activity_start_time(activity)>=\"18:20\" and activity_end_time(activity)<=\"20:05\": result=True",
+    "accommodation_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_cost+=activity_cost(activity)\nresult=(accommodation_cost<=2844)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Tsinghua University\":\n    if activity_start_time(activity)>=\"12:16\" and activity_end_time(activity)<=\"14:01\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Atour Hotel Beijing Anzhenditan\"}<=accommodation_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Atour Hotel, Changyingtian Street, Chaoyang North Road, Beijing\", \"TRUE GO Hotel (Beijing Xueqing Road Agricultural University Branch)\", \"Beijing Sanyuanqiao Atour X Hotel\"}&accommodation_name_set)",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=206)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Halal cuisine\"}&restaurant_type_set)"
+  ],
+  "nature_language": "We are 4 people traveling from Hangzhou to Beijing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not use walking for transportation within the destination city.\n5. Do not include any of these attraction types: Red tourism sites.\n6. Visit Bird's Nest (National Stadium) between 18:20 and 20:05.\n7. Keep the accommodation cost within 2844.\n8. Visit Tsinghua University between 12:16 and 14:01.\n9. Stay at the following hotels: Atour Hotel Beijing Anzhenditan.\n10. Do not include any of these hotels: Atour Hotel, Changyingtian Street, Chaoyang North Road, Beijing, TRUE GO Hotel (Beijing Xueqing Road Agricultural University Branch), and Beijing Sanyuanqiao Atour X Hotel.\n11. Keep transportation within the destination city within 206.\n12. Do not include any of these restaurant types: Halal cuisine."
+}

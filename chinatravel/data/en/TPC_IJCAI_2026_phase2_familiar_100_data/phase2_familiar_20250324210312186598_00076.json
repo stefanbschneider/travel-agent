@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250324210312186598_00076",
+  "start_city": "Beijing",
+  "target_city": "Shenzhen",
+  "days": 3,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"Seafood\"}&restaurant_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Shenzhen Qianhai OCT JW Marriott Hotel - Metropolitan Feast Buffet Restaurant\", \"Jia Yuan Restaurant\", \"Lei Garden Restaurant (MixC Mall Luohu Branch)\"}&restaurant_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"commercial district\"}<=attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)\":\n    if activity_start_time(activity)>=\"22:25\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"University campus\", \"Library/Memorial Hall\"}&attraction_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Spa\", \"Charging station\"}&accommodation_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({\"Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)\", \"Joyful Gathering (Jingtian Branch)\", \"Nanxianglou Art Hotel (Overseas Chinese Town Gankeng Ancient Town Branch) · Phoenix Hakka Restaurant\"}<=restaurant_name_set)"
+  ],
+  "nature_language": "I am traveling from Beijing to Shenzhen for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these restaurant types: Seafood.\n5. Do not include any of these restaurants: Shenzhen Qianhai OCT JW Marriott Hotel - Metropolitan Feast Buffet Restaurant, Jia Yuan Restaurant, and Lei Garden Restaurant (MixC Mall Luohu Branch).\n6. Include the following attraction types: commercial district.\n7. Stay at Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop) between 22:25 and 24:00.\n8. Use only metro and taxi for transportation within the destination city.\n9. Do not use walking for transportation within the destination city.\n10. Do not include any of these attraction types: University campus and Library/Memorial Hall.\n11. Do not include any of these hotel feature types: Spa and Charging station.\n12. Dine at the following restaurants: Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop), Joyful Gathering (Jingtian Branch), and Nanxianglou Art Hotel (Overseas Chinese Town Gankeng Ancient Town Branch) · Phoenix Hakka Restaurant."
+}

@@ -1,0 +1,19 @@
+{
+  "uid": "phase2_familiar_20250321210015834839_00021",
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "days": 2,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"natural scenery\"}&attraction_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Parking lot\"}&accommodation_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Fenyang Garden Boutique Hotel\":\n    if activity_start_time(activity)>=\"22:04\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Shanghai Botanical Garden\"}<=attraction_name_set)",
+    "total_cost=0\nfor activity in allactivities(plan):\n  total_cost+=activity_cost(activity)\n  total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=2471)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Atour Hotel\", \"Maixinge International Hotel (Shanghai International Tourism Resort, Zhoupu Metro Station )\", \"Nanjiao Hotel Shanghai\"}&accommodation_name_set)"
+  ],
+  "nature_language": "I am traveling from Shenzhen to Shanghai for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Do not include any of these attraction types: natural scenery.\n5. Do not include any of these hotel feature types: Parking lot.\n6. Stay at Fenyang Garden Boutique Hotel between 22:04 and 24:00.\n7. Visit the following attractions: Shanghai Botanical Garden.\n8. Keep the total activity and in-city transportation cost within 2471.\n9. Do not include any of these hotels: Atour Hotel, Maixinge International Hotel (Shanghai International Tourism Resort, Zhoupu Metro Station ), and Nanjiao Hotel Shanghai."
+}

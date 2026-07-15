@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_20250322103945146888_00080",
+  "start_city": "Hangzhou",
+  "target_city": "Suzhou",
+  "days": 3,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"coffee shop\"}&restaurant_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({\"Free parking\"}<=accommodation_type_set)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Jinhaihua · SuSHOW (Ligongdi Flagship Store)\", \"Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop\"}&restaurant_name_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Lake View Room\"}&accommodation_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Wangfu Jinke Grand Hotel\", \"Pan Pacific Suzhou\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)\":\n    if activity_start_time(activity)>=\"22:55\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"True Interest Garden\":\n    if activity_start_time(activity)>=\"12:25\" and activity_end_time(activity)<=\"14:15\": result=True",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch)\"}<=accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"Other\"}<=attraction_type_set)"
+  ],
+  "nature_language": "We are 3 people traveling from Hangzhou to Suzhou for 3 days.\nRequirements:\n1. The trip must last 3 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these restaurant types: coffee shop.\n5. Include the following hotel feature types: Free parking.\n6. Do not include any of these restaurants: Jinhaihua · SuSHOW (Ligongdi Flagship Store) and Suzhou Jinji Lake Tonino Lamborghini Bookstore Hotel · Su Noodle Workshop.\n7. Do not include any of these hotel feature types: Lake View Room.\n8. Do not include any of these hotels: Wangfu Jinke Grand Hotel and Pan Pacific Suzhou.\n9. Stay at Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch) between 22:55 and 24:00.\n10. Visit True Interest Garden between 12:25 and 14:15.\n11. Stay at the following hotels: Suzhou Huaxi Meishi Hotel (Heiyi Wujiang Branch).\n12. Include the following attraction types: Other."
+}

@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250324220331951689_00034",
+  "start_city": "Beijing",
+  "target_city": "Suzhou",
+  "days": 2,
+  "people_number": 1,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==1)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"commercial district\"}<=attraction_type_set)",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Parking lot\", \"Spa\"}&accommodation_type_set)",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Yangcheng Lake\", \"Luzhi Ancient Town\", \"Suzhou Museum\"}&attraction_name_set)",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=827)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Peach Blossom Lane\"}<=attraction_name_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"buffet\", \"coffee shop\"}&restaurant_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Hall of Farming and Pleasure\":\n    if activity_start_time(activity)>=\"08:21\" and activity_end_time(activity)<=\"10:11\": result=True"
+  ],
+  "nature_language": "I am traveling from Beijing to Suzhou for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 1 traveler.\n3. Tickets for attractions, intercity transport, and metro rides must match 1 traveler.\n4. Include the following attraction types: commercial district.\n5. Do not include any of these hotel feature types: Parking lot and Spa.\n6. Do not include any of these attractions: Yangcheng Lake, Luzhi Ancient Town, and Suzhou Museum.\n7. Keep the dining cost within 827.\n8. Use only metro and taxi for transportation within the destination city.\n9. Visit the following attractions: Peach Blossom Lane.\n10. Do not include any of these restaurant types: buffet and coffee shop.\n11. Visit Hall of Farming and Pleasure between 08:21 and 10:11."
+}

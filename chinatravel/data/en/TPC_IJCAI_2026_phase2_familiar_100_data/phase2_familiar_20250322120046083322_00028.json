@@ -1,0 +1,21 @@
+{
+  "uid": "phase2_familiar_20250322120046083322_00028",
+  "start_city": "Wuhan",
+  "target_city": "Chengdu",
+  "days": 2,
+  "people_number": 2,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==2)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Premium Shantou Beef Restaurant (Ludao Branch)\":\n    if activity_start_time(activity)>=\"16:55\" and activity_end_time(activity)<=\"18:15\": result=True",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=not({\"Cultural Tourism Area\"}&attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Chengdu Yuehuimei Hotel\":\n    if activity_start_time(activity)>=\"21:40\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"Chengdu Happy Valley\", \"Du Fu Thatched Cottage\"}&attraction_name_set)",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=469)",
+    "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=not({\"Chengdu Foodie (Kuixinglou Branch)\"}&restaurant_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"Big Pear Roast Duck (Longhu Xingyuehui Branch)\":\n    if activity_start_time(activity)>=\"11:45\" and activity_end_time(activity)<=\"13:00\": result=True",
+    "inner_city_transportation_cost=0\nfor activity in allactivities(plan):\n  inner_city_transportation_cost+=innercity_transport_cost(activity_transports(activity))\nresult=(inner_city_transportation_cost<=104)"
+  ],
+  "nature_language": "We are 2 people traveling from Wuhan to Chengdu for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 2 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 2 travelers.\n4. Dine at Premium Shantou Beef Restaurant (Ludao Branch) between 16:55 and 18:15.\n5. Do not include any of these attraction types: Cultural Tourism Area.\n6. Stay at Chengdu Yuehuimei Hotel between 21:40 and 24:00.\n7. Do not include any of these attractions: Chengdu Happy Valley and Du Fu Thatched Cottage.\n8. Keep the dining cost within 469.\n9. Do not include any of these restaurants: Chengdu Foodie (Kuixinglou Branch).\n10. Dine at Big Pear Roast Duck (Longhu Xingyuehui Branch) between 11:45 and 13:00.\n11. Keep transportation within the destination city within 104."
+}

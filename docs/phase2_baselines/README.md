@@ -18,20 +18,21 @@ The recorder writes:
 - `history.csv`: tabular projection;
 - `latest.json` and `latest.md`: most recent row; and
 - `runs/<run_id>.json`: immutable snapshots.
+Every new row embeds a `data_source` object; its ID distinguishes repository-derived splits from the checksum-pinned familiar-100 archive. The CSV projection carries the ID, kind, dataset ID, source URL, and archive checksum.
 
 ## Compare like with like
 
-A comparison is meaningful only when rows use the same source revision, split set, deterministic fold/limit, budget, repeat count, flags, parser/model configuration, and telemetry collection mode.
+A comparison is meaningful only when rows use the same source revision, data-source ID, split set, deterministic fold/limit, budget, repeat count, flags, parser/model configuration, and telemetry collection mode.
 Treat low-`n` rows as smoke checks, not regressions or improvements.
 A pinned evaluation records the source revision it executed; prefer it for long runs.
 
 The public Phase 2 material does not currently specify a query timeout or repeat count.
 `300 s` and `900 s` are local sensitivity assumptions, not organizer rules.
-Do not infer final-evaluation performance from local rows or from familiar-100 once it is imported.
+Do not infer final-evaluation performance from local rows or from familiar-100.
 
 ## Read the row before using it
 
-- **No-oracle boundary:** end-to-end rows must hide `hard_logic_py` from the agent.
+- **No-oracle boundary:** end-to-end rows must hide every top-level `hard_logic*` verifier field from the agent.
 - **Axes:** compare ceiling, solver-only, and end-to-end values separately; their gaps attribute solver headroom and parsing/harness loss.
 - **Aggregate score:** `eval_tpc.py` uses 10% EPR-micro and 10% EPR-macro. Its per-query monotonic merge score uses EPR-micro for both environmental slots; that merge choice is not a second aggregate score.
 - **Repetitions:** inspect mean and standard deviation together. A label alone does not prove a configured LLM was reached; check backend and failure telemetry.

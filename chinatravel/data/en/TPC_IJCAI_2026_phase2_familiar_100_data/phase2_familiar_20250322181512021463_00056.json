@@ -1,0 +1,19 @@
+{
+  "uid": "phase2_familiar_20250322181512021463_00056",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({\"Intercity Hangzhou West Lake Huanglong Hotel\"}<=accommodation_name_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Hangzhou GongShu Asian Games Park Atour Hotel\", \"Atour Hotel Pinghai Road, West Lake, Hangzhou\"}&accommodation_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"704 Project (Lin Biao's Hangzhou Villa)\":\n    if activity_start_time(activity)>=\"13:03\" and activity_end_time(activity)<=\"15:03\": result=True",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=4: result=False"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not use walking for transportation within the destination city.\n5. Stay at the following hotels: Intercity Hangzhou West Lake Huanglong Hotel.\n6. Do not include any of these hotels: Hangzhou GongShu Asian Games Park Atour Hotel and Atour Hotel Pinghai Road, West Lake, Hangzhou.\n7. Visit 704 Project (Lin Biao's Hangzhou Villa) between 13:03 and 15:03.\n8. Use only metro and taxi for transportation within the destination city.\n9. Each accommodation stay must reserve 4 rooms."
+}

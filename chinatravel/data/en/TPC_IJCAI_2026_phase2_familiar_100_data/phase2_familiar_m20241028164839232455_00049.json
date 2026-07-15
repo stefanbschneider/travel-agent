@@ -1,0 +1,22 @@
+{
+  "uid": "phase2_familiar_m20241028164839232455_00049",
+  "start_city": "Guangzhou",
+  "target_city": "Shanghai",
+  "days": 2,
+  "people_number": 3,
+  "hard_logic_py": [
+    "result=(day_count(plan)==2)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(activity)==\"LOVE Thai\":\n    if activity_start_time(activity)>=\"10:50\" and activity_end_time(activity)<=\"12:05\": result=True",
+    "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=not({\"Designer hotel\"}&accommodation_type_set)",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"coffee shop\"}&restaurant_type_set)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=(inner_city_transportation_set<={\"metro\", \"taxi\"})",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False",
+    "restaurant_cost=0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_cost+=activity_cost(activity)\nresult=(restaurant_cost<=1723)",
+    "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\nresult=not({\"walk\"}&inner_city_transportation_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Fosun Foundation Center\":\n    if activity_start_time(activity)>=\"15:54\" and activity_end_time(activity)<=\"17:44\": result=True",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"Mickey Avenue\":\n    if activity_start_time(activity)>=\"11:57\" and activity_end_time(activity)<=\"13:37\": result=True"
+  ],
+  "nature_language": "We are 3 people traveling from Guangzhou to Shanghai for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Dine at LOVE Thai between 10:50 and 12:05.\n5. Do not include any of these hotel feature types: Designer hotel.\n6. Do not include any of these restaurant types: coffee shop.\n7. Use only metro and taxi for transportation within the destination city.\n8. Each accommodation stay must reserve 2 rooms.\n9. Keep the dining cost within 1723.\n10. Do not use walking for transportation within the destination city.\n11. Visit Fosun Foundation Center between 15:54 and 17:44.\n12. Visit Mickey Avenue between 11:57 and 13:37."
+}

@@ -1,0 +1,20 @@
+{
+  "uid": "phase2_familiar_20250325013355437592_00050",
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "days": 4,
+  "people_number": 4,
+  "hard_logic_py": [
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+    "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=not({\"West Lake Boat Tour\", \"Qiantang River\", \"Hangzhou Safari Park\"}&attraction_name_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction' and activity_position(activity)==\"North Peak Cable Car\":\n    if activity_start_time(activity)>=\"13:16\" and activity_end_time(activity)<=\"15:11\": result=True",
+    "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=not({\"coffee shop\"}&restaurant_type_set)",
+    "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=not({\"Hangzhou West Lake Wulin Pagoda Junting Design Hotel\", \"Grand New Century Hotel Canal Hangzhou\"}&accommodation_name_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({\"Cultural Tourism Area\"}<=attraction_type_set)",
+    "result=False\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and activity_position(activity)==\"Baiye Homestay (West Lake Branch)\":\n    if activity_start_time(activity)>=\"08:25\" and activity_end_time(activity)<=\"24:00\": result=True",
+    "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+  ],
+  "nature_language": "We are 4 people traveling from Suzhou to Hangzhou for 4 days.\nRequirements:\n1. The trip must last 4 days.\n2. The plan must be for 4 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 4 travelers.\n4. Do not include any of these attractions: West Lake Boat Tour, Qiantang River, and Hangzhou Safari Park.\n5. Visit North Peak Cable Car between 13:16 and 15:11.\n6. Do not include any of these restaurant types: coffee shop.\n7. Do not include any of these hotels: Hangzhou West Lake Wulin Pagoda Junting Design Hotel and Grand New Century Hotel Canal Hangzhou.\n8. Include the following attraction types: Cultural Tourism Area.\n9. Stay at Baiye Homestay (West Lake Branch) between 08:25 and 24:00.\n10. Whenever taking a taxi, use 1 taxi."
+}

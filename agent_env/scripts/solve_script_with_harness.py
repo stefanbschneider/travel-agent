@@ -19,6 +19,14 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 HIDDEN_QUERY_KEYS = {"hard_logic", "hard_logic_py", "hard_logic_nl"}
+
+
+def _is_oracle_query_key(key: object) -> bool:
+    return isinstance(key, str) and (
+        key in HIDDEN_QUERY_KEYS or key.startswith("hard_logic")
+    )
+
+
 OUTPUT_OPEN_TAG = "<output>"
 OUTPUT_CLOSE_TAG = "</output>"
 
@@ -30,7 +38,11 @@ def default_tool_python() -> str:
 def load_queries(split: str) -> tuple[list[str], dict[str, Any]]:
     from chinatravel.data.load_datasets import load_query
 
-    args = argparse.Namespace(splits=split, oracle_translation=True)
+    args = argparse.Namespace(
+        splits=split,
+        lang="en" if split == "tpc_phase2_familiar_100" else None,
+        oracle_translation=True,
+    )
     query_ids, query_data = load_query(args)
     if not query_ids:
         raise RuntimeError(f"No queries found for split: {split}")
@@ -46,7 +58,7 @@ def load_one_query(split: str, uid: str | None) -> tuple[str, dict[str, Any]]:
 
 
 def visible_query(query: dict[str, Any]) -> dict[str, Any]:
-    return {key: value for key, value in query.items() if key not in HIDDEN_QUERY_KEYS}
+    return {key: value for key, value in query.items() if not _is_oracle_query_key(key)}
 
 
 def json_default(value: Any) -> Any:
