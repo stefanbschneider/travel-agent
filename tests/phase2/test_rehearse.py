@@ -108,6 +108,9 @@ def test_write_uids_file_roundtrips(tmp_path):
 def test_split_set_for_maps_split_name_back_to_cli_choice():
     assert R._split_set_for("tpc_phase2_val") == "val"
     assert R._split_set_for("tpc_phase2_test") == "test"
+    assert R._split_set_for("tpc_phase2_familiar_100") == "familiar_100"
+    with pytest.raises(ValueError, match="unknown Phase 2 split name"):
+        R._split_set_for("tpc_phase2_unknown")
 
 
 # --- Parallel chunk dispatch (P2_PARALLEL) -----------------------------------

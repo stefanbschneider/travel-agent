@@ -359,7 +359,13 @@ def _write_uids_file(uids: list[str]) -> Path:
 
 
 def _split_set_for(split_name: str) -> str:
-    return "test" if split_name == "tpc_phase2_test" else "val"
+    if split_name == "tpc_phase2_val":
+        return "val"
+    if split_name == "tpc_phase2_test":
+        return "test"
+    if split_name == "tpc_phase2_familiar_100":
+        return "familiar_100"
+    raise ValueError(f"unknown Phase 2 split name: {split_name!r}")
 
 
 def _run_chunk_subprocess(cmd: list[str], uids_file: Path) -> None:

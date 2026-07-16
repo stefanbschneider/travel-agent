@@ -4,6 +4,7 @@ import argparse
 import csv
 import hashlib
 import json
+import sys
 from pathlib import Path
 
 import phase2_record_baseline as baseline
@@ -147,8 +148,11 @@ def test_familiar_split_set_alias_resolves_without_heldout_warning(capsys):
     assert capsys.readouterr().out == ""
 
 
-def test_familiar_baseline_cli_accepts_split_set_alias():
-    args = baseline.parse_args(["--split-set", "familiar_100", "--folds", "1"])
+def test_familiar_baseline_cli_accepts_split_set_alias(monkeypatch):
+    monkeypatch.setattr(
+        sys, "argv", ["phase2_record_baseline.py", "--split-set", "familiar_100", "--folds", "1"]
+    )
+    args = baseline.parse_args()
 
     assert args.split_set == "familiar_100"
     assert args.folds == 1
