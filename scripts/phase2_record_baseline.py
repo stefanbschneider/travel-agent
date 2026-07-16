@@ -320,10 +320,28 @@ def _variance_summary(rehearsals: list[dict[str, Any]]) -> dict[str, Any]:
     return summary
 
 
+def _ceiling_is_available(ceiling: Any) -> bool:
+    """Return whether a ceiling result actually evaluated at least one plan.
+
+    New rows carry ``quality.evaluated``; fall back to ``raw.evaluated`` and then
+    field presence for older rows so historical repository-local baselines retain
+    their original projections.
+    """
+    if not isinstance(ceiling, dict):
+        return False
+    for section_name in ("quality", "raw"):
+        section = ceiling.get(section_name)
+        if isinstance(section, dict) and "evaluated" in section:
+            return int(section.get("evaluated") or 0) > 0
+    return "fpr" in ceiling
+
+
 def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     rehearsal = record.get("rehearsal", {})
     modes = rehearsal.get("modes", {})
-    ceiling = float(rehearsal.get("ceiling", {}).get("fpr", 0.0))
+    ceiling_record = rehearsal.get("ceiling", {})
+    ceiling_available = _ceiling_is_available(ceiling_record)
+    ceiling = float(ceiling_record.get("fpr", 0.0))
     solver = float(modes.get("solver-only", {}).get("fpr", 0.0))
     e2e = float(modes.get("end-to-end", {}).get("fpr", 0.0))
     ceiling_quality = rehearsal.get("ceiling", {}).get("quality", {})
@@ -395,20 +413,24 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "limit": record.get("limit"),
         "n": int(record.get("n", 0)),
         "budget_sec": float(record.get("budget_sec", 0.0)),
-        "ceiling_fpr": ceiling,
+        "ceiling_fpr": ceiling if ceiling_available else None,
         "solver_only_fpr": solver,
         "end_to_end_fpr": e2e,
-        "solver_headroom": ceiling - solver,
+        "solver_headroom": ceiling - solver if ceiling_available else None,
         "parsing_loss": solver - e2e,
-        "ceiling_overall_true": ceiling_overall_true,
+        "ceiling_overall_true": ceiling_overall_true if ceiling_available else None,
         "solver_only_overall_true": solver_overall_true,
         "end_to_end_overall_true": e2e_overall_true,
-        "overall_true_solver_headroom": ceiling_overall_true - solver_overall_true,
+        "overall_true_solver_headroom": (
+            ceiling_overall_true - solver_overall_true if ceiling_available else None
+        ),
         "overall_true_parsing_loss": solver_overall_true - e2e_overall_true,
-        "ceiling_overall_parsed": ceiling_overall_parsed,
+        "ceiling_overall_parsed": ceiling_overall_parsed if ceiling_available else None,
         "solver_only_overall_parsed": solver_overall_parsed,
         "end_to_end_overall_parsed": e2e_overall_parsed,
-        "overall_parsed_solver_headroom": ceiling_overall_parsed - solver_overall_parsed,
+        "overall_parsed_solver_headroom": (
+            ceiling_overall_parsed - solver_overall_parsed if ceiling_available else None
+        ),
         "overall_parsed_parsing_loss": solver_overall_parsed - e2e_overall_parsed,
         "parser_precision": float(parser.get("precision", 0.0)),
         "parser_recall": float(parser.get("recall", 0.0)),
@@ -562,7 +584,9 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
 def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
     rehearsal = record.get("rehearsal", {})
     modes = rehearsal.get("modes", {})
-    ceiling = float(rehearsal.get("ceiling", {}).get("fpr", 0.0))
+    ceiling_record = rehearsal.get("ceiling", {})
+    ceiling_available = _ceiling_is_available(ceiling_record)
+    ceiling = float(ceiling_record.get("fpr", 0.0))
     solver = float(modes.get("solver-only", {}).get("fpr", 0.0))
     e2e = float(modes.get("end-to-end", {}).get("fpr", 0.0))
 
@@ -592,6 +616,17 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
     parse_completion = completion.get("parse", {}) if isinstance(completion, dict) else {}
     e2e_completion = completion.get("end_to_end", {}) if isinstance(completion, dict) else {}
     solver_completion = completion.get("solver_only", {}) if isinstance(completion, dict) else {}
+    ceiling_unavailable = "unavailable (no evaluated ceiling plans for this data source)"
+    ceiling_fpr_text = f"{ceiling:.4f}" if ceiling_available else ceiling_unavailable
+    fpr_headroom_text = f"{ceiling - solver:.4f}" if ceiling_available else "unavailable"
+    ceiling_true_text = f"{ceiling_true:.4f}" if ceiling_available else ceiling_unavailable
+    true_headroom_text = (
+        f"{ceiling_true - solver_true:.4f}" if ceiling_available else "unavailable"
+    )
+    ceiling_parsed_text = f"{ceiling_parsed:.4f}" if ceiling_available else ceiling_unavailable
+    parsed_headroom_text = (
+        f"{ceiling_parsed - solver_parsed:.4f}" if ceiling_available else "unavailable"
+    )
 
     lines = [
         "# Phase 2 Baseline (Latest)",
@@ -609,10 +644,10 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         "",
         "## Rehearsal Attribution (FPR)",
         "",
-        f"- ceiling_fpr: {ceiling:.4f}",
+        f"- ceiling_fpr: {ceiling_fpr_text}",
         f"- solver_only_fpr: {solver:.4f}",
         f"- end_to_end_fpr: {e2e:.4f}",
-        f"- solver_headroom: {ceiling - solver:.4f}",
+        f"- solver_headroom: {fpr_headroom_text}",
         f"- parsing_loss: {solver - e2e:.4f}",
         "",
         "## Run-To-Run Variance (across repeats)",
@@ -625,15 +660,15 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         "",
         "## Rehearsal Attribution (Continuous Score)",
         "",
-        f"- ceiling_overall_true_mean: {ceiling_true:.4f}",
+        f"- ceiling_overall_true_mean: {ceiling_true_text}",
         f"- solver_only_overall_true_mean: {solver_true:.4f}",
         f"- end_to_end_overall_true_mean: {e2e_true:.4f}",
-        f"- overall_true_solver_headroom: {ceiling_true - solver_true:.4f}",
+        f"- overall_true_solver_headroom: {true_headroom_text}",
         f"- overall_true_parsing_loss: {solver_true - e2e_true:.4f}",
-        f"- ceiling_overall_parsed_mean: {ceiling_parsed:.4f}",
+        f"- ceiling_overall_parsed_mean: {ceiling_parsed_text}",
         f"- solver_only_overall_parsed_mean: {solver_parsed:.4f}",
         f"- end_to_end_overall_parsed_mean: {e2e_parsed:.4f}",
-        f"- overall_parsed_solver_headroom: {ceiling_parsed - solver_parsed:.4f}",
+        f"- overall_parsed_solver_headroom: {parsed_headroom_text}",
         f"- overall_parsed_parsing_loss: {solver_parsed - e2e_parsed:.4f}",
         "",
         "## Parser Vs Oracle",
@@ -645,8 +680,8 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- disjunction_flattened: {int(parser.get('disjunction_flattened', 0))}",
         f"- behavioral_agreement_rate: {float(behavioral.get('agreement_rate', 0.0)):.4f}",
         "",
-        "## Parser Vs Oracle (full val, n={0}) -- headline signal, solver-free".format(
-            int(parser_full.get("n", 0))
+        "## Parser Vs Oracle (full split: {0}, n={1}) -- headline signal, solver-free".format(
+            record.get("split_name", ""), int(parser_full.get("n", 0))
         ),
         "",
         f"- precision: {float(parser_full.get('precision', 0.0)):.4f}",

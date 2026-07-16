@@ -7,6 +7,7 @@ hand-fabricated result files and mtimes.
 from __future__ import annotations
 
 import os
+import sys
 import time
 
 import phase2_progress as P
@@ -76,3 +77,12 @@ def test_fraction_and_eta_present_in_summary(tmp_path):
     assert summary["elapsed_sec"] > 0
     text = P.format_summary(summary, n=tracker.n, repeats=tracker.repeats)
     assert "end-to-end" in text and "solver-only" in text
+
+
+def test_cli_accepts_familiar_split(monkeypatch):
+    monkeypatch.setattr(
+        sys, "argv", ["phase2_progress.py", "--split-set", "familiar_100", "--folds", "1"]
+    )
+    args = P.parse_args()
+    assert args.split_set == "familiar_100"
+    assert args.folds == 1

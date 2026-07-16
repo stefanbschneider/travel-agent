@@ -16,10 +16,9 @@ These capabilities are not evidence of final-evaluation performance.
 
 ## Current evidence
 
-The current local reference is [run `20260713T130105Z`](../results/phase2_baselines/runs/20260713T130105Z.json), with its configuration, attribution, repetitions, parser statistics, and telemetry preserved in the row.
-Use the [latest summary](../results/phase2_baselines/latest.md) only as a pointer; make decisions from the immutable run row and like-for-like comparisons.
-The row is repository-local evidence, not an organizer result and not a familiar-100 measurement.
-The familiar-100 import lives under `chinatravel/data/en/TPC_IJCAI_2026_phase2_familiar_100_data/`; no familiar-100 baseline row has been recorded yet.
+The current local reference is the pinned no-oracle Qwen [familiar-100 run `20260716T090638Z`](../results/phase2_baselines/runs/20260716T090638Z.json). It used the official familiar-100 archive, DeepInfra `Qwen/Qwen3.6-27B`, two fresh repeats, library-default Phase 2 flags, and the local `300 s` budget assumption.
+The row reports `26%` solver-only FPR versus `2%` end-to-end FPR, a `24`-point parser/normalization loss. Full-split parser precision/recall/F1 are `0.4445 / 0.1281 / 0.1988`. All outputs are schema-valid; `35%` of end-to-end runs and `23%` of solver-only runs reached the bounded-solver timeout and recovered without fallback.
+The familiar release has no organizer best plans, so its ceiling is unavailable rather than zero. This repository-local development result is not an estimate of final held-out performance.
 
 ## Operating rules
 
@@ -32,17 +31,16 @@ The familiar-100 import lives under `chinatravel/data/en/TPC_IJCAI_2026_phase2_f
 
 ## Highest priority
 
-1. **Establish a pinned no-oracle Qwen familiar-100 baseline.** Use `tpc_phase2_familiar_100`, record all local runtime and repetition assumptions, and publish the resulting ledger evidence.
-2. **Re-rank failures from that evidence.** Separate parser/normalization failures from solver, timeout, and output failures before choosing a fix.
-3. **Run the paired `900 s` sensitivity only if the `300 s` timeout/recovery mix still confounds attribution.** Keep source revision, data source, model, flags, repeats, and fresh-output policy fixed.
-
+1. Fix the coupled `activity_time_windows` and `position_presence` parser family with focused regressions and a flags-off-safe implementation. It contributes `84/84` time-window errors and `69/84` position errors in the full-split report.
+2. Measure that change through the normal pinned no-oracle gate before touching another family.
+3. Keep `budgets` (`70/70` missing) as the next independent parser family. Do not combine it or the broad excluded-entity families with the first change.
 Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.
 
 ## Follow-on order
 
-1. Fix the dominant measured failure family with a focused regression test and a flags-off-safe implementation.
-2. Measure the winning change through the normal no-oracle gate.
-3. Run the longer local-budget assumption as a sensitivity check after the short baseline identifies the failure mix.
+1. Re-rank parser families after measuring the focused time-window/position change.
+2. Fix the next measured family, currently budgets, with the same regression-first gate.
+3. Run a longer local-budget sensitivity only if a future short-gate failure set remains timeout-confounded. The anchor does not justify it: all `23` solver-only timeout recoveries are solver-pass cases, and none of the `74` both-mode failures timed out.
 4. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
 
 The public material still does not specify a runtime contract.

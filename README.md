@@ -50,7 +50,7 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 ## Current state
 
-Phase 1 operations are mature. On 2026-07-15 the organizers released the Agent Environment Guide and familiar-100 development set. A familiar-100 baseline has not yet been measured locally. That development set is not the final held-out evaluation set.
+Phase 1 operations are mature. The first pinned no-oracle familiar-100 anchor was measured on 2026-07-16: [run `20260716T090638Z`](results/phase2_baselines/runs/20260716T090638Z.json) records `2%` end-to-end FPR versus `26%` solver-only FPR under the local `300 s` budget assumption. The official development set has no best plans, so no ceiling is available; it is not the final held-out evaluation set.
 
 ## Documentation
 

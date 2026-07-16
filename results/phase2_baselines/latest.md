@@ -1,61 +1,64 @@
 # Phase 2 Baseline (Latest)
 
-- run_id: 20260713T130105Z
-- timestamp_utc: 2026-07-13T13:01:05+00:00
-- git_sha: ace69b66869fb6ff881c0a3e925fd04292d279e4
-- split: tpc_phase2_val (set=val, fold=0/10, n=85)
+- run_id: 20260716T090638Z
+- timestamp_utc: 2026-07-16T09:06:38+00:00
+- git_sha: a3fcdc39aa5a14aecfb1257b5d427dfa676eb20a
+- split: tpc_phase2_familiar_100 (set=familiar_100, fold=0/1, n=100)
+- data_source_id: ijcai2026_phase2_familiar_100@sha256:32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c
+- data_source_url: https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip
+- data_source_archive_sha256: 32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c
 - budget_sec: 300.0
-- label: plan3-n1n7-gate
+- label: familiar100-qwen-baseline
 - repeats: 2 (fresh=True)
 
 ## Rehearsal Attribution (FPR)
 
-- ceiling_fpr: 100.0000
-- solver_only_fpr: 95.2941
-- end_to_end_fpr: 85.8824
-- solver_headroom: 4.7059
-- parsing_loss: 9.4118
+- ceiling_fpr: unavailable (no evaluated ceiling plans for this data source)
+- solver_only_fpr: 26.0000
+- end_to_end_fpr: 2.0000
+- solver_headroom: unavailable
+- parsing_loss: 24.0000
 
 ## Run-To-Run Variance (across repeats)
 
 - repeats: 2
-- e2e_fpr mean/std: 71.1765 / 14.7059
-- solver_only_fpr mean/std: 95.2941 / 0.0000
-- e2e_overall_true mean/std: 88.2001 / 0.1820
-- solver_only_overall_true mean/std: 94.2338 / 0.1690
+- e2e_fpr mean/std: 2.0000 / 0.0000
+- solver_only_fpr mean/std: 26.0000 / 0.0000
+- e2e_overall_true mean/std: 36.0610 / 0.0530
+- solver_only_overall_true mean/std: 48.2979 / 0.1584
 
 ## Rehearsal Attribution (Continuous Score)
 
-- ceiling_overall_true_mean: 100.0000
-- solver_only_overall_true_mean: 94.0647
-- end_to_end_overall_true_mean: 88.3821
-- overall_true_solver_headroom: 5.9353
-- overall_true_parsing_loss: 5.6826
-- ceiling_overall_parsed_mean: 76.4657
-- solver_only_overall_parsed_mean: 69.2682
-- end_to_end_overall_parsed_mean: 69.8440
-- overall_parsed_solver_headroom: 7.1975
-- overall_parsed_parsing_loss: -0.5758
+- ceiling_overall_true_mean: unavailable (no evaluated ceiling plans for this data source)
+- solver_only_overall_true_mean: 48.1395
+- end_to_end_overall_true_mean: 36.1140
+- overall_true_solver_headroom: unavailable
+- overall_true_parsing_loss: 12.0255
+- ceiling_overall_parsed_mean: unavailable (no evaluated ceiling plans for this data source)
+- solver_only_overall_parsed_mean: 42.1844
+- end_to_end_overall_parsed_mean: 53.2298
+- overall_parsed_solver_headroom: unavailable
+- overall_parsed_parsing_loss: -11.0455
 
 ## Parser Vs Oracle
 
-- precision: 0.7584
-- recall: 0.7839
-- f1: 0.7710
-- value_accuracy: 0.8526
-- disjunction_flattened: 12
-- behavioral_agreement_rate: 0.7882
+- precision: 0.4445
+- recall: 0.1281
+- f1: 0.1988
+- value_accuracy: 0.6400
+- disjunction_flattened: 0
+- behavioral_agreement_rate: 0.0000
 
-## Parser Vs Oracle (full val, n=850) -- headline signal, solver-free
+## Parser Vs Oracle (full split: tpc_phase2_familiar_100, n=100) -- headline signal, solver-free
 
-- precision: 0.7587
-- recall: 0.7635
-- f1: 0.7611
-- value_accuracy: 0.8363
-- disjunction_flattened: 113
-- behavioral_agreement_rate (accept-side): 0.8141
-- reject_agreement (reject-side probes): 0.8348
-- behavioral_balanced: 0.8245
+- precision: 0.4445
+- recall: 0.1281
+- f1: 0.1988
+- value_accuracy: 0.6400
+- disjunction_flattened: 0
+- behavioral_agreement_rate (accept-side): 0.0000
+- reject_agreement (reject-side probes): None
+- behavioral_balanced: 0.0000
 
 ## LLM Parse Config
 
@@ -64,23 +67,23 @@
 
 ## Timing And Reliability
 
-- total_p50_sec: 271.0164
-- total_p95_sec: 271.1362
+- total_p50_sec: 270.4289
+- total_p95_sec: 271.1225
 - valid_output_rate: 1.0000
-- timed_out: 66
+- timed_out: 35
 - used_fallback: 0
 - budget_overruns: 0
-- llm_parse_attempted: 85
+- llm_parse_attempted: 100
 - llm_parse_failed: 0
 
 ## Completion Status
 
-- parse_completed: 85/85
+- parse_completed: 100/100
 - parse_failed: 0
 - parse_timed_out: 0
-- end_to_end_completed_without_timeout: 19/85
-- end_to_end_timed_out: 66
-- solver_only_completed_without_timeout: 15/85
-- solver_only_timed_out: 70
-- solver_only_recovered_from_timeout: 70
+- end_to_end_completed_without_timeout: 65/100
+- end_to_end_timed_out: 35
+- solver_only_completed_without_timeout: 77/100
+- solver_only_timed_out: 23
+- solver_only_recovered_from_timeout: 23
 - solver_only_used_fallback: 0

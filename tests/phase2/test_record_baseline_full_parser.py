@@ -111,3 +111,55 @@ def test_full_val_parser_columns_present_in_csv_fieldnames(tmp_path):
         "llm_parse",
     ):
         assert col in header
+
+
+def _familiar_record_with_unavailable_ceiling():
+    record = _record(
+        run_id="familiar-run",
+        split_set="familiar_100",
+        split_name="tpc_phase2_familiar_100",
+        n=100,
+        rehearsal={
+            "ceiling": {"fpr": 0.0, "quality": {"evaluated": 0}},
+            "modes": {
+                "solver-only": {
+                    "fpr": 26.0,
+                    "quality": {
+                        "overall_true": {"mean": 48.0},
+                        "overall_parsed": {"mean": 42.0},
+                    },
+                },
+                "end-to-end": {
+                    "fpr": 2.0,
+                    "quality": {
+                        "overall_true": {"mean": 36.0},
+                        "overall_parsed": {"mean": 53.0},
+                    },
+                },
+            },
+        },
+    )
+    record["parser_full"] = {**record["parser_full"], "n": 100}
+    return record
+
+
+def test_unavailable_ceiling_does_not_project_negative_headroom():
+    row = B._to_history_row(_familiar_record_with_unavailable_ceiling())
+    assert row["ceiling_fpr"] is None
+    assert row["solver_headroom"] is None
+    assert row["ceiling_overall_true"] is None
+    assert row["overall_true_solver_headroom"] is None
+    assert row["ceiling_overall_parsed"] is None
+    assert row["overall_parsed_solver_headroom"] is None
+    assert row["parsing_loss"] == 24.0
+    assert row["overall_true_parsing_loss"] == 12.0
+
+
+def test_latest_summary_labels_unavailable_ceiling_and_actual_full_split(tmp_path):
+    path = tmp_path / "latest.md"
+    B._write_latest_md(path, _familiar_record_with_unavailable_ceiling())
+    text = path.read_text(encoding="utf-8")
+    assert "ceiling_fpr: unavailable (no evaluated ceiling plans for this data source)" in text
+    assert "solver_headroom: unavailable" in text
+    assert "parsing_loss: 24.0000" in text
+    assert "full split: tpc_phase2_familiar_100, n=100" in text
