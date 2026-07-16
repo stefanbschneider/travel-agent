@@ -574,6 +574,16 @@ def parse_excluded_hotels(text):
     return names if names else None
 
 
+_CONTAINED_BETWEEN_WINDOW_RE = re.compile(
+    r"^[ \t]*(?:\d+\.[ \t]+)?"
+    r"(?:visit|(?:dine|stay)[ \t]+at)[ \t]+"
+    r"(?P<location>.+?)[ \t]+between[ \t]+"
+    r"(?P<start>\d{1,2}:\d{2})[ \t]+and[ \t]+(?P<end>\d{1,2}:\d{2})"
+    r"[ \t]*[.;]?[ \t]*$",
+    re.I | re.M,
+)
+
+
 def parse_stay_duration(text):
     """Extract minimum stay duration at a specific location."""
     constraints = []
@@ -589,8 +599,9 @@ def parse_stay_duration(text):
         _add(m.group(1), m.group(2))
     for m in re.finditer(r"spend\s+(?:at\s+least\s+)?(\d+)\s*minutes?\s+at\s+(.+?)(?:\.|;|,|$)", text, re.I):
         _add(m.group(2), m.group(1))
+    between_text = _CONTAINED_BETWEEN_WINDOW_RE.sub("", text)
     # "visit/be at X between A and B" -> min stay = (B - A) minutes
-    for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", text, re.I):
+    for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", between_text, re.I):
         dur = _hhmm_to_min(m.group(3)) - _hhmm_to_min(m.group(2))
         if dur > 0:
             _add(m.group(1), dur)
@@ -848,9 +859,25 @@ def parse_activity_time_windows(text):
       - "leave/depart (from) X no earlier than T" / "depart no earlier than T from X" -> end_after=T
       - "leave/depart (from) X no later than T"  -> end_before=T
       - "visit/be at X between A and B"          -> latest=A, end_after=B
+      - numbered/line-start "Visit/Dine at/Stay at X between A and B"
+        -> earliest=A, end_before=B (the activity must fit inside the interval)
     """
     def _loc(s):
         return re.sub(r"^the\s+", "", s.strip().rstrip("."), flags=re.I).strip()
+
+    contained = [
+        {
+            "location": _loc(match.group("location")),
+            "earliest": match.group("start"),
+            "latest": None,
+            "end_after": None,
+            "end_before": match.group("end"),
+        }
+        for match in _CONTAINED_BETWEEN_WINDOW_RE.finditer(text)
+    ]
+    # Preserve the legacy free-form "wish to visit X between A and B" cover-window
+    # interpretation below without letting it match the line-scoped contained form too.
+    text = _CONTAINED_BETWEEN_WINDOW_RE.sub("", text)
 
     by_loc = {}
     order = []
@@ -884,7 +911,7 @@ def parse_activity_time_windows(text):
     for m in re.finditer(r"(?:visit|be\s+at)\s+(.+?)\s+between\s+(\d{1,2}:\d{2})\s+and\s+(\d{1,2}:\d{2})", text, re.I):
         _mark(m.group(1)); _set(m.group(1), "latest", m.group(2)); _set(m.group(1), "end_after", m.group(3))
 
-    return [by_loc[loc] for loc in order] if order else None
+    return (contained + [by_loc[loc] for loc in order]) if (contained or order) else None
 
 
 def detect_disjunctive(text):

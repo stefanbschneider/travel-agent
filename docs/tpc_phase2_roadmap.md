@@ -31,8 +31,8 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 
 ## Highest priority
 
-1. Fix the coupled `activity_time_windows` and `position_presence` parser family with focused regressions and a flags-off-safe implementation. It contributes `84/84` time-window errors and `69/84` position errors in the full-split report.
-2. Measure that change through the normal pinned no-oracle gate before touching another family.
+1. A focused deterministic parser change now maps numbered or line-start `Visit` / `Dine at` / `Stay at` intervals into contained activity windows while preserving the legacy free-form interpretation. Its solver-free familiar report matches `activity_time_windows` and `position_presence` on all `84/84` affected queries, removes `48` spurious `stay_duration` cases, and moves parser precision/recall/F1 from `0.4445 / 0.1281 / 0.1988` to `0.8180 / 0.3518 / 0.4920`. This is diagnostic evidence, not promotion.
+2. Measure the committed change through the normal pinned no-oracle gate only after explicit run confirmation.
 3. Keep `budgets` (`70/70` missing) as the next independent parser family. Do not combine it or the broad excluded-entity families with the first change.
 Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.
 

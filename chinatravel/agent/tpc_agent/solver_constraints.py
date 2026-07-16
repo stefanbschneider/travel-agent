@@ -310,12 +310,18 @@ def _parse_hotel_distance(logic: str, result: dict[str, Any]) -> None:
         result.setdefault("poi_distance_hotel", []).append(item)
 
 
+_ACTIVITY_POSITION_EQ_RE = re.compile(
+    r"activity_position\(\s*activity\s*\)\s*==\s*"
+    r"(?P<quote>['\"])(?P<location>[^\r\n]*?)(?P=quote)"
+)
+
+
 def _parse_activity_windows(logic: str, result: dict[str, Any]) -> None:
-    positions = list(re.finditer(r"activity_position\(activity\)\s*==\s*['\"]([^'\"]+)['\"]", logic))
+    positions = list(_ACTIVITY_POSITION_EQ_RE.finditer(logic))
     if not positions:
         return
     for idx, match in enumerate(positions):
-        loc = match.group(1)
+        loc = match.group("location")
         end = positions[idx + 1].start() if idx + 1 < len(positions) else len(logic)
         block = logic[match.start():end]
         min_minutes = _duration_minutes(block)
@@ -372,7 +378,7 @@ def _parse_position_names(logic: str, result: dict[str, Any]) -> None:
     """Any POI referenced positively by activity_position(...)=='NAME' must be in
     the plan for the clause to pass, so record it as required presence (covers
     ordering and other position clauses, not just time windows)."""
-    names = re.findall(r"activity_position\(\s*activity\s*\)\s*==\s*['\"]([^'\"]+)['\"]", logic)
+    names = [match.group("location") for match in _ACTIVITY_POSITION_EQ_RE.finditer(logic)]
     if names:
         result.setdefault("position_presence", []).extend(names)
 

@@ -3,13 +3,14 @@
 These mirror the oracle solver-dict shapes exactly (verified against val examples):
 - required_hotel_any_types / required_hotel_all_types
 - activity_time_windows: {location, earliest, latest, end_after, end_before}
-- stay_duration: {location, min_minutes}  (incl. "between A and B" -> B-A)
+- stay_duration: {location, min_minutes}  (legacy free-form "between A and B" -> B-A)
 - position_presence: locations referenced by time-window / stay-duration constraints
 """
 
 from __future__ import annotations
 
 import parse_constraints as pc
+from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
 
 
 def _q(nl, people=2, days=3):
@@ -77,6 +78,43 @@ def test_visit_between_sets_window_and_stay_duration():
     assert raw.get("stay_duration") == [
         {"location": "Feilaifeng Grottoes", "min_minutes": 90}
     ], raw.get("stay_duration")
+
+
+def test_numbered_imperative_between_forms_are_contained_windows():
+    raw = pc.parse_query_no_oracle(
+        _q(
+            "Requirements:\n"
+            "1. Visit Maple Bridge Scenic Area between 08:15 and 10:05.\n"
+            "2. Dine at Jiahong Hotel between 07:45 and 08:40.\n"
+            "3. Stay at Jiahong Hotel between 20:10 and 24:00."
+        )
+    )
+    assert raw.get("activity_time_windows") == [
+        _win("Maple Bridge Scenic Area", earliest="08:15", end_before="10:05"),
+        _win("Jiahong Hotel", earliest="07:45", end_before="08:40"),
+        _win("Jiahong Hotel", earliest="20:10", end_before="24:00"),
+    ]
+    assert raw.get("stay_duration") is None
+    assert raw.get("position_presence") == ["Maple Bridge Scenic Area", "Jiahong Hotel"]
+
+
+def test_oracle_window_location_preserves_apostrophes():
+    logic = (
+        "result=False\n"
+        "for activity in allactivities(plan):\n"
+        "  if activity_position(activity)==\"Bear Grandma's Garden\":\n"
+        "    if activity_start_time(activity)>=\"17:57\" and "
+        "activity_end_time(activity)<=\"19:47\": result=True"
+    )
+    constraints = solver_constraint_variants(
+        {"hard_logic_py": [logic], "nature_language": "", "people_number": 1, "days": 1},
+        {},
+        use_oracle=True,
+    )[0]
+    assert constraints.get("activity_time_windows") == [
+        _win("Bear Grandma's Garden", earliest="17:57", end_before="19:47")
+    ]
+    assert constraints.get("position_presence") == ["Bear Grandma's Garden"]
 
 
 # --- Timing-constraint parsing regression ----------------------------------------------------
