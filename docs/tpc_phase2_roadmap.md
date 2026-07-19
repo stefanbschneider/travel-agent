@@ -32,7 +32,7 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 
 ## Highest priority
 
-1. Fix `budgets`, now the dominant independent parser family at `70/70` missing, with focused regressions and a deterministic implementation.
+1. A focused deterministic budget parser change now maps the five familiar line-scoped cap templates into the existing solver buckets. Its solver-free familiar report matches `budgets` on all `70/70` affected queries and moves parser precision/recall/F1 from `0.8180 / 0.3518 / 0.4920` to `0.8502 / 0.4561 / 0.5937`. This is diagnostic evidence, not promotion.
 2. Measure the budget change through the normal pinned no-oracle gate before touching another family.
 3. Keep the broad excluded-entity families separate; the largest remaining groups are excluded hotels and cuisine types at `55/55` missing each.
 Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.

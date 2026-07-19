@@ -2,7 +2,7 @@
 
 A1: derive taxi_cars_equals from people_number.
 A2: restaurant negation guard + bogus cuisine cleanup.
-A3: budget category disambiguation (cross-city must not leak into inner_transport).
+A3: budget category disambiguation + familiar line-scoped caps.
 
 These lock in the concrete parser bugs found in the val-split analysis.
 """
@@ -151,6 +151,26 @@ def test_genuine_inner_transport_budget_still_parsed():
     )
     b = raw.get("budgets") or {}
     assert b.get("inner_transport") == 150.0, b
+
+
+def test_familiar_keep_within_budget_templates_map_all_buckets():
+    raw = pc.parse_query_no_oracle(
+        _q(
+            "Requirements:\n"
+            "1. Keep the accommodation cost within 342.\n"
+            "2. Keep transportation within the destination city within 74.\n"
+            "3. Keep the total activity and in-city transportation cost within 6436.\n"
+            "4. Keep the dining cost within 1161.\n"
+            "5. Keep the attraction ticket cost within 55."
+        )
+    )
+    assert raw.get("budgets") == {
+        "accommodation": 342.0,
+        "inner_transport": 74.0,
+        "total": 6436.0,
+        "dining": 1161.0,
+        "sightseeing": 55.0,
+    }
 
 
 # --- 1c: negation guard extended to hotels ---------------------------------

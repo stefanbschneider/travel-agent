@@ -54,9 +54,61 @@ def _truncate_at_negation(chunk):
     return chunk
 
 
+_LINE_SCOPED_BUDGET_PATTERNS = (
+    (
+        "accommodation",
+        re.compile(
+            r"^[ \t]*(?:\d+\.[ \t]+)?Keep[ \t]+the[ \t]+accommodation[ \t]+cost"
+            r"[ \t]+within[ \t]+(?P<value>\d+(?:\.\d+)?)[ \t]*[.;]?[ \t]*$",
+            re.I | re.M,
+        ),
+    ),
+    (
+        "inner_transport",
+        re.compile(
+            r"^[ \t]*(?:\d+\.[ \t]+)?Keep[ \t]+transportation[ \t]+within[ \t]+the"
+            r"[ \t]+destination[ \t]+city[ \t]+within[ \t]+"
+            r"(?P<value>\d+(?:\.\d+)?)[ \t]*[.;]?[ \t]*$",
+            re.I | re.M,
+        ),
+    ),
+    (
+        "total",
+        re.compile(
+            r"^[ \t]*(?:\d+\.[ \t]+)?Keep[ \t]+the[ \t]+total[ \t]+activity"
+            r"[ \t]+and[ \t]+in-city[ \t]+transportation[ \t]+cost[ \t]+within"
+            r"[ \t]+(?P<value>\d+(?:\.\d+)?)[ \t]*[.;]?[ \t]*$",
+            re.I | re.M,
+        ),
+    ),
+    (
+        "dining",
+        re.compile(
+            r"^[ \t]*(?:\d+\.[ \t]+)?Keep[ \t]+the[ \t]+dining[ \t]+cost"
+            r"[ \t]+within[ \t]+(?P<value>\d+(?:\.\d+)?)[ \t]*[.;]?[ \t]*$",
+            re.I | re.M,
+        ),
+    ),
+    (
+        "sightseeing",
+        re.compile(
+            r"^[ \t]*(?:\d+\.[ \t]+)?Keep[ \t]+the[ \t]+attraction[ \t]+ticket"
+            r"[ \t]+cost[ \t]+within[ \t]+(?P<value>\d+(?:\.\d+)?)"
+            r"[ \t]*[.;]?[ \t]*$",
+            re.I | re.M,
+        ),
+    ),
+)
+
+
 def parse_budget(text):
     """Extract budget constraints from text."""
     budgets = {}
+    for key, pattern in _LINE_SCOPED_BUDGET_PATTERNS:
+        match = pattern.search(text)
+        if match:
+            budgets[key] = float(match.group("value"))
+
 
     # Sightseeing budget
     m = re.search(r"(?:sightseeing|attractions?\s+)budget[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
