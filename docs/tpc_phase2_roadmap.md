@@ -21,6 +21,8 @@ The continuous-score gate passes without reasons or advisories. Mean end-to-end 
 All `100/100` candidate outputs are valid, with zero parse failures, fallbacks, or budget overruns. End-to-end bounded-solver timeouts move `35 -> 34`; solver-only timeouts remain `23`, all recovered into solver-pass cases.
 The familiar release has no organizer best plans, so its ceiling is unavailable rather than zero. This repository-local development result is not an estimate of final held-out performance.
 
+> **Note — flag description to reconcile.** The two rows above are described as using *both* DeepInfra `Qwen/Qwen3.6-27B` *and* "library-default Phase 2 flags." These cannot both hold: library-default `Flags()` keeps `llm_parse` off and makes zero LLM calls, so a real Qwen parse run is not library-default. The harness path (`resolve_llm_client_and_flags`) actually defaults `disjunction`, `dynamic_budget`, `entity_resolution`, and — once a backend is configured — `llm_parse` on. Those two rows predate flag recording, so their true configuration is not captured. Baseline rows now record the resolved flags under `flags` (see the [ledger guide](phase2_baselines/README.md)); re-derive the intended description from a newly recorded row before treating either as the pinned reference.
+
 ## Operating rules
 
 1. **No oracle in the agent path.** Local oracle fields may score or attribute a rehearsal, never feed parsing, solving, or finalization.
