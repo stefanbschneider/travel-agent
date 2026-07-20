@@ -54,6 +54,80 @@ def _truncate_at_negation(chunk):
     return chunk
 
 
+# --- "Do not include any of these <category>: <list>" (familiar-100) ----------
+# Every familiar-100 query states its exclusions with this one uniform template,
+# which none of the older "do not want to visit/stay/try ..." patterns matched --
+# leaving all five excluded_* families at zero recall (see docs/tpc_phase2_roadmap.md).
+# The <category> is passed by each extractor as a regex anchored immediately before
+# the ':' list marker, so a name category ("hotels") cannot also swallow a sibling
+# type category ("hotel feature types") that shares the same prefix.
+def _do_not_include_items(text, category_pattern, protect=()):
+    """Return the list items from a "Do not include any of these <category>: A, B and C."
+    clause (or None). Items are split on commas / " and " / " or "; any phrase in
+    ``protect`` (a closed environment vocabulary of compound values that legitimately
+    contain " and ", e.g. "Fast food and casual dining") is masked before splitting so it
+    survives as one item."""
+    items = []
+    pattern = (
+        r"do\s+not\s+include\s+any\s+of\s+these\s+" + category_pattern
+        + r"\s*:\s*(.+?)(?:\.|;|$)"
+    )
+    protect = sorted((p for p in protect if p), key=len, reverse=True)
+    for m in re.finditer(pattern, text, re.I):
+        chunk = m.group(1).strip().rstrip(".")
+        placeholders = {}
+        for i, phrase in enumerate(protect):
+            token = f"\x00{i}\x00"
+            masked = re.sub(re.escape(phrase), token, chunk, flags=re.I)
+            if masked != chunk:
+                chunk = masked
+                placeholders[token] = phrase
+        # Consume an optional "and"/"or" right after a comma so an Oxford-comma list
+        # ("A, B, and C") does not leave a leading "and C" fragment.
+        for piece in re.split(r"\s+and\s+|\s+or\s+|,\s*(?:and\s+|or\s+)?", chunk):
+            piece = piece.strip().rstrip(".")
+            for token, phrase in placeholders.items():
+                if token in piece:
+                    piece = piece.replace(token, phrase)
+            if piece and piece not in items:
+                items.append(piece)
+    return items or None
+
+
+_compound_cuisine_cache = None
+
+
+def _compound_cuisine_types():
+    """The closed set of environment cuisine/restaurant-type values that contain " and "
+    (e.g. "Bakery and Desserts", "Fast food and casual dining"). Read once from the same
+    committed database_en restaurant CSVs WorldEnv loads -- deterministic environment data,
+    not oracle -- so the negative-list splitter never breaks a compound type in two. Empty on
+    any read failure (splitter then falls back to naive splitting)."""
+    global _compound_cuisine_cache
+    if _compound_cuisine_cache is not None:
+        return _compound_cuisine_cache
+    import csv
+    import glob
+    import os
+
+    root = os.path.dirname(os.path.abspath(__file__))
+    compound = set()
+    pattern = os.path.join(
+        root, "chinatravel", "environment", "database_en", "restaurants", "*", "*.csv"
+    )
+    try:
+        for path in glob.glob(pattern):
+            with open(path, encoding="utf-8", newline="") as f:
+                for row in csv.DictReader(f):
+                    value = (row.get("cuisine") or row.get("type") or "").strip()
+                    if value and " and " in value.lower():
+                        compound.add(value)
+    except OSError:
+        compound = set()
+    _compound_cuisine_cache = compound
+    return compound
+
+
 _LINE_SCOPED_BUDGET_PATTERNS = (
     (
         "accommodation",
@@ -480,6 +554,15 @@ def parse_excluded_attraction_types(text):
                     if canonical and canonical not in types:
                         types.append(canonical)
 
+    # "Do not include any of these attraction types: X and Y." (familiar-100). Values are written
+    # in the oracle's own vocabulary/casing, so they are kept verbatim rather than routed through
+    # the alias table (which lower-cases and would drop unaliased types like "Library/Memorial
+    # Hall"). The "attraction types" category cannot collide with the bare "attractions" name
+    # family: the ':' anchor stops each extractor at its own line.
+    for t in _do_not_include_items(text, r"attraction\s+types?") or []:
+        if t not in types:
+            types.append(t)
+
     return types if types else None
 
 
@@ -517,6 +600,12 @@ def parse_excluded_attractions(text):
                 p = p.strip().rstrip(".")
                 if p and len(p) > 2 and p.lower() not in known_type_words:
                     names.append(p)
+
+    # "Do not include any of these attractions: X and Y." (familiar-100). The "attractions"
+    # category is anchored at ':' so it never fires on the sibling "attraction types:" line.
+    for n in _do_not_include_items(text, r"attractions?") or []:
+        if n and n not in names:
+            names.append(n)
 
     return names if names else None
 
@@ -623,6 +712,13 @@ def parse_excluded_hotels(text):
                 p = p.strip().rstrip(".")
                 if p and len(p) > 3:
                     names.append(p)
+
+    # "Do not include any of these hotels: X and Y." (familiar-100). The "hotels" category is
+    # anchored at ':' so it never fires on the sibling "hotel feature types:" line.
+    for n in _do_not_include_items(text, r"hotels?") or []:
+        if n and n not in names:
+            names.append(n)
+
     return names if names else None
 
 
@@ -742,6 +838,12 @@ def parse_excluded_restaurants(text):
             if p and len(p) > 2 and p not in names:
                 names.append(p)
 
+    # "Do not include any of these restaurants: X and Y." (familiar-100). Anchored at ':' so it
+    # stays on the restaurant-name line and never fires on "restaurant types:" (-> cuisine).
+    for n in _do_not_include_items(text, r"restaurants?") or []:
+        if n and n not in names:
+            names.append(n)
+
     return names if names else None
 
 
@@ -847,6 +949,16 @@ def parse_excluded_cuisine_types(text):
                 if p and p.lower() not in {"the", "following", "these", "a"}:
                     if p not in types:
                         types.append(p)
+
+    # "Do not include any of these restaurant types: X and Y." (familiar-100) -> excluded cuisine
+    # types. Values are verbatim oracle vocabulary; compound cuisines that legitimately contain
+    # " and " (e.g. "Fast food and casual dining") are protected from the splitter.
+    for t in _do_not_include_items(
+        text, r"restaurant\s+types?", protect=_compound_cuisine_types()
+    ) or []:
+        if t and t not in types:
+            types.append(t)
+
     return types if types else None
 
 

@@ -155,3 +155,62 @@ def test_stay_at_for_minutes_still_supported():
     )
     assert {"location": "Grand Museum", "min_minutes": 60} in (raw.get("stay_duration") or []), raw
     assert "Grand Museum" in (raw.get("position_presence") or []), raw
+
+
+# --- "Do not include any of these <category>: ..." (familiar-100 exclusions) ----
+# The familiar-100 set states every exclusion with this one uniform template. The older
+# "do not want to visit/stay/try ..." patterns never matched it, leaving all five excluded_*
+# families at zero recall. See docs/tpc_phase2_roadmap.md.
+
+def test_do_not_include_attractions_names():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these attractions: Golden Buddha Mountain and Nanshan Scenic Area.")
+    )
+    assert raw.get("excluded_attractions") == [
+        "Golden Buddha Mountain", "Nanshan Scenic Area"
+    ], raw.get("excluded_attractions")
+
+
+def test_do_not_include_attraction_types_kept_verbatim():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these attraction types: Other and Red tourism sites.")
+    )
+    # Values stay in the oracle's own vocabulary/casing (not lower-cased via the alias table).
+    assert raw.get("excluded_attraction_types") == ["Other", "Red tourism sites"], raw
+    # The name family must NOT also fire on the "attraction types" line.
+    assert not raw.get("excluded_attractions"), raw.get("excluded_attractions")
+
+
+def test_do_not_include_hotels_not_confused_with_feature_types():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these hotels: Xinshan Hotel King Shinning. "
+           "Do not include any of these hotel feature types: Media Room.")
+    )
+    assert raw.get("excluded_hotels") == ["Xinshan Hotel King Shinning"], raw.get("excluded_hotels")
+
+
+def test_do_not_include_restaurants_names():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these restaurants: Artful Cafe.")
+    )
+    assert raw.get("excluded_restaurants") == ["Artful Cafe"], raw.get("excluded_restaurants")
+    assert not raw.get("excluded_cuisine_types"), raw.get("excluded_cuisine_types")
+
+
+def test_do_not_include_restaurant_types_protects_compound_cuisine():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these restaurant types: Hot pot and Fast food and casual dining.")
+    )
+    # "Fast food and casual dining" is a single environment cuisine value and must not be split
+    # on its internal " and ".
+    assert raw.get("excluded_cuisine_types") == [
+        "Hot pot", "Fast food and casual dining"
+    ], raw.get("excluded_cuisine_types")
+    assert not raw.get("excluded_restaurants"), raw.get("excluded_restaurants")
+
+
+def test_do_not_include_oxford_comma_no_leading_and():
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these attractions: A Park, B Tower, and C Temple.")
+    )
+    assert raw.get("excluded_attractions") == ["A Park", "B Tower", "C Temple"], raw
