@@ -40,6 +40,22 @@ def test_to_history_row_projects_full_val_parser_columns():
     assert row["parser_full_behavioral_agreement_rate"] == 0.7565
 
 
+def test_to_history_row_keeps_behavioral_unavailable_as_none():
+    # A data source with no best plans (e.g. familiar-100) yields None accept-side agreement.
+    # It must stay None in the row -- a 0.0 would read as total parser/oracle disagreement.
+    record = _record(
+        parser={"precision": 0.5, "recall": 0.5, "behavioral": {"agreement_rate": None}},
+    )
+    record["parser_full"]["behavioral"] = {
+        "agreement_rate": None,
+        "behavioral_balanced": None,
+    }
+    row = B._to_history_row(record)
+    assert row["behavioral_agreement_rate"] is None
+    assert row["parser_full_behavioral_agreement_rate"] is None
+    assert row["parser_full_behavioral_balanced"] is None
+
+
 def test_to_history_row_projects_llm_config_columns():
     row = B._to_history_row(_record())
     assert row["llm_backend"] == "deepinfra"

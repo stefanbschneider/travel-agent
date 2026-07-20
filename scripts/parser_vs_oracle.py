@@ -632,15 +632,19 @@ def run_report(split: str, *, uids=None, limit=None, behavioral=False, lang="en"
         "family_stats": _aggregate_family_stats(rows, per_variant=per_variant_family_stats),
     }
     if behavioral:
-        accept_agreement = round(_mean(1.0 if b["agree"] else 0.0 for b in behav_rows), 4)
+        # No best plans for this data source (e.g. the familiar-100 archive ships none) means the
+        # accept-side check has nothing to evaluate. Report None (unavailable) rather than a 0.0
+        # that reads as total disagreement -- mirroring reject_agreement's None and the ceiling.
+        accept_agreement = (
+            round(_mean(1.0 if b["agree"] else 0.0 for b in behav_rows), 4)
+            if behav_rows else None
+        )
         kept_rows = [r for r in reject_rows if r["n_kept"] > 0]
         total_kept = sum(r["n_kept"] for r in kept_rows)
         total_reject_agree = sum(r["reject_agree"] for r in kept_rows)
         reject_agreement = round(total_reject_agree / total_kept, 4) if total_kept else None
-        behavioral_balanced = (
-            round((accept_agreement + reject_agreement) / 2.0, 4)
-            if reject_agreement is not None else accept_agreement
-        )
+        _sides = [s for s in (accept_agreement, reject_agreement) if s is not None]
+        behavioral_balanced = round(_mean(_sides), 4) if _sides else None
         reject_miss_uids = sorted(
             r["uid"] for r in kept_rows if r["reject_agree"] < r["n_kept"]
         )
