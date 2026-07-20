@@ -214,3 +214,17 @@ def test_do_not_include_oxford_comma_no_leading_and():
         _q("Do not include any of these attractions: A Park, B Tower, and C Temple.")
     )
     assert raw.get("excluded_attractions") == ["A Park", "B Tower", "C Temple"], raw
+
+
+def test_compound_cuisine_vocab_not_loaded_without_template():
+    # The compound-cuisine CSV scan must stay lazy: parsing text that lacks the
+    # "restaurant types" exclusion template should not trigger the filesystem read.
+    pc._compound_cuisine_cache = None
+    pc.parse_query_no_oracle(_q("We want to try a Hot pot restaurant and visit a museum."))
+    assert pc._compound_cuisine_cache is None
+    # When the template IS present, the vocab loads and protects the compound value.
+    raw = pc.parse_query_no_oracle(
+        _q("Do not include any of these restaurant types: Fast food and casual dining.")
+    )
+    assert raw.get("excluded_cuisine_types") == ["Fast food and casual dining"], raw
+    assert pc._compound_cuisine_cache is not None

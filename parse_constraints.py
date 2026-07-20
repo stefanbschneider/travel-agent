@@ -66,14 +66,20 @@ def _do_not_include_items(text, category_pattern, protect=()):
     clause (or None). Items are split on commas / " and " / " or "; any phrase in
     ``protect`` (a closed environment vocabulary of compound values that legitimately
     contain " and ", e.g. "Fast food and casual dining") is masked before splitting so it
-    survives as one item."""
-    items = []
+    survives as one item. ``protect`` may be a zero-arg callable, resolved lazily only when
+    the template actually matches, so callers can pass an expensive vocabulary builder without
+    paying for it on the (common) inputs that never use this template."""
     pattern = (
         r"do\s+not\s+include\s+any\s+of\s+these\s+" + category_pattern
         + r"\s*:\s*(.+?)(?:\.|;|$)"
     )
+    matches = list(re.finditer(pattern, text, re.I))
+    if not matches:
+        return None
+    protect = protect() if callable(protect) else protect
     protect = sorted((p for p in protect if p), key=len, reverse=True)
-    for m in re.finditer(pattern, text, re.I):
+    items = []
+    for m in matches:
         chunk = m.group(1).strip().rstrip(".")
         placeholders = {}
         for i, phrase in enumerate(protect):
@@ -102,7 +108,7 @@ def _compound_cuisine_types():
     (e.g. "Bakery and Desserts", "Fast food and casual dining"). Read once from the same
     committed database_en restaurant CSVs WorldEnv loads -- deterministic environment data,
     not oracle -- so the negative-list splitter never breaks a compound type in two. Empty on
-    any read failure (splitter then falls back to naive splitting)."""
+    any read/decode/parse failure (splitter then falls back to naive splitting)."""
     global _compound_cuisine_cache
     if _compound_cuisine_cache is not None:
         return _compound_cuisine_cache
@@ -122,7 +128,10 @@ def _compound_cuisine_types():
                     value = (row.get("cuisine") or row.get("type") or "").strip()
                     if value and " and " in value.lower():
                         compound.add(value)
-    except OSError:
+    # A best-effort vocabulary helper: a missing/unreadable (OSError), non-UTF8 (UnicodeError),
+    # or malformed (csv.Error) CSV must degrade to naive splitting, never crash live query
+    # parsing -- matching the "empty on any read/decode/parse failure" contract.
+    except (OSError, UnicodeError, csv.Error):
         compound = set()
     _compound_cuisine_cache = compound
     return compound
@@ -954,7 +963,7 @@ def parse_excluded_cuisine_types(text):
     # types. Values are verbatim oracle vocabulary; compound cuisines that legitimately contain
     # " and " (e.g. "Fast food and casual dining") are protected from the splitter.
     for t in _do_not_include_items(
-        text, r"restaurant\s+types?", protect=_compound_cuisine_types()
+        text, r"restaurant\s+types?", protect=_compound_cuisine_types
     ) or []:
         if t and t not in types:
             types.append(t)
