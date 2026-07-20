@@ -336,6 +336,27 @@ def _ceiling_is_available(ceiling: Any) -> bool:
     return "fpr" in ceiling
 
 
+# Phase 2 feature-flag fields recorded in the JSON ``flags`` block. This tuple fixes the order of
+# that block only; ``history.csv`` appends these columns separately in ``_write_history_csv`` (so
+# pre-existing column order is preserved) and therefore does not follow this order. Mirrors the
+# behavioral flags on ``orchestrator.Flags``; ``llm_backend`` is intentionally excluded because the
+# backend is already captured in ``llm_config`` and the ``Flags.llm_backend`` field is not the
+# resolved client backend.
+_FLAG_FIELDS = (
+    "disjunction",
+    "llm_parse",
+    "llm_parse_mode",
+    "llm_refine",
+    "dynamic_budget",
+    "entity_resolution",
+)
+
+
+def _flags_snapshot(flags: Any) -> dict[str, Any]:
+    """Serialize the resolved Phase 2 ``Flags`` into a plain dict for the ledger row."""
+    return {name: getattr(flags, name, None) for name in _FLAG_FIELDS}
+
+
 def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     rehearsal = record.get("rehearsal", {})
     modes = rehearsal.get("modes", {})
@@ -378,6 +399,9 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
 
     llm_config = record.get("llm_config", {}) if isinstance(record, dict) else {}
     llm_backend = str(llm_config.get("backend") or "none")
+    flags_snapshot = record.get("flags", {}) if isinstance(record, dict) else {}
+    if not isinstance(flags_snapshot, dict):
+        flags_snapshot = {}
     data_source = _record_data_source(record)
 
     timing = record.get("timing", {})
@@ -458,7 +482,16 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
             else parser_full_behavioral.get("agreement_rate", 0.0)
         ),
         "llm_backend": llm_backend,
-        "llm_parse": llm_backend != "none",
+        # Prefer the recorded resolved flag; fall back to the backend heuristic for legacy rows
+        # written before the ``flags`` block existed.
+        "llm_parse": bool(flags_snapshot.get("llm_parse"))
+        if "llm_parse" in flags_snapshot
+        else (llm_backend != "none"),
+        "disjunction": flags_snapshot.get("disjunction"),
+        "dynamic_budget": flags_snapshot.get("dynamic_budget"),
+        "entity_resolution": flags_snapshot.get("entity_resolution"),
+        "llm_refine": flags_snapshot.get("llm_refine"),
+        "llm_parse_mode": flags_snapshot.get("llm_parse_mode"),
         "timing_total_p50": float(timing.get("total_p50", 0.0)),
         "timing_total_p95": float(timing.get("total_p95", 0.0)),
         "timing_valid_output_rate": float(timing.get("valid_output_rate", 0.0)),
@@ -573,6 +606,12 @@ def _write_history_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "solver_timed_out",
         "solver_recovered_from_timeout",
         "solver_used_fallback",
+        # Resolved Phase 2 feature flags (appended so pre-existing column order is unchanged).
+        "disjunction",
+        "dynamic_budget",
+        "entity_resolution",
+        "llm_refine",
+        "llm_parse_mode",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -609,6 +648,9 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         parser_full.get("behavioral", {}) if isinstance(parser_full, dict) else {}
     )
     llm_config = record.get("llm_config", {}) if isinstance(record, dict) else {}
+    flags_snapshot = record.get("flags", {}) if isinstance(record, dict) else {}
+    if not isinstance(flags_snapshot, dict):
+        flags_snapshot = {}
     data_source = _record_data_source(record)
     timing = record.get("timing", {})
     variance = record.get("variance", {}) if isinstance(record, dict) else {}
@@ -697,6 +739,15 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         "",
         f"- backend: {llm_config.get('backend', 'none')}",
         f"- model: {llm_config.get('model') or '(n/a)'}",
+        "",
+        "## Phase 2 Flags (resolved for the e2e run)",
+        "",
+        f"- disjunction: {flags_snapshot.get('disjunction')}",
+        f"- llm_parse: {flags_snapshot.get('llm_parse')}",
+        f"- llm_parse_mode: {flags_snapshot.get('llm_parse_mode')}",
+        f"- llm_refine: {flags_snapshot.get('llm_refine')}",
+        f"- dynamic_budget: {flags_snapshot.get('dynamic_budget')}",
+        f"- entity_resolution: {flags_snapshot.get('entity_resolution')}",
         "",
         "## Timing And Reliability",
         "",
@@ -905,6 +956,12 @@ def main() -> None:
             "backend": llm_cfg.get("backend", "none"),
             "model": _resolve_llm_model(llm_cfg, llm_client),
         },
+        # Resolved Phase 2 feature flags for the e2e run (the same object used above for
+        # fingerprints). The harness defaults several of these ON (disjunction, dynamic_budget,
+        # llm_parse when a backend is configured, entity_resolution), and those defaults live in
+        # code that can change over time -- recording them here makes the row reproducible and
+        # comparable instead of leaving the configuration implicit.
+        "flags": _flags_snapshot(run_flags),
         "timing": timing,
         "completion": completion,
         "timing_source": {

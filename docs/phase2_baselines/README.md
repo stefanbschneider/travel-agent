@@ -36,6 +36,7 @@ Do not infer final-evaluation performance from local rows or from familiar-100.
 - **Axes:** compare ceiling, solver-only, and end-to-end values separately; their gaps attribute solver headroom and parsing/harness loss.
 - **Aggregate score:** `eval_tpc.py` uses 10% EPR-micro and 10% EPR-macro. Its per-query monotonic merge score uses EPR-micro for both environmental slots; that merge choice is not a second aggregate score.
 - **Repetitions:** inspect mean and standard deviation together. A label alone does not prove a configured LLM was reached; check backend and failure telemetry.
+- **Flags:** each row records the resolved Phase 2 feature flags under `flags` (also projected as `history.csv` columns and a `latest.md` section). Read them instead of assuming a configuration — the harness defaults several features on, so "library-default" is not the run configuration unless the row's flags say so.
 - **Freshness:** compare rows produced from fresh outputs. Resumed output or mixed revisions invalidates attribution.
 - **Gate:** run `make phase2-gate BASELINE=<row> CANDIDATE=<row>` before accepting an intended improvement.
 
