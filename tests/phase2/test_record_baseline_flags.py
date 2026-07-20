@@ -96,6 +96,11 @@ def test_latest_md_includes_flags_section(tmp_path):
 def test_harness_defaults_enable_deterministic_features(monkeypatch, no_network):
     """The recorded contract's source of truth: with no operator overrides, the harness turns on
     disjunction, dynamic budgeting, and entity resolution (all deterministic, backend-independent).
+
+    Pin the backend to ``none`` so the test is hermetic: ``resolve_llm_client_and_flags()`` otherwise
+    reads ``agent_env/config.toml`` and could construct a real backend (and, via ``no_network``,
+    fail) depending on the machine. With the backend forced off, ``llm_parse`` must stay off while
+    the three deterministic features are still enabled.
     """
     import solve_phase2 as sp
 
@@ -106,8 +111,12 @@ def test_harness_defaults_enable_deterministic_features(monkeypatch, no_network)
         "TPC_P2_LLM_PARSE",
     ):
         monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv("TPC_P2_LLM_BACKEND", "none")
 
-    _client, flags = sp.resolve_llm_client_and_flags()
+    client, flags = sp.resolve_llm_client_and_flags()
+    assert client.backend == "none"
     assert flags.disjunction is True
     assert flags.dynamic_budget is True
     assert flags.entity_resolution is True
+    # Backend off => the LLM parse audit stays off even without an explicit TPC_P2_LLM_PARSE override.
+    assert flags.llm_parse is False

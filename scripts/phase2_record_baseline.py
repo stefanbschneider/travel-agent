@@ -336,10 +336,12 @@ def _ceiling_is_available(ceiling: Any) -> bool:
     return "fpr" in ceiling
 
 
-# Phase 2 feature-flag fields recorded per row (order = row/CSV order). Mirrors the behavioral
-# flags on ``orchestrator.Flags``; ``llm_backend`` is intentionally excluded because the backend is
-# already captured in ``llm_config`` and the ``Flags.llm_backend`` field is not the resolved client
-# backend.
+# Phase 2 feature-flag fields recorded in the JSON ``flags`` block. This tuple fixes the order of
+# that block only; ``history.csv`` appends these columns separately in ``_write_history_csv`` (so
+# pre-existing column order is preserved) and therefore does not follow this order. Mirrors the
+# behavioral flags on ``orchestrator.Flags``; ``llm_backend`` is intentionally excluded because the
+# backend is already captured in ``llm_config`` and the ``Flags.llm_backend`` field is not the
+# resolved client backend.
 _FLAG_FIELDS = (
     "disjunction",
     "llm_parse",
