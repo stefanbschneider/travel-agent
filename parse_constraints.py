@@ -54,26 +54,32 @@ def _truncate_at_negation(chunk):
     return chunk
 
 
-# --- "Do not include any of these <category>: <list>" (familiar-100) ----------
-# Every familiar-100 query states its exclusions with this one uniform template,
-# which none of the older "do not want to visit/stay/try ..." patterns matched --
-# leaving all five excluded_* families at zero recall (see docs/tpc_phase2_roadmap.md).
-# The <category> is passed by each extractor as a regex anchored immediately before
-# the ':' list marker, so a name category ("hotels") cannot also swallow a sibling
-# type category ("hotel feature types") that shares the same prefix.
-def _do_not_include_items(text, category_pattern, protect=()):
-    """Return the list items from a "Do not include any of these <category>: A, B and C."
-    clause (or None). Items are split on commas / " and " / " or "; any phrase in
-    ``protect`` (a closed environment vocabulary of compound values that legitimately
-    contain " and ", e.g. "Fast food and casual dining") is masked before splitting so it
-    survives as one item. ``protect`` may be a zero-arg callable, resolved lazily only when
-    the template actually matches, so callers can pass an expensive vocabulary builder without
-    paying for it on the (common) inputs that never use this template."""
-    pattern = (
-        r"do\s+not\s+include\s+any\s+of\s+these\s+" + category_pattern
-        + r"\s*:\s*(.+?)(?:\.|;|$)"
-    )
-    matches = list(re.finditer(pattern, text, re.I))
+# --- Uniform familiar-100 list templates -------------------------------------
+# Every familiar-100 query states its exclusions and its requirements with two mirror-image
+# templates that none of the older "do not want to visit/stay/try ..." / "want to visit ..."
+# patterns matched -- leaving the excluded_* and required_* families at zero recall (see
+# docs/tpc_phase2_roadmap.md):
+#     negative: "Do not include any of these <category>: A, B and C."
+#     positive: "<Visit|Dine at|Stay at|Include> the following <category>: A, B and C."
+# The <category> is passed by each extractor as a regex anchored immediately before the ':'
+# list marker, so a name category ("hotels"/"attractions") cannot swallow a sibling type
+# category ("hotel feature types"/"attraction types") that shares the same prefix.
+def _list_after_marker(text, lead_pattern, category_pattern, *, protect=(), check_negation=False):
+    """Match ``<lead> <category>: A, B and C`` and return the split list items (or None).
+
+    Items are split on commas / " and " / " or "; any phrase in ``protect`` (a closed
+    environment vocabulary of compound values that legitimately contain " and ", e.g.
+    "Fast food and casual dining") is masked before splitting so it survives as one item.
+    ``protect`` may be a zero-arg callable, resolved lazily only when the template actually
+    matches, so callers can pass an expensive vocabulary builder without paying for it on the
+    (common) inputs that never use this template. ``check_negation`` drops a match whose lead-in
+    is itself negated ("do not visit the following ..."), so the positive template does not fire
+    on a negated clause in unseen data."""
+    pattern = lead_pattern + category_pattern + r"\s*:\s*(.+?)(?:\.|;|$)"
+    matches = [
+        m for m in re.finditer(pattern, text, re.I)
+        if not (check_negation and _negated_before(text, m.start()))
+    ]
     if not matches:
         return None
     protect = protect() if callable(protect) else protect
@@ -98,6 +104,25 @@ def _do_not_include_items(text, category_pattern, protect=()):
             if piece and piece not in items:
                 items.append(piece)
     return items or None
+
+
+def _do_not_include_items(text, category_pattern, protect=()):
+    """Negative template: "Do not include any of these <category>: A, B and C." -> items."""
+    return _list_after_marker(
+        text, r"do\s+not\s+include\s+any\s+of\s+these\s+", category_pattern, protect=protect
+    )
+
+
+def _the_following_items(text, category_pattern, protect=()):
+    """Positive template: "<Visit|Dine at|Stay at|Include|Try> the following <category>: A and B."
+    -> items. Guards against a negated lead-in so it never fires on a "do not ..." clause."""
+    return _list_after_marker(
+        text,
+        r"(?:visit|dine\s+at|stay\s+at|include|try)\s+the\s+following\s+",
+        category_pattern,
+        protect=protect,
+        check_negation=True,
+    )
 
 
 _compound_cuisine_cache = None
@@ -420,6 +445,11 @@ def parse_required_attractions(text):
             chunk = _truncate_at_negation(m.group(1).strip())
             if not chunk:
                 continue
+            # "Visit the following attractions: <names>" is handled verbatim by the
+            # _the_following_items template below; the bare "^visit ..." pattern would otherwise
+            # capture the "the following attractions:" label as part of the first name.
+            if re.match(r"the\s+following\s+attractions?\s*:", chunk, re.I):
+                continue
             # Skip attraction TYPE phrases (those belong to parse_required_attraction_types).
             if chunk.lower().strip() in _ATTRACTION_TYPE_PHRASES:
                 continue
@@ -447,6 +477,12 @@ def parse_required_attractions(text):
                 p = p.strip().rstrip(".")
                 if p and len(p) > 1:
                     names.append(p)
+
+    # "Visit the following attractions: X and Y." (familiar-100). Anchored at ':' so it stays on
+    # the attraction-name line and never fires on "attraction types:" (-> required_attraction_types).
+    for n in _the_following_items(text, r"attractions?") or []:
+        if n and n not in names:
+            names.append(n)
 
     return names if names else None
 
@@ -480,8 +516,14 @@ def parse_required_attraction_types(text):
         # negated types ("... and do not want to visit any Museum") do not leak
         # into the *required* set (parse_excluded_attraction_types owns those).
         chunk = _truncate_at_negation(m.group(1).strip().rstrip("."))
+        # "Visit the following attractions: <names>" is a required-NAME list, not a type list --
+        # parse_required_attractions owns it. Without this guard the broad "Visit ..." pattern
+        # above scans the names for embedded type words (e.g. "... Art Museum" inside a proper
+        # name) and emits a spurious required_attraction_type.
+        if re.match(r"the\s+following\s+attractions?\s*:", chunk, re.I):
+            chunk = ""
         if not chunk:
-            return types if types else None
+            return _finish_required_attraction_types(text, types)
         # Check if it matches known types or type-like patterns
         for kt in known_types:
             if kt.lower() in chunk.lower():
@@ -498,6 +540,16 @@ def parse_required_attraction_types(text):
                         if kt not in types:
                             types.append(kt)
 
+    return _finish_required_attraction_types(text, types)
+
+
+def _finish_required_attraction_types(text, types):
+    """Append the familiar-100 "Include the following attraction types: X and Y." matches.
+    Values are kept verbatim (the NL uses the oracle's vocabulary/casing, so unaliased types
+    like "Library/Memorial Hall" or "University campus" survive intact)."""
+    for t in _the_following_items(text, r"attraction\s+types?") or []:
+        if t and t not in types:
+            types.append(t)
     return types if types else None
 
 
@@ -626,7 +678,13 @@ def parse_free_attractions(text):
 
 def parse_room_type(text):
     """Extract preferred room type."""
-    m = re.search(r"(?:stay\s+in\s+(?:a\s+)?|prefer\s+(?:a\s+)?|want\s+)(single-bed|double-bed|single\s+bed|double\s+bed|twin)\s*room", text, re.I)
+    # Triggers: "stay in a ... room", "prefer a ... room", "want ... room", and the familiar-100
+    # "(Each accommodation stay must) use ...-bed rooms" phrasing.
+    m = re.search(
+        r"(?:stay\s+in\s+(?:a\s+)?|prefer\s+(?:a\s+)?|want\s+|(?:must\s+)?use\s+)"
+        r"(single-bed|double-bed|twin-bed|single\s+bed|double\s+bed|twin)\s*rooms?",
+        text, re.I,
+    )
     if m:
         rt = m.group(1).lower()
         if "single" in rt:
@@ -687,6 +745,18 @@ def parse_required_hotels(text):
                 continue
             chunk = _truncate_at_negation(m.group(1).strip().rstrip("."))
             if not chunk:
+                continue
+            # "Stay at X between 21:39 and 24:00" is a time-window/position constraint
+            # (parse_activity_time_windows owns it), not a required-hotel-name list. Without this
+            # guard the broad "stay at ..." pattern captures the venue plus its window ("... between
+            # 21:39") and splits it into junk names -- the dominant required_hotels precision leak.
+            if re.search(r"\bbetween\s+\d{1,2}:\d{2}", chunk, re.I):
+                continue
+            # "Stay at the following hotels: X and Y" -- the broad pattern's optional
+            # "(?:hotel[:\s]+)?" fails to consume the plural "hotels:" label, leaving a junk
+            # "hotels: X" first name. The dedicated "hotels?[:\s]+" pattern below extracts the
+            # clean list, so drop the label-prefixed chunk here.
+            if re.match(r"hotels?\s*:", chunk, re.I):
                 continue
             # Skip if it matches room type or hotel type patterns
             if re.match(r"(?:a\s+)?(single|double|twin)", chunk, re.I):
@@ -818,6 +888,12 @@ def parse_required_restaurants(text):
                     if p not in names:
                         names.append(p)
 
+    # "Dine at the following restaurants: X and Y." (familiar-100). Anchored at ':' so it stays on
+    # the restaurant-name line and never fires on "restaurant types:" (-> cuisine_preference).
+    for n in _the_following_items(text, r"restaurants?") or []:
+        if n and n not in names:
+            names.append(n)
+
     return names if names else None
 
 
@@ -915,6 +991,15 @@ def parse_cuisine_preference(text):
         if full not in cuisines:
             cuisines.append(full)
 
+    # "Include the following restaurant types: X and Y." (familiar-100) -> cuisine preference.
+    # Values are verbatim oracle vocabulary; compound cuisines that legitimately contain " and "
+    # (e.g. "Fast food and casual dining") are protected from the splitter.
+    for c in _the_following_items(
+        text, r"restaurant\s+types?", protect=_compound_cuisine_types
+    ) or []:
+        if c and c not in cuisines:
+            cuisines.append(c)
+
     if len(cuisines) == 1:
         return cuisines[0]
     elif cuisines:
@@ -1006,6 +1091,8 @@ def parse_required_hotel_types(text):
         any_types = _split_types(m.group(1))
     if not any_types:
         for pat in (
+            # "Include the following hotel feature types: X and Y." (familiar-100) -- all required.
+            r"(?:include\s+)?the\s+following\s+hotel\s+feature\s+types?[:\s]+(.+?)(?:\.|;|$)",
             r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
             r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
             r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
