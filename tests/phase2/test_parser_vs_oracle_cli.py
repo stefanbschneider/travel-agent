@@ -29,6 +29,20 @@ def test_run_report_behavioral(tmp_path):
 
 
 @pytest.mark.integration
+def test_run_report_behavioral_unavailable_without_best_plans(tmp_path):
+    """familiar-100 ships no results/best plans, so the accept-side check has nothing to score.
+    It must report None (unavailable), not a 0.0 that reads as total disagreement."""
+    agg = pvo.run_report(
+        "tpc_phase2_familiar_100", limit=5, behavioral=True, out_dir=str(tmp_path)
+    )
+    behavioral = agg["behavioral"]
+    assert behavioral["n"] == 0
+    assert behavioral["accept_agreement"] is None
+    assert behavioral["agreement_rate"] is None
+    assert behavioral["behavioral_balanced"] is None
+
+
+@pytest.mark.integration
 def test_run_report_behavioral_two_sided_metrics(tmp_path):
     """Verify that accept, reject, and balanced behavioral metrics accompany the legacy
     ``agreement_rate``. The limit must provide at least one `(target_city, days)` group with two

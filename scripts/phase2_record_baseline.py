@@ -357,6 +357,15 @@ def _flags_snapshot(flags: Any) -> dict[str, Any]:
     return {name: getattr(flags, name, None) for name in _FLAG_FIELDS}
 
 
+def _opt_float(value: Any) -> float | None:
+    """Coerce to float, but preserve None (unavailable) instead of collapsing it to 0.0.
+
+    Behavioral accept-side agreement is None when the data source ships no best plans to
+    score (e.g. familiar-100); a 0.0 there would read as total parser/oracle disagreement.
+    """
+    return None if value is None else float(value)
+
+
 def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
     rehearsal = record.get("rehearsal", {})
     modes = rehearsal.get("modes", {})
@@ -461,25 +470,26 @@ def _to_history_row(record: dict[str, Any]) -> dict[str, Any]:
         "parser_f1": float(parser.get("f1", 0.0)),
         "parser_value_accuracy": float(parser.get("value_accuracy", 0.0)),
         "parser_disjunction_flattened": int(parser.get("disjunction_flattened", 0)),
-        "behavioral_agreement_rate": float(behavioral.get("agreement_rate", 0.0)),
+        "behavioral_agreement_rate": _opt_float(behavioral.get("agreement_rate")),
         "parser_full_n": int(parser_full.get("n", 0)),
         "parser_full_precision": float(parser_full.get("precision", 0.0)),
         "parser_full_recall": float(parser_full.get("recall", 0.0)),
         "parser_full_f1": float(parser_full.get("f1", 0.0)),
         "parser_full_value_accuracy": float(parser_full.get("value_accuracy", 0.0)),
         "parser_full_disjunction_flattened": int(parser_full.get("disjunction_flattened", 0)),
-        "parser_full_behavioral_agreement_rate": float(
-            parser_full_behavioral.get("agreement_rate", 0.0)
+        "parser_full_behavioral_agreement_rate": _opt_float(
+            parser_full_behavioral.get("agreement_rate")
         ),
         # Two-sided proxy: the accept-side agreement_rate above is blind to
         # *missing* constraints (both sides accept the same oracle-optimal plan regardless of
         # what the parser dropped); behavioral_balanced folds in the reject-side probe check,
         # which a missing-constraint parser fails visibly. None (no valid reject probes for any
-        # uid in this split/fold) collapses to the accept-only number, same as the metric itself.
-        "parser_full_behavioral_balanced": float(
+        # uid in this split/fold) collapses to the accept-only number, same as the metric itself;
+        # both None (no best plans at all, e.g. familiar-100) stays None/unavailable.
+        "parser_full_behavioral_balanced": _opt_float(
             parser_full_behavioral.get("behavioral_balanced")
             if parser_full_behavioral.get("behavioral_balanced") is not None
-            else parser_full_behavioral.get("agreement_rate", 0.0)
+            else parser_full_behavioral.get("agreement_rate")
         ),
         "llm_backend": llm_backend,
         # Prefer the recorded resolved flag; fall back to the backend heuristic for legacy rows
@@ -669,6 +679,16 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
     parsed_headroom_text = (
         f"{ceiling_parsed - solver_parsed:.4f}" if ceiling_available else "unavailable"
     )
+    behavioral_unavailable = "unavailable (no best plans for this data source)"
+
+    def _behav_text(value: Any) -> str:
+        return f"{float(value):.4f}" if value is not None else behavioral_unavailable
+
+    parser_full_balanced = (
+        parser_full_behavioral.get("behavioral_balanced")
+        if parser_full_behavioral.get("behavioral_balanced") is not None
+        else parser_full_behavioral.get("agreement_rate")
+    )
 
     lines = [
         "# Phase 2 Baseline (Latest)",
@@ -720,7 +740,7 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- f1: {float(parser.get('f1', 0.0)):.4f}",
         f"- value_accuracy: {float(parser.get('value_accuracy', 0.0)):.4f}",
         f"- disjunction_flattened: {int(parser.get('disjunction_flattened', 0))}",
-        f"- behavioral_agreement_rate: {float(behavioral.get('agreement_rate', 0.0)):.4f}",
+        f"- behavioral_agreement_rate: {_behav_text(behavioral.get('agreement_rate'))}",
         "",
         "## Parser Vs Oracle (full split: {0}, n={1}) -- headline signal, solver-free".format(
             record.get("split_name", ""), int(parser_full.get("n", 0))
@@ -731,9 +751,9 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
         f"- f1: {float(parser_full.get('f1', 0.0)):.4f}",
         f"- value_accuracy: {float(parser_full.get('value_accuracy', 0.0)):.4f}",
         f"- disjunction_flattened: {int(parser_full.get('disjunction_flattened', 0))}",
-        f"- behavioral_agreement_rate (accept-side): {float(parser_full_behavioral.get('agreement_rate', 0.0)):.4f}",
+        f"- behavioral_agreement_rate (accept-side): {_behav_text(parser_full_behavioral.get('agreement_rate'))}",
         f"- reject_agreement (reject-side probes): {parser_full_behavioral.get('reject_agreement')}",
-        f"- behavioral_balanced: {float(parser_full_behavioral.get('behavioral_balanced') if parser_full_behavioral.get('behavioral_balanced') is not None else parser_full_behavioral.get('agreement_rate', 0.0)):.4f}",
+        f"- behavioral_balanced: {_behav_text(parser_full_balanced)}",
         "",
         "## LLM Parse Config",
         "",

@@ -34,15 +34,58 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 
 ## Highest priority
 
-1. A focused deterministic budget parser change now maps the five familiar line-scoped cap templates into the existing solver buckets. Its solver-free familiar report matches `budgets` on all `70/70` affected queries and moves parser precision/recall/F1 from `0.8180 / 0.3518 / 0.4920` to `0.8502 / 0.4561 / 0.5937`. This is diagnostic evidence, not promotion.
-2. Measure the budget change through the normal pinned no-oracle gate before touching another family.
-3. Keep the broad excluded-entity families separate; the largest remaining groups are excluded hotels and cuisine types at `55/55` missing each.
+1. The focused deterministic budget parser change is committed at `c428dd6c`; it maps the five familiar line-scoped cap templates into the existing solver buckets. Its solver-free familiar report (regenerated at that revision) reproduces `0.8502 / 0.4561 / 0.5937` precision/recall/F1, up from `0.8180 / 0.3518 / 0.4920`. This is diagnostic evidence, not promotion.
+2. Measure the budget change through the normal pinned no-oracle gate before touching another family. The latest promoted familiar row (`20260718T155006Z`, `ae6337f0`) predates the budget commit, so the two are not yet like-for-like.
+3. The negative/excluded-constraint families were the dominant recall gap; a deterministic parser template now covers them (see "Negative-constraint parser fix" below). Both this and the budget change still need the pinned end-to-end gate before promotion.
 Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.
+
+## Parser recall attribution (familiar-100, solver-free)
+
+Solver-free `scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100` at `c428dd6c` (deterministic parser, no LLM audit) explains why familiar-100 end-to-end FPR (`7.0`) is far below repository-local val (`85.9`): the parser drops most of the constraints these denser queries carry. Familiar records average `~38` `hard_logic_py` constraints each versus `~16` in the released Phase 1 source that `tpc_phase2_val` is partitioned from, so this is out-of-distribution constraint density, not a val regression.
+
+Of `359` missing constraints across the split, `266` (`74%`) come from five negative families the deterministic parser extracts **zero** of:
+
+| Family | matched | missing | spurious | wrong_value |
+| --- | --- | --- | --- | --- |
+| `excluded_cuisine_types` | 0 | 55 | 0 | 0 |
+| `excluded_hotels` | 0 | 55 | 0 | 0 |
+| `excluded_attractions` | 0 | 54 | 0 | 0 |
+| `excluded_restaurants` | 0 | 53 | 0 | 0 |
+| `excluded_attraction_types` | 0 | 49 | 0 | 0 |
+| `required_attractions` | 0 | 23 | 0 | 0 |
+| `required_restaurants` | 0 | 18 | 0 | 0 |
+| `required_hotel_all_types` | 0 | 16 | 0 | 0 |
+| `required_attraction_types` | 0 | 15 | 12 | 5 |
+| `cuisine_preference` | 0 | 12 | 0 | 0 |
+| `room_type` | 0 | 9 | 0 | 0 |
+| `required_hotels` | 0 | 0 | 31 | 16 |
+
+The oracle encodes negatives as `result=not({<names>} & <set>)` (e.g. `result=not({"Red tourism sites"}&attraction_type_set)`). All `100/100` queries carry at least one such constraint, so a dropped negative lets the solver include a forbidden item on essentially every query and fail that query's all-constraints FPR — the direct mechanism behind the val-to-familiar FPR collapse. This was a structural coverage gap (no template mapped the negative shape), not a value error: extracted-side precision was healthy (`0.8502`) and value-accuracy `0.9485`. `required_hotels` is the one notable precision leak (`31` spurious, `16` wrong_value) and stays a second-order concern behind the negatives.
+
+## Negative-constraint parser fix
+
+The five negative families all surface in the NL through one uniform familiar-100 template — `Do not include any of these <category>: A, B and C.` — that none of the older `do not want to visit/stay/try …` patterns matched. `parse_constraints._do_not_include_items` now parses it and feeds the five `parse_excluded_*` extractors, with:
+
+- **category anchoring at the `:` list marker**, so a name category (`hotels`) never fires on a sibling type category (`hotel feature types`), and `attractions`/`restaurants` never fire on `attraction types`/`restaurant types`;
+- **verbatim values for the type families** (`excluded_attraction_types`, `excluded_cuisine_types`) — the NL uses the oracle's own vocabulary/casing, so routing through the lower-casing alias table would drop unaliased types like `Library/Memorial Hall`;
+- **compound-vocabulary protection** for cuisine values that legitimately contain `" and "` (`Fast food and casual dining`, `Bakery and Desserts`), read once from the committed `database_en` restaurant CSVs (deterministic environment data, not oracle); and
+- **Oxford-comma handling** so `A, B, and C` does not leave a leading `and C` fragment.
+
+Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100` moves as follows (flags-off deterministic path, the headline signal):
+
+| Metric | Before (`c428dd6c`) | After | After + entity-resolution (harness default) |
+| --- | --- | --- | --- |
+| precision | 0.8502 | 0.8620 | 0.8747 |
+| recall | 0.4561 | 0.8036 | 0.8148 |
+| F1 | 0.5937 | 0.8317 | 0.8437 |
+| value-accuracy | 0.9485 | 0.9224 | 0.9354 |
+
+All five negative families now have **zero missing** (full recall); `excluded_cuisine_types` and `excluded_attraction_types` match exactly (`55/55`, `49/49`, zero wrong-value). The residual `wrong_value` (`~16` hotels, `~8` restaurants, `~2` attractions) are proper names that contain internal commas/`" and "` and can only be segmented against the city catalog — a pre-existing entity-resolution limitation, not specific to this template. This is diagnostic evidence: it must clear the pinned no-oracle gate against the last promoted row before promotion, and it is not a final-evaluation estimate.
 
 ## Follow-on order
 
-1. Re-rank parser families after measuring the focused budget change.
-2. Fix the next measured family with the same regression-first gate.
+1. Gate the negative-constraint fix and the budget change together through the pinned no-oracle path against the last promoted familiar row (`20260718T155006Z`), then promote if the end-to-end gate passes with no new parse failures or timeouts.
+2. Fix the next measured family with the same regression-first gate. The largest remaining recall families are now the positive `required_*` groups (`required_attractions` `23`, `required_restaurants` `18`, `required_hotel_all_types` `16`), followed by the comma-in-name `wrong_value` residual above.
 3. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded. The promoted row does not justify it: all `23` solver-only timeouts recovered into pass cases, while none of the `74` solver-only failures timed out.
 4. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
 
