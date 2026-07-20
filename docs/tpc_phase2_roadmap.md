@@ -34,14 +34,37 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 
 ## Highest priority
 
-1. A focused deterministic budget parser change now maps the five familiar line-scoped cap templates into the existing solver buckets. Its solver-free familiar report matches `budgets` on all `70/70` affected queries and moves parser precision/recall/F1 from `0.8180 / 0.3518 / 0.4920` to `0.8502 / 0.4561 / 0.5937`. This is diagnostic evidence, not promotion.
-2. Measure the budget change through the normal pinned no-oracle gate before touching another family.
-3. Keep the broad excluded-entity families separate; the largest remaining groups are excluded hotels and cuisine types at `55/55` missing each.
+1. The focused deterministic budget parser change is committed at `c428dd6c`; it maps the five familiar line-scoped cap templates into the existing solver buckets. Its solver-free familiar report (regenerated at that revision) reproduces `0.8502 / 0.4561 / 0.5937` precision/recall/F1, up from `0.8180 / 0.3518 / 0.4920`. This is diagnostic evidence, not promotion.
+2. Measure the budget change through the normal pinned no-oracle gate before touching another family. The latest promoted familiar row (`20260718T155006Z`, `ae6337f0`) predates the budget commit, so the two are not yet like-for-like.
+3. The dominant remaining recall gap is the negative/excluded-constraint families; see the attribution below. Keep them separate, and prefer them over any precision cleanup because they are missed on every query.
 Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.
+
+## Parser recall attribution (familiar-100, solver-free)
+
+Solver-free `scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100` at `c428dd6c` (deterministic parser, no LLM audit) explains why familiar-100 end-to-end FPR (`7.0`) is far below repository-local val (`85.9`): the parser drops most of the constraints these denser queries carry. Familiar records average `~38` `hard_logic_py` constraints each versus `~16` in the released Phase 1 source that `tpc_phase2_val` is partitioned from, so this is out-of-distribution constraint density, not a val regression.
+
+Of `359` missing constraints across the split, `266` (`74%`) come from five negative families the deterministic parser extracts **zero** of:
+
+| Family | matched | missing | spurious | wrong_value |
+| --- | --- | --- | --- | --- |
+| `excluded_cuisine_types` | 0 | 55 | 0 | 0 |
+| `excluded_hotels` | 0 | 55 | 0 | 0 |
+| `excluded_attractions` | 0 | 54 | 0 | 0 |
+| `excluded_restaurants` | 0 | 53 | 0 | 0 |
+| `excluded_attraction_types` | 0 | 49 | 0 | 0 |
+| `required_attractions` | 0 | 23 | 0 | 0 |
+| `required_restaurants` | 0 | 18 | 0 | 0 |
+| `required_hotel_all_types` | 0 | 16 | 0 | 0 |
+| `required_attraction_types` | 0 | 15 | 12 | 5 |
+| `cuisine_preference` | 0 | 12 | 0 | 0 |
+| `room_type` | 0 | 9 | 0 | 0 |
+| `required_hotels` | 0 | 0 | 31 | 16 |
+
+The oracle encodes negatives as `result=not({<names>} & <set>)` (e.g. `result=not({"Red tourism sites"}&attraction_type_set)`). All `100/100` queries carry at least one such constraint, so a dropped negative lets the solver include a forbidden item on essentially every query and fail that query's all-constraints FPR — the direct mechanism behind the val-to-familiar FPR collapse. This is a structural coverage gap (no template maps the negative shape), not a value error: extracted-side precision is healthy (`0.8502`) and value-accuracy is `0.9485`. `required_hotels` is the one notable precision leak (`31` spurious, `16` wrong_value) and stays a second-order concern behind the negatives.
 
 ## Follow-on order
 
-1. Re-rank parser families after measuring the focused budget change.
+1. Re-ranked above: after the committed budget change, the five negative/excluded families are the top recall driver (`74%` of missing). Add a deterministic template for the `result=not({...} & set)` shape next, once the budget change clears the pinned gate.
 2. Fix the next measured family with the same regression-first gate.
 3. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded. The promoted row does not justify it: all `23` solver-only timeouts recovered into pass cases, while none of the `74` solver-only failures timed out.
 4. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
