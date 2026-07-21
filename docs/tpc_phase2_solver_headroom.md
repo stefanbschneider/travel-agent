@@ -97,8 +97,9 @@ Verified: the retime mechanics (`tests/phase2/test_pin_timed_windows.py`) and, o
 
 Landed in `chinatravel/agent/tpc_agent/tpc_agent.py` as `_resequence_day`, tried from
 `_pin_timed_windows` only when `_try_pin_activity`'s local, same-slot retime fails to commit for
-every matching activity (i.e. a fixed neighbour blocks it for lack of slack — the cascade limit
-noted below). It orders the day's meal/attraction activities by target window (windowed POIs at
+every matching activity — i.e. a fixed neighbour blocks it for lack of slack, the cascade limit
+described above (on back-to-back-packed days a morning→evening move is rejected because the local
+retime cannot reorder around it). It orders the day's meal/attraction activities by target window (windowed POIs at
 `[earliest, end_before]`, others by current `start_time`), recomputes each activity's inbound leg
 sequentially against its new predecessor via `_get_transport`, and commits on a deepcopy only if
 the full checker still accepts and the preference key does not regress. Intercity legs and the
