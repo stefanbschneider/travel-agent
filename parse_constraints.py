@@ -506,10 +506,17 @@ def parse_required_attraction_types(text):
     if m and _negated_before(text, m.start()):
         m = None
     if not m:
-        # Try "visit X and Y" (positive form, not preceded by "not")
-        m = re.search(r"[Vv]isit\s+(.+?)(?:\.|;|,\s*(?:and\s+we|we|the)|$)", text, re.I)
+        # Try "visit X and Y" (positive form, not preceded by "not"). Strip line-scoped
+        # "Visit X between A and B" sentences first: those are activity_time_windows
+        # constraints on a named POI (parse_activity_time_windows owns them via
+        # _CONTAINED_BETWEEN_WINDOW_RE), not a type preference. Left in, a POI name that
+        # happens to contain a type word -- "Golden Eagle Art Museum", "Baihua Tan Park",
+        # "Cloudrise Art Museum" -- leaks through the known-types substring scan below as a
+        # spurious required_attraction_type.
+        fallback_text = _CONTAINED_BETWEEN_WINDOW_RE.sub("", text)
+        m = re.search(r"[Vv]isit\s+(.+?)(?:\.|;|,\s*(?:and\s+we|we|the)|$)", fallback_text, re.I)
         # Skip if preceded by "not" within 20 chars
-        if m and re.search(r"(?:not|don't|no)\s+(?:\w+\s+){0,3}visit", text[:m.start() + 10], re.I):
+        if m and re.search(r"(?:not|don't|no)\s+(?:\w+\s+){0,3}visit", fallback_text[:m.start() + 10], re.I):
             m = None
     if m:
         # Truncate a greedy chunk that ran into a following negated clause so

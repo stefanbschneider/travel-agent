@@ -247,6 +247,25 @@ def test_positive_attraction_still_required():
     assert raw.get("required_attractions") == ["Xixi Paradise Commercial Street"], raw
 
 
+# --- 1d: POI names in a time-window line must not leak into required_attraction_types --------
+#
+# familiar-100 real uids (parser_vs_oracle spurious-required_attraction_types bucket): the
+# numbered-line "Visit X between A and B" template (activity_time_windows' territory) was also
+# scanned by the required_attraction_types fallback, and a POI name containing a type word --
+# "Golden Eagle Art Museum", "Baihua Tan Park", "Cloudrise Art Museum" -- spuriously produced a
+# required_attraction_types entry with no such oracle constraint.
+
+@pytest.mark.parametrize("line,leaked_type", [
+    ("1. Visit Golden Eagle Art Museum between 14:44 and 16:34.", "Art Museum"),
+    ("1. Visit Baihua Tan Park between 09:31 and 11:16.", "park"),
+    ("1. Visit Cloudrise Art Museum between 15:33 and 17:33.", "Art Museum"),
+])
+def test_time_window_poi_name_does_not_leak_into_required_attraction_type(line, leaked_type):
+    raw = pc.parse_query_no_oracle(_q(f"Requirements:\n{line}"))
+    req_types = raw.get("required_attraction_types") or []
+    assert leaked_type not in req_types, raw
+
+
 # --- 5a: poi_distance_hotel schema parity (real val uids) ------------------
 #
 # The no-oracle NL path already extracts "accommodation within X km of Y" correctly via
