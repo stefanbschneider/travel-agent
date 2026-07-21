@@ -195,6 +195,36 @@ def test_resequence_leaves_accommodation_anchor_fixed():
     assert tail["position"] == "Hotel X"
 
 
+def test_resequence_bails_when_movable_activities_are_not_contiguous():
+    # Reviewer scenario: a fixed activity (here, a second accommodation) sits between two movable
+    # activities, splitting them into two separate blocks. The head/tail recompute assumes a single
+    # contiguous movable block bounded by at most one fixed predecessor and one fixed successor, so
+    # this must bail rather than reorder across the fixed anchor.
+    agent = _bare_agent()
+    plan = {
+        "itinerary": [
+            {"activities": [
+                {"type": "attraction", "position": "Bear Garden", "start_time": "09:00",
+                 "end_time": "10:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "accommodation", "position": "Mid Inn", "start_time": "12:00",
+                 "end_time": "13:00", "price": 50, "cost": 50, "rooms": 1, "room_type": 2,
+                 "tickets": 1, "transports": []},
+                {"type": "attraction", "position": "Museum", "start_time": "14:00",
+                 "end_time": "15:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "accommodation", "position": "Hotel X", "start_time": "20:00",
+                 "end_time": "24:00", "price": 100, "cost": 100, "rooms": 1, "room_type": 2,
+                 "tickets": 1, "transports": []},
+            ]}
+        ]
+    }
+    snapshot = [dict(a) for a in plan["itinerary"][0]["activities"]]
+    constraints = {"activity_time_windows": [WINDOW]}
+    committed = agent._resequence_day(
+        plan, 0, {"target_city": "Shenzhen", "people_number": 1}, constraints, _window_checker())
+    assert committed is False
+    assert plan["itinerary"][0]["activities"] == snapshot
+
+
 def test_resequence_is_noop_when_already_ordered():
     agent = _bare_agent()
     plan = _misplaced_evening_plan()

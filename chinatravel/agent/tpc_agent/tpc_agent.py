@@ -1342,6 +1342,11 @@ class TPCAgent(BaseAgent):
         movable_slots = [i for i, a in enumerate(activities) if a.get("type") in self._WINDOW_ACTIVITY_TYPES]
         if len(movable_slots) < 2:
             return False
+        if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+            # The head/tail recompute below assumes one contiguous movable block bounded by at most
+            # one fixed predecessor and one fixed successor. A fixed activity (e.g. an intercity leg)
+            # sitting between two movable ones would violate that and isn't safe to reorder across.
+            return False
 
         windows = [
             w for w in (constraints.get("activity_time_windows", []) or [])
