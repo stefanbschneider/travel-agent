@@ -1339,7 +1339,15 @@ class TPCAgent(BaseAgent):
         accommodation activity are never moved: only the meal/attraction slots between them are
         reordered, so the floor stays byte-identical when the flag is off."""
         activities = plan["itinerary"][day_idx].get("activities", []) or []
-        movable_slots = [i for i, a in enumerate(activities) if a.get("type") in self._WINDOW_ACTIVITY_TYPES]
+        # A missing/empty position is treated as a foreign, non-reorderable anchor -- same
+        # convention as ``_find_activities_at`` -- rather than a movable slot: otherwise its
+        # position would poison the running ``prev_pos`` and silently skip the *next* activity's
+        # inbound-leg recompute (an empty string is falsy, so ``if prev_pos:`` reads it as "no
+        # predecessor" instead of "predecessor with an unknown position").
+        movable_slots = [
+            i for i, a in enumerate(activities)
+            if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
+        ]
         if len(movable_slots) < 2:
             return False
         if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):

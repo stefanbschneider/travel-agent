@@ -225,6 +225,37 @@ def test_resequence_bails_when_movable_activities_are_not_contiguous():
     assert plan["itinerary"][0]["activities"] == snapshot
 
 
+def test_resequence_excludes_blank_position_activity_from_movable_slots():
+    # Reviewer scenario: a meal/attraction-typed activity with an empty position (malformed data)
+    # must not count as a movable slot. Otherwise its blank position becomes the running prev_pos
+    # after it's processed, and the *next* activity's inbound leg is silently skipped (empty string
+    # reads as "no predecessor" instead of "predecessor with an unknown position"), corrupting a
+    # transport field the checker may not catch. Excluding it here makes the remaining movable slots
+    # non-contiguous (Bear Garden at 0, Museum at 2), so this bails via the contiguous-block guard.
+    agent = _bare_agent()
+    plan = {
+        "itinerary": [
+            {"activities": [
+                {"type": "attraction", "position": "Bear Garden", "start_time": "09:00",
+                 "end_time": "10:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "attraction", "position": "", "start_time": "11:00",
+                 "end_time": "11:30", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "attraction", "position": "Museum", "start_time": "14:00",
+                 "end_time": "15:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "accommodation", "position": "Hotel X", "start_time": "20:00",
+                 "end_time": "24:00", "price": 100, "cost": 100, "rooms": 1, "room_type": 2,
+                 "tickets": 1, "transports": []},
+            ]}
+        ]
+    }
+    snapshot = [dict(a) for a in plan["itinerary"][0]["activities"]]
+    constraints = {"activity_time_windows": [WINDOW]}
+    committed = agent._resequence_day(
+        plan, 0, {"target_city": "Shenzhen", "people_number": 1}, constraints, _window_checker())
+    assert committed is False
+    assert plan["itinerary"][0]["activities"] == snapshot
+
+
 def test_resequence_is_noop_when_already_ordered():
     agent = _bare_agent()
     plan = _misplaced_evening_plan()
