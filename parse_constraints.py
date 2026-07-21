@@ -1099,18 +1099,27 @@ def parse_required_hotel_types(text):
     if m and not _negated_before(text, m.start()):
         any_types = _split_types(m.group(1))
     if not any_types:
-        for pat in (
-            # "Include the following hotel feature types: X and Y." (familiar-100) -- all required.
-            r"(?:include\s+)?the\s+following\s+hotel\s+feature\s+types?[:\s]+(.+?)(?:\.|;|$)",
-            r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-            r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-            r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-            r"hotels?\s+with\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
-        ):
+        # Only the explicit "the following hotel feature types:" list template respects a
+        # negated lead-in ("do not want to include ..." is an exclusion, never a requirement).
+        # The "hotel with/that offers/of type X" amenity-mention patterns below have no
+        # negative-amenity family in the oracle at all -- "we do not want to stay in hotels
+        # with a Sunbathing area" is still encoded as required_hotel_all_types, so those
+        # patterns must fire regardless of a preceding "do not want".
+        patterns_check_negation = (
+            (r"(?:include\s+)?the\s+following\s+hotel\s+feature\s+types?[:\s]+(.+?)(?:\.|;|$)", True),
+            (r"hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)", False),
+            (r"stay\s+(?:at|in)\s+(?:a\s+)?hotels?\s+of\s+(?:the\s+)?type[:\s]+(.+?)(?:\.|;|,\s*(?:and|we)|$)", False),
+            (r"hotels?\s+(?:that\s+)?offer(?:s|ing)?\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)", False),
+            (r"hotels?\s+with\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)", False),
+        )
+        for pat, check_negation in patterns_check_negation:
             m = re.search(pat, text, re.I)
-            if m and not _negated_before(text, m.start()):
-                all_types = _split_types(m.group(1))
-                break
+            if not m:
+                continue
+            if check_negation and _negated_before(text, m.start()):
+                continue
+            all_types = _split_types(m.group(1))
+            break
     return any_types, all_types
 
 
