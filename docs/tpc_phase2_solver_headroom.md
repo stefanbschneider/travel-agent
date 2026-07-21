@@ -93,22 +93,37 @@ Implemented in `chinatravel/agent/tpc_agent/tpc_agent.py`, gated behind `TPC_PIN
 Verified: the retime mechanics (`tests/phase2/test_pin_timed_windows.py`) and, on failing uid
 `...00062`, the `required_hotels` projection moving the required breakfast onto the named inn.
 
+### Step 2: within-day resequencer (same flag)
+
+Landed in `chinatravel/agent/tpc_agent/tpc_agent.py` as `_resequence_day`, tried from
+`_pin_timed_windows` only when `_try_pin_activity`'s local, same-slot retime fails to commit for
+every matching activity (i.e. a fixed neighbour blocks it for lack of slack — the cascade limit
+noted below). It orders the day's meal/attraction activities by target window (windowed POIs at
+`[earliest, end_before]`, others by current `start_time`), recomputes each activity's inbound leg
+sequentially against its new predecessor via `_get_transport`, and commits on a deepcopy only if
+the full checker still accepts and the preference key does not regress. Intercity legs and the
+overnight accommodation activity are never moved — only the meal/attraction slots between them are
+reordered — so a query with no window-blocked cascade sees no change, and the deterministic floor
+stays byte-identical when `TPC_PIN_TIMED_WINDOWS` is off.
+
+Verified by unit tests (`tests/phase2/test_resequence_day.py`): a misplaced-morning/required-evening
+swap commits and lands the target inside its window, the accommodation anchor stays fixed in
+position and type, an already-ordered day is a no-op, and a rejecting checker leaves the plan
+untouched. This is diagnostic/opt-in only — it has not been measured through the pinned end-to-end
+gate.
+
 ### Known limits / what the gate must check
 
-- **Cascade.** Retiming is *local* — no day resequencing. On back-to-back-packed days a morning→
-  evening move (the 39 attraction cases) is rejected for lack of slack. The next increment is a
-  within-day resequencer (order a day's non-intercity activities by target window, recompute the
-  full day's inbound legs, commit acceptance-gated on a deepcopy, intercity anchors fixed), staged
-  in the [roadmap](tpc_phase2_roadmap.md) follow-on item 6.
 - **A rejected idea.** Emitting `arrive_no_later` from `end_before` (to time morning meals)
   **regressed commonsense** on the floor — its ceiling pruned proper transport, producing
   transport-less plans that fail "Invalid Transport information across positions." It was dropped;
   do not reintroduce it without gating.
 - **No promotion without the gate.** No committed familiar row records flags, and both ran a Qwen
   backend (auto-enabling `llm_parse`), so none is a true flags-off baseline. Before promoting this
-  step: record a clean flags-off solver-only familiar-100 baseline, then run flag-on through the
-  pinned no-oracle gate (`make phase2-gate`) against `20260718T155006Z` and promote only if
-  solver-only FPR improves with no new parse failures or timeouts.
+  step (pinning + resequencing together): record a clean flags-off solver-only familiar-100
+  baseline, then run flag-on through the pinned no-oracle gate (`make phase2-gate`) against
+  `20260718T155006Z` and promote only if solver-only FPR improves with no new parse failures or
+  timeouts.
 
 ## Out of scope
 
