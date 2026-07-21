@@ -101,10 +101,24 @@ Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100`, measured from
 
 Every family now has **zero missing** (full-split recall). `required_hotel_all_types`, `cuisine_preference`, `required_hotels`, and `room_type` match exactly with zero wrong-value; `required_hotels` in particular went from `0` matched / `31` spurious / `16` wrong-value to `16 / 0 / 0` once the two guards landed. Remaining defects: `required_attraction_types` keeps `7` spurious (pre-existing substring false positives like `park` inside `Free parking`, down from `12`; tightening them risks a val regression), and the comma-in-name `wrong_value` residual (`~4` attractions, `~3` restaurants) is the same catalog-segmentation limit as the negatives. Val is unchanged (`f1 0.7268 -> 0.7272`): the `the following` template is inert on the phase-1 partition. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
 
+## `required_attraction_types` time-window guard
+
+Root-caused the `7` remaining familiar-100 `required_attraction_types` spurious entries flagged above: the actual mechanism is not `park` inside a hotel-feature phrase like `Free parking` (a different family) but a POI **name** that happens to contain a known type word, picked up by `parse_required_attraction_types`'s unanchored `[Vv]isit\s+(.+?)...` fallback when it scans a numbered-line `Visit X between A and B` sentence — territory `parse_activity_time_windows` (`_CONTAINED_BETWEEN_WINDOW_RE`) already owns. E.g. `Visit Golden Eagle Art Museum between 14:44 and 16:34.` matched the `Art Museum` known-type substring; `Visit Baihua Tan Park between 09:31 and 11:16.` matched `park`. The fix strips `_CONTAINED_BETWEEN_WINDOW_RE` lines out of the text the fallback scans, before the known-types substring check runs — the same "don't scan a POI name for a naive type substring" lesson `parse_excluded_attraction_types` already applies (see its `piece`-exact-match comment).
+
+Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100`, measured from the required-constraint-fix baseline above:
+
+| Metric | Before | After |
+| --- | --- | --- |
+| precision | 0.9402 | 0.9510 |
+| recall | 0.9487 | 0.9510 |
+| F1 | 0.9444 | 0.9510 |
+
+`required_attraction_types` moves `18` matched / `7` spurious / `2` wrong-value → `20` matched / `0` spurious / `0` wrong-value (the two prior wrong-value cases resolved once their time-window line stopped contributing a rival entry). Val is byte-identical (`f1 0.7282` before and after): `_CONTAINED_BETWEEN_WINDOW_RE` targets the familiar-100 numbered-line template only, so this is inert on the phase-1 partition, same as the required-constraint fix above. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
+
 ## Follow-on order
 
-1. Gate the negative-constraint fix, the required-constraint fix, and the budget change together through the pinned no-oracle path against the last promoted familiar row (`20260718T155006Z`), then promote if the end-to-end gate passes with no new parse failures or timeouts.
-2. The parser is now at `~0.94` familiar-100 F1 with zero missing. The remaining parser defects are precision-only: the `required_attraction_types` substring false positives and the comma-in-name `wrong_value` residual (both above); prefer the catalog-segmentation path (entity resolution) over more regex for the latter.
+1. Gate the negative-constraint fix, the required-constraint fix, the budget change, and the `required_attraction_types` time-window guard together through the pinned no-oracle path against the last promoted familiar row (`20260718T155006Z`), then promote if the end-to-end gate passes with no new parse failures or timeouts.
+2. The parser is now at `~0.95` familiar-100 F1 with zero missing and zero spurious/wrong-value on `required_attraction_types`. The remaining parser defect is the comma-in-name `wrong_value` residual (`~4` attractions, `~3` restaurants); prefer the catalog-segmentation path (entity resolution) over more regex for it.
 3. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded. The promoted row does not justify it: all `23` solver-only timeouts recovered into pass cases, while none of the `74` solver-only failures timed out.
 4. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
 
