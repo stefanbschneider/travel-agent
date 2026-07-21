@@ -30,11 +30,15 @@ WORKTREE_ROOT = Path("/tmp/phase2_eval")
 
 # Gitignored state the rehearsal reads/writes (see .gitignore) that a fresh worktree checkout
 # would otherwise start empty: the LLM response + parser-vs-oracle caches, per-method result
-# JSON + run telemetry, and the LLM API key file. ``.env`` is tracked in this repo (force-added
-# by fac88ca0) but some older shas predate that commit and would check out without it -- symlink
-# it unconditionally so every pinned eval can reach the configured backend regardless of sha.
-# ``chinatravel/data/`` is fully committed, so the worktree already has it without symlinking.
-SHARED_RELPATHS = ["cache", "results", "agent_env/runs", ".env"]
+# JSON + run telemetry, the LLM API key file, and -- critically -- ``agent_env/config.toml``, the
+# gitignored file that configures the LLM backend/model. Without config.toml shared in, a pinned
+# eval resolves ``backend=none`` and silently runs the *deterministic* parser (llm_parse off)
+# instead of the intended LLM-parse path, producing a mislabeled row (caught 2026-07-21 via the
+# recorded ``flags`` block on run 20260721T054820Z). ``.env`` is tracked in this repo (force-added
+# by fac88ca0) but some older shas predate that commit and would check out without it -- symlink it
+# too so a backend configured there is reachable regardless of sha. ``chinatravel/data/`` is fully
+# committed, so the worktree already has it without symlinking.
+SHARED_RELPATHS = ["cache", "results", "agent_env/runs", ".env", "agent_env/config.toml"]
 
 DEFAULT_LEDGER_DIR = PROJECT_ROOT / "results" / "phase2_baselines"
 
