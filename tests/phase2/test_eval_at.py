@@ -95,6 +95,23 @@ def test_link_shared_state_symlinks_missing_and_tracked_paths(tmp_path):
     assert not (worktree_dir / "agent_env" / "runs").exists()
 
 
+def test_link_shared_state_symlinks_backend_config_toml(tmp_path):
+    # Regression: the LLM backend is configured in the gitignored agent_env/config.toml. If it is
+    # not shared into the pinned worktree, resolve_llm_client_and_flags falls back to backend=none
+    # and the pinned eval silently runs the deterministic (no-LLM) parser (2026-07-21).
+    main_repo = tmp_path / "main"
+    worktree_dir = tmp_path / "worktree"
+    (main_repo / "agent_env").mkdir(parents=True)
+    (main_repo / "agent_env" / "config.toml").write_text("[phase2.llm]\nbackend = 'deepinfra'\n")
+    worktree_dir.mkdir()
+
+    ea.link_shared_state(worktree_dir, main_repo=main_repo)
+
+    linked = worktree_dir / "agent_env" / "config.toml"
+    assert linked.is_symlink()
+    assert "deepinfra" in linked.read_text()
+
+
 def test_link_shared_state_is_idempotent(tmp_path):
     main_repo = tmp_path / "main"
     worktree_dir = tmp_path / "worktree"
