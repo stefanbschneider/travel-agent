@@ -28,6 +28,7 @@ def server():
     finally:
         httpd.shutdown()
         thread.join(timeout=5)
+        httpd.server_close()
 
 
 def _get(server, path):
