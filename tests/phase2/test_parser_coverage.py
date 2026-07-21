@@ -228,3 +228,95 @@ def test_compound_cuisine_vocab_not_loaded_without_template():
     )
     assert raw.get("excluded_cuisine_types") == ["Fast food and casual dining"], raw
     assert pc._compound_cuisine_cache is not None
+
+
+# --- "<Visit|Dine at|Stay at|Include> the following <category>: ..." (required_* families) ------
+# The positive mirror of the "Do not include any of these ..." template; familiar-100 states every
+# requirement this way, which the older "want/wish to ..." patterns missed. See the roadmap.
+
+def test_visit_the_following_attractions_names():
+    raw = pc.parse_query_no_oracle(
+        _q("Visit the following attractions: Golden Buddha Mountain and Nanshan Scenic Area.")
+    )
+    assert raw.get("required_attractions") == [
+        "Golden Buddha Mountain", "Nanshan Scenic Area"
+    ], raw.get("required_attractions")
+    # The name line must NOT leak into required_attraction_types.
+    assert not raw.get("required_attraction_types"), raw.get("required_attraction_types")
+
+
+def test_include_the_following_attraction_types_verbatim():
+    raw = pc.parse_query_no_oracle(
+        _q("Include the following attraction types: Museum/Memorial Hall and natural scenery.")
+    )
+    assert raw.get("required_attraction_types") == [
+        "Museum/Memorial Hall", "natural scenery"
+    ], raw.get("required_attraction_types")
+    assert not raw.get("required_attractions"), raw.get("required_attractions")
+
+
+def test_dine_at_the_following_restaurants_names():
+    raw = pc.parse_query_no_oracle(
+        _q("Dine at the following restaurants: Moon Pavilion (Guanqian Branch).")
+    )
+    assert raw.get("required_restaurants") == ["Moon Pavilion (Guanqian Branch)"], raw
+    assert not raw.get("cuisine_preference"), raw.get("cuisine_preference")
+
+
+def test_include_the_following_restaurant_types_protects_compound():
+    raw = pc.parse_query_no_oracle(
+        _q("Include the following restaurant types: Sichuan cuisine and Bakery and Desserts.")
+    )
+    cuisine = raw.get("cuisine_preference")
+    assert cuisine == ["Sichuan cuisine", "Bakery and Desserts"], cuisine
+
+
+def test_include_the_following_hotel_feature_types_all():
+    raw = pc.parse_query_no_oracle(
+        _q("Include the following hotel feature types: Free parking.")
+    )
+    assert raw.get("required_hotel_all_types") == ["Free parking"], raw
+
+
+def test_hotel_feature_types_negated_lead_in_not_required():
+    # A negated lead-in ("do not want to include the following ...") is an exclusion, never a hard
+    # requirement -- parse_required_hotel_types must not emit a required all_type for it.
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to include the following hotel feature types: Free parking.")
+    )
+    assert not raw.get("required_hotel_all_types"), raw.get("required_hotel_all_types")
+
+
+def test_stay_at_the_following_hotels_names():
+    raw = pc.parse_query_no_oracle(
+        _q("Stay at the following hotels: Golden Eagle Summit Hotel and Suning Universal Hotel.")
+    )
+    assert raw.get("required_hotels") == [
+        "Golden Eagle Summit Hotel", "Suning Universal Hotel"
+    ], raw.get("required_hotels")
+
+
+def test_time_windowed_stay_at_is_not_a_required_hotel():
+    # "Stay at X between HH:MM and HH:MM" is a time-window/position constraint, not a required-hotel
+    # name list -- it must not produce a (junk-valued) required_hotels entry.
+    raw = pc.parse_query_no_oracle(
+        _q("Stay at Beijing LanWan International Hotel (Capital Airport) between 21:39 and 24:00.")
+    )
+    assert not raw.get("required_hotels"), raw.get("required_hotels")
+
+
+def test_room_type_must_use_bed_rooms():
+    assert pc.parse_query_no_oracle(
+        _q("Each accommodation stay must use twin-bed rooms.")
+    ).get("room_type") == "twin"
+    assert pc.parse_query_no_oracle(
+        _q("Each accommodation stay must use single-bed rooms.")
+    ).get("room_type") == "single"
+
+
+def test_positive_template_guards_against_negation():
+    # A negated lead-in must not be read as a positive requirement.
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to visit the following attractions: Sea Rainbow.")
+    )
+    assert not raw.get("required_attractions"), raw.get("required_attractions")
