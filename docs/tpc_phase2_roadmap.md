@@ -157,6 +157,7 @@ Two findings:
 3. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded. The promoted row does not justify it: all `23` solver-only timeouts recovered into pass cases, while none of the `74` solver-only failures timed out.
 4. Re-examine the harness auto-enable of audit-mode `llm_parse` when a backend is configured (see "LLM parsing vs deterministic" above): the parser-level evidence shows it adds spurious constraints with no recall benefit on familiar-100 or HF, so an end-to-end gate should confirm whether keeping it on is justified before the next promoted row.
 5. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
+6. Now that the parser is at `~0.95` F1, the `26.0` solver-only FPR is the binding ceiling on familiar-100 end-to-end. The dominant solver-only gap is the timed-visit-at-named-POI family (G8): sole logical blocker in `53` of the `74` failures. An opt-in first step (`TPC_PIN_TIMED_WINDOWS`, default off, floor byte-identical) is implemented — see [solver headroom analysis](tpc_phase2_solver_headroom.md). Record a flags-off solver-only baseline, then gate flag-on before promotion; the remaining cascade (day resequencing) is the next increment.
 
 The public material still does not specify a runtime contract.
 Until it does, `300 s` and `900 s` are local assumptions for sensitivity analysis, not organizer-confirmed limits.
