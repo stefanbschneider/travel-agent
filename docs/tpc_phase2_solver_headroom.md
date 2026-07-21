@@ -96,8 +96,10 @@ Verified: the retime mechanics (`tests/phase2/test_pin_timed_windows.py`) and, o
 ### Known limits / what the gate must check
 
 - **Cascade.** Retiming is *local* — no day resequencing. On back-to-back-packed days a morning→
-  evening move (the 39 attraction cases) is rejected for lack of slack. Extending to a day
-  resequencer with full-day transport recomputation is the natural next increment.
+  evening move (the 39 attraction cases) is rejected for lack of slack. The next increment is a
+  within-day resequencer (order a day's non-intercity activities by target window, recompute the
+  full day's inbound legs, commit acceptance-gated on a deepcopy, intercity anchors fixed), staged
+  in the [roadmap](tpc_phase2_roadmap.md) follow-on item 6.
 - **A rejected idea.** Emitting `arrive_no_later` from `end_before` (to time morning meals)
   **regressed commonsense** on the floor — its ceiling pruned proper transport, producing
   transport-less plans that fail "Invalid Transport information across positions." It was dropped;

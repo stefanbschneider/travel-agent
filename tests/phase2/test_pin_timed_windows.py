@@ -111,6 +111,41 @@ def test_pin_is_noop_when_already_in_window():
     assert before == after
 
 
+def test_pin_starts_at_arrival_when_later_than_window_earliest():
+    # Reviewer scenario: a POI reachable only partway into its window should still be pinned by
+    # starting at max(earliest, arrival), not rejected for missing the earliest edge.
+    agent = _bare_agent()
+    agent._get_transport = lambda env, city, frm, to, depart, people: ([], "12:15")
+    # Day 0: an attraction, then a mistimed lunch at Nanyang Inn as the LAST activity (no outbound).
+    plan = {
+        "itinerary": [
+            {"activities": [
+                {"type": "attraction", "position": "A", "start_time": "10:00", "end_time": "11:00",
+                 "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "lunch", "position": "Nanyang Inn", "start_time": "09:00", "end_time": "10:00",
+                 "price": 10, "cost": 10, "tickets": 1, "transports": []},
+            ]}
+        ]
+    }
+    window = {"location": "Nanyang Inn", "earliest": "11:30", "latest": None,
+              "end_after": None, "end_before": "13:00"}
+
+    def check(p):
+        for day in p.get("itinerary", []):
+            for a in day.get("activities", []):
+                if a.get("type") == "lunch" and a.get("position") == "Nanyang Inn":
+                    if a.get("start_time", "") >= "11:30" and a.get("end_time", "") <= "13:00":
+                        return (1, 1)
+        return (0, 1)
+
+    agent._pin_timed_windows(plan, {"target_city": "Shenzhen", "people_number": 1},
+                             {"activity_time_windows": [window]}, check)
+    lunch = plan["itinerary"][0]["activities"][1]
+    assert lunch["start_time"] == "12:15"  # arrival, later than the 11:30 earliest edge
+    assert lunch["end_time"] <= "13:00"
+    assert agent._accepted(*check(plan)) is True
+
+
 def test_pin_reverts_when_check_rejects():
     # A checker that never accepts must leave the plan untouched (per-move acceptance gate).
     agent = _bare_agent()

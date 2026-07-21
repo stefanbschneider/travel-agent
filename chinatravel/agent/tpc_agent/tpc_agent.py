@@ -1229,30 +1229,36 @@ class TPCAgent(BaseAgent):
         win_hi = hi if hi is not None else cur_end
         if win_hi <= win_lo:
             return False
-        dwell = cur_end - cur_start
-        if dwell <= 0:
-            dwell = min(60, win_hi - win_lo)
-        dwell = min(dwell, win_hi - win_lo)
-        new_start = win_lo
-        new_end = new_start + dwell
+        desired_dwell = cur_end - cur_start
+        if desired_dwell <= 0:
+            desired_dwell = min(60, win_hi - win_lo)
+        desired_dwell = min(desired_dwell, win_hi - win_lo)
 
         trial = deepcopy(plan)
         tacts = trial["itinerary"][day_idx]["activities"]
         tact = tacts[act_idx]
-        # Recompute this activity's inbound leg (skip when it is the day's first activity, whose
-        # inbound transports are empty -- e.g. a hotel breakfast).
+        # Recompute this activity's inbound leg first (skipped for a day's first activity, whose
+        # inbound transports are empty -- e.g. a hotel breakfast). Pin the start to the later of the
+        # window's earliest and the actual arrival, so a POI reachable only partway into the window
+        # can still be pinned as long as it then fits before end_before.
+        new_start = win_lo
         if act_idx > 0:
             prev = tacts[act_idx - 1]
             from_pos = self._activity_end_position(prev)
-            depart = str(prev.get("end_time", "")) or minutes_to_time(new_start)
+            depart = str(prev.get("end_time", "")) or minutes_to_time(win_lo)
             try:
                 transports_in, arrival = self._get_transport(
                     self.env, city, from_pos, loc, depart, people)
             except Exception:
                 return False
-            if arrival is None or time_to_minutes(arrival) > new_start:
-                return False  # cannot reach the POI by the window start
+            if arrival is None:
+                return False
+            new_start = max(win_lo, time_to_minutes(arrival))
             tact["transports"] = transports_in
+        dwell = min(desired_dwell, win_hi - new_start)
+        if dwell <= 0:
+            return False  # cannot fit even a minimal visit before end_before
+        new_end = new_start + dwell
         tact["start_time"] = minutes_to_time(new_start)
         tact["end_time"] = minutes_to_time(new_end)
         # Recompute the following activity's inbound leg from the retimed POI; revert if it can no

@@ -121,7 +121,8 @@ def load_hard_logic_by_uid(data_glob: str = FAMILIAR_DATA_GLOB) -> dict[str, lis
     """uid -> its ordered ``hard_logic_py`` clause list, from the imported split records."""
     out: dict[str, list[str]] = {}
     for f in sorted(glob.glob(data_glob)):
-        d = json.load(open(f, encoding="utf-8"))
+        with open(f, encoding="utf-8") as fh:
+            d = json.load(fh)
         uid = d.get("uid")
         if uid:
             out[uid] = list(d.get("hard_logic_py", []))
@@ -269,13 +270,15 @@ def main() -> None:
     p.add_argument("--json", default=None, help="also write the machine-readable attribution here")
     args = p.parse_args()
 
-    run = json.load(open(args.run, encoding="utf-8"))
+    with open(args.run, encoding="utf-8") as fh:
+        run = json.load(fh)
     hard_logic = load_hard_logic_by_uid(args.data_glob)
     att = attribute(run, hard_logic, args.mode)
     print(format_report(att))
     if args.json:
         os.makedirs(os.path.dirname(os.path.abspath(args.json)) or ".", exist_ok=True)
-        json.dump(att, open(args.json, "w", encoding="utf-8"), indent=2)
+        with open(args.json, "w", encoding="utf-8") as fh:
+            json.dump(att, fh, indent=2)
         print(f"\nwrote {args.json}")
 
 
