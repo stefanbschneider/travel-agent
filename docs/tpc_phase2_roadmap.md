@@ -113,7 +113,7 @@ Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100`, measured from
 | recall | 0.9487 | 0.9510 |
 | F1 | 0.9444 | 0.9510 |
 
-`required_attraction_types` moves `18` matched / `7` spurious / `2` wrong-value → `20` matched / `0` spurious / `0` wrong-value (the two prior wrong-value cases resolved once their time-window line stopped contributing a rival entry). Val is byte-identical (`f1 0.7282` before and after): `_CONTAINED_BETWEEN_WINDOW_RE` targets the familiar-100 numbered-line template only, so this is inert on the phase-1 partition, same as the required-constraint fix above. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
+`required_attraction_types` moves `18` matched / `7` spurious / `2` wrong-value → `20` matched / `0` spurious / `0` wrong-value (the two prior wrong-value cases resolved once their time-window line stopped contributing a rival entry). Val is byte-identical (`f1 0.7282` before and after): `_CONTAINED_BETWEEN_WINDOW_RE` targets the familiar-100 line-scoped `Visit/Dine at/Stay at X between A and B` template only (an optional leading `N.` numbering is not required), so this is inert on the phase-1 partition, same as the required-constraint fix above. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
 
 ## Follow-on order
 

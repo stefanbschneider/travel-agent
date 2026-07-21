@@ -507,7 +507,7 @@ def parse_required_attraction_types(text):
         m = None
     if not m:
         # Try "visit X and Y" (positive form, not preceded by "not"). Strip line-scoped
-        # "Visit X between A and B" sentences first: those are activity_time_window
+        # "Visit X between A and B" sentences first: those are activity_time_windows
         # constraints on a named POI (parse_activity_time_windows owns them via
         # _CONTAINED_BETWEEN_WINDOW_RE), not a type preference. Left in, a POI name that
         # happens to contain a type word -- "Golden Eagle Art Museum", "Baihua Tan Park",
