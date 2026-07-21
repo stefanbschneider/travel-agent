@@ -421,6 +421,14 @@ class TPCAgent(BaseAgent):
             tail = tail[off:] + tail[:off]
         return pinned + tail
 
+    def _pin_windows_enabled(self):
+        """Opt-in flag for the experimental timed-visit-at-named-POI pinning path (roadmap G8).
+
+        Default OFF, so the deterministic floor is byte-identical to before: no extra pool
+        projection and no retiming move. Enable with ``TPC_PIN_TIMED_WINDOWS=1`` to measure the
+        familiar-100 solver-only effect through the pinned gate before any promotion."""
+        return os.environ.get("TPC_PIN_TIMED_WINDOWS", "0") not in ("", "0", "false", "False")
+
     def _apply_search_constraints(self, constraints, params):
         """Project per-POI dwell/time-window POIs into the required pools (so the base build
         includes them) and a window's latest-start onto an arrive_no_later timing constraint
@@ -438,7 +446,13 @@ class TPCAgent(BaseAgent):
                 positioned.append(str(d["location"]))
         if positioned:
             # The resolver filters per-DB, so a name only survives in the pool it actually matches.
-            for key in ("required_attractions", "required_restaurants"):
+            # required_hotels (opt-in) is included so a "meal at <named accommodation>" window pins
+            # hotel selection to that accommodation (its hotel breakfast satisfies the clause); it is
+            # gated because it changes hotel selection on the deterministic floor.
+            pool_keys = ["required_attractions", "required_restaurants"]
+            if self._pin_windows_enabled():
+                pool_keys.append("required_hotels")
+            for key in pool_keys:
                 existing = list(merged.get(key, []) or [])
                 for loc in positioned:
                     if not any(self._match_constraint_text(loc, e) for e in existing):
@@ -688,10 +702,32 @@ class TPCAgent(BaseAgent):
         self._set_timeout_recovery_plan(resolved)
         return resolved
 
+    def _set_transport_context(self, constraints):
+        """Set the per-solve attributes ``_get_transport`` reads, so retiming/insertion helpers can
+        recompute inner-city legs consistently outside ``_build_plan``."""
+        constraints = constraints or {}
+        self._active_timing_constraints = constraints.get("timing_constraints", []) or []
+        self._transport_constraints = {
+            "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
+            "conditional_transport": constraints.get("conditional_transport", None),
+            "taxi_cars_equals": constraints.get("taxi_cars_equals", None),
+        }
+        self._forced_inner_mode = None
+        self._budget_limits = self._extract_budget_limits(constraints)
+
     def _pack_plan(self, plan, query, constraints, check, base_params):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
         DAV/DDR. Never trades a hard pass for preference: gated locally by `check`."""
         plan = self._sanitize_plan_for_grounding(plan, query)
+        # Pin named timed-visit POIs into their clause windows first (opt-in; roadmap G8). This runs
+        # *before* the acceptance gate below because a window-failing plan is by definition not yet
+        # accepted, and each pin is individually gated (committed only if the full checker then
+        # accepts and the preference key does not regress) -- so it can flip a sole-window-blocker to
+        # accepted, which then lets the packing/densify passes lift its preference score too. Off by
+        # default, so the deterministic floor is unchanged.
+        if self._pin_windows_enabled():
+            self._set_transport_context(constraints or {})
+            self._pin_timed_windows(plan, query, constraints or {}, check)
         if not self._accepted(*check(plan)):
             return plan
         best_plan = plan
@@ -1133,6 +1169,143 @@ class TPCAgent(BaseAgent):
         next_act["transports"] = old_next_transports
         return False
 
+    def _pin_timed_windows(self, plan, query, constraints, check):
+        """Retime a present-but-mistimed named-POI activity into its ``[earliest, end_before]``
+        window. Purely additive and fully acceptance-gated: each shift is trialed on a deepcopy and
+        kept only if the full checker still accepts and the preference key does not regress, so a
+        shift that breaks ordering/transport/duration is silently reverted.
+
+        This targets the roadmap-G8 failure family (familiar-100's dominant solver-only gap): the
+        base build now *includes* the named POI (see ``_apply_search_constraints``' pool projection)
+        but the greedy slotter schedules it by visit order, not by its clause window -- e.g. a
+        required 07:50-08:40 hotel breakfast landing at 07:30-08:30. Only local retiming is
+        attempted (recomputing the activity's own inbound leg and the following activity's inbound
+        leg); reordering across the day is out of scope and left to the search restarts."""
+        windows = [
+            w for w in (constraints.get("activity_time_windows", []) or [])
+            if isinstance(w, dict) and w.get("location") and (w.get("earliest") or w.get("end_before"))
+        ]
+        if not windows:
+            return
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+
+        for w in windows:
+            loc = str(w["location"])
+            lo = time_to_minutes(str(w["earliest"])) if w.get("earliest") else None
+            hi = time_to_minutes(str(w["end_before"])) if w.get("end_before") else None
+            matches = self._find_activities_at(plan, loc)
+            if not matches:
+                continue  # absent -> needs insertion/reselection, out of this move's scope
+            # The clause is satisfied by ANY matching activity in the window, so skip if one already
+            # is, then try each candidate until one retiming commits (an arrival-day copy that can't
+            # reach the window is skipped in favour of a stay-day copy that can).
+            if any(self._activity_in_window(plan, d, a, lo, hi) for d, a in matches):
+                continue
+            for day_idx, act_idx in matches:
+                if self._try_pin_activity(plan, day_idx, act_idx, loc, lo, hi, city, people, check):
+                    break
+
+    def _activity_in_window(self, plan, day_idx, act_idx, lo, hi):
+        activity = plan["itinerary"][day_idx]["activities"][act_idx]
+        try:
+            cur_start = time_to_minutes(str(activity.get("start_time", "")))
+            cur_end = time_to_minutes(str(activity.get("end_time", "")))
+        except Exception:
+            return False
+        return (lo is None or cur_start >= lo) and (hi is None or cur_end <= hi)
+
+    def _try_pin_activity(self, plan, day_idx, act_idx, loc, lo, hi, city, people, check):
+        """Trial-retime one activity into ``[lo, hi]``; commit iff still accepted and not regressing.
+        Returns True on commit."""
+        activities = plan["itinerary"][day_idx].get("activities", []) or []
+        activity = activities[act_idx]
+        try:
+            cur_start = time_to_minutes(str(activity.get("start_time", "")))
+            cur_end = time_to_minutes(str(activity.get("end_time", "")))
+        except Exception:
+            return False
+        win_lo = lo if lo is not None else cur_start
+        win_hi = hi if hi is not None else cur_end
+        if win_hi <= win_lo:
+            return False
+        desired_dwell = cur_end - cur_start
+        if desired_dwell <= 0:
+            desired_dwell = min(60, win_hi - win_lo)
+        desired_dwell = min(desired_dwell, win_hi - win_lo)
+
+        trial = deepcopy(plan)
+        tacts = trial["itinerary"][day_idx]["activities"]
+        tact = tacts[act_idx]
+        # Recompute this activity's inbound leg first (skipped for a day's first activity, whose
+        # inbound transports are empty -- e.g. a hotel breakfast). Pin the start to the later of the
+        # window's earliest and the actual arrival, so a POI reachable only partway into the window
+        # can still be pinned as long as it then fits before end_before.
+        new_start = win_lo
+        if act_idx > 0:
+            prev = tacts[act_idx - 1]
+            from_pos = self._activity_end_position(prev)
+            depart = str(prev.get("end_time", "")) or minutes_to_time(win_lo)
+            try:
+                transports_in, arrival = self._get_transport(
+                    self.env, city, from_pos, loc, depart, people)
+            except Exception:
+                return False
+            if arrival is None:
+                return False
+            new_start = max(win_lo, time_to_minutes(arrival))
+            tact["transports"] = transports_in
+        dwell = min(desired_dwell, win_hi - new_start)
+        if dwell <= 0:
+            return False  # cannot fit even a minimal visit before end_before
+        new_end = new_start + dwell
+        tact["start_time"] = minutes_to_time(new_start)
+        tact["end_time"] = minutes_to_time(new_end)
+        # Recompute the following activity's inbound leg from the retimed POI; revert if it can no
+        # longer be reached in time (no cascading reorder).
+        if act_idx + 1 < len(tacts):
+            nxt = tacts[act_idx + 1]
+            if nxt.get("type") not in ("airplane", "train"):
+                next_pos = self._activity_start_position(nxt)
+                try:
+                    transports_out, next_arrival = self._get_transport(
+                        self.env, city, loc, next_pos, minutes_to_time(new_end), people)
+                except Exception:
+                    return False
+                if next_arrival is None:
+                    return False
+                next_start = str(nxt.get("start_time", ""))
+                if next_start and time_to_minutes(next_arrival) > time_to_minutes(next_start):
+                    return False
+                nxt["transports"] = transports_out
+
+        before_key = self._accepted_eval_key(plan)
+        try:
+            if self._accepted(*check(trial)) and self._accepted_eval_key(trial) >= before_key:
+                plan["itinerary"][day_idx]["activities"] = tacts
+                return True
+        except Exception:
+            return False
+        return False
+
+    _WINDOW_ACTIVITY_TYPES = ("breakfast", "lunch", "dinner", "attraction")
+
+    def _find_activities_at(self, plan, location):
+        """Return ``[(day_idx, act_idx), ...]`` for every meal/attraction activity whose position
+        matches ``location`` (bidirectional constraint-text match). The overnight ``accommodation``
+        stay shares an inn's name but is never a timed-visit target, so it is excluded."""
+        out = []
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            for act_idx, activity in enumerate(day.get("activities", []) or []):
+                if activity.get("type") not in self._WINDOW_ACTIVITY_TYPES:
+                    continue
+                pos = str(activity.get("position", ""))
+                if not pos:
+                    continue
+                if self._match_constraint_text(pos, location) or self._match_constraint_text(location, pos):
+                    out.append((day_idx, act_idx))
+        return out
+
     def _extend_window_meals(self, plan, query, constraints, check, restaurants):
         """Swap a bounding intercity to a wider-window option and add the meal it unlocks.
 
@@ -1281,14 +1454,7 @@ class TPCAgent(BaseAgent):
         city = query.get("target_city", "")
         people = int(query.get("people_number", 1) or 1)
         constraints = constraints or {}
-        self._active_timing_constraints = constraints.get("timing_constraints", []) or []
-        self._transport_constraints = {
-            "excluded_inner_transport": constraints.get("excluded_inner_transport", []),
-            "conditional_transport": constraints.get("conditional_transport", None),
-            "taxi_cars_equals": constraints.get("taxi_cars_equals", None),
-        }
-        self._forced_inner_mode = None
-        self._budget_limits = self._extract_budget_limits(constraints)
+        self._set_transport_context(constraints)
 
         restaurants = sorted(ctx.get("restaurants", []) or [], key=lambda r: (r.get("price_cents", 0), r.get("name", "")))
         attractions = list(ctx.get("attractions", []) or [])
