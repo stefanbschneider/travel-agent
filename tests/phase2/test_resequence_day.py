@@ -130,6 +130,22 @@ def test_resequence_bails_when_fixed_predecessor_position_unresolvable():
     assert plan["itinerary"][0]["activities"] == snapshot
 
 
+def test_resequence_bails_when_fixed_tail_position_unresolvable():
+    # Symmetric reviewer scenario on the tail side: the fixed activity after the movable block has
+    # an unresolvable position (e.g. a malformed accommodation record). Calling _get_transport with
+    # an invalid destination and silently accepting whatever it returns risks a bogus leg; it must
+    # bail instead.
+    agent = _bare_agent()
+    plan = _misplaced_evening_plan()
+    plan["itinerary"][0]["activities"][2]["position"] = ""
+    snapshot = [dict(a) for a in plan["itinerary"][0]["activities"]]
+    constraints = {"activity_time_windows": [WINDOW]}
+    committed = agent._resequence_day(
+        plan, 0, {"target_city": "Shenzhen", "people_number": 1}, constraints, _window_checker())
+    assert committed is False
+    assert plan["itinerary"][0]["activities"] == snapshot
+
+
 def test_resequence_recomputes_intercity_tail_transports():
     # Reviewer scenario: when the day ends in a fixed intercity leg, its inbound `transports` must
     # still be recomputed against the new (reordered) predecessor -- otherwise a checker validating

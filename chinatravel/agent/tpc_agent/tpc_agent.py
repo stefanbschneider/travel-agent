@@ -1428,6 +1428,10 @@ class TPCAgent(BaseAgent):
             # start/end time stays fixed (this only rejects if the new arrival can't make it).
             tail = tacts[tail_idx]
             tail_pos = self._activity_start_position(tail)
+            if not tail_pos:
+                # Symmetric with the head-side guard above: don't call _get_transport with an
+                # unresolvable destination and risk silently accepting a bogus leg.
+                return False
             try:
                 transports_out, tail_arrival = self._get_transport(
                     self.env, city, prev_pos, tail_pos, prev_end, people)
