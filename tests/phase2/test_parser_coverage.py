@@ -278,6 +278,15 @@ def test_include_the_following_hotel_feature_types_all():
     assert raw.get("required_hotel_all_types") == ["Free parking"], raw
 
 
+def test_hotel_feature_types_negated_lead_in_not_required():
+    # A negated lead-in ("do not want to include the following ...") is an exclusion, never a hard
+    # requirement -- parse_required_hotel_types must not emit a required all_type for it.
+    raw = pc.parse_query_no_oracle(
+        _q("We do not want to include the following hotel feature types: Free parking.")
+    )
+    assert not raw.get("required_hotel_all_types"), raw.get("required_hotel_all_types")
+
+
 def test_stay_at_the_following_hotels_names():
     raw = pc.parse_query_no_oracle(
         _q("Stay at the following hotels: Golden Eagle Summit Hotel and Suning Universal Hotel.")

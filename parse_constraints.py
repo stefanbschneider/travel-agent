@@ -1087,7 +1087,9 @@ def parse_required_hotel_types(text):
         r"one\s+of\s+the\s+following\s+(?:hotel\s+)?types?(?:\s+of\s+hotels?)?[:\s]+(.+?)(?:\.|;|$)",
         text, re.I,
     )
-    if m:
+    # Required_* extractors must not fire on a negated-desire clause ("do not want to include the
+    # following hotel feature types: ...") -- that is an exclusion, never a hard requirement.
+    if m and not _negated_before(text, m.start()):
         any_types = _split_types(m.group(1))
     if not any_types:
         for pat in (
@@ -1099,7 +1101,7 @@ def parse_required_hotel_types(text):
             r"hotels?\s+with\s+(.+?)(?:\.|;|,\s*(?:and|we)|$)",
         ):
             m = re.search(pat, text, re.I)
-            if m:
+            if m and not _negated_before(text, m.start()):
                 all_types = _split_types(m.group(1))
                 break
     return any_types, all_types
