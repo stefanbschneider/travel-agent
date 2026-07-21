@@ -115,12 +115,48 @@ Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100`, measured from
 
 `required_attraction_types` moves `18` matched / `7` spurious / `2` wrong-value → `20` matched / `0` spurious / `0` wrong-value (the two prior wrong-value cases resolved once their time-window line stopped contributing a rival entry). Val is byte-identical (`f1 0.7282` before and after): `_CONTAINED_BETWEEN_WINDOW_RE` targets the familiar-100 line-scoped `Visit/Dine at/Stay at X between A and B` template only (an optional leading `N.` numbering is not required), so this is inert on the phase-1 partition, same as the required-constraint fix above. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
 
+## LLM parsing vs deterministic (familiar-100 + HF OOD)
+
+Question: does routing the parse through the DeepInfra `Qwen/Qwen3.6-27B` LLM beat the deterministic parser, and should `TPC_P2_LLM_PARSE` be defaulted on? Measured with `scripts/parser_vs_oracle.py` (parse vs oracle, shared solver-dict schema), keeping the harness-default flags `--disjunction --entity-resolution --branch-aware` on both sides and toggling only `--llm-parse` (and, for `extract`, `Flags.llm_parse_mode`). Temperature 0, responses cached, backend `deepinfra`. Two LLM strategies exist: `audit` (the harness default — corrective audit that re-parses every LLM proposal through the regex) and `extract` (LLM-first structured extraction validated against closed vocabularies, independent of the regex).
+
+All rows are measured on **English** query text: familiar-100 and the local `tpc_phase2_val`/`test` partitions are natively English, and the HF `LAMDA-NeSy/ChinaTravel` set is natively Chinese (`nature_language`) but `load_hf_queries` uses its English translation field (`nature_language_en`), which is what the agent path would receive. So the "OOD" gap below is a phrasing-register difference *within English* (familiar-100's rigid `Requirements: 1. … 2. …` templates vs. HF's free-prose translations), not a cross-language difference.
+
+Familiar-100 (full 100, the final-distribution proxy):
+
+| Config | precision | recall | F1 | matched | missing | spurious | wrong_value |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| deterministic | 0.9311 | 0.9321 | 0.9316 | 644 | 0 | 1 | 47 |
+| LLM audit | 0.9057 | 0.9154 | 0.9106 | 633 | 0 | 10 | 58 |
+| LLM extract (25-uid subset) | — | — | 0.758 | 135 | 0 | 23 | 32 |
+
+(The `extract` row is a 25-uid subset; its like-for-like deterministic baseline on the *same* 25 uids is F1 `0.935` — so extract loses ~0.18 F1 there. Audit on that same subset was byte-identical to deterministic, `0.935`.)
+
+HF `LAMDA-NeSy/ChinaTravel` config `default`, first 50 uids per split (out-of-distribution phrasing generalization probe — a measurement set only, never tuned against; see [dataset boundaries](tpc_phase2_hf_dataset.md)):
+
+| Split | Config | precision | recall | F1 | matched | missing | spurious | wrong_value |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| medium | deterministic | 0.8367 | 0.3050 | 0.4470 | 52 | 121 | 14 | 3 |
+| medium | LLM audit | 0.5667 | 0.3050 | 0.3966 | 52 | 118 | 40 | 6 |
+| medium | LLM extract | 0.7643 | 0.8233 | 0.7927 | 143 | 3 | 19 | 30 |
+| human | deterministic | 0.8567 | 0.5900 | 0.6988 | 51 | 47 | 12 | 4 |
+| human | LLM audit | 0.8267 | 0.5900 | 0.6886 | 51 | 46 | 14 | 5 |
+| human | LLM extract | 0.7067 | 0.6567 | 0.6807 | 60 | 21 | 19 | 21 |
+
+Two findings:
+
+1. **Audit mode never recovers recall on any set.** `matched` never rises deterministic→audit: it is flat on HF (medium `52→52`, human `51→51`) and actually falls on familiar-100 (`644→633`, i.e. audit corrupted 11 previously-matched families into `spurious`/`wrong_value`); `missing` barely moves. This is structural: `normalize.llm_parse_stub` re-parses every LLM proposal through `parse_constraints.parse_single_constraint_text`, so a constraint the regex could not extract from the original NL it also cannot extract from the LLM's paraphrase. Audit can only re-route an already-parseable span (polarity/value), never recover a regex-unparseable constraint — and it adds spurious noise on every set (familiar `1→10`, medium `14→40`). Net F1 ≤ deterministic on all three. **Audit-by-default is pure downside at the parser level.** (Audit's *theoretical* niche is non-empty — it helps when the deterministic miss is a trigger/phrasing gap on a value the regex *can* express, e.g. "check out the Forbidden City" that the LLM rewrites into the canonical `Visit …` template the regex then extracts, or a polarity mislabel on an already-located span. On these sets that niche is near-empty: the misses are dominated by value-segmentation failures the regex cannot express either way, so the paraphrase round-trip has nothing to recover.)
+
+2. **Extract mode recovers OOD recall, but at a value-accuracy cost that only pays off on machine-templated OOD phrasing.** On HF `medium` it is a large win (`missing 121→3`, F1 `0.447→0.793`). On HF `human` the recall gain is offset by `wrong_value`/`spurious` (F1 `0.699→0.681`, net slightly negative). On the familiar-100 25-uid subset it is strongly negative (deterministic `0.935` → extract `0.758` on that same subset): the deterministic templates already reach zero missing there, so the LLM only re-derives values it gets slightly wrong against the oracle's exact strings.
+
+**Decision: do not default `TPC_P2_LLM_PARSE` on.** The final held-out set is drawn from the familiar-100 distribution, and on that distribution (and on human-written NL) both LLM modes are neutral-to-negative; extract's only decisive win is on machine-templated OOD phrasing that is not the final distribution. Consistent with the operating rule that parser statistics diagnose but do not promote, this is parser-level evidence only — the end-to-end gate the operator runs separately is the arbiter, and it should also re-examine the harness's existing auto-enable of audit mode when a backend is configured (`agent_env/scripts/solve_phase2.py::resolve_llm_client_and_flags`), which this evidence shows adds spurious constraints with no recall benefit. The library default (`Flags()`) already keeps `llm_parse` off; no default is changed by this investigation. Regenerate with `TPC_P2_LLM_BACKEND=deepinfra scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100 --disjunction --entity-resolution --branch-aware [--llm-parse]`.
+
 ## Follow-on order
 
 1. Gate the negative-constraint fix, the required-constraint fix, the budget change, and the `required_attraction_types` time-window guard together through the pinned no-oracle path against the last promoted familiar row (`20260718T155006Z`), then promote if the end-to-end gate passes with no new parse failures or timeouts.
 2. The parser is now at `~0.95` familiar-100 F1 with zero missing and zero spurious/wrong-value on `required_attraction_types`. The remaining parser defect is the comma-in-name `wrong_value` residual (`~4` attractions, `~3` restaurants); prefer the catalog-segmentation path (entity resolution) over more regex for it.
 3. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded. The promoted row does not justify it: all `23` solver-only timeouts recovered into pass cases, while none of the `74` solver-only failures timed out.
-4. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
+4. Re-examine the harness auto-enable of audit-mode `llm_parse` when a backend is configured (see "LLM parsing vs deterministic" above): the parser-level evidence shows it adds spurious constraints with no recall benefit on familiar-100 or HF, so an end-to-end gate should confirm whether keeping it on is justified before the next promoted row.
+5. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
 
 The public material still does not specify a runtime contract.
 Until it does, `300 s` and `900 s` are local assumptions for sensitivity analysis, not organizer-confirmed limits.
