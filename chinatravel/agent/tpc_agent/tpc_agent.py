@@ -1380,7 +1380,11 @@ class TPCAgent(BaseAgent):
             hotel = self._find_hotel_for_day(plan, day_idx)
             if hotel:
                 prev_pos = hotel
-                prev_end = str(activities[movable_slots[0]].get("start_time", "")) or "00:00"
+                # Anchor on the activity that will actually occupy the first slot after
+                # reordering, not whichever activity happened to be there before -- otherwise a
+                # reorder that promotes a different activity into slot 0 computes its inbound leg
+                # from an unrelated activity's original clock.
+                prev_end = str(reordered[0].get("start_time", "")) or "00:00"
 
         for slot_i, act in zip(movable_slots, reordered):
             try:
@@ -1419,20 +1423,23 @@ class TPCAgent(BaseAgent):
 
         tail_idx = movable_slots[-1] + 1
         if tail_idx < len(tacts):
+            # Recompute the inbound leg regardless of the tail's type: an intercity activity's own
+            # `transports` field represents the leg from the previous activity to the station/
+            # airport, and reordering changes what that previous activity is. Its scheduled
+            # start/end time stays fixed (this only rejects if the new arrival can't make it).
             tail = tacts[tail_idx]
-            if tail.get("type") not in ("airplane", "train"):
-                tail_pos = self._activity_start_position(tail)
-                try:
-                    transports_out, tail_arrival = self._get_transport(
-                        self.env, city, prev_pos, tail_pos, prev_end, people)
-                except Exception:
-                    return False
-                if tail_arrival is None:
-                    return False
-                tail_start = str(tail.get("start_time", ""))
-                if tail_start and time_to_minutes(tail_arrival) > time_to_minutes(tail_start):
-                    return False
-                tail["transports"] = transports_out
+            tail_pos = self._activity_start_position(tail)
+            try:
+                transports_out, tail_arrival = self._get_transport(
+                    self.env, city, prev_pos, tail_pos, prev_end, people)
+            except Exception:
+                return False
+            if tail_arrival is None:
+                return False
+            tail_start = str(tail.get("start_time", ""))
+            if tail_start and time_to_minutes(tail_arrival) > time_to_minutes(tail_start):
+                return False
+            tail["transports"] = transports_out
 
         before_key = self._accepted_eval_key(plan)
         try:

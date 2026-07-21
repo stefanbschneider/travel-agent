@@ -84,6 +84,59 @@ def test_resequence_reorders_misplaced_window_activity():
     assert agent._accepted(*check(plan)) is True
 
 
+def test_resequence_hotel_anchor_uses_reordered_first_activity_own_time():
+    # Reviewer scenario: the hotel-departure baseline must come from whichever activity actually
+    # lands in slot 0 after reordering (Museum, originally at 14:00), not from whichever activity
+    # happened to occupy slot 0 before reordering (Bear Garden, originally at 09:00).
+    agent = _bare_agent()
+    plan = _misplaced_evening_plan()
+    constraints = {"activity_time_windows": [WINDOW]}
+    committed = agent._resequence_day(
+        plan, 0, {"target_city": "Shenzhen", "people_number": 1}, constraints, _window_checker())
+    assert committed is True
+    acts = plan["itinerary"][0]["activities"]
+    assert acts[0]["position"] == "Museum"
+    assert acts[0]["start_time"] == "14:00"
+
+
+def test_resequence_recomputes_intercity_tail_transports():
+    # Reviewer scenario: when the day ends in a fixed intercity leg, its inbound `transports` must
+    # still be recomputed against the new (reordered) predecessor -- otherwise a checker validating
+    # transport continuity rejects every last-day resequence, silently disabling the move there.
+    agent = _bare_agent()
+    agent._get_transport = lambda env, city, frm, to, depart, people: ([{"from": frm, "to": to}], depart)
+    plan = {
+        "itinerary": [
+            {"activities": [
+                {"type": "attraction", "position": "Bear Garden", "start_time": "09:00",
+                 "end_time": "10:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "attraction", "position": "Museum", "start_time": "14:00",
+                 "end_time": "15:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "airplane", "start": "APT", "end": "HOME", "start_time": "19:00",
+                 "end_time": "20:30", "price": 500, "cost": 500, "tickets": 1,
+                 "transports": [{"stale": True}]},
+            ]}
+        ]
+    }
+    constraints = {"activity_time_windows": [WINDOW]}
+
+    def check(p):
+        acts = p["itinerary"][0]["activities"]
+        bear = next(a for a in acts if a["position"] == "Bear Garden")
+        tail = acts[-1]
+        ok = (
+            bear["start_time"] >= "17:00" and bear["end_time"] <= "19:00"
+            and bool(tail["transports"]) and tail["transports"][0].get("from") == "Bear Garden"
+        )
+        return (1, 1) if ok else (0, 1)
+
+    committed = agent._resequence_day(
+        plan, 0, {"target_city": "Shenzhen", "people_number": 1}, constraints, check)
+    assert committed is True
+    tail = plan["itinerary"][0]["activities"][-1]
+    assert tail["transports"][0]["from"] == "Bear Garden"
+
+
 def test_resequence_leaves_accommodation_anchor_fixed():
     agent = _bare_agent()
     plan = _misplaced_evening_plan()
