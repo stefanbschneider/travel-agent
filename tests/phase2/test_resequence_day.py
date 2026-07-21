@@ -84,10 +84,11 @@ def test_resequence_reorders_misplaced_window_activity():
     assert agent._accepted(*check(plan)) is True
 
 
-def test_resequence_hotel_anchor_uses_reordered_first_activity_own_time():
-    # Reviewer scenario: the hotel-departure baseline must come from whichever activity actually
-    # lands in slot 0 after reordering (Museum, originally at 14:00), not from whichever activity
-    # happened to occupy slot 0 before reordering (Bear Garden, originally at 09:00).
+def test_resequence_first_slot_keeps_own_time_with_no_fixed_predecessor():
+    # Reviewer scenario: with no fixed activity before the movable block, whichever activity lands
+    # in slot 0 after reordering (Museum, originally at 14:00) must keep its own original time and
+    # get no invented inbound leg -- consistent with _try_pin_activity's act_idx == 0 convention --
+    # rather than a guessed "hotel departure" time derived from either activity's start_time.
     agent = _bare_agent()
     plan = _misplaced_evening_plan()
     constraints = {"activity_time_windows": [WINDOW]}
@@ -97,6 +98,36 @@ def test_resequence_hotel_anchor_uses_reordered_first_activity_own_time():
     acts = plan["itinerary"][0]["activities"]
     assert acts[0]["position"] == "Museum"
     assert acts[0]["start_time"] == "14:00"
+    assert acts[0]["transports"] == []
+
+
+def test_resequence_bails_when_fixed_predecessor_position_unresolvable():
+    # Reviewer scenario: a fixed activity precedes the movable block (movable_slots[0] > 0) but its
+    # end position can't be resolved (e.g. a malformed intercity arrival). Silently treating this as
+    # "no predecessor" would drop a real inbound leg and produce a discontinuous day; it must bail
+    # instead.
+    agent = _bare_agent()
+    plan = {
+        "itinerary": [
+            {"activities": [
+                {"type": "airplane", "start": "HOME", "end": "", "start_time": "07:00",
+                 "end_time": "09:00", "price": 500, "cost": 500, "tickets": 1, "transports": []},
+                {"type": "attraction", "position": "Bear Garden", "start_time": "09:30",
+                 "end_time": "10:30", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "attraction", "position": "Museum", "start_time": "14:00",
+                 "end_time": "15:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "accommodation", "position": "Hotel X", "start_time": "20:00",
+                 "end_time": "24:00", "price": 100, "cost": 100, "rooms": 1, "room_type": 2,
+                 "tickets": 1, "transports": []},
+            ]}
+        ]
+    }
+    snapshot = [dict(a) for a in plan["itinerary"][0]["activities"]]
+    constraints = {"activity_time_windows": [WINDOW]}
+    committed = agent._resequence_day(
+        plan, 0, {"target_city": "Shenzhen", "people_number": 1}, constraints, _window_checker())
+    assert committed is False
+    assert plan["itinerary"][0]["activities"] == snapshot
 
 
 def test_resequence_recomputes_intercity_tail_transports():

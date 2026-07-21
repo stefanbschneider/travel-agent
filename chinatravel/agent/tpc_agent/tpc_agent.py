@@ -1371,20 +1371,19 @@ class TPCAgent(BaseAgent):
         tacts = trial["itinerary"][day_idx]["activities"]
         reordered = [deepcopy(activities[movable_slots[k]]) for k in order]
 
+        # No fixed head (movable_slots[0] == 0) leaves prev_pos/prev_end at None: the activity
+        # landing in slot 0 keeps its own original start/end time and empty transports, exactly
+        # like _try_pin_activity's act_idx == 0 case -- a guessed hotel-departure time here would
+        # misinterpret that activity's own original start_time as a real departure clock.
         prev_pos, prev_end = None, None
         if movable_slots[0] > 0:
             head = tacts[movable_slots[0] - 1]
             prev_pos = self._activity_end_position(head)
+            if not prev_pos:
+                # A fixed predecessor exists but its position can't be resolved -- bail rather
+                # than silently drop the inbound leg and produce a discontinuous day.
+                return False
             prev_end = str(head.get("end_time", ""))
-        else:
-            hotel = self._find_hotel_for_day(plan, day_idx)
-            if hotel:
-                prev_pos = hotel
-                # Anchor on the activity that will actually occupy the first slot after
-                # reordering, not whichever activity happened to be there before -- otherwise a
-                # reorder that promotes a different activity into slot 0 computes its inbound leg
-                # from an unrelated activity's original clock.
-                prev_end = str(reordered[0].get("start_time", "")) or "00:00"
 
         for slot_i, act in zip(movable_slots, reordered):
             try:
