@@ -647,9 +647,19 @@ class TPCAgent(BaseAgent):
                     )
                     updated = True
             if updated:
-                best_now = best_accepted["plan"] if best_accepted["plan"] is not None else best["plan"]
+                # Export whichever bucket actually produced best_now -- best_accepted may hold a
+                # plan/constraints pair from an *earlier* call than this one (this call only
+                # improved best["plan"], the unaccepted search-key leader). Using the current
+                # candidate's constraints unconditionally here would mismatch a stale
+                # best_accepted export, so pull constraints from the same bucket as best_now.
+                if best_accepted["plan"] is not None:
+                    best_now = best_accepted["plan"]
+                    constraints_now = best_accepted["constraints"]
+                else:
+                    best_now = best["plan"]
+                    constraints_now = best["constraints"]
                 self._set_timeout_recovery_plan(best_now)
-                self._last_solve_constraints = deepcopy(constraints)
+                self._last_solve_constraints = deepcopy(constraints_now)
             if accepted and stop_at_accept:
                 raise _AcceptedEarlyStop()
             return accepted

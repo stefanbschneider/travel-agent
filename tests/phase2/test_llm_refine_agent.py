@@ -226,3 +226,52 @@ def test_ground_and_check_never_raises_on_bad_query():
     agent = _bare_agent()
     accepted, grounded, key, failure = agent.ground_and_check(_day_plan(), {})
     assert accepted in (True, False)
+
+
+# --- _last_solve_constraints tracking (regression for a Copilot review finding on PR #32) ------
+#
+# consider() must export _last_solve_constraints from the SAME bucket (best_accepted or best) as
+# the plan it hands to _set_timeout_recovery_plan -- not unconditionally from the current call's
+# constraints. Otherwise a later variant/candidate that only improves the raw search-key leader
+# (best["plan"]), without unseating a higher-ranked best_accepted from an EARLIER variant, would
+# overwrite _last_solve_constraints with constraints that don't match the exported best_accepted
+# plan, so ground_and_check would re-check that plan against the wrong constraint set.
+
+def test_last_solve_constraints_tracks_exported_best_accepted_not_a_later_candidate():
+    import os
+    import time
+
+    agent = _bare_agent(zero_travel=False)
+    agent.max_restarts = 0
+    agent.solve_budget_sec = 60.0
+    agent.start_clock = time.time()
+    agent.seed_salt = "0"
+    agent._transport_constraints = {}
+
+    # Two branch-local variants with distinguishable constraints; both "plans" are accepted by the
+    # stubbed checker, but rank oppositely under the raw search key (_eval_proxy, used for `best`)
+    # vs. the accepted preference key (_accepted_eval_key, used for `best_accepted`) -- variant 2's
+    # plan is the stronger *raw* candidate but the weaker *accepted* one.
+    agent._constraint_variants = lambda query: [{"v": 1}, {"v": 2}]
+    agent._make_checker = lambda query, constraints: (lambda plan: (1, 1))
+    agent._build_plan = lambda query, constraints=None, params=None: {"_v": (constraints or {}).get("v")}
+    agent._repair_params = lambda constraints: []
+    agent._eval_proxy = lambda plan: 1.0 if plan.get("_v") == 1 else 100.0
+    agent._accepted_eval_key = lambda plan: (10.0,) if plan.get("_v") == 1 else (1.0,)
+    agent._plan_total_cost = lambda plan: 0.0
+    agent._pack_plan = lambda plan, *a, **k: plan  # packing is out of scope for this bookkeeping
+
+    os.environ["TPC_USE_CP_SOLVER"] = "0"
+    os.environ["TPC_SOLVE_STOP_AT_ACCEPT"] = "0"
+    try:
+        result = agent._solve({"uid": "last_solve_constraints_regression"})
+    finally:
+        os.environ.pop("TPC_USE_CP_SOLVER", None)
+        os.environ.pop("TPC_SOLVE_STOP_AT_ACCEPT", None)
+
+    # best_accepted stays variant 1's plan (higher _accepted_eval_key); the recovery plan and the
+    # tracked constraints must both describe that same plan, not variant 2's.
+    assert result.get("_v") == 1
+    assert agent._last_solve_constraints == {"v": 1}
+    recovered = agent.get_timeout_recovery_plan()
+    assert recovered.get("_v") == 1

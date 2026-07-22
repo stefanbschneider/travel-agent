@@ -214,6 +214,27 @@ def test_parse_raises_on_invalid_json():
         R.parse_llm_refine_edits("not json at all")
 
 
+def test_parse_raises_on_missing_edits_key():
+    # Regression for a Copilot review finding on PR #32: a response shape violation (wrong key
+    # name, e.g. the model wrote "edit" instead of "edits") must raise, not silently degrade to
+    # "no edits proposed" -- that would mask a real prompt/model regression.
+    import pytest
+
+    with pytest.raises(ValueError):
+        R.parse_llm_refine_edits('{"edit": [{"op": "drop_activity"}]}')
+
+
+def test_parse_raises_on_non_list_edits_value():
+    import pytest
+
+    with pytest.raises(ValueError):
+        R.parse_llm_refine_edits('{"edits": "none"}')
+
+
+def test_parse_returns_empty_for_explicit_empty_edits_list():
+    assert R.parse_llm_refine_edits('{"edits": []}') == []
+
+
 def test_cache_key_stable_and_scoped_to_uid_and_prompt():
     q1 = {"uid": "abc"}
     q2 = {"uid": "xyz"}

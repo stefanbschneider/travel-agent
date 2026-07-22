@@ -100,9 +100,12 @@ def parse_llm_refine_edits(text: str) -> list[dict]:
 
     Raises ``ValueError`` on malformed JSON/shape (mirrors ``normalize._parse_llm_json_blob``'s
     raise-on-failure contract, so the caller can distinguish "LLM/JSON broke" from "LLM proposed
-    nothing"); an empty or absent ``edits`` list is not an error and returns ``[]``. Every returned
-    edit's ``op`` is one of ``REFINE_ALLOWED_OPS`` -- anything else is silently dropped, not raised
-    on, since a model may echo an unsupported op alongside otherwise-valid ones.
+    nothing") -- this includes an ``edits`` key that is missing or not a list (e.g. the model wrote
+    ``{"edit": ...}`` or ``{"edits": "none"}``), since silently treating that as "no edits" would
+    mask a real prompt/model regression as a legitimate no-op. An explicit ``{"edits": []}`` is not
+    an error and returns ``[]``. Every returned edit's ``op`` is one of ``REFINE_ALLOWED_OPS`` --
+    anything else is silently dropped, not raised on, since a model may echo an unsupported op
+    alongside otherwise-valid ones.
     """
     raw = (text or "").strip()
     if not raw:
@@ -116,9 +119,11 @@ def parse_llm_refine_edits(text: str) -> list[dict]:
         raise ValueError(f"llm_refine invalid JSON: {exc}") from None
     if not isinstance(payload, dict):
         raise ValueError("llm_refine response must be a JSON object")
-    edits = payload.get("edits")
+    if "edits" not in payload:
+        raise ValueError("llm_refine response missing 'edits' key")
+    edits = payload["edits"]
     if not isinstance(edits, list):
-        return []
+        raise ValueError("llm_refine response 'edits' must be a list")
     out = []
     for edit in edits[:MAX_REFINE_EDITS]:
         if isinstance(edit, dict) and str(edit.get("op") or "") in REFINE_ALLOWED_OPS:
