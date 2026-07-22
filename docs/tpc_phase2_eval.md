@@ -1,6 +1,6 @@
-# TPC 2026 Phase 2 Evaluation
+# TPC 2026 Phase 2 Evaluation and Dataset Boundaries
 
-This document defines how to measure a no-oracle harness without confusing local diagnostics for organizer results.
+This document defines how to measure a no-oracle harness without confusing local diagnostics for organizer results, and which data source each measurement is drawn from.
 Generated rows live in [`results/phase2_baselines/`](../results/phase2_baselines/); this document defines their interpretation.
 
 ## Three axes
@@ -26,16 +26,53 @@ $$
 Its per-query score for monotonic merging is different: it assigns both 10% environmental slots from that query's binary commonsense result.
 That implementation choice helps rank merge candidates; it is not a second official aggregate.
 
+## Dataset boundaries
+
+Phase 2 measurements must name their data source.
+These four sources have different trust and generalization properties; none substitutes for the organizer's final held-out set.
+Do not compare rows across sources as if they had the same distribution or oracle exposure.
+
+### 1. Official familiar-100 development set (preferred signal)
+
+The organizers released the [familiar-100 archive](https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip) on 2026-07-15 with the Agent Environment Guide.
+The 100 source records are imported unchanged under `chinatravel/data/en/TPC_IJCAI_2026_phase2_familiar_100_data/` and selected by `tpc_phase2_familiar_100`.
+`_provenance.json` pins the source URL, release/retrieval dates, archive SHA-256, and every extracted member's size, CRC32, and SHA-256.
+The records contain `hard_logic_py`; loaders retain it only for scoring and attribution, while the adapter and both harnesses expose only `uid`, trip metadata, and `nature_language` to the agent path.
+Familiar-100 is drawn from the same distribution as final evaluation, so it is the preferred new-development signal — but a familiar-100 result must identify this imported artifact and run configuration and must not be presented as a final-evaluation estimate.
+
+### 2. Repository-local released data
+
+The repository contains the released Phase 1 English queries and their oracle fields under `chinatravel/data/en/TPC_IJCAI_2026_phase1_EN/`.
+`make phase2-splits` deterministically partitions that released source into `tpc_phase2_val` and `tpc_phase2_test` for local development.
+Despite the local `test` name, these are not organizer-held-out Phase 2 data.
+They average `~16` `hard_logic_py` constraints per record versus `~38` in familiar-100, so a val result under-represents the constraint density of the final distribution.
+They remain useful only when the agent path hides `hard_logic_py` and other oracle-only fields.
+
+### 3. Hugging Face ChinaTravel
+
+[`LAMDA-NeSy/ChinaTravel`](https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel) is public benchmark data with multiple configurations and splits.
+It is useful only as an out-of-distribution phrasing-generalization probe for an auxiliary parser or solver, never as a tuning target.
+The set is natively Chinese; `load_hf_queries` uses its English translation field (`nature_language_en`), so the "OOD" gap versus familiar-100 is a phrasing-register difference within English (free prose vs. rigid templates), not a cross-language difference.
+Keep the HF configuration and split names with every result; do not merge different configurations into one comparison.
+The repository comparison utility is:
+
+```bash
+.venv/bin/python scripts/compare_hf_dataset.py --hf-config default
+```
+
+### 4. Organizer final held-out set
+
+The final Phase 2 set is separate, unavailable locally, and evaluated only through the organizer-run no-oracle harness on Qwen3.6-27B via SGLang.
+No local split, HF subset, or familiar-100 result proves performance on it.
+Use those sources to diagnose and rank work, then preserve no-oracle boundaries and regression gates so the submitted harness remains robust to unseen requests.
+
 ## Baselines and repetitions
 
 Use a deterministic fold, fresh outputs, and a pinned source revision for a promotable baseline.
 Long runs should use `make phase2-baseline-at SHA=<ref> ...` so the recorded revision is the code that executed.
 Record a local repeat count whenever variance matters.
 The public competition material does not specify a repeat count or per-query timeout; `300 s` and `900 s` remain local sensitivity settings.
-
-The imported official familiar-100 set (`tpc_phase2_familiar_100`) is the preferred new development signal.
-Its ledger rows must carry the manifest-derived data-source ID and remain separate from repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
-See [dataset boundaries](tpc_phase2_hf_dataset.md).
+Familiar-100 ledger rows must carry the manifest-derived data-source ID and remain separate from the repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
 
 ## Ledger comparability
 
@@ -75,3 +112,9 @@ make phase2-timing P2_METHOD=<method> P2_BUDGET=300
 
 Use `make phase2-help` for the full catalog.
 The [baseline ledger guide](phase2_baselines/README.md) covers row fields and generated artifacts.
+
+## Measurement rule
+
+Record the source name, selected split, deterministic selection, budget, flags, and model/backend with every measurement.
+Do not infer final-evaluation performance from local rows or from familiar-100.
+For ledger semantics, see the [baseline ledger guide](phase2_baselines/README.md); for current priorities, see the [Phase 2 roadmap](tpc_phase2_roadmap.md).

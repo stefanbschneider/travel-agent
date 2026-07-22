@@ -3,7 +3,7 @@
 
 Answers: is HF a usable independent generalization/held-out rehearsal set? Reports uid overlap,
 field presence (esp. hard_logic_py / nature_language_en), city coverage vs local, and day/people
-distributions. See docs/tpc_phase2_hf_dataset.md.
+distributions. See docs/tpc_phase2_eval.md.
 
 The comparison core is pure over lists of query dicts (unit-tested). The CLI loads the HF dataset
 via the ``datasets`` library and local queries via load_datasets.

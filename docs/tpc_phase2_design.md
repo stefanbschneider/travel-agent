@@ -61,7 +61,6 @@ They may improve a proposal, never bypass grounding, branch isolation, time boun
 
 ## Related documents
 
-- [Evaluation methodology](tpc_phase2_eval.md): axes, metrics, ledger, and regression gates.
-- [Phase 2 roadmap](tpc_phase2_roadmap.md): current evidence and decisions.
-- [Dataset boundaries](tpc_phase2_hf_dataset.md): local, HF, familiar-100, and final data.
+- [Evaluation and dataset boundaries](tpc_phase2_eval.md): axes, metrics, ledger, regression gates, and the four data sources.
+- [Phase 2 roadmap](tpc_phase2_roadmap.md): current evidence, decisions, and solver headroom.
 - [Agent environment guide](../agent_env/README.md): human setup and harness interface.
