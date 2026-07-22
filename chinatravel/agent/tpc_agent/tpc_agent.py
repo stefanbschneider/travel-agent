@@ -429,6 +429,15 @@ class TPCAgent(BaseAgent):
         familiar-100 solver-only effect through the pinned gate before any promotion."""
         return os.environ.get("TPC_PIN_TIMED_WINDOWS", "0") not in ("", "0", "false", "False")
 
+    def _repair_transport_gaps_enabled(self):
+        """Opt-in flag for the commonsense-transport repair pass (roadmap step 4).
+
+        Default OFF, so the deterministic floor is byte-identical to before: no leg
+        recomputation and no plan mutation. Enable with ``TPC_REPAIR_TRANSPORT_GAPS=1`` to
+        measure the "Invalid Transport information across positions" effect through the
+        pinned gate before any promotion."""
+        return os.environ.get("TPC_REPAIR_TRANSPORT_GAPS", "0") not in ("", "0", "false", "False")
+
     def _apply_search_constraints(self, constraints, params):
         """Project per-POI dwell/time-window POIs into the required pools (so the base build
         includes them) and a window's latest-start onto an arrive_no_later timing constraint
@@ -719,6 +728,19 @@ class TPCAgent(BaseAgent):
         """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
         DAV/DDR. Never trades a hard pass for preference: gated locally by `check`."""
         plan = self._sanitize_plan_for_grounding(plan, query)
+        # Ground broken inner-city legs first (opt-in; roadmap step 4). A restart's forced/excluded
+        # inner-transport exploration can leave an activity's inbound leg missing or mismatched
+        # against the previous activity's position when no route existed under that forced mode --
+        # the greedy build still appends the activity rather than abandoning the candidate (see
+        # ``_get_transport`` callers in ``_build_plan``). This recomputes every such leg under the
+        # full allowed mode set in one batched, all-or-nothing trial (many commonsense-transport
+        # failures involve several broken legs in the same plan, so a per-leg trial that still
+        # requires the *whole* plan to pass would never commit). Runs before the window pinning
+        # below so that pass is not blocked by an unrelated grounding gap elsewhere in the plan. Off
+        # by default, so the deterministic floor is unchanged.
+        if self._repair_transport_gaps_enabled():
+            self._set_transport_context(constraints or {})
+            self._repair_transport_gaps(plan, query, constraints or {}, check)
         # Pin named timed-visit POIs into their clause windows first (opt-in; roadmap G8). This runs
         # *before* the acceptance gate below because a window-failing plan is by definition not yet
         # accepted, and each pin is individually gated (committed only if the full checker then
@@ -1168,6 +1190,110 @@ class TPCAgent(BaseAgent):
         del activities[prev_idx + 1]
         next_act["transports"] = old_next_transports
         return False
+
+    def _transport_leg_valid(self, activity, from_pos):
+        """Mirror ``Is_space_correct``'s edge check: the activity's inbound leg must start at
+        ``from_pos`` and end at the activity's own position (both compared via the checker's own
+        ``normalize_poi_name`` alias table, not the lower-cased ``_norm_text``)."""
+        to_pos = self._activity_start_position(activity)
+        legs = activity.get("transports") or []
+        if not legs:
+            return False
+        try:
+            leg_start = normalize_poi_name(str(legs[0].get("start", "")))
+            leg_end = normalize_poi_name(str(legs[-1].get("end", "")))
+        except Exception:
+            return False
+        return (
+            leg_start == normalize_poi_name(str(from_pos))
+            and leg_end == normalize_poi_name(str(to_pos))
+        )
+
+    def _fix_transport_leg_if_broken(self, activity, from_pos, depart_time, city, people):
+        """Recompute one activity's inbound leg if it does not already connect ``from_pos`` to the
+        activity's position. Only commits within the caller's trial dict (mutates ``activity`` in
+        place); the caller re-validates the whole plan afterward. Skipped (returns False, activity
+        left untouched) when there is nothing to anchor from, no route exists under the full
+        allowed mode set, or the recomputed arrival would land after the activity's own start_time
+        -- this repair never shifts timing, only fills/corrects the leg itself."""
+        if self._transport_leg_valid(activity, from_pos):
+            return False
+        to_pos = self._activity_start_position(activity)
+        if not from_pos or not to_pos or not depart_time:
+            return False
+        try:
+            transports, arrival = self._get_transport_resilient(self.env, city, from_pos, to_pos, depart_time, people)
+        except Exception:
+            return False
+        if transports is None or arrival is None:
+            return False
+        cur_start = str(activity.get("start_time", ""))
+        try:
+            if cur_start and time_to_minutes(str(arrival)) > time_to_minutes(cur_start):
+                return False
+        except Exception:
+            return False
+        activity["transports"] = transports
+        return True
+
+    def _repair_transport_gaps(self, plan, query, constraints, check):
+        """Ground every broken inner-city leg in one batched, acceptance-gated trial (roadmap step
+        4, the "Invalid Transport information across positions" commonsense residual).
+
+        Walks the plan in checker order (continuous across day boundaries, exactly like
+        ``Is_space_correct``'s ``position_list``), skipping the very first activity of the whole
+        plan and any intercity activity (their own transport shape is out of this move's scope --
+        see ``_sanitize_plan_for_grounding`` for mid-itinerary intercity cleanup). For every other
+        activity whose position differs from the previous activity's, recomputes the inbound leg
+        under the full allowed mode set (``_forced_inner_mode`` cleared, so an exploratory
+        restart's forced/excluded mode that had no route for this particular pair no longer blocks
+        it; real constraint exclusions still apply via ``_set_transport_context``) when the
+        existing leg does not already connect the two positions. All fixes land in one deepcopy
+        trial and are committed together only if the full checker then accepts -- never a partial
+        commit, since a single remaining broken leg would still fail the full checker on its own.
+        A grounded leg has a real, nonzero cost where the broken original had none, so the
+        "preference must not regress" guard only applies when the *starting* plan was already
+        accepted: turning an invalid plan valid is a pure win regardless of the small cost added,
+        matching the invariant's own wording (never trade a *valid* plan for a higher score) --
+        it does not forbid spending cost to make an invalid plan valid at all."""
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        saved_forced_mode = getattr(self, "_forced_inner_mode", None)
+        self._forced_inner_mode = None
+        try:
+            was_accepted = self._accepted(*check(plan))
+            trial = deepcopy(plan)
+            changed = False
+            prev_pos = None
+            prev_end = None
+            for day in trial.get("itinerary", []) or []:
+                for activity in day.get("activities", []) or []:
+                    is_intercity = activity.get("type") in ("airplane", "train")
+                    if prev_pos is not None and not is_intercity:
+                        cur_pos = self._activity_start_position(activity)
+                        # Compare via normalize_poi_name, exactly like Is_space_correct's own
+                        # position_list check -- two alias-equivalent names (e.g. a POI listed
+                        # under both a short and long form) are the same position to the checker,
+                        # so raw-string inequality here would misfire a repair (and its cost) where
+                        # none is required.
+                        if cur_pos and normalize_poi_name(cur_pos) != normalize_poi_name(prev_pos):
+                            if self._fix_transport_leg_if_broken(
+                                activity, prev_pos, prev_end, city, people
+                            ):
+                                changed = True
+                    prev_pos = self._activity_end_position(activity)
+                    prev_end = str(activity.get("end_time", "")) or prev_end
+            if not changed:
+                return
+            if not self._accepted(*check(trial)):
+                return
+            if was_accepted and self._accepted_eval_key(trial) < self._accepted_eval_key(plan):
+                return
+            plan["itinerary"] = trial["itinerary"]
+        except Exception:
+            pass
+        finally:
+            self._forced_inner_mode = saved_forced_mode
 
     def _pin_timed_windows(self, plan, query, constraints, check):
         """Retime a present-but-mistimed named-POI activity into its ``[earliest, end_before]``
@@ -3601,33 +3727,85 @@ class TPCAgent(BaseAgent):
             for mode in mode_order:
                 result = env.transportation.goto(city, from_pos, to_pos, start_time, mode)
                 if isinstance(result, list) and len(result) > 0:
-                    transports = []
-                    for seg in result:
-                        t = {
-                            "start": seg["start"],
-                            "end": seg["end"],
-                            "mode": seg["mode"],
-                            "start_time": seg["start_time"],
-                            "end_time": seg["end_time"],
-                            "distance": seg["distance"],
-                        }
-                        if seg["mode"] == "taxi":
-                            cars = max(1, int(math.ceil(float(people) / 4.0)))
-                            t["price"] = seg["cost"]
-                            t["cost"] = seg["cost"] * cars
-                            t["cars"] = cars
-                        elif seg["mode"] == "metro":
-                            t["price"] = seg["cost"]
-                            t["cost"] = seg["cost"] * people
-                            t["tickets"] = people
-                        else:  # walk
-                            t["price"] = 0
-                            t["cost"] = 0
-                        transports.append(t)
+                    transports = self._format_transport_segments(result, people)
                     arrival_time = transports[-1]["end_time"]
                     return transports, arrival_time
         except Exception:
             pass
+        return None, None
+
+    def _format_transport_segments(self, result, people):
+        """Convert ``env.transportation.goto``'s raw segment list into the plan-facing
+        ``transports`` shape (shared by ``_get_transport`` and ``_get_transport_resilient``)."""
+        transports = []
+        for seg in result:
+            t = {
+                "start": seg["start"],
+                "end": seg["end"],
+                "mode": seg["mode"],
+                "start_time": seg["start_time"],
+                "end_time": seg["end_time"],
+                "distance": seg["distance"],
+            }
+            if seg["mode"] == "taxi":
+                cars = max(1, int(math.ceil(float(people) / 4.0)))
+                t["price"] = seg["cost"]
+                t["cost"] = seg["cost"] * cars
+                t["cars"] = cars
+            elif seg["mode"] == "metro":
+                t["price"] = seg["cost"]
+                t["cost"] = seg["cost"] * people
+                t["tickets"] = people
+            else:  # walk
+                t["price"] = 0
+                t["cost"] = 0
+            transports.append(t)
+        return transports
+
+    def _get_transport_resilient(self, env, city, from_pos, to_pos, start_time, people):
+        """Like ``_get_transport``, but tries every allowed inner-city mode independently, so one
+        mode raising (an observed ``env.transportation.goto`` edge case on some metro routes)
+        does not abort the remaining modes. ``_get_transport`` wraps its *whole* mode loop in one
+        try/except, so today a single raising mode silently fails the entire lookup even when a
+        later mode would have succeeded -- the roadmap-step-4 root cause behind some "Invalid
+        Transport information across positions" cases, where the greedy build's own
+        ``_get_transport`` call failed this way and the caller fell back to an empty leg.
+
+        Used only by the opt-in transport-gap repair pass, so the widely-called
+        ``_get_transport`` (and its restart-exploration semantics -- forced mode, budget-ordered
+        preference, conditional threshold) stays untouched everywhere else. This variant ignores
+        those exploration knobs entirely (repair wants the best chance at *any* grounded route,
+        not a particular exploration bias); real exclusions (``excluded_inner_transport``, the
+        taxi car-count guard) still apply."""
+        timing_constraints = getattr(self, "_active_timing_constraints", [])
+        depart_floor = self._timing_departure_floor(timing_constraints, [from_pos])
+        if depart_floor is not None and time_to_minutes(start_time) < depart_floor:
+            start_time = minutes_to_time(depart_floor)
+        if from_pos == to_pos:
+            return [], start_time
+        excluded = set(
+            self._norm_text(m)
+            for m in (self._transport_constraints.get("excluded_inner_transport", []) or [])
+        )
+        taxi_cars_equals = self._transport_constraints.get("taxi_cars_equals", None)
+        for mode in ("metro", "walk", "taxi"):
+            if self._norm_text(mode) in excluded:
+                continue
+            if mode == "taxi" and taxi_cars_equals is not None:
+                try:
+                    required_cars = int(taxi_cars_equals)
+                    projected_cars = max(1, int(math.ceil(float(people) / 4.0)))
+                    if projected_cars != required_cars:
+                        continue
+                except Exception:
+                    pass
+            try:
+                result = env.transportation.goto(city, from_pos, to_pos, start_time, mode)
+            except Exception:
+                continue
+            if isinstance(result, list) and len(result) > 0:
+                transports = self._format_transport_segments(result, people)
+                return transports, transports[-1]["end_time"]
         return None, None
 
     def _make_intercity_activity(self, transport, people, transports=None):

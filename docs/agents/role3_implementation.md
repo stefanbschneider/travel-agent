@@ -12,13 +12,17 @@ Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap
 
 ## Pick the next item
 
-Take the highest-priority **implementation** item from the roadmap's "Next steps" that is not merely a gate (gates belong to role 2). Confirm against the live roadmap first; as written, the strongest new-implementation targets are:
+Take the highest-priority **implementation** item from the roadmap's "Next steps" that is not merely a gate (gates belong to role 2). Confirm against the live roadmap first.
 
-- **Commonsense-transport residual (roadmap step 4, recommended default).** ~24/100 queries fail commonsense even at solver-only, dominated by "Invalid Transport information across positions" (18) and intercity-event grounding (6). Prefer a grounded transport-repair pass over more search. Note the rejected `arrive_no_later`-from-`end_before` idea (it pruned proper transport and regressed commonsense) — do not reintroduce it.
+**Done, pending gate:** the commonsense-transport residual (former roadmap step 4) landed opt-in behind `TPC_REPAIR_TRANSPORT_GAPS` in PR [#29](https://github.com/stefanbschneider/china-travel-agent/pull/29) — see [Commonsense-transport repair](../tpc_phase2_roadmap.md#commonsense-transport-repair) for the mechanism, tests, and known limits. Do not reimplement it; it is now a role-2 gate item (roadmap Next step 4). A residual is already known and explicitly out of that pass's bounded scope: legs that need a real cascading time shift (not just a leg fix) to fit — a future resequencing move, not a re-run of the same fix.
+
+As written, the strongest remaining new-implementation targets are:
+
+- **Solver budget / early-convergence (step 5, recommended default).** Median solve is at the budget wall with ~38% timeouts; add an early-convergence stop distinct from the evaluation-only `TPC_SOLVE_STOP_AT_ACCEPT`, and/or quantify the restart-count vs. score curve.
 - **Abbreviation-period truncation residual (part of step 6).** The remaining 6 familiar-100 `wrong_value` cases come from truncation at an abbreviation period (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser — a small, well-scoped fix distinct from the comma-in-name segmentation already landed.
-- **Solver budget / early-convergence (step 5).** Median solve is at the budget wall with ~38% timeouts; add an early-convergence stop distinct from the evaluation-only `TPC_SOLVE_STOP_AT_ACCEPT`, and/or quantify the restart-count vs. score curve.
+- **Stage 3 refine (step 7).** Only after the above: a bounded, acceptance-gated refinement of an already-valid plan (`orchestrator.llm_refine_stub` is currently an intentional no-op).
 
-If unsure which to take, default to the commonsense-transport residual — it is the second solver surface after the timed-visit family and the highest-leverage unimplemented item.
+If unsure which to take, default to the solver budget / early-convergence study — it is next in roadmap priority order and the current-largest unaddressed shortcoming (`38%` of queries time out and rely on recovery).
 
 ## Invariants your change must hold
 
