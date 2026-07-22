@@ -39,7 +39,7 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 
 1. **Solver-only ceiling dominated by one family.** `26/100` solver-only pass with perfect constraints; `timed_visit_named_poi` is the *sole* logical blocker in `53` of the `74` failures. The landed pinning + resequencer (opt-in, ungated) target exactly this but have not been measured through the gate. This is the single highest-leverage gap. See [Solver-only headroom](#solver-only-headroom).
 2. **Budget-bound solver with no early convergence — early-convergence stop landed opt-in, pending gate.** Solve `p50` sits at the budget wall; `38%` of queries time out and survive only through timeout recovery. The seeded-restart loop had no "good enough, stop" signal short of the wall, so extra budget bought little and the recovery plan carried a large share of outputs. `TPC_SOLVE_CONVERGE_PATIENCE` (opt-in, default `0`/off) now stops the random-restart loop once the best accepted plan's preference key has stalled for that many consecutive restarts, distinct from the evaluation-only `TPC_SOLVE_STOP_AT_ACCEPT` (which stops at the *first* accept regardless of score); see [Solver budget and early convergence](#solver-budget-and-early-convergence). Not yet measured through the pinned end-to-end gate, and the restart-count-vs-score curve quantification (which would inform a default patience value) remains open.
-3. **Stage 3 "improve" is a no-op.** `orchestrator.llm_refine_stub` returns the plan unchanged and never calls the LLM (`improve` stage `p50 ≈ 1 µs`). The reserved improve slice is either wasted or, with `dynamic_budget`, reallocated to solve. There is no bounded, acceptance-gated refinement of an already-valid plan — a designed extension point that is still empty.
+3. **Stage 3 "improve" is a no-op — the active implementation target.** `orchestrator.llm_refine_stub` returns the plan unchanged and never calls the LLM (`improve` stage `p50 ≈ 1 µs`). The reserved improve slice is either wasted or, with `dynamic_budget`, reallocated to solve. There is no bounded, acceptance-gated refinement — a designed extension point that is still empty, and now the only "Next steps" item that is a new implementation rather than a gate (Next step 7). See [Stage 3 LLM refine](#stage-3-llm-refine).
 4. **Commonsense residual — transport-repair pass landed opt-in, pending gate.** Even at solver-only, `~24/100` fail commonsense, dominated by "Invalid Transport information across positions" (`18`) and intercity-event grounding (`6`). These are produced-but-invalid plans, so the feasible fallback does not help them. Root-caused (PR [#29](https://github.com/stefanbschneider/china-travel-agent/pull/29)) to two `_build_plan`/`_get_transport` bugs: several call sites fall back to an empty `transports` leg while still moving position when a leg lookup fails, and `_get_transport` aborts its whole mode fallback chain on the first candidate mode's exception instead of trying the rest. `_repair_transport_gaps` (opt-in behind `TPC_REPAIR_TRANSPORT_GAPS`, default off) grounds every broken leg in one batched, acceptance-gated trial; see [Commonsense-transport repair](#commonsense-transport-repair) for the mechanism and known limits. Not yet measured through the pinned end-to-end gate.
 5. **Parser value-segmentation residual — largely closed, pending gate.** The comma-/`" and "`-in-name `wrong_value` residual was fixed on `main` (`62df2a0b`) via maximum-munch catalog segmentation plus a restaurant/hotel matching-pool broadening, taking familiar-100 F1 `0.9316 -> 0.9908` (wrong_value `47 -> 6`). It is diagnostic evidence only — not yet through the end-to-end gate. The distinct abbreviation-period truncation bug (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser's `_list_after_marker` is now fixed unconditionally on `main` (F1 `0.9908 -> 0.9949`, wrong_value `6 -> 3`; see [Completed parser work](#completed-parser-work)); a `3`-case `excluded_hotels` residual remains from a separate, already-known limit — a comma-heavy full-address value spans more raw tokens than the entity-resolution merge's bounded `_ENTITY_SEGMENT_MAX_SPAN` (`4`), so it stays fragmented rather than re-merging into one catalog name.
 6. **LLM-parse decision is not yet cleanly gated end-to-end.** Parser-level evidence says audit mode is neutral-to-negative, yet the harness auto-enables it whenever a backend is configured, and the two end-to-end points that bracket it are at different shas (`nollm` at `7d5e1910`, `llmon` at `1de62e99`) so they conflate parser code with the flag. A paired on/off gate at one sha is now runnable and should settle the auto-enable.
@@ -63,7 +63,7 @@ Execution is split across [parallel agent roles](../CLAUDE.md#parallel-agent-rol
 4. **Gate the commonsense-transport repair pass.** `TPC_REPAIR_TRANSPORT_GAPS` landed opt-in (PR [#29](https://github.com/stefanbschneider/china-travel-agent/pull/29); see [Commonsense-transport repair](#commonsense-transport-repair)), targeting "Invalid Transport information across positions" (`18` solver-only) via a batched, acceptance-gated leg-recomputation pass. Record a clean flags-off baseline, then run the flag on through `make phase2-gate` against a matched baseline; promote only if the commonsense FPR component improves with no new parse failures or timeouts. A residual is already known and out of this pass's bounded scope: legs that need a real cascading time shift (not just a leg fix) to fit — a future resequencing move, not a gate blocker.
 5. **Gate the solver early-convergence stop.** `TPC_SOLVE_CONVERGE_PATIENCE` landed opt-in (default `0`/off; see [Solver budget and early convergence](#solver-budget-and-early-convergence)), stopping the random-restart loop once the accepted plan's preference key stalls for `N` consecutive restarts instead of running to `max_restarts`/the wall-clock budget. Record a clean flags-off baseline, then run a small sweep of patience values through `make phase2-gate` against a matched baseline; promote a value only if wall-clock/timeout rate improves with no drop in solver-only FPR or `continuous_score`. The restart-count-vs-score curve quantification (to pick a sensible default patience) remains open and is a good companion diagnostic, not a gate blocker.
 6. **Gate the landed entity-resolution segmentation fix** (`62df2a0b`, comma-in-name residual) and the abbreviation-period truncation fix (unconditional, on `main`; F1 `0.9908 -> 0.9949`, wrong_value `6 -> 3`; see [Completed parser work](#completed-parser-work)) together in one pinned end-to-end row. A `3`-case `excluded_hotels` residual remains out of scope for both fixes — a comma-heavy full-address value exceeds the entity-resolution merge's bounded token span (`_ENTITY_SEGMENT_MAX_SPAN = 4`); widening that span is a separate, not-yet-scoped change (raising it risks over-merging unrelated multi-entity lists elsewhere, so needs its own measurement, not a drive-by bump here).
-7. **Consider implementing Stage 3 refine.** Only after the above: a bounded, acceptance-gated refinement of an already-valid plan, keeping the change only if acceptance still passes. Today it is an intentional no-op placeholder. **Next implementation target** (highest-priority open item not awaiting a gate) — see [Agent prompts](agents/README.md).
+7. **Implement Stage 3 refine — the active implementation target.** This is now the **only** "Next steps" item that is a new implementation rather than a gate (steps 1–6 are all landed-and-awaiting-role-2 or landed on `main`), so it is the current top implementation item. A bounded, acceptance-gated LLM refinement pass over the solver's chosen plan: the LLM proposes a small set of typed edits, every edited POI/window/price/leg is re-grounded from `WorldEnv`, and the result is committed only if the deterministic checker accepts and the preference key does not regress. Today `orchestrator.llm_refine_stub` is an intentional no-op that never calls the LLM. See [Stage 3 LLM refine](#stage-3-llm-refine) for the design and the dedicated implementation brief [`agents/stage3_llm_refine.md`](agents/stage3_llm_refine.md).
 8. **Package and smoke-test the official harness interface**, including oracle hiding, output layout, and tool access (`agent_env/scripts/solve_phase2.py`, `solve_script_with_harness.py`; entry-point smoke tests exist).
 
 The public material still does not specify a runtime contract. Until it does, `300 s` and `900 s` are local assumptions for sensitivity analysis, not organizer-confirmed limits.
@@ -177,6 +177,65 @@ Verified by unit tests (`tests/phase2/test_solve_converge_patience.py`, 4 cases:
 
 - **No default patience value yet.** The roadmap's restart-count-vs-score curve quantification (informing a sensible default `N`) is still open; this lands the mechanism, not a chosen default.
 - **No promotion without the gate.** Record a clean flags-off baseline, then sweep a few patience values through `make phase2-gate` against a matched baseline; promote only if wall-clock/timeout rate improves with no drop in solver-only FPR or `continuous_score`. Restart-search timing is not run-to-run reproducible (wall-clock-bounded restarts pick different random params each run), so a clean paired before/after comparison needs the pinned gate, not an ad hoc rerun.
+
+## Stage 3 LLM refine
+
+Design for roadmap shortcoming 3 / Next step 7 — the active implementation target and the only remaining "Next steps"
+item that is a new implementation rather than a gate. Not yet implemented; this section is the plan. The dedicated
+implementation brief is [`agents/stage3_llm_refine.md`](agents/stage3_llm_refine.md).
+
+### The problem
+
+`orchestrator.llm_refine_stub` (`chinatravel/agent/phase2/orchestrator.py`) returns the plan unchanged and never calls
+the LLM, so the `improve` stage is a no-op (`improve` `p50 ≈ 1 µs`). The stage is otherwise fully wired — a
+`func_timeout`-bounded slice (`b.improve_sec`), revert-to-last-valid on timeout/exception/invalid-shape, telemetry, and a
+`dynamic_budget` reserve (`dynamic_solve_sec(..., improve_reserved=flags.llm_refine)`) — so the reserved slice is simply
+wasted (or, with `dynamic_budget`, handed to solve). There is no bounded, acceptance-gated refinement of the solver's
+plan: a designed extension point that is still empty.
+
+### Why it is well-placed
+
+The orchestrator's Stage 4 gate is **shape-only**: `_valid_plan_shape` checks that `itinerary` is a list, not that the
+plan passes the semantic checker. A produced-but-invalid plan is therefore emitted verbatim (it is not replaced by the
+constraint-light fallback, which only fires when the candidate is not even plan-shaped). Solver-only FPR (`~26/100`) is
+the binding ceiling, and those failures are produced-but-invalid plans — so **Stage 3 is the only stage left that can
+flip such a plan to accepted end-to-end.** It complements the landed deterministic repair passes
+(`_pin_timed_windows`, `_repair_transport_gaps`) by covering exactly the cases they decline — e.g. a leg or window that
+needs a real cascading time shift / resequencing rather than a local leg fix.
+
+### Planned mechanism (v1: repair, not polish)
+
+Gated behind the existing `TPC_P2_LLM_REFINE` / `Flags.llm_refine` (default **off**, floor byte-identical, zero LLM calls
+on the deterministic path):
+
+- **Repair-only in v1.** If the input plan already passes acceptance, no-op and return it — the solver's restart loop
+  already spends its whole budget polishing DAV/ATT/DDR (shortcoming 2), so preference-lift on an already-valid plan is
+  low-value/high-risk and is deferred to a documented stretch behind its own sub-flag.
+- **LLM proposes, deterministic path disposes.** Build a repair prompt from the visible query fields only (mirroring
+  `build_llm_parse_prompt`'s allowlist), the current plan, and the no-oracle checker's failure summary; ask for strict
+  JSON with a small, bounded list of typed edits (reorder/shift/swap/drop) — no free-form rewrites. Every edited
+  POI/window/price/leg is re-grounded from `WorldEnv`; a reference the environment cannot ground is dropped, never
+  fabricated.
+- **Acceptance-gated, deepcopy-trialed.** Apply edits to a deepcopy and commit only if the full deterministic checker
+  accepts and `_accepted_eval_key` does not regress vs. the input — the same commit rule as `_pin_timed_windows` /
+  `_resequence_day`. On LLM error, timeout, invalid JSON, or no accepted improvement, return the input plan unchanged.
+- **Wiring.** Keep Stage 3 in the orchestrator (its separate `improve_sec` slice and revert-to-last-valid safety are
+  deliberate); expose a `ground_and_check` hook off the TPCAgent-backed `solve_fn` the way `make_tpcagent_solve_fn`
+  already exposes `get_timeout_recovery_plan`, so the refine can ground + check + read failures without moving into
+  `TPCAgent.run()` (which would spend the solve budget). When the hook is absent (unit tests inject a bare `solve_fn`),
+  refine no-ops.
+
+### Known limits / what the gate must check
+
+- **No oracle, no fabrication.** The checker used is the no-oracle one (`_make_checker`, `use_oracle=False`), which scores
+  against parsed `constraints`, not `hard_logic_py`; the prompt must carry no oracle field. The gate must confirm the
+  floor stays byte-identical with the flag off.
+- **Repair is strictly non-regressing by construction** (commit only on accept + no eval-key regression), so the risk is
+  wasted budget, not a worse plan. The gate should measure whether it flips any produced-but-invalid plan to accepted
+  end-to-end (FPR / `continuous_score`) with no new parse failures or timeouts, and watch the `improve` slice's wall-clock
+  cost (one bounded LLM call must fit the `~30 s` improve slice at a `300 s` budget).
+- **No promotion without the gate.** Role 2 runs a paired `TPC_P2_LLM_REFINE` on/off gate at one SHA (backend reachable
+  for the on run); role 1 records the outcome. As with every landed feature, an ad hoc rerun does not promote it.
 
 ## Completed parser work
 

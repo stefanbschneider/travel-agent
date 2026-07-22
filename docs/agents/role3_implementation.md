@@ -14,15 +14,18 @@ Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap
 
 Take the highest-priority **implementation** item from the roadmap's "Next steps" that is not merely a gate (gates belong to role 2). Confirm against the live roadmap first.
 
-**Done, pending gate:** the commonsense-transport residual (former roadmap step 4) landed opt-in behind `TPC_REPAIR_TRANSPORT_GAPS` in PR [#29](https://github.com/stefanbschneider/china-travel-agent/pull/29) — see [Commonsense-transport repair](../tpc_phase2_roadmap.md#commonsense-transport-repair) for the mechanism, tests, and known limits. Do not reimplement it; it is now a role-2 gate item (roadmap Next step 4). A residual is already known and explicitly out of that pass's bounded scope: legs that need a real cascading time shift (not just a leg fix) to fit — a future resequencing move, not a re-run of the same fix.
+**Current top target: Stage 3 LLM refine (roadmap Next step 7).** It is now the **only** "Next steps" item that is a new implementation rather than a gate — every other landed feature is waiting on role 2. A dedicated, self-contained brief is [`stage3_llm_refine.md`](stage3_llm_refine.md); use it. `orchestrator.llm_refine_stub` is currently an intentional no-op that never calls the LLM, and the orchestrator's Stage 4 gate is shape-only, so a produced-but-invalid plan is emitted verbatim — Stage 3 is the only place left that can flip it to accepted end-to-end.
 
-As written, the strongest remaining new-implementation targets are:
+**Already landed opt-in, now role-2 gate items (do not reimplement):**
 
-- **Solver budget / early-convergence (step 5, recommended default).** Median solve is at the budget wall with ~38% timeouts; add an early-convergence stop distinct from the evaluation-only `TPC_SOLVE_STOP_AT_ACCEPT`, and/or quantify the restart-count vs. score curve.
-- **Abbreviation-period truncation residual (part of step 6).** The remaining 6 familiar-100 `wrong_value` cases come from truncation at an abbreviation period (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser — a small, well-scoped fix distinct from the comma-in-name segmentation already landed.
-- **Stage 3 refine (step 7).** Only after the above: a bounded, acceptance-gated refinement of an already-valid plan (`orchestrator.llm_refine_stub` is currently an intentional no-op).
+- **Commonsense-transport repair** (former step 4) — `TPC_REPAIR_TRANSPORT_GAPS`, PR [#29](https://github.com/stefanbschneider/china-travel-agent/pull/29); see [Commonsense-transport repair](../tpc_phase2_roadmap.md#commonsense-transport-repair).
+- **Timed-window pinning + resequencer** (step 1) — `TPC_PIN_TIMED_WINDOWS`; see [Solver-only headroom](../tpc_phase2_roadmap.md#solver-only-headroom).
+- **Solver early-convergence stop** (step 5) — `TPC_SOLVE_CONVERGE_PATIENCE`; see [Solver budget and early convergence](../tpc_phase2_roadmap.md#solver-budget-and-early-convergence). The restart-count-vs-score curve quantification (to pick a default patience) is still open as a companion diagnostic.
+- **Abbreviation-period truncation fix** (part of step 6) — landed unconditionally on `main` (F1 `0.9908 -> 0.9949`); see [Completed parser work](../tpc_phase2_roadmap.md#completed-parser-work).
 
-If unsure which to take, default to the solver budget / early-convergence study — it is next in roadmap priority order and the current-largest unaddressed shortcoming (`38%` of queries time out and rely on recovery).
+For these, the mechanism is implemented and tested; do not re-run the same fix. A known residual is explicitly out of the transport pass's bounded scope: legs that need a real cascading time shift (not just a leg fix) to fit — that is precisely the kind of case Stage 3 refine can target through an LLM-proposed, deterministically-grounded, acceptance-gated reorder.
+
+If unsure which to take, default to **Stage 3 refine** via [`stage3_llm_refine.md`](stage3_llm_refine.md) — it is next in roadmap priority order and the sole remaining new-implementation item.
 
 ## Invariants your change must hold
 
