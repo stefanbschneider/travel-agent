@@ -52,8 +52,8 @@ bounded deterministic passes refuse. The LLM proposes the reorder; the determini
 - **Flags off is the floor.** Ships behind `TPC_P2_LLM_REFINE` (the existing `Flags.llm_refine`), default **off**, so the
   library-default deterministic path stays **byte-identical** and makes **zero** LLM calls. Assert both with unit tests
   (a spy client records `calls == []`; output equals the no-refine output).
-- **Acceptance-gated, deepcopy-trialed.** Apply every LLM-proposed edit to a **deepcopy**, then keep the result only if
-  the full deterministic checker accepts (`_accepted(*check(plan))`) **and** the preference key does not regress
+- **Acceptance-gated, deepcopy-trialed.** Apply every LLM-proposed edit to a **deepcopy** (`trial`), then keep the result
+  only if the full deterministic checker accepts (`_accepted(*check(trial))`) **and** the preference key does not regress
   (`_accepted_eval_key(trial) >= _accepted_eval_key(input)`). Never trade a valid or higher-scored plan for a worse one.
   Follow the exact pattern in `_pin_timed_windows` / `_resequence_day` (`chinatravel/agent/tpc_agent/tpc_agent.py`), which
   trial on a deepcopy and commit on `self._accepted(*check(trial)) and self._accepted_eval_key(trial) >= before_key`.
