@@ -86,6 +86,14 @@ Compare rows only when they match on:
 A row must expose enough telemetry to explain its score: valid-output rate, parse failures, timeout and recovery counts, fallback use, stage timings, LLM attempts/failures, and the three attribution axes.
 Low-`n` rows are smoke checks, not promotion evidence.
 
+## Quick screen before the slow gate
+
+The pinned end-to-end gate below is authoritative but slow (hours). To decide *within 1–2h on a
+short-lived box* whether an off-by-default flag is even worth that gate, run the paired reduced-budget
+A/B **screen** in [Phase 2 quick eval](tpc_phase2_quick_eval.md) (`make phase2-quick-eval
+P2_FLAG=<env var>`). A screen ranks and triages candidates; it never promotes one. Only a committed
+ledger row through the gate below promotes a default.
+
 ## Gates
 
 Run the regression gate on like-for-like ledger rows:
