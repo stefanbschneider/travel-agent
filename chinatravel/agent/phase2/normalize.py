@@ -888,11 +888,12 @@ def _merge_fragmented_list_entries(
     """Re-merge adjacent raw list *items* that name one catalog entry between them.
 
     ``_segment_entity_list`` fixes a single string with an internal ','/'and' that names multiple
-    entries; this fixes the opposite/upstream case, where the base regex parser (``parse_constraints
-    .py``) already split a `"...Cultural and Creative Park..."`-style name into two separate list
-    entries *before* entity resolution ever sees a combined string (e.g. ``required_attractions ==
-    ["...", "Honey Lake 1979 Cultural", "Creative Park", "..."]``). Scans left to right and, at
-    each position, prefers the longest run of adjacent items (up to ``_ENTITY_SEGMENT_MAX_SPAN``)
+    entries; this fixes the opposite/upstream case, where the base regex parser
+    (``parse_constraints.py``) already split a `"...Cultural and Creative Park..."`-style name into
+    two separate list entries *before* entity resolution ever sees a combined string (e.g.
+    ``required_attractions == ["...", "Honey Lake 1979 Cultural", "Creative Park", "..."]``).
+    Scans left to right and, at each position, prefers the longest run of adjacent items (up to
+    ``_ENTITY_SEGMENT_MAX_SPAN``)
     that resolves once rejoined with a plausible original separator -- a merge only commits when
     the combined text actually matches the catalog, so two genuinely distinct consecutive entries
     are never falsely joined.
