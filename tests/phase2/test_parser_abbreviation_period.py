@@ -3,9 +3,10 @@
 The base regex parser's ``_list_after_marker`` (``parse_constraints.py``, shared by
 ``_do_not_include_items``/``_the_following_items`` across required/excluded attractions, attraction
 types, hotels, restaurants, and cuisine types) captured a name-list chunk with
-``(.+?)(?:\\.|;|$)``. Because ``.`` is a literal match target too, the *first* period anywhere in
-the chunk terminated the capture -- including a period embedded in an entity name, not just a
-real sentence boundary. Two real familiar-100 examples exposed this as a `wrong_value` residual
+``(.+?)(?:\\.|;|$)``. The terminator alternative ``\\.`` matches a literal period unconditionally,
+with no way to distinguish a real sentence-ending period from one embedded inside an entity name --
+so the *first* literal period anywhere in the chunk terminated the capture, not just a real
+sentence boundary. Two real familiar-100 examples exposed this as a `wrong_value` residual
 (``excluded_hotels``/``excluded_restaurants``, 3 cases each): "St. Regis" (an abbreviation) and
 "No. 3955 Baishi Road ..." (an abbreviation directly followed by a number). Before the fix, the
 captured chunk was truncated at (or even before) the abbreviation, silently dropping the rest of
