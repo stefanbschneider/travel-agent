@@ -821,6 +821,21 @@ def _segment_entity_list(text: str, catalog_names: list[str]) -> list[str] | Non
     pieces = _ENTITY_SPLIT_TOKEN_RE.split(text)
     tokens = [t.strip() for t in pieces[0::2]]
     seps = [s.strip() for s in pieces[1::2]]
+
+    # An Oxford comma ("A, B, and C") has two adjacent delimiters (',' then 'and') with nothing
+    # between them, which re.split turns into an empty token in the *middle* of the list -- collapse
+    # each such pair into a single logical separator (preferring the semantic 'and'/'or' over the
+    # now-redundant comma) instead of leaving a token that can never resolve.
+    i = 1
+    while i < len(tokens) - 1:
+        if tokens[i] == "":
+            merged_sep = seps[i] if seps[i].lower() in ("and", "or") else seps[i - 1]
+            seps[i - 1] = merged_sep
+            del tokens[i]
+            del seps[i]
+            continue
+        i += 1
+
     while tokens and not tokens[0]:
         tokens.pop(0)
         if seps:
@@ -869,7 +884,7 @@ _ENTITY_MERGE_SEPARATORS = (" and ", ", ", " or ")
 
 def _merge_fragmented_list_entries(
     values: list, catalog: dict[str, list[str]], category: str,
-) -> tuple[list[str], list]:
+) -> list:
     """Re-merge adjacent raw list *items* that name one catalog entry between them.
 
     ``_segment_entity_list`` fixes a single string with an internal ','/'and' that names multiple
@@ -882,10 +897,11 @@ def _merge_fragmented_list_entries(
     the combined text actually matches the catalog, so two genuinely distinct consecutive entries
     are never falsely joined.
 
-    Returns ``(resolved_names, remaining_items)``: ``remaining_items`` keeps any entry that wasn't
-    part of a committed merge (including non-string items) for the normal per-item pipeline, which
-    still runs every single-span case (a name with no fragmentation, or one this pass didn't
-    resolve) exactly as before.
+    Returns a new list, the same length or shorter, preserving relative order: a run of raw items
+    that jointly resolves to one catalog entry is replaced *in place* by that single resolved name;
+    everything else (including non-string items, and any span this pass didn't resolve) passes
+    through unchanged for the normal per-item pipeline, which still runs on every such entry exactly
+    as before -- a merged name is fed back through it too and trivially confirms via an exact match.
     """
     pool = _effective_catalog_names(catalog, category)
     # Every candidate here spans >1 raw items, so require an *exact* (normalized) catalog match --
@@ -897,12 +913,11 @@ def _merge_fragmented_list_entries(
         norm_to_orig.setdefault(_norm_entity_key(name), name)
 
     n = len(values)
-    resolved: list[str] = []
-    remaining: list = []
+    out: list = []
     i = 0
     while i < n:
         if not isinstance(values[i], str):
-            remaining.append(values[i])
+            out.append(values[i])
             i += 1
             continue
         found = None
@@ -919,13 +934,13 @@ def _merge_fragmented_list_entries(
             if found:
                 break
         if found is None:
-            remaining.append(values[i])
+            out.append(values[i])
             i += 1
         else:
             match, span = found
-            resolved.append(match)
+            out.append(match)
             i += span
-    return _dedupe_preserve_order(resolved), remaining
+    return out
 
 
 def _match_type_vocab(text: str, slug: str | None) -> str | None:
@@ -1036,9 +1051,7 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
         new_names: list[str] = []
         type_additions: list[str] = []
         position_additions: list[str] = []
-        merged_names, remaining = _merge_fragmented_list_entries(values, catalog, category)
-        new_names.extend(merged_names)
-        for raw in remaining:
+        for raw in _merge_fragmented_list_entries(values, catalog, category):
             if not isinstance(raw, str):
                 new_names.append(raw)
                 continue

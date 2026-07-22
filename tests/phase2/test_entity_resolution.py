@@ -195,6 +195,39 @@ def test_list_level_merge_does_not_overreach_into_the_next_real_entry():
     }
 
 
+def test_oxford_comma_list_with_compound_name_segmented_within_one_string():
+    # "A, B, and C" splits into an empty token between the ',' and 'and' delimiters (adjacent
+    # delimiters, nothing between them) -- _segment_entity_list's explicit collapse pass handles
+    # this deterministically rather than relying on the empty token happening to normalize away
+    # when absorbed into a neighbouring span's exact-match candidate.
+    variant = {"required_attractions": [
+        "Wutong Mountain Art Town, Honey Lake 1979 Cultural and Creative Park, and Dameisha Seaside Park",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert set(out["required_attractions"]) == {
+        "Wutong Mountain Art Town",
+        "Honey Lake 1979 Cultural and Creative Park",
+        "Dameisha Seaside Park",
+    }
+
+
+def test_list_level_merge_preserves_relative_order():
+    # Regression: a merge in the *middle* of the list must not reorder the surrounding entries --
+    # the merged name belongs at the position the merge occurred, not appended ahead of everything
+    # else in the list.
+    variant = {"required_attractions": [
+        "Wutong Mountain Art Town", "Honey Lake 1979 Cultural", "Creative Park", "Dameisha Seaside Park",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert out["required_attractions"] == [
+        "Wutong Mountain Art Town",
+        "Honey Lake 1979 Cultural and Creative Park",
+        "Dameisha Seaside Park",
+    ]
+
+
 def test_required_restaurants_resolves_against_hotel_catalog_for_breakfast():
     # The oracle's own symbolic extraction (hard_constraint.py) adds *every* breakfast/lunch/
     # dinner activity's position to the same restaurant-name set a required_restaurants clause
