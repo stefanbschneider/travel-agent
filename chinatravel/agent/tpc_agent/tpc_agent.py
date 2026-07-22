@@ -81,6 +81,12 @@ class TPCAgent(BaseAgent):
         self.max_restarts = int(os.environ.get("TPC_MAX_RESTARTS", "400"))
         # Wall-clock budget (seconds) the per-query search self-limits to.
         self.solve_budget_sec = float(os.environ.get("TPC_SOLVE_BUDGET_SEC", "120"))
+        # Consecutive non-improving random restarts (after an accepted plan already exists) after
+        # which the multi-start loop stops early instead of spending the rest of the budget/restart
+        # cap on a plateaued search. 0 (default) disables this -- restarts always run to
+        # max_restarts/budget, the pre-existing behavior. Distinct from TPC_SOLVE_STOP_AT_ACCEPT,
+        # which stops at the *first* accept regardless of preference score.
+        self.solve_converge_patience = int(os.environ.get("TPC_SOLVE_CONVERGE_PATIENCE", "0"))
         # Salt mixed into the per-query RNG seed so distinct search rounds explore different params.
         self.seed_salt = os.environ.get("TPC_SEED_SALT", "0")
         self._transport_constraints = {}
@@ -587,6 +593,14 @@ class TPCAgent(BaseAgent):
         it returns as soon as any accepted plan is found instead of spending the remaining budget
         polishing preference score, producing a cheaper but preference-uncalibrated FPR signal.
         When off, this method's behavior is unchanged.
+
+        ``TPC_SOLVE_CONVERGE_PATIENCE`` (``self.solve_converge_patience``) is a separate, opt-in
+        early-convergence stop for the random-restart loop: once an accepted plan exists, if this
+        many consecutive restarts fail to improve the best accepted preference key, the loop
+        breaks early instead of exhausting ``max_restarts``/the wall-clock budget on a plateaued
+        search. Default 0 disables it, so the restart loop's behavior is unchanged (byte-identical
+        floor). Unlike ``TPC_SOLVE_STOP_AT_ACCEPT``, this does not stop at the first accept -- it
+        keeps polishing preference score until it stalls.
         """
         self.reset_timeout_recovery_plan()
         stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")
@@ -686,13 +700,25 @@ class TPCAgent(BaseAgent):
                     except Exception:
                         continue
 
+                # Per-variant early-convergence tracking (roadmap step 5). Reset per variant since
+                # a new constraint variant starts a fresh scoring landscape.
+                stall_restarts = 0
                 while restarts < self.max_restarts and not out_of_budget():
                     restarts += 1
                     params = self._random_params(rng, constraints)
+                    prev_accepted_key = best_accepted["key"]
                     try:
                         consider(self._build_plan(query, constraints=constraints, params=params), constraints, check, params)
                     except Exception:
                         continue
+                    converge_patience = getattr(self, "solve_converge_patience", 0)
+                    if converge_patience > 0 and best_accepted["plan"] is not None:
+                        if best_accepted["key"] > prev_accepted_key:
+                            stall_restarts = 0
+                        else:
+                            stall_restarts += 1
+                            if stall_restarts >= converge_patience:
+                                break
         except _AcceptedEarlyStop:
             pass
 
