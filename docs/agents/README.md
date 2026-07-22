@@ -8,9 +8,19 @@ Phase 2 development runs as three concurrent roles (see the [Parallel agent role
 | 2. Evaluation (long e2e) | [`role2_evaluation.md`](role2_evaluation.md) | Sonnet 5 |
 | 3. Implementation | [`role3_implementation.md`](role3_implementation.md) | Sonnet 5 |
 
+### Focused task prompts (role 3)
+
+When one implementation item is large or precise enough to warrant its own self-contained brief, it gets a focused prompt
+alongside the generic role-3 one. These are still role-3 work (code + tests under `chinatravel/`, `agent_env/`, `tests/`,
+`scripts/`) and obey the same invariants; they just pre-select the item and spell out the mechanism.
+
+| Task | Prompt | Status |
+| --- | --- | --- |
+| Stage 3 LLM refine (roadmap Next step 7) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | Current top implementation target — the only "Next steps" item that is a new implementation rather than a gate. |
+
 ## How to use these
 
-Hand the role-2 and role-3 prompt files to two separate Sonnet 5 agents launched in parallel. Each prompt is self-contained: it names the branch to develop on, the exact commands to run, the invariants to obey, and ends by opening a PR. They take direction from the [roadmap](../tpc_phase2_roadmap.md)'s "Next steps" — role 1 owns that priority order, so re-read it at the start of every run in case `main` has moved.
+Hand the role-2 and role-3 prompt files to two separate Sonnet 5 agents launched in parallel. Each prompt is self-contained: it names the branch to develop on, the exact commands to run, the invariants to obey, and ends by opening a PR. They take direction from the [roadmap](../tpc_phase2_roadmap.md)'s "Next steps" — role 1 owns that priority order, so re-read it at the start of every run in case `main` has moved. A focused task prompt (above) overrides role 3's "pick the next item" step for that one item; when it lands, delete or supersede it and fall back to the generic role-3 prompt.
 
 The division of labor is strict:
 
