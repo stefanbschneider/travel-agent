@@ -54,6 +54,7 @@ Familiar-100, local released data, HF data, and final held-out evaluation remain
 3. Run the relevant test or smoke path before committing.
 4. Pull/rebase the shared branch before committing and again before pushing; resolve unexpected changes as user work, never overwrite them.
 5. Commit the completed unit of work locally, then push the reviewed branch. Do not create a competing ledger branch.
+6. When asked to open a PR, after opening it wait for GitHub Copilot review comments (poll up to 10 minutes), then address or resolve each one before proceeding.
 
 Use Python 3.12 through `.venv/bin/python`.
 Do not read, edit, stage, or overwrite `.env`; it is local user configuration.
