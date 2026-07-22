@@ -1,0 +1,27 @@
+# Lean dependency set for running `pytest` in CI.
+#
+# Deliberately excludes the local-model backend stack (torch, vllm,
+# flashinfer-python, transformers, accelerate, modelscope) from
+# requirements.txt: Phase 2's deterministic path never imports them
+# (see tests/phase2/test_llms_lazy_import.py), and installing that GPU
+# stack in CI would be slow and unnecessary just to run unit tests.
+geopy==2.4.1
+numpy==1.26.4
+pandas==2.2.3
+jsonschema==4.23.0
+tqdm==4.66.6
+openai==1.53.0
+json_repair==0.30.0
+scikit-learn==1.5.2
+psutil==7.2.2
+packaging==24.2
+fuzzywuzzy==0.18.0
+func_timeout==4.3.5
+matplotlib==3.9.4
+seaborn==0.13.2
+datasets==3.3.2
+httpx==0.27.2
+z3-solver==4.14.1.0
+ortools==9.9.3963
+tiktoken==0.9.0
+pytest==9.1.1
