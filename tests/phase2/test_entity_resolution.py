@@ -261,10 +261,13 @@ def test_required_restaurants_list_level_merge_rejoins_hotel_name_split_by_comma
     assert "position_presence" not in out
 
 
-def test_required_attractions_still_reroutes_hotel_name_to_position_presence():
-    # Unlike restaurants, an attraction activity's position can never come from the hotel
-    # catalog, so the pre-existing category-misrouting reroute must be unaffected by the
-    # restaurant/hotel pooling above.
+def test_required_attractions_still_reroutes_unrelated_category_match_to_position_presence():
+    # "Chiang Rai Bay (Vientiane Qianhai Branch)" is a restaurant-catalog entry (see
+    # test_category_misrouted_hotel_rerouted_to_position_presence below, same POI via
+    # required_hotels). An attraction activity's position can never come from the restaurant
+    # (or hotel) catalog, so the pre-existing category-misrouting reroute for required_attractions
+    # must be unaffected by the restaurant/hotel pooling above, which only broadens the
+    # restaurant family's own pool.
     variant = {"required_attractions": ["Chiang Rai Bay (Vientiane Qianhai Branch)"]}
     catalog = normalize.load_city_entity_catalog("Shenzhen")
     out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
