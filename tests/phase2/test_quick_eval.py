@@ -3,7 +3,7 @@
 Only the pure ``decide_verdict`` reconciliation is unit-tested here -- it is the piece that turns
 paired metric deltas + the monotonic gate into a go/no-go, and it must stay honest about the
 timeout caveat. Running an actual solve is an integration concern (covered by the worked example in
-docs/tpc_phase2_quick_eval.md), not a unit test.
+docs/tpc_phase2_eval.md, "Quick A/B screen"), not a unit test.
 """
 
 from __future__ import annotations

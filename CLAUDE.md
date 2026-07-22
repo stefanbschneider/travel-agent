@@ -33,8 +33,7 @@ Shared rules for every role: obey the [non-negotiable invariants](#non-negotiabl
 | Shared solver architecture | [AGENT_DESIGN.md](AGENT_DESIGN.md) and [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md) |
 | Phase 1 operation | [Phase 1 playbook](docs/tpc_phase1_playbook.md) |
 | Phase 2 architecture | [Phase 2 design](docs/tpc_phase2_design.md) |
-| Phase 2 metrics, gates, and dataset boundaries | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
-| Phase 2 fast A/B screen for ungated flags (pre-gate triage) | [Phase 2 quick eval](docs/tpc_phase2_quick_eval.md) |
+| Phase 2 metrics, gates, dataset boundaries, and the fast pre-gate A/B screen + cadence | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
 | Phase 2 priorities and solver headroom | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Parallel-agent prompts (roles 2 and 3) | [Agent prompts](docs/agents/README.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |

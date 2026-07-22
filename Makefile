@@ -107,7 +107,7 @@ phase2-help:
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_quick_eval.md)' \
+	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
 	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
@@ -173,7 +173,7 @@ phase2-timing:
 phase2-gate:
 	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)
 
-# Quick A/B screen for an off-by-default flag (docs/tpc_phase2_quick_eval.md). Reduced-budget paired
+# Quick A/B screen for an off-by-default flag (docs/tpc_phase2_eval.md, "Quick A/B screen"). Reduced-budget paired
 # baseline-vs-candidate SCREEN, not a promotion gate -- decides in ~1-2h whether a change is worth a
 # pinned end-to-end gate. Requires P2_FLAG=<env var>; override P2_ON/P2_OFF/P2_N/P2_BUDGET/P2_PARALLEL
 # and P2_QE_MODE (solver-only|end-to-end) as needed.

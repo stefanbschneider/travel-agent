@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Phase 2 quick A/B screen for an off-by-default flag (docs/tpc_phase2_quick_eval.md).
+"""Phase 2 quick A/B screen for an off-by-default flag.
+
+Methodology, cadence, and worked example: docs/tpc_phase2_eval.md ("Quick A/B screen (pre-gate
+triage)").
 
 Purpose: decide *within an hour or two, on a short-lived box* whether a landed-but-ungated
 Phase 2 improvement helps enough to flip its default on -- without waiting for the 8h+ pinned
@@ -169,7 +172,7 @@ def decide_verdict(baseline: dict, candidate: dict, gate: dict, flag: str) -> st
     """Reconcile the target-signal delta with the strict monotonic gate into one screen verdict.
 
     Pure function of the two metric dicts, the gate result, and the flag name, so it is unit-tested
-    without running a solve. The categories are documented in docs/tpc_phase2_quick_eval.md
+    without running a solve. The categories are documented in docs/tpc_phase2_eval.md
     (GREEN LIGHT / GREEN LIGHT with caveat / MIXED / RED / NEUTRAL).
     """
     d_fpr = candidate["fpr"] - baseline["fpr"]

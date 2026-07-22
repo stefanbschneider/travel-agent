@@ -86,13 +86,188 @@ Compare rows only when they match on:
 A row must expose enough telemetry to explain its score: valid-output rate, parse failures, timeout and recovery counts, fallback use, stage timings, LLM attempts/failures, and the three attribution axes.
 Low-`n` rows are smoke checks, not promotion evidence.
 
-## Quick screen before the slow gate
+## Quick A/B screen (pre-gate triage)
 
-The pinned end-to-end gate below is authoritative but slow (hours). To decide *within 1–2h on a
-short-lived box* whether an off-by-default flag is even worth that gate, run the paired reduced-budget
-A/B **screen** in [Phase 2 quick eval](tpc_phase2_quick_eval.md) (`make phase2-quick-eval
-P2_FLAG=<env var>`). A screen ranks and triages candidates; it never promotes one. Only a committed
-ledger row through the gate below promotes a default.
+The pinned end-to-end gate below is authoritative but slow (hours). Gating **every** landed change
+behind its own isolated long e2e does not scale: at `O(changes × 8h)` it falls behind the rate of
+new work, and most of that compute is wasted re-establishing the same baseline. The quick A/B
+**screen** is the pre-filter that keeps the slow gate for changes that already show a signal. It
+decides *within 1–2h on a short-lived box* whether an off-by-default flag is even worth an e2e run.
+It **ranks and triages; it never promotes** — only a committed ledger row through the [gate](#gates)
+promotes a default. Tool: [`scripts/phase2_quick_eval.py`](../scripts/phase2_quick_eval.py)
+(`make phase2-quick-eval P2_FLAG=<env var>`).
+
+### How the screen beats the wall-clock
+
+The pinned baseline runs `100` familiar-100 queries at a `300 s` budget, twice; the solver's
+restart loop spends the whole budget (solve `p50 ≈ 270 s`), so wall-clock is roughly
+`queries × budget × repeats / parallelism` — hours. The screen cuts that on three axes at once and
+trusts only the **paired delta**, never the absolute numbers:
+
+1. **Subset** — a deterministic slice (`--n`, default `40`) instead of all `100`.
+2. **Reduced budget** — `--budget-sec` (default `60`) instead of `300`. The deterministic solver
+   flags act at the **acceptance boundary** inside `_pack_plan` (before the acceptance gate), so
+   their FPR effect shows even when the restart loop is cut short. Measured: solver-only FPR is
+   `20%` at `n=30`/`60 s` vs `25.5%` at `100`/`300 s` — the reduced budget keeps most of the signal.
+3. **Paired same-everything A/B** — baseline (off) and candidate (on) share subset, budget, and
+   seed; only the one flag changes, so the *difference* isolates it even though the reduced-budget
+   absolute FPR is not comparable to a ledger row. It is a controlled experiment, not a baseline.
+
+### What it measures
+
+Default mode is `solver-only` (oracle constraints, **no LLM**, fully deterministic) because that is
+what the highest-leverage flags target. Per arm, from the run's per-query results and telemetry:
+
+| Signal | Meaning | Better |
+| --- | --- | --- |
+| `FPR` | % of queries whose final plan passes every check (target of the acceptance-flipping flags) | higher |
+| `overall_true` | mean per-query preference-weighted score (`continuous_score`) | higher |
+| `timeouts` | queries that hit the budget wall (recovered via the timeout snapshot unless `used_fallback` moves) | lower |
+| `solve p50` | median solve wall-time | lower |
+| `used_fallback` | queries that fell back to the schema-shaped empty plan (a real correctness loss) | lower |
+| `parse_failures` | invalid-JSON / eval / solver errors | lower |
+
+It then runs the monotonic [`phase2_gate.check_gate`](../scripts/phase2_gate.py) on the gate-shaped
+keys and prints a reconciled verdict (see [reading the verdict](#reading-the-verdict)).
+
+### How to run
+
+```bash
+# Screen the timed-window pinning flag, solver-only, 40 queries at a 60s budget, 3 in parallel:
+make phase2-quick-eval P2_FLAG=TPC_PIN_TIMED_WINDOWS P2_N=40 P2_BUDGET=60 P2_PARALLEL=3
+# equivalently:
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_PIN_TIMED_WINDOWS --n 40 --budget-sec 60 --parallel 3
+
+# Early-convergence stop at patience 15 (target: fewer timeouts at held FPR):
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_SOLVE_CONVERGE_PATIENCE --on 15 --n 40 --budget-sec 60 --parallel 3
+
+# Stack flags: screen repair on top of an already-on pin (this is also how the nightly batch is screened):
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_REPAIR_TRANSPORT_GAPS --extra-env TPC_PIN_TIMED_WINDOWS=1 --n 40 --budget-sec 60 --parallel 3
+```
+
+**Reuse one baseline across flags.** The `flag=off` arm is identical (all-flags-off, same
+subset/budget/seed) for every deterministic flag, so run it once and reuse it with `--baseline-json`
+(`results/<out>/baseline.json`) — halving the cost of each additional flag. You own the
+subset/budget/seed match; the tool trusts the reused baseline.
+
+Cost per arm ≈ `ceil(n / parallel) × (budget_sec + ~3 s)`. On a 4-core box (`--parallel 3`),
+`n=40`/`60 s` is ~14 min/arm; screening three flags against one shared baseline is ~55 min. Keep
+`--parallel` at `cores − 1` (each CP-SAT solve is single-threaded).
+
+### Reading the verdict
+
+- **GREEN LIGHT** — target improves *and* the like-for-like gate passes. Queue for e2e.
+- **GREEN LIGHT (with caveat)** — target improves, but the *only* gate block is more timeouts at the
+  tight screen budget (all recovered). Expected when a flag does more work per solve: fewer restarts
+  fit, so more queries hit the wall — a wall-clock cost, not a correctness loss. The full-budget e2e
+  must confirm the cost is acceptable; the acceptance/preference gain is real. Still queue for e2e.
+- **MIXED** — target improves but the gate blocks on a non-timeout metric. Read the blocks first.
+- **RED** — a correctness signal regresses (FPR, `overall_true`, or `parse_failures`). Do not queue;
+  bounce it back to the author.
+- **NEUTRAL** — no measurable delta. Enlarge `--n`/`--budget-sec` or pick a subset that exercises
+  the flag.
+
+A timeout-only gate block is *informative, not disqualifying* on a screen — it is exactly the
+tight-budget timeout-boundary nondeterminism the [gate](#gates) warns about, which is why the tool
+prints both the raw gate result and the reconciled verdict.
+
+### Recommended cadence: daily screen, nightly batched e2e
+
+The screen and the continuous e2e are complementary, not either/or. Do **not** gate every change
+behind its own isolated e2e (it cannot keep up), and do **not** promote off a screen alone (it does
+not estimate final performance). Instead:
+
+1. **On each landing — fast screen.** RED bounces back to the author and never enters the batch.
+   GREEN / GREEN-caveat: the flag **stays off on `main`** but joins tonight's promotion queue.
+2. **Nightly — one *batched* e2e.** Run a single pinned e2e with **all** queued green flags stacked
+   ON, against the **current promoted baseline** (the flags already defaulted-on). This is the real
+   gate, and it is `1` run/night regardless of how many changes landed — that is what makes the
+   cadence keep up. Before spending the night, a stacked *screen* (all-queued-on vs all-off, the
+   `--extra-env` form above) is a cheap interaction check.
+3. **Morning — promote or bisect.** If the batch improves `continuous_score` with no new parse
+   failures or timeouts vs the baseline, promote the **whole batch**: flip the defaults on, commit
+   the ledger row, and it becomes the new baseline. If the batch regresses, promote nothing and run
+   drop-one-out *screens* (fast) to find the offending change or interaction, drop it, and re-batch
+   the rest the next night.
+4. **Keep the continuous e2e running.** It maintains the promoted-baseline ledger row that the
+   nightly batch compares against and catches drift a screen cannot see.
+
+Why batch rather than gate each change in isolation: two changes that each screen green can still
+interact when stacked (e.g. `TPC_PIN_TIMED_WINDOWS` and `TPC_REPAIR_TRANSPORT_GAPS` both retime /
+re-leg the same plan, so order and overlap matter). The batched e2e measures the *net* effect that
+actually ships; the per-change screen only pre-qualifies candidates for it. Promotion stays honest —
+still only a gated e2e ledger row — but the gate runs **once per night against a moving baseline**,
+not once per change. This preserves "flags off is the floor" and "promote only through the gate"
+while absorbing the daily churn.
+
+### Setup on a fresh box (no GPU needed)
+
+The screen never loads a local model, so the heavy GPU requirements (`torch`, `vllm`, `flashinfer`,
+`transformers`, …) are not needed — they are lazily imported only by the local-model LLM backends. A
+minimal CPU-only environment is enough:
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install \
+  geopy==2.4.1 numpy==1.26.4 pandas==2.2.3 jsonschema==4.23.0 tqdm==4.66.6 \
+  openai==1.53.0 json_repair==0.30.0 scikit-learn==1.5.2 psutil==7.2.2 \
+  packaging==24.2 fuzzywuzzy==0.18.0 func_timeout==4.3.5 httpx==0.27.2 \
+  z3-solver==4.14.1.0 ortools==9.9.3963 tiktoken==0.9.0 python-Levenshtein==0.25.1
+```
+
+The environment database (`chinatravel/environment/database_en/`) and the imported
+`tpc_phase2_familiar_100` split must be present (both committed).
+
+### LLM-backed flags (`TPC_P2_LLM_PARSE`, `TPC_P2_LLM_REFINE`)
+
+The same tool screens the LLM flags with `--mode end-to-end` and a configured Phase 2 backend
+(reachable OpenAI-compatible endpoint, key sourced from `.env`):
+
+```bash
+export TPC_P2_LLM_BACKEND=deepinfra          # or openai
+export TPC_P2_LLM_MODEL=Qwen/Qwen3.6-27B-Instruct   # DEEPINFRA_API_KEY/OPENAI_API_KEY in env
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_REFINE --mode end-to-end --n 30 --budget-sec 120 --parallel 3
+```
+
+- With the backend at `none` (library default) the end-to-end path makes **zero** LLM calls, so the
+  deterministic flags can also be screened `--mode end-to-end` on a box with no key.
+- `TPC_P2_LLM_PARSE` is auto-enabled whenever a backend is configured, so screen it with explicit
+  `--off 0 --on 1` and a fixed backend across both arms (the env override wins over the auto-enable).
+- Give the LLM arm a larger `--budget-sec` (the call must fit the stage slice) and expect higher
+  per-arm wall-clock from network latency.
+
+### Worked example: the ungated solver flags on `main` (2026-07-22)
+
+Solver-only, `tpc_phase2_familiar_100`, deterministic subset `n=30`, `60 s`, `--parallel 3`, seed
+`20260705`, one shared all-flags-off baseline (FPR `20.0`, `overall_true 43.88`, `7` timeouts).
+Screen only — reduced-budget deltas, not a promotion.
+
+| Flag | FPR | overall_true | timeouts | Screen verdict |
+| --- | --- | --- | --- | --- |
+| `TPC_PIN_TIMED_WINDOWS=1` | `20.0 → 26.67` (**+6.67**) | `43.88 → 49.88` (**+6.00**) | `7 → 9` | GREEN (caveat: +2 recovered timeouts) |
+| `TPC_REPAIR_TRANSPORT_GAPS=1` | `20.0 → 23.33` (**+3.33**) | `43.88 → 46.60` (**+2.72**) | `7 → 8` | GREEN (caveat: +1 recovered timeout) |
+| `TPC_SOLVE_CONVERGE_PATIENCE=15` | `20.0 → 20.0` (+0.0) | `43.88 → 46.16` (+2.28) | `7 → 6` (**−1**) | GREEN (weak: −1 timeout at the noise floor) |
+
+Both acceptance-flippers clearly move solver-only FPR (the binding ceiling) and the preference score
+at the cost of a few *recovered* timeouts from extra per-candidate work; neither loses a plan to the
+fallback or adds a parse failure. The convergence stop holds FPR and shaves a timeout, but its `−1`
+delta is inside the run-to-run noise floor — a *weak* positive whose real payoff (wall-clock) only
+shows at the full `300 s` budget where the restart loop plateaus. All three are safe to carry into
+one **batched** e2e (roadmap Next steps 1, 4, 5); the screen ranks them but flips no default.
+
+### Limits — read before trusting a screen
+
+- **A screen never promotes.** It authorizes an e2e run; only a committed ledger row from a pinned
+  SHA through the [gate](#gates) promotes a default. Preserves the
+  [non-negotiable invariants](../CLAUDE.md#non-negotiable-invariants).
+- **Absolute numbers are not ledger-comparable** (reduced budget/subset). Only the paired delta at a
+  fixed budget is meaningful; do not commit screen outputs into `results/phase2_baselines/`.
+- **Timeout counts carry run-to-run noise** — a `±1–2` swing at a tight budget is nondeterminism,
+  not a regression, so FPR/`continuous_score` are the correctness signals and a timeout-only block is
+  a caveat.
+- **Familiar-100 is a development signal**, inheriting every [dataset-boundary
+  caveat](#dataset-boundaries); a screen never estimates final performance.
+- **Use `n ≥ 30`.** Smaller subsets are noise-dominated smoke checks.
 
 ## Gates
 
