@@ -609,6 +609,19 @@ _ENTITY_TYPE_FIELD_FOR = {
     "required_attractions": "required_attraction_types",
     "excluded_attractions": "excluded_attraction_types",
 }
+# The oracle's own symbolic extraction (hard_constraint.py get_symbolic_concepts) adds *every*
+# breakfast/lunch/dinner activity's position to the same restaurant-name set a required_/
+# excluded_restaurants clause checks -- unconditionally, whether or not that position is actually
+# in the restaurants catalog. A free hotel breakfast is a "breakfast" activity positioned at the
+# hotel's own name, so a restaurant-family entry that names a hotel is not a mis-parse: it
+# legitimately means "a meal at this named place" and must resolve against the hotel catalog too,
+# not just restaurants'. required_/excluded_attractions and _hotels have no such cross-bucket
+# equivalent (attractions/hotels are their own buckets with no shared alternate position source).
+_ENTITY_CATEGORY_POOL = {
+    "attraction": ("attraction",),
+    "restaurant": ("restaurant", "hotel"),
+    "hotel": ("hotel",),
+}
 _ENTITY_FUZZY_THRESHOLD = 0.85
 
 _ENTITY_LABEL_PREFIX_RES = [
@@ -620,7 +633,8 @@ _ENTITY_LABEL_SUFFIX_RES = [
 ]
 _ENTITY_PUNCT_RE = re.compile(r"[·\-_/,():;!?\"'’‘“”]")
 _ENTITY_TRAILING_NUMBER_RE = re.compile(r"\s+\d+$")
-_ENTITY_SPLIT_RE = re.compile(r"\s*(?:,|\band\b|\bor\b)\s*", re.IGNORECASE)
+_ENTITY_SPLIT_TOKEN_RE = re.compile(r"\s*(,|\band\b|\bor\b)\s*", re.IGNORECASE)
+_ENTITY_SEGMENT_MAX_SPAN = 4  # max tokens a single catalog name may itself span
 
 _entity_catalog_cache: dict[str, dict[str, list[str]]] = {}
 _attraction_type_vocab_cache: dict[str, dict[str, str]] = {}
@@ -659,6 +673,15 @@ def load_city_entity_catalog(city) -> dict[str, list[str]]:
         catalog[category] = names
     _entity_catalog_cache[slug] = catalog
     return catalog
+
+
+def _effective_catalog_names(catalog: dict[str, list[str]], category: str) -> list[str]:
+    """Names a family's ``category`` may legitimately resolve against -- the union of
+    ``_ENTITY_CATEGORY_POOL[category]`` (e.g. restaurant + hotel for the restaurant family)."""
+    names: list[str] = []
+    for pool_category in _ENTITY_CATEGORY_POOL.get(category, (category,)):
+        names.extend(catalog.get(pool_category, []))
+    return names
 
 
 def _attraction_type_vocab(slug: str | None) -> dict[str, str]:
@@ -714,6 +737,22 @@ def _strip_entity_label(text: str) -> str:
     return s.strip()
 
 
+def _exact_catalog_match(text: str, catalog_names: list[str]) -> str | None:
+    """Normalized exact match only -- no containment/fuzzy leniency. Used ahead of segmentation
+    (single-string and list-level) so an unambiguous exact hit is never preempted by, or made to
+    preempt, a genuine multi-entity split."""
+    text = text.strip()
+    if not text or not catalog_names:
+        return None
+    norm_text = _norm_entity_key(text)
+    if not norm_text:
+        return None
+    for name in catalog_names:
+        if _norm_entity_key(name) == norm_text:
+            return name
+    return None
+
+
 def _match_catalog_name(text: str, catalog_names: list[str]) -> str | None:
     """Steps 2-3: exact match, then containment (catalog name is a substring of ``text`` -- fixes
     prefix garbage in one step), then fuzzy match (unique best above threshold)."""
@@ -723,12 +762,12 @@ def _match_catalog_name(text: str, catalog_names: list[str]) -> str | None:
     norm_text = _norm_entity_key(text)
     if not norm_text:
         return None
+    exact = _exact_catalog_match(text, catalog_names)
+    if exact:
+        return exact
     norm_to_orig: dict[str, str] = {}
     for name in catalog_names:
         norm_to_orig.setdefault(_norm_entity_key(name), name)
-
-    if norm_text in norm_to_orig:
-        return norm_to_orig[norm_text]
 
     # Containment only fires when the catalog name covers most of the candidate text (residual
     # label garbage, not a genuine multi-entity string) -- otherwise a short catalog name that
@@ -759,20 +798,134 @@ def _match_catalog_name(text: str, catalog_names: list[str]) -> str | None:
     return best_orig
 
 
+def _join_entity_span(tokens: list[str], seps: list[str]) -> str:
+    out = [tokens[0]]
+    for tok, sep in zip(tokens[1:], seps):
+        out.append(sep)
+        out.append(tok)
+    return " ".join(out)
+
+
 def _segment_entity_list(text: str, catalog_names: list[str]) -> list[str] | None:
     """Step 4: when a single string actually names multiple catalog entries (','/'and'/'or'
-    -separated), split and resolve each segment. Only returns a result when every non-empty
-    segment resolves -- a partial split is worse than leaving the original string alone."""
-    parts = [p.strip() for p in _ENTITY_SPLIT_RE.split(text) if p.strip()]
-    if len(parts) < 2:
+    -separated), split and resolve each segment against ``catalog_names`` (the caller's effective
+    pool -- see ``_effective_catalog_names``). Only returns a result when every segment resolves;
+    a partial split is worse than leaving the original string alone.
+
+    A catalog name can itself contain an internal ','/'and' (e.g. "Honey Lake 1979 Cultural and
+    Creative Park", or a parenthetical qualifier with a comma). Naively splitting at every
+    delimiter breaks those into garbage fragments, so this scans left to right and, at each
+    position, prefers the *longest* run of tokens (up to ``_ENTITY_SEGMENT_MAX_SPAN``) that
+    resolves -- standard maximum-munch dictionary segmentation.
+    """
+    pieces = _ENTITY_SPLIT_TOKEN_RE.split(text)
+    tokens = [t.strip() for t in pieces[0::2]]
+    seps = [s.strip() for s in pieces[1::2]]
+    while tokens and not tokens[0]:
+        tokens.pop(0)
+        if seps:
+            seps.pop(0)
+    while tokens and not tokens[-1]:
+        tokens.pop()
+        if seps:
+            seps.pop()
+    if len(tokens) < 2:
         return None
-    resolved = []
-    for part in parts:
-        match = _match_catalog_name(part, catalog_names)
-        if not match:
+
+    norm_to_orig: dict[str, str] = {}
+    for name in catalog_names:
+        norm_to_orig.setdefault(_norm_entity_key(name), name)
+
+    n = len(tokens)
+    resolved: list[str] = []
+    i = 0
+    while i < n:
+        found = None
+        for span in range(min(_ENTITY_SEGMENT_MAX_SPAN, n - i), 0, -1):
+            j = i + span
+            candidate = _join_entity_span(tokens[i:j], seps[i:j - 1])
+            if span > 1:
+                # A multi-token candidate must match a catalog name *exactly* (normalized): the
+                # lenient containment/fuzzy matching in _match_catalog_name is designed for a
+                # single messy string with residual label garbage, and would otherwise accept an
+                # over-long span whose catalog name is only its prefix (containment fires at >=60%
+                # coverage), silently swallowing the next real segment.
+                match = norm_to_orig.get(_norm_entity_key(candidate))
+            else:
+                match = _match_catalog_name(candidate, catalog_names)
+            if match:
+                found = (match, j)
+                break
+        if found is None:
             return None
+        match, j = found
         resolved.append(match)
+        i = j
     return _dedupe_preserve_order(resolved)
+
+
+_ENTITY_MERGE_SEPARATORS = (" and ", ", ", " or ")
+
+
+def _merge_fragmented_list_entries(
+    values: list, catalog: dict[str, list[str]], category: str,
+) -> tuple[list[str], list]:
+    """Re-merge adjacent raw list *items* that name one catalog entry between them.
+
+    ``_segment_entity_list`` fixes a single string with an internal ','/'and' that names multiple
+    entries; this fixes the opposite/upstream case, where the base regex parser (``parse_constraints
+    .py``) already split a `"...Cultural and Creative Park..."`-style name into two separate list
+    entries *before* entity resolution ever sees a combined string (e.g. ``required_attractions ==
+    ["...", "Honey Lake 1979 Cultural", "Creative Park", "..."]``). Scans left to right and, at
+    each position, prefers the longest run of adjacent items (up to ``_ENTITY_SEGMENT_MAX_SPAN``)
+    that resolves once rejoined with a plausible original separator -- a merge only commits when
+    the combined text actually matches the catalog, so two genuinely distinct consecutive entries
+    are never falsely joined.
+
+    Returns ``(resolved_names, remaining_items)``: ``remaining_items`` keeps any entry that wasn't
+    part of a commited merge (including non-string items) for the normal per-item pipeline, which
+    still runs every single-span case (a name with no fragmentation, or one this pass didn't
+    resolve) exactly as before.
+    """
+    pool = _effective_catalog_names(catalog, category)
+    # Every candidate here spans >1 raw items, so require an *exact* (normalized) catalog match --
+    # same reasoning as _segment_entity_list's span > 1 case: lenient containment/fuzzy matching
+    # would accept an over-long span whose catalog name only covers its prefix, silently absorbing
+    # the next genuinely distinct list entry into the merge.
+    norm_to_orig: dict[str, str] = {}
+    for name in pool:
+        norm_to_orig.setdefault(_norm_entity_key(name), name)
+
+    n = len(values)
+    resolved: list[str] = []
+    remaining: list = []
+    i = 0
+    while i < n:
+        if not isinstance(values[i], str):
+            remaining.append(values[i])
+            i += 1
+            continue
+        found = None
+        for span in range(min(_ENTITY_SEGMENT_MAX_SPAN, n - i), 1, -1):
+            chunk = values[i:i + span]
+            if not all(isinstance(v, str) for v in chunk):
+                continue
+            for sep in _ENTITY_MERGE_SEPARATORS:
+                candidate = sep.join(v.strip() for v in chunk)
+                match = norm_to_orig.get(_norm_entity_key(candidate))
+                if match:
+                    found = (match, span)
+                    break
+            if found:
+                break
+        if found is None:
+            remaining.append(values[i])
+            i += 1
+        else:
+            match, span = found
+            resolved.append(match)
+            i += span
+    return _dedupe_preserve_order(resolved), remaining
 
 
 def _match_type_vocab(text: str, slug: str | None) -> str | None:
@@ -823,15 +976,25 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
     if not cleaned:
         return {"kind": "keep", "value": text}
 
-    own_catalog = catalog.get(category, [])
+    own_catalog = _effective_catalog_names(catalog, category)
 
-    match = _match_catalog_name(cleaned, own_catalog)
-    if match:
-        return {"kind": "name", "value": match}
+    # Exact match first (unambiguous), then segmentation, and only then the lenient containment/
+    # fuzzy whole-string match. Trying the lenient match before segmentation would let it fire on
+    # a genuine multi-entity string whenever the *first* name happens to cover >=60% of the whole
+    # text (containment's threshold for stripping label garbage) -- e.g. "Honey Lake 1979 Cultural
+    # and Creative Park and Dameisha Seaside Park" would resolve to just the first name and silently
+    # drop "Dameisha Seaside Park", never giving segmentation a chance to recover both.
+    exact = _exact_catalog_match(cleaned, own_catalog)
+    if exact:
+        return {"kind": "name", "value": exact}
 
     segments = _segment_entity_list(cleaned, own_catalog)
     if segments:
         return {"kind": "names", "value": segments}
+
+    match = _match_catalog_name(cleaned, own_catalog)
+    if match:
+        return {"kind": "name", "value": match}
 
     if field in _ENTITY_TYPE_FIELD_FOR:
         type_match = _match_type_vocab(cleaned, slug)
@@ -839,8 +1002,8 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
             return {"kind": "type", "value": type_match}
 
     for other_category in ("attraction", "restaurant", "hotel"):
-        if other_category == category:
-            continue
+        if other_category in _ENTITY_CATEGORY_POOL.get(category, (category,)):
+            continue  # already covered by the effective pool above
         other_match = _match_catalog_name(cleaned, catalog.get(other_category, []))
         if other_match:
             # Step 6: category misrouting -- e.g. a required_hotels entry that's actually an
@@ -873,7 +1036,9 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
         new_names: list[str] = []
         type_additions: list[str] = []
         position_additions: list[str] = []
-        for raw in values:
+        merged_names, remaining = _merge_fragmented_list_entries(values, catalog, category)
+        new_names.extend(merged_names)
+        for raw in remaining:
             if not isinstance(raw, str):
                 new_names.append(raw)
                 continue

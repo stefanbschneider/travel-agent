@@ -131,6 +131,114 @@ def test_comma_separated_attraction_list_segmented():
     assert set(out["required_attractions"]) == {"Zhongshan Park", "Venice Town"}
 
 
+def test_catalog_name_with_internal_and_segmented_within_one_string():
+    # A catalog name can itself contain "and" ("Honey Lake 1979 Cultural and Creative Park"),
+    # alongside two other real, distinct entries in the same comma/and-joined string. Naive
+    # splitting at every delimiter would break the compound name into two garbage fragments;
+    # maximum-munch segmentation must prefer the longest resolving span at each position.
+    variant = {"required_attractions": [
+        "Wutong Mountain Art Town, Honey Lake 1979 Cultural and Creative Park, Dameisha Seaside Park",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert set(out["required_attractions"]) == {
+        "Wutong Mountain Art Town",
+        "Honey Lake 1979 Cultural and Creative Park",
+        "Dameisha Seaside Park",
+    }
+
+
+def test_segmentation_does_not_overreach_into_the_next_real_entry():
+    # Regression: the catalog also has shorter, unrelated entries ("Honey Lake", "Honey Lake
+    # Park") that could tempt a lenient/containment match. Greedy segmentation must not let a
+    # longer candidate span "Honey Lake 1979 Cultural and Creative Park and Dameisha Seaside
+    # Park" swallow the next distinct real entry just because the first name is its prefix.
+    variant = {"required_attractions": [
+        "Honey Lake 1979 Cultural and Creative Park and Dameisha Seaside Park",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert set(out["required_attractions"]) == {
+        "Honey Lake 1979 Cultural and Creative Park",
+        "Dameisha Seaside Park",
+    }
+
+
+def test_base_parser_pre_split_catalog_name_is_rejoined_across_list_items():
+    # The base regex parser (parse_constraints.py) splits "...Cultural and Creative Park..."
+    # into two separate *list items* before entity resolution ever sees a combined string --
+    # this is the upstream case _segment_entity_list (a single-string fix) cannot reach.
+    variant = {"required_attractions": [
+        "Wutong Mountain Art Town", "Honey Lake 1979 Cultural", "Creative Park", "Dameisha Seaside Park",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert set(out["required_attractions"]) == {
+        "Wutong Mountain Art Town",
+        "Honey Lake 1979 Cultural and Creative Park",
+        "Dameisha Seaside Park",
+    }
+
+
+def test_list_level_merge_does_not_overreach_into_the_next_real_entry():
+    # Regression, list-item-merge version of the same containment-overreach risk: merging
+    # ["Honey Lake 1979 Cultural", "Creative Park", "Dameisha Seaside Park"] must stop after the
+    # correct 2-item span, not swallow the third (distinct, unmerged) entry too.
+    variant = {"required_attractions": [
+        "Honey Lake 1979 Cultural", "Creative Park", "Dameisha Seaside Park",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert set(out["required_attractions"]) == {
+        "Honey Lake 1979 Cultural and Creative Park",
+        "Dameisha Seaside Park",
+    }
+
+
+def test_required_restaurants_resolves_against_hotel_catalog_for_breakfast():
+    # The oracle's own symbolic extraction (hard_constraint.py) adds *every* breakfast/lunch/
+    # dinner activity's position to the same restaurant-name set a required_restaurants clause
+    # checks -- including a free hotel breakfast, positioned at the hotel's own name. So a
+    # restaurant-family entry naming a hotel is not a mis-parse and must resolve within
+    # required_restaurants, not reroute to position_presence.
+    variant = {"required_restaurants": [
+        "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)", "Sir Elly's Rooftop Restaurant",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shanghai")
+    out = normalize.resolve_entities(variant, {"target_city": "Shanghai"}, catalog)
+    assert set(out["required_restaurants"]) == {
+        "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+        "Sir Elly's Rooftop Restaurant",
+    }
+    assert "position_presence" not in out
+
+
+def test_required_restaurants_list_level_merge_rejoins_hotel_name_split_by_comma():
+    # Combines both fixes: the base parser splits this hotel name's own internal comma into two
+    # list items, and the rejoined name only resolves via the hotel catalog (not restaurants').
+    variant = {"required_restaurants": [
+        "Jiahong Hotel (Shanghai Pudong Airport", "Chuansha Metro Station)", "Sir Elly's Rooftop Restaurant",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Shanghai")
+    out = normalize.resolve_entities(variant, {"target_city": "Shanghai"}, catalog)
+    assert set(out["required_restaurants"]) == {
+        "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+        "Sir Elly's Rooftop Restaurant",
+    }
+    assert "position_presence" not in out
+
+
+def test_required_attractions_still_reroutes_hotel_name_to_position_presence():
+    # Unlike restaurants, an attraction activity's position can never come from the hotel
+    # catalog, so the pre-existing category-misrouting reroute must be unaffected by the
+    # restaurant/hotel pooling above.
+    variant = {"required_attractions": ["Chiang Rai Bay (Vientiane Qianhai Branch)"]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog)
+    assert "required_attractions" not in out
+    assert "Chiang Rai Bay (Vientiane Qianhai Branch)" in out["position_presence"]
+
+
 # --- G2 type-vs-name collision: reroute to the type family -----------------
 
 
