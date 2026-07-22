@@ -65,6 +65,32 @@ def test_no_delta_is_neutral():
     assert v.startswith("NEUTRAL:")
 
 
+def test_sub_noise_pref_drop_is_not_red():
+    # The real TPC_P2_LLM_REFINE screen: FPR held, overall_true -0.02 (pure noise), +8 timeouts,
+    # zero commits. A -0.02 must NOT read as a RED correctness regression; the added cost with no
+    # benefit is a NO BENEFIT thumbs-down instead.
+    base = _metrics(20.0, 47.38, timeouts=11)
+    cand = _metrics(20.0, 47.35, timeouts=19)
+    v = _verdict(base, cand, flag="TPC_P2_LLM_REFINE")
+    assert v.startswith("NO BENEFIT")
+    assert not v.startswith("RED")
+
+
+def test_pref_drop_beyond_noise_is_red():
+    # The real TPC_P2_LLM_PARSE screen at timeout=15 (audit actually firing): overall_true -3.20.
+    base = _metrics(20.0, 47.38, timeouts=11)
+    cand = _metrics(20.0, 44.18, timeouts=11)
+    v = _verdict(base, cand, flag="TPC_P2_LLM_PARSE")
+    assert v.startswith("RED:")
+
+
+def test_flat_quality_with_added_cost_is_no_benefit_not_neutral():
+    base = _metrics(20.0, 43.9, timeouts=7)
+    cand = _metrics(20.0, 43.9, timeouts=10)  # identical quality, more timeouts
+    v = _verdict(base, cand)
+    assert v.startswith("NO BENEFIT")
+
+
 def test_converge_target_is_timeouts_at_held_fpr():
     # The real TPC_SOLVE_CONVERGE_PATIENCE screen: FPR held, a timeout shaved -> green for this flag.
     base = _metrics(20.0, 43.88, timeouts=7)

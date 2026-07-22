@@ -220,21 +220,43 @@ The environment database (`chinatravel/environment/database_en/`) and the import
 
 ### LLM-backed flags (`TPC_P2_LLM_PARSE`, `TPC_P2_LLM_REFINE`)
 
-The same tool screens the LLM flags with `--mode end-to-end` and a configured Phase 2 backend
-(reachable OpenAI-compatible endpoint, key sourced from `.env`):
+The same tool screens the LLM flags with `--mode end-to-end` and a configured Phase 2 backend. The
+one extra requirement is a reachable OpenAI-compatible endpoint and an API key — and the key is
+loaded **for you**: `build_llm_client` calls `load_local_env()`, which reads the repo-root `.env`
+into the process environment when the backend is `openai`/`deepinfra`. So you only export the
+backend selector; you never read, source, or print `.env`:
 
 ```bash
-export TPC_P2_LLM_BACKEND=deepinfra          # or openai
-export TPC_P2_LLM_MODEL=Qwen/Qwen3.6-27B-Instruct   # DEEPINFRA_API_KEY/OPENAI_API_KEY in env
-.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_REFINE --mode end-to-end --n 30 --budget-sec 120 --parallel 3
+# DeepInfra Qwen (the organizer model family); DEEPINFRA_API_KEY is picked up from .env automatically.
+# TPC_P2_LLM_TIMEOUT_SEC must be BELOW the reduced parse/improve slices -- see the note below.
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_PARSE --mode end-to-end \
+    --off 0 --on 1 --extra-env "TPC_P2_LLM_BACKEND=deepinfra,TPC_P2_LLM_TIMEOUT_SEC=6" \
+    --n 30 --budget-sec 90 --parallel 3 --out results/phase2_quick_eval/llm_parse
+
+# Screen refine reusing the same all-LLM-off baseline; pin llm_parse=0 in both arms so only refine moves.
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_REFINE --mode end-to-end \
+    --off 0 --on 1 --extra-env "TPC_P2_LLM_BACKEND=deepinfra,TPC_P2_LLM_PARSE=0,TPC_P2_LLM_TIMEOUT_SEC=6" \
+    --n 30 --budget-sec 90 --parallel 3 --baseline-json results/phase2_quick_eval/llm_parse/baseline.json
 ```
 
+- **Lower the LLM timeout below the reduced slice, or the flag silently no-ops.** Both stages skip
+  the LLM when the slice they run in is smaller than the client timeout (`parse_to_ir` and Stage 3
+  both guard `slice < client_timeout` to avoid a mid-flight overrun). The default timeout is `30 s`;
+  at a `90 s` screen budget the parse slice is `~22 s` and the improve slice is `~9 s`, so with the
+  default you would measure a no-op. Set `TPC_P2_LLM_TIMEOUT_SEC` under the smaller slice (`6 s`
+  works at `90 s`; the improve slice is the binding one for refine). This is safe and faithful:
+  DeepInfra Qwen answers in `~1.2 s` with thinking off, and at the full `300 s` budget the default
+  `30 s` fits the larger slices — so a low-timeout reduced-budget screen exercises exactly the path
+  the full-budget run takes. Verify the arm actually called out: the `flag=on` arm's per-query
+  telemetry must show `llm_parse` fired (no `llm_parse_skipped_deadline`) or `improve_llm_called:
+  true` — a green screen where the LLM never fired is meaningless.
 - With the backend at `none` (library default) the end-to-end path makes **zero** LLM calls, so the
   deterministic flags can also be screened `--mode end-to-end` on a box with no key.
-- `TPC_P2_LLM_PARSE` is auto-enabled whenever a backend is configured, so screen it with explicit
-  `--off 0 --on 1` and a fixed backend across both arms (the env override wins over the auto-enable).
-- Give the LLM arm a larger `--budget-sec` (the call must fit the stage slice) and expect higher
-  per-arm wall-clock from network latency.
+- `TPC_P2_LLM_PARSE` is auto-enabled whenever a backend is configured, so screen each LLM flag with
+  explicit `--off 0 --on 1` and pin the *other* LLM flag across both arms (the env override wins
+  over the auto-enable); otherwise the refine baseline silently also runs the parse audit.
+- Expect higher per-arm wall-clock from network latency; the response cache (on by default, keyed by
+  prompt hash at temperature 0) makes reruns and the shared baseline cheap.
 
 ### Worked example: the ungated solver flags on `main` (2026-07-22)
 
@@ -255,6 +277,30 @@ delta is inside the run-to-run noise floor — a *weak* positive whose real payo
 shows at the full `300 s` budget where the restart loop plateaus. All three are safe to carry into
 one **batched** e2e (roadmap Next steps 1, 4, 5); the screen ranks them but flips no default.
 
+### Worked example: the LLM flags on `main` (2026-07-22)
+
+End-to-end, `tpc_phase2_familiar_100`, `n=30`, `90 s`, `--parallel 3`, DeepInfra `Qwen/Qwen3.6-27B`,
+shared all-LLM-off baseline (`overall_true 47.38`, `11` timeouts). Both came back **do-not-default**,
+and each carries the lesson that made the screen honest:
+
+| Flag | FPR | overall_true | timeouts | LLM activity (cand) | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| `TPC_P2_LLM_PARSE=1` (timeout `15`) | `20.0 → 20.0` | `47.38 → 44.18` (**−3.20**) | `11 → 11` | audit fired `30/30` | **RED** |
+| `TPC_P2_LLM_REFINE=1` (timeout `8`) | `20.0 → 20.0` | `47.38 → 47.35` (−0.02) | `11 → 19` | refine called `18`, committed `0` | **NO BENEFIT** |
+
+- **`TPC_P2_LLM_PARSE` regresses preference** by `3.2` once the audit actually fires on every query —
+  an end-to-end confirmation of the parser-level "audit is neutral-to-negative" finding, so it stays
+  off. **This is the timeout lesson in one row:** a first pass at `timeout=6` looked *positive*
+  (`+1.97`) only because `10/30` audits silently timed out and fell back to the deterministic parse;
+  raising the timeout so all `30` fired flipped the verdict to RED. Always read the LLM-activity line
+  before trusting an LLM screen.
+- **`TPC_P2_LLM_REFINE` (Stage 3 v1) flips nothing here** — called on `18` produced-but-invalid
+  plans, committed `0` (`8` proposed ungroundable edits, `5` didn't satisfy the checker, `5`
+  LLM-errored) — while its reserved improve slice costs `+8` timeouts. Quality is flat within the
+  noise band, so it is NO BENEFIT (a thumbs-down on cost), not RED (it cannot regress by
+  construction). The committed/called telemetry is the actionable output: v1 needs groundable,
+  checker-satisfying edits before it earns an e2e gate (roadmap Next step 7).
+
 ### Limits — read before trusting a screen
 
 - **A screen never promotes.** It authorizes an e2e run; only a committed ledger row from a pinned
@@ -264,7 +310,10 @@ one **batched** e2e (roadmap Next steps 1, 4, 5); the screen ranks them but flip
   fixed budget is meaningful; do not commit screen outputs into `results/phase2_baselines/`.
 - **Timeout counts carry run-to-run noise** — a `±1–2` swing at a tight budget is nondeterminism,
   not a regression, so FPR/`continuous_score` are the correctness signals and a timeout-only block is
-  a caveat.
+  a caveat. A sub-point `overall_true` wobble is likewise noise: the verdict treats `|Δ| ≤ --tol`
+  (default `0.5`) as flat, so a pass that commits nothing does not read as RED.
+- **Verify an LLM flag actually fired** (LLM-activity line / per-query telemetry) before trusting an
+  LLM screen — a slice-vs-timeout mismatch silently no-ops it, and a partial fire skews the delta.
 - **Familiar-100 is a development signal**, inheriting every [dataset-boundary
   caveat](#dataset-boundaries); a screen never estimates final performance.
 - **Use `n ≥ 30`.** Smaller subsets are noise-dominated smoke checks.

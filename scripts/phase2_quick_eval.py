@@ -78,6 +78,12 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
     used_fallback = 0
     errored = 0
     valid = 0
+    # LLM-activity counters (end-to-end mode only; stay 0 for solver-only / deterministic runs).
+    llm_parse_fired = 0
+    llm_parse_skipped = 0
+    llm_parse_errored = 0
+    refine_called = 0
+    refine_committed = 0
     solve_secs: list[float] = []
     for uid in uids:
         tpath = run_dir / uid / "telemetry.json"
@@ -96,6 +102,18 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
         used_fallback += int(bool(t.get("used_fallback")))
         errored += int(bool(t.get("error")))
         valid += int(bool(t.get("valid_output")))
+        # An LLM flag that never fired makes its screen meaningless, so surface it: parse audit ran
+        # iff the flag was on and it was neither deadline-skipped nor errored; refine ran iff
+        # improve_llm_called. improve_committed counts repairs that actually landed.
+        if t.get("flags", {}).get("llm_parse"):
+            if t.get("llm_parse_skipped_deadline"):
+                llm_parse_skipped += 1
+            elif t.get("llm_parse_error"):
+                llm_parse_errored += 1
+            else:
+                llm_parse_fired += 1
+        refine_called += int(bool(t.get("improve_llm_called")))
+        refine_committed += int(bool(t.get("improve_committed")))
         stage = t.get("stage_sec") or {}
         if "solve" in stage:
             solve_secs.append(float(stage["solve"]))
@@ -114,6 +132,11 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
         "used_fallback": used_fallback,
         "errored": errored,
         "valid_output": valid,
+        "llm_parse_fired": llm_parse_fired,
+        "llm_parse_skipped": llm_parse_skipped,
+        "llm_parse_errored": llm_parse_errored,
+        "refine_called": refine_called,
+        "refine_committed": refine_committed,
         "solve_sec_mean": (sum(solve_secs) / len(solve_secs)) if solve_secs else 0.0,
         "solve_sec_p50": _pct(0.5),
         "solve_sec_p90": _pct(0.9),
@@ -168,25 +191,32 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
     }
 
 
-def decide_verdict(baseline: dict, candidate: dict, gate: dict, flag: str) -> str:
+def decide_verdict(baseline: dict, candidate: dict, gate: dict, flag: str, *, tol: float = 0.5) -> str:
     """Reconcile the target-signal delta with the strict monotonic gate into one screen verdict.
 
     Pure function of the two metric dicts, the gate result, and the flag name, so it is unit-tested
     without running a solve. The categories are documented in docs/tpc_phase2_eval.md
     (GREEN LIGHT / GREEN LIGHT with caveat / MIXED / RED / NEUTRAL).
+
+    ``tol`` is a preference-score noise band: an ``overall_true`` move within +-tol counts as flat,
+    not a regression or an improvement. Screens run at a reduced budget with a wall-clock-bounded
+    restart loop, so a sub-point ``continuous_score`` wobble is run-to-run noise, not signal -- e.g.
+    a repair pass that commits nothing still shifts overall_true by a few hundredths through solve
+    timing alone, and that must not read as RED.
     """
     d_fpr = candidate["fpr"] - baseline["fpr"]
     d_cs = candidate["continuous_score"] - baseline["continuous_score"]
     d_to = candidate["timeouts"] - baseline["timeouts"]
     d_pf = candidate["parse_failures"] - baseline["parse_failures"]
-    # A quality regression (fewer accepted plans / lower preference / new parse failures) is a hard
-    # RED regardless of the timeout picture -- those are correctness signals.
-    quality_regression = d_fpr < -1e-9 or d_cs < -1e-9 or d_pf > 0
+    # A quality regression (fewer accepted plans / lower preference beyond noise / new parse
+    # failures) is a hard RED regardless of the timeout picture -- those are correctness signals.
+    quality_regression = d_fpr < -1e-9 or d_cs < -tol or d_pf > 0
     # For the two acceptance-flipping flags the target is FPR/overall_true; for the convergence
-    # stop the target is the timeout/wall-clock rate at held FPR.
+    # stop the target is the timeout/wall-clock rate at held FPR. overall_true only counts as
+    # "improved" when it clears the noise band.
     target_improved = (
-        d_fpr > 1e-9 or (abs(d_fpr) < 1e-9 and d_cs > 1e-9)
-        or (flag == "TPC_SOLVE_CONVERGE_PATIENCE" and d_to < 0 and d_fpr >= -1e-9 and d_cs >= -1e-9)
+        d_fpr > 1e-9 or (abs(d_fpr) < 1e-9 and d_cs > tol)
+        or (flag == "TPC_SOLVE_CONVERGE_PATIENCE" and d_to < 0 and d_fpr >= -1e-9 and d_cs >= -tol)
     )
     only_timeout_blocks = (not gate["passed"]) and bool(gate["reasons"]) and all(
         "timeout" in r for r in gate["reasons"]
@@ -206,6 +236,12 @@ def decide_verdict(baseline: dict, candidate: dict, gate: dict, flag: str) -> st
     if target_improved:
         return ("MIXED: target signal improves but the gate blocks on a non-timeout metric -> "
                 "read the blocks above before spending a pinned gate.")
+    # Not improved and not a regression: quality is flat within noise. Separate "flat but costs
+    # wall-clock" (a real thumbs-down: the flag buys nothing and adds work) from a true no-op.
+    if d_to > 0 or not gate["passed"]:
+        return ("NO BENEFIT: quality is flat within noise but the candidate adds wall-clock cost "
+                f"(+{d_to} timeouts) and flips nothing -> not worth defaulting as-is; use the "
+                "per-query telemetry (e.g. refine committed/called, or parse fired) to see why.")
     return ("NEUTRAL: no measurable delta on this screen -> enlarge n/budget or pick a "
             "subset that exercises the flag before deciding.")
 
@@ -238,6 +274,10 @@ def main() -> None:
     p.add_argument("--folds", type=int, default=1, help="Fold partition count (1 = whole split).")
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--seed", type=int, default=reh.DEFAULT_SEED)
+    p.add_argument("--tol", type=float, default=0.5,
+                   help="overall_true (continuous_score) noise band: a move within +-tol is treated "
+                   "as flat by both the gate and the verdict (default 0.5). Screens run at a reduced "
+                   "budget where a sub-point preference wobble is run-to-run noise, not signal.")
     p.add_argument("--out", default=None, help="Directory to write baseline/candidate/summary JSON.")
     p.add_argument("--baseline-json", default=None,
                    help="Reuse a previously written baseline.json instead of rerunning the OFF arm. "
@@ -285,7 +325,7 @@ def main() -> None:
     print(f"      done in {candidate['wall_sec']}s  FPR={candidate['fpr']} "
           f"overall_true={candidate['continuous_score']}\n", flush=True)
 
-    gate = check_gate(baseline, candidate)
+    gate = check_gate(baseline, candidate, tol=args.tol)
 
     print("=" * 72)
     print(f"RESULT  {args.flag}: {args.off} -> {args.on}   (n={len(fold_uids)}, "
@@ -298,6 +338,18 @@ def main() -> None:
     print(f"  solve p50 (sec)       {_fmt_delta(bt['solve_sec_p50'], ct['solve_sec_p50'], higher_better=False)}")
     print(f"  used_fallback         {_fmt_delta(bt['used_fallback'], ct['used_fallback'], higher_better=False)}")
     print(f"  parse_failures        {_fmt_delta(baseline['parse_failures'], candidate['parse_failures'], higher_better=False)}")
+    # LLM-activity line: only meaningful in end-to-end mode with an LLM flag. Proves the candidate
+    # arm actually reached the model (a green screen where the LLM never fired is meaningless) and,
+    # for refine, how many proposed repairs actually committed.
+    if any(ct.get(k) for k in ("llm_parse_fired", "llm_parse_skipped", "llm_parse_errored",
+                               "refine_called", "refine_committed")):
+        bits = []
+        if ct.get("llm_parse_fired") or ct.get("llm_parse_skipped") or ct.get("llm_parse_errored"):
+            bits.append(f"llm_parse fired {ct['llm_parse_fired']}/"
+                        f"skipped {ct['llm_parse_skipped']}/errored {ct['llm_parse_errored']}")
+        if ct.get("refine_called") or ct.get("refine_committed"):
+            bits.append(f"refine called {ct['refine_called']}/committed {ct['refine_committed']}")
+        print(f"  LLM activity (cand)   {'; '.join(bits)}")
     print("-" * 72)
     print(f"  monotonic gate (like-for-like at this budget): "
           f"{'PASS' if gate['passed'] else 'FAIL'}")
@@ -307,7 +359,7 @@ def main() -> None:
         print(f"    - note:   {a}")
     print("-" * 72)
 
-    verdict = decide_verdict(baseline, candidate, gate, args.flag)
+    verdict = decide_verdict(baseline, candidate, gate, args.flag, tol=args.tol)
     print(f"  VERDICT: {verdict}")
     print("=" * 72)
 

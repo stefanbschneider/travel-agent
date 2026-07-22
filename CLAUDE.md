@@ -69,4 +69,10 @@ Familiar-100, local released data, HF data, and final held-out evaluation remain
 6. When asked to open a PR, after opening it wait for GitHub Copilot review comments (poll up to 10 minutes), then address or resolve each one before proceeding.
 
 Use Python 3.12 through `.venv/bin/python`.
-Do not read, edit, stage, or overwrite `.env`; it is local user configuration.
+Do not read, edit, stage, or overwrite `.env`; it is local user configuration. To run an LLM-backed
+path (e.g. a `--mode end-to-end` [quick screen](docs/tpc_phase2_eval.md#llm-backed-flags-tpc_p2_llm_parse-tpc_p2_llm_refine)
+of `TPC_P2_LLM_PARSE` / `TPC_P2_LLM_REFINE`), do **not** source or echo `.env`: set
+`TPC_P2_LLM_BACKEND=deepinfra` and the code's `build_llm_client` → `load_local_env()` loads
+`DEEPINFRA_API_KEY` from `.env` into the process itself. On a reduced screen budget also set
+`TPC_P2_LLM_TIMEOUT_SEC` below the parse/improve slice (`6` at a `90 s` budget) or the LLM stage
+silently no-ops; confirm the `flag=on` arm's telemetry shows the call fired before trusting the result.
