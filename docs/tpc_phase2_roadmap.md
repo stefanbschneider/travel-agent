@@ -19,7 +19,7 @@ These capabilities are not evidence of final-evaluation performance.
 
 ## Current evidence
 
-The current local reference for the flags-on harness path is [familiar-100 run `20260721T174336Z`](../results/phase2_baselines/runs/20260721T174336Z.json) (`familiar100-negconstraint-llmon`, sha `1de62e99`, two fresh repeats, harness-default flags with `llm_parse` audit on, `300 s` budget). It carries all the landed parser fixes: parser precision/recall/F1 are each `0.9510` with zero missing, mean end-to-end FPR `21.5%`, mean end-to-end `overall_true` `45.06`, solver-only FPR `25.5%`. All `100/100` outputs are valid; zero parse failures, zero fallbacks, zero budget overruns.
+The current local reference for the flags-on harness path is [familiar-100 run `20260721T174336Z`](../results/phase2_baselines/runs/20260721T174336Z.json) (`familiar100-negconstraint-llmon`, sha `1de62e99`, two fresh repeats, harness-default flags with `llm_parse` audit on, `300 s` budget). It carries the parser template fixes through `1de62e99` but **predates** the entity-resolution segmentation fix (`62df2a0b`, F1 `0.9316 -> 0.9908`): parser precision/recall/F1 are each `0.9510` with zero missing, mean end-to-end FPR `21.5%`, mean end-to-end `overall_true` `45.06`, solver-only FPR `25.5%`. All `100/100` outputs are valid; zero parse failures, zero fallbacks, zero budget overruns.
 
 Two facts from this row set the roadmap:
 
