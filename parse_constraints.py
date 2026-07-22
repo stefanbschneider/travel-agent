@@ -64,6 +64,27 @@ def _truncate_at_negation(chunk):
 # The <category> is passed by each extractor as a regex anchored immediately before the ':'
 # list marker, so a name category ("hotels"/"attractions") cannot swallow a sibling type
 # category ("hotel feature types"/"attraction types") that shares the same prefix.
+# A period ending the captured list must be a genuine sentence boundary, not an abbreviation
+# period embedded in an entity name ("St. Regis", "No. 3955 Baishi Road ..." -- both seen in
+# familiar-100 hotel/restaurant names). Rule a period out as a terminator when it directly follows
+# one of a short closed set of address/title abbreviations, each checked as a whole word via a
+# fixed-width lookbehind so e.g. "Stanford." or "West." never match (grouped by lookbehind width,
+# since Python's `re` requires each lookbehind assertion to be fixed-width, though separate
+# assertions may still differ in width from each other).
+#
+# Deliberately *not* also gated on "not followed by a digit": these familiar-100 requirements are
+# numbered lists ("... 9. Do not include any of these attractions: X.\n10. Dine at ..."), so a
+# genuine end-of-sentence period is routinely followed by whitespace + the next item's digit --
+# adding that lookahead would swallow every subsequent numbered requirement into the capture
+# instead of just the one abbreviation case it targeted.
+_ABBREV_NO_TERM = (
+    r"(?<!\bSt)(?<!\bNo)(?<!\bMt)(?<!\bDr)(?<!\bMr)(?<!\bRd)(?<!\bCo)(?<!\bJr)(?<!\bSr)(?<!\bMs)(?<!\bFt)"
+    r"(?<!\bAve)(?<!\bInc)(?<!\bLtd)(?<!\bMrs)"
+    r"(?<!\bBlvd)"
+)
+_LIST_TERM = _ABBREV_NO_TERM + r"\.|;|$"
+
+
 def _list_after_marker(text, lead_pattern, category_pattern, *, protect=(), check_negation=False):
     """Match ``<lead> <category>: A, B and C`` and return the split list items (or None).
 
@@ -75,7 +96,7 @@ def _list_after_marker(text, lead_pattern, category_pattern, *, protect=(), chec
     (common) inputs that never use this template. ``check_negation`` drops a match whose lead-in
     is itself negated ("do not visit the following ..."), so the positive template does not fire
     on a negated clause in unseen data."""
-    pattern = lead_pattern + category_pattern + r"\s*:\s*(.+?)(?:\.|;|$)"
+    pattern = lead_pattern + category_pattern + r"\s*:\s*(.+?)(?:" + _LIST_TERM + r")"
     matches = [
         m for m in re.finditer(pattern, text, re.I)
         if not (check_negation and _negated_before(text, m.start()))
