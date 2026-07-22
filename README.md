@@ -50,7 +50,7 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 ## Current state
 
-Phase 1 operations are mature. On the familiar-100 development set the parser is now at `~0.95` F1 with zero missing families, so the binding ceiling has shifted from parsing to the solver: with oracle-perfect constraints the solver still passes only `~26/100` (solver-only FPR), dominated by the timed-visit-at-named-POI family. The current flags-on reference is [run `20260721T174336Z`](results/phase2_baselines/runs/20260721T174336Z.json) (mean end-to-end FPR `21.5%`, `overall_true` `45.06`, `300 s` local budget). Timed-window pinning and a within-day resequencer that target the solver ceiling have landed opt-in but are not yet gated. See the [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for the shortcomings review and prioritized next steps. The official development set has no best plans, so no ceiling is available; it is not the final held-out evaluation set.
+Phase 1 operations are mature. On the familiar-100 development set the parser is now at `~0.99` F1 with zero missing families (the latest step, the comma-in-name entity-resolution segmentation fix, moved F1 `0.9316 -> 0.9908`), so the binding ceiling has shifted from parsing to the solver: with oracle-perfect constraints the solver still passes only `~26/100` (solver-only FPR), dominated by the timed-visit-at-named-POI family. The current flags-on reference is [run `20260721T174336Z`](results/phase2_baselines/runs/20260721T174336Z.json) (mean end-to-end FPR `21.5%`, `overall_true` `45.06`, `300 s` local budget). Timed-window pinning and a within-day resequencer that target the solver ceiling have landed opt-in but are not yet gated. See the [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for the shortcomings review and prioritized next steps. The official development set has no best plans, so no ceiling is available; it is not the final held-out evaluation set.
 
 ## Documentation
 
@@ -58,6 +58,7 @@ Phase 1 operations are mature. On the familiar-100 development set the parser is
 - [Phase 2 design](docs/tpc_phase2_design.md): stable architecture and interfaces.
 - [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, gates, and dataset boundaries (HF, local, familiar-100, final).
 - [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions, evidence-backed priorities, and solver headroom.
+- [Parallel agent prompts](docs/agents/README.md): the three-role split (analysis / evaluation / implementation) and the role-2 and role-3 agent prompts.
 - [Baseline ledger guide](docs/phase2_baselines/README.md): how to compare generated rows in `results/phase2_baselines/`.
 - [Competition reference](docs/reference/competition.md): dated local summary of official facts.
 - [Agent design](AGENT_DESIGN.md): shared component and data-flow map.

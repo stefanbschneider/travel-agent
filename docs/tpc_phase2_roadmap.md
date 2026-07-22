@@ -52,6 +52,8 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 
 ## Next steps (priority order)
 
+Execution is split across [parallel agent roles](../CLAUDE.md#parallel-agent-roles): the gate items below are run by the evaluation agent (role 2), the code items by the implementation agent (role 3); this document (role 1) owns their order.
+
 1. **Gate the solver-headroom step.** Record a clean flags-off solver-only familiar-100 baseline (no committed row is truly flags-off), then run `TPC_PIN_TIMED_WINDOWS` on through the pinned no-oracle gate (`make phase2-gate`) against a matched baseline; promote only if solver-only FPR improves with no new parse failures or timeouts. This is the highest-leverage open item — see [Solver-only headroom](#solver-only-headroom).
 2. **Gate the landed parser fixes together.** The negative-constraint, required-constraint, deterministic-budget, and `required_attraction_types` time-window fixes still need one pinned end-to-end gate against the last promoted familiar row before promotion. The current best flags-on row (`20260721T174336Z`) already carries them but has no matched flags-off counterpart at the same sha.
 3. **Settle the LLM-parse auto-enable.** Run paired `llm_parse` on/off rows at one sha (`make phase2-baseline-at SHA=<ref>` with and without `TPC_P2_LLM_PARSE`, now that `phase2_eval_at.py` shares `agent_env/config.toml` into the worktree) and gate on `continuous_score`. If audit adds spurious constraints with no end-to-end benefit, stop the harness auto-enabling it when a backend is configured (`agent_env/scripts/solve_phase2.py::resolve_llm_client_and_flags`).
@@ -121,7 +123,7 @@ Verified by unit tests (`tests/phase2/test_pin_timed_windows.py`, `tests/phase2/
 
 ## Completed parser work
 
-The parser rose from `~0.20` to `~0.95` familiar-100 F1 (solver-free `scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100`, flags-off deterministic path) through a sequence of structural template fixes. Full per-family tables and the chronological narrative are preserved in the [archive](archive/README.md); the headline sequence and the durable lessons:
+The parser rose from `~0.20` to `~0.99` familiar-100 F1 (solver-free `scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100`; the template fixes run flags-off, the final segmentation row with entity resolution on) through a sequence of structural fixes. Full per-family tables and the chronological narrative are preserved in the [archive](archive/README.md); the headline sequence and the durable lessons:
 
 | Stage (sha) | precision | recall | F1 |
 | --- | --- | --- | --- |
