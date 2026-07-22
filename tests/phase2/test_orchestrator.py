@@ -77,10 +77,10 @@ def test_timeout_recovers_best_plan_from_solve_hook(one_query):
 
 
 def test_improve_invalid_output_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
-    def invalid_improve(plan, query, llm_client, budget_sec):
+    def invalid_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
         return {"not": "a plan"}
 
-    monkeypatch.setattr(O, "llm_refine_stub", invalid_improve)
+    monkeypatch.setattr(O, "llm_refine", invalid_improve)
     plan, telemetry = O.solve_phase2(
         one_query,
         budget_sec=10.0,
@@ -94,11 +94,11 @@ def test_improve_invalid_output_reverts_to_last_valid(one_query, fast_solve_fn, 
 
 
 def test_improve_timeout_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
-    def slow_improve(plan, query, llm_client, budget_sec):
+    def slow_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
         time.sleep(0.3)
         return {"itinerary": []}
 
-    monkeypatch.setattr(O, "llm_refine_stub", slow_improve)
+    monkeypatch.setattr(O, "llm_refine", slow_improve)
     plan, telemetry = O.solve_phase2(
         one_query,
         budget_sec=1.0,

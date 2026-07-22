@@ -1,8 +1,10 @@
-"""Tests for the flag-gated improvement stubs.
+"""Tests for the flag-gated improvement hooks.
 
-All three flags default OFF and the deterministic path must be byte-identical to the current
-no-oracle baseline. When a flag is ON, the pipeline routes through a named no-op stub that does not
-change results (and, in the skeleton, still does not call the LLM).
+All flags default OFF and the deterministic path must be byte-identical to the current no-oracle
+baseline. Disjunction/llm_parse route through named no-op-preserving stubs; llm_refine (Stage 3) is
+a real acceptance-gated repair pass once a TPCAgent-backed solve_fn's ground_and_check hook is
+present (see tests/phase2/test_llm_refine.py) but is still a pure no-op -- no LLM call -- against
+the bare solve_fn stub these tests use, which exposes no such hook.
 """
 
 from __future__ import annotations
@@ -62,22 +64,26 @@ def test_llm_parse_flag_routes_through_stub_without_llm_call(sample_queries, spy
     assert len(spy_llm.calls) == 1
 
 
-def test_llm_refine_flag_routes_through_stub_without_change(one_query, fast_solve_fn, spy_llm, monkeypatch):
+def test_llm_refine_flag_with_no_hook_is_noop_without_llm_call(one_query, fast_solve_fn, spy_llm, monkeypatch):
+    # fast_solve_fn (the bare Stage-2 test stub) exposes no ground_and_check hook -- the shape a
+    # real TPCAgent-backed solve_fn only gets from make_tpcagent_solve_fn -- so llm_refine must
+    # degrade to a pure no-op even with the flag on and a real llm_client, exactly like the other
+    # flag-gated stubs. See tests/phase2/test_llm_refine.py for llm_refine's own repair-path tests.
     calls = {"n": 0}
-    orig = O.llm_refine_stub
+    orig = O.llm_refine
 
-    def spy(plan, query, llm_client, budget_sec):
+    def spy(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
         calls["n"] += 1
-        return orig(plan, query, llm_client, budget_sec)
+        return orig(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits)
 
-    monkeypatch.setattr(O, "llm_refine_stub", spy)
+    monkeypatch.setattr(O, "llm_refine", spy)
     plan_off, _ = O.solve_phase2(one_query, budget_sec=10.0, solve_fn=fast_solve_fn)
     plan_on, _ = O.solve_phase2(
         one_query, budget_sec=10.0, solve_fn=fast_solve_fn, llm_client=spy_llm,
         flags=Flags(llm_refine=True),
     )
     assert calls["n"] == 1
-    assert plan_on == plan_off  # stub is a no-op
+    assert plan_on == plan_off
     assert spy_llm.calls == []
 
 
