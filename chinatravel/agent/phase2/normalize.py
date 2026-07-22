@@ -762,12 +762,12 @@ def _match_catalog_name(text: str, catalog_names: list[str]) -> str | None:
     norm_text = _norm_entity_key(text)
     if not norm_text:
         return None
-    exact = _exact_catalog_match(text, catalog_names)
-    if exact:
-        return exact
     norm_to_orig: dict[str, str] = {}
     for name in catalog_names:
         norm_to_orig.setdefault(_norm_entity_key(name), name)
+
+    if norm_text in norm_to_orig:
+        return norm_to_orig[norm_text]
 
     # Containment only fires when the catalog name covers most of the candidate text (residual
     # label garbage, not a genuine multi-entity string) -- otherwise a short catalog name that
@@ -883,7 +883,7 @@ def _merge_fragmented_list_entries(
     are never falsely joined.
 
     Returns ``(resolved_names, remaining_items)``: ``remaining_items`` keeps any entry that wasn't
-    part of a commited merge (including non-string items) for the normal per-item pipeline, which
+    part of a committed merge (including non-string items) for the normal per-item pipeline, which
     still runs every single-span case (a name with no fragmentation, or one this pass didn't
     resolve) exactly as before.
     """
