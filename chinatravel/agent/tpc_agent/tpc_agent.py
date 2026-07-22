@@ -1178,9 +1178,12 @@ class TPCAgent(BaseAgent):
         This targets the roadmap-G8 failure family (familiar-100's dominant solver-only gap): the
         base build now *includes* the named POI (see ``_apply_search_constraints``' pool projection)
         but the greedy slotter schedules it by visit order, not by its clause window -- e.g. a
-        required 07:50-08:40 hotel breakfast landing at 07:30-08:30. Only local retiming is
-        attempted (recomputing the activity's own inbound leg and the following activity's inbound
-        leg); reordering across the day is out of scope and left to the search restarts."""
+        required 07:50-08:40 hotel breakfast landing at 07:30-08:30. Local retiming is tried first
+        (recomputing the activity's own inbound leg and the following activity's inbound leg); when
+        that lacks slack because a fixed neighbour blocks it (e.g. a required evening visit built
+        into the morning, with another activity already occupying the evening slot), ``_resequence_day``
+        is tried next -- reordering the day's meal/attraction activities around their target windows,
+        with intercity legs and the overnight accommodation stay left fixed."""
         windows = [
             w for w in (constraints.get("activity_time_windows", []) or [])
             if isinstance(w, dict) and w.get("location") and (w.get("earliest") or w.get("end_before"))
@@ -1202,8 +1205,17 @@ class TPCAgent(BaseAgent):
             # reach the window is skipped in favour of a stay-day copy that can).
             if any(self._activity_in_window(plan, d, a, lo, hi) for d, a in matches):
                 continue
+            pinned = False
             for day_idx, act_idx in matches:
                 if self._try_pin_activity(plan, day_idx, act_idx, loc, lo, hi, city, people, check):
+                    pinned = True
+                    break
+            if pinned:
+                continue
+            # Same-slot retime lacked slack (a fixed neighbour blocks it) -- try reordering the
+            # whole day around its target windows instead (roadmap G8 day-resequencer follow-on).
+            for day_idx, act_idx in matches:
+                if self._resequence_day(plan, day_idx, query, constraints, check):
                     break
 
     def _activity_in_window(self, plan, day_idx, act_idx, lo, hi):
@@ -1305,6 +1317,154 @@ class TPCAgent(BaseAgent):
                 if self._match_constraint_text(pos, location) or self._match_constraint_text(location, pos):
                     out.append((day_idx, act_idx))
         return out
+
+    def _window_for_position(self, windows, position):
+        pos = str(position or "")
+        for w in windows:
+            loc = str(w.get("location", ""))
+            if loc and (self._match_constraint_text(pos, loc) or self._match_constraint_text(loc, pos)):
+                return w
+        return None
+
+    def _resequence_day(self, plan, day_idx, query, constraints, check):
+        """Within-day resequencing move (roadmap G8 follow-on): order a day's meal/attraction
+        activities by their target window (windowed POIs at ``[earliest, end_before]``, others by
+        current ``start_time``), recompute each activity's inbound leg sequentially from the new
+        predecessor, and commit on a deepcopy only if the full checker still accepts and the
+        preference key does not regress.
+
+        This is the fallback for when ``_try_pin_activity``'s local, same-slot retime lacks slack
+        (the target's own dwell can move but its neighbours cannot) -- e.g. a required evening
+        visit that the greedy slotter built into the morning. Intercity legs and the overnight
+        accommodation activity are never moved: only the meal/attraction slots between them are
+        reordered, so the floor stays byte-identical when the flag is off."""
+        activities = plan["itinerary"][day_idx].get("activities", []) or []
+        # A missing/empty position is treated as a foreign, non-reorderable anchor -- same
+        # convention as ``_find_activities_at`` -- rather than a movable slot: otherwise its
+        # position would poison the running ``prev_pos`` and silently skip the *next* activity's
+        # inbound-leg recompute (an empty string is falsy, so ``if prev_pos:`` reads it as "no
+        # predecessor" instead of "predecessor with an unknown position").
+        movable_slots = [
+            i for i, a in enumerate(activities)
+            if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
+        ]
+        if len(movable_slots) < 2:
+            return False
+        if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+            # The head/tail recompute below assumes one contiguous movable block bounded by at most
+            # one fixed predecessor and one fixed successor. A fixed activity (e.g. an intercity leg)
+            # sitting between two movable ones would violate that and isn't safe to reorder across.
+            return False
+
+        windows = [
+            w for w in (constraints.get("activity_time_windows", []) or [])
+            if isinstance(w, dict) and w.get("location") and (w.get("earliest") or w.get("end_before"))
+        ]
+
+        def sort_key(act):
+            w = self._window_for_position(windows, act.get("position"))
+            if w is not None:
+                if w.get("earliest"):
+                    return time_to_minutes(str(w["earliest"]))
+                if w.get("end_before"):
+                    return time_to_minutes(str(w["end_before"]))
+            try:
+                return time_to_minutes(str(act.get("start_time", "")))
+            except Exception:
+                return 0
+
+        order = sorted(range(len(movable_slots)), key=lambda k: (sort_key(activities[movable_slots[k]]), k))
+        if order == list(range(len(movable_slots))):
+            return False  # already in target order -- nothing to trial
+
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+
+        trial = deepcopy(plan)
+        tacts = trial["itinerary"][day_idx]["activities"]
+        reordered = [deepcopy(activities[movable_slots[k]]) for k in order]
+
+        # No fixed head (movable_slots[0] == 0) leaves prev_pos/prev_end at None: the activity
+        # landing in slot 0 keeps its own original start/end time and empty transports, exactly
+        # like _try_pin_activity's act_idx == 0 case -- a guessed hotel-departure time here would
+        # misinterpret that activity's own original start_time as a real departure clock.
+        prev_pos, prev_end = None, None
+        if movable_slots[0] > 0:
+            head = tacts[movable_slots[0] - 1]
+            prev_pos = self._activity_end_position(head)
+            if not prev_pos:
+                # A fixed predecessor exists but its position can't be resolved -- bail rather
+                # than silently drop the inbound leg and produce a discontinuous day.
+                return False
+            prev_end = str(head.get("end_time", ""))
+
+        for slot_i, act in zip(movable_slots, reordered):
+            try:
+                cur_start = time_to_minutes(str(act.get("start_time", "")))
+                cur_end = time_to_minutes(str(act.get("end_time", "")))
+            except Exception:
+                return False
+            dwell = max(1, cur_end - cur_start)
+            if prev_pos:
+                try:
+                    transports_in, arrival = self._get_transport(
+                        self.env, city, prev_pos, str(act.get("position", "")), prev_end or "00:00", people)
+                except Exception:
+                    return False
+                if arrival is None:
+                    return False
+                new_start = time_to_minutes(arrival)
+                act["transports"] = transports_in
+            else:
+                new_start = cur_start
+                act["transports"] = []
+            w = self._window_for_position(windows, act.get("position"))
+            if w is not None:
+                lo = time_to_minutes(str(w["earliest"])) if w.get("earliest") else new_start
+                hi = time_to_minutes(str(w["end_before"])) if w.get("end_before") else new_start + dwell
+                new_start = max(new_start, lo)
+                dwell = min(dwell, hi - new_start)
+                if dwell <= 0:
+                    return False
+            new_end = new_start + dwell
+            act["start_time"] = minutes_to_time(new_start)
+            act["end_time"] = minutes_to_time(new_end)
+            tacts[slot_i] = act
+            prev_pos = str(act.get("position", ""))
+            prev_end = minutes_to_time(new_end)
+
+        tail_idx = movable_slots[-1] + 1
+        if tail_idx < len(tacts):
+            # Recompute the inbound leg regardless of the tail's type: an intercity activity's own
+            # `transports` field represents the leg from the previous activity to the station/
+            # airport, and reordering changes what that previous activity is. Its scheduled
+            # start/end time stays fixed (this only rejects if the new arrival can't make it).
+            tail = tacts[tail_idx]
+            tail_pos = self._activity_start_position(tail)
+            if not tail_pos:
+                # Symmetric with the head-side guard above: don't call _get_transport with an
+                # unresolvable destination and risk silently accepting a bogus leg.
+                return False
+            try:
+                transports_out, tail_arrival = self._get_transport(
+                    self.env, city, prev_pos, tail_pos, prev_end, people)
+            except Exception:
+                return False
+            if tail_arrival is None:
+                return False
+            tail_start = str(tail.get("start_time", ""))
+            if tail_start and time_to_minutes(tail_arrival) > time_to_minutes(tail_start):
+                return False
+            tail["transports"] = transports_out
+
+        before_key = self._accepted_eval_key(plan)
+        try:
+            if self._accepted(*check(trial)) and self._accepted_eval_key(trial) >= before_key:
+                plan["itinerary"][day_idx]["activities"] = tacts
+                return True
+        except Exception:
+            return False
+        return False
 
     def _extend_window_meals(self, plan, query, constraints, check, restaurants):
         """Swap a bounding intercity to a wider-window option and add the meal it unlocks.
