@@ -98,6 +98,11 @@ class TPCAgent(BaseAgent):
         self._injected_variants = None
         # Best-so-far plan snapshot exported to the Phase 2 harness when external timeouts fire.
         self._timeout_recovery_plan = None
+        # Constraints dict behind the best-so-far candidate's checker (mirrors
+        # _timeout_recovery_plan's "best so far" semantics). Exported via ground_and_check so the
+        # Phase 2 orchestrator's Stage 3 LLM refine can re-check a trialled edit with the exact
+        # same checker _solve used, without re-deriving constraints or spending solve budget.
+        self._last_solve_constraints = None
 
     def reset_timeout_recovery_plan(self):
         self._timeout_recovery_plan = None
@@ -603,6 +608,7 @@ class TPCAgent(BaseAgent):
         keeps polishing preference score until it stalls.
         """
         self.reset_timeout_recovery_plan()
+        self._last_solve_constraints = None
         stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
@@ -641,8 +647,19 @@ class TPCAgent(BaseAgent):
                     )
                     updated = True
             if updated:
-                best_now = best_accepted["plan"] if best_accepted["plan"] is not None else best["plan"]
+                # Export whichever bucket actually produced best_now -- best_accepted may hold a
+                # plan/constraints pair from an *earlier* call than this one (this call only
+                # improved best["plan"], the unaccepted search-key leader). Using the current
+                # candidate's constraints unconditionally here would mismatch a stale
+                # best_accepted export, so pull constraints from the same bucket as best_now.
+                if best_accepted["plan"] is not None:
+                    best_now = best_accepted["plan"]
+                    constraints_now = best_accepted["constraints"]
+                else:
+                    best_now = best["plan"]
+                    constraints_now = best["constraints"]
                 self._set_timeout_recovery_plan(best_now)
+                self._last_solve_constraints = deepcopy(constraints_now)
             if accepted and stop_at_accept:
                 raise _AcceptedEarlyStop()
             return accepted
@@ -1533,8 +1550,35 @@ class TPCAgent(BaseAgent):
         people = int(query.get("people_number", 1) or 1)
 
         trial = deepcopy(plan)
+        if not self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people,
+                                             windows=windows):
+            return False
+
+        before_key = self._accepted_eval_key(plan)
+        try:
+            if self._accepted(*check(trial)) and self._accepted_eval_key(trial) >= before_key:
+                plan["itinerary"][day_idx]["activities"] = trial["itinerary"][day_idx]["activities"]
+                return True
+        except Exception:
+            return False
+        return False
+
+    def _relayout_movable_block(self, trial, day_idx, movable_slots, order, city, people, windows=None):
+        """Reorder and re-leg one day's contiguous movable (meal/attraction) block in place on
+        ``trial``, shared by ``_resequence_day`` (window-driven order) and the Stage 3 LLM refine's
+        ``reorder_day``/``swap_activity`` edits (LLM-proposed order, no windows).
+
+        ``movable_slots`` are the day's original movable activity indices (already validated
+        contiguous by the caller); ``order`` is a permutation of ``range(len(movable_slots))``
+        giving the new slot order. Every inbound leg from the block's fixed predecessor (if any)
+        through its fixed successor (if any) is recomputed via ``_get_transport``; a leg that
+        cannot be grounded fails the whole relayout. Intercity legs and the day's fixed head/tail
+        are never touched. ``windows`` (``activity_time_windows``-shaped dicts), when given, clamps
+        a retimed slot into its clause window exactly like ``_resequence_day`` always did; omitted
+        for a plain LLM-proposed reorder/swap, which has no window to honor. Returns True on a
+        structurally valid relayout -- callers still apply their own acceptance gate."""
         tacts = trial["itinerary"][day_idx]["activities"]
-        reordered = [deepcopy(activities[movable_slots[k]]) for k in order]
+        reordered = [deepcopy(tacts[movable_slots[k]]) for k in order]
 
         # No fixed head (movable_slots[0] == 0) leaves prev_pos/prev_end at None: the activity
         # landing in slot 0 keeps its own original start/end time and empty transports, exactly
@@ -1570,14 +1614,15 @@ class TPCAgent(BaseAgent):
             else:
                 new_start = cur_start
                 act["transports"] = []
-            w = self._window_for_position(windows, act.get("position"))
-            if w is not None:
-                lo = time_to_minutes(str(w["earliest"])) if w.get("earliest") else new_start
-                hi = time_to_minutes(str(w["end_before"])) if w.get("end_before") else new_start + dwell
-                new_start = max(new_start, lo)
-                dwell = min(dwell, hi - new_start)
-                if dwell <= 0:
-                    return False
+            if windows is not None:
+                w = self._window_for_position(windows, act.get("position"))
+                if w is not None:
+                    lo = time_to_minutes(str(w["earliest"])) if w.get("earliest") else new_start
+                    hi = time_to_minutes(str(w["end_before"])) if w.get("end_before") else new_start + dwell
+                    new_start = max(new_start, lo)
+                    dwell = min(dwell, hi - new_start)
+                    if dwell <= 0:
+                        return False
             new_end = new_start + dwell
             act["start_time"] = minutes_to_time(new_start)
             act["end_time"] = minutes_to_time(new_end)
@@ -1608,15 +1653,297 @@ class TPCAgent(BaseAgent):
             if tail_start and time_to_minutes(tail_arrival) > time_to_minutes(tail_start):
                 return False
             tail["transports"] = transports_out
+        return True
 
-        before_key = self._accepted_eval_key(plan)
+    # --- Stage 3 LLM refine support (roadmap Next step 7 / TPC_P2_LLM_REFINE) ------------------
+    #
+    # The orchestrator's Stage 3 owns the bounded/timed/revert-on-failure control flow (see
+    # ``orchestrator.llm_refine``); these methods are the WorldEnv-grounded primitives it calls
+    # through the ``ground_and_check``/``apply_refine_edits`` hooks ``make_tpcagent_solve_fn``
+    # attaches to the returned solve_fn. The LLM only proposes typed edit ops -- every position,
+    # time, and leg an edit touches is re-derived here from ``self.env``/``_get_transport``, never
+    # trusted from the model's output.
+
+    def ground_and_check(self, plan, query):
+        """Ground ``plan`` against WorldEnv and score it with the same acceptance checker
+        ``_solve`` used for this query's best-so-far candidate (``_last_solve_constraints``,
+        updated live during the search -- mirrors ``_timeout_recovery_plan``'s "best so far"
+        semantics). Falls back to a fresh no-oracle constraint derivation if the search never
+        got that far (e.g. every restart raised). Never raises. Returns ``(accepted,
+        grounded_plan, eval_key, failure_summary)``."""
+        constraints = self._last_solve_constraints
+        if constraints is None:
+            try:
+                variants = self._constraint_variants(query) or [{}]
+                constraints = deepcopy(variants[0] or {})
+            except Exception:
+                constraints = {}
         try:
-            if self._accepted(*check(trial)) and self._accepted_eval_key(trial) >= before_key:
-                plan["itinerary"][day_idx]["activities"] = tacts
-                return True
+            grounded = self._sanitize_plan_for_grounding(deepcopy(plan), query)
+            check = self._make_checker(query, constraints)
+            passed, total = check(grounded)
+        except Exception:
+            return False, plan, None, {}
+        accepted = self._accepted(passed, total)
+        eval_key = self._accepted_eval_key(grounded)
+        failure_summary = self._describe_check_failure(query, constraints, grounded)
+        return accepted, grounded, eval_key, failure_summary
+
+    def _describe_check_failure(self, query, constraints, plan):
+        """Compact, oracle-free description of which no-oracle constraint families and
+        commonsense checks ``plan`` currently fails -- built only from the parsed ``constraints``
+        dict (never ``hard_logic_py``) and the plan itself, for the Stage 3 LLM refine prompt.
+        Family-level (not per-clause) since ``evaluate_parsed_constraints`` returns a flat
+        ``list[bool]`` with no label; re-running it one family at a time is cheap (bounded by the
+        handful of families a query actually has) and needs no duplicated matching logic."""
+        target_city = query.get("target_city", "")
+        failed_families = []
+        for key, value in (constraints or {}).items():
+            if value in (None, [], {}, ""):
+                continue
+            try:
+                results = evaluate_parsed_constraints({key: value}, plan, target_city)
+            except Exception:
+                continue
+            if results and not all(results):
+                failed_families.append(key)
+        return {
+            "failed_constraint_families": failed_families,
+            "failed_commonsense_checks": self._commonsense_failure_columns(query, plan),
+            "schema_ok": self._schema_ok(query, plan),
+        }
+
+    def _commonsense_failure_columns(self, query, plan):
+        """Failing commonsense sub-check names (e.g. ``Is_space_correct``) for ``plan``, reusing
+        the same no-oracle-safe call ``_commonsense_ok`` makes (``query`` is the harness-visible
+        query dict, never ``hard_logic_py``). Returns ``[]`` on any error or when already passing."""
+        uid = str(query.get("uid", ""))
+        try:
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                _, _, result_agg, pass_id = evaluate_commonsense_constraints(
+                    [uid], {uid: query}, {uid: plan}, verbose=False, lang=self.lang)
+            if uid in pass_id:
+                return []
+            rows = result_agg[result_agg["data_id"] == uid]
+            if rows.empty:
+                return []
+            row = rows.iloc[0]
+            return [col for col in result_agg.columns if col != "data_id" and bool(row[col])]
+        except Exception:
+            return []
+
+    _REFINE_MAX_EDITS = 6
+    _REFINE_OP_HANDLERS_ATTR = (
+        ("shift_activity_window", "_refine_shift_activity"),
+        ("drop_activity", "_refine_drop_activity"),
+        ("swap_activity", "_refine_swap_activity"),
+        ("reorder_day", "_refine_reorder_day"),
+    )
+
+    def apply_refine_edits(self, plan, query, edits):
+        """Apply a bounded list of LLM-proposed, typed edit ops to a deepcopy of ``plan``. Each op
+        is grounded against WorldEnv through the same helpers the deterministic repair passes use
+        (``_get_transport``, ``_activity_start/end_position``); an edit that references a day/POI
+        the environment cannot resolve, or that cannot be legally re-legged, is dropped rather than
+        fabricated. Never raises -- the caller re-checks the whole batch with ``ground_and_check``.
+        Returns ``(trial_plan, applied_count)``."""
+        trial = deepcopy(plan)
+        city = str(query.get("target_city", ""))
+        people = int(query.get("people_number", 1) or 1)
+        handlers = dict(self._REFINE_OP_HANDLERS_ATTR)
+        applied = 0
+        for edit in list(edits or [])[: self._REFINE_MAX_EDITS]:
+            if not isinstance(edit, dict):
+                continue
+            handler_name = handlers.get(str(edit.get("op") or "").strip())
+            if handler_name is None:
+                continue
+            handler = getattr(self, handler_name)
+            try:
+                if handler(trial, edit, city, people):
+                    applied += 1
+            except Exception:
+                continue
+        return trial, applied
+
+    def _refine_day_index(self, plan, day_value):
+        """Resolve an edit's 1-based ``day`` field to an itinerary index: match the day object's
+        own ``day`` field first (robust to a plan whose list order and day numbers ever diverge),
+        falling back to treating ``day_value`` as a 1-based position."""
+        itinerary = plan.get("itinerary", []) or []
+        try:
+            day_num = int(day_value)
+        except (TypeError, ValueError):
+            return None
+        for idx, day in enumerate(itinerary):
+            if isinstance(day, dict) and day.get("day") == day_num:
+                return idx
+        if 1 <= day_num <= len(itinerary):
+            return day_num - 1
+        return None
+
+    def _refine_find_activity_index(self, activities, location):
+        """Index of the meal/attraction activity in ``activities`` whose position matches
+        ``location`` (same bidirectional text match as ``_find_activities_at``). ``None`` when the
+        edit names a POI not actually in this day -- the caller drops such an edit."""
+        if not isinstance(location, str) or not location.strip():
+            return None
+        for idx, act in enumerate(activities):
+            if not isinstance(act, dict) or act.get("type") not in self._WINDOW_ACTIVITY_TYPES:
+                continue
+            pos = str(act.get("position", ""))
+            if pos and self._match_constraint_text(pos, location):
+                return idx
+        return None
+
+    def _refine_shift_activity(self, trial, edit, city, people):
+        """``shift_activity_window`` edit: retime one named activity to an explicit
+        ``[start_time, end_time]``, recomputing its own inbound leg and the following activity's
+        inbound leg (same grounding as ``_try_pin_activity``, without that method's own
+        accept-gate -- the batch is gated once, by the caller, via ``ground_and_check``)."""
+        day_idx = self._refine_day_index(trial, edit.get("day"))
+        if day_idx is None:
+            return False
+        activities = trial["itinerary"][day_idx].get("activities", []) or []
+        act_idx = self._refine_find_activity_index(activities, edit.get("location"))
+        if act_idx is None:
+            return False
+        activity = activities[act_idx]
+        try:
+            cur_start = time_to_minutes(str(activity.get("start_time", "00:00")))
+            cur_end = time_to_minutes(str(activity.get("end_time", "00:00")))
+            new_start = time_to_minutes(str(edit["start_time"])) if edit.get("start_time") else cur_start
+            new_end = time_to_minutes(str(edit["end_time"])) if edit.get("end_time") else cur_end
         except Exception:
             return False
-        return False
+        if new_end <= new_start:
+            return False
+
+        if act_idx > 0 and activities[act_idx - 1].get("type") not in ("airplane", "train"):
+            prev = activities[act_idx - 1]
+            from_pos = self._activity_end_position(prev)
+            depart = str(prev.get("end_time", "")) or minutes_to_time(new_start)
+            try:
+                transports_in, arrival = self._get_transport(
+                    self.env, city, from_pos, self._activity_start_position(activity), depart, people)
+            except Exception:
+                return False
+            if arrival is None:
+                return False
+            new_start = max(new_start, time_to_minutes(arrival))
+            activity["transports"] = transports_in
+        if new_end <= new_start:
+            return False
+        activity["start_time"] = minutes_to_time(new_start)
+        activity["end_time"] = minutes_to_time(new_end)
+
+        if act_idx + 1 < len(activities) and activities[act_idx + 1].get("type") not in ("airplane", "train"):
+            nxt = activities[act_idx + 1]
+            next_pos = self._activity_start_position(nxt)
+            try:
+                transports_out, next_arrival = self._get_transport(
+                    self.env, city, self._activity_end_position(activity), next_pos, minutes_to_time(new_end), people)
+            except Exception:
+                return False
+            if next_arrival is None:
+                return False
+            next_start = str(nxt.get("start_time", ""))
+            if next_start and time_to_minutes(next_arrival) > time_to_minutes(next_start):
+                return False
+            nxt["transports"] = transports_out
+        return True
+
+    def _refine_drop_activity(self, trial, edit, city, people):
+        """``drop_activity`` edit: remove one named activity from its day and reconnect the
+        following activity's inbound leg from the new previous activity (same reconnect pattern as
+        ``_sanitize_plan_for_grounding``'s illegal-intercity cleanup). Never drops a day down to
+        zero activities."""
+        day_idx = self._refine_day_index(trial, edit.get("day"))
+        if day_idx is None:
+            return False
+        activities = trial["itinerary"][day_idx].get("activities", []) or []
+        if len(activities) <= 1:
+            return False
+        act_idx = self._refine_find_activity_index(activities, edit.get("location"))
+        if act_idx is None:
+            return False
+        del activities[act_idx]
+        if act_idx < len(activities):
+            nxt = activities[act_idx]
+            if nxt.get("type") not in ("airplane", "train"):
+                transports = []
+                if act_idx > 0:
+                    prev = activities[act_idx - 1]
+                    from_pos = self._activity_end_position(prev)
+                    depart = str(prev.get("end_time", ""))
+                    to_pos = self._activity_start_position(nxt)
+                    if from_pos and depart and to_pos:
+                        try:
+                            transports, _arrival = self._get_transport(self.env, city, from_pos, to_pos, depart, people)
+                        except Exception:
+                            transports = []
+                nxt["transports"] = transports or []
+        return True
+
+    def _refine_swap_activity(self, trial, edit, city, people):
+        """``swap_activity`` edit: swap two named activities' order within a day and re-leg the
+        day's movable block (``_relayout_movable_block``, no window clamp)."""
+        day_idx = self._refine_day_index(trial, edit.get("day"))
+        if day_idx is None:
+            return False
+        activities = trial["itinerary"][day_idx].get("activities", []) or []
+        movable_slots = [
+            i for i, a in enumerate(activities)
+            if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
+        ]
+        if len(movable_slots) < 2 or movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+            return False
+        idx_a = self._refine_find_activity_index(activities, edit.get("location_a"))
+        idx_b = self._refine_find_activity_index(activities, edit.get("location_b"))
+        if idx_a is None or idx_b is None or idx_a == idx_b:
+            return False
+        if idx_a not in movable_slots or idx_b not in movable_slots:
+            return False
+        pos_a, pos_b = movable_slots.index(idx_a), movable_slots.index(idx_b)
+        order = list(range(len(movable_slots)))
+        order[pos_a], order[pos_b] = order[pos_b], order[pos_a]
+        return self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people)
+
+    def _refine_reorder_day(self, trial, edit, city, people):
+        """``reorder_day`` edit: reorder a day's movable block to an explicit LLM-given
+        ``order`` (list of position names). A named entry that cannot be matched, or that is
+        missing entirely, keeps the unmatched slots at the end in their original relative order --
+        a partial match is worse than nothing, but not fatal on its own; the caller's acceptance
+        gate is the real filter."""
+        day_idx = self._refine_day_index(trial, edit.get("day"))
+        if day_idx is None:
+            return False
+        activities = trial["itinerary"][day_idx].get("activities", []) or []
+        movable_slots = [
+            i for i, a in enumerate(activities)
+            if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
+        ]
+        if len(movable_slots) < 2 or movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+            return False
+
+        order_locations = [x for x in (edit.get("order") or []) if isinstance(x, str)]
+        if not order_locations:
+            return False
+        remaining = list(range(len(movable_slots)))
+        picked = []
+        for loc in order_locations:
+            match_k = None
+            for k in remaining:
+                if self._match_constraint_text(activities[movable_slots[k]].get("position", ""), loc):
+                    match_k = k
+                    break
+            if match_k is not None:
+                picked.append(match_k)
+                remaining.remove(match_k)
+        order = picked + remaining
+        if order == list(range(len(movable_slots))):
+            return False  # no actual change proposed
+        return self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people)
 
     def _extend_window_meals(self, plan, query, constraints, check, restaurants):
         """Swap a bounding intercity to a wider-window option and add the meal it unlocks.
