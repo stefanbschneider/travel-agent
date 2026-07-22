@@ -181,6 +181,29 @@ def test_repair_skips_first_activity_and_intercity():
     assert plan["itinerary"][0]["activities"][1] == snapshot_train
 
 
+def test_repair_gap_detection_uses_normalize_poi_name_not_raw_strings():
+    """Two alias-equivalent POI names (see concept_func._POI_NAME_ALIASES: "Bistro Sola" <->
+    "Sola Bistro") are the *same* position to Is_space_correct's own normalize_poi_name-based
+    comparison -- the repair pass must not attempt (and cost) a leg between them just because the
+    raw strings differ (Copilot review on PR #29)."""
+    def boom(env, city, frm, to, depart, people):
+        raise AssertionError("must not attempt a transport fix between alias-equivalent positions")
+
+    agent = _bare_agent(boom)
+    plan = {
+        "itinerary": [
+            {"activities": [
+                {"type": "attraction", "position": "Sola Bistro", "start_time": "09:00",
+                 "end_time": "10:00", "price": 0, "cost": 0, "tickets": 1, "transports": []},
+                {"type": "lunch", "position": "Bistro Sola", "start_time": "10:30",
+                 "end_time": "11:30", "price": 20, "cost": 20, "tickets": 1, "transports": []},
+            ]}
+        ]
+    }
+    agent._repair_transport_gaps(plan, QUERY, {}, lambda p: (1, 1))
+    assert plan["itinerary"][0]["activities"][1]["transports"] == []
+
+
 def test_repair_is_noop_when_nothing_broken():
     agent = _bare_agent(_zero_time_transport)
     plan = _broken_plan()

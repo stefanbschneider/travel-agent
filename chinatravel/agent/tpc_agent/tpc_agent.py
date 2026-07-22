@@ -1271,7 +1271,12 @@ class TPCAgent(BaseAgent):
                     is_intercity = activity.get("type") in ("airplane", "train")
                     if prev_pos is not None and not is_intercity:
                         cur_pos = self._activity_start_position(activity)
-                        if cur_pos and cur_pos != prev_pos:
+                        # Compare via normalize_poi_name, exactly like Is_space_correct's own
+                        # position_list check -- two alias-equivalent names (e.g. a POI listed
+                        # under both a short and long form) are the same position to the checker,
+                        # so raw-string inequality here would misfire a repair (and its cost) where
+                        # none is required.
+                        if cur_pos and normalize_poi_name(cur_pos) != normalize_poi_name(prev_pos):
                             if self._fix_transport_leg_if_broken(
                                 activity, prev_pos, prev_end, city, people
                             ):
