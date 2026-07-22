@@ -21,9 +21,8 @@ The public material does not specify a per-query timeout or repeat count; local 
 | Shared solver architecture | [AGENT_DESIGN.md](AGENT_DESIGN.md) and [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md) |
 | Phase 1 operation | [Phase 1 playbook](docs/tpc_phase1_playbook.md) |
 | Phase 2 architecture | [Phase 2 design](docs/tpc_phase2_design.md) |
-| Phase 2 metrics and gates | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
-| Phase 2 priorities | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
-| Dataset boundaries | [Dataset guide](docs/tpc_phase2_hf_dataset.md) |
+| Phase 2 metrics, gates, and dataset boundaries | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
+| Phase 2 priorities and solver headroom | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |
 | Agent environment | [Human guide](agent_env/README.md) and [agent contract](agent_env/SKILL.md) |
 | Historical decisions and measurements | [Documentation archive](docs/archive/README.md) |

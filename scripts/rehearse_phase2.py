@@ -90,7 +90,7 @@ def resolve_split_set(split_set: str) -> tuple[str, bool]:
     ``val``/``test`` partition the repository-local tpc_phase1 queries. ``familiar_100`` selects
     the organizers' imported official development set (tpc_phase2_familiar_100); it is drawn from
     the final distribution but is development-only and is not the held-out test, so it carries no
-    overfitting warning (see docs/tpc_phase2_hf_dataset.md).
+    overfitting warning (see docs/tpc_phase2_eval.md).
     """
     if split_set == "val":
         return "tpc_phase2_val", False

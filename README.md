@@ -50,15 +50,14 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 ## Current state
 
-Phase 1 operations are mature. The current pinned no-oracle familiar-100 reference is [run `20260718T155006Z`](results/phase2_baselines/runs/20260718T155006Z.json): the focused activity-window parser fix raises mean end-to-end FPR from `2.0%` to `7.5%` and mean continuous score from `36.0610` to `39.1265` under the local `300 s` assumption, passing the like-for-like gate. The official development set has no best plans, so no ceiling is available; it is not the final held-out evaluation set.
+Phase 1 operations are mature. On the familiar-100 development set the parser is now at `~0.95` F1 with zero missing families, so the binding ceiling has shifted from parsing to the solver: with oracle-perfect constraints the solver still passes only `~26/100` (solver-only FPR), dominated by the timed-visit-at-named-POI family. The current flags-on reference is [run `20260721T174336Z`](results/phase2_baselines/runs/20260721T174336Z.json) (mean end-to-end FPR `21.5%`, `overall_true` `45.06`, `300 s` local budget). Timed-window pinning and a within-day resequencer that target the solver ceiling have landed opt-in but are not yet gated. See the [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for the shortcomings review and prioritized next steps. The official development set has no best plans, so no ceiling is available; it is not the final held-out evaluation set.
 
 ## Documentation
 
 - [Phase 1 playbook](docs/tpc_phase1_playbook.md): operating flow and reusable solver lessons.
 - [Phase 2 design](docs/tpc_phase2_design.md): stable architecture and interfaces.
-- [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, and gates.
-- [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions and evidence-backed priorities.
-- [Dataset provenance](docs/tpc_phase2_hf_dataset.md): HF, local, familiar-100, and final-data boundaries.
+- [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, gates, and dataset boundaries (HF, local, familiar-100, final).
+- [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions, evidence-backed priorities, and solver headroom.
 - [Baseline ledger guide](docs/phase2_baselines/README.md): how to compare generated rows in `results/phase2_baselines/`.
 - [Competition reference](docs/reference/competition.md): dated local summary of official facts.
 - [Agent design](AGENT_DESIGN.md): shared component and data-flow map.

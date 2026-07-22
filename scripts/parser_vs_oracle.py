@@ -273,12 +273,12 @@ def _hf_city_lookup() -> dict[str, str]:
 
 
 def load_hf_queries(config: str = "default", splits: list[str] | None = None):
-    """Load the HF ``LAMDA-NeSy/ChinaTravel`` dataset (see ``docs/tpc_phase2_hf_dataset.md``) in
+    """Load the HF ``LAMDA-NeSy/ChinaTravel`` dataset (see ``docs/tpc_phase2_eval.md``) in
     the same ``(query_ids, query_data)`` shape ``_load_queries`` returns, normalized to what the
     local pipeline expects: ``nature_language_en`` -> ``nature_language``, Chinese city names ->
     English, ``hard_logic_py`` literal-eval'd if it arrived as a string. A **measurement set**,
     never tuned against (uid-disjoint from ``tpc_phase1`` per the compare-script findings) --
-    read-only by design, see docs/tpc_phase2_hf_dataset.md.
+    read-only by design, see docs/tpc_phase2_eval.md.
     """
     import ast
 
@@ -709,7 +709,7 @@ def parse_args() -> argparse.Namespace:
                         "families against the target city's POI catalog.")
     p.add_argument("--hf-config", default=None, choices=["default", "preference"],
                    help="Measure against the HF LAMDA-NeSy/ChinaTravel dataset instead of a local "
-                        "split (see docs/tpc_phase2_hf_dataset.md) -- a held-out phrasing "
+                        "split (see docs/tpc_phase2_eval.md) -- a held-out phrasing "
                         "generalization probe, uid-disjoint from tpc_phase1. Overrides --split/"
                         "--split-set. A measurement set only -- never tune the parser against it.")
     p.add_argument("--hf-splits", nargs="*", default=None,

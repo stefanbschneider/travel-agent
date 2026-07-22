@@ -1,7 +1,8 @@
 # TPC 2026 Phase 2 Roadmap
 
-This is the only active Phase 2 plan.
+This is the only active Phase 2 plan. It also absorbs the former solver-headroom note.
 Historical step plans, chronology, and superseded priorities are preserved in the [Phase 2 archive](archive/README.md).
+For measurement discipline and dataset boundaries, see [Phase 2 evaluation](tpc_phase2_eval.md).
 
 ## Completed capabilities
 
@@ -11,17 +12,34 @@ Historical step plans, chronology, and superseded priorities are preserved in th
 - Rehearsal supports ceiling, solver-only, and end-to-end attribution; parser comparison and regression gates are available.
 - Baselines can run from a pinned source revision and publish committed rows under `results/phase2_baselines/`.
 - The official familiar-100 records are imported byte-for-byte with a pinned archive checksum, per-member manifest, dedicated split, and explicit no-oracle boundary.
+- **Parser lifted from `~0.20` to `~0.99` familiar-100 F1** with zero missing families — the last step being the comma-in-name entity-resolution segmentation fix (`62df2a0b`, F1 `0.9316 -> 0.9908`; see [Completed parser work](#completed-parser-work)).
+- **Timed-window pinning and a within-day resequencer landed opt-in** behind `TPC_PIN_TIMED_WINDOWS` (default off, floor byte-identical), targeting the dominant solver-only failure family (see [Solver-only headroom](#solver-only-headroom)).
 
 These capabilities are not evidence of final-evaluation performance.
 
 ## Current evidence
 
-The current local reference is the promoted no-oracle Qwen [familiar-100 run `20260718T155006Z`](../results/phase2_baselines/runs/20260718T155006Z.json), measured at parser-fix commit `ae6337f0`. It is like-for-like with [anchor `20260716T090638Z`](../results/phase2_baselines/runs/20260716T090638Z.json): official familiar archive, DeepInfra `Qwen/Qwen3.6-27B`, two fresh repeats, the harness-default Phase 2 flags (`disjunction`, `dynamic_budget`, `entity_resolution`, and `llm_parse` on — *not* library-default; see the note below), and the local `300 s` budget assumption.
-The continuous-score gate passes without reasons or advisories. Mean end-to-end FPR moves `2.0% -> 7.5%`, mean end-to-end `overall_true` moves `36.0610 -> 39.1265`, and solver-only FPR stays `26.0%`. The mean continuous parser gap closes from `12.2369` to `7.9591`. Full-split parser precision/recall/F1 move `0.4445 / 0.1281 / 0.1988 -> 0.8180 / 0.3518 / 0.4920`.
-All `100/100` candidate outputs are valid, with zero parse failures, fallbacks, or budget overruns. End-to-end bounded-solver timeouts move `35 -> 34`; solver-only timeouts remain `23`, all recovered into solver-pass cases.
-The familiar release has no organizer best plans, so its ceiling is unavailable rather than zero. This repository-local development result is not an estimate of final held-out performance.
+The current local reference for the flags-on harness path is [familiar-100 run `20260721T174336Z`](../results/phase2_baselines/runs/20260721T174336Z.json) (`familiar100-negconstraint-llmon`, sha `1de62e99`, two fresh repeats, harness-default flags with `llm_parse` audit on, `300 s` budget). It carries all the landed parser fixes: parser precision/recall/F1 are each `0.9510` with zero missing, mean end-to-end FPR `21.5%`, mean end-to-end `overall_true` `45.06`, solver-only FPR `25.5%`. All `100/100` outputs are valid; zero parse failures, zero fallbacks, zero budget overruns.
 
-> **Note — flag description reconciled.** The two rows above are described as using *both* DeepInfra `Qwen/Qwen3.6-27B` *and* "library-default Phase 2 flags," which cannot both hold: library-default `Flags()` keeps `llm_parse` off and makes zero LLM calls. Their telemetry settles it — `20260718T155006Z` records `llm_parse_attempted: 100`, so it **did** run the Qwen LLM audit. The correct description is the harness path (`resolve_llm_client_and_flags`): `disjunction`, `dynamic_budget`, `entity_resolution`, and — because a backend was configured — `llm_parse`, all on (not library-default). Those two rows predate flag recording, so read that "library-default" wording as an error, not their configuration. Baseline rows now record the resolved flags under `flags` (see the [ledger guide](phase2_baselines/README.md)).
+Two facts from this row set the roadmap:
+
+1. **Solver-only FPR (`~26`) is now the binding ceiling.** With oracle-perfect constraints the solver still passes only `26/100`, stable across every committed familiar row and repeat. The parser is no longer the bottleneck on familiar-100; the solver is.
+2. **The median query runs to the budget wall.** Solve `p50 = 270 s` at a `300 s` budget, and `38/100` end-to-end queries time out (all recovered into valid plans). The restart loop consumes the whole budget rather than converging, so wall-clock is a live constraint and the recovery path is load-bearing.
+
+The earlier promoted anchor was [`20260718T155006Z`](../results/phase2_baselines/runs/20260718T155006Z.json) (`ae6337f0`); it and `20260716T090638Z` predate flag recording and were mislabeled "library-default" — their telemetry (`llm_parse_attempted: 100`) shows they ran the Qwen audit path. Baseline rows now record resolved flags under `flags`.
+
+The familiar release has no organizer best plans, so its ceiling is unavailable rather than zero. Every number here is a repository-local development result, not an estimate of final held-out performance.
+
+## Shortcomings of the current agent
+
+A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAgent`) against the latest evidence surfaces six shortcomings, roughly in leverage order.
+
+1. **Solver-only ceiling dominated by one family.** `26/100` solver-only pass with perfect constraints; `timed_visit_named_poi` is the *sole* logical blocker in `53` of the `74` failures. The landed pinning + resequencer (opt-in, ungated) target exactly this but have not been measured through the gate. This is the single highest-leverage gap. See [Solver-only headroom](#solver-only-headroom).
+2. **Budget-bound solver with no early convergence.** Solve `p50` sits at the budget wall; `38%` of queries time out and survive only through timeout recovery. The seeded-restart loop has no "good enough, stop" signal short of the wall, so extra budget buys little and the recovery plan carries a large share of outputs. A convergence/early-accept heuristic (distinct from the evaluation-only `TPC_SOLVE_STOP_AT_ACCEPT`) and a restart-budget study are open.
+3. **Stage 3 "improve" is a no-op.** `orchestrator.llm_refine_stub` returns the plan unchanged and never calls the LLM (`improve` stage `p50 ≈ 1 µs`). The reserved improve slice is either wasted or, with `dynamic_budget`, reallocated to solve. There is no bounded, acceptance-gated refinement of an already-valid plan — a designed extension point that is still empty.
+4. **Commonsense residual is unaddressed.** Even at solver-only, `~24/100` fail commonsense, dominated by "Invalid Transport information across positions" (`18`) and intercity-event grounding (`6`). These are produced-but-invalid plans, so the feasible fallback does not help them; they need a transport-grounding repair, not more search.
+5. **Parser value-segmentation residual — largely closed, pending gate.** The comma-/`" and "`-in-name `wrong_value` residual was fixed on `main` (`62df2a0b`) via maximum-munch catalog segmentation plus a restaurant/hotel matching-pool broadening, taking familiar-100 F1 `0.9316 -> 0.9908` (wrong_value `47 -> 6`). It is diagnostic evidence only — not yet through the end-to-end gate — and a `6`-case residual remains from a *different* upstream bug: abbreviation-period truncation (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser.
+6. **LLM-parse decision is not yet cleanly gated end-to-end.** Parser-level evidence says audit mode is neutral-to-negative, yet the harness auto-enables it whenever a backend is configured, and the two end-to-end points that bracket it are at different shas (`nollm` at `7d5e1910`, `llmon` at `1de62e99`) so they conflate parser code with the flag. A paired on/off gate at one sha is now runnable and should settle the auto-enable.
 
 ## Operating rules
 
@@ -32,167 +50,116 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 5. **Gate end-to-end behavior.** Parser statistics guide diagnosis but do not promote a change alone. Gate a like-for-like end-to-end row; use `continuous_score` when available and reject increased parse failures or timeouts.
 6. **Preserve development signals.** Do not tune repeatedly on the organizer final set. Treat local partitions, HF data, familiar-100, and final evaluation as distinct sources.
 
-## Highest priority
+## Next steps (priority order)
 
-1. The focused deterministic budget parser change is committed at `c428dd6c`; it maps the five familiar line-scoped cap templates into the existing solver buckets. Its solver-free familiar report (regenerated at that revision) reproduces `0.8502 / 0.4561 / 0.5937` precision/recall/F1, up from `0.8180 / 0.3518 / 0.4920`. This is diagnostic evidence, not promotion.
-2. Measure the budget change through the normal pinned no-oracle gate before touching another family. The latest promoted familiar row (`20260718T155006Z`, `ae6337f0`) predates the budget commit, so the two are not yet like-for-like.
-3. The negative/excluded-constraint families and the positive `required_*` families are now both covered by deterministic templates (see "Negative-constraint parser fix" and "Required-constraint parser fix" below), taking familiar-100 parser F1 from `~0.49` to `~0.94` with zero missing. These, plus the budget change, all still need the pinned end-to-end gate before promotion.
-Familiar-100 is a development-only set drawn from the final distribution; its result must not be reported as a final-evaluation estimate.
+1. **Gate the solver-headroom step.** Record a clean flags-off solver-only familiar-100 baseline (no committed row is truly flags-off), then run `TPC_PIN_TIMED_WINDOWS` on through the pinned no-oracle gate (`make phase2-gate`) against a matched baseline; promote only if solver-only FPR improves with no new parse failures or timeouts. This is the highest-leverage open item — see [Solver-only headroom](#solver-only-headroom).
+2. **Gate the landed parser fixes together.** The negative-constraint, required-constraint, deterministic-budget, and `required_attraction_types` time-window fixes still need one pinned end-to-end gate against the last promoted familiar row before promotion. The current best flags-on row (`20260721T174336Z`) already carries them but has no matched flags-off counterpart at the same sha.
+3. **Settle the LLM-parse auto-enable.** Run paired `llm_parse` on/off rows at one sha (`make phase2-baseline-at SHA=<ref>` with and without `TPC_P2_LLM_PARSE`, now that `phase2_eval_at.py` shares `agent_env/config.toml` into the worktree) and gate on `continuous_score`. If audit adds spurious constraints with no end-to-end benefit, stop the harness auto-enabling it when a backend is configured (`agent_env/scripts/solve_phase2.py::resolve_llm_client_and_flags`).
+4. **Attack the commonsense-transport residual.** Root-cause "Invalid Transport information across positions" (`18` solver-only) and intercity-event grounding (`6`); prefer a grounded transport-repair pass over more search. This is the second solver surface after the timed-visit family.
+5. **Study the solver budget/convergence.** Because solve `p50` is at the wall with `38%` timeouts, quantify the restart-count vs. score curve and add an early-convergence stop distinct from the evaluation-only `TPC_SOLVE_STOP_AT_ACCEPT`. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded — the current one is not (all `22`–`23` solver-only timeouts recover into pass cases; none of the failures timed out).
+6. **Gate the landed entity-resolution segmentation fix** (`62df2a0b`, comma-in-name residual) and, separately, address the `6`-case abbreviation-period truncation residual (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser — a distinct upstream bug, not a segmentation gap.
+7. **Consider implementing Stage 3 refine.** Only after the above: a bounded, acceptance-gated refinement of an already-valid plan, keeping the change only if acceptance still passes. Today it is an intentional no-op placeholder.
+8. **Package and smoke-test the official harness interface**, including oracle hiding, output layout, and tool access (`agent_env/scripts/solve_phase2.py`, `solve_script_with_harness.py`; entry-point smoke tests exist).
 
-## Parser recall attribution (familiar-100, solver-free)
+The public material still does not specify a runtime contract. Until it does, `300 s` and `900 s` are local assumptions for sensitivity analysis, not organizer-confirmed limits.
 
-Solver-free `scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100` at `c428dd6c` (deterministic parser, no LLM audit) explains why familiar-100 end-to-end FPR (`7.0`) is far below repository-local val (`85.9`): the parser drops most of the constraints these denser queries carry. Familiar records average `~38` `hard_logic_py` constraints each versus `~16` in the released Phase 1 source that `tpc_phase2_val` is partitioned from, so this is out-of-distribution constraint density, not a val regression.
+## Solver-only headroom
 
-Of `359` missing constraints across the split, `266` (`74%`) come from five negative families the deterministic parser extracts **zero** of:
+Diagnostic analysis of the **solver-only** failure surface (oracle constraints fed to a bounded solve, parser removed) on familiar-100, plus the landed opt-in step to close it. Development signal only; the relevant invariant is G8 in the [archived gap map](archive/phase2/tpc_phase2_plan3.md).
 
-| Family | matched | missing | spurious | wrong_value |
-| --- | --- | --- | --- | --- |
-| `excluded_cuisine_types` | 0 | 55 | 0 | 0 |
-| `excluded_hotels` | 0 | 55 | 0 | 0 |
-| `excluded_attractions` | 0 | 54 | 0 | 0 |
-| `excluded_restaurants` | 0 | 53 | 0 | 0 |
-| `excluded_attraction_types` | 0 | 49 | 0 | 0 |
-| `required_attractions` | 0 | 23 | 0 | 0 |
-| `required_restaurants` | 0 | 18 | 0 | 0 |
-| `required_hotel_all_types` | 0 | 16 | 0 | 0 |
-| `required_attraction_types` | 0 | 15 | 12 | 5 |
-| `cuisine_preference` | 0 | 12 | 0 | 0 |
-| `room_type` | 0 | 9 | 0 | 0 |
-| `required_hotels` | 0 | 0 | 31 | 16 |
+Reproduce offline (reads the committed baseline's per-clause verdicts and the split's oracle `hard_logic_py`; no LLM calls, no re-solve):
 
-The oracle encodes negatives as `result=not({<names>} & <set>)` (e.g. `result=not({"Red tourism sites"}&attraction_type_set)`). All `100/100` queries carry at least one such constraint, so a dropped negative lets the solver include a forbidden item on essentially every query and fail that query's all-constraints FPR — the direct mechanism behind the val-to-familiar FPR collapse. This was a structural coverage gap (no template mapped the negative shape), not a value error: extracted-side precision was healthy (`0.8502`) and value-accuracy `0.9485`. `required_hotels` is the one notable precision leak (`31` spurious, `16` wrong_value) and stays a second-order concern behind the negatives.
+```
+python3 scripts/phase2_solver_failure_attribution.py            # latest familiar row, solver-only
+python3 scripts/phase2_solver_failure_attribution.py --mode end-to-end
+```
 
-## Negative-constraint parser fix
+Against `results/phase2_baselines/runs/20260718T155006Z.json`:
 
-The five negative families all surface in the NL through one uniform familiar-100 template — `Do not include any of these <category>: A, B and C.` — that none of the older `do not want to visit/stay/try …` patterns matched. `parse_constraints._do_not_include_items` now parses it and feeds the five `parse_excluded_*` extractors, with:
-
-- **category anchoring at the `:` list marker**, so a name category (`hotels`) never fires on a sibling type category (`hotel feature types`), and `attractions`/`restaurants` never fire on `attraction types`/`restaurant types`;
-- **verbatim values for the type families** (`excluded_attraction_types`, `excluded_cuisine_types`) — the NL uses the oracle's own vocabulary/casing, so routing through the lower-casing alias table would drop unaliased types like `Library/Memorial Hall`;
-- **compound-vocabulary protection** for cuisine values that legitimately contain `" and "` (`Fast food and casual dining`, `Bakery and Desserts`), read once from the committed `database_en` restaurant CSVs (deterministic environment data, not oracle); and
-- **Oxford-comma handling** so `A, B, and C` does not leave a leading `and C` fragment.
-
-Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100` moves as follows (flags-off deterministic path, the headline signal):
-
-| Metric | Before (`c428dd6c`) | After | After + entity-resolution (harness default) |
-| --- | --- | --- | --- |
-| precision | 0.8502 | 0.8620 | 0.8747 |
-| recall | 0.4561 | 0.8036 | 0.8148 |
-| F1 | 0.5937 | 0.8317 | 0.8437 |
-| value-accuracy | 0.9485 | 0.9224 | 0.9354 |
-
-All five negative families now have **zero missing** (full recall); `excluded_cuisine_types` and `excluded_attraction_types` match exactly (`55/55`, `49/49`, zero wrong-value). The residual `wrong_value` (`~16` hotels, `~8` restaurants, `~2` attractions) are proper names that contain internal commas/`" and "` and can only be segmented against the city catalog — a pre-existing entity-resolution limitation, not specific to this template. This is diagnostic evidence: it must clear the pinned no-oracle gate against the last promoted row before promotion, and it is not a final-evaluation estimate.
-
-## Required-constraint parser fix
-
-The positive requirements use the mirror-image template — `<Visit|Dine at|Stay at|Include> the following <category>: A, B and C.` — parsed by `parse_constraints._the_following_items` (which shares its splitting core, `_list_after_marker`, with the negative helper). It feeds the `required_*` extractors with the same category anchoring, verbatim type values, compound-cuisine protection, and Oxford-comma handling, plus a negated-lead-in guard so it never fires on a `do not …` clause. Two precision guards accompany it:
-
-- **junk-label guard**: the older `^visit …` / broad `stay at …` patterns captured the `the following attractions:` / `hotels:` label as part of the first name (e.g. `hotels: Golden Eagle Summit Hotel`) — those template lines are now skipped so the clean template owns them;
-- **time-window guard**: `Stay at X between 21:39 and 24:00` is an activity-time-window/position constraint, not a required hotel; the broad `stay at` pattern no longer emits a (junk-valued) `required_hotels` entry for it.
-
-`room_type` also gained the familiar `Each accommodation stay must use <single|twin>-bed rooms.` phrasing.
-
-Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100`, measured from the post-negatives-merge baseline (`7d5e1910`):
-
-| Metric | Before | After | After + entity-resolution (harness default) |
-| --- | --- | --- | --- |
-| precision | 0.8620 | 0.9402 | 0.9193 |
-| recall | 0.8036 | 0.9487 | 0.9284 |
-| F1 | 0.8317 | 0.9444 | 0.9239 |
-
-Every family now has **zero missing** (full-split recall). `required_hotel_all_types`, `cuisine_preference`, `required_hotels`, and `room_type` match exactly with zero wrong-value; `required_hotels` in particular went from `0` matched / `31` spurious / `16` wrong-value to `16 / 0 / 0` once the two guards landed. Remaining defects: `required_attraction_types` keeps `7` spurious (pre-existing substring false positives like `park` inside `Free parking`, down from `12`; tightening them risks a val regression), and the comma-in-name `wrong_value` residual (`~4` attractions, `~3` restaurants) is the same catalog-segmentation limit as the negatives. Val is unchanged (`f1 0.7268 -> 0.7272`): the `the following` template is inert on the phase-1 partition. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
-
-## `required_attraction_types` time-window guard
-
-Root-caused the `7` remaining familiar-100 `required_attraction_types` spurious entries flagged above: the actual mechanism is not `park` inside a hotel-feature phrase like `Free parking` (a different family) but a POI **name** that happens to contain a known type word, picked up by `parse_required_attraction_types`'s unanchored `[Vv]isit\s+(.+?)...` fallback when it scans a numbered-line `Visit X between A and B` sentence — territory `parse_activity_time_windows` (`_CONTAINED_BETWEEN_WINDOW_RE`) already owns. E.g. `Visit Golden Eagle Art Museum between 14:44 and 16:34.` matched the `Art Museum` known-type substring; `Visit Baihua Tan Park between 09:31 and 11:16.` matched `park`. The fix strips `_CONTAINED_BETWEEN_WINDOW_RE` lines out of the text the fallback scans, before the known-types substring check runs — the same "don't scan a POI name for a naive type substring" lesson `parse_excluded_attraction_types` already applies (see its `piece`-exact-match comment).
-
-Solver-free `parser_vs_oracle.py --split tpc_phase2_familiar_100`, measured from the required-constraint-fix baseline above:
-
-| Metric | Before | After |
+| Layer | pass (macro) | micro |
 | --- | --- | --- |
-| precision | 0.9402 | 0.9510 |
-| recall | 0.9487 | 0.9510 |
-| F1 | 0.9444 | 0.9510 |
+| Schema | 100/100 | — |
+| Commonsense (EPR) | 76/100 | 98.19 |
+| Logical (C-LPR) | 28/100 | 88.91 |
+| **All (FPR)** | **26/100** | — |
 
-`required_attraction_types` moves `18` matched / `7` spurious / `2` wrong-value → `20` matched / `0` spurious / `0` wrong-value (the two prior wrong-value cases resolved once their time-window line stopped contributing a rival entry). Val is byte-identical (`f1 0.7282` before and after): `_CONTAINED_BETWEEN_WINDOW_RE` targets the familiar-100 line-scoped `Visit/Dine at/Stay at X between A and B` template only (an optional leading `N.` numbering is not required), so this is inert on the phase-1 partition, same as the required-constraint fix above. Diagnostic evidence pending the pinned end-to-end gate; not a final-evaluation estimate.
+Logical satisfaction is the binding surface, and one family dominates it:
 
-## Entity-resolution catalog-segmentation fix (comma-in-name residual)
-
-Root-caused the comma-in-name `wrong_value` residual flagged in the required-constraint-fix section above (`~4` attractions, `~3` restaurants at the time): two distinct mechanisms, both in `chinatravel/agent/phase2/normalize.py`.
-
-1. **A catalog name can itself contain an internal `,`/`and`** (e.g. `Honey Lake 1979 Cultural and Creative Park`, or a parenthetical qualifier with a comma like `Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)`), sometimes already split into *separate list items* by the base regex parser before entity resolution ever sees a combined string (e.g. `required_attractions == ["...", "Honey Lake 1979 Cultural", "Creative Park", "..."]`). `_segment_entity_list` (single-string case) and the new `_merge_fragmented_list_entries` (list-item case) both scan left to right and prefer the *longest* run of tokens/items that resolves against the catalog (standard maximum-munch dictionary segmentation), instead of always splitting/leaving every delimiter as its own boundary.
-2. **`required_restaurants`/`excluded_restaurants` can legitimately name a hotel.** The oracle's own symbolic extraction (`hard_constraint.py`'s `get_symbolic_concepts`) adds *every* breakfast/lunch/dinner activity's position to the same restaurant-name set a restaurant-family clause checks — including a free hotel breakfast, positioned at the hotel's own name. A restaurant-family entry that resolves against the hotel catalog is therefore not a mis-parse to reroute away (the pre-existing step-6 "category misrouting" behavior did exactly that); `_ENTITY_CATEGORY_POOL`/`_effective_catalog_names` broadens the restaurant family's own matching pool to `{restaurant, hotel}` (attractions and hotels keep their single pool: neither bucket has an equivalent cross-source).
-
-Both new segmentation paths use a **strict, normalized-exact** match for any multi-token/multi-item candidate span — not the lenient containment/fuzzy matching `_match_catalog_name` uses for single-string label-garbage cleanup. Reusing the lenient match for a longer span would accept a candidate whose real catalog name only covers its *prefix* (containment's own threshold is ≥60% coverage), silently absorbing the next, genuinely distinct entry into the same span — reproduced and regression-tested (`test_segmentation_does_not_overreach_into_the_next_real_entry`, `test_list_level_merge_does_not_overreach_into_the_next_real_entry`). The same reordering (exact match, then segmentation, then the lenient fallback) also had to move into `_resolve_one_required_name` itself: trying the lenient whole-string match *before* segmentation had the same failure mode one level up (a two-real-entity string where the first name's coverage already clears 60% never reached segmentation at all).
-
-Solver-free `parser_vs_oracle.py --disjunction --entity-resolution --branch-aware`, before/after (repository-local, no LLM parse):
-
-| Split | Metric | Before | After |
+| logical family | failing queries | failed instances | sole blocker |
 | --- | --- | --- | --- |
-| familiar-100 | wrong_value (of 691 total) | 47 | 6 |
-| familiar-100 | F1 | 0.9316 | 0.9908 |
-| val | wrong_value (of 2209 total) | 225 | 212 |
-| val | F1 | 0.7869 | 0.7949 |
+| **timed_visit_named_poi** | **70** | **104** | **53** |
+| required_attractions | 6 | 6 | 1 |
+| required_restaurants | 6 | 6 | 0 |
+| room_count | 2 | 2 | 0 |
+| required_cuisine_types | 2 | 2 | 0 |
+| (others) | ≤1 each | | |
 
-All 9 originally-inspected uids (4 attractions, 5 restaurants) now match the oracle exactly. The remaining `6` familiar-100 `wrong_value` cases (`excluded_hotels` and `excluded_restaurants`, `3` each) are a *different* bug — truncation at an abbreviation period (`"St. Regis"`, `"No. 3955 ..."`) upstream in the base regex parser, not comma/`and`-in-name — left for a future increment. Verified with unit tests (`tests/phase2/test_entity_resolution.py`): multi-token names within one string, the same case pre-split across list items, the two overreach regressions above, the restaurant/hotel pool (both directions: a hotel name resolves into `required_restaurants`, and `required_attractions` still reroutes an unrelated-category match to `position_presence` exactly as before). Diagnostic evidence only, per the roadmap's operating rules: not yet measured through the pinned end-to-end gate, and val's smaller F1 move (fewer dense comma-joined lists than familiar-100) is not a final-evaluation estimate.
+`sole_blocker` = queries where the family is the only failing logical family. **timed_visit_named_poi is the sole blocker in 53 of the 74 failures** — the highest-leverage target by a wide margin, quantitatively confirming G8.
 
-## LLM parsing vs deterministic (familiar-100 + HF OOD)
+### The failure mechanism
 
-Question: does routing the parse through the DeepInfra `Qwen/Qwen3.6-27B` LLM beat the deterministic parser, and should `TPC_P2_LLM_PARSE` be defaulted on? Measured with `scripts/parser_vs_oracle.py` (parse vs oracle, shared solver-dict schema), keeping the harness-default flags `--disjunction --entity-resolution --branch-aware` on both sides and toggling only `--llm-parse` (and, for `extract`, `Flags.llm_parse_mode`). Temperature 0, responses cached, backend `deepinfra`. Two LLM strategies exist: `audit` (the harness default — corrective audit that re-parses every LLM proposal through the regex) and `extract` (LLM-first structured extraction validated against closed vocabularies, independent of the regex).
+The clause requires *an activity of a given type, at a named position, within `[earliest, end_before]`*. The `104` failing instances split by the named position's database: **44 meals at a named accommodation** (hotel breakfast), **39 attraction visits at a named attraction**, **21 meals at a named restaurant**. Two concrete gaps, confirmed by reproducing failing plans:
 
-All rows are measured on **English** query text: familiar-100 and the local `tpc_phase2_val`/`test` partitions are natively English, and the HF `LAMDA-NeSy/ChinaTravel` set is natively Chinese (`nature_language`) but `load_hf_queries` uses its English translation field (`nature_language_en`), which is what the agent path would receive. So the "OOD" gap below is a phrasing-register difference *within English* (familiar-100's rigid `Requirements: 1. … 2. …` templates vs. HF's free-prose translations), not a cross-language difference.
+1. **Pool routing.** `_apply_search_constraints` projected window/position names only into `required_attractions`/`required_restaurants`. An accommodation name resolves in neither, so "meal at *Nanyang Inn*" never pinned hotel selection to that inn — the plan stayed elsewhere and the named meal was absent.
+2. **Timing.** The greedy slotter schedules included POIs by visit order, not by clause window, so a present named POI lands at the wrong time (a required 07:50–08:40 hotel breakfast placed 07:30–08:30; a required evening attraction placed in the morning).
 
-Familiar-100 (full 100, the final-distribution proxy):
+### Landed: opt-in timed-window pinning + resequencer (`TPC_PIN_TIMED_WINDOWS`, default off)
 
-| Config | precision | recall | F1 | matched | missing | spurious | wrong_value |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| deterministic | 0.9311 | 0.9321 | 0.9316 | 644 | 0 | 1 | 47 |
-| LLM audit | 0.9057 | 0.9154 | 0.9106 | 633 | 0 | 10 | 58 |
-| LLM extract (25-uid subset) | — | — | 0.758 | 135 | 0 | 23 | 32 |
+Implemented in `chinatravel/agent/tpc_agent/tpc_agent.py`, gated behind `TPC_PIN_TIMED_WINDOWS` (default **off**, so the deterministic floor is byte-identical; asserted by unit tests). When on:
 
-(The `extract` row is a 25-uid subset; its like-for-like deterministic baseline on the *same* 25 uids is F1 `0.935` — so extract loses ~0.18 F1 there. Audit on that same subset was byte-identical to deterministic, `0.935`.)
+- **Pool routing** — `_apply_search_constraints` also projects window/position names into `required_hotels` (the per-DB resolver keeps a name only in the pool it matches), so a named accommodation pins hotel selection there and its hotel breakfast can satisfy the clause.
+- **Retiming** — `_pin_timed_windows` (run in `_pack_plan` *before* the acceptance gate) shifts a present-but-mistimed matching activity into `[earliest, end_before]`, recomputing its own and the following activity's inbound legs. Every shift is trialed on a deepcopy and committed only if the full checker then accepts and the preference key does not regress.
+- **Resequencing** — `_resequence_day`, tried from `_pin_timed_windows` only when the local same-slot retime fails to commit (a fixed neighbour blocks it for lack of slack). It orders the day's meal/attraction activities by target window, recomputes each inbound leg sequentially via `_get_transport`, and commits on a deepcopy only if the full checker still accepts and the preference key does not regress. Intercity legs and the overnight accommodation activity are never moved.
 
-HF `LAMDA-NeSy/ChinaTravel` config `default`, first 50 uids per split (out-of-distribution phrasing generalization probe — a measurement set only, never tuned against; see [dataset boundaries](tpc_phase2_hf_dataset.md)):
+Verified by unit tests (`tests/phase2/test_pin_timed_windows.py`, `tests/phase2/test_resequence_day.py`) and, on failing uid `...00062`, the `required_hotels` projection moving the required breakfast onto the named inn. **Not yet measured through the pinned end-to-end gate** — that is Next step 1.
 
-| Split | Config | precision | recall | F1 | matched | missing | spurious | wrong_value |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| medium | deterministic | 0.8367 | 0.3050 | 0.4470 | 52 | 121 | 14 | 3 |
-| medium | LLM audit | 0.5667 | 0.3050 | 0.3966 | 52 | 118 | 40 | 6 |
-| medium | LLM extract | 0.7643 | 0.8233 | 0.7927 | 143 | 3 | 19 | 30 |
-| human | deterministic | 0.8567 | 0.5900 | 0.6988 | 51 | 47 | 12 | 4 |
-| human | LLM audit | 0.8267 | 0.5900 | 0.6886 | 51 | 46 | 14 | 5 |
-| human | LLM extract | 0.7067 | 0.6567 | 0.6807 | 60 | 21 | 19 | 21 |
+### Known limits / what the gate must check
 
-Two findings:
+- **A rejected idea — do not reintroduce.** Emitting `arrive_no_later` from `end_before` (to time morning meals) **regressed commonsense** on the floor: its ceiling pruned proper transport, producing transport-less plans that fail "Invalid Transport information across positions." It was dropped; do not revive it without gating.
+- **No promotion without the gate.** No committed familiar row is truly flags-off (all ran a Qwen backend that auto-enables `llm_parse`). Before promoting pinning + resequencing: record a clean flags-off solver-only familiar-100 baseline, then run flag-on through `make phase2-gate` against a matched baseline; promote only if solver-only FPR improves with no new parse failures or timeouts.
+- **Out of scope.** The constraint-light feasible fallback (G7, `fallback.py`'s empty itinerary) does not move solver-only FPR — those failures are produced-but-invalid plans, not solver failures/timeouts.
 
-1. **Audit mode never recovers recall on any set.** `matched` never rises deterministic→audit: it is flat on HF (medium `52→52`, human `51→51`) and actually falls on familiar-100 (`644→633`, i.e. audit corrupted 11 previously-matched families into `spurious`/`wrong_value`); `missing` barely moves. This is structural: `normalize.llm_parse_stub` re-parses every LLM proposal through `parse_constraints.parse_single_constraint_text`, so a constraint the regex could not extract from the original NL it also cannot extract from the LLM's paraphrase. Audit can only re-route an already-parseable span (polarity/value), never recover a regex-unparseable constraint — and it adds spurious noise on every set (familiar `1→10`, medium `14→40`). Net F1 ≤ deterministic on all three. **Audit-by-default is pure downside at the parser level.** (Audit's *theoretical* niche is non-empty — it helps when the deterministic miss is a trigger/phrasing gap on a value the regex *can* express, e.g. "check out the Forbidden City" that the LLM rewrites into the canonical `Visit …` template the regex then extracts, or a polarity mislabel on an already-located span. On these sets that niche is near-empty: the misses are dominated by value-segmentation failures the regex cannot express either way, so the paraphrase round-trip has nothing to recover.)
+## Completed parser work
 
-2. **Extract mode recovers OOD recall, but at a value-accuracy cost that only pays off on machine-templated OOD phrasing.** On HF `medium` it is a large win (`missing 121→3`, F1 `0.447→0.793`). On HF `human` the recall gain is offset by `wrong_value`/`spurious` (F1 `0.699→0.681`, net slightly negative). On the familiar-100 25-uid subset it is strongly negative (deterministic `0.935` → extract `0.758` on that same subset): the deterministic templates already reach zero missing there, so the LLM only re-derives values it gets slightly wrong against the oracle's exact strings.
+The parser rose from `~0.20` to `~0.95` familiar-100 F1 (solver-free `scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100`, flags-off deterministic path) through a sequence of structural template fixes. Full per-family tables and the chronological narrative are preserved in the [archive](archive/README.md); the headline sequence and the durable lessons:
 
-**Decision: do not default `TPC_P2_LLM_PARSE` on.** The final held-out set is drawn from the familiar-100 distribution, and on that distribution (and on human-written NL) both LLM modes are neutral-to-negative; extract's only decisive win is on machine-templated OOD phrasing that is not the final distribution. Consistent with the operating rule that parser statistics diagnose but do not promote, this is parser-level evidence only — the end-to-end gate the operator runs separately is the arbiter, and it should also re-examine the harness's existing auto-enable of audit mode when a backend is configured (`agent_env/scripts/solve_phase2.py::resolve_llm_client_and_flags`), which this evidence shows adds spurious constraints with no recall benefit. The library default (`Flags()`) already keeps `llm_parse` off; no default is changed by this investigation. Regenerate with `TPC_P2_LLM_BACKEND=deepinfra scripts/parser_vs_oracle.py --split tpc_phase2_familiar_100 --disjunction --entity-resolution --branch-aware [--llm-parse]`.
+| Stage (sha) | precision | recall | F1 |
+| --- | --- | --- | --- |
+| Baseline | 0.4445 | 0.1281 | 0.1988 |
+| Activity-window fix (`ae6337f0`) | 0.8180 | 0.3518 | 0.4920 |
+| Deterministic-budget templates (`c428dd6c`) | 0.8502 | 0.4561 | 0.5937 |
+| Negative-constraint fix | 0.8620 | 0.8036 | 0.8317 |
+| Required-constraint fix | 0.9402 | 0.9487 | 0.9444 |
+| `required_attraction_types` time-window guard | 0.9510 | 0.9510 | 0.9510 |
+| Entity-resolution catalog segmentation (`62df2a0b`) | — | — | 0.9908 |
 
-### First end-to-end datapoint (`llm_parse` off)
+(The last row is measured with entity resolution on, `--disjunction --entity-resolution --branch-aware`; it drops familiar-100 `wrong_value` `47 -> 6` and moves val F1 `0.7869 -> 0.7949`. The reference run `20260721T174336Z` predates it, so its `0.9510` does not yet reflect this fix.)
 
-Run [`20260721T054820Z`](../results/phase2_baselines/runs/20260721T054820Z.json) (`familiar100-negconstraint-nollm`, two fresh repeats, `flags.llm_parse=false`, `7d5e1910`) is the first *end-to-end* (solver-in-the-loop, not just parser-level) point on this question: mean end-to-end `overall_true` `41.8254` / FPR `12.5%`, `100/100` valid, zero fallbacks. It exceeds the older Qwen-audit `20260718T155006Z` (`39.1265` / `7.5%`), directionally consistent with "audit-by-default is not a win." It is **not** the clean gate follow-on #4 needs: it is at a newer parser sha (`7d5e1910` carries the negative-constraint fix) and has **no paired `llm_parse`-on run at the same sha**, so it conflates parser code with the flag. That missing pair is itself informative — the pinned run went deterministic only because `phase2_eval_at.py` did not share the gitignored `agent_env/config.toml` into the worktree (`backend` resolved to `none`); the recorded `flags` block surfaced it. That gap is fixed here (config.toml is now shared in), so a paired `llm_parse` on/off gate at one sha is now runnable.
+Why familiar-100 needed this while val did not: familiar records average `~38` `hard_logic_py` constraints each vs. `~16` in the released Phase 1 source `tpc_phase2_val` is partitioned from. The dominant gap was five negative families the parser extracted **zero** of (`excluded_cuisine_types`, `excluded_hotels`, `excluded_attractions`, `excluded_restaurants`, `excluded_attraction_types`) — `266` of `359` missing constraints — encoded in the oracle as `result=not({<names>} & <set>)` and surfaced in one uniform `Do not include any of these <category>: A, B and C.` template. All five now have zero missing.
 
-## Follow-on order
+Durable parser lessons (each landed with a val-inert guard, so the phase-1 partition stayed byte-identical):
 
-1. Gate the negative-constraint fix, the required-constraint fix, the budget change, and the `required_attraction_types` time-window guard together through the pinned no-oracle path against the last promoted familiar row (`20260718T155006Z`), then promote if the end-to-end gate passes with no new parse failures or timeouts.
-2. **Landed:** the comma-in-name `wrong_value` residual (`~4` attractions, `~3` restaurants) is fixed via the catalog-segmentation path in entity resolution (maximum-munch segmentation for both a single multi-entity string and already-fragmented list items, plus a restaurant/hotel matching-pool broadening) — see "Entity-resolution catalog-segmentation fix" below. Solver-free familiar-100 F1 (with entity resolution) moves `0.9316 -> 0.9908`; val moves `0.7869 -> 0.7949`. A `6`-case residual remains (an unrelated abbreviation-period truncation bug). Diagnostic evidence pending the pinned end-to-end gate.
-3. Run a longer local-budget sensitivity only if a future solver-only failure set becomes timeout-confounded. The promoted row does not justify it: all `23` solver-only timeouts recovered into pass cases, while none of the `74` solver-only failures timed out.
-4. Re-examine the harness auto-enable of audit-mode `llm_parse` when a backend is configured (see "LLM parsing vs deterministic" above): the parser-level evidence shows it adds spurious constraints with no recall benefit on familiar-100 or HF, so an end-to-end gate should confirm whether keeping it on is justified before the next promoted row. The first end-to-end point (`20260721T054820Z`, `llm_parse` off) is directionally consistent but not a clean gate; now that `phase2_eval_at.py` shares `agent_env/config.toml` into the worktree, run the paired `llm_parse` on/off rows at one sha (`make phase2-baseline-at SHA=<ref>` with and without `TPC_P2_LLM_PARSE`) and gate on `continuous_score`.
-5. Package and smoke-test the official harness interface, including oracle hiding, output layout, and tool access.
-6. **Solver-only headroom (timed-visit-at-named-POI, G8).** Now that the parser is at `~0.95` F1, the `26.0` solver-only FPR is the binding ceiling on familiar-100 end-to-end. The dominant gap is the timed-visit-at-named-POI family: sole logical blocker in `53` of the `74` failures, split by named-position DB into `44` accommodation meals, `39` attraction-window visits, `21` restaurant meals. See [solver headroom analysis](tpc_phase2_solver_headroom.md). Staged plan:
-   1. **Landed (opt-in, `TPC_PIN_TIMED_WINDOWS`, default off, floor byte-identical):** project window/position names into `required_hotels` (pins hotel selection to a named-accommodation meal) and `_pin_timed_windows`, an acceptance-gated *local* retime (`max(earliest, arrival)`, dwell clamped to `end_before`) run before the `_pack_plan` acceptance gate. Handles the meal cases that only need retiming within a day.
-   2. **Gate it:** record a clean flags-off solver-only familiar-100 baseline (no committed familiar row records flags; both ran a Qwen backend that auto-enables `llm_parse`, so neither is flags-off), then run flag-on through the pinned no-oracle gate (`make phase2-gate`) against `20260718T155006Z`; promote only if solver-only FPR improves with no new parse failures or timeouts.
-   3. **Landed (opt-in, same flag, floor byte-identical): day resequencer.** `_resequence_day` (`chinatravel/agent/tpc_agent/tpc_agent.py`) targets the `39` attraction cases whose required window sits in a different part of the day than the greedy placed them (e.g. a required evening visit built into the morning), which `_try_pin_activity`'s same-slot retime cannot fix when a neighbour blocks the slack. Tried as its fallback: order a day's meal/attraction activities by their target window (windowed POIs at `[earliest, end_before]`, others by current time), recompute the full day's inbound legs sequentially via `_get_transport`, and commit on a deepcopy only if the full checker accepts and the preference key does not regress. Strictly local to one day (intercity legs and the overnight accommodation stay fixed) and acceptance-gated, so the floor stays byte-identical when the flag is off. Unit-tested (`tests/phase2/test_resequence_day.py`); not yet measured through the pinned end-to-end gate — see [solver headroom analysis](tpc_phase2_solver_headroom.md#step-2-within-day-resequencer-same-flag). Do **not** revive the `arrive_no_later`-from-`end_before` hint (it regressed commonsense by pruning transport — see the analysis).
+- **Anchor the category at the `:` list marker** so a name category (`hotels`) never fires on a sibling type category (`hotel feature types`).
+- **Use verbatim values for type families** — the NL uses the oracle's own vocabulary/casing; routing through the lower-casing alias table drops unaliased types.
+- **Protect compound vocabulary** read from committed `database_en` CSVs (cuisine values like `Fast food and casual dining` legitimately contain `" and "`).
+- **Handle Oxford commas** so `A, B, and C` leaves no `and C` fragment.
+- **Never scan a POI name for a naive type substring** — strip `Visit X between A and B` window lines before the known-types substring check (the fix that removed the last `required_attraction_types` spurious entries).
+- **Segment entity lists by maximum-munch against the catalog, with a strict exact match** — a catalog name can itself contain an internal `,`/`" and "` (`Honey Lake 1979 Cultural and Creative Park`), so `_segment_entity_list`/`_merge_fragmented_list_entries` prefer the longest span that resolves exactly; reusing the lenient ≥60%-containment match let a longer candidate silently absorb the next distinct entry. A restaurant-family clause can also legitimately name a hotel (a free hotel breakfast positioned at the hotel's own name), so broaden that family's pool to `{restaurant, hotel}` rather than rerouting the match away.
 
-The public material still does not specify a runtime contract.
-Until it does, `300 s` and `900 s` are local assumptions for sensitivity analysis, not organizer-confirmed limits.
+Remaining parser defect after the segmentation fix: a `6`-case `wrong_value` residual on familiar-100 (`excluded_hotels`/`excluded_restaurants`, `3` each) from abbreviation-period truncation (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser — a distinct upstream bug from the comma-in-name segmentation now handled by entity resolution (Next step 6).
+
+### LLM parsing vs deterministic
+
+Question settled at the parser level: routing the parse through the DeepInfra `Qwen/Qwen3.6-27B` LLM does **not** beat the deterministic parser on the final distribution, so **`TPC_P2_LLM_PARSE` is not defaulted on** (the library default `Flags()` already keeps it off). Measured with `scripts/parser_vs_oracle.py`, temperature 0, cached, on English text.
+
+- **Audit mode never recovers recall on any set.** `matched` is flat on HF (`52→52`, `51→51`) and falls on familiar-100 (`644→633`, corrupting matched families into spurious/wrong-value), because `normalize.llm_parse_stub` re-parses every LLM proposal through the regex — a constraint the regex cannot extract from the original NL it also cannot extract from the paraphrase. Net F1 ≤ deterministic on all three sets; audit-by-default is pure downside at the parser level.
+- **Extract mode recovers OOD recall** (HF `medium` F1 `0.447→0.793`) but at a value-accuracy cost that is neutral-to-negative on human-written NL (HF `human` `0.699→0.681`) and strongly negative on familiar-100's already-solved templates (`0.935→0.758` on the 25-uid subset). Its only decisive win is machine-templated OOD phrasing, which is not the final distribution.
+
+The end-to-end gate (Next step 3) is the arbiter and should also re-examine the harness auto-enable of audit mode when a backend is configured. The first end-to-end point (`20260721T054820Z`, `llm_parse` off, `41.83` overall_true / `12.5%` FPR) is directionally consistent but not a clean gate; the current `llmon` best (`20260721T174336Z`, `45.06` / `21.5%`) is at a different sha, so the pair still conflates parser code with the flag.
 
 ## References
 
 - [Stable design](tpc_phase2_design.md)
-- [Evaluation methodology](tpc_phase2_eval.md)
-- [Dataset boundaries](tpc_phase2_hf_dataset.md)
+- [Evaluation and dataset boundaries](tpc_phase2_eval.md)
 - [Competition reference](reference/competition.md)
 - [Baseline ledger guide](phase2_baselines/README.md)
