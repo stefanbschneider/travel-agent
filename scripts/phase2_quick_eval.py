@@ -174,8 +174,16 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
     quality = m.get("quality", {})
     overall_true = (quality.get("overall_true") or {}).get("mean", 0.0)
     telem = _aggregate_telemetry(mode, split_name, fold_uids)
-    parse_failures = int(quality.get("invalid_json", 0)) + int(quality.get("eval_failed", 0)) \
-        + int(telem.get("errored", 0))
+    # A uid that produced no result file (`missing`), unreadable JSON, a failed eval, or a solve
+    # error is a failure that must count -- otherwise a run where some uids produced no artifact
+    # looks greener than it is (the gate blocks on any increase). `missing`/`invalid_json`/
+    # `eval_failed` are disjoint per-uid quality buckets; telemetry `errored` may overlap a missing
+    # uid, but over-counting failures only makes the gate stricter (the safe direction).
+    parse_failures = int(quality.get("missing", 0)) + int(quality.get("invalid_json", 0)) \
+        + int(quality.get("eval_failed", 0)) + int(telem.get("errored", 0))
+    # Missing telemetry files undercount timeouts/solve stats, so surface coverage explicitly.
+    requested = len(fold_uids)
+    telemetry_coverage = f"{int(telem.get('n_telemetry', 0))}/{requested}"
     return {
         "label": label,
         "env_overrides": env_overrides,
@@ -185,6 +193,7 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
         "continuous_score": round(float(overall_true), 3),
         "parse_failures": parse_failures,
         "timeouts": int(telem.get("timeouts", 0)),
+        "telemetry_coverage": telemetry_coverage,
         # richer screen signals:
         "telemetry": telem,
         "quality_n": {k: quality.get(k) for k in ("requested", "evaluated", "missing")},
@@ -196,7 +205,7 @@ def decide_verdict(baseline: dict, candidate: dict, gate: dict, flag: str, *, to
 
     Pure function of the two metric dicts, the gate result, and the flag name, so it is unit-tested
     without running a solve. The categories are documented in docs/tpc_phase2_eval.md
-    (GREEN LIGHT / GREEN LIGHT with caveat / MIXED / RED / NEUTRAL).
+    (GREEN LIGHT / GREEN LIGHT with caveat / MIXED / RED / NO BENEFIT / NEUTRAL).
 
     ``tol`` is a preference-score noise band: an ``overall_true`` move within +-tol counts as flat,
     not a regression or an improvement. Screens run at a reduced budget with a wall-clock-bounded
@@ -338,6 +347,14 @@ def main() -> None:
     print(f"  solve p50 (sec)       {_fmt_delta(bt['solve_sec_p50'], ct['solve_sec_p50'], higher_better=False)}")
     print(f"  used_fallback         {_fmt_delta(bt['used_fallback'], ct['used_fallback'], higher_better=False)}")
     print(f"  parse_failures        {_fmt_delta(baseline['parse_failures'], candidate['parse_failures'], higher_better=False)}")
+    # Warn when either arm produced fewer telemetry files than uids -- timeouts/solve stats then
+    # undercount, so the deltas above are not fully trustworthy for this run.
+    for arm in (baseline, candidate):
+        cov = arm.get("telemetry_coverage", "")
+        got, _, want = cov.partition("/")
+        if got and want and got != want:
+            print(f"  WARNING: {arm['label']} telemetry coverage {cov} -- "
+                  f"timeouts/solve stats undercount; enlarge budget or investigate the gap.")
     # LLM-activity line: only meaningful in end-to-end mode with an LLM flag. Proves the candidate
     # arm actually reached the model (a green screen where the LLM never fired is meaningless) and,
     # for refine, how many proposed repairs actually committed.
