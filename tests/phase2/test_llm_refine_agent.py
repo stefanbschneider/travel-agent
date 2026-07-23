@@ -322,6 +322,95 @@ def test_describe_check_failure_skips_feasible_windows_without_env():
     assert failure["activity_feasible_windows"] == []
 
 
+# --- sharper failure_summary: failed_clauses / space_gaps (roadmap Next step 7 bucket 2) --------
+
+def test_describe_failed_clause_items_names_the_specific_missing_poi():
+    agent = _bare_agent()
+    plan = _day_plan()
+    # "Museum" is in the plan (satisfied) -- only the missing name should be reported.
+    clauses = agent._describe_failed_clause_items(
+        "required_attractions", ["Not In Plan", "Museum"], plan, "Shenzhen")
+    assert clauses == [{"family": "required_attractions", "detail": "Not In Plan"}]
+
+
+def test_describe_failed_clause_items_names_the_specific_unmet_window():
+    agent = _bare_agent()
+    plan = _day_plan()  # Museum is scheduled 09:00-10:00
+    window = {"location": "Museum", "earliest": "11:00"}
+    clauses = agent._describe_failed_clause_items("activity_time_windows", [window], plan, "Shenzhen")
+    assert clauses == [{"family": "activity_time_windows", "location": "Museum", "window": window}]
+
+
+def test_describe_failed_clause_items_empty_when_item_is_satisfied():
+    agent = _bare_agent()
+    plan = _day_plan()
+    clauses = agent._describe_failed_clause_items("required_attractions", ["Museum"], plan, "Shenzhen")
+    assert clauses == []
+
+
+def test_describe_failed_clause_items_skips_families_with_no_per_item_name():
+    # budgets/room_type/etc. are scalar or dict-shaped -- no single POI/location to name, so they
+    # stay family-level only (in failed_constraint_families), never in failed_clauses.
+    agent = _bare_agent()
+    plan = _day_plan()
+    assert agent._describe_failed_clause_items("budgets", {"sightseeing": 0}, plan, "Shenzhen") == []
+
+
+def test_describe_check_failure_includes_failed_clauses():
+    agent = _bare_agent()
+    plan = _day_plan()
+    failure = agent._describe_check_failure(
+        {"target_city": "Shenzhen"}, {"required_attractions": ["Not In Plan"]}, plan)
+    assert failure["failed_clauses"] == [{"family": "required_attractions", "detail": "Not In Plan"}]
+
+
+def test_find_space_gaps_reports_broken_legs_in_plan_order():
+    agent = _bare_agent()
+    plan = _day_plan()  # Museum -> Cafe X -> Park Y -> Hotel Z, every activity's transports == []
+    gaps = agent._find_space_gaps(plan)
+    assert [g["position"] for g in gaps] == ["Cafe X", "Park Y", "Hotel Z"]
+    assert gaps[0]["expected_from"] == "Museum"
+    assert gaps[0]["day"] == 1
+
+
+def test_find_space_gaps_empty_when_legs_present():
+    agent = _bare_agent()
+    plan = _day_plan()
+    for day in plan["itinerary"]:
+        for act in day["activities"]:
+            act["transports"] = [{"start": "Museum", "end": act["position"]}]
+    # Legs are all self-consistent-looking stand-ins, not real grounded transports, but each one at
+    # least starts/ends somewhere -- the point here is _transport_leg_valid only flags an *empty*
+    # or mis-anchored leg, not the absence of a real route.
+    plan["itinerary"][0]["activities"][0]["transports"] = []  # first activity has no predecessor
+    gaps = agent._find_space_gaps(plan)
+    # Every non-first activity's leg now starts at "Museum" and ends at its own position, so only
+    # legs whose *previous* activity was not Museum would still mismatch -- Cafe X (prev=Museum) is
+    # fine, but Park Y/Hotel Z's legs claim to start at Museum while the previous activity ends
+    # elsewhere, so they remain gaps.
+    assert [g["position"] for g in gaps] == ["Park Y", "Hotel Z"]
+
+
+def test_describe_check_failure_includes_space_gaps_when_commonsense_flags_it():
+    agent = _bare_agent()
+    plan = _day_plan()
+    agent._commonsense_failure_columns = (
+        lambda query, plan: ["Invalid Transport information across positions"])
+    agent._schema_ok = lambda query, plan: True
+    failure = agent._describe_check_failure(QUERY, {}, plan)
+    assert failure["failed_commonsense_checks"] == ["Invalid Transport information across positions"]
+    assert [g["position"] for g in failure["space_gaps"]] == ["Cafe X", "Park Y", "Hotel Z"]
+
+
+def test_describe_check_failure_skips_space_gaps_when_commonsense_ok():
+    agent = _bare_agent()
+    plan = _day_plan()
+    agent._commonsense_failure_columns = lambda query, plan: []
+    agent._schema_ok = lambda query, plan: True
+    failure = agent._describe_check_failure(QUERY, {}, plan)
+    assert failure["space_gaps"] == []
+
+
 # --- drop_activity -------------------------------------------------------------------------------
 
 def test_drop_activity_removes_named_activity_and_reconnects():

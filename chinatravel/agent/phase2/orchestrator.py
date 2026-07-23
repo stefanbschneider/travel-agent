@@ -101,6 +101,62 @@ class Flags:
 SolveFn = Callable[[dict, list, float], dict]
 
 
+def _llm_refine_attempt(
+    *, base_plan: dict, query: dict, llm_client, before_key, failure_summary: dict,
+    ground_and_check, apply_refine_edits, info: dict[str, Any], attempt_no: int,
+) -> dict | None:
+    """One bounded refine call: prompt from ``(base_plan, failure_summary)`` -> parse edits ->
+    apply -> re-check. Returns the committed grounded plan on acceptance with no preference-key
+    regression vs. ``before_key``, else ``None`` with ``info["improve_skip_reason"]`` set. On a
+    rejected-but-grounded trial (``not_accepted_or_regressed``), also stashes the post-edit plan and
+    failure summary in ``info`` so a bounded second attempt can pick up from there. Never raises."""
+    prompt = refine_mod.build_llm_refine_prompt(query, base_plan, failure_summary)
+    cache_key = refine_mod.llm_refine_cache_key(query, prompt)
+    info["improve_llm_called"] = True
+    info["improve_attempts"] = attempt_no
+    try:
+        response = llm_client.complete(prompt, cache_key=cache_key)
+        edits = refine_mod.parse_llm_refine_edits(response)
+    except Exception:
+        info["improve_skip_reason"] = "llm_error_or_invalid_json"
+        return None
+
+    if not edits:
+        info["improve_skip_reason"] = "no_edits_proposed"
+        return None
+
+    if not callable(apply_refine_edits):
+        info["improve_skip_reason"] = "no_apply_edits_hook"
+        return None
+
+    try:
+        trial, applied, edit_reasons = apply_refine_edits(base_plan, edits)
+    except Exception:
+        info["improve_skip_reason"] = "apply_edits_error"
+        return None
+    info["improve_edit_count"] = applied
+    info["improve_edit_reasons"] = edit_reasons
+    if not applied:
+        info["improve_skip_reason"] = "no_groundable_edits"
+        return None
+
+    try:
+        trial_accepted, trial_grounded, trial_key, trial_failure = ground_and_check(trial)
+    except Exception:
+        info["improve_skip_reason"] = "ground_and_check_error_after_edit"
+        return None
+
+    if trial_accepted and (before_key is None or trial_key >= before_key):
+        info["improve_committed"] = True
+        info["improve_skip_reason"] = None
+        return trial_grounded
+
+    info["improve_skip_reason"] = "not_accepted_or_regressed"
+    info["_retry_base_plan"] = trial_grounded
+    info["_retry_failure_summary"] = trial_failure
+    return None
+
+
 def llm_refine(
     plan: dict, query: dict, llm_client, budget_sec: float,
     ground_and_check=None, apply_refine_edits=None,
@@ -114,8 +170,16 @@ def llm_refine(
     commits only if ``ground_and_check`` then reports the whole batch accepted with a preference
     key that does not regress vs. the input. ``ground_and_check``/``apply_refine_edits`` are the
     hooks ``make_tpcagent_solve_fn`` attaches to the returned ``solve_fn``; either being ``None``
-    (a bare injected ``solve_fn``, e.g. unit tests) makes this a pure no-op. Never raises; always
-    returns ``(plan_or_repaired_plan, info)`` where ``info`` is a small telemetry fragment the
+    (a bare injected ``solve_fn``, e.g. unit tests) makes this a pure no-op.
+
+    If the first attempt grounds edits but the checker still rejects the batch
+    (``not_accepted_or_regressed``, roadmap Next step 7 bucket 2), a bounded second attempt
+    re-prompts once with the post-edit plan and its own failure summary -- one extra LLM call, only
+    when the remaining ``budget_sec`` slice can still fit it (mirrors the pre-first-call deadline
+    check below; a slice too small for a second call is skipped with
+    ``improve_second_attempt_skip_reason = "skipped_deadline"`` rather than started and left to time
+    out mid-flight, exactly like the parse stage's ``llm_parse_skipped_deadline``). Never raises;
+    always returns ``(plan_or_repaired_plan, info)`` where ``info`` is a small telemetry fragment the
     caller merges into the orchestrator's telemetry dict.
     """
     info: dict[str, Any] = {
@@ -124,6 +188,8 @@ def llm_refine(
         "improve_edit_count": 0,
         "improve_edit_reasons": [],
         "improve_skip_reason": None,
+        "improve_attempts": 0,
+        "improve_second_attempt_skip_reason": None,
     }
     if not callable(ground_and_check):
         info["improve_skip_reason"] = "no_ground_and_check_hook"
@@ -150,46 +216,35 @@ def llm_refine(
         info["improve_skip_reason"] = "skipped_deadline"
         return plan, info
 
-    prompt = refine_mod.build_llm_refine_prompt(query, grounded_plan, failure_summary)
-    cache_key = refine_mod.llm_refine_cache_key(query, prompt)
-    info["improve_llm_called"] = True
-    try:
-        response = llm_client.complete(prompt, cache_key=cache_key)
-        edits = refine_mod.parse_llm_refine_edits(response)
-    except Exception:
-        info["improve_skip_reason"] = "llm_error_or_invalid_json"
+    attempt_start = time.perf_counter()
+    committed = _llm_refine_attempt(
+        base_plan=grounded_plan, query=query, llm_client=llm_client, before_key=before_key,
+        failure_summary=failure_summary, ground_and_check=ground_and_check,
+        apply_refine_edits=apply_refine_edits, info=info, attempt_no=1,
+    )
+    if committed is not None:
+        return committed, info
+
+    if info["improve_skip_reason"] != "not_accepted_or_regressed":
         return plan, info
 
-    if not edits:
-        info["improve_skip_reason"] = "no_edits_proposed"
+    retry_base_plan = info.pop("_retry_base_plan", None)
+    retry_failure_summary = info.pop("_retry_failure_summary", None)
+    remaining = budget_sec - (time.perf_counter() - attempt_start)
+    if client_timeout is not None and remaining < client_timeout:
+        info["improve_second_attempt_skip_reason"] = "skipped_deadline"
         return plan, info
 
-    if not callable(apply_refine_edits):
-        info["improve_skip_reason"] = "no_apply_edits_hook"
-        return plan, info
+    committed = _llm_refine_attempt(
+        base_plan=retry_base_plan, query=query, llm_client=llm_client, before_key=before_key,
+        failure_summary=retry_failure_summary, ground_and_check=ground_and_check,
+        apply_refine_edits=apply_refine_edits, info=info, attempt_no=2,
+    )
+    info.pop("_retry_base_plan", None)
+    info.pop("_retry_failure_summary", None)
+    if committed is not None:
+        return committed, info
 
-    try:
-        trial, applied, edit_reasons = apply_refine_edits(grounded_plan, edits)
-    except Exception:
-        info["improve_skip_reason"] = "apply_edits_error"
-        return plan, info
-    info["improve_edit_count"] = applied
-    info["improve_edit_reasons"] = edit_reasons
-    if not applied:
-        info["improve_skip_reason"] = "no_groundable_edits"
-        return plan, info
-
-    try:
-        trial_accepted, trial_grounded, trial_key, _trial_failure = ground_and_check(trial)
-    except Exception:
-        info["improve_skip_reason"] = "ground_and_check_error_after_edit"
-        return plan, info
-
-    if trial_accepted and (before_key is None or trial_key >= before_key):
-        info["improve_committed"] = True
-        return trial_grounded, info
-
-    info["improve_skip_reason"] = "not_accepted_or_regressed"
     return plan, info
 
 
@@ -299,6 +354,8 @@ def solve_phase2(
         "improve_edit_count": 0,
         "improve_edit_reasons": [],
         "improve_skip_reason": None,
+        "improve_attempts": 0,
+        "improve_second_attempt_skip_reason": None,
         "used_fallback": False,
         "valid_output": False,
         "error": None,

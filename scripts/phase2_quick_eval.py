@@ -88,6 +88,7 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
     llm_parse_errored = 0
     refine_called = 0
     refine_committed = 0
+    refine_second_attempts = 0
     solve_secs: list[float] = []
     for uid in uids:
         tpath = run_dir / uid / "telemetry.json"
@@ -118,6 +119,7 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
                 llm_parse_fired += 1
         refine_called += int(bool(t.get("improve_llm_called")))
         refine_committed += int(bool(t.get("improve_committed")))
+        refine_second_attempts += int(int(t.get("improve_attempts") or 0) >= 2)
         stage = t.get("stage_sec") or {}
         if "solve" in stage:
             solve_secs.append(float(stage["solve"]))
@@ -141,6 +143,7 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
         "llm_parse_errored": llm_parse_errored,
         "refine_called": refine_called,
         "refine_committed": refine_committed,
+        "refine_second_attempts": refine_second_attempts,
         "solve_sec_mean": (sum(solve_secs) / len(solve_secs)) if solve_secs else 0.0,
         "solve_sec_p50": _pct(0.5),
         "solve_sec_p90": _pct(0.9),
@@ -375,7 +378,8 @@ def main() -> None:
             bits.append(f"llm_parse fired {ct['llm_parse_fired']}/"
                         f"skipped {ct['llm_parse_skipped']}/errored {ct['llm_parse_errored']}")
         if ct.get("refine_called") or ct.get("refine_committed"):
-            bits.append(f"refine called {ct['refine_called']}/committed {ct['refine_committed']}")
+            bits.append(f"refine called {ct['refine_called']}/committed {ct['refine_committed']}"
+                        f"/2nd-attempt {ct.get('refine_second_attempts', 0)}")
         print(f"  LLM activity (cand)   {'; '.join(bits)}")
     print("-" * 72)
     print(f"  monotonic gate (like-for-like at this budget): "
