@@ -1775,15 +1775,89 @@ class TPCAgent(BaseAgent):
         failure_summary = self._describe_check_failure(query, constraints, grounded)
         return accepted, grounded, eval_key, failure_summary
 
+    # Families whose value is a list of names (POIs/types/cuisines) or a list of dicts naming a
+    # "location" -- these can be broken down to the specific failing item. Scalar/dict-shaped
+    # families (budgets, room_type, hotel_nearby, intercity_mode, ...) have no single POI/location
+    # to name and stay family-level only, in ``failed_constraint_families``.
+    _REFINE_PER_ITEM_CLAUSE_FAMILIES = frozenset({
+        "required_attractions", "excluded_attractions",
+        "required_attraction_types", "excluded_attraction_types",
+        "required_restaurants", "excluded_restaurants",
+        "cuisine_preference", "excluded_cuisine_types",
+        "required_hotels", "excluded_hotels", "required_hotel_all_types",
+        "stay_duration", "activity_time_windows",
+    })
+
+    def _describe_failed_clause_items(self, family, value, plan, target_city):
+        """Break a failing ``family`` down to the specific POI/location its list holds, by
+        re-running ``evaluate_parsed_constraints`` one item at a time -- it returns a flat
+        ``list[bool]`` with no label, so isolating a single item is the cheap way to name which one
+        is unmet (bounded by a family's own item count, never more than a handful). Only families in
+        ``_REFINE_PER_ITEM_CLAUSE_FAMILIES`` are broken down; everything else returns ``[]`` (still
+        reported at family level by the caller). Never raises."""
+        if family not in self._REFINE_PER_ITEM_CLAUSE_FAMILIES:
+            return []
+        items = value if isinstance(value, list) else [value]
+        out = []
+        for item in items:
+            try:
+                results = evaluate_parsed_constraints({family: [item]}, plan, target_city)
+            except Exception:
+                continue
+            if results and all(results):
+                continue
+            if isinstance(item, dict):
+                detail = item.get("location")
+                if not detail:
+                    continue
+                # "item" is generic on purpose: dict-shaped families in this allowlist are not all
+                # time windows (e.g. stay_duration's {location, min_minutes}) -- a family-specific
+                # key like "window" would misdescribe those (Copilot review finding on PR #36).
+                out.append({"family": family, "location": detail, "item": item})
+            elif isinstance(item, str) and item:
+                out.append({"family": family, "detail": item})
+        return out
+
+    def _find_space_gaps(self, plan):
+        """Read-only diagnostic naming every broken inbound leg (day, position, expected origin)
+        for the Stage 3 refine failure_summary -- mirrors ``_repair_transport_gaps``'s walk order
+        (continuous across day boundaries, matching ``Is_space_correct``'s ``position_list``) but
+        never mutates or attempts a fix; ``_repair_transport_gaps`` is the separately-gated,
+        separately-tested repair pass this only informs the LLM prompt for. Never raises."""
+        gaps = []
+        try:
+            prev_pos = None
+            for day in plan.get("itinerary", []) or []:
+                if not isinstance(day, dict):
+                    continue
+                for activity in day.get("activities", []) or []:
+                    if not isinstance(activity, dict):
+                        continue
+                    is_intercity = activity.get("type") in ("airplane", "train")
+                    if prev_pos is not None and not is_intercity:
+                        if not self._transport_leg_valid(activity, prev_pos):
+                            gaps.append({
+                                "day": day.get("day"),
+                                "position": self._activity_start_position(activity),
+                                "expected_from": prev_pos,
+                            })
+                    prev_pos = self._activity_end_position(activity)
+        except Exception:
+            return []
+        return gaps
+
     def _describe_check_failure(self, query, constraints, plan):
         """Compact, oracle-free description of which no-oracle constraint families and
         commonsense checks ``plan`` currently fails -- built only from the parsed ``constraints``
         dict (never ``hard_logic_py``) and the plan itself, for the Stage 3 LLM refine prompt.
-        Family-level (not per-clause) since ``evaluate_parsed_constraints`` returns a flat
-        ``list[bool]`` with no label; re-running it one family at a time is cheap (bounded by the
-        handful of families a query actually has) and needs no duplicated matching logic."""
+        ``failed_constraint_families`` stays family-level (``evaluate_parsed_constraints`` returns a
+        flat ``list[bool]`` with no label); ``failed_clauses`` sharpens the families in
+        ``_REFINE_PER_ITEM_CLAUSE_FAMILIES`` down to the specific POI/location/window at fault
+        (roadmap Next step 7 bucket 2), and ``space_gaps`` names the specific broken leg(s) when the
+        commonsense "Invalid Transport information across positions" check fails."""
         target_city = query.get("target_city", "")
         failed_families = []
+        failed_clauses = []
         for key, value in (constraints or {}).items():
             if value in (None, [], {}, ""):
                 continue
@@ -1793,8 +1867,12 @@ class TPCAgent(BaseAgent):
                 continue
             if results and not all(results):
                 failed_families.append(key)
+                failed_clauses.extend(self._describe_failed_clause_items(key, value, plan, target_city))
         failed_commonsense = self._commonsense_failure_columns(query, plan)
         schema_ok = self._schema_ok(query, plan)
+        space_gaps = []
+        if "Invalid Transport information across positions" in failed_commonsense:
+            space_gaps = self._find_space_gaps(plan)
         # Feasible-window grounding costs a _get_transport lookup per activity -- skip it when
         # there is no env to ground against, or nothing is actually failing (an already-accepted
         # plan has nothing for Stage 3 to repair, so the context would be computed and discarded).
@@ -1806,7 +1884,9 @@ class TPCAgent(BaseAgent):
                 feasible_windows = []
         return {
             "failed_constraint_families": failed_families,
+            "failed_clauses": failed_clauses,
             "failed_commonsense_checks": failed_commonsense,
+            "space_gaps": space_gaps,
             "schema_ok": schema_ok,
             "activity_feasible_windows": feasible_windows,
         }
