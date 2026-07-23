@@ -844,15 +844,19 @@ class TPCAgent(BaseAgent):
             close_min += 24 * 60
         return int(open_min), int(close_min)
 
-    def _lookup_poi_open_bounds(self, city, position, activity_type):
+    def _lookup_poi_open_bounds(self, city, position, activity_type, tickets=None):
         """Real WorldEnv opening/closing bounds (minutes-of-day, see ``_poi_open_bounds``) for a
         named POI -- the feasibility fact the Stage 3 LLM refine prompt and edit grounding were
         missing (roadmap Next step 7, bucket 1: proposed edits fail to ground because nothing told
         the model, or the edit applier, what hours the POI is actually open). Returns ``None`` when
         the environment/position can't be resolved: a bare-agent unit test (``self.env is None``),
-        an unrecognized name, or an accommodation-based meal (hotel breakfast has no tracked hours
-        in this dataset, same as everywhere else this codebase treats it)."""
+        an unrecognized name, or an accommodation-based meal (``tickets == 0``, e.g.
+        ``_make_hotel_breakfast``'s free hotel breakfast) -- that meal's ``position`` is the hotel's
+        name, not a restaurant, and has no tracked hours in this dataset; looking it up against the
+        restaurant pool risks a spurious name match instead."""
         if self.env is None or not position:
+            return None
+        if activity_type in ("breakfast", "lunch", "dinner") and tickets == 0:
             return None
         if activity_type == "attraction":
             pools = [self.env.attractions]
@@ -861,10 +865,18 @@ class TPCAgent(BaseAgent):
         else:
             return None
         for pool in pools:
-            try:
-                df = pool.select(city, "name", lambda x: True)
-            except Exception:
-                continue
+            # Pools expose ``.data[city]`` (a DataFrame) directly; prefer it over ``.select()``,
+            # which would otherwise scan the column twice (once to build ``.select``'s bool mask,
+            # once here to find the name match). Fall back to ``.select()`` for stand-ins (test
+            # fakes) that only implement that method.
+            data_by_city = getattr(pool, "data", None)
+            if isinstance(data_by_city, dict) and city in data_by_city:
+                df = data_by_city[city]
+            else:
+                try:
+                    df = pool.select(city, "name", lambda x: True)
+                except Exception:
+                    continue
             for i in range(len(df)):
                 try:
                     row = df.iloc[i]
@@ -896,7 +908,7 @@ class TPCAgent(BaseAgent):
                 if not position:
                     continue
                 entry = {"day": day.get("day"), "position": position}
-                bounds = self._lookup_poi_open_bounds(city, position, act.get("type"))
+                bounds = self._lookup_poi_open_bounds(city, position, act.get("type"), act.get("tickets"))
                 if bounds is not None:
                     open_min, close_min = bounds
                     entry["open"] = minutes_to_time(open_min % (24 * 60))
@@ -1781,14 +1793,21 @@ class TPCAgent(BaseAgent):
                 continue
             if results and not all(results):
                 failed_families.append(key)
-        try:
-            feasible_windows = self._refine_feasible_windows(query, plan)
-        except Exception:
-            feasible_windows = []
+        failed_commonsense = self._commonsense_failure_columns(query, plan)
+        schema_ok = self._schema_ok(query, plan)
+        # Feasible-window grounding costs a _get_transport lookup per activity -- skip it when
+        # there is no env to ground against, or nothing is actually failing (an already-accepted
+        # plan has nothing for Stage 3 to repair, so the context would be computed and discarded).
+        feasible_windows = []
+        if self.env is not None and (failed_families or failed_commonsense or not schema_ok):
+            try:
+                feasible_windows = self._refine_feasible_windows(query, plan)
+            except Exception:
+                feasible_windows = []
         return {
             "failed_constraint_families": failed_families,
-            "failed_commonsense_checks": self._commonsense_failure_columns(query, plan),
-            "schema_ok": self._schema_ok(query, plan),
+            "failed_commonsense_checks": failed_commonsense,
+            "schema_ok": schema_ok,
             "activity_feasible_windows": feasible_windows,
         }
 
@@ -1920,7 +1939,8 @@ class TPCAgent(BaseAgent):
         if new_end <= new_start:
             return _fail("empty_window")
 
-        bounds = self._lookup_poi_open_bounds(city, edit.get("location"), activity.get("type"))
+        bounds = self._lookup_poi_open_bounds(
+            city, edit.get("location"), activity.get("type"), activity.get("tickets"))
         if bounds is not None:
             poi_open, poi_close = bounds
             new_start = max(new_start, poi_open)

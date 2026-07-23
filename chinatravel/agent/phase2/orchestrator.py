@@ -243,7 +243,9 @@ def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -
 
     def _apply_refine_edits(plan: dict, edits: list):
         if last_query is None:
-            return deepcopy(plan), 0
+            reasons = [{"op": (e.get("op") if isinstance(e, dict) else None), "committed": False,
+                        "reason": "no_query_context"} for e in (edits or [])]
+            return deepcopy(plan), 0, reasons
         return agent.apply_refine_edits(plan, last_query, edits)
 
     setattr(_solve, "get_timeout_recovery_plan", _get_timeout_recovery_plan)
