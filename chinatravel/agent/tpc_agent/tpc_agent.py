@@ -844,6 +844,92 @@ class TPCAgent(BaseAgent):
             close_min += 24 * 60
         return int(open_min), int(close_min)
 
+    def _lookup_poi_open_bounds(self, city, position, activity_type, tickets=None):
+        """Real WorldEnv opening/closing bounds (minutes-of-day, see ``_poi_open_bounds``) for a
+        named POI -- the feasibility fact the Stage 3 LLM refine prompt and edit grounding were
+        missing (roadmap Next step 7, bucket 1: proposed edits fail to ground because nothing told
+        the model, or the edit applier, what hours the POI is actually open). Returns ``None`` when
+        the environment/position can't be resolved: a bare-agent unit test (``self.env is None``),
+        an unrecognized name, or an accommodation-based meal (``tickets == 0``, e.g.
+        ``_make_hotel_breakfast``'s free hotel breakfast) -- that meal's ``position`` is the hotel's
+        name, not a restaurant, and has no tracked hours in this dataset; looking it up against the
+        restaurant pool risks a spurious name match instead."""
+        if self.env is None or not position:
+            return None
+        if activity_type in ("breakfast", "lunch", "dinner") and tickets == 0:
+            return None
+        if activity_type == "attraction":
+            pools = [self.env.attractions]
+        elif activity_type in ("breakfast", "lunch", "dinner"):
+            pools = [self.env.restaurants]
+        else:
+            return None
+        for pool in pools:
+            # Pools expose ``.data[city]`` (a DataFrame) directly; prefer it over ``.select()``,
+            # which would otherwise scan the column twice (once to build ``.select``'s bool mask,
+            # once here to find the name match). Fall back to ``.select()`` for stand-ins (test
+            # fakes) that only implement that method.
+            data_by_city = getattr(pool, "data", None)
+            if isinstance(data_by_city, dict) and city in data_by_city:
+                df = data_by_city[city]
+            else:
+                try:
+                    df = pool.select(city, "name", lambda x: True)
+                except Exception:
+                    continue
+            for i in range(len(df)):
+                try:
+                    row = df.iloc[i]
+                    if self._match_constraint_text(str(row.get("name", "")), position):
+                        return self._poi_open_bounds(row)
+                except Exception:
+                    continue
+        return None
+
+    def _refine_feasible_windows(self, query, plan):
+        """Per-activity feasibility context for the Stage 3 refine prompt: each meal/attraction
+        activity's real WorldEnv opening/closing bounds, plus the time actually available given its
+        neighbours (mirrors the arrival/next-start calc ``_try_pin_activity`` already uses to decide
+        whether a retiming has slack). This is exactly what an LLM proposing a ``shift_activity_window``
+        edit needs to avoid asking for a time the environment cannot ground -- roadmap Next step 7's
+        biggest ``no_groundable_edits`` bucket. Never raises; a POI/leg that can't be resolved is
+        simply omitted from that activity's entry, not fabricated."""
+        city = str(query.get("target_city", ""))
+        people = int(query.get("people_number", 1) or 1)
+        out = []
+        for day in plan.get("itinerary", []) or []:
+            if not isinstance(day, dict):
+                continue
+            activities = day.get("activities", []) or []
+            for idx, act in enumerate(activities):
+                if not isinstance(act, dict) or act.get("type") not in self._WINDOW_ACTIVITY_TYPES:
+                    continue
+                position = str(act.get("position", ""))
+                if not position:
+                    continue
+                entry = {"day": day.get("day"), "position": position}
+                bounds = self._lookup_poi_open_bounds(city, position, act.get("type"), act.get("tickets"))
+                if bounds is not None:
+                    open_min, close_min = bounds
+                    entry["open"] = minutes_to_time(open_min % (24 * 60))
+                    entry["close"] = "24:00" if close_min >= 24 * 60 else minutes_to_time(close_min)
+                if idx > 0 and activities[idx - 1].get("type") not in ("airplane", "train"):
+                    prev = activities[idx - 1]
+                    try:
+                        _legs, arrival = self._get_transport(
+                            self.env, city, self._activity_end_position(prev), position,
+                            str(prev.get("end_time", "")), people)
+                        if arrival is not None:
+                            entry["earliest_reachable"] = arrival
+                    except Exception:
+                        pass
+                if idx + 1 < len(activities) and activities[idx + 1].get("type") not in ("airplane", "train"):
+                    next_start = str(activities[idx + 1].get("start_time", ""))
+                    if next_start:
+                        entry["must_end_before_next_starts_at"] = next_start
+                out.append(entry)
+        return out
+
     def _densify_dwell_minutes(self, poi, kind):
         if kind != "attraction":
             default_meal_dwell = "45" if self.use_oracle else "60"
@@ -1707,10 +1793,22 @@ class TPCAgent(BaseAgent):
                 continue
             if results and not all(results):
                 failed_families.append(key)
+        failed_commonsense = self._commonsense_failure_columns(query, plan)
+        schema_ok = self._schema_ok(query, plan)
+        # Feasible-window grounding costs a _get_transport lookup per activity -- skip it when
+        # there is no env to ground against, or nothing is actually failing (an already-accepted
+        # plan has nothing for Stage 3 to repair, so the context would be computed and discarded).
+        feasible_windows = []
+        if self.env is not None and (failed_families or failed_commonsense or not schema_ok):
+            try:
+                feasible_windows = self._refine_feasible_windows(query, plan)
+            except Exception:
+                feasible_windows = []
         return {
             "failed_constraint_families": failed_families,
-            "failed_commonsense_checks": self._commonsense_failure_columns(query, plan),
-            "schema_ok": self._schema_ok(query, plan),
+            "failed_commonsense_checks": failed_commonsense,
+            "schema_ok": schema_ok,
+            "activity_feasible_windows": feasible_windows,
         }
 
     def _commonsense_failure_columns(self, query, plan):
@@ -1746,25 +1844,36 @@ class TPCAgent(BaseAgent):
         (``_get_transport``, ``_activity_start/end_position``); an edit that references a day/POI
         the environment cannot resolve, or that cannot be legally re-legged, is dropped rather than
         fabricated. Never raises -- the caller re-checks the whole batch with ``ground_and_check``.
-        Returns ``(trial_plan, applied_count)``."""
+        Returns ``(trial_plan, applied_count, reasons)`` where ``reasons`` is a per-edit diagnostic
+        list (``{"op", "committed", "reason"}``, oracle-free WorldEnv-grounding facts only) so a
+        screen can see *why* a batch committed nothing (roadmap Next step 7's ``no_groundable_edits``
+        bucket) instead of just the count."""
         trial = deepcopy(plan)
         city = str(query.get("target_city", ""))
         people = int(query.get("people_number", 1) or 1)
         handlers = dict(self._REFINE_OP_HANDLERS_ATTR)
         applied = 0
+        reasons = []
         for edit in list(edits or [])[: self._REFINE_MAX_EDITS]:
             if not isinstance(edit, dict):
+                reasons.append({"op": None, "committed": False, "reason": "malformed_edit"})
                 continue
-            handler_name = handlers.get(str(edit.get("op") or "").strip())
+            op = str(edit.get("op") or "").strip()
+            handler_name = handlers.get(op)
             if handler_name is None:
+                reasons.append({"op": op or None, "committed": False, "reason": "unknown_op"})
                 continue
             handler = getattr(self, handler_name)
+            diag: list = []
             try:
-                if handler(trial, edit, city, people):
-                    applied += 1
+                ok = handler(trial, edit, city, people, diag)
             except Exception:
-                continue
-        return trial, applied
+                ok = False
+                diag = ["handler_exception"]
+            if ok:
+                applied += 1
+            reasons.append({"op": op, "committed": bool(ok), "reason": (diag[-1] if diag else None)})
+        return trial, applied, reasons
 
     def _refine_day_index(self, plan, day_value):
         """Resolve an edit's 1-based ``day`` field to an itinerary index: match the day object's
@@ -1796,18 +1905,29 @@ class TPCAgent(BaseAgent):
                 return idx
         return None
 
-    def _refine_shift_activity(self, trial, edit, city, people):
+    def _refine_shift_activity(self, trial, edit, city, people, diag=None):
         """``shift_activity_window`` edit: retime one named activity to an explicit
         ``[start_time, end_time]``, recomputing its own inbound leg and the following activity's
         inbound leg (same grounding as ``_try_pin_activity``, without that method's own
-        accept-gate -- the batch is gated once, by the caller, via ``ground_and_check``)."""
+        accept-gate -- the batch is gated once, by the caller, via ``ground_and_check``).
+
+        The proposed window is first snapped into the POI's real WorldEnv opening/closing bounds
+        (roadmap Next step 7, bucket 1) rather than trialed verbatim: a plausible-but-slightly-off-
+        hours proposal still grounds this way, instead of being dropped here or (previously) trialed
+        only to fail the checker's commonsense hours check later. ``diag``, if given, gets one short
+        reason string appended -- why the edit failed, or ``"committed"``."""
+        def _fail(reason):
+            if diag is not None:
+                diag.append(reason)
+            return False
+
         day_idx = self._refine_day_index(trial, edit.get("day"))
         if day_idx is None:
-            return False
+            return _fail("day_not_found")
         activities = trial["itinerary"][day_idx].get("activities", []) or []
         act_idx = self._refine_find_activity_index(activities, edit.get("location"))
         if act_idx is None:
-            return False
+            return _fail("location_not_found")
         activity = activities[act_idx]
         try:
             cur_start = time_to_minutes(str(activity.get("start_time", "00:00")))
@@ -1815,9 +1935,18 @@ class TPCAgent(BaseAgent):
             new_start = time_to_minutes(str(edit["start_time"])) if edit.get("start_time") else cur_start
             new_end = time_to_minutes(str(edit["end_time"])) if edit.get("end_time") else cur_end
         except Exception:
-            return False
+            return _fail("bad_time_format")
         if new_end <= new_start:
-            return False
+            return _fail("empty_window")
+
+        bounds = self._lookup_poi_open_bounds(
+            city, edit.get("location"), activity.get("type"), activity.get("tickets"))
+        if bounds is not None:
+            poi_open, poi_close = bounds
+            new_start = max(new_start, poi_open)
+            new_end = min(new_end, poi_close)
+            if new_end <= new_start:
+                return _fail("poi_closed_during_requested_window")
 
         if act_idx > 0 and activities[act_idx - 1].get("type") not in ("airplane", "train"):
             prev = activities[act_idx - 1]
@@ -1827,13 +1956,13 @@ class TPCAgent(BaseAgent):
                 transports_in, arrival = self._get_transport(
                     self.env, city, from_pos, self._activity_start_position(activity), depart, people)
             except Exception:
-                return False
+                return _fail("inbound_transport_error")
             if arrival is None:
-                return False
+                return _fail("inbound_transport_ungroundable")
             new_start = max(new_start, time_to_minutes(arrival))
             activity["transports"] = transports_in
         if new_end <= new_start:
-            return False
+            return _fail("no_time_left_after_arrival")
         activity["start_time"] = minutes_to_time(new_start)
         activity["end_time"] = minutes_to_time(new_end)
 
@@ -1844,29 +1973,36 @@ class TPCAgent(BaseAgent):
                 transports_out, next_arrival = self._get_transport(
                     self.env, city, self._activity_end_position(activity), next_pos, minutes_to_time(new_end), people)
             except Exception:
-                return False
+                return _fail("outbound_transport_error")
             if next_arrival is None:
-                return False
+                return _fail("outbound_transport_ungroundable")
             next_start = str(nxt.get("start_time", ""))
             if next_start and time_to_minutes(next_arrival) > time_to_minutes(next_start):
-                return False
+                return _fail("next_activity_unreachable")
             nxt["transports"] = transports_out
+        if diag is not None:
+            diag.append("committed")
         return True
 
-    def _refine_drop_activity(self, trial, edit, city, people):
+    def _refine_drop_activity(self, trial, edit, city, people, diag=None):
         """``drop_activity`` edit: remove one named activity from its day and reconnect the
         following activity's inbound leg from the new previous activity (same reconnect pattern as
         ``_sanitize_plan_for_grounding``'s illegal-intercity cleanup). Never drops a day down to
         zero activities."""
+        def _fail(reason):
+            if diag is not None:
+                diag.append(reason)
+            return False
+
         day_idx = self._refine_day_index(trial, edit.get("day"))
         if day_idx is None:
-            return False
+            return _fail("day_not_found")
         activities = trial["itinerary"][day_idx].get("activities", []) or []
         if len(activities) <= 1:
-            return False
+            return _fail("would_empty_day")
         act_idx = self._refine_find_activity_index(activities, edit.get("location"))
         if act_idx is None:
-            return False
+            return _fail("location_not_found")
         del activities[act_idx]
         if act_idx < len(activities):
             nxt = activities[act_idx]
@@ -1883,52 +2019,67 @@ class TPCAgent(BaseAgent):
                         except Exception:
                             transports = []
                 nxt["transports"] = transports or []
+        if diag is not None:
+            diag.append("committed")
         return True
 
-    def _refine_swap_activity(self, trial, edit, city, people):
+    def _refine_swap_activity(self, trial, edit, city, people, diag=None):
         """``swap_activity`` edit: swap two named activities' order within a day and re-leg the
         day's movable block (``_relayout_movable_block``, no window clamp)."""
+        def _fail(reason):
+            if diag is not None:
+                diag.append(reason)
+            return False
+
         day_idx = self._refine_day_index(trial, edit.get("day"))
         if day_idx is None:
-            return False
+            return _fail("day_not_found")
         activities = trial["itinerary"][day_idx].get("activities", []) or []
         movable_slots = [
             i for i, a in enumerate(activities)
             if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
         ]
         if len(movable_slots) < 2 or movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
-            return False
+            return _fail("day_not_contiguous_movable_block")
         idx_a = self._refine_find_activity_index(activities, edit.get("location_a"))
         idx_b = self._refine_find_activity_index(activities, edit.get("location_b"))
         if idx_a is None or idx_b is None or idx_a == idx_b:
-            return False
+            return _fail("location_not_found")
         if idx_a not in movable_slots or idx_b not in movable_slots:
-            return False
+            return _fail("location_not_movable")
         pos_a, pos_b = movable_slots.index(idx_a), movable_slots.index(idx_b)
         order = list(range(len(movable_slots)))
         order[pos_a], order[pos_b] = order[pos_b], order[pos_a]
-        return self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people)
+        ok = self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people)
+        if diag is not None:
+            diag.append("committed" if ok else "relayout_ungroundable")
+        return ok
 
-    def _refine_reorder_day(self, trial, edit, city, people):
+    def _refine_reorder_day(self, trial, edit, city, people, diag=None):
         """``reorder_day`` edit: reorder a day's movable block to an explicit LLM-given
         ``order`` (list of position names). A named entry that cannot be matched, or that is
         missing entirely, keeps the unmatched slots at the end in their original relative order --
         a partial match is worse than nothing, but not fatal on its own; the caller's acceptance
         gate is the real filter."""
+        def _fail(reason):
+            if diag is not None:
+                diag.append(reason)
+            return False
+
         day_idx = self._refine_day_index(trial, edit.get("day"))
         if day_idx is None:
-            return False
+            return _fail("day_not_found")
         activities = trial["itinerary"][day_idx].get("activities", []) or []
         movable_slots = [
             i for i, a in enumerate(activities)
             if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
         ]
         if len(movable_slots) < 2 or movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
-            return False
+            return _fail("day_not_contiguous_movable_block")
 
         order_locations = [x for x in (edit.get("order") or []) if isinstance(x, str)]
         if not order_locations:
-            return False
+            return _fail("empty_order")
         remaining = list(range(len(movable_slots)))
         picked = []
         for loc in order_locations:
@@ -1942,8 +2093,11 @@ class TPCAgent(BaseAgent):
                 remaining.remove(match_k)
         order = picked + remaining
         if order == list(range(len(movable_slots))):
-            return False  # no actual change proposed
-        return self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people)
+            return _fail("no_change_proposed")
+        ok = self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people)
+        if diag is not None:
+            diag.append("committed" if ok else "relayout_ungroundable")
+        return ok
 
     def _extend_window_meals(self, plan, query, constraints, check, restaurants):
         """Swap a bounding intercity to a wider-window option and add the meal it unlocks.

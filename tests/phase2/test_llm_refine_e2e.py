@@ -42,8 +42,9 @@ def test_refine_hooks_are_noop_before_any_solve_call(env):
     assert accepted is False
     assert plan == {"itinerary": []}
     assert failure == {}
-    trial, applied = solve_fn.apply_refine_edits({"itinerary": []}, [{"op": "drop_activity"}])
+    trial, applied, reasons = solve_fn.apply_refine_edits({"itinerary": []}, [{"op": "drop_activity"}])
     assert applied == 0
+    assert reasons and reasons[0]["committed"] is False
 
 
 @pytest.mark.integration

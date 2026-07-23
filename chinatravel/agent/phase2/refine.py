@@ -90,7 +90,12 @@ def build_llm_refine_prompt(query: dict, plan: dict, failure_summary: dict) -> s
         f"{json.dumps(visible, ensure_ascii=False, indent=2)}\n\n"
         "Current plan (day/activities only; each activity's position is its name):\n"
         f"{json.dumps(compact_plan, ensure_ascii=False, indent=2)}\n\n"
-        "Checker failure summary -- fix these, don't touch anything not listed here:\n"
+        "Checker failure summary -- fix these, don't touch anything not listed here. "
+        "\"activity_feasible_windows\" lists, per already-scheduled activity, its real opening/"
+        "closing hours (\"open\"/\"close\"), the earliest it can actually be reached "
+        "(\"earliest_reachable\"), and the latest it must end to still reach the next fixed "
+        "activity (\"must_end_before_next_starts_at\") -- a shift_activity_window edit outside "
+        "these bounds cannot ground and will be dropped, so stay within them:\n"
         f"{json.dumps(failure_summary, ensure_ascii=False, indent=2)}"
     )
 
