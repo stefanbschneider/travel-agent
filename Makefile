@@ -110,7 +110,7 @@ phase2-help:
 	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
 	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
+	  'Variables: P2_SPLIT_SET=val|test|familiar_100|familiar_100_val|familiar_100_test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:

@@ -50,6 +50,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+# Put scripts/ (this file's own dir) on the path so sibling modules import under a single, stable
+# name (``phase2_gate``, not ``scripts.phase2_gate``) -- matching the tests and every other caller,
+# so the same file is never loaded twice under two module names.
+sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 sys.path.insert(0, str(PROJECT_ROOT / "agent_env" / "scripts"))
 CHINATRAVEL_ROOT = str(PROJECT_ROOT / "chinatravel")
 if CHINATRAVEL_ROOT not in sys.path:
@@ -57,7 +61,7 @@ if CHINATRAVEL_ROOT not in sys.path:
 
 import make_phase2_splits as splits  # noqa: E402
 import rehearse_phase2 as reh  # noqa: E402
-from scripts.phase2_gate import check_gate  # noqa: E402
+from phase2_gate import check_gate  # noqa: E402
 
 
 def _method_for(mode: str, split_name: str) -> str:

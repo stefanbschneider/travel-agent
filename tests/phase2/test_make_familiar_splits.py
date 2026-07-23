@@ -30,6 +30,20 @@ def test_write_familiar_splits_idempotent_without_force(tmp_path):
     assert test_path.read_text(encoding="utf-8") == original
 
 
+def test_write_familiar_splits_raises_on_partial_state(tmp_path):
+    import pytest
+
+    uids = [f"phase2_familiar_{i:05d}" for i in range(100)]
+    mfs.write_familiar_splits(uids, out_dir=tmp_path, force=False)
+    # Delete one file to simulate a broken/partial split; a plain rerun must fail loudly.
+    (tmp_path / f"{mfs.TEST_NAME}.txt").unlink()
+    with pytest.raises(RuntimeError):
+        mfs.write_familiar_splits(uids, out_dir=tmp_path, force=False)
+    # force=True rewrites both cleanly.
+    assert mfs.write_familiar_splits(uids, out_dir=tmp_path, force=True) is True
+    assert (tmp_path / f"{mfs.TEST_NAME}.txt").exists()
+
+
 def test_write_familiar_splits_default_is_80_20(tmp_path):
     uids = [f"phase2_familiar_{i:05d}" for i in range(100)]
     mfs.write_familiar_splits(uids, out_dir=tmp_path, force=False)

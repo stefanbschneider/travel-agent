@@ -55,14 +55,24 @@ def write_familiar_splits(
 ) -> bool:
     """Write the familiar val/test split files. Returns True if written, False if skipped.
 
-    Idempotent unless ``force``: if either target already exists and ``force`` is False, nothing is
-    written (keeps the held-out familiar test set frozen).
+    Idempotent unless ``force``: if *both* targets already exist and ``force`` is False, nothing is
+    written (keeps the held-out familiar test set frozen). If exactly one exists, the split is in a
+    broken/partial state (interrupted write, bad merge, manual deletion) -- raise rather than
+    silently leave it half-written or claim it is complete; pass ``force=True`` to rewrite both.
     """
     out_dir = Path(out_dir)
     val_path = out_dir / f"{VAL_NAME}.txt"
     test_path = out_dir / f"{TEST_NAME}.txt"
-    if not force and (val_path.exists() or test_path.exists()):
-        return False
+    if not force:
+        if val_path.exists() and test_path.exists():
+            return False
+        if val_path.exists() != test_path.exists():
+            present = val_path if val_path.exists() else test_path
+            missing = test_path if val_path.exists() else val_path
+            raise RuntimeError(
+                f"Partial familiar split: {present} exists but {missing} is missing. Refusing to "
+                f"leave a half-written split -- rerun with force=True (or `--force`) to rewrite both."
+            )
     val_list, test_list = make_splits(uids, test_size=test_size, seed=seed)
     _write_lines(val_path, val_list)
     _write_lines(test_path, test_list)
