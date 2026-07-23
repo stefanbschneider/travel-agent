@@ -52,7 +52,9 @@ def _hooks(*, accepted_before, key_before, accepted_after=True, key_after=None, 
         calls["are"] += 1
         trial = dict(plan)
         trial["itinerary"] = list(plan.get("itinerary", [])) + [{"day": 99, "activities": [], "_edited": True}]
-        return trial, applied
+        reasons = [{"op": e.get("op"), "committed": bool(applied), "reason": "committed" if applied else "test_stub"}
+                   for e in (edits or [])]
+        return trial, applied, reasons
 
     return ground_and_check, apply_refine_edits, calls
 
@@ -110,6 +112,7 @@ def test_repair_commits_on_accept_and_no_regression(one_query):
     assert info["improve_llm_called"] is True
     assert info["improve_committed"] is True
     assert info["improve_edit_count"] == 1
+    assert info["improve_edit_reasons"] == [{"op": "drop_activity", "committed": True, "reason": "committed"}]
     assert out != plan
     assert len(out["itinerary"]) == len(plan["itinerary"]) + 1  # per the fake apply_refine_edits
     assert len(llm.calls) == 1
@@ -174,6 +177,7 @@ def test_graceful_degrade_on_ungroundable_edit(one_query):
     assert out is plan
     assert info["improve_edit_count"] == 0
     assert info["improve_skip_reason"] == "no_groundable_edits"
+    assert info["improve_edit_reasons"] == [{"op": "drop_activity", "committed": False, "reason": "test_stub"}]
 
 
 def test_graceful_degrade_on_ground_and_check_error(one_query):
@@ -183,7 +187,7 @@ def test_graceful_degrade_on_ground_and_check_error(one_query):
     def boom_gac(_plan):
         raise RuntimeError("checker blew up")
 
-    out, info = O.llm_refine(plan, one_query, llm, 30.0, boom_gac, lambda p, e: (p, 0))
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, boom_gac, lambda p, e: (p, 0, []))
     assert out is plan
     assert info["improve_skip_reason"] == "ground_and_check_error"
     assert llm.calls == []

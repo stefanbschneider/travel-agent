@@ -122,6 +122,7 @@ def llm_refine(
         "improve_llm_called": False,
         "improve_committed": False,
         "improve_edit_count": 0,
+        "improve_edit_reasons": [],
         "improve_skip_reason": None,
     }
     if not callable(ground_and_check):
@@ -168,11 +169,12 @@ def llm_refine(
         return plan, info
 
     try:
-        trial, applied = apply_refine_edits(grounded_plan, edits)
+        trial, applied, edit_reasons = apply_refine_edits(grounded_plan, edits)
     except Exception:
         info["improve_skip_reason"] = "apply_edits_error"
         return plan, info
     info["improve_edit_count"] = applied
+    info["improve_edit_reasons"] = edit_reasons
     if not applied:
         info["improve_skip_reason"] = "no_groundable_edits"
         return plan, info
@@ -293,6 +295,7 @@ def solve_phase2(
         "improve_llm_called": False,
         "improve_committed": False,
         "improve_edit_count": 0,
+        "improve_edit_reasons": [],
         "improve_skip_reason": None,
         "used_fallback": False,
         "valid_output": False,

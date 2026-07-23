@@ -16,7 +16,29 @@ for _p in (str(PROJECT_ROOT), str(PROJECT_ROOT / "chinatravel")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+import pandas as pd  # noqa: E402
+
 from chinatravel.agent.tpc_agent.tpc_agent import TPCAgent  # noqa: E402
+
+
+class _FakePool:
+    """Minimal WorldEnv attractions/restaurants stand-in exposing just the ``.select`` shape
+    ``_lookup_poi_open_bounds`` calls -- enough to test the roadmap Next step 7 bucket-1 fix
+    (snapping a proposed shift into a POI's real opening hours) without a real WorldEnv."""
+
+    def __init__(self, rows):
+        self._df = pd.DataFrame(rows)
+
+    def select(self, city, key, func):
+        return self._df
+
+
+def _env_with_hours(attractions=None, restaurants=None):
+    from types import SimpleNamespace
+    return SimpleNamespace(
+        attractions=_FakePool(attractions or []),
+        restaurants=_FakePool(restaurants or []),
+    )
 
 
 def _bare_agent(zero_travel=True):
@@ -61,9 +83,10 @@ QUERY = {"target_city": "Shenzhen", "people_number": 1, "uid": "test_uid"}
 
 def test_apply_refine_edits_drops_unknown_op():
     agent = _bare_agent()
-    trial, applied = agent.apply_refine_edits(_day_plan(), QUERY, [{"op": "rewrite_everything"}])
+    trial, applied, reasons = agent.apply_refine_edits(_day_plan(), QUERY, [{"op": "rewrite_everything"}])
     assert applied == 0
     assert trial == _day_plan()
+    assert reasons == [{"op": "rewrite_everything", "committed": False, "reason": "unknown_op"}]
 
 
 def test_apply_refine_edits_caps_at_max_edits():
@@ -71,14 +94,16 @@ def test_apply_refine_edits_caps_at_max_edits():
     edits = [{"op": "drop_activity", "day": 1, "location": "Museum"}] * 20
     # Each successive attempt after the first drop targets a name no longer present -> only the
     # cap matters here, not whether every attempt individually succeeds.
-    trial, applied = agent.apply_refine_edits(_day_plan(), QUERY, edits)
+    trial, applied, reasons = agent.apply_refine_edits(_day_plan(), QUERY, edits)
     assert applied <= agent._REFINE_MAX_EDITS
+    assert len(reasons) == agent._REFINE_MAX_EDITS
 
 
 def test_apply_refine_edits_never_raises_on_malformed_edit():
     agent = _bare_agent()
-    trial, applied = agent.apply_refine_edits(_day_plan(), QUERY, [None, 42, {"op": None}, "x"])
+    trial, applied, reasons = agent.apply_refine_edits(_day_plan(), QUERY, [None, 42, {"op": None}, "x"])
     assert applied == 0
+    assert all(r["committed"] is False for r in reasons)
 
 
 # --- shift_activity_window ---------------------------------------------------------------------
@@ -113,6 +138,124 @@ def test_shift_activity_window_rejects_empty_window():
         "Shenzhen", 1,
     )
     assert ok is False
+
+
+# --- shift_activity_window snapping to real opening hours (roadmap Next step 7, bucket 1) -------
+#
+# Before this fix, apply_refine_edits never consulted WorldEnv opening hours at all: a proposal
+# outside a POI's real hours was either trialed verbatim (and only caught much later by the
+# checker's commonsense hours check, landing in "not_accepted_or_regressed") or, if transport
+# happened to make it infeasible, dropped for an unrelated reason. Snapping here lets a
+# plausible-but-slightly-off-hours proposal still ground and commit.
+
+def _single_activity_day_plan():
+    # No neighbours to complicate the transport/next-activity checks -- isolates the
+    # opening-hours snap itself from the (unrelated, no-cascading-shift) downstream-conflict path.
+    return {"itinerary": [{"day": 1, "activities": [
+        {"type": "attraction", "position": "Museum", "start_time": "09:00", "end_time": "10:00",
+         "price": 0, "cost": 0, "tickets": 1, "transports": []},
+    ]}]}
+
+
+def test_shift_activity_window_snaps_to_poi_opening_hours():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[{"name": "Museum", "opentime": "09:00", "endtime": "18:00"}])
+    plan = _single_activity_day_plan()
+    diag = []
+    ok = agent._refine_shift_activity(
+        plan, {"day": 1, "location": "Museum", "start_time": "07:00", "end_time": "20:00"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is True
+    assert diag == ["committed"]
+    act = plan["itinerary"][0]["activities"][0]
+    assert act["start_time"] == "09:00" and act["end_time"] == "18:00"
+
+
+def test_shift_activity_window_drops_when_poi_closed_during_requested_window():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[{"name": "Museum", "opentime": "09:00", "endtime": "18:00"}])
+    plan = _single_activity_day_plan()
+    diag = []
+    ok = agent._refine_shift_activity(
+        plan, {"day": 1, "location": "Museum", "start_time": "02:00", "end_time": "03:00"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is False
+    assert diag == ["poi_closed_during_requested_window"]
+
+
+def test_shift_activity_window_without_env_ignores_hours():
+    # No WorldEnv (bare-agent unit tests) -> _lookup_poi_open_bounds returns None -> no snapping,
+    # same behavior as before this fix.
+    agent = _bare_agent()
+    plan = _day_plan()
+    diag = []
+    ok = agent._refine_shift_activity(
+        plan, {"day": 1, "location": "Museum", "start_time": "10:30", "end_time": "11:30"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is True
+    assert diag == ["committed"]
+    act = plan["itinerary"][0]["activities"][0]
+    assert act["start_time"] == "10:30" and act["end_time"] == "11:30"
+
+
+def test_shift_activity_window_records_reason_for_missing_location():
+    agent = _bare_agent()
+    plan = _day_plan()
+    diag = []
+    ok = agent._refine_shift_activity(
+        plan, {"day": 1, "location": "Nonexistent Place", "start_time": "10:30", "end_time": "11:30"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is False
+    assert diag == ["location_not_found"]
+
+
+# --- apply_refine_edits per-edit diagnostics (roadmap Next step 7, bucket 1) --------------------
+
+def test_apply_refine_edits_reports_committed_reason():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[{"name": "Museum", "opentime": "09:00", "endtime": "18:00"}])
+    trial, applied, reasons = agent.apply_refine_edits(
+        _day_plan(), QUERY,
+        [{"op": "shift_activity_window", "day": 1, "location": "Museum",
+          "start_time": "10:30", "end_time": "11:30"}],
+    )
+    assert applied == 1
+    assert reasons == [{"op": "shift_activity_window", "committed": True, "reason": "committed"}]
+
+
+def test_apply_refine_edits_reports_failure_reason():
+    agent = _bare_agent()
+    trial, applied, reasons = agent.apply_refine_edits(
+        _day_plan(), QUERY,
+        [{"op": "shift_activity_window", "day": 1, "location": "Nowhere",
+          "start_time": "10:30", "end_time": "11:30"}],
+    )
+    assert applied == 0
+    assert reasons == [{"op": "shift_activity_window", "committed": False, "reason": "location_not_found"}]
+
+
+# --- _refine_feasible_windows / ground_and_check wiring (roadmap Next step 7, bucket 1) ---------
+
+def test_refine_feasible_windows_reports_real_opening_hours():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[{"name": "Museum", "opentime": "09:00", "endtime": "18:00"}])
+    windows = agent._refine_feasible_windows(QUERY, _day_plan())
+    museum = next(w for w in windows if w["position"] == "Museum")
+    assert museum["open"] == "09:00" and museum["close"] == "18:00"
+
+
+def test_ground_and_check_failure_summary_includes_feasible_windows():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[{"name": "Museum", "opentime": "09:00", "endtime": "18:00"}])
+    agent._last_solve_constraints = {"required_attractions": ["Not In Plan"]}
+    _accepted, _grounded, _key, failure = agent.ground_and_check(_day_plan(), QUERY)
+    assert "activity_feasible_windows" in failure
+    positions = [w["position"] for w in failure["activity_feasible_windows"]]
+    assert "Museum" in positions
 
 
 # --- drop_activity -------------------------------------------------------------------------------
