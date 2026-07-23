@@ -40,6 +40,8 @@ The 100 source records are imported unchanged under `chinatravel/data/en/TPC_IJC
 The records contain `hard_logic_py`; loaders retain it only for scoring and attribution, while the adapter and both harnesses expose only `uid`, trip metadata, and `nature_language` to the agent path.
 Familiar-100 is drawn from the same distribution as final evaluation, so it is the preferred new-development signal — but a familiar-100 result must identify this imported artifact and run configuration and must not be presented as a final-evaluation estimate.
 
+**Val / held-out-test partition (since 2026-07-23).** To avoid overfitting familiar-100 itself, `scripts/make_familiar_splits.py` splits the 100 records once, deterministically (seed `20260723`), into `tpc_phase2_familiar_100_val` (80) and `tpc_phase2_familiar_100_test` (20) — regenerate/inspect with `make phase2-familiar-splits` (frozen unless `--force`). **Every screen and development gate runs on the val split; the test split is an occasional overfitting tripwire, never a per-change signal** — you compare val↔test only rarely (e.g. before a submission) to check the two haven't diverged. Two caveats: the 20-record test split is a *coarse, high-variance* tripwire (a seeded random split, not stratified), and neither familiar split is the organizer final held-out set — that remains the only true generalization measure. The full `tpc_phase2_familiar_100` split file stays in place for backward comparison with the already-committed 100-record baseline rows; new development rows use val.
+
 ### 2. Repository-local released data
 
 The repository contains the released Phase 1 English queries and their oracle fields under `chinatravel/data/en/TPC_IJCAI_2026_phase1_EN/`.
@@ -175,22 +177,26 @@ prints both the raw gate result and the reconciled verdict.
 
 The screen and the continuous e2e are complementary, not either/or. Do **not** gate every change
 behind its own isolated e2e (it cannot keep up), and do **not** promote off a screen alone (it does
-not estimate final performance). Instead:
+not estimate final performance). Everything below runs on the **`tpc_phase2_familiar_100_val`**
+split; the `tpc_phase2_familiar_100_test` split stays out of this loop entirely. Instead:
 
-1. **On each landing — fast screen.** RED bounces back to the author and never enters the batch.
-   GREEN / GREEN-caveat: the flag **stays off on `main`** but joins tonight's promotion queue.
-2. **Nightly — one *batched* e2e.** Run a single pinned e2e with **all** queued green flags stacked
-   ON, against the **current promoted baseline** (the flags already defaulted-on). This is the real
-   gate, and it is `1` run/night regardless of how many changes landed — that is what makes the
-   cadence keep up. Before spending the night, a stacked *screen* (all-queued-on vs all-off, the
-   `--extra-env` form above) is a cheap interaction check.
+1. **On each landing — fast screen** (`familiar_100_val`). RED bounces back to the author and never
+   enters the batch. GREEN / GREEN-caveat: the flag **stays off on `main`** but joins tonight's queue.
+2. **Nightly — one *batched* e2e** (`familiar_100_val`). Run a single pinned e2e with **all** queued
+   green flags stacked ON, against the **current promoted baseline** (the flags already
+   defaulted-on, same val split). This is the real gate, and it is `1` run/night regardless of how
+   many changes landed — that is what makes the cadence keep up. Before spending the night, a stacked
+   *screen* (all-queued-on vs all-off, the `--extra-env` form above) is a cheap interaction check.
 3. **Morning — promote or bisect.** If the batch improves `continuous_score` with no new parse
    failures or timeouts vs the baseline, promote the **whole batch**: flip the defaults on, commit
    the ledger row, and it becomes the new baseline. If the batch regresses, promote nothing and run
    drop-one-out *screens* (fast) to find the offending change or interaction, drop it, and re-batch
    the rest the next night.
-4. **Keep the continuous e2e running.** It maintains the promoted-baseline ledger row that the
-   nightly batch compares against and catches drift a screen cannot see.
+4. **Keep the continuous e2e running** (`familiar_100_val`). It maintains the promoted-baseline
+   ledger row that the nightly batch compares against and catches drift a screen cannot see.
+5. **Periodically — the test tripwire** (`familiar_100_test`, e.g. before a submission). Run the
+   current promoted config on the held-out 20 and compare the val↔test gap. A val-only gain that
+   does not carry to test is overfitting the val split; treat it as a warning, not a per-change gate.
 
 Why batch rather than gate each change in isolation: two changes that each screen green can still
 interact when stacked (e.g. `TPC_PIN_TIMED_WINDOWS` and `TPC_REPAIR_TRANSPORT_GAPS` both retime /

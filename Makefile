@@ -108,6 +108,7 @@ phase2-help:
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
 	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
+	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
 	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
@@ -173,6 +174,12 @@ phase2-timing:
 phase2-gate:
 	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)
 
+# Create the familiar-100 val/test split files (80/20, deterministic). Idempotent: the held-out
+# test set stays frozen unless P2_FAMILIAR_SPLIT_ARGS=--force. See docs/tpc_phase2_eval.md.
+P2_FAMILIAR_SPLIT_ARGS ?=
+phase2-familiar-splits:
+	.venv/bin/python scripts/make_familiar_splits.py $(P2_FAMILIAR_SPLIT_ARGS)
+
 # Quick A/B screen for an off-by-default flag (docs/tpc_phase2_eval.md, "Quick A/B screen"). Reduced-budget paired
 # baseline-vs-candidate SCREEN, not a promotion gate -- decides in ~1-2h whether a change is worth a
 # pinned end-to-end gate. Requires P2_FLAG=<env var>; override P2_ON/P2_OFF/P2_N/P2_BUDGET/P2_PARALLEL
@@ -183,7 +190,7 @@ P2_ON ?= 1
 P2_OFF ?= 0
 P2_N ?= 40
 P2_QE_MODE ?= solver-only
-P2_QE_SPLIT_SET ?= familiar_100
+P2_QE_SPLIT_SET ?= familiar_100_val
 P2_QE_EXTRA_ENV ?=
 P2_QE_BASELINE_JSON ?=
 P2_QE_OUT ?=

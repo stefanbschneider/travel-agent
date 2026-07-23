@@ -58,6 +58,7 @@ Compare rows only when data source, split/fold/limit, budget, repeat count, flag
 Parser diagnostics prioritize a failure investigation; they do not by themselves promote a change.
 Gate a like-for-like end-to-end candidate and inspect parse failures, timeouts, recovery/fallback use, stage telemetry, and LLM failure telemetry.
 Familiar-100, local released data, HF data, and final held-out evaluation remain separate signals.
+Familiar-100 is split 80/20 into `tpc_phase2_familiar_100_val` (screens + development gates) and a held-out `tpc_phase2_familiar_100_test` (occasional overfitting tripwire, never a per-change signal); `make phase2-familiar-splits` regenerates them and the [eval doc](docs/tpc_phase2_eval.md#1-official-familiar-100-development-set-preferred-signal) states the boundary.
 
 ## Change and branch protocol
 

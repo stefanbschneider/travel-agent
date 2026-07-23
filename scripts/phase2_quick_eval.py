@@ -275,7 +275,13 @@ def main() -> None:
     p.add_argument("--extra-env", default="",
                    help="Comma-separated K=V applied to BOTH arms (stack other flags/settings).")
     p.add_argument("--mode", choices=["solver-only", "end-to-end"], default="solver-only")
-    p.add_argument("--split-set", choices=["val", "test", "familiar_100"], default="familiar_100")
+    p.add_argument(
+        "--split-set",
+        choices=["val", "test", "familiar_100", "familiar_100_val", "familiar_100_test"],
+        default="familiar_100_val",
+        help="Development screens default to the familiar-100 VAL split (80 records); the "
+        "familiar_100_test split (20) is a held-out overfitting tripwire, not a per-change signal.",
+    )
     p.add_argument("--n", type=int, default=40, help="Queries to screen (subset size).")
     p.add_argument("--budget-sec", type=float, default=60.0)
     p.add_argument("--parallel", type=int, default=3)
