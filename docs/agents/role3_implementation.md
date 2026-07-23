@@ -25,7 +25,9 @@ Take the highest-priority **implementation** item from the roadmap's "Next steps
 
 For these, the mechanism is implemented and tested; do not re-run the same fix. A known residual is explicitly out of the transport pass's bounded scope: legs that need a real cascading time shift (not just a leg fix) to fit — that is precisely the kind of case Stage 3 refine can target through an LLM-proposed, deterministically-grounded, acceptance-gated reorder.
 
-If unsure which to take, default to **Stage 3 refine** via [`stage3_llm_refine.md`](stage3_llm_refine.md) — it is next in roadmap priority order and the sole remaining new-implementation item.
+**Second implementation item — cut `TPC_PIN_TIMED_WINDOWS`'s wall-clock cost (surfaced by the PR [#34](https://github.com/stefanbschneider/china-travel-agent/pull/34) gate).** The pin gate promoted nothing because the flag lifts solver-only quality (`25.5 → 30.5` FPR) but regresses timeouts (`38 → 57` end-to-end) — the roadmap root-causes the cost to the per-trial deepcopy + full-checker revalidation in `_pin_timed_windows`/`_resequence_day` (`chinatravel/agent/tpc_agent/tpc_agent.py`). Making those passes cheaper (e.g. incremental/partial revalidation instead of a whole-plan re-check per trial, or fewer deepcopies) so the flag keeps its quality gain without the timeout regression is a concrete, high-leverage implementation task — it is what would let the `pin + TPC_SOLVE_CONVERGE_PATIENCE` batch (roadmap Next step 1/5) actually promote. Screen it the same way (solver-only, val) and confirm timeouts drop with FPR held before handing to role 2.
+
+If unsure which to take, default to **Stage 3 refine** via [`stage3_llm_refine.md`](stage3_llm_refine.md) — it is the top new-implementation item; the pin-cost reduction above is the strong second.
 
 ## Invariants your change must hold
 
