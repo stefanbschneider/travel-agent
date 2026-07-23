@@ -11,23 +11,23 @@ Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap
 - **Do not read, edit, or stage `.env`** or `agent_env/config.toml` content into a commit — they are local user configuration.
 - A row **promotes nothing on its own**. You produce evidence; role 1 decides what it means for the roadmap. Never edit roadmap priorities.
 
-## What to run
+## Which split — val, and the test tripwire
 
-Work the roadmap's gate items in priority order. As of the current roadmap the open gates are, highest-leverage first:
+Every development gate runs on **`tpc_phase2_familiar_100_val`** (the 80-record val split), **not** the full 100. The `tpc_phase2_familiar_100_test` 20 records are a held-out overfitting tripwire: touch them only occasionally (e.g. once before a submission), never as a per-change gate. The full `tpc_phase2_familiar_100` split remains only for backward comparison with the pre-2026-07-23 100-record rows — do not start new development rows on it. See [dataset boundaries](../tpc_phase2_eval.md#1-official-familiar-100-development-set-preferred-signal). Run `make phase2-familiar-splits` if the split files are missing.
 
-1. **Solver-headroom step** (`TPC_PIN_TIMED_WINDOWS` pinning + resequencer). Record a clean **flags-off** solver-only familiar-100 baseline, then a **flag-on** run at the same SHA, and gate them. Promote-worthy only if solver-only FPR improves with no new parse failures or timeouts.
-2. **Landed parser fixes together** (negative-constraint, required-constraint, deterministic-budget, `required_attraction_types` guard, and the entity-resolution segmentation fix `62df2a0b`) — one pinned end-to-end gate against the last promoted familiar row.
-3. **Paired `llm_parse` on/off** at one SHA — settle whether the harness auto-enable of audit mode is justified end-to-end.
+## What to run — the nightly batched e2e
 
-Confirm the exact next item against the live roadmap before spending a long run on it.
+You are the **gate** end of the [daily-screen / nightly-batched-e2e cadence](../tpc_phase2_eval.md#recommended-cadence-daily-screen-nightly-batched-e2e). Role 3 (and any implementer) fast-**screens** each landed off-by-default flag; the ones that come back green queue up. Your job each cycle is **one** pinned e2e with **all** currently-queued green flags stacked ON, against the **current promoted baseline** (the flags already defaulted-on, same val split) — not one isolated run per flag. If the batch improves `continuous_score` with no new parse failures or timeouts, it is promote-worthy as a set; if it regresses, it does not promote and role 3 bisects with drop-one-out screens. Maintain the promoted-baseline row continuously so the batch always has a fresh, like-for-like comparison.
+
+Confirm the exact queued flags and priority against the live roadmap before spending a long run. As of the current roadmap the leading batch candidate is **`TPC_PIN_TIMED_WINDOWS` + `TPC_SOLVE_CONVERGE_PATIENCE` together**: pin alone gated as quality-up/timeouts-up (PR #34, not promoted); the convergence stop is expected to reclaim the restart budget pin spends, so the *pair* may keep the quality gain without the timeout regression. Screen the pair first, then gate it. Other open gates: the landed parser fixes together, and the commonsense-transport repair — check the roadmap's "Next steps" for current order.
 
 ## Commands
 
-Use the pinned targets so the recorded revision is the code that executed. Familiar-100 is the preferred signal (`P2_SPLIT_SET=familiar_100`, `FOLD=0 P2_FOLDS=1` selects all 100):
+Use the pinned targets so the recorded revision is the code that executed. Development gates use the val split (`P2_SPLIT_SET=familiar_100_val`, `FOLD=0 P2_FOLDS=1` selects all 80):
 
 ```bash
-# Pinned baseline at a specific commit, familiar-100, two fresh repeats, 300 s local budget.
-make phase2-baseline-at SHA=<ref> P2_SPLIT_SET=familiar_100 \
+# Pinned baseline at a specific commit, familiar-100 VAL, two fresh repeats, 300 s local budget.
+make phase2-baseline-at SHA=<ref> P2_SPLIT_SET=familiar_100_val \
   FOLD=0 P2_FOLDS=1 P2_BUDGET=300 P2_REPEATS=2 P2_LABEL=<tag>
 
 # Regression gate between two committed rows (continuous_score blocks when present, else FPR;
@@ -37,9 +37,13 @@ make phase2-gate BASELINE=results/phase2_baselines/runs/<base>.json \
 
 # Live progress of a running/just-launched baseline (read-only, safe any time).
 make phase2-progress FOLD=0 P2_FOLDS=1 P2_REPEATS=2 P2_PROGRESS_ARGS=--watch
+
+# Occasional overfitting tripwire: the current promoted config on the HELD-OUT test split.
+make phase2-baseline-at SHA=<ref> P2_SPLIT_SET=familiar_100_test \
+  FOLD=0 P2_FOLDS=1 P2_BUDGET=300 P2_REPEATS=2 P2_LABEL=test-tripwire
 ```
 
-To toggle the feature under test, set its env var for the run (e.g. `TPC_PIN_TIMED_WINDOWS=1`, `TPC_P2_LLM_PARSE=1`/`0`). Keep everything else identical between the two rows of a pair — SHA, split, fold/limit, budget, repeats, parallelism, backend/model, and fresh-output policy — or the gate is not like-for-like. The run records resolved flags under `flags`; verify them in the row rather than trusting the label.
+To stack the batch's flags for a run, set each env var (e.g. `TPC_PIN_TIMED_WINDOWS=1 TPC_SOLVE_CONVERGE_PATIENCE=15`). Keep everything else identical between the two rows of a pair — SHA, split, fold/limit, budget, repeats, parallelism, backend/model, and fresh-output policy — or the gate is not like-for-like. The run records resolved flags under `flags`; verify them in the row rather than trusting the label.
 
 ## Expectations for a run
 

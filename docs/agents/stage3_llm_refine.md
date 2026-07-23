@@ -11,41 +11,58 @@ item 3), the [Phase 2 design doc](../tpc_phase2_design.md) ("Improve" stage and 
 [TPCAgent internals](../../chinatravel/agent/tpc_agent/readme.md) before writing code. Read the owning code path
 before editing it.
 
-## Why this is the next implementation target
+## Status: v1 is LANDED — your job is to make its edits actually commit
 
-Every other landed opt-in feature (`TPC_PIN_TIMED_WINDOWS`, `TPC_REPAIR_TRANSPORT_GAPS`, `TPC_SOLVE_CONVERGE_PATIENCE`)
-is now waiting on a role-2 gate, and the two parser residual fixes have landed on `main`. Stage 3 is the only
-**new-implementation** item left in the roadmap's "Next steps" that is not merely a gate.
+**This brief no longer asks you to fill an empty stub — v1 is implemented.** `orchestrator._improve_stage`
+(`chinatravel/agent/phase2/orchestrator.py`) calls the LLM behind `TPC_P2_LLM_REFINE`; `chinatravel/agent/phase2/refine.py`
+builds the prompt (`build_llm_refine_prompt`) and parses typed edits (`parse_llm_refine_edits`); and
+`TPCAgent.apply_refine_edits` / `TPCAgent.ground_and_check` (`chinatravel/agent/tpc_agent/tpc_agent.py`, ~lines 1667/1743)
+ground each edit against `WorldEnv` and re-check the whole batch. Telemetry records `improve_llm_called`,
+`improve_committed`, `improve_edit_count`, and `improve_skip_reason`. The floor-off, no-hook, and acceptance-gate tests
+exist (`tests/phase2/test_*refine*`). **Do not reimplement any of this.**
 
-Today `orchestrator.llm_refine_stub` (`chinatravel/agent/phase2/orchestrator.py`) returns the plan unchanged and never
-calls the LLM. Its stage is wired end-to-end — a `func_timeout`-bounded slice (`b.improve_sec`), a revert-to-last-valid
-safety path, telemetry (`improve_timed_out`, `improve_reverted_to_last_valid`), and a `dynamic_budget` reserve
-(`dynamic_solve_sec(..., improve_reserved=flags.llm_refine)`) — but the body is empty, so the reserved slice is wasted.
-This task fills that body.
+The problem is that **v1 commits nothing yet.** A quick end-to-end screen on familiar-100 val (`n=30`, `90 s`, DeepInfra
+`Qwen/Qwen3.6-27B`, `TPC_P2_LLM_TIMEOUT_SEC=8`) found `improve_llm_called=18`, `improve_committed=0`, with these
+`improve_skip_reason` buckets — this is your work list, in priority order:
 
-## The target the refine pass should attack
+| bucket | count | what it means | where to look |
+| --- | --- | --- | --- |
+| `no_groundable_edits` | 8 | the LLM proposed edits but **every one failed grounding** against `WorldEnv`, so nothing was even trialed | `apply_refine_edits` + the prompt's feasibility context |
+| `not_accepted_or_regressed` | 5 | edits grounded and were trialed, but the **checker still rejected** the batch (or the preference key regressed) | `build_llm_refine_prompt`'s `failure_summary`; batch/iterate logic |
+| `llm_error_or_invalid_json` | 5 | the refine call **errored or returned bad JSON** | partly a screen artifact — see below |
 
-The binding failure surface end-to-end is **produced-but-invalid plans**, not solver crashes or timeouts:
+**Reproduce it first** (this is your baseline, and how you'll know v2 works): run the screen from
+[role 3's "Screen your change" step](role3_implementation.md#screen-your-change-before-handing-it-off) with
+`--flag TPC_P2_LLM_REFINE`, and read the `LLM activity (cand)` line and the per-uid `improve_skip_reason` in
+`agent_env/runs/phase2_e2e_*/<uid>/telemetry.json`. **Success = `improve_committed` rises above 0 without any regression,
+and the screen verdict moves off `NO BENEFIT`.**
 
-- Solver-only FPR (`~26/100` familiar-100) is the ceiling; `timed_visit_named_poi` dominates logical failures and
-  "Invalid Transport information across positions" dominates commonsense failures (see the roadmap's
-  [Solver-only headroom](../tpc_phase2_roadmap.md#solver-only-headroom) and
-  [Commonsense-transport repair](../tpc_phase2_roadmap.md#commonsense-transport-repair)).
-- **Crucially, the orchestrator's Stage 4 gate is shape-only.** `_valid_plan_shape` checks `isinstance(plan.get("itinerary"), list)` — **not** semantic acceptance. A plan that the checker would reject
-  still flows through to output as-is (it is not replaced by the fallback, because it is plan-shaped). So a
-  produced-but-invalid plan is emitted verbatim today, and **Stage 3 is the only place left that can flip it to
-  accepted end-to-end.**
+### Concrete v2 work, by bucket
 
-**v1 scope — repair, not polish.** Target produced-but-invalid plans: ask the LLM for a small set of targeted edits,
-re-ground them deterministically, and commit only if the deterministic checker then accepts. Explicitly out of v1:
-preference polishing of already-accepted plans (the solver's restart loop already spends its whole budget polishing
-DAV/ATT/DDR — see roadmap shortcoming 2 — so the marginal LLM gain there is low and the regression risk is real). If
-the input plan already passes acceptance, v1 should no-op and return it unchanged. Leave preference-lift as a documented
-stretch, gated behind its own sub-flag, only if v1 lands cleanly.
+1. **`no_groundable_edits` (biggest bucket).** The prompt already forbids inventing POIs ("must be the exact `position` of
+   an activity already in the plan"), so the edits reference real activities but still fail to ground — most likely a
+   `shift_activity_window` to a time outside the POI's opening hours, or a `swap`/`reorder` whose resulting transport leg
+   can't be grounded. **Give the LLM the feasibility context it is missing:** include each activity's *grounded* feasible
+   window (opening/closing, and the time actually available given neighbours) in the compact plan, and/or have
+   `apply_refine_edits` snap a proposed window to the nearest groundable one rather than dropping the whole edit. Add a
+   short per-edit diagnostic (which op failed grounding and why) so the next screen shows the shift.
+2. **`not_accepted_or_regressed`.** Edits ground but the plan still fails — usually because a single edit does not resolve
+   *all* failing clauses, or fixes one and breaks another. **Sharpen the `failure_summary`** so each failing clause names
+   the specific POI / day / window / leg at fault (not just a family name), and let the model address the full failing set
+   in one batch (`MAX_REFINE_EDITS` already allows several). A bounded **second attempt** — re-prompt once with the
+   post-edit checker failures — is in scope if the first batch grounds but still fails; keep it to one extra call within
+   the `improve_sec` slice.
+3. **`llm_error_or_invalid_json`.** At `timeout=8` on the reduced screen slice some calls simply time out; at the full
+   `300 s` budget the improve slice is ~30 s, so this bucket should mostly evaporate — **confirm** by re-screening at a
+   larger `--budget-sec` / timeout and checking the errored count drops. Any residual JSON-shape errors are prompt/schema
+   robustness (tighten the schema instruction or the tolerant parse), not a logic change.
 
-This aligns with the deterministic repair passes already landed (`_pin_timed_windows`, `_repair_transport_gaps`) but
-covers the cases those explicitly decline — e.g. a leg or window that needs a **cascading time shift / resequencing** the
-bounded deterministic passes refuse. The LLM proposes the reorder; the deterministic path grounds and checks it.
+Stay in **v1 repair-only scope**: if the input plan already passes acceptance, no-op and return it (preference-lift on an
+already-valid plan stays a documented stretch behind its own sub-flag). You are closing the gap on produced-but-invalid
+plans — the binding surface, since the orchestrator's Stage 4 gate is shape-only (`_valid_plan_shape` checks
+`isinstance(plan.get("itinerary"), list)`, not acceptance), so a produced-but-invalid plan is emitted verbatim and Stage 3
+is the only place left that can flip it to accepted end-to-end. This complements the deterministic passes
+(`_pin_timed_windows`, `_repair_transport_gaps`) by covering exactly the cascading-shift / resequencing cases they decline.
 
 ## Invariants your change must hold (do not weaken any of these)
 
@@ -73,66 +90,62 @@ bounded deterministic passes refuse. The LLM proposes the reorder; the determini
   unchanged**. The orchestrator already reverts to `last_valid_plan` on timeout/exception/invalid-shape; your function
   must additionally degrade gracefully within its own body (never raise, never return a worse plan).
 
-## Recommended wiring (you may adjust, but keep the invariants)
+## Where the code lives (you are modifying this, not building it)
 
-The refine needs three things the current `llm_refine_stub(plan, query, llm_client, budget_sec)` signature lacks: the
-ability to (1) ground a candidate plan against `WorldEnv`, (2) run the acceptance checker, and (3) read the failure
-summary for the prompt. All three live inside `TPCAgent`, not the orchestrator. Keep Stage 3 in the orchestrator (its
-separate `improve_sec` slice and revert-to-last-valid safety are deliberate — do **not** move refine inside
-`TPCAgent.run()`, which would spend the *solve* budget and lose that safety). Instead expose a hook the way
-`make_tpcagent_solve_fn` already exposes `get_timeout_recovery_plan`:
+The full v1 path already exists; touch these and keep the flow intact:
 
-1. In `make_tpcagent_solve_fn` (`orchestrator.py`), attach a `ground_and_check` callable to the returned `_solve`
-   (alongside `get_timeout_recovery_plan`). It takes a plan dict and returns something like
-   `(accepted: bool, grounded_plan: dict, eval_key, failure_summary: dict)` — internally building the same
-   `constraints` + `check = _make_checker(query, constraints)` the solve used, running `_sanitize_plan_for_grounding`,
-   `_accepted`, and `_accepted_eval_key`, and collecting a compact, oracle-free description of which clauses / commonsense
-   checks fail. Reuse the agent's existing no-oracle constraint build so the checker matches the solve path exactly.
-2. In `solve_phase2`, pull `ground_and_check = getattr(solve_fn, "ground_and_check", None)` and pass it into the refine
-   function. When it is `None` (unit tests inject a bare `solve_fn`), the refine **no-ops and returns the input** — this
-   keeps existing tests and the floor intact.
-3. Rename `llm_refine_stub` to `llm_refine` (or keep the name; update `TODO` docstring either way) and implement:
-   - Call `ground_and_check(plan)`. If already accepted → return `plan` unchanged (v1 is repair-only).
-   - Build a repair prompt (new `build_llm_refine_prompt`, colocated with `build_llm_parse_prompt` in `normalize.py` or a
-     small `refine.py`): visible query, the current plan, and the failure summary; ask for **strict JSON** with a small,
-     bounded list of typed edit ops (e.g. `reorder_day`, `shift_activity_window`, `swap_activity`, `drop_activity`) — no
-     free-form plan rewrites. Cache the call with a `refine_<uid>_<hash>` key (mirror `llm_parse_cache_key`).
-   - Parse the JSON defensively (reuse the tolerant JSON extraction already used by the parse stubs). Apply each edit to a
-     deepcopy via deterministic, environment-grounded helpers; drop any edit that references an ungroundable POI.
-   - Run `ground_and_check` on the edited deepcopy; commit only on `accepted and eval_key >= input_eval_key`. Otherwise
-     return the input plan.
-   - Add refine telemetry (e.g. `improve_llm_called`, `improve_committed`, `improve_edit_count`) so role 2 can see the
-     effect in the row, without changing the existing `improve_*` keys.
+- **`chinatravel/agent/phase2/orchestrator.py`** — `_improve_stage` is the Stage 3 body (bounded by `improve_sec`,
+  reverts to last-valid on timeout/exception, pulls `ground_and_check`/`apply_refine_edits` off the solve_fn hook; no-ops
+  when the hook is absent). `make_tpcagent_solve_fn` attaches the hooks. Keep Stage 3 **in the orchestrator** — its
+  separate slice and revert safety are deliberate; do not move refine into `TPCAgent.run()` (that spends the *solve*
+  budget). Most of your prompt/edit changes will *not* need to touch this file.
+- **`chinatravel/agent/phase2/refine.py`** — `build_llm_refine_prompt` (the prompt + compact plan + `failure_summary`),
+  `parse_llm_refine_edits`, `REFINE_ALLOWED_OPS`, `MAX_REFINE_EDITS`. **Bucket 1 (feasibility context) and bucket 2
+  (sharper `failure_summary`, optional second attempt) mostly live here.**
+- **`chinatravel/agent/tpc_agent/tpc_agent.py`** — `ground_and_check` (~1667: builds the same no-oracle `constraints` +
+  `_make_checker` the solve used, runs `_sanitize_plan_for_grounding`, `_accepted`, `_accepted_eval_key`, and returns the
+  `(accepted, grounded_plan, eval_key, failure_summary)` tuple) and `apply_refine_edits` (~1743: grounds each typed op
+  against `WorldEnv`, dropping the ungroundable). **Bucket 1's "snap to a groundable window / emit a per-edit reason"
+  work lives in `apply_refine_edits`; enriching the failure summary for bucket 2 may touch `ground_and_check`.**
 
-Keep the LLM call within one bounded request: `improve_sec` at a 300 s budget is ~30 s, i.e. roughly one
-`DEFAULT_LLM_TIMEOUT_SEC` call plus grounding + check. Budget accordingly and skip the call (record a telemetry reason)
-if the remaining slice cannot fit one call, exactly as the parse stage skips on `llm_parse_skipped_deadline`.
+If you add a bounded second attempt (bucket 2), keep the whole stage within one `improve_sec` slice: it is ~30 s at a
+`300 s` budget (≈ one `DEFAULT_LLM_TIMEOUT_SEC` call plus grounding + check), so two calls need a smaller per-call timeout
+or a check that the slice can fit both — skip and record a telemetry reason otherwise, exactly like the parse stage's
+`llm_parse_skipped_deadline`.
 
 ## Build and verify
 
 - Use Python 3.12 through `.venv/bin/python`.
-- Add focused tests under `tests/phase2/` (model them on `test_orchestrator.py`, `test_pin_timed_windows.py`, and
-  `test_repair_transport_gaps.py`). Cover at least:
-  - **Flags-off floor:** `TPC_P2_LLM_REFINE` off → zero LLM calls (spy client) and output identical to no-refine.
-  - **No hook → no-op:** a bare injected `solve_fn` (no `ground_and_check`) leaves the plan unchanged.
-  - **Repair commits:** a `FixtureLLMClient` proposing a valid edit flips a produced-but-invalid plan to accepted, and it
-    is committed.
-  - **Rejects on non-acceptance:** a proposal that still fails the checker → input returned unchanged.
-  - **Rejects on preference regression:** a proposal that lowers `_accepted_eval_key` → input returned unchanged.
-  - **Graceful degrade:** LLM error / timeout / invalid JSON / ungroundable POI → input returned, telemetry set, no raise.
-  - **No oracle in the prompt:** assert `build_llm_refine_prompt` output contains no oracle field
-    (`hard_logic_py`, etc.).
-- Run before committing:
+- **The v1 invariant tests already exist and must keep passing** — flags-off byte-identical floor (spy client, `calls ==
+  []`), no-hook no-op, repair-commits (a `FixtureLLMClient` edit flips invalid→accepted and commits), rejects-on-non-
+  acceptance, rejects-on-preference-regression, graceful-degrade, and no-oracle-in-prompt. Do not remove or weaken them.
+- **Add v2 tests for the specific gap you close**, with a `FixtureLLMClient` returning the exact edit shape that used to
+  fail: e.g. a `shift_activity_window` to an out-of-hours time now **snaps to the groundable window and commits** (bucket
+  1); a multi-clause failure where a single-edit batch was rejected but the fuller batch / second attempt now **commits**
+  (bucket 2). Model them on `test_repair_transport_gaps.py` and the existing refine tests. Keep tests hermetic — use the
+  `fixture` backend, never a live call.
+- Run the unit suite before committing:
 
   ```bash
   make phase2-test
   .venv/bin/python -m pytest tests/phase2/ -q
   ```
 
+- **Then screen your change end-to-end on val** (the self-check that tells you it actually worked — see
+  [role 3's screen step](role3_implementation.md#screen-your-change-before-handing-it-off)):
+
+  ```bash
+  .venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_REFINE --mode end-to-end \
+    --off 0 --on 1 --extra-env "TPC_P2_LLM_BACKEND=deepinfra,TPC_P2_LLM_TIMEOUT_SEC=8" \
+    --n 30 --budget-sec 90 --parallel 3
+  ```
+
+  Success is `improve_committed > 0` on the candidate arm (up from 0) with no correctness regression and the verdict off
+  `NO BENEFIT`. Put the before/after `called`/`committed` counts and the verdict in your PR body.
 - Keep the change one coherent, acceptance-preserving unit. Match the surrounding code's naming, comment density, and idiom.
 - **`.env`:** the DeepInfra key lives in `.env` and is loaded by `load_local_env` when a backend is selected. Do **not**
-  read, edit, stage, or print `.env`. For tests, use the `fixture` backend (`FixtureLLMClient`) — never a live call — so
-  the suite stays hermetic and byte-deterministic.
+  read, edit, stage, or print `.env`. For unit tests, use the `fixture` backend (`FixtureLLMClient`) — never a live call —
+  so the suite stays hermetic; the live DeepInfra call is only for the end-to-end screen above.
 
 ## Finish — open a PR
 

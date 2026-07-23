@@ -33,7 +33,7 @@ Shared rules for every role: obey the [non-negotiable invariants](#non-negotiabl
 | Shared solver architecture | [AGENT_DESIGN.md](AGENT_DESIGN.md) and [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md) |
 | Phase 1 operation | [Phase 1 playbook](docs/tpc_phase1_playbook.md) |
 | Phase 2 architecture | [Phase 2 design](docs/tpc_phase2_design.md) |
-| Phase 2 metrics, gates, and dataset boundaries | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
+| Phase 2 metrics, gates, dataset boundaries, and the fast pre-gate A/B screen + cadence | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
 | Phase 2 priorities and solver headroom | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Parallel-agent prompts (roles 2 and 3) | [Agent prompts](docs/agents/README.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |
@@ -58,6 +58,7 @@ Compare rows only when data source, split/fold/limit, budget, repeat count, flag
 Parser diagnostics prioritize a failure investigation; they do not by themselves promote a change.
 Gate a like-for-like end-to-end candidate and inspect parse failures, timeouts, recovery/fallback use, stage telemetry, and LLM failure telemetry.
 Familiar-100, local released data, HF data, and final held-out evaluation remain separate signals.
+Familiar-100 is split 80/20 into `tpc_phase2_familiar_100_val` (screens + development gates) and a held-out `tpc_phase2_familiar_100_test` (occasional overfitting tripwire, never a per-change signal); `make phase2-familiar-splits` regenerates them and the [eval doc](docs/tpc_phase2_eval.md#1-official-familiar-100-development-set-preferred-signal) states the boundary.
 
 ## Change and branch protocol
 
@@ -69,4 +70,10 @@ Familiar-100, local released data, HF data, and final held-out evaluation remain
 6. When asked to open a PR, after opening it wait for GitHub Copilot review comments (poll up to 10 minutes), then address or resolve each one before proceeding.
 
 Use Python 3.12 through `.venv/bin/python`.
-Do not read, edit, stage, or overwrite `.env`; it is local user configuration.
+Do not read, edit, stage, or overwrite `.env`; it is local user configuration. To run an LLM-backed
+path (e.g. a `--mode end-to-end` [quick screen](docs/tpc_phase2_eval.md#llm-backed-flags-tpc_p2_llm_parse-tpc_p2_llm_refine)
+of `TPC_P2_LLM_PARSE` / `TPC_P2_LLM_REFINE`), do **not** source or echo `.env`: set
+`TPC_P2_LLM_BACKEND=deepinfra` and the code's `build_llm_client` → `load_local_env()` loads
+`DEEPINFRA_API_KEY` from `.env` into the process itself. On a reduced screen budget also set
+`TPC_P2_LLM_TIMEOUT_SEC` below the parse/improve slice (`6` at a `90 s` budget) or the LLM stage
+silently no-ops; confirm the `flag=on` arm's telemetry shows the call fired before trusting the result.

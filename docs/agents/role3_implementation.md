@@ -14,7 +14,7 @@ Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap
 
 Take the highest-priority **implementation** item from the roadmap's "Next steps" that is not merely a gate (gates belong to role 2). Confirm against the live roadmap first.
 
-**Current top target: Stage 3 LLM refine (roadmap Next step 7).** It is now the **only** "Next steps" item that is a new implementation rather than a gate — every other landed feature is waiting on role 2. A dedicated, self-contained brief is [`stage3_llm_refine.md`](stage3_llm_refine.md); use it. `orchestrator.llm_refine_stub` is currently an intentional no-op that never calls the LLM, and the orchestrator's Stage 4 gate is shape-only, so a produced-but-invalid plan is emitted verbatim — Stage 3 is the only place left that can flip it to accepted end-to-end.
+**Current top target: make Stage 3 LLM refine actually land repairs (roadmap Next step 7).** Stage 3 v1 is now *implemented* (no longer a stub), but a quick end-to-end screen on familiar-100 found it commits **0** repairs: called on 18 produced-but-invalid plans it proposed 8 ungroundable edits, 5 that the checker still rejected, and 5 LLM errors — flat quality at added wall-clock cost (see the [worked example](../tpc_phase2_eval.md#worked-example-the-llm-flags-on-main-2026-07-22)). So the open implementation work is not wiring the stage (done) but making its edits *groundable and checker-satisfying*: tighten the refine prompt/edit schema against `WorldEnv` grounding and the no-oracle checker so proposed edits actually pass acceptance. The design brief is [`stage3_llm_refine.md`](stage3_llm_refine.md); the orchestrator's Stage 4 gate is shape-only, so a produced-but-invalid plan is emitted verbatim — Stage 3 is the only place left that can flip it to accepted end-to-end, which is why closing this gap matters.
 
 **Already landed opt-in, now role-2 gate items (do not reimplement):**
 
@@ -25,7 +25,9 @@ Take the highest-priority **implementation** item from the roadmap's "Next steps
 
 For these, the mechanism is implemented and tested; do not re-run the same fix. A known residual is explicitly out of the transport pass's bounded scope: legs that need a real cascading time shift (not just a leg fix) to fit — that is precisely the kind of case Stage 3 refine can target through an LLM-proposed, deterministically-grounded, acceptance-gated reorder.
 
-If unsure which to take, default to **Stage 3 refine** via [`stage3_llm_refine.md`](stage3_llm_refine.md) — it is next in roadmap priority order and the sole remaining new-implementation item.
+**Second implementation item — cut `TPC_PIN_TIMED_WINDOWS`'s wall-clock cost (surfaced by the PR [#34](https://github.com/stefanbschneider/china-travel-agent/pull/34) gate).** The pin gate promoted nothing because the flag lifts solver-only quality (`25.5 → 30.5` FPR) but regresses timeouts (`38 → 57` end-to-end) — the roadmap root-causes the cost to the per-trial deepcopy + full-checker revalidation in `_pin_timed_windows`/`_resequence_day` (`chinatravel/agent/tpc_agent/tpc_agent.py`). Making those passes cheaper (e.g. incremental/partial revalidation instead of a whole-plan re-check per trial, or fewer deepcopies) so the flag keeps its quality gain without the timeout regression is a concrete, high-leverage implementation task — it is what would let the `pin + TPC_SOLVE_CONVERGE_PATIENCE` batch (roadmap Next step 1/5) actually promote. Screen it the same way (solver-only, val) and confirm timeouts drop with FPR held before handing to role 2.
+
+If unsure which to take, default to **Stage 3 refine** via [`stage3_llm_refine.md`](stage3_llm_refine.md) — it is the top new-implementation item; the pin-cost reduction above is the strong second.
 
 ## Invariants your change must hold
 
@@ -46,6 +48,21 @@ If unsure which to take, default to **Stage 3 refine** via [`stage3_llm_refine.m
   ```
 
 - Keep the change one coherent, acceptance-preserving unit. Match the surrounding code's naming, comment density, and idiom.
+
+## Screen your change before handing it off
+
+After the unit tests pass, run the fast A/B [quick screen](../tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage) on the **val** split as a self-check — it takes ~15–30 min on a short-lived box and tells you whether the flag is even worth role 2's long gate, *before* you hand it over:
+
+```bash
+# Deterministic solver flag (no LLM): solver-only screen on familiar-100 VAL.
+make phase2-quick-eval P2_FLAG=TPC_YOUR_FLAG P2_N=40 P2_BUDGET=60 P2_PARALLEL=3
+# LLM flag: end-to-end; set the backend and a timeout below the reduced slice (see the doc).
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_YOUR_FLAG --mode end-to-end \
+  --off 0 --on 1 --extra-env "TPC_P2_LLM_BACKEND=deepinfra,TPC_P2_LLM_TIMEOUT_SEC=8" \
+  --n 30 --budget-sec 90 --parallel 3
+```
+
+Read the verdict honestly and put it in your PR body: **RED** means fix it before handing off (do not hand role 2 a change your own screen says regresses); **GREEN / GREEN-caveat** means it is worth the gate and joins the nightly batch queue; **NO BENEFIT / NEUTRAL** means it costs without helping — say so. For an LLM flag, confirm the LLM-activity line shows it actually fired; a screen where it didn't is meaningless. The screen never promotes — role 2 gates the batch — but it keeps you from shipping a regression or spending a long run on a dud.
 
 ## Finish — open a PR
 

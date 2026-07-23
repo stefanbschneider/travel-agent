@@ -107,8 +107,10 @@ phase2-help:
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
+	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
+	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
-	  'Variables: P2_SPLIT_SET=val|test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
+	  'Variables: P2_SPLIT_SET=val|test|familiar_100|familiar_100_val|familiar_100_test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
 phase2-test:
@@ -171,6 +173,34 @@ phase2-timing:
 # Monotonic regression gate: fails if CANDIDATE is worse than BASELINE. Requires BASELINE/CANDIDATE.
 phase2-gate:
 	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)
+
+# Create the familiar-100 val/test split files (80/20, deterministic). Idempotent: the held-out
+# test set stays frozen unless P2_FAMILIAR_SPLIT_ARGS=--force. See docs/tpc_phase2_eval.md.
+P2_FAMILIAR_SPLIT_ARGS ?=
+phase2-familiar-splits:
+	.venv/bin/python scripts/make_familiar_splits.py $(P2_FAMILIAR_SPLIT_ARGS)
+
+# Quick A/B screen for an off-by-default flag (docs/tpc_phase2_eval.md, "Quick A/B screen"). Reduced-budget paired
+# baseline-vs-candidate SCREEN, not a promotion gate -- decides in ~1-2h whether a change is worth a
+# pinned end-to-end gate. Requires P2_FLAG=<env var>; override P2_ON/P2_OFF/P2_N/P2_BUDGET/P2_PARALLEL
+# and P2_QE_MODE (solver-only|end-to-end) as needed.
+#   make phase2-quick-eval P2_FLAG=TPC_PIN_TIMED_WINDOWS P2_N=40 P2_BUDGET=60 P2_PARALLEL=3
+P2_FLAG ?=
+P2_ON ?= 1
+P2_OFF ?= 0
+P2_N ?= 40
+P2_QE_MODE ?= solver-only
+P2_QE_SPLIT_SET ?= familiar_100_val
+P2_QE_EXTRA_ENV ?=
+P2_QE_BASELINE_JSON ?=
+P2_QE_OUT ?=
+phase2-quick-eval:
+	.venv/bin/python scripts/phase2_quick_eval.py --flag $(P2_FLAG) --on $(P2_ON) --off $(P2_OFF) \
+	  --mode $(P2_QE_MODE) --split-set $(P2_QE_SPLIT_SET) --n $(P2_N) --budget-sec $(P2_BUDGET) \
+	  --parallel $(P2_PARALLEL) \
+	  $(if $(P2_QE_EXTRA_ENV),--extra-env $(P2_QE_EXTRA_ENV),) \
+	  $(if $(P2_QE_BASELINE_JSON),--baseline-json $(P2_QE_BASELINE_JSON),) \
+	  $(if $(P2_QE_OUT),--out $(P2_QE_OUT),)
 
 # Live progress counter for a running/just-launched phase2-baseline job. Read-only (never touches
 # code the harness imports), safe to run at any time including mid-freeze. Add --watch for a
