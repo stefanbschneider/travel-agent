@@ -1810,7 +1810,10 @@ class TPCAgent(BaseAgent):
                 detail = item.get("location")
                 if not detail:
                     continue
-                out.append({"family": family, "location": detail, "window": item})
+                # "item" is generic on purpose: dict-shaped families in this allowlist are not all
+                # time windows (e.g. stay_duration's {location, min_minutes}) -- a family-specific
+                # key like "window" would misdescribe those (Copilot review finding on PR #36).
+                out.append({"family": family, "location": detail, "item": item})
             elif isinstance(item, str) and item:
                 out.append({"family": family, "detail": item})
         return out

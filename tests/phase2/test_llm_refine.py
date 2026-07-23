@@ -245,6 +245,59 @@ def test_second_attempt_skipped_when_slice_cannot_fit_two_calls(one_query, monke
     assert calls["gac"] == 2
 
 
+# --- Copilot review findings on PR #36 --------------------------------------------------------
+
+def test_llm_refine_attempt_never_raises_on_prompt_build_error(one_query, monkeypatch):
+    # Prompt/cache-key construction must be inside the same try/except as the LLM call -- a
+    # malformed base_plan/failure_summary (e.g. bad retry context) must degrade via
+    # improve_skip_reason, never bubble an exception out of llm_refine's "never raises" contract.
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    gac, are, _ = _hooks(accepted_before=False, key_before=(0, 0, 0, 0))
+
+    def boom_prompt(query, plan, failure_summary):
+        raise RuntimeError("bad failure_summary shape")
+
+    monkeypatch.setattr(O.refine_mod, "build_llm_refine_prompt", boom_prompt)
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, gac, are)
+    assert out is plan
+    assert info["improve_skip_reason"] == "llm_error_or_invalid_json"
+    assert info["improve_llm_called"] is False
+    assert llm.calls == []
+
+
+def test_second_attempt_skipped_on_invalid_retry_context(one_query):
+    # A misbehaving ground_and_check hook could in principle report a non-dict "grounded plan" --
+    # attempt 2 must not build a prompt from it; it should skip with a dedicated reason instead of
+    # crashing or silently misclassifying the failure as an LLM/JSON error.
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    calls = {"gac": 0, "are": 0}
+
+    def ground_and_check(p):
+        calls["gac"] += 1
+        if calls["gac"] == 1:
+            return False, p, (0.5, 0.5, 1, 0), {"failed_constraint_families": ["required_attractions"]}
+        # Post-edit-1 check: rejected, and returns a non-dict grounded plan.
+        return False, "not-a-dict", (0.5, 0.5, 1, 0), {"failed_constraint_families": ["required_restaurants"]}
+
+    def apply_refine_edits(p, edits):
+        calls["are"] += 1
+        trial = dict(p)
+        trial["itinerary"] = list(p.get("itinerary", [])) + [{"day": 99, "activities": [], "_edited": True}]
+        reasons = [{"op": e.get("op"), "committed": True, "reason": "committed"} for e in (edits or [])]
+        return trial, 1, reasons
+
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, ground_and_check, apply_refine_edits)
+    assert out is plan
+    assert info["improve_committed"] is False
+    assert info["improve_skip_reason"] == "not_accepted_or_regressed"
+    assert info["improve_second_attempt_skip_reason"] == "invalid_retry_context"
+    assert info["improve_attempts"] == 1
+    assert len(llm.calls) == 1
+    assert calls["are"] == 1
+
+
 def test_graceful_degrade_on_invalid_json(one_query):
     plan = _plan()
     llm = FakeClient("not json")

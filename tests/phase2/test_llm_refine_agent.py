@@ -338,7 +338,7 @@ def test_describe_failed_clause_items_names_the_specific_unmet_window():
     plan = _day_plan()  # Museum is scheduled 09:00-10:00
     window = {"location": "Museum", "earliest": "11:00"}
     clauses = agent._describe_failed_clause_items("activity_time_windows", [window], plan, "Shenzhen")
-    assert clauses == [{"family": "activity_time_windows", "location": "Museum", "window": window}]
+    assert clauses == [{"family": "activity_time_windows", "location": "Museum", "item": window}]
 
 
 def test_describe_failed_clause_items_empty_when_item_is_satisfied():

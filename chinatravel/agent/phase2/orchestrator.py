@@ -108,13 +108,17 @@ def _llm_refine_attempt(
     """One bounded refine call: prompt from ``(base_plan, failure_summary)`` -> parse edits ->
     apply -> re-check. Returns the committed grounded plan on acceptance with no preference-key
     regression vs. ``before_key``, else ``None`` with ``info["improve_skip_reason"]`` set. On a
-    rejected-but-grounded trial (``not_accepted_or_regressed``), also stashes the post-edit plan and
-    failure summary in ``info`` so a bounded second attempt can pick up from there. Never raises."""
-    prompt = refine_mod.build_llm_refine_prompt(query, base_plan, failure_summary)
-    cache_key = refine_mod.llm_refine_cache_key(query, prompt)
-    info["improve_llm_called"] = True
+    trial that is not committed (rejected outright, or accepted with a regressed preference key --
+    both recorded as ``not_accepted_or_regressed``), also stashes the post-edit plan and failure
+    summary in ``info`` so a bounded second attempt can pick up from there. Never raises -- prompt
+    construction is inside the same try/except as the LLM call, since a malformed ``base_plan``/
+    ``failure_summary`` (e.g. bad retry context) must degrade the same way a live LLM failure does,
+    not bubble an exception (Copilot review finding on PR #36)."""
     info["improve_attempts"] = attempt_no
     try:
+        prompt = refine_mod.build_llm_refine_prompt(query, base_plan, failure_summary)
+        cache_key = refine_mod.llm_refine_cache_key(query, prompt)
+        info["improve_llm_called"] = True
         response = llm_client.complete(prompt, cache_key=cache_key)
         edits = refine_mod.parse_llm_refine_edits(response)
     except Exception:
@@ -172,13 +176,15 @@ def llm_refine(
     hooks ``make_tpcagent_solve_fn`` attaches to the returned ``solve_fn``; either being ``None``
     (a bare injected ``solve_fn``, e.g. unit tests) makes this a pure no-op.
 
-    If the first attempt grounds edits but the checker still rejects the batch
-    (``not_accepted_or_regressed``, roadmap Next step 7 bucket 2), a bounded second attempt
+    If the first attempt grounds edits but does not commit -- the checker rejects the batch
+    outright, or accepts it with a preference key that regresses vs. the input (both recorded as
+    ``not_accepted_or_regressed``; roadmap Next step 7 bucket 2) -- a bounded second attempt
     re-prompts once with the post-edit plan and its own failure summary -- one extra LLM call, only
     when the remaining ``budget_sec`` slice can still fit it (mirrors the pre-first-call deadline
     check below; a slice too small for a second call is skipped with
     ``improve_second_attempt_skip_reason = "skipped_deadline"`` rather than started and left to time
-    out mid-flight, exactly like the parse stage's ``llm_parse_skipped_deadline``). Never raises;
+    out mid-flight, exactly like the parse stage's ``llm_parse_skipped_deadline``) and the first
+    attempt's stashed retry context is well-formed (else ``"invalid_retry_context"``). Never raises;
     always returns ``(plan_or_repaired_plan, info)`` where ``info`` is a small telemetry fragment the
     caller merges into the orchestrator's telemetry dict.
     """
@@ -230,6 +236,14 @@ def llm_refine(
 
     retry_base_plan = info.pop("_retry_base_plan", None)
     retry_failure_summary = info.pop("_retry_failure_summary", None)
+    # A well-formed attempt 1 always stashes a dict plan/summary (ground_and_check's own contract);
+    # guard anyway so a misbehaving hook degrades via a dedicated skip reason instead of building a
+    # prompt from -- and later misclassifying a failure against -- invalid retry context (Copilot
+    # review finding on PR #36).
+    if not isinstance(retry_base_plan, dict) or not isinstance(retry_failure_summary, dict):
+        info["improve_second_attempt_skip_reason"] = "invalid_retry_context"
+        return plan, info
+
     remaining = budget_sec - (time.perf_counter() - attempt_start)
     if client_timeout is not None and remaining < client_timeout:
         info["improve_second_attempt_skip_reason"] = "skipped_deadline"
