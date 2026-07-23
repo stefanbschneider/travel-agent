@@ -7,6 +7,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 import phase2_record_baseline as baseline
 import rehearse_phase2
 import make_phase2_splits as splits_lib
@@ -164,3 +166,45 @@ def test_familiar_single_fold_selects_all_records(project_root: Path):
 
     assert len(selected) == 100
     assert set(selected) == set(uids)
+
+
+@pytest.mark.parametrize("split_set", ["familiar_100_val", "familiar_100_test"])
+def test_familiar_baseline_cli_accepts_val_test_split_set(split_set, monkeypatch):
+    """Regression (2026-07-23): --split-set choices lagged the val/test split landing in
+    rehearse_phase2/phase2_quick_eval, so make phase2-baseline-at errored immediately on
+    familiar_100_val/test even though the underlying resolver already supported them."""
+    monkeypatch.setattr(
+        sys, "argv", ["phase2_record_baseline.py", "--split-set", split_set, "--folds", "1"]
+    )
+    args = baseline.parse_args()
+    assert args.split_set == split_set
+
+
+@pytest.mark.parametrize(
+    ("split_set", "expected_split_name", "expected_n"),
+    [
+        ("familiar_100_val", "tpc_phase2_familiar_100_val", 80),
+        ("familiar_100_test", "tpc_phase2_familiar_100_test", 20),
+    ],
+)
+def test_familiar_val_test_source_metadata_shares_archive_provenance(
+    split_set, expected_split_name, expected_n
+):
+    """The val/test split files are a deterministic partition of the same 100 imported records
+    (same archive/manifest) -- a val/test row must carry the identical manifest-derived
+    dataset_id/archive_sha256 as the full-100 row (eval.md's "must carry the manifest-derived
+    data-source ID"), while still honestly recording which sub-split it actually ran."""
+    resolved_name, _is_test = rehearse_phase2.resolve_split_set(split_set)
+    assert resolved_name == expected_split_name
+
+    source = baseline._data_source_metadata(resolved_name)
+
+    assert source["dataset_id"] == "ijcai2026_phase2_familiar_100"
+    assert source["archive_sha256"] == EXPECTED_ARCHIVE_SHA256
+    assert source["id"].endswith(EXPECTED_ARCHIVE_SHA256)
+    assert source["kind"] == "official_archive"
+    # Honest split_name -- not silently overwritten to the parent 100's name.
+    assert source["split_name"] == expected_split_name
+
+    uids = splits_lib.read_split(expected_split_name)
+    assert len(uids) == expected_n
