@@ -597,7 +597,21 @@ class TPCAgent(BaseAgent):
         ``TPC_SOLVE_STOP_AT_ACCEPT`` is evaluation-tooling only and defaults off. When enabled,
         it returns as soon as any accepted plan is found instead of spending the remaining budget
         polishing preference score, producing a cheaper but preference-uncalibrated FPR signal.
-        When off, this method's behavior is unchanged.
+        When off, this method's behavior is unchanged. It skips ``_pack_plan`` entirely, so it must
+        not be used to measure the ``_pack_plan`` repair passes (``_pin_timed_windows`` /
+        ``_repair_transport_gaps``) -- those plans never run under it.
+
+        ``TPC_SOLVE_STOP_AT_ACCEPT_PACKED`` is the finalization-preserving sibling of the above,
+        also evaluation-tooling only and defaulting off. It stops the search at the first accept the
+        same way, but *still* runs ``_pack_plan`` on the chosen plan, so the deterministic repair
+        passes (window pinning, transport-gap repair) and the packing/densify pass all execute. It
+        preserves the binary FPR signal -- a pre-pack accept stays accepted, and ``_pack_plan`` only
+        commits changes that keep the checker accepting and do not regress the preference key -- so
+        it is the mode to use for fast FPR-only measurement in a longer (e.g. 900 s) budget regime
+        without skipping the repair passes under test. Like ``TPC_SOLVE_STOP_AT_ACCEPT``, its
+        continuous/preference score is uncalibrated (the search stops before polishing), and it is
+        never set by the real harness. If both flags are set, ``TPC_SOLVE_STOP_AT_ACCEPT``'s
+        pack-skip wins; do not set both.
 
         ``TPC_SOLVE_CONVERGE_PATIENCE`` (``self.solve_converge_patience``) is a separate, opt-in
         early-convergence stop for the random-restart loop: once an accepted plan exists, if this
@@ -610,6 +624,7 @@ class TPCAgent(BaseAgent):
         self.reset_timeout_recovery_plan()
         self._last_solve_constraints = None
         stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")
+        stop_at_accept_packed = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", "0") not in ("", "0", "false", "False")
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         init_key = (-1, float("-inf"), float("-inf"))
@@ -660,7 +675,7 @@ class TPCAgent(BaseAgent):
                     constraints_now = best["constraints"]
                 self._set_timeout_recovery_plan(best_now)
                 self._last_solve_constraints = deepcopy(constraints_now)
-            if accepted and stop_at_accept:
+            if accepted and (stop_at_accept or stop_at_accept_packed):
                 raise _AcceptedEarlyStop()
             return accepted
 

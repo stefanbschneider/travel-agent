@@ -73,7 +73,19 @@ Use those sources to diagnose and rank work, then preserve no-oracle boundaries 
 Use a deterministic fold, fresh outputs, and a pinned source revision for a promotable baseline.
 Long runs should use `make phase2-baseline-at SHA=<ref> ...` so the recorded revision is the code that executed.
 Record a local repeat count whenever variance matters.
-The public competition material does not specify a repeat count or per-query timeout; `300 s` and `900 s` remain local sensitivity settings.
+
+**Primary gate budget: `900 s` (since 2026-07-24).** The public competition material still does not
+specify a repeat count or per-query timeout, so every budget remains a local assumption — but the
+working expectation is now that the official per-query timeout is closer to `900 s` than to the `300 s`
+we originally used to keep e2e eval fast. Development gates therefore run at **`900 s`** so a change is
+judged in the budget regime it will actually run in; several landed solver features (`TPC_PIN_TIMED_WINDOWS`,
+`TPC_REPAIR_TRANSPORT_GAPS`) trade wall-clock for FPR and were blocked only by the `300 s` no-new-timeouts
+guard, which a `900 s` gate is expected to relax. `300 s` is retained as a **faster sensitivity setting**
+(and the quick A/B screen still runs at a reduced `60 s`); the `make phase2-budget-sweep`
+(`30,60,120,300,900`) attribution stays the tool for checking a promotion is not `900 s`-fragile — a
+change that only helps at the full `900 s` and collapses at, say, `600 s` is a warning, since the true
+timeout is unconfirmed. Do not overfit any single budget number the organizer has not published.
+
 Familiar-100 ledger rows must carry the manifest-derived data-source ID and remain separate from the repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
 
 ## Ledger comparability
@@ -334,8 +346,27 @@ make phase2-gate BASELINE=results/phase2_baselines/runs/<base>.json \
 ```
 
 When both inputs supply `continuous_score`, it is the blocking score and FPR is advisory; otherwise FPR blocks.
-In every case, more parse failures or timeouts block promotion.
+In every case, more parse failures or timeouts block promotion. The no-new-timeouts guard is evaluated
+**relative to the budget both rows ran at** — pair rows at the same budget (now `900 s`; see [Baselines and
+repetitions](#baselines-and-repetitions)). A timeout regression measured at `300 s` does not by itself block
+a change whose intended budget is `900 s`; re-gate the pair at `900 s` before concluding.
+
 Early-stop evaluation modes are diagnostic only and are not comparable with normal preference-scoring rows.
+Two exist, both eval-tooling only and never set by the real harness:
+
+- `--fast-fpr` (`TPC_SOLVE_STOP_AT_ACCEPT`) stops each solve at the first accepted plan and **skips
+  `_pack_plan`**, so it is the cheapest FPR signal but **cannot** measure the `_pack_plan` repair passes
+  (`_pin_timed_windows`, `_repair_transport_gaps`) — those never run under it. Rows are forced to a
+  `fastfpr-` label prefix.
+- `--fast-fpr-packed` (`TPC_SOLVE_STOP_AT_ACCEPT_PACKED`) also stops at the first accept but **still runs
+  `_pack_plan`**, so the repair passes execute. Use this — not `--fast-fpr` — to fast-measure the FPR of
+  those passes in the `900 s` regime without paying for full preference polishing on every query. Its
+  continuous score is still uncalibrated; rows are forced to a `fastfprpacked-` label prefix and must never
+  be gate-compared against normal (or `fastfpr-`) rows.
+
+Both preserve the binary FPR signal (a pre-pack accept stays accepted; `_pack_plan` only commits changes
+that keep the checker accepting and do not regress the preference key), so they let you drive toward higher
+FPR at `900 s` while keeping local iteration cheap.
 
 ## Command path
 

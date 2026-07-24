@@ -1,4 +1,6 @@
-"""Unit tests for TPCAgent._solve's TPC_SOLVE_STOP_AT_ACCEPT early-exit mode.
+"""Unit tests for TPCAgent._solve's early-exit modes: TPC_SOLVE_STOP_AT_ACCEPT (stop at first
+accept, skip finalization) and TPC_SOLVE_STOP_AT_ACCEPT_PACKED (stop at first accept but still run
+_pack_plan, for fast FPR measurement in a longer budget regime without skipping the repair passes).
 
 Builds a *bare* TPCAgent (``__new__``, no WorldEnv/LLM) with every collaborator replaced by a
 spy/fake, the same pattern as ``test_agent_injection.py``, so ``_solve``'s real control flow runs
@@ -76,11 +78,19 @@ def _no_cp_solver(monkeypatch):
 @pytest.fixture
 def _stop_at_accept_off(monkeypatch):
     monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT", raising=False)
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", raising=False)
 
 
 @pytest.fixture
 def _stop_at_accept_on(monkeypatch):
     monkeypatch.setenv("TPC_SOLVE_STOP_AT_ACCEPT", "1")
+
+
+@pytest.fixture
+def _stop_at_accept_packed_on(monkeypatch):
+    # Explicitly clear the plain stop-at-accept so this exercises the packed variant alone.
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT", raising=False)
+    monkeypatch.setenv("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", "1")
 
 
 def test_flag_off_runs_all_restarts_and_packs(_stop_at_accept_off):
@@ -123,4 +133,48 @@ def test_flag_on_never_accepted_explores_full_budget_but_still_skips_pack(_stop_
     plan = agent._solve({"uid": "u1"})
     assert calls["build_plan"] == 4  # base + 3 restarts, same count as the flag-off case
     assert calls["pack_plan"] == 0  # unconditional under stop_at_accept, not gated on acceptance
+    assert plan == {"itinerary": []}
+
+
+def test_packed_flag_stops_at_first_accept_but_still_packs(_stop_at_accept_packed_on):
+    """The distinguishing behavior vs TPC_SOLVE_STOP_AT_ACCEPT: the packed variant stops the search
+    at the first accept (build_plan == 1 here) *and still runs* _pack_plan, so the deterministic
+    repair passes under measurement (pin/transport-repair) execute."""
+    agent, calls = _bare_solve_agent(max_restarts=3, accept_on_call=1)
+    plan = agent._solve({"uid": "u1"})
+    assert calls["build_plan"] == 1  # stops the moment the base build is accepted
+    assert calls["pack_plan"] == 1  # ...but finalization still runs, unlike stop_at_accept
+    assert plan == {"itinerary": []}
+
+
+def test_packed_flag_explores_until_first_accept_then_packs(_stop_at_accept_packed_on):
+    """When the base build isn't accepted, the packed variant keeps exploring until the first
+    accept, then packs -- it stops the moment something is accepted, not before."""
+    agent, calls = _bare_solve_agent(max_restarts=3, accept_on_call=3)
+    plan = agent._solve({"uid": "u1"})
+    assert calls["build_plan"] == 3  # base + 2 restarts before the 3rd build is accepted
+    assert calls["pack_plan"] == 1
+    assert plan == {"itinerary": []}
+
+
+def test_packed_flag_never_accepted_explores_full_budget_and_still_packs(_stop_at_accept_packed_on):
+    """If nothing is ever accepted, there's no early exit, so it explores the full restart budget
+    exactly like the flag-off path -- and, unlike stop_at_accept, it still packs the best plan (so
+    pin/transport-repair can flip a produced-but-invalid plan to accepted at finalization)."""
+    agent, calls = _bare_solve_agent(max_restarts=3, accept_on_call=999)
+    plan = agent._solve({"uid": "u1"})
+    assert calls["build_plan"] == 4  # base + 3 restarts, same count as the flag-off case
+    assert calls["pack_plan"] == 1  # finalization always runs under the packed variant
+    assert plan == {"itinerary": []}
+
+
+def test_plain_stop_at_accept_takes_precedence_over_packed(monkeypatch):
+    """If both flags are set (a nonsensical combo), the plain stop-at-accept's pack-skip wins: the
+    docstring says do not set both, and the guard at the pack step keys off stop_at_accept."""
+    monkeypatch.setenv("TPC_SOLVE_STOP_AT_ACCEPT", "1")
+    monkeypatch.setenv("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", "1")
+    agent, calls = _bare_solve_agent(max_restarts=3, accept_on_call=1)
+    plan = agent._solve({"uid": "u1"})
+    assert calls["build_plan"] == 1
+    assert calls["pack_plan"] == 0  # stop_at_accept's pack-skip wins
     assert plan == {"itinerary": []}

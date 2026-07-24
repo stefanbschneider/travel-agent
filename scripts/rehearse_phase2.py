@@ -482,6 +482,7 @@ def rehearse(
     chunk_size=DEFAULT_CHUNK,
     parallel=DEFAULT_PARALLEL,
     fast_fpr=False,
+    fast_fpr_packed=False,
 ) -> dict:
     split_name, _is_test = resolve_split_set(split_set)
     uids = splits.read_split(split_name)
@@ -500,16 +501,21 @@ def rehearse(
         "chunk_size": int(chunk_size),
         "parallel": int(parallel),
         "fast_fpr": bool(fast_fpr),
+        "fast_fpr_packed": bool(fast_fpr_packed),
         "modes": {},
     }
 
-    # Eval-tooling only: never set by run_split and never a library default. See
-    # TPC_SOLVE_STOP_AT_ACCEPT in tpc_agent.py. Chunk subprocesses inherit this process's
-    # environment, so setting it here before dispatching them is sufficient; restored afterward
-    # so it never leaks into an unrelated call in the same process.
-    _FAST_FPR_ENV = "TPC_SOLVE_STOP_AT_ACCEPT"
+    # Eval-tooling only: never set by run_split and never a library default. Chunk subprocesses
+    # inherit this process's environment, so setting it here before dispatching them is sufficient;
+    # restored afterward so it never leaks into an unrelated call in the same process. The two modes
+    # are distinct env vars (see tpc_agent.py): plain fast_fpr stops at the first accept and *skips*
+    # _pack_plan, while fast_fpr_packed stops at the first accept but still runs _pack_plan, so the
+    # deterministic repair passes (pin/transport-repair) under measurement actually execute. Both are
+    # uncalibrated FPR-only signals; they are mutually exclusive at the CLI.
+    _fast_fpr_active = bool(fast_fpr or fast_fpr_packed)
+    _FAST_FPR_ENV = "TPC_SOLVE_STOP_AT_ACCEPT_PACKED" if fast_fpr_packed else "TPC_SOLVE_STOP_AT_ACCEPT"
     _prev_fast_fpr_env = os.environ.get(_FAST_FPR_ENV)
-    if fast_fpr:
+    if _fast_fpr_active:
         os.environ[_FAST_FPR_ENV] = "1"
 
     try:
@@ -519,7 +525,7 @@ def rehearse(
             parallel=parallel, fold=fold, folds=folds,
         )
     finally:
-        if fast_fpr:
+        if _fast_fpr_active:
             if _prev_fast_fpr_env is None:
                 os.environ.pop(_FAST_FPR_ENV, None)
             else:
@@ -617,14 +623,24 @@ def parse_args() -> argparse.Namespace:
         help=argparse.SUPPRESS,  # internal: self-exec entry point used by _run_solver_only_chunked
     )
     p.add_argument("--uids-file", default=None, help=argparse.SUPPRESS)  # internal, with --worker
-    p.add_argument(
+    _fast_fpr_grp = p.add_mutually_exclusive_group()
+    _fast_fpr_grp.add_argument(
         "--fast-fpr",
         action="store_true",
         help="Eval-tooling only, never set by the real harness: stop each "
         "query's solve as soon as an accepted plan is found instead of spending the rest of the "
         "budget polishing preference score (TPC_SOLVE_STOP_AT_ACCEPT). Cuts iteration cost but "
         "the resulting FPR is a different, uncalibrated metric -- never compare its rows "
-        "directly against normal ones.",
+        "directly against normal ones. Skips _pack_plan, so it cannot measure the repair passes.",
+    )
+    _fast_fpr_grp.add_argument(
+        "--fast-fpr-packed",
+        action="store_true",
+        help="Eval-tooling only, never set by the real harness: like --fast-fpr (stop at the first "
+        "accept, uncalibrated FPR-only, never gate-compare against normal rows) but still runs "
+        "_pack_plan (TPC_SOLVE_STOP_AT_ACCEPT_PACKED), so the deterministic repair passes "
+        "(pin/transport-repair) execute. Use this -- not --fast-fpr -- to fast-measure FPR of those "
+        "passes in a longer (e.g. 900 s) budget regime.",
     )
     return p.parse_args()
 
@@ -656,6 +672,7 @@ def main() -> None:
         chunk_size=args.chunk_size,
         parallel=args.parallel,
         fast_fpr=args.fast_fpr,
+        fast_fpr_packed=args.fast_fpr_packed,
     )
 
 
