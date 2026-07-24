@@ -594,12 +594,13 @@ class TPCAgent(BaseAgent):
         """Per-query oracle-guided search: base build, guided repair, then random multi-start,
         keeping the best accepted plan found within budget; finally pack it.
 
-        ``TPC_SOLVE_STOP_AT_ACCEPT`` is evaluation-tooling only and defaults off. When enabled,
-        it returns as soon as any accepted plan is found instead of spending the remaining budget
-        polishing preference score, producing a cheaper but preference-uncalibrated FPR signal.
-        When off, this method's behavior is unchanged. It skips ``_pack_plan`` entirely, so it must
-        not be used to measure the ``_pack_plan`` repair passes (``_pin_timed_windows`` /
-        ``_repair_transport_gaps``) -- those plans never run under it.
+        ``TPC_SOLVE_STOP_AT_ACCEPT`` is evaluation-tooling only and defaults off. When enabled, it
+        returns as soon as any accepted plan is found instead of spending the remaining budget
+        polishing preference score, producing a cheaper but preference-uncalibrated FPR signal, and
+        it skips ``_pack_plan`` entirely -- so while this flag is enabled the ``_pack_plan`` repair
+        passes (``_pin_timed_windows`` / ``_repair_transport_gaps``) never run, and it must not be
+        used to measure them. When off (the default), this method's behavior is unchanged and
+        ``_pack_plan`` runs as usual.
 
         ``TPC_SOLVE_STOP_AT_ACCEPT_PACKED`` is the finalization-preserving sibling of the above,
         also evaluation-tooling only and defaulting off. It stops the search at the first accept the

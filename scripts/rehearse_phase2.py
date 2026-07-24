@@ -511,12 +511,21 @@ def rehearse(
     # are distinct env vars (see tpc_agent.py): plain fast_fpr stops at the first accept and *skips*
     # _pack_plan, while fast_fpr_packed stops at the first accept but still runs _pack_plan, so the
     # deterministic repair passes (pin/transport-repair) under measurement actually execute. Both are
-    # uncalibrated FPR-only signals; they are mutually exclusive at the CLI.
+    # uncalibrated FPR-only signals; they are mutually exclusive at the CLI. Manage *both* vars for
+    # the duration -- set the selected one and clear the other -- so a stray TPC_SOLVE_STOP_AT_ACCEPT
+    # already in the parent environment cannot mask the packed variant (stop_at_accept dominates in
+    # _solve and would skip _pack_plan, silently defeating the packed measurement). Both are restored
+    # to their prior values afterward.
+    _FAST_FPR_ENVS = ("TPC_SOLVE_STOP_AT_ACCEPT", "TPC_SOLVE_STOP_AT_ACCEPT_PACKED")
     _fast_fpr_active = bool(fast_fpr or fast_fpr_packed)
-    _FAST_FPR_ENV = "TPC_SOLVE_STOP_AT_ACCEPT_PACKED" if fast_fpr_packed else "TPC_SOLVE_STOP_AT_ACCEPT"
-    _prev_fast_fpr_env = os.environ.get(_FAST_FPR_ENV)
+    _selected_fast_fpr_env = "TPC_SOLVE_STOP_AT_ACCEPT_PACKED" if fast_fpr_packed else "TPC_SOLVE_STOP_AT_ACCEPT"
+    _prev_fast_fpr_env = {k: os.environ.get(k) for k in _FAST_FPR_ENVS}
     if _fast_fpr_active:
-        os.environ[_FAST_FPR_ENV] = "1"
+        for k in _FAST_FPR_ENVS:
+            if k == _selected_fast_fpr_env:
+                os.environ[k] = "1"
+            else:
+                os.environ.pop(k, None)
 
     try:
         return _rehearse_body(
@@ -526,10 +535,11 @@ def rehearse(
         )
     finally:
         if _fast_fpr_active:
-            if _prev_fast_fpr_env is None:
-                os.environ.pop(_FAST_FPR_ENV, None)
-            else:
-                os.environ[_FAST_FPR_ENV] = _prev_fast_fpr_env
+            for k, prev in _prev_fast_fpr_env.items():
+                if prev is None:
+                    os.environ.pop(k, None)
+                else:
+                    os.environ[k] = prev
 
 
 def _rehearse_body(

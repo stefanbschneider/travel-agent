@@ -883,9 +883,11 @@ def main() -> None:
     fresh = not args.reuse_existing
     repeats = max(int(args.repeats), 1)
     label = args.label or ("smoke" if len(fold_info.uids) < 10 else "")
-    if args.fast_fpr_packed and not label.startswith("fastfprpacked-"):
+    # Match the prefix with or without its trailing dash so an explicit --label of "fastfprpacked"
+    # / "fastfpr" (no dash) is treated as already-prefixed rather than double-prefixed.
+    if args.fast_fpr_packed and not label.startswith("fastfprpacked"):
         label = f"fastfprpacked-{label}" if label else "fastfprpacked"
-    elif args.fast_fpr and not label.startswith("fastfpr-"):
+    elif args.fast_fpr and not label.startswith("fastfpr"):
         label = f"fastfpr-{label}" if label else "fastfpr"
     if len(fold_info.uids) < 10:
         print(
