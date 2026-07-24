@@ -839,13 +839,24 @@ def parse_args() -> argparse.Namespace:
         "sequential). Each query's CP-SAT solve uses 1 core by default, so size this to "
         "(core count - 1); memory is usually not the limit (see docs/tpc_phase2_design.md).",
     )
-    p.add_argument(
+    _fast_fpr_grp = p.add_mutually_exclusive_group()
+    _fast_fpr_grp.add_argument(
         "--fast-fpr",
         action="store_true",
         help="Eval-tooling only: each query's solve stops at the first accepted "
         "plan (TPC_SOLVE_STOP_AT_ACCEPT) instead of spending the full budget on preference "
         "polishing. The resulting FPR is a different, uncalibrated metric -- the row is forced "
-        "to a 'fastfpr-' label prefix and must never be gate-compared against normal rows.",
+        "to a 'fastfpr-' label prefix and must never be gate-compared against normal rows. Skips "
+        "_pack_plan, so it cannot measure the repair passes.",
+    )
+    _fast_fpr_grp.add_argument(
+        "--fast-fpr-packed",
+        action="store_true",
+        help="Eval-tooling only: like --fast-fpr but still runs _pack_plan "
+        "(TPC_SOLVE_STOP_AT_ACCEPT_PACKED), so the deterministic repair passes "
+        "(pin/transport-repair) execute -- the mode to fast-measure their FPR in a longer (e.g. "
+        "900 s) budget regime. Still uncalibrated FPR-only; the row is forced to a "
+        "'fastfprpacked-' label prefix and must never be gate-compared against normal rows.",
     )
     return p.parse_args()
 
@@ -872,7 +883,11 @@ def main() -> None:
     fresh = not args.reuse_existing
     repeats = max(int(args.repeats), 1)
     label = args.label or ("smoke" if len(fold_info.uids) < 10 else "")
-    if args.fast_fpr and not label.startswith("fastfpr-"):
+    # Match the prefix with or without its trailing dash so an explicit --label of "fastfprpacked"
+    # / "fastfpr" (no dash) is treated as already-prefixed rather than double-prefixed.
+    if args.fast_fpr_packed and not label.startswith("fastfprpacked"):
+        label = f"fastfprpacked-{label}" if label else "fastfprpacked"
+    elif args.fast_fpr and not label.startswith("fastfpr"):
         label = f"fastfpr-{label}" if label else "fastfpr"
     if len(fold_info.uids) < 10:
         print(
@@ -897,6 +912,7 @@ def main() -> None:
                 fresh=fresh,
                 parallel=args.parallel,
                 fast_fpr=args.fast_fpr,
+                fast_fpr_packed=args.fast_fpr_packed,
             )
         )
     rehearsal = rehearsals[-1]
@@ -967,6 +983,7 @@ def main() -> None:
         "repeats": repeats,
         "fresh": fresh,
         "fast_fpr": bool(args.fast_fpr),
+        "fast_fpr_packed": bool(args.fast_fpr_packed),
         "variance": variance,
         "rehearsal": rehearsal,
         "parser": parser,

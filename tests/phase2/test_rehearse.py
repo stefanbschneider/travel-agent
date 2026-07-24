@@ -222,6 +222,7 @@ def _stub_rehearse_deps(monkeypatch, *, capture_env_into=None):
     def fake_body(report, **kwargs):
         if capture_env_into is not None:
             capture_env_into["env_during"] = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT")
+            capture_env_into["env_during_packed"] = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT_PACKED")
         return report
 
     monkeypatch.setattr(R, "_rehearse_body", fake_body)
@@ -258,3 +259,35 @@ def test_fast_fpr_off_never_touches_env(monkeypatch):
     assert captured["env_during"] is None
     assert os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT") is None
     assert report["fast_fpr"] is False
+
+
+def test_fast_fpr_packed_sets_packed_env_during_body_and_clears_after(monkeypatch):
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT", raising=False)
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", raising=False)
+    captured = {}
+    _stub_rehearse_deps(monkeypatch, capture_env_into=captured)
+
+    report = R.rehearse(split_set="val", fold=0, folds=2, fast_fpr_packed=True)
+
+    assert captured["env_during_packed"] == "1"
+    assert captured["env_during"] is None  # plain var stays unset under packed mode
+    assert os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT_PACKED") is None
+    assert report["fast_fpr_packed"] is True
+
+
+def test_fast_fpr_packed_clears_a_preexisting_plain_env_during_body(monkeypatch):
+    # The bug this guards: a stray TPC_SOLVE_STOP_AT_ACCEPT in the parent env dominates in _solve
+    # (it skips _pack_plan), silently defeating the packed measurement. Packed mode must clear it
+    # for the duration of the run, then restore it afterward.
+    monkeypatch.setenv("TPC_SOLVE_STOP_AT_ACCEPT", "prior-plain")
+    monkeypatch.delenv("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", raising=False)
+    captured = {}
+    _stub_rehearse_deps(monkeypatch, capture_env_into=captured)
+
+    R.rehearse(split_set="val", fold=0, folds=2, fast_fpr_packed=True)
+
+    assert captured["env_during"] is None  # plain cleared while packed mode runs
+    assert captured["env_during_packed"] == "1"
+    # both restored to their prior values afterward
+    assert os.environ["TPC_SOLVE_STOP_AT_ACCEPT"] == "prior-plain"
+    assert os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT_PACKED") is None
