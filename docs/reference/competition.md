@@ -1,30 +1,38 @@
 # TPC @ IJCAI 2026 Competition Reference
 
-**Accessed:** 2026-07-15. **Last re-verification attempt:** 2026-07-24 (see note below).
+**Accessed:** 2026-07-15. **Last re-verified against the live site:** 2026-07-24 (facts below confirmed current).
 The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative when this note conflicts with local material.
 This is a concise repository reference, not a replacement for the rules.
 
-> **2026-07-24 re-verification blocked.** An attempt to re-check the live site from an agent
-> session failed: the environment's egress proxy returns HTTP 403 for
-> `chinatravel-competition.github.io` (an organization policy denial, not a transient error), and
-> web search could not read the page either. The facts below therefore still date from the
-> 2026-07-15 snapshot and are **~9 days stale**. Re-verify from a browser or an environment with
-> site access before relying on them near a deadline. The two highest-value unknowns to confirm on
-> the live site are the **Round 2 submission portal/format** and any **organizer-enforced per-query
-> timeout / evaluation repeat count** (see [Details not yet public](#details-not-yet-public)).
+> **2026-07-24 re-verification succeeded.** The live site was re-checked directly (its content is
+> rendered client-side from `app.js`, so the facts were read from that bundle, not the empty static
+> HTML). The earlier egress 403 no longer applies. Outcome: the dates, advancement rule, harness
+> setup, hardware, and scoring below all **match the live site** and are current as of 2026-07-24.
+> The two previously flagged unknowns remain **unresolved by the organizers** (not merely unverified
+> by us): the **Round 2 submission portal/format** is still "announced later", and no
+> **organizer-enforced per-query timeout or evaluation repeat count** appears anywhere on the live
+> site — the archived "5 runs" figure is *not* present (see [Details not yet public](#details-not-yet-public)).
 
 ## Dates and advancement
 
-| Milestone | Date |
-| --- | --- |
-| Phase 1 data release and submissions open | 2026-06-01 |
-| Phase 1 submission deadline | 2026-08-01 |
-| Phase 2 evaluation | 2026-08-01 to 2026-08-07 |
-| Technical-report deadline | 2026-08-07 |
-| Final results | 2026-08-10 |
+| Milestone | Live-site label | Date |
+| --- | --- | --- |
+| Data release and submissions open | Data Release and Submission Opens | 2026-06-01 |
+| **Phase 1** submission deadline | Stage 1 Submission Deadline | 2026-08-01 |
+| **Phase 2** evaluation window | Stage 2 Evaluation | 2026-08-01 to 2026-08-07 |
+| Technical-report deadline | Technical Report Deadline | 2026-08-07 |
+| Final results | Final Results Announced | 2026-08-10 |
 
 Phase 1 is open to all teams.
 The top five Phase 1 teams, plus every team tied at the fifth-place cutoff, advance to Phase 2.
+
+**What the 2026-08-01 deadline covers.** The live timeline labels 2026-08-01 explicitly as the
+**"Stage 1 Submission Deadline"** — it is the Phase 1 (prediction) deadline only. Phase 2 has **no
+published submission deadline**: its row is labelled "Stage 2 **Evaluation**" and spans 2026-08-01
+to 2026-08-07, and the site states the Round 2 submission portal and format "will be announced
+later." Because Phase 2 evaluation begins the same day Phase 1 closes (2026-08-01), the harness
+submission deadline must fall on or just after 2026-08-01; expect the organizers to publish the
+portal, format, and exact Phase 2 cut-off shortly before that window. Track it near the deadline.
 
 ## Phase 1: predictions
 
@@ -59,16 +67,18 @@ The examples are drawn from the same distribution as final evaluation but are de
 
 ## Details not yet public
 
-The public material does not state an organizer-enforced per-query timeout or evaluation repeat count.
-It also says the Round 2 submission portal and format will be announced later.
-Treat local 300 s and 900 s settings as sensitivity assumptions, not official budgets.
+As re-confirmed on the live site 2026-07-24, the public material does **not** state an
+organizer-enforced per-query timeout or evaluation repeat count, and the **Round 2 submission portal
+and format are still "announced later"** (no portal, format, or exact Phase 2 submission deadline
+yet). Treat local 300 s and 900 s settings as sensitivity assumptions, not official budgets.
 
-**Repeat-count inconsistency to resolve on re-verification.** The 2026-07-15 archive copy
+**Repeat-count inconsistency — resolved for now.** The 2026-07-15 archive copy
 ([`docs/archive/reference/ijcai2026_competition_2026-07-15.md`](../archive/reference/ijcai2026_competition_2026-07-15.md))
-records "each harness is run five times on the held-out test set and the scores are averaged." That
-"5 runs" figure is *not* carried into this reference because it could not be reconfirmed; the
-conservative statement above (repeat count not organizer-confirmed) stands until the live site is
-re-checked. If the live site still states five runs, promote it here; if not, leave it unconfirmed.
+records "each harness is run five times on the held-out test set and the scores are averaged." The
+2026-07-24 live-site re-check found **no such "5 runs" statement** anywhere in the site content; the
+only `repeatCount` token in the page is an SVG animation attribute, unrelated to evaluation. The
+conservative statement above (repeat count not organizer-confirmed) therefore stands, and the "5
+runs" figure remains un-promoted. Re-check if the organizers publish the Round 2 format.
 
 ## Phase 2 expected API (harness invocation)
 
