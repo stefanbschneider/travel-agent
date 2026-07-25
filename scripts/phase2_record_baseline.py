@@ -59,6 +59,14 @@ LATEST_JSON = "latest.json"
 LATEST_MD = "latest.md"
 
 FAMILIAR_SPLIT_NAME = "tpc_phase2_familiar_100"
+# The val/test split files (since 2026-07-23) are a deterministic partition of the same 100
+# imported records -- same archive, same manifest, so they carry identical provenance, just a
+# different ``split_name`` in the returned metadata (see _data_source_metadata below).
+FAMILIAR_SPLIT_NAMES = {
+    FAMILIAR_SPLIT_NAME,
+    "tpc_phase2_familiar_100_val",
+    "tpc_phase2_familiar_100_test",
+}
 FAMILIAR_PROVENANCE_PATH = (
     PROJECT_ROOT
     / "chinatravel"
@@ -94,7 +102,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _data_source_metadata(split_name: str) -> dict[str, Any]:
-    if split_name == FAMILIAR_SPLIT_NAME:
+    if split_name in FAMILIAR_SPLIT_NAMES:
         manifest = _load_json(FAMILIAR_PROVENANCE_PATH)
         if manifest.get("split_name") != FAMILIAR_SPLIT_NAME:
             raise RuntimeError(
@@ -116,7 +124,10 @@ def _data_source_metadata(split_name: str) -> dict[str, Any]:
             "id": f"{dataset_id}@sha256:{archive_sha256}",
             "kind": "official_archive",
             "dataset_id": dataset_id,
-            "split_name": FAMILIAR_SPLIT_NAME,
+            # The actual split served (e.g. the val/test sub-partition), not always the parent
+            # 100 -- the manifest/archive identity above is shared, but the row must say honestly
+            # which subset it ran.
+            "split_name": split_name,
             "language": str(manifest.get("language") or ""),
             "source_url": str(manifest.get("source_url") or ""),
             "release_date": str(manifest.get("release_date") or ""),
@@ -798,7 +809,11 @@ def _write_latest_md(path: Path, record: dict[str, Any]) -> None:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--split-set", choices=["val", "test", "familiar_100"], default="val")
+    p.add_argument(
+        "--split-set",
+        choices=["val", "test", "familiar_100", "familiar_100_val", "familiar_100_test"],
+        default="val",
+    )
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--folds", type=int, default=rehearse_mod.DEFAULT_FOLDS)
     p.add_argument("--seed", type=int, default=rehearse_mod.DEFAULT_SEED)

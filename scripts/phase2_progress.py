@@ -164,7 +164,11 @@ def format_summary(summary: dict, *, n: int, repeats: int, show_rate: bool = Tru
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--split-set", choices=["val", "test", "familiar_100"], default="val")
+    p.add_argument(
+        "--split-set",
+        choices=["val", "test", "familiar_100", "familiar_100_val", "familiar_100_test"],
+        default="val",
+    )
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--folds", type=int, default=10)
     p.add_argument("--seed", type=int, default=20260705)
