@@ -169,6 +169,33 @@ def resolve_llm_client_and_flags():
     return llm_client, flags
 
 
+def apply_deterministic_solver_defaults():
+    """Promote gate-cleared deterministic solver features to harness-default-on.
+
+    Same promotion pattern ``resolve_llm_client_and_flags`` uses for disjunction/dynamic_budget/
+    entity_resolution: set the env default the ``TPCAgent`` reads, *unless the operator explicitly
+    overrides it*, so the library default (the unset env var) -- and the byte-identical opt-in unit
+    tests that assert it -- stay unchanged. These are deterministic (no LLM, no network) passes with
+    a committed ``900 s`` gate, so this is the sanctioned "explicit measured configuration" path.
+
+    - ``TPC_PIN_TIMED_WINDOWS=1``: the ``900 s`` ``familiar_100_val`` gate (roadmap step 1, rows
+      ``20260723T200723Z`` floor / ``20260724T071840Z`` pin) cleared cleanly -- e2e continuous
+      ``43.72 -> 48.04``, timeouts ``0 -> 0``. The earlier ``300 s`` timeout regression that blocked
+      it was a budget-boundary artifact, not a real cost.
+    - ``TPC_SOLVE_CONVERGE_PATIENCE=15``: paired with pin (row ``20260724T192503Z``) it held quality
+      flat (e2e continuous ``47.98``) while cutting solve ``p50`` ``366 s -> 265 s`` (below even the
+      floor's ``337 s``) -- reclaiming wall-clock and making the submission more robust to an
+      organizer per-query timeout shorter than the assumed ``900 s``.
+
+    Must run *before* ``make_tpcagent_solve_fn`` builds the agent: ``TPCAgent.__init__`` reads
+    ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS`` is read lazily at pack time,
+    but both are set here for clarity)."""
+    if "TPC_PIN_TIMED_WINDOWS" not in os.environ:
+        os.environ["TPC_PIN_TIMED_WINDOWS"] = "1"
+    if "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ:
+        os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] = "15"
+
+
 def run_split(
     split: str,
     *,
@@ -217,6 +244,13 @@ def run_split(
 
     # Build the deterministic TPCAgent-backed solve function once (unless injected).
     if solve_fn is None:
+        # Promote the gate-cleared deterministic solver features (timed-window pinning + early
+        # convergence) to harness-default-on -- but only when we build the agent ourselves. It runs
+        # before make_tpcagent_solve_fn, since TPCAgent.__init__ reads TPC_SOLVE_CONVERGE_PATIENCE
+        # eagerly. Gated on ``solve_fn is None`` so an injected solve_fn (unit tests / embedded
+        # callers) never triggers a process-global env mutation the caller didn't ask for. An
+        # explicit operator override of either env var is still respected.
+        apply_deterministic_solver_defaults()
         if env is None:
             from chinatravel.environment.world_env import WorldEnv
 
