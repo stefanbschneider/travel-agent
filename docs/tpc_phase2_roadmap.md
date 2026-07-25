@@ -37,7 +37,7 @@ Interpretation:
 
 - **Parser is no longer the main bottleneck.** Familiar-100 parser quality is already high (latest headline F1 `0.9949`), and incremental parser fixes now have smaller end-to-end leverage than solver-side work.
 - **Promoted deterministic defaults are stable.** `TPC_PIN_TIMED_WINDOWS` plus `TPC_SOLVE_CONVERGE_PATIENCE=15` passed `900 s` gates cleanly and are now harness defaults.
-- **Commonsense transport remains a practical residual.** The landed `TPC_REPAIR_TRANSPORT_GAPS` pass is still ungated; intercity endpoint failures remain a separate structural family.
+- **Commonsense transport remains a practical residual.** `TPC_REPAIR_TRANSPORT_GAPS` and `TPC_REPAIR_INTERCITY` are both landed behind flags, but neither is promoted by pinned gate yet.
 - **LLM-assisted paths remain selective.** `TPC_P2_LLM_PARSE` audit remains neutral-to-negative in current evidence; Stage 3 refine is wired but currently quality-neutral because commit rate is near zero.
 
 ## Phase 2 guardrails
@@ -55,6 +55,7 @@ Interpretation:
 - Major parser recovery is complete (`~0.20 -> ~0.99+` familiar-100 F1).
 - Pinning + resequencing + converge pairing is promoted at `900 s`.
 - `TPC_REPAIR_TRANSPORT_GAPS` and Stage 3 refine v1 are implemented behind flags.
+- `TPC_REPAIR_INTERCITY` endpoint grounding repair is implemented behind a flag.
 
 Both `make phase2-gate` runs (e2e and solver-only, floor -> pin and floor -> pin+converge) **pass cleanly** — `continuous_score` up, zero new timeouts, zero parse failures on all four. The `300 s` timeout regression was purely a budget-boundary artifact of the extra per-trial deepcopy + full-checker revalidation `_pin_timed_windows`/`_resequence_day` do (PR #34's causal read holds), not a real correctness cost: at `900 s` the restart loop has enough room to absorb it with zero timeouts either way. `TPC_SOLVE_CONVERGE_PATIENCE=15` adds no quality (flat within noise vs pin-alone) but **reclaims the wall-clock pin spends and then some** — pin+converge's `p50`/`p95` beat even the floor's, confirming the roadmap's own hypothesis that converge would absorb the budget pin spends. Both are now harness-default-on (PR [#41](https://github.com/stefanbschneider/china-travel-agent/pull/41)). See [Solver-only headroom](#solver-only-headroom).
 
@@ -117,8 +118,8 @@ Use the current promoted baseline and gate on EPR/FPR plus no-new-failure guaran
 4. **Converge standalone sweep**
 Keep pin+converge promoted, but still run a standalone converge-only sweep/gate to validate default robustness independent of pin.
 
-5. **Implement and gate intercity endpoint grounding (`TPC_REPAIR_INTERCITY`)**
-Target the structural family where first/last intercity activities are missing or invalid.
+5. **Gate intercity endpoint grounding (`TPC_REPAIR_INTERCITY`) at `900 s`**
+Promote only if the first/last intercity structural family drops with no new parse failures/timeouts and no FPR/`continuous_score` regression.
 
 6. **Stage 3 refine v2: raise accepted-commit rate**
 Integrate the remaining Stage 3 work directly in roadmap execution:
