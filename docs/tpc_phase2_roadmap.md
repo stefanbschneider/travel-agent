@@ -53,8 +53,8 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 
 Submission deadline is **2026-08-01**, with one working weekend before it. The strategy is *harvest first, reach second*: most of the near-term gain is landed-but-unpromoted work that the `900 s` budget unblocks; only then spend remaining time on new mechanisms. Iterate on **60 s solver-only screens** (`scripts/phase2_quick_eval.py`, ~15–20 min each) and confirm winners with `--fast-fpr-packed` `900 s` solver-only runs; reserve full e2e gates for **overnight, batched** — never sit waiting on one.
 
-**Tier 0 — harvest (near-zero new eval), owned by the evaluation run (role 2).**
-- [x] Promote `TPC_PIN_TIMED_WINDOWS` (default on): the `900 s` arms showed a clean +4.3 e2e gain, zero timeout cost. Rows committed, gate passed, promoted (PR [#41](https://github.com/stefanbschneider/china-travel-agent/pull/41)).
+**Tier 0 — harvest (near-zero new eval).**
+- [x] Promote `TPC_PIN_TIMED_WINDOWS` **and** `TPC_SOLVE_CONVERGE_PATIENCE=15` to harness-default-on: the `900 s` arms showed a clean +4.3 e2e gain, zero timeout cost, and converge cuts solve `p50` `366s -> 265s`. Landed in [PR #41](https://github.com/stefanbschneider/china-travel-agent/pull/41) via `solve_phase2.apply_deterministic_solver_defaults()`; the three `900 s` rows were committed by the eval run (PR #40).
 - [x] Re-baseline the flags-off floor at `900 s` — part of the same matched triple (PR [#40](https://github.com/stefanbschneider/china-travel-agent/pull/40)).
 - [ ] Settle the `llm_parse` auto-enable → **off** (screens show it regresses e2e `overall_true 47.38 → 44.18`); a free e2e win that also removes LLM latency/timeout risk from the submitted harness ([Next step 3](#next-steps-priority-order)). Still open.
 
