@@ -1,6 +1,6 @@
-# Intercity-transport endpoint grounding (role-3 implementation brief)
+# Intercity-transport endpoint grounding (implementation brief)
 
-Role-3 focused brief. Self-contained: hand to an implementation agent. Targets the **intercity
+Focused implementation brief. Self-contained: hand to an implementation agent. Targets the **intercity
 commonsense residual** the post-pin solver-only attribution surfaces — a failure family that neither
 pinning/cascade (timed windows) nor transport-repair (inner-city legs) touches.
 
@@ -99,7 +99,7 @@ stubbed `env.intercitytransport.select` returning a small fixed table:
 4. Flag on, no feasible return row exists → declines, plan unchanged (no fabrication).
 5. Flag on, outbound endpoint broken → repaired symmetrically.
 
-## Gate criteria (role 2, after implementation)
+## Gate criteria (after implementation)
 
 Gate `TPC_REPAIR_INTERCITY=1` at `900 s` on `familiar_100_val` against the pin+converge default
 baseline (shareable with the other gates — see

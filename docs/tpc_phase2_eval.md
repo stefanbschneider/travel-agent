@@ -293,7 +293,7 @@ at the cost of a few *recovered* timeouts from extra per-candidate work; neither
 fallback or adds a parse failure. The convergence stop holds FPR and shaves a timeout, but its `−1`
 delta is inside the run-to-run noise floor — a *weak* positive whose real payoff (wall-clock) only
 shows at the full `300 s` budget where the restart loop plateaus. All three are safe to carry into
-one **batched** e2e (roadmap Next steps 1, 4, 5); the screen ranks them but flips no default.
+one **batched** e2e (the roadmap's deterministic gate queue); the screen ranks them but flips no default.
 
 ### Worked example: the LLM flags on `main` (2026-07-22)
 
@@ -317,7 +317,7 @@ and each carries the lesson that made the screen honest:
   LLM-errored) — while its reserved improve slice costs `+8` timeouts. Quality is flat within the
   noise band, so it is NO BENEFIT (a thumbs-down on cost), not RED (it cannot regress by
   construction). The committed/called telemetry is the actionable output: v1 needs groundable,
-  checker-satisfying edits before it earns an e2e gate (roadmap Next step 7).
+  checker-satisfying edits before it earns an e2e gate (roadmap Stage 3 refine item).
 
 ### Limits — read before trusting a screen
 
