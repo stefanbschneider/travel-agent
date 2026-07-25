@@ -11,9 +11,11 @@ independent and **share one baseline**, so this does not wait on the cascade run
   section for the mechanism. This brief is purely a **900 s gate**, which is long-running eval work
   — that is why it is a role-2 task, not implementation.
 - **Target metric is commonsense (EPR), not logical FPR.** The pass grounds broken inner-city legs,
-  targeting the *"Invalid Transport information across positions"* commonsense residual (16 failing
-  queries in the post-pin solver-only attribution). Watch the EPR/commonsense component and that
-  specific failure count — not `overall_true`/FPR alone.
+  targeting the *"Invalid Transport information across positions"* commonsense residual — the dominant
+  commonsense-transport failure family in the post-pin solver-only attribution (run
+  `scripts/phase2_solver_failure_attribution.py` on the current baseline row for the live count rather
+  than trusting a hard-coded number here). Watch the EPR/commonsense component and that specific
+  failure count — not `overall_true`/FPR alone.
 
 ## Baseline is the current promoted default — and is shared with the cascade gate
 
@@ -27,8 +29,12 @@ candidate flag *on top of that same default baseline*, so:
 - The transport-repair candidate and the cascade candidate are **independent runs** — launch them
   concurrently (separate cores/machines/folds).
 
-All runs: `familiar_100_val` (the 80-query dev split), `900 s`, 2 repeats, one pinned sha
-(`a56708ba6fb2f583dac1c29f4f6c616fb512567a` = current `main`, or newer if `main` moved — re-check).
+All runs: `familiar_100_val` (the 80-query dev split), `900 s`, 2 repeats, **one pinned sha shared by
+all three rows**. Pick it at run time and export it (do not trust a hard-coded hash — `main` moves):
+
+```bash
+export MAIN_SHA=$(git rev-parse origin/main)   # or a specific reviewed sha you intend to gate
+```
 
 ## Step 0 (optional, ~15–20 min): fast screen first
 
@@ -45,7 +51,7 @@ proceed to the gate. Flat/negative → report and stop; do not gate.
 ## Step 1: record the shared baseline (once)
 
 ```bash
-make phase2-baseline-at SHA=a56708ba P2_SPLIT_SET=familiar_100_val \
+make phase2-baseline-at SHA=$MAIN_SHA P2_SPLIT_SET=familiar_100_val \
   P2_BUDGET=900 P2_REPEATS=2 P2_PARALLEL=3 P2_LABEL=tier1-baseline-pinconv
 ```
 
@@ -56,7 +62,7 @@ This is the pin+converge default (no extra env). **Reuse this row for the cascad
 Same sha, same split/budget/repeats — the only difference is the env flag:
 
 ```bash
-TPC_REPAIR_TRANSPORT_GAPS=1 make phase2-baseline-at SHA=a56708ba P2_SPLIT_SET=familiar_100_val \
+TPC_REPAIR_TRANSPORT_GAPS=1 make phase2-baseline-at SHA=$MAIN_SHA P2_SPLIT_SET=familiar_100_val \
   P2_BUDGET=900 P2_REPEATS=2 P2_PARALLEL=3 P2_LABEL=tier1-transport-repair-on
 ```
 
