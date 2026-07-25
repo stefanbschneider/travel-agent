@@ -7,6 +7,7 @@ Opt-in (marked ``integration``): touches the real WorldEnv + TPCAgent. Run with:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import jsonschema
@@ -225,3 +226,31 @@ def test_runner_resume_skips_existing(tmp_path):
     runner.run_split("tpc_phase1", **common)
     summary2 = runner.run_split("tpc_phase1", resume=True, **common)
     assert summary2["skipped"] >= 1
+
+
+# --- Deterministic solver-flag promotion (not integration: pure env-var logic) ------------------
+
+def test_apply_deterministic_solver_defaults_promotes_pin_and_converge(monkeypatch):
+    import solve_phase2 as runner
+
+    monkeypatch.delenv("TPC_PIN_TIMED_WINDOWS", raising=False)
+    monkeypatch.delenv("TPC_SOLVE_CONVERGE_PATIENCE", raising=False)
+
+    runner.apply_deterministic_solver_defaults()
+
+    assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"
+    assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "15"
+
+
+def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypatch):
+    """An explicit env value (e.g. the eval tooling's flags-off A/B arm) must win over the promoted
+    default -- the same operator-override contract as the TPC_P2_* harness defaults."""
+    import solve_phase2 as runner
+
+    monkeypatch.setenv("TPC_PIN_TIMED_WINDOWS", "0")
+    monkeypatch.setenv("TPC_SOLVE_CONVERGE_PATIENCE", "7")
+
+    runner.apply_deterministic_solver_defaults()
+
+    assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "0"
+    assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "7"
