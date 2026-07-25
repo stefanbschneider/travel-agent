@@ -1,14 +1,14 @@
 {
-  "run_id": "20260722T195341Z",
-  "timestamp_utc": "2026-07-22T19:53:41+00:00",
-  "git_sha": "110eefae80a57fe7ce1f3240d1411c08b97d6e78",
-  "split_set": "familiar_100",
-  "split_name": "tpc_phase2_familiar_100",
+  "run_id": "20260724T192503Z",
+  "timestamp_utc": "2026-07-24T19:25:03+00:00",
+  "git_sha": "a72357c315bd1fdb7acc43ce9da1a6594fc7356e",
+  "split_set": "familiar_100_val",
+  "split_name": "tpc_phase2_familiar_100_val",
   "data_source": {
     "id": "ijcai2026_phase2_familiar_100@sha256:32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c",
     "kind": "official_archive",
     "dataset_id": "ijcai2026_phase2_familiar_100",
-    "split_name": "tpc_phase2_familiar_100",
+    "split_name": "tpc_phase2_familiar_100_val",
     "language": "en",
     "source_url": "https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip",
     "release_date": "2026-07-15",
@@ -22,12 +22,12 @@
   "fold": 0,
   "folds": 1,
   "seed": 20260705,
-  "budget_sec": 300.0,
+  "budget_sec": 900.0,
   "limit": null,
-  "n": 100,
+  "n": 80,
   "lang": "en",
   "branch_aware": false,
-  "label": "familiar100-pinwindows-on",
+  "label": "val-pinconverge-900s",
   "repeats": 2,
   "fresh": true,
   "fast_fpr": false,
@@ -35,57 +35,55 @@
     "repeats": 2,
     "per_repeat": [
       {
-        "e2e_fpr": 30.0,
-        "solver_only_fpr": 31.0,
-        "e2e_overall_true": 51.58510706532199,
-        "solver_only_overall_true": 49.482428139865114
+        "e2e_fpr": 26.25,
+        "solver_only_fpr": 27.5,
+        "e2e_overall_true": 48.91758538667021,
+        "solver_only_overall_true": 49.36949146862837
       },
       {
-        "e2e_fpr": 29.0,
-        "solver_only_fpr": 30.0,
-        "e2e_overall_true": 48.765732458305436,
-        "solver_only_overall_true": 51.35655009738938
+        "e2e_fpr": 25.0,
+        "solver_only_fpr": 27.5,
+        "e2e_overall_true": 47.04433389225675,
+        "solver_only_overall_true": 49.71743709745942
       }
     ],
-    "e2e_fpr_mean": 29.5,
-    "e2e_fpr_std": 0.5,
-    "solver_only_fpr_mean": 30.5,
-    "solver_only_fpr_std": 0.5,
-    "e2e_overall_true_mean": 50.175419761813714,
-    "e2e_overall_true_std": 1.409687303508278,
-    "solver_only_overall_true_mean": 50.41948911862725,
-    "solver_only_overall_true_std": 0.9370609787621333
+    "e2e_fpr_mean": 25.625,
+    "e2e_fpr_std": 0.625,
+    "solver_only_fpr_mean": 27.5,
+    "solver_only_fpr_std": 0.0,
+    "e2e_overall_true_mean": 47.98095963946348,
+    "e2e_overall_true_std": 0.9366257472067296,
+    "solver_only_overall_true_mean": 49.54346428304389,
+    "solver_only_overall_true_std": 0.17397281441552437
   },
   "rehearsal": {
-    "split_name": "tpc_phase2_familiar_100",
+    "split_name": "tpc_phase2_familiar_100_val",
     "fold": 0,
     "folds": 1,
-    "n": 100,
+    "n": 80,
     "fresh": true,
     "chunk_size": 5,
     "parallel": 3,
     "fast_fpr": false,
     "modes": {
       "end-to-end": {
-        "fpr": 29.0,
+        "fpr": 25.0,
         "raw": {
-          "split": "tpc_phase2_familiar_100",
-          "method": "phase2_e2e_tpc_phase2_familiar_100",
-          "evaluated": 100,
-          "parsed_evaluated": 100,
+          "split": "tpc_phase2_familiar_100_val",
+          "method": "phase2_e2e_tpc_phase2_familiar_100_val",
+          "evaluated": 80,
+          "parsed_evaluated": 80,
           "parse_failures": 0,
-          "schema_pass_count": 100,
-          "commonsense_pass_count": 74,
-          "logical_pass_count": 30,
-          "all_pass_count": 29,
+          "schema_pass_count": 80,
+          "commonsense_pass_count": 59,
+          "logical_pass_count": 20,
+          "all_pass_count": 20,
           "all_pass_ids": [
             "phase2_familiar_20250321114538807334_00042",
             "phase2_familiar_20250321141840877581_00048",
             "phase2_familiar_20250321210015834839_00021",
-            "phase2_familiar_20250322070031331863_00100",
             "phase2_familiar_20250322130318575994_00098",
             "phase2_familiar_20250322132432715549_00008",
-            "phase2_familiar_20250322150346246439_00004",
             "phase2_familiar_20250322162034361396_00018",
             "phase2_familiar_20250322165435882231_00085",
             "phase2_familiar_20250322181512021463_00056",
@@ -93,29 +91,22 @@
             "phase2_familiar_20250322185221319705_00038",
             "phase2_familiar_20250322193334546588_00051",
             "phase2_familiar_20250322195527737080_00002",
-            "phase2_familiar_20250322203108551201_00010",
-            "phase2_familiar_20250322233622180048_00084",
-            "phase2_familiar_20250323001836416953_00016",
             "phase2_familiar_20250323014548418503_00037",
-            "phase2_familiar_20250323022920454903_00012",
             "phase2_familiar_20250323112746016374_00036",
-            "phase2_familiar_20250324212220275360_00013",
             "phase2_familiar_20250324215016772997_00064",
             "phase2_familiar_20250324223909692415_00081",
-            "phase2_familiar_20250325015641074558_00031",
             "phase2_familiar_e20241028160358265981_00025",
-            "phase2_familiar_m20241028164700651701_00055",
             "phase2_familiar_m20241028164758041148_00040",
             "phase2_familiar_m20241028164913584976_00072",
             "phase2_familiar_m20241028165003809657_00053"
           ],
           "schema_rate": 100.0,
-          "commonsense_micro": 98.42307692307692,
-          "commonsense_macro": 74.0,
-          "logical_micro": 90.3516681695221,
-          "logical_macro": 30.0,
-          "conditional_logical_micro": 66.81695220919748,
-          "conditional_logical_macro": 28.999999999999996,
+          "commonsense_micro": 98.41346153846153,
+          "commonsense_macro": 73.75,
+          "logical_micro": 89.46772366930918,
+          "logical_macro": 25.0,
+          "conditional_logical_micro": 66.02491506228766,
+          "conditional_logical_macro": 25.0,
           "schema_details": [
             {
               "data_id": "phase2_familiar_20250321012512564936_00022",
@@ -138,10 +129,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250321141142046017_00095",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250321141840877581_00048",
               "schema": 1
             },
@@ -154,15 +141,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250321171346047220_00011",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250321210015834839_00021",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250321225327900119_00027",
               "schema": 1
             },
             {
@@ -170,19 +149,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250322035350348919_00015",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322070031331863_00100",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322103945146888_00080",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322111042021223_00006",
               "schema": 1
             },
             {
@@ -222,14 +189,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250322150346246439_00004",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322150844830338_00090",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322162034361396_00018",
               "schema": 1
             },
@@ -239,10 +198,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322181512021463_00056",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322182643388445_00097",
               "schema": 1
             },
             {
@@ -282,10 +237,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250322203108551201_00010",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322210310765461_00074",
               "schema": 1
             },
@@ -295,10 +246,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322231032581051_00033",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322233622180048_00084",
               "schema": 1
             },
             {
@@ -326,15 +273,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250323022920454903_00012",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250323023110110834_00075",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250323024847827162_00069",
               "schema": 1
             },
             {
@@ -350,10 +289,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250324082131674535_00083",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250324205935312282_00020",
               "schema": 1
             },
@@ -366,15 +301,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250324212220275360_00013",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250324212447508195_00007",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250324213114489746_00045",
               "schema": 1
             },
             {
@@ -387,10 +314,6 @@
             },
             {
               "data_id": "phase2_familiar_20250324220050355278_00077",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250324220331951689_00034",
               "schema": 1
             },
             {
@@ -418,19 +341,11 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250325015641074558_00031",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250325015820363948_00047",
               "schema": 1
             },
             {
               "data_id": "phase2_familiar_e20241028160301887545_00029",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_e20241028160321868761_00024",
               "schema": 1
             },
             {
@@ -463,10 +378,6 @@
             },
             {
               "data_id": "phase2_familiar_m20241028164632364032_00092",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_m20241028164700651701_00055",
               "schema": 1
             },
             {
@@ -665,35 +576,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250321141142046017_00095",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250321141840877581_00048",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -781,65 +663,7 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250321171346047220_00011",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250321210015834839_00021",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250321225327900119_00027",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -897,64 +721,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250322035350348919_00015",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322070031331863_00100",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250322103945146888_00080",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -982,35 +748,6 @@
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322111042021223_00006",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250322114324029605_00039",
@@ -1274,64 +1011,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250322150346246439_00004",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322150844830338_00090",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322162034361396_00018",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -1391,35 +1070,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322181512021463_00056",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322182643388445_00097",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -1560,7 +1210,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -1709,35 +1359,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250322203108551201_00010",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250322210310765461_00074",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -1821,36 +1442,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322233622180048_00084",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -2028,65 +1620,7 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250323022920454903_00012",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250323023110110834_00075",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250323024847827162_00069",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -2202,35 +1736,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250324082131674535_00083",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250324205935312282_00020",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -2318,35 +1823,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250324212220275360_00013",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250324212447508195_00007",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -2374,35 +1850,6 @@
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250324213114489746_00045",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250324215016772997_00064",
@@ -2464,35 +1911,6 @@
             },
             {
               "data_id": "phase2_familiar_20250324220050355278_00077",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250324220331951689_00034",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -2604,7 +2022,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -2695,35 +2113,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250325015641074558_00031",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250325015820363948_00047",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -2780,35 +2169,6 @@
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_e20241028160321868761_00024",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 1,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 1,
-              "Incorrect Information of Intercity Transport on price or duration": 1,
-              "Incorrect Cost on Intercity Transportation": 1,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_e20241028160358265981_00025",
@@ -2894,7 +2254,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -2953,7 +2313,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_m20241028164624886634_00043",
@@ -3043,35 +2403,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_m20241028164700651701_00055",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_m20241028164712892867_00073",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -3098,7 +2429,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_m20241028164715213722_00054",
@@ -3156,7 +2487,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_m20241028164747208761_00099",
@@ -3502,22 +2833,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250321141142046017_00095",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 0,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250321141840877581_00048",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -3566,22 +2881,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250321171346047220_00011",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 0,
-              "logic_py_7": 0,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250321210015834839_00021",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -3594,22 +2893,6 @@
               "logic_py_8": 1,
               "logic_py_9": NaN,
               "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250321225327900119_00027",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -3630,38 +2913,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322035350348919_00015",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 0,
-              "logic_py_12": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322070031331863_00100",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250322103945146888_00080",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -3676,22 +2927,6 @@
               "logic_py_10": 1,
               "logic_py_11": 1,
               "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250322111042021223_00006",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 0,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
             },
             {
               "data_id": "phase2_familiar_20250322114324029605_00039",
@@ -3721,7 +2956,7 @@
               "logic_py_7": 1,
               "logic_py_8": 0,
               "logic_py_9": 1,
-              "logic_py_10": 1,
+              "logic_py_10": 0,
               "logic_py_11": 1,
               "logic_py_12": NaN
             },
@@ -3746,14 +2981,14 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 0,
+              "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_5": 0,
+              "logic_py_6": 1,
               "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
+              "logic_py_8": 0,
+              "logic_py_9": 0,
+              "logic_py_10": 0,
               "logic_py_11": 1,
               "logic_py_12": 1
             },
@@ -3838,38 +3073,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322150346246439_00004",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322150844830338_00090",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250322162034361396_00018",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -3916,22 +3119,6 @@
               "logic_py_10": NaN,
               "logic_py_11": NaN,
               "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250322182643388445_00097",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 0,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 0
             },
             {
               "data_id": "phase2_familiar_20250322183205470139_00063",
@@ -4078,22 +3265,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322203108551201_00010",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250322210310765461_00074",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -4142,22 +3313,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322233622180048_00084",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322235422616103_00030",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -4202,7 +3357,7 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
-              "logic_py_11": 1,
+              "logic_py_11": 0,
               "logic_py_12": NaN
             },
             {
@@ -4254,22 +3409,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250323022920454903_00012",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250323023110110834_00075",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -4282,22 +3421,6 @@
               "logic_py_8": 1,
               "logic_py_9": 0,
               "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250323024847827162_00069",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 0,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -4350,22 +3473,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250324082131674535_00083",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 0,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
-            },
-            {
               "data_id": "phase2_familiar_20250324205935312282_00020",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -4378,7 +3485,7 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 0,
-              "logic_py_11": 0,
+              "logic_py_11": 1,
               "logic_py_12": NaN
             },
             {
@@ -4414,22 +3521,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250324212220275360_00013",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250324212447508195_00007",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -4443,22 +3534,6 @@
               "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": 1,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250324213114489746_00045",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 0,
-              "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
               "logic_py_12": NaN
             },
             {
@@ -4506,22 +3581,6 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250324220331951689_00034",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 0,
-              "logic_py_9": 1,
-              "logic_py_10": 0,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -4622,22 +3681,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250325015641074558_00031",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250325015820363948_00047",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -4667,22 +3710,6 @@
               "logic_py_9": 0,
               "logic_py_10": 1,
               "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_e20241028160321868761_00024",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 0,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 0,
-              "logic_py_8": 1,
-              "logic_py_9": 0,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
               "logic_py_12": NaN
             },
             {
@@ -4756,8 +3783,8 @@
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_5": 0,
+              "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
               "logic_py_9": 1,
@@ -4810,22 +3837,6 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 0,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_m20241028164700651701_00055",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": NaN,
-              "logic_py_10": NaN,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -4920,7 +3931,7 @@
               "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
-              "logic_py_9": 1,
+              "logic_py_9": 0,
               "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
@@ -5024,62 +4035,59 @@
           ]
         },
         "quality": {
-          "requested": 100,
-          "evaluated": 100,
+          "requested": 80,
+          "evaluated": 80,
           "missing": 0,
           "invalid_json": 0,
           "eval_failed": 0,
           "overall_true": {
-            "count": 100,
-            "mean": 48.765732458305436,
+            "count": 80,
+            "mean": 47.04433389225675,
             "min": 8.076923076923078,
-            "max": 98.0204081632653,
-            "std": 32.50817424568243
+            "max": 99.44444444444444,
+            "std": 32.02262811272997
           },
           "overall_parsed": {
-            "count": 100,
-            "mean": 50.25300861770504,
+            "count": 80,
+            "mean": 48.98563694684106,
             "min": 8.076923076923078,
-            "max": 98.33333333333334,
-            "std": 33.51574210815868
+            "max": 99.44444444444444,
+            "std": 33.45913186093888
           },
           "fpr_true": {
-            "count": 100,
-            "mean": 29.0,
+            "count": 80,
+            "mean": 25.0,
             "min": 0.0,
             "max": 100.0,
-            "std": 45.37620521815371
+            "std": 43.30127018922193
           },
           "fpr_parsed": {
-            "count": 100,
-            "mean": 32.0,
+            "count": 80,
+            "mean": 28.75,
             "min": 0.0,
             "max": 100.0,
-            "std": 46.647615158762406
+            "std": 45.25966747557918
           }
         }
       },
       "solver-only": {
-        "fpr": 30.0,
+        "fpr": 27.5,
         "raw": {
-          "split": "tpc_phase2_familiar_100",
-          "method": "phase2_solver_only_tpc_phase2_familiar_100",
-          "evaluated": 100,
-          "parsed_evaluated": 100,
+          "split": "tpc_phase2_familiar_100_val",
+          "method": "phase2_solver_only_tpc_phase2_familiar_100_val",
+          "evaluated": 80,
+          "parsed_evaluated": 80,
           "parse_failures": 0,
-          "schema_pass_count": 100,
-          "commonsense_pass_count": 80,
-          "logical_pass_count": 32,
-          "all_pass_count": 30,
+          "schema_pass_count": 80,
+          "commonsense_pass_count": 61,
+          "logical_pass_count": 23,
+          "all_pass_count": 22,
           "all_pass_ids": [
             "phase2_familiar_20250321114538807334_00042",
-            "phase2_familiar_20250321141142046017_00095",
             "phase2_familiar_20250321141840877581_00048",
             "phase2_familiar_20250321210015834839_00021",
-            "phase2_familiar_20250322070031331863_00100",
             "phase2_familiar_20250322130318575994_00098",
             "phase2_familiar_20250322132432715549_00008",
-            "phase2_familiar_20250322150346246439_00004",
             "phase2_familiar_20250322162034361396_00018",
             "phase2_familiar_20250322165435882231_00085",
             "phase2_familiar_20250322181512021463_00056",
@@ -5087,29 +4095,24 @@
             "phase2_familiar_20250322185221319705_00038",
             "phase2_familiar_20250322193334546588_00051",
             "phase2_familiar_20250322195527737080_00002",
-            "phase2_familiar_20250322203108551201_00010",
             "phase2_familiar_20250322220216551788_00009",
-            "phase2_familiar_20250322233622180048_00084",
             "phase2_familiar_20250323001836416953_00016",
-            "phase2_familiar_20250323022920454903_00012",
+            "phase2_familiar_20250323014548418503_00037",
             "phase2_familiar_20250323112746016374_00036",
-            "phase2_familiar_20250324212220275360_00013",
             "phase2_familiar_20250324215016772997_00064",
             "phase2_familiar_20250324223909692415_00081",
             "phase2_familiar_20250325010714662958_00096",
-            "phase2_familiar_20250325015641074558_00031",
-            "phase2_familiar_m20241028164700651701_00055",
             "phase2_familiar_m20241028164758041148_00040",
             "phase2_familiar_m20241028164913584976_00072",
             "phase2_familiar_m20241028165003809657_00053"
           ],
           "schema_rate": 100.0,
-          "commonsense_micro": 98.34615384615385,
-          "commonsense_macro": 80.0,
-          "logical_micro": 91.07303877366996,
-          "logical_macro": 32.0,
-          "conditional_logical_micro": 73.21911632100992,
-          "conditional_logical_macro": 30.0,
+          "commonsense_micro": 98.125,
+          "commonsense_macro": 76.25,
+          "logical_micro": 90.71347678369196,
+          "logical_macro": 28.749999999999996,
+          "conditional_logical_micro": 69.6489241223103,
+          "conditional_logical_macro": 27.500000000000004,
           "schema_details": [
             {
               "data_id": "phase2_familiar_20250321012512564936_00022",
@@ -5132,10 +4135,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250321141142046017_00095",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250321141840877581_00048",
               "schema": 1
             },
@@ -5148,15 +4147,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250321171346047220_00011",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250321210015834839_00021",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250321225327900119_00027",
               "schema": 1
             },
             {
@@ -5164,19 +4155,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250322035350348919_00015",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322070031331863_00100",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322103945146888_00080",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322111042021223_00006",
               "schema": 1
             },
             {
@@ -5216,14 +4195,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250322150346246439_00004",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322150844830338_00090",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322162034361396_00018",
               "schema": 1
             },
@@ -5233,10 +4204,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322181512021463_00056",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322182643388445_00097",
               "schema": 1
             },
             {
@@ -5276,10 +4243,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250322203108551201_00010",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322210310765461_00074",
               "schema": 1
             },
@@ -5289,10 +4252,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322231032581051_00033",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322233622180048_00084",
               "schema": 1
             },
             {
@@ -5320,15 +4279,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250323022920454903_00012",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250323023110110834_00075",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250323024847827162_00069",
               "schema": 1
             },
             {
@@ -5344,10 +4295,6 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250324082131674535_00083",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250324205935312282_00020",
               "schema": 1
             },
@@ -5360,15 +4307,7 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250324212220275360_00013",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250324212447508195_00007",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250324213114489746_00045",
               "schema": 1
             },
             {
@@ -5381,10 +4320,6 @@
             },
             {
               "data_id": "phase2_familiar_20250324220050355278_00077",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250324220331951689_00034",
               "schema": 1
             },
             {
@@ -5412,19 +4347,11 @@
               "schema": 1
             },
             {
-              "data_id": "phase2_familiar_20250325015641074558_00031",
-              "schema": 1
-            },
-            {
               "data_id": "phase2_familiar_20250325015820363948_00047",
               "schema": 1
             },
             {
               "data_id": "phase2_familiar_e20241028160301887545_00029",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_e20241028160321868761_00024",
               "schema": 1
             },
             {
@@ -5457,10 +4384,6 @@
             },
             {
               "data_id": "phase2_familiar_m20241028164632364032_00092",
-              "schema": 1
-            },
-            {
-              "data_id": "phase2_familiar_m20241028164700651701_00055",
               "schema": 1
             },
             {
@@ -5659,35 +4582,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250321141142046017_00095",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250321141840877581_00048",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -5775,65 +4669,7 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250321171346047220_00011",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250321210015834839_00021",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250321225327900119_00027",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -5891,64 +4727,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250322035350348919_00015",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322070031331863_00100",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250322103945146888_00080",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -5974,36 +4752,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322111042021223_00006",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -6268,64 +5017,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250322150346246439_00004",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322150844830338_00090",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
-            },
-            {
               "data_id": "phase2_familiar_20250322162034361396_00018",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -6385,35 +5076,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322181512021463_00056",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322182643388445_00097",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -6555,7 +5217,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250322193334546588_00051",
@@ -6671,39 +5333,10 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250322201313997965_00089",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322203108551201_00010",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -6791,35 +5424,6 @@
             },
             {
               "data_id": "phase2_familiar_20250322231032581051_00033",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250322233622180048_00084",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -7022,65 +5626,7 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250323022920454903_00012",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250323023110110834_00075",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250323024847827162_00069",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -7196,35 +5742,6 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250324082131674535_00083",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250324205935312282_00020",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
@@ -7312,65 +5829,7 @@
               "Invalid Transport information across positions": 0
             },
             {
-              "data_id": "phase2_familiar_20250324212220275360_00013",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
               "data_id": "phase2_familiar_20250324212447508195_00007",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250324213114489746_00045",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -7458,35 +5917,6 @@
             },
             {
               "data_id": "phase2_familiar_20250324220050355278_00077",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250324220331951689_00034",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -7627,8 +6057,8 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Does not follow Chronological Order": 1,
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250325010714662958_00096",
@@ -7661,35 +6091,6 @@
             },
             {
               "data_id": "phase2_familiar_20250325013355437592_00050",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_20250325015641074558_00031",
               "Invalid or ungrounded activity entity": 0,
               "Intercity transportation events must occur": 0,
               "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
@@ -7774,35 +6175,6 @@
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_e20241028160321868761_00024",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 1,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 1,
-              "Incorrect Information of Intercity Transport on price or duration": 1,
-              "Incorrect Cost on Intercity Transportation": 1,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_e20241028160358265981_00025",
@@ -8034,36 +6406,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
-            },
-            {
-              "data_id": "phase2_familiar_m20241028164700651701_00055",
-              "Invalid or ungrounded activity entity": 0,
-              "Intercity transportation events must occur": 0,
-              "Invalid Trains or Airplanes, given TrainID/FlightID, origin and destination": 0,
-              "Incorrect Information of Intercity Transport on price or duration": 0,
-              "Incorrect Cost on Intercity Transportation": 0,
-              "Unavailable attractions": 0,
-              "Visiting attraction in their closed time": 0,
-              "Repeated attraction Choices": 0,
-              "Incorrect price Information of attraction": 0,
-              "Incorrect cost Information of attraction": 0,
-              "Unavailable Accommodation": 0,
-              "Incorrect Information of Accommodation on price or room type": 0,
-              "Incorrect cost Information of Accommodation": 0,
-              "Accomondation is necessary for trips longer than one day": 0,
-              "Unavailable Restruants": 0,
-              "Visiting Restruants in their closed time": 0,
-              "Repeated Restruants Choices": 0,
-              "Incorrect price Information of Restruants": 0,
-              "Incorrect cost Information of Restruants": 0,
-              "Inappropriate Meal Times": 0,
-              "Unavailable Inner-City Transport": 0,
-              "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
-              "Inccorrect cost information of Inner-City Transport": 0,
-              "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_m20241028164712892867_00073",
@@ -8496,22 +6839,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250321141142046017_00095",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250321141840877581_00048",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -8560,22 +6887,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250321171346047220_00011",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 0,
-              "logic_py_7": 0,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250321210015834839_00021",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -8588,22 +6899,6 @@
               "logic_py_8": 1,
               "logic_py_9": NaN,
               "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250321225327900119_00027",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -8624,38 +6919,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322035350348919_00015",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 0,
-              "logic_py_12": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322070031331863_00100",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250322103945146888_00080",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -8670,22 +6933,6 @@
               "logic_py_10": 1,
               "logic_py_11": 1,
               "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250322111042021223_00006",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
             },
             {
               "data_id": "phase2_familiar_20250322114324029605_00039",
@@ -8715,8 +6962,8 @@
               "logic_py_7": 1,
               "logic_py_8": 0,
               "logic_py_9": 1,
-              "logic_py_10": 0,
-              "logic_py_11": 1,
+              "logic_py_10": 1,
+              "logic_py_11": 0,
               "logic_py_12": NaN
             },
             {
@@ -8832,38 +7079,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322150346246439_00004",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
-            },
-            {
-              "data_id": "phase2_familiar_20250322150844830338_00090",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250322162034361396_00018",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -8910,22 +7125,6 @@
               "logic_py_10": NaN,
               "logic_py_11": NaN,
               "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250322182643388445_00097",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 0,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 0
             },
             {
               "data_id": "phase2_familiar_20250322183205470139_00063",
@@ -9072,22 +7271,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250322203108551201_00010",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250322210310765461_00074",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -9134,22 +7317,6 @@
               "logic_py_10": NaN,
               "logic_py_11": NaN,
               "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250322233622180048_00084",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
             },
             {
               "data_id": "phase2_familiar_20250322235422616103_00030",
@@ -9220,7 +7387,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 0,
+              "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -9248,22 +7415,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250323022920454903_00012",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250323023110110834_00075",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -9276,22 +7427,6 @@
               "logic_py_8": 1,
               "logic_py_9": 0,
               "logic_py_10": NaN,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250323024847827162_00069",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 0,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -9344,22 +7479,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250324082131674535_00083",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 0,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
-              "logic_py_12": 1
-            },
-            {
               "data_id": "phase2_familiar_20250324205935312282_00020",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -9408,22 +7527,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250324212220275360_00013",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250324212447508195_00007",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -9437,22 +7540,6 @@
               "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": 1,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250324213114489746_00045",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 0,
-              "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": NaN,
-              "logic_py_11": NaN,
               "logic_py_12": NaN
             },
             {
@@ -9500,22 +7587,6 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_20250324220331951689_00034",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 0,
-              "logic_py_9": 1,
-              "logic_py_10": 0,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -9616,22 +7687,6 @@
               "logic_py_12": NaN
             },
             {
-              "data_id": "phase2_familiar_20250325015641074558_00031",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
               "data_id": "phase2_familiar_20250325015820363948_00047",
               "logic_py_0": 1,
               "logic_py_1": 1,
@@ -9661,22 +7716,6 @@
               "logic_py_9": 0,
               "logic_py_10": 1,
               "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_e20241028160321868761_00024",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 0,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 0,
-              "logic_py_8": 1,
-              "logic_py_9": 0,
-              "logic_py_10": 1,
-              "logic_py_11": 1,
               "logic_py_12": NaN
             },
             {
@@ -9804,22 +7843,6 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
-              "logic_py_11": NaN,
-              "logic_py_12": NaN
-            },
-            {
-              "data_id": "phase2_familiar_m20241028164700651701_00055",
-              "logic_py_0": 1,
-              "logic_py_1": 1,
-              "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 1,
-              "logic_py_5": 1,
-              "logic_py_6": 1,
-              "logic_py_7": 1,
-              "logic_py_8": 1,
-              "logic_py_9": NaN,
-              "logic_py_10": NaN,
               "logic_py_11": NaN,
               "logic_py_12": NaN
             },
@@ -10018,38 +8041,38 @@
           ]
         },
         "quality": {
-          "requested": 100,
-          "evaluated": 100,
+          "requested": 80,
+          "evaluated": 80,
           "missing": 0,
           "invalid_json": 0,
           "eval_failed": 0,
           "overall_true": {
-            "count": 100,
-            "mean": 51.35655009738938,
+            "count": 80,
+            "mean": 49.71743709745942,
             "min": 8.076923076923078,
             "max": 100.0,
-            "std": 31.397956967914386
+            "std": 32.93024274116484
           },
           "overall_parsed": {
-            "count": 100,
-            "mean": 50.537283669372954,
+            "count": 80,
+            "mean": 48.721768703353526,
             "min": 8.076923076923078,
             "max": 100.0,
-            "std": 31.16458078409995
+            "std": 32.54153751455473
           },
           "fpr_true": {
-            "count": 100,
-            "mean": 30.0,
+            "count": 80,
+            "mean": 27.5,
             "min": 0.0,
             "max": 100.0,
-            "std": 45.8257569495584
+            "std": 44.65142774872938
           },
           "fpr_parsed": {
-            "count": 100,
-            "mean": 29.0,
+            "count": 80,
+            "mean": 26.25,
             "min": 0.0,
             "max": 100.0,
-            "std": 45.37620521815371
+            "std": 43.999289766995105
           }
         }
       }
@@ -10057,7 +8080,7 @@
     "ceiling": {
       "fpr": 0.0,
       "raw": {
-        "split": "tpc_phase2_familiar_100",
+        "split": "tpc_phase2_familiar_100_val",
         "method": "best",
         "evaluated": 0,
         "parsed_evaluated": 0,
@@ -10079,9 +8102,9 @@
         "logical_details": []
       },
       "quality": {
-        "requested": 100,
+        "requested": 80,
         "evaluated": 0,
-        "missing": 100,
+        "missing": 80,
         "invalid_json": 0,
         "eval_failed": 0,
         "overall_true": {
@@ -10116,24 +8139,24 @@
     }
   },
   "parser": {
-    "split": "tpc_phase2_familiar_100",
-    "n": 100,
-    "precision": 0.951,
-    "recall": 0.951,
-    "f1": 0.951,
-    "value_accuracy": 0.951,
+    "split": "tpc_phase2_familiar_100_val",
+    "n": 80,
+    "precision": 0.9588,
+    "recall": 0.9588,
+    "f1": 0.9588,
+    "value_accuracy": 0.9588,
     "disjunction_flattened": 0,
     "totals": {
-      "matched": 658,
+      "matched": 528,
       "missing": 0,
       "spurious": 0,
-      "wrong_value": 33,
-      "defaulted": 87
+      "wrong_value": 22,
+      "defaulted": 70
     },
     "family_stats": [
       {
         "family": "activity_time_windows",
-        "matched": 84,
+        "matched": 68,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10145,7 +8168,7 @@
       },
       {
         "family": "budgets",
-        "matched": 70,
+        "matched": 54,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10157,7 +8180,7 @@
       },
       {
         "family": "cuisine_preference",
-        "matched": 12,
+        "matched": 11,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10169,7 +8192,7 @@
       },
       {
         "family": "excluded_attraction_types",
-        "matched": 49,
+        "matched": 40,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10181,7 +8204,7 @@
       },
       {
         "family": "excluded_attractions",
-        "matched": 52,
+        "matched": 45,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 2,
@@ -10196,7 +8219,7 @@
       },
       {
         "family": "excluded_cuisine_types",
-        "matched": 55,
+        "matched": 45,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10208,10 +8231,10 @@
       },
       {
         "family": "excluded_hotels",
-        "matched": 39,
+        "matched": 30,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 16,
+        "wrong_value": 14,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
@@ -10226,7 +8249,7 @@
       },
       {
         "family": "excluded_inner_transport",
-        "matched": 60,
+        "matched": 45,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10238,25 +8261,23 @@
       },
       {
         "family": "excluded_restaurants",
-        "matched": 45,
+        "matched": 41,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 8,
+        "wrong_value": 3,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": [
-          "phase2_familiar_20250321044802265544_00014",
-          "phase2_familiar_20250322120414354584_00052",
-          "phase2_familiar_20250322133107994604_00079",
-          "phase2_familiar_20250324082131674535_00083",
-          "phase2_familiar_20250324205935312282_00020"
+          "phase2_familiar_20250324205935312282_00020",
+          "phase2_familiar_20250324220050355278_00077",
+          "phase2_familiar_m20241028164747208761_00099"
         ]
       },
       {
         "family": "position_presence",
-        "matched": 84,
+        "matched": 68,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10268,7 +8289,7 @@
       },
       {
         "family": "required_attraction_types",
-        "matched": 20,
+        "matched": 15,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10280,10 +8301,10 @@
       },
       {
         "family": "required_attractions",
-        "matched": 19,
+        "matched": 14,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 4,
+        "wrong_value": 3,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
@@ -10291,13 +8312,12 @@
         "example_wrong_value_uids": [
           "phase2_familiar_20250322120414354584_00052",
           "phase2_familiar_20250322165435882231_00085",
-          "phase2_familiar_20250323022540312612_00032",
-          "phase2_familiar_e20241028160321868761_00024"
+          "phase2_familiar_20250323022540312612_00032"
         ]
       },
       {
         "family": "required_hotel_all_types",
-        "matched": 16,
+        "matched": 12,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10309,7 +8329,7 @@
       },
       {
         "family": "required_hotels",
-        "matched": 16,
+        "matched": 12,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10321,23 +8341,19 @@
       },
       {
         "family": "required_restaurants",
-        "matched": 15,
+        "matched": 13,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 3,
+        "wrong_value": 0,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
-        "example_wrong_value_uids": [
-          "phase2_familiar_20250322035350348919_00015",
-          "phase2_familiar_20250322111042021223_00006",
-          "phase2_familiar_20250325015641074558_00031"
-        ]
+        "example_wrong_value_uids": []
       },
       {
         "family": "room_type",
-        "matched": 9,
+        "matched": 5,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10349,11 +8365,11 @@
       },
       {
         "family": "taxi_cars_equals",
-        "matched": 13,
+        "matched": 10,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
-        "defaulted": 87,
+        "defaulted": 70,
         "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
@@ -10366,31 +8382,31 @@
       "accept_agreement": null,
       "disagreements": [],
       "reject_agreement": null,
-      "reject_probes_n": 100,
+      "reject_probes_n": 80,
       "reject_probes_kept_n": 0,
       "reject_miss_uids": [],
       "behavioral_balanced": null
     }
   },
   "parser_full": {
-    "split": "tpc_phase2_familiar_100",
-    "n": 100,
-    "precision": 0.951,
-    "recall": 0.951,
-    "f1": 0.951,
-    "value_accuracy": 0.951,
+    "split": "tpc_phase2_familiar_100_val",
+    "n": 80,
+    "precision": 0.9588,
+    "recall": 0.9588,
+    "f1": 0.9588,
+    "value_accuracy": 0.9588,
     "disjunction_flattened": 0,
     "totals": {
-      "matched": 658,
+      "matched": 528,
       "missing": 0,
       "spurious": 0,
-      "wrong_value": 33,
-      "defaulted": 87
+      "wrong_value": 22,
+      "defaulted": 70
     },
     "family_stats": [
       {
         "family": "activity_time_windows",
-        "matched": 84,
+        "matched": 68,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10402,7 +8418,7 @@
       },
       {
         "family": "budgets",
-        "matched": 70,
+        "matched": 54,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10414,7 +8430,7 @@
       },
       {
         "family": "cuisine_preference",
-        "matched": 12,
+        "matched": 11,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10426,7 +8442,7 @@
       },
       {
         "family": "excluded_attraction_types",
-        "matched": 49,
+        "matched": 40,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10438,7 +8454,7 @@
       },
       {
         "family": "excluded_attractions",
-        "matched": 52,
+        "matched": 45,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 2,
@@ -10453,7 +8469,7 @@
       },
       {
         "family": "excluded_cuisine_types",
-        "matched": 55,
+        "matched": 45,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10465,10 +8481,10 @@
       },
       {
         "family": "excluded_hotels",
-        "matched": 39,
+        "matched": 30,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 16,
+        "wrong_value": 14,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
@@ -10483,7 +8499,7 @@
       },
       {
         "family": "excluded_inner_transport",
-        "matched": 60,
+        "matched": 45,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10495,25 +8511,23 @@
       },
       {
         "family": "excluded_restaurants",
-        "matched": 45,
+        "matched": 41,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 8,
+        "wrong_value": 3,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
         "example_wrong_value_uids": [
-          "phase2_familiar_20250321044802265544_00014",
-          "phase2_familiar_20250322120414354584_00052",
-          "phase2_familiar_20250322133107994604_00079",
-          "phase2_familiar_20250324082131674535_00083",
-          "phase2_familiar_20250324205935312282_00020"
+          "phase2_familiar_20250324205935312282_00020",
+          "phase2_familiar_20250324220050355278_00077",
+          "phase2_familiar_m20241028164747208761_00099"
         ]
       },
       {
         "family": "position_presence",
-        "matched": 84,
+        "matched": 68,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10525,7 +8539,7 @@
       },
       {
         "family": "required_attraction_types",
-        "matched": 20,
+        "matched": 15,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10537,10 +8551,10 @@
       },
       {
         "family": "required_attractions",
-        "matched": 19,
+        "matched": 14,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 4,
+        "wrong_value": 3,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
@@ -10548,13 +8562,12 @@
         "example_wrong_value_uids": [
           "phase2_familiar_20250322120414354584_00052",
           "phase2_familiar_20250322165435882231_00085",
-          "phase2_familiar_20250323022540312612_00032",
-          "phase2_familiar_e20241028160321868761_00024"
+          "phase2_familiar_20250323022540312612_00032"
         ]
       },
       {
         "family": "required_hotel_all_types",
-        "matched": 16,
+        "matched": 12,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10566,7 +8579,7 @@
       },
       {
         "family": "required_hotels",
-        "matched": 16,
+        "matched": 12,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10578,23 +8591,19 @@
       },
       {
         "family": "required_restaurants",
-        "matched": 15,
+        "matched": 13,
         "missing": 0,
         "spurious": 0,
-        "wrong_value": 3,
+        "wrong_value": 0,
         "defaulted": 0,
         "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
-        "example_wrong_value_uids": [
-          "phase2_familiar_20250322035350348919_00015",
-          "phase2_familiar_20250322111042021223_00006",
-          "phase2_familiar_20250325015641074558_00031"
-        ]
+        "example_wrong_value_uids": []
       },
       {
         "family": "room_type",
-        "matched": 9,
+        "matched": 5,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
@@ -10606,11 +8615,11 @@
       },
       {
         "family": "taxi_cars_equals",
-        "matched": 13,
+        "matched": 10,
         "missing": 0,
         "spurious": 0,
         "wrong_value": 0,
-        "defaulted": 87,
+        "defaulted": 70,
         "reject_miss": 0,
         "example_missing_uids": [],
         "example_spurious_uids": [],
@@ -10623,7 +8632,7 @@
       "accept_agreement": null,
       "disagreements": [],
       "reject_agreement": null,
-      "reject_probes_n": 100,
+      "reject_probes_n": 80,
       "reject_probes_kept_n": 0,
       "reject_miss_uids": [],
       "behavioral_balanced": null
@@ -10633,35 +8642,26 @@
     "phase2_familiar_20250321012512564936_00022": "9db2d8135b9f6673ed90c98cde351e728f3698414f8f2d16b61c5433d070b6be",
     "phase2_familiar_20250321032641509206_00005": "c71ccaeefeed7a41aff8abba8b3d2ce6ce87f74ef72a338ac64eaccf27494c78",
     "phase2_familiar_20250321040138918100_00001": "0cd53dc5298074a9e7224029e9665adc2603fe89eb4d1d88c0d4adfe3c56c17e",
-    "phase2_familiar_20250321044802265544_00014": "df5da924789c18f654bc486cda9bc62b26de35dc4cb774c267c40ebc5a20c5f0",
+    "phase2_familiar_20250321044802265544_00014": "44386db8cc098d499633a99796fa060857bfba2b7f5bcb049233526eeba6c940",
     "phase2_familiar_20250321114538807334_00042": "b59ab2849092d36acfe0ae4267e3275feb8ad8e90d970044ec03fe87f644fc1e",
-    "phase2_familiar_20250321141142046017_00095": "8ecc971574b3a458fe5cc89067a47512d364d8545780e5c0882d17e3b771c41a",
     "phase2_familiar_20250321141840877581_00048": "981d7c402a2538bdedeb1e4927e1c9b016d4548f5400e037066a043521d11349",
     "phase2_familiar_20250321152320931058_00062": "7edc4dd824c3a543b84d133db259034edaecb730d5738a1aca2be3e5c8f54d75",
     "phase2_familiar_20250321155107635610_00035": "8b5863b9ccfc513ca41648ea0615dfdc1a3198174869187111ecbb1f656fb406",
-    "phase2_familiar_20250321171346047220_00011": "0ef3f79f492301c53cffa40d2e3f7e8898bac9ef02b955020837edce49be1ef3",
     "phase2_familiar_20250321210015834839_00021": "a69924d6cb386f351235653219f9e5193c0b4dc8f9007ecaceb256b1b424d882",
-    "phase2_familiar_20250321225327900119_00027": "a83fb15bd9bf03764d85e0a9f4004b57061b7f146b60fff8eef16090b286cdba",
     "phase2_familiar_20250322022134656894_00087": "0f4d77baa98c58cc1b474c8aa65984d30f0249f39f385074b27c3430ce7a1ce6",
-    "phase2_familiar_20250322035350348919_00015": "92ce043219ba87601b9cf00ee6a28166bd4ca1e0d1e107755bb45ec5bb6beb34",
-    "phase2_familiar_20250322070031331863_00100": "c3d1466f2b5f7717c4edb603bac8db75ca30b46663235fe7716c1bf3ee9a44e3",
     "phase2_familiar_20250322103945146888_00080": "827855a4a045253436deeffd23fc2074ea297a1825b5838d0f043bd7a8a95627",
-    "phase2_familiar_20250322111042021223_00006": "45a146a47b34c9a630c163334d7a41243a01c68786024d1f74d4f96cc5f77a5d",
     "phase2_familiar_20250322114324029605_00039": "2643451e1d5c7cc9609fc6951f27d291308a3ddb12627036a9402f1f954b57fc",
     "phase2_familiar_20250322115606690734_00057": "92a4c70a01fe89cb70465214fbfee2b129998542b99e1fc1d0d4ae6154574d2d",
     "phase2_familiar_20250322120046083322_00028": "70bcc015d4d7bc474d0df4782dd8ec9c8bf017c5643d0f39ab21b3707a10ae9d",
-    "phase2_familiar_20250322120414354584_00052": "7af03e4be64699f10ae581fbae54df16fe774919685b24f2463d2c174c7bb96d",
+    "phase2_familiar_20250322120414354584_00052": "4a33521291404e56988cb96946fa9fc77296194f49125451764184a6f2414d9b",
     "phase2_familiar_20250322122010666557_00070": "0801f2a893ad4ed67e953935ca1744ab5bd17fd8fd9537828b7d0eecd7dc1343",
     "phase2_familiar_20250322123503517813_00046": "eb37a0c5de84f238acf4ac6ceee1b17fa60507a907614510f5c8dadecf72ad59",
     "phase2_familiar_20250322130318575994_00098": "738592d22968bc7b5cf8b0b720d88216564215d313e5b15274669464db13504c",
     "phase2_familiar_20250322132432715549_00008": "aeb1109464f1b3156e4fc954e23b1928d7adb2be0ecacffb316f731fc474d941",
-    "phase2_familiar_20250322133107994604_00079": "753a84c78ec4c9534e59a84db53dcf2e0ff448cf04951947b58ecbdb8f7a0a54",
-    "phase2_familiar_20250322150346246439_00004": "e517637476305365d9cd1e7420b00830a41f05f6620e4b2440a342f01cfa0da5",
-    "phase2_familiar_20250322150844830338_00090": "fc3b6502dd9c75854834ef49852bebffa580c2407274af4b3f68539a83b24d69",
+    "phase2_familiar_20250322133107994604_00079": "a6e09d963e3c6431cf942143915f4da7ca605ce2ca8c7a0098fb1cece15706ef",
     "phase2_familiar_20250322162034361396_00018": "71f97f1caa2c9a2f2e2d60462df5d518b355c19e2e9770b30774a97d193e3c4b",
-    "phase2_familiar_20250322165435882231_00085": "4e387b4a9ea3f7e2e1f37898337205db6e65a5588af47710fe96c347b423b5d6",
+    "phase2_familiar_20250322165435882231_00085": "6b47db8a072f95e5f38f8bf8653d47761ed26b5479ecdcc8f9b8398a8a9a1933",
     "phase2_familiar_20250322181512021463_00056": "976958ea3a9878aa81de5f3c00120d308bf994db0a32fc73cda809aae3692836",
-    "phase2_familiar_20250322182643388445_00097": "6d87376b981e979fb43b7d708332ce621f312281b74132c320388900b57d24fd",
     "phase2_familiar_20250322183205470139_00063": "2ed5b34b12ebaba5ba6448bf416284c70e7c1f15859ac3080d0a32aa23f0686f",
     "phase2_familiar_20250322184829394258_00094": "f9eafe09c0f40f04f4ff7087550cb74cb9aa83398d1b5d227c085af6cab3c805",
     "phase2_familiar_20250322185221319705_00038": "850745a8d632774583028b525656a8482c6f31b9c3948eb82e9d0dd5631a5802",
@@ -10671,44 +8671,34 @@
     "phase2_familiar_20250322195527737080_00002": "71ee4c7cf682432b850c0ee440281b0da891a71edcecf8cdd0592b81e88f0a4a",
     "phase2_familiar_20250322201024175211_00058": "4532ccee45e910c18a59c24116374fd4de8ecc3f0e1f326b36acc0b0440e6cd0",
     "phase2_familiar_20250322201313997965_00089": "0557fe5601d68cfdf239fdf36c8ccba80ecc9d92a7ade1c39fb12a08a6b16b3c",
-    "phase2_familiar_20250322203108551201_00010": "e5a6aff193f95c2ca25400f5bad0aaf61c4dee26472c93e9496d111e64ea1558",
     "phase2_familiar_20250322210310765461_00074": "5c8174ea4e6d382eea11835fe259da24b12a76bd6d6dc60b8454a27031737818",
     "phase2_familiar_20250322220216551788_00009": "1929fb3542262e5a2b5062fa31dd6ee0bf7c80b071306a1ffcc5974cc3e623c3",
     "phase2_familiar_20250322231032581051_00033": "83972b1ddf9d7943c3373cac01414b042bf8faffc7739c1621ddf336066ed4a3",
-    "phase2_familiar_20250322233622180048_00084": "17d1154ee0f566da8534db1ecfbd18cc99ae4e4cb8c73f8fa7aba32ff6ac2a5a",
     "phase2_familiar_20250322235422616103_00030": "08e5b39e0f6e7ff6e357c1a3198539ee940a5ba95568697e095f9c56949c1067",
     "phase2_familiar_20250323001701860855_00088": "2828946b0425e408dd959a3b5fd71e51deb5cd2683d114f20dc60d471021d808",
     "phase2_familiar_20250323001836416953_00016": "72dfbd63d399ea6dce0cfa197a92e1ff497a3bf3119b7cfdb6cb8df3b74e2ce4",
     "phase2_familiar_20250323014035231483_00041": "f330260b37fbd01289912c5b90a5f8b0e1152069b9fc401e2d527d20d7b20f46",
     "phase2_familiar_20250323014548418503_00037": "84db287dd8aae226b219df7ed5b0db0fd6eaab8721603473fdfeca23b780f3a3",
     "phase2_familiar_20250323022540312612_00032": "1cd3e681baa055fb0fab2eaa887659b5986dad92791a1f49a2a5b540bcfebd4b",
-    "phase2_familiar_20250323022920454903_00012": "dcccace2eac17c7db68ec01de0d5bc6f654f86966e4a8e59b5c0d6a0d43e6863",
     "phase2_familiar_20250323023110110834_00075": "2e61194e9b3842565ad1855398e52b74d884c38a0ab02e5c69177cee02e06eaa",
-    "phase2_familiar_20250323024847827162_00069": "49d63d944ff22800bda8acf9ff2d1f6dc2304e2579c9e5dbdadb44396b7db9d1",
     "phase2_familiar_20250323112746016374_00036": "f6c7e0e787e6585feea064058601f1e347266ee7a5ce5b2ae45b88f37e9b39fe",
     "phase2_familiar_20250323130321920602_00093": "185188c231424924fa2e53490f985ecc58abfb6bd7e5a6718933d47482b3e8ed",
     "phase2_familiar_20250323135039668314_00068": "e109672396c3af22bf8bdc4fd353e954b99dc32868b0534ac53a84ffb63095ee",
-    "phase2_familiar_20250324082131674535_00083": "d3c4af47ff537b71e38a4c5d341254b6f075ef890496290297ef512b7d89e151",
     "phase2_familiar_20250324205935312282_00020": "1145940ceec79197995a163c089b4f0f2c078bdb225ac4fe0ec191b449c53045",
     "phase2_familiar_20250324210312186598_00076": "1cf2c3bce126f384cbdfc593b92bae76cc3acdb02b844fca1b21880df957254e",
     "phase2_familiar_20250324210728912485_00026": "691bc484f9671b77ad28d350e221d819ac0458d1b90c91320cc3f519ff5d89e1",
-    "phase2_familiar_20250324212220275360_00013": "d1174995401f213afd72808476aa06cbee6361106bfcde6bf87d41e95a654c0f",
     "phase2_familiar_20250324212447508195_00007": "23aac2bae264b1d76486f35addfbbe7673fae52a9eef5efe79c21e66e53a557f",
-    "phase2_familiar_20250324213114489746_00045": "729d76f96829eaecf3727c0b1dde33444b334aabd4beb9ec5f153a69dca3690b",
-    "phase2_familiar_20250324215016772997_00064": "716818983dfd0b034abc7027498ef44658ef3be569d7dfbf9d329fe047883c1e",
+    "phase2_familiar_20250324215016772997_00064": "cd6c891ea09579dba2e69bd8c365770d3c280e1c14a789ce24c5f5e31c67023e",
     "phase2_familiar_20250324215156257522_00061": "c25620ae8aeb6d486e1cf5b8d235007f2487fa579ae169fbab5df2e049961577",
     "phase2_familiar_20250324220050355278_00077": "746b4433a93bf0b68b1f4af69bb80e14f7a4b7118d95ec6a02394b62e56b2bad",
-    "phase2_familiar_20250324220331951689_00034": "1b61ac96a48b48c9a253cc0d26f6dbb65e3a19cd018491861ed526e80d01148b",
     "phase2_familiar_20250324221956345687_00091": "31990961977a5369f67f7b9827882df9afaae2e01f273501d4da63707908487b",
     "phase2_familiar_20250324223909692415_00081": "b53e40e541b6c911efef4f5f596c3304b9910142de58b08bad88e43b15b6f3fc",
     "phase2_familiar_20250324225955755391_00067": "b7922035e96ff5e45626c92794297372d13df6d06a85f6f665fb0989b6d02438",
     "phase2_familiar_20250324230340923488_00019": "28017d35fc08b2e51e45c37ca67f4638d1ec6342d036751cffc0455fc4bf5dc1",
     "phase2_familiar_20250325010714662958_00096": "f47dff6e0abbd25ad2d17987a19173c8018d98c111aff899c7b07d0d2b2029bb",
     "phase2_familiar_20250325013355437592_00050": "05cb5b79cff606c6608ea6fcc34fa2296e8eacd3583dd9fa017a70b16c847a3d",
-    "phase2_familiar_20250325015641074558_00031": "ccc6c3f236fed2c673c37d88e7a4d660b440ce78c99951f5ca47678acad02aaa",
     "phase2_familiar_20250325015820363948_00047": "ac0ce4cc2de35afcdf6d59ff7b3892f5fc321c0495c4158298c587409ea72477",
     "phase2_familiar_e20241028160301887545_00029": "4ead26a2d58ffe8b0187e2c41051a1eb4139be5137934e7be5329b660424c9b1",
-    "phase2_familiar_e20241028160321868761_00024": "80f0fa3de9402453ef9e283b79b72f7b2c7d70056617fbab7b834f269a84acc1",
     "phase2_familiar_e20241028160358265981_00025": "1018c5a418d52ff7fedfdb0853e47c0747356ee42d3adf96e22041e1a060bfbe",
     "phase2_familiar_e20241028160403455246_00065": "0125805dc72c45a76e902837edb01a08514ff52a3bbf203ef53a77d73df2c6a3",
     "phase2_familiar_e20241028160409480928_00071": "4145c0cad7eee81178c95f96ff3f30736b10ff91befa0369b4a1073b2e31c585",
@@ -10717,7 +8707,6 @@
     "phase2_familiar_m20241028164624886634_00043": "741bdc24f191669db4ecd2b3b0b145ca5bd57774ad65dda6a2aea22170ae2ded",
     "phase2_familiar_m20241028164626006100_00060": "2889d3d841a3a00789784838ade0100d3cb85ff78e7aa9e74e7f2a260b05d224",
     "phase2_familiar_m20241028164632364032_00092": "50fac49f3bacea25101991a7bf5e96e41d2b985985d8bda3acf808e55e258617",
-    "phase2_familiar_m20241028164700651701_00055": "5de990eb2172c109e15be1c92dd66506b44a4acfa865a9167bb50a24fc67a3e5",
     "phase2_familiar_m20241028164712892867_00073": "2b8cede99bd62aa0ddab5c9a3ee87932a17cc3586bb8239baba068824cb04742",
     "phase2_familiar_m20241028164715213722_00054": "8a3eee704aaff32fd338c2768b6ee1ff8d25dfc63fa1898ef0d6f38c61a8cb54",
     "phase2_familiar_m20241028164728831122_00003": "09db865e58cb4411de048fc4d1bbc1acb2955810cdd68163fe9c4819765cce9f",
@@ -10744,83 +8733,83 @@
     "entity_resolution": true
   },
   "timing": {
-    "n": 100,
+    "n": 80,
     "per_stage": {
       "parse": {
-        "p50": 0.095262655406259,
-        "p95": 0.23338908801088107,
-        "mean": 0.10860446326667443,
-        "max": 0.4925309179816395
+        "p50": 0.0931527124485001,
+        "p95": 0.22472149769309907,
+        "mean": 0.1029207373445388,
+        "max": 0.33854049700312316
       },
       "solve": {
-        "p50": 270.8275202384684,
-        "p95": 271.0119952079607,
-        "mean": 256.77491402873073,
-        "max": 271.12464583315887
+        "p50": 264.43366821762174,
+        "p95": 498.57457226392575,
+        "mean": 261.79524870877793,
+        "max": 535.9599759099074
       },
       "improve": {
-        "p50": 1.4529796317219734e-06,
-        "p95": 2.3039174266159534e-06,
-        "mean": 1.5213945880532265e-06,
-        "max": 4.108063876628876e-06
+        "p50": 1.4725374057888985e-06,
+        "p95": 2.6490772143006322e-06,
+        "mean": 1.5714205801486969e-06,
+        "max": 3.455905243754387e-06
       },
       "finalize": {
-        "p50": 1.6634585335850716e-06,
-        "p95": 5.191017407923936e-06,
-        "mean": 2.5785760954022407e-06,
-        "max": 4.915008321404457e-05
+        "p50": 2.6945490390062332e-06,
+        "p95": 6.692821625620121e-06,
+        "mean": 3.430966171436012e-06,
+        "max": 1.698196865618229e-05
       }
     },
-    "total_p50": 271.01458445424214,
-    "total_p95": 271.1273873438011,
+    "total_p50": 264.5209184171399,
+    "total_p95": 498.58970699796913,
     "budget_overruns": 0,
-    "timed_out": 57,
+    "timed_out": 0,
     "used_fallback": 0,
     "valid_output_rate": 1.0,
-    "llm_parse_attempted": 100,
+    "llm_parse_attempted": 80,
     "llm_parse_failed": 0
   },
   "completion": {
     "parse": {
-      "n": 100,
-      "completed": 100,
+      "n": 80,
+      "completed": 80,
       "failed": 0,
       "timed_out": 0
     },
     "end_to_end": {
-      "n": 100,
-      "completed_without_timeout": 43,
-      "interrupted": 57,
-      "timed_out": 57,
-      "recovered_from_timeout": 57,
+      "n": 80,
+      "completed_without_timeout": 80,
+      "interrupted": 0,
+      "timed_out": 0,
+      "recovered_from_timeout": 0,
       "recovered_from_error": 0,
       "used_fallback": 0,
-      "valid_output": 100,
-      "completed_without_timeout_rate": 0.43
+      "valid_output": 80,
+      "completed_without_timeout_rate": 1.0
     },
     "solver_only": {
-      "n": 100,
-      "completed_without_timeout": 73,
-      "interrupted": 27,
-      "timed_out": 27,
-      "recovered_from_timeout": 27,
+      "n": 80,
+      "completed_without_timeout": 80,
+      "interrupted": 0,
+      "timed_out": 0,
+      "recovered_from_timeout": 0,
       "recovered_from_error": 0,
       "used_fallback": 0,
-      "valid_output": 100,
-      "completed_without_timeout_rate": 0.73
+      "valid_output": 80,
+      "completed_without_timeout_rate": 1.0
     }
   },
   "timing_source": {
-    "method": "phase2_e2e_tpc_phase2_familiar_100",
-    "selected_uids": 100,
-    "telemetry_found": 100,
+    "method": "phase2_e2e_tpc_phase2_familiar_100_val",
+    "selected_uids": 80,
+    "telemetry_found": 80,
     "telemetry_missing": 0,
     "missing_uids": []
   },
   "solver_only_timing_source": {
-    "method": "phase2_solver_only_tpc_phase2_familiar_100",
-    "selected_uids": 100,
-    "telemetry_found": 100,
+    "method": "phase2_solver_only_tpc_phase2_familiar_100_val",
+    "selected_uids": 80,
+    "telemetry_found": 80,
     "telemetry_missing": 0,
     "missing_uids": []
   }
