@@ -18,6 +18,15 @@ alongside the generic role-3 one. These are still role-3 work (code + tests unde
 | --- | --- | --- |
 | Stage 3 LLM refine (roadmap Next step 7) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | Current top implementation target — the only "Next steps" item that is a new implementation rather than a gate. |
 
+### Focused task prompts (role 2)
+
+A gate item can also warrant its own self-contained brief when it can run **in parallel** with another
+long gate. These are role-2 work (generated rows only) and obey the same invariants.
+
+| Task | Prompt | Status |
+| --- | --- | --- |
+| Tier 1: commonsense-transport repair gate (`TPC_REPAIR_TRANSPORT_GAPS`) | [`tier1_transport_repair_gate.md`](tier1_transport_repair_gate.md) | Runnable now — no new code (flag already landed); shares its baseline with the cascade gate (PR #39), so it runs concurrently, not after it. |
+
 ## How to use these
 
 Hand the role-2 and role-3 prompt files to two separate Sonnet 5 agents launched in parallel. Each prompt is self-contained: it names the branch to develop on, the exact commands to run, the invariants to obey, and ends by opening a PR. They take direction from the [roadmap](../tpc_phase2_roadmap.md)'s "Next steps" — role 1 owns that priority order, so re-read it at the start of every run in case `main` has moved. A focused task prompt (above) overrides role 3's "pick the next item" step for that one item; when it lands, delete or supersede it and fall back to the generic role-3 prompt.
