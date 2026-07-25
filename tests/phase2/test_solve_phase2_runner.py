@@ -254,3 +254,26 @@ def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypa
 
     assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "0"
     assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "7"
+
+
+def test_injected_solve_fn_does_not_leak_solver_defaults(tmp_path, monkeypatch):
+    """Regression for the env-leak Copilot flagged on PR #41: run_split with an *injected* solve_fn
+    builds no agent, so it must not mutate the process-global TPC_PIN_TIMED_WINDOWS /
+    TPC_SOLVE_CONVERGE_PATIENCE -- only the agent-building path (solve_fn is None) promotes them."""
+    import solve_phase2 as runner
+
+    monkeypatch.delenv("TPC_PIN_TIMED_WINDOWS", raising=False)
+    monkeypatch.delenv("TPC_SOLVE_CONVERGE_PATIENCE", raising=False)
+
+    runner.run_split(
+        "tpc_phase1",
+        method="phase2_leakcheck",
+        limit=1,
+        budget_sec=5.0,
+        results_dir=str(tmp_path / "results"),
+        work_dir=str(tmp_path / "runs"),
+        solve_fn=_fast_solve,
+    )
+
+    assert "TPC_PIN_TIMED_WINDOWS" not in os.environ
+    assert "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ

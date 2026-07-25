@@ -242,14 +242,15 @@ def run_split(
     else:
         selected = query_ids[: int(limit)] if limit else query_ids
 
-    # Promote the gate-cleared deterministic solver features (timed-window pinning + early
-    # convergence) to harness-default-on. Must run before make_tpcagent_solve_fn builds the agent,
-    # since TPCAgent.__init__ reads TPC_SOLVE_CONVERGE_PATIENCE eagerly. An explicit operator
-    # override of either env var is respected.
-    apply_deterministic_solver_defaults()
-
     # Build the deterministic TPCAgent-backed solve function once (unless injected).
     if solve_fn is None:
+        # Promote the gate-cleared deterministic solver features (timed-window pinning + early
+        # convergence) to harness-default-on -- but only when we build the agent ourselves. It runs
+        # before make_tpcagent_solve_fn, since TPCAgent.__init__ reads TPC_SOLVE_CONVERGE_PATIENCE
+        # eagerly. Gated on ``solve_fn is None`` so an injected solve_fn (unit tests / embedded
+        # callers) never triggers a process-global env mutation the caller didn't ask for. An
+        # explicit operator override of either env var is still respected.
+        apply_deterministic_solver_defaults()
         if env is None:
             from chinatravel.environment.world_env import WorldEnv
 
