@@ -451,8 +451,8 @@ class TPCAgent(BaseAgent):
 
     def _cascade_timed_windows_enabled(self):
         """Opt-in cascading forward-shift fallback for the post-pin ``timed_visit_named_poi``
-        residual -- still the dominant solver-only failure family (53 sole-blocker queries) *after*
-        ``TPC_PIN_TIMED_WINDOWS``.
+        residual -- still the dominant solver-only failure family *after* ``TPC_PIN_TIMED_WINDOWS``
+        (see the roadmap's "Cascading timed-window shift" section for the measured attribution).
 
         Default OFF, so the deterministic floor -- and the existing pin flow when this is unset --
         stays byte-identical: the fallback branch in ``_pin_timed_windows`` is skipped entirely.
@@ -1510,7 +1510,14 @@ class TPCAgent(BaseAgent):
             # is unchanged. Re-lay the day's movable block in its *current* order with the windows
             # honored, so the clamp cascades the delay through the following legs. Deepcopy-trialed
             # and committed only on a still-accepting, non-regressing plan, same as the moves above.
-            for day_idx, act_idx in matches:
+            # _enforce_windows_in_order re-lays the whole day honoring every window, so one call per
+            # day suffices even when several matched activities share a day -- dedup by day_idx to
+            # avoid redundant deepcopy+relayout+check work.
+            seen_days = set()
+            for day_idx, _act_idx in matches:
+                if day_idx in seen_days:
+                    continue
+                seen_days.add(day_idx)
                 if self._enforce_windows_in_order(plan, day_idx, query, constraints, check):
                     break
 
