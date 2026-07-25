@@ -89,10 +89,12 @@ def test_cli_accepts_familiar_split(monkeypatch):
 
 
 def test_cli_accepts_familiar_val_test_splits(monkeypatch):
-    """Regression (2026-07-23): --split-set choices lagged the val/test split landing in
-    rehearse_phase2/phase2_quick_eval, so `make phase2-progress P2_SPLIT_SET=familiar_100_val`
-    errored at argument parsing even though resolve_fold_uids -> resolve_split_set already
-    supported it (same underlying bug as phase2_record_baseline.py, fixed alongside it)."""
+    """Regression (2026-07-23): --split-set choices lagged the val/test split landing --
+    rehearse_phase2.py's own CLI and scripts/phase2_quick_eval.py were updated with the new
+    choices, but phase2_progress.py was not, so `make phase2-progress
+    P2_SPLIT_SET=familiar_100_val` errored at argument parsing even though
+    resolve_fold_uids -> resolve_split_set already supported it (same underlying bug as
+    phase2_record_baseline.py, fixed alongside it)."""
     for split_set in ("familiar_100_val", "familiar_100_test"):
         monkeypatch.setattr(
             sys, "argv", ["phase2_progress.py", "--split-set", split_set, "--folds", "1"]

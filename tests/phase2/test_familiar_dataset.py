@@ -170,9 +170,11 @@ def test_familiar_single_fold_selects_all_records(project_root: Path):
 
 @pytest.mark.parametrize("split_set", ["familiar_100_val", "familiar_100_test"])
 def test_familiar_baseline_cli_accepts_val_test_split_set(split_set, monkeypatch):
-    """Regression (2026-07-23): --split-set choices lagged the val/test split landing in
-    rehearse_phase2/phase2_quick_eval, so make phase2-baseline-at errored immediately on
-    familiar_100_val/test even though the underlying resolver already supported them."""
+    """Regression (2026-07-23): --split-set choices lagged the val/test split landing --
+    rehearse_phase2.py's own CLI and scripts/phase2_quick_eval.py were updated with the new
+    choices, but phase2_record_baseline.py was not, so make phase2-baseline-at errored
+    immediately on familiar_100_val/test even though the underlying resolver already
+    supported them."""
     monkeypatch.setattr(
         sys, "argv", ["phase2_record_baseline.py", "--split-set", split_set, "--folds", "1"]
     )
