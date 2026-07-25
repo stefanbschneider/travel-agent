@@ -16,7 +16,8 @@ alongside the generic role-3 one. These are still role-3 work (code + tests unde
 
 | Task | Prompt | Status |
 | --- | --- | --- |
-| Stage 3 LLM refine (roadmap Next step 7) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | Current top implementation target — the only "Next steps" item that is a new implementation rather than a gate. |
+| Intercity-transport endpoint grounding | [`intercity_transport_grounding.md`](intercity_transport_grounding.md) | Ready to implement — closes the post-pin intercity commonsense residual (4 queries fail all four intercity families via one structural defect); floor-safe behind `TPC_REPAIR_INTERCITY`, screenable in ~20 min. |
+| Stage 3 LLM refine (roadmap Next step 7) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | A larger new implementation; lower priority than the intercity grounding fix above (bounded LLM refine vs. a deterministic structural fix). |
 
 ### Focused task prompts (role 2)
 
