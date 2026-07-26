@@ -1,44 +1,44 @@
 # Phase 2 Baseline (Latest)
 
-- run_id: 20260726T034030Z
-- timestamp_utc: 2026-07-26T03:40:30+00:00
-- git_sha: 6d354b99b442d1952639405c2a2610299c2691b3
+- run_id: 20260726T184941Z
+- timestamp_utc: 2026-07-26T18:49:41+00:00
+- git_sha: c599570b614512681c8aec6c2e6305a5490d7e3a
 - split: tpc_phase2_familiar_100_val (set=familiar_100_val, fold=0/1, n=80)
 - data_source_id: ijcai2026_phase2_familiar_100@sha256:32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c
 - data_source_url: https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip
 - data_source_archive_sha256: 32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c
 - budget_sec: 900.0
-- label: final-all3-on
+- label: final-night-csfirst-on
 - repeats: 1 (fresh=True)
 
 ## Rehearsal Attribution (FPR)
 
 - ceiling_fpr: unavailable (no evaluated ceiling plans for this data source)
-- solver_only_fpr: 26.2500
-- end_to_end_fpr: 21.2500
+- solver_only_fpr: 23.7500
+- end_to_end_fpr: 23.7500
 - solver_headroom: unavailable
-- parsing_loss: 5.0000
+- parsing_loss: 0.0000
 
 ## Run-To-Run Variance (across repeats)
 
 - repeats: 1
-- e2e_fpr mean/std: 21.2500 / 0.0000
-- solver_only_fpr mean/std: 26.2500 / 0.0000
-- e2e_overall_true mean/std: 45.4305 / 0.0000
-- solver_only_overall_true mean/std: 48.2603 / 0.0000
+- e2e_fpr mean/std: 23.7500 / 0.0000
+- solver_only_fpr mean/std: 23.7500 / 0.0000
+- e2e_overall_true mean/std: 53.5588 / 0.0000
+- solver_only_overall_true mean/std: 45.2697 / 0.0000
 
 ## Rehearsal Attribution (Continuous Score)
 
 - ceiling_overall_true_mean: unavailable (no evaluated ceiling plans for this data source)
-- solver_only_overall_true_mean: 48.2603
-- end_to_end_overall_true_mean: 45.4305
+- solver_only_overall_true_mean: 45.2697
+- end_to_end_overall_true_mean: 53.5588
 - overall_true_solver_headroom: unavailable
-- overall_true_parsing_loss: 2.8298
+- overall_true_parsing_loss: -8.2892
 - ceiling_overall_parsed_mean: unavailable (no evaluated ceiling plans for this data source)
-- solver_only_overall_parsed_mean: 46.5518
-- end_to_end_overall_parsed_mean: 46.7378
+- solver_only_overall_parsed_mean: 44.2722
+- end_to_end_overall_parsed_mean: 56.1765
 - overall_parsed_solver_headroom: unavailable
-- overall_parsed_parsing_loss: -0.1861
+- overall_parsed_parsing_loss: -11.9043
 
 ## Parser Vs Oracle
 
@@ -63,7 +63,7 @@
 ## LLM Parse Config
 
 - backend: deepinfra
-- model: (n/a)
+- model: Qwen/Qwen3.6-27B
 
 ## Phase 2 Flags (resolved for the e2e run)
 
@@ -76,8 +76,8 @@
 
 ## Timing And Reliability
 
-- total_p50_sec: 172.6381
-- total_p95_sec: 309.1444
+- total_p50_sec: 282.1716
+- total_p95_sec: 508.5817
 - valid_output_rate: 1.0000
 - timed_out: 0
 - used_fallback: 0
