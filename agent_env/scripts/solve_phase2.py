@@ -186,6 +186,24 @@ def apply_deterministic_solver_defaults():
       flat (e2e continuous ``47.98``) while cutting solve ``p50`` ``366 s -> 265 s`` (below even the
       floor's ``337 s``) -- reclaiming wall-clock and making the submission more robust to an
       organizer per-query timeout shorter than the assumed ``900 s``.
+    - ``TPC_COMMONSENSE_FIRST=1``: the commonsense-first finalization policy (relaxed repair commit
+      rule for unaccepted plans + the ``best_cs`` bucket in ``_solve``; see
+      ``docs/agents/final_night_commonsense_first.md``). ``eval_tpc`` scores C-LPR as the
+      *conditional* logical micro, so an emitted plan that fails commonsense forfeits its whole
+      logical partial credit (weight ``0.25``) and its EPR-macro point (``0.10``). Paired same-SHA
+      end-to-end screen (``results/phase2_baselines/screens/20260726_e2e_n40_b120_commonsense_first``,
+      ``familiar_100_val`` fold 0, ``n=40``, ``120 s``, ``parallel=7``, LLM backend ``none``):
+      ``overall_true`` ``51.34 -> 60.98``, commonsense pass ``30/40 -> 40/40``, EPR-macro
+      ``75 -> 100``, C-LPR ``67.35 -> 89.95``, FPR ``32.5 -> 35.0``, ``all_pass`` ``13 -> 14``, zero
+      parse failures. ``logical_micro`` is unchanged at ``89.95``, which is the proof of mechanism:
+      the gain is entirely the commonsense gate releasing logical credit the solver had already
+      earned. **Caveat:** timeouts rose ``4 -> 7`` at that deliberately tight budget (baseline solve
+      ``p50`` is already ``108 s`` of ``120 s``), all recovered with ``used_fallback=0`` -- the same
+      budget-boundary shape ``TPC_PIN_TIMED_WINDOWS`` showed at ``300 s`` and cleared at ``900 s``
+      (``p50 265 s`` there). The probe cost is bounded proportionally
+      (``TPC_CS_CHECK_TIME_FRAC=0.08`` of the solve budget, ``TPC_CS_CHECK_BUDGET=60``
+      confirmations), and ``docs/agents/final_night_eval_commands.md`` carries the ``900 s`` pinned
+      confirmation rows.
 
     Must run *before* ``make_tpcagent_solve_fn`` builds the agent: ``TPCAgent.__init__`` reads
     ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS`` is read lazily at pack time,
@@ -194,6 +212,8 @@ def apply_deterministic_solver_defaults():
         os.environ["TPC_PIN_TIMED_WINDOWS"] = "1"
     if "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ:
         os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] = "15"
+    if "TPC_COMMONSENSE_FIRST" not in os.environ:
+        os.environ["TPC_COMMONSENSE_FIRST"] = "1"
 
 
 def run_split(

@@ -235,11 +235,15 @@ def test_apply_deterministic_solver_defaults_promotes_pin_and_converge(monkeypat
 
     monkeypatch.delenv("TPC_PIN_TIMED_WINDOWS", raising=False)
     monkeypatch.delenv("TPC_SOLVE_CONVERGE_PATIENCE", raising=False)
+    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
 
     runner.apply_deterministic_solver_defaults()
 
     assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"
     assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "15"
+    # Promoted on the 2026-07-26 paired e2e screen (overall_true 51.34 -> 60.98, C-LPR
+    # 67.35 -> 89.95, commonsense pass 30/40 -> 40/40).
+    assert os.environ["TPC_COMMONSENSE_FIRST"] == "1"
 
 
 def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypatch):
@@ -249,21 +253,25 @@ def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypa
 
     monkeypatch.setenv("TPC_PIN_TIMED_WINDOWS", "0")
     monkeypatch.setenv("TPC_SOLVE_CONVERGE_PATIENCE", "7")
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "0")
 
     runner.apply_deterministic_solver_defaults()
 
     assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "0"
     assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "7"
+    assert os.environ["TPC_COMMONSENSE_FIRST"] == "0"
 
 
 def test_injected_solve_fn_does_not_leak_solver_defaults(tmp_path, monkeypatch):
     """Regression for the env-leak Copilot flagged on PR #41: run_split with an *injected* solve_fn
     builds no agent, so it must not mutate the process-global TPC_PIN_TIMED_WINDOWS /
-    TPC_SOLVE_CONVERGE_PATIENCE -- only the agent-building path (solve_fn is None) promotes them."""
+    TPC_SOLVE_CONVERGE_PATIENCE / TPC_COMMONSENSE_FIRST -- only the agent-building path
+    (solve_fn is None) promotes them."""
     import solve_phase2 as runner
 
     monkeypatch.delenv("TPC_PIN_TIMED_WINDOWS", raising=False)
     monkeypatch.delenv("TPC_SOLVE_CONVERGE_PATIENCE", raising=False)
+    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
 
     runner.run_split(
         "tpc_phase1",
@@ -277,3 +285,4 @@ def test_injected_solve_fn_does_not_leak_solver_defaults(tmp_path, monkeypatch):
 
     assert "TPC_PIN_TIMED_WINDOWS" not in os.environ
     assert "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ
+    assert "TPC_COMMONSENSE_FIRST" not in os.environ
