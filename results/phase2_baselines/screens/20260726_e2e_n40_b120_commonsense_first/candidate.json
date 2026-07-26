@@ -1,0 +1,43 @@
+{
+  "label": "TPC_COMMONSENSE_FIRST=1",
+  "env_overrides": {
+    "TPC_COMMONSENSE_FIRST": "1"
+  },
+  "wall_sec": 548.8,
+  "fpr": 35.0,
+  "continuous_score": 60.981,
+  "parse_failures": 0,
+  "timeouts": 7,
+  "telemetry_coverage": "40/40",
+  "telemetry": {
+    "n_telemetry": 40,
+    "timeouts": 7,
+    "recovered": 7,
+    "used_fallback": 0,
+    "errored": 0,
+    "valid_output": 40,
+    "llm_parse_fired": 0,
+    "llm_parse_skipped": 0,
+    "llm_parse_errored": 0,
+    "refine_called": 0,
+    "refine_committed": 0,
+    "refine_second_attempts": 0,
+    "solve_sec_mean": 84.56602624378574,
+    "solve_sec_p50": 108.13359758304432,
+    "solve_sec_p90": 108.90075933304615
+  },
+  "layers": {
+    "commonsense_pass_count": 40,
+    "commonsense_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "logical_micro": 89.95433789954338,
+    "logical_macro": 35.0,
+    "conditional_logical_micro": 89.95433789954338,
+    "all_pass_count": 14
+  },
+  "quality_n": {
+    "requested": 40,
+    "evaluated": 40,
+    "missing": 0
+  }
+}
