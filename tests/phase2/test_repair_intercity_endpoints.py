@@ -324,3 +324,85 @@ def test_broken_outbound_endpoint_is_repaired_symmetrically():
     assert first.get("start") == "A Station"
     assert second.get("transports") == _leg("B Station", "Hotel B", "08:00")
     assert agent._accepted(*check(plan)) is True
+
+
+# --- unaccepted-plan commit rule (TPC_COMMONSENSE_FIRST) --------------------------------------
+#
+# 3 of the 21 failing end-to-end plans on the promoted row fail all four intercity commonsense
+# columns at once ("Intercity transportation events must occur" and friends). Those plans are also
+# unaccepted, so the legacy `if not self._accepted(*check(trial)): return` guard discarded the
+# re-grounding every time -- see docs/agents/final_night_commonsense_first.md.
+
+
+def _endpoints_grounded(plan):
+    """Mirror of the endpoint checker's verdict, used as the stubbed commonsense verdict."""
+    return _endpoint_checker(ROWS)(plan) == (1, 1)
+
+
+def _never_accepted_endpoint_check(plan):
+    """Grounded endpoints raise the parsed-pass count but one clause always fails."""
+    passed, _ = _endpoint_checker(ROWS)(plan)
+    return (passed, 2)
+
+
+def _unaccepted_agent(*, schema_ok=True, commonsense_from_endpoints=True):
+    agent = _bare_agent(ROWS)
+    agent._schema_ok = lambda query, plan: schema_ok
+    if commonsense_from_endpoints:
+        agent._commonsense_ok = lambda query, plan: _endpoints_grounded(plan)
+    else:
+        agent._commonsense_ok = lambda query, plan: False
+    return agent
+
+
+def test_unaccepted_plan_untouched_when_umbrella_flag_off(monkeypatch):
+    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
+    monkeypatch.setenv("TPC_REPAIR_INTERCITY", "1")
+    agent = _unaccepted_agent()
+    plan = _base_plan()
+    snapshot = deepcopy(plan)
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, _never_accepted_endpoint_check)
+
+    assert plan == snapshot  # byte-identical floor without the umbrella
+
+
+def test_unaccepted_plan_regrounded_under_commonsense_first(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent()
+    plan = _base_plan()
+    assert _endpoints_grounded(plan) is False
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, _never_accepted_endpoint_check)
+
+    first = plan["itinerary"][0]["activities"][0]
+    assert first["TrainID"] == "T_GO_1"
+    assert first["price"] == 120
+    assert first["cost"] == 240  # 120 x 2 tickets
+    assert _endpoints_grounded(plan) is True
+
+
+def test_unaccepted_commit_refused_when_commonsense_stays_invalid(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent(commonsense_from_endpoints=False)
+    plan = _base_plan()
+    snapshot = deepcopy(plan)
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, _never_accepted_endpoint_check)
+
+    assert plan == snapshot
+
+
+def test_unaccepted_commit_refused_when_parsed_passes_drop(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent()
+    plan = _base_plan()
+    snapshot = deepcopy(plan)
+
+    def check(p):
+        # The grounded endpoint breaks one parsed clause (e.g. an intercity budget cap).
+        return (1, 3) if _endpoints_grounded(p) else (2, 3)
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    assert plan == snapshot

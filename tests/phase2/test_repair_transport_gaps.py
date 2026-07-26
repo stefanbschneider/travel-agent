@@ -297,3 +297,163 @@ def test_get_transport_resilient_none_when_every_mode_fails():
 def test_get_transport_resilient_same_position_short_circuits():
     agent = _resilient_agent()
     assert agent._get_transport_resilient(None, "Chongqing", "Hotel", "Hotel", "08:30", 1) == ([], "08:30")
+
+
+# --- unaccepted-plan commit rule (TPC_COMMONSENSE_FIRST) --------------------------------------
+#
+# The regime the legacy rule could never reach. An emitted plan that fails some parsed logical
+# constraint is unaccepted by definition, so `if not self._accepted(*check(trial)): return` threw
+# away a transport repair on exactly the plans whose commonsense failure zeroes their C-LPR (scored
+# conditionally on the commonsense pass) and their EPR-macro point. 13 of the 21 failing end-to-end
+# plans on the promoted row fail "Invalid Transport information across positions".
+
+
+def _legs_connected(plan):
+    """True when every non-first activity's inbound leg connects the previous position to its own."""
+    prev_pos = None
+    for day in plan.get("itinerary", []):
+        for a in day.get("activities", []):
+            pos = a.get("position") or a.get("end") or a.get("start")
+            if prev_pos is not None and pos != prev_pos:
+                legs = a.get("transports") or []
+                if not legs or legs[0]["start"] != prev_pos or legs[-1]["end"] != pos:
+                    return False
+            prev_pos = pos
+    return True
+
+
+def _unaccepted_agent(*, commonsense_from_legs=True, schema_ok=True):
+    """Bare agent whose commonsense verdict tracks leg connectivity, never fully accepted."""
+    agent = _bare_agent(_zero_time_transport)
+    agent._schema_ok = lambda query, plan: schema_ok
+    if commonsense_from_legs:
+        agent._commonsense_ok = lambda query, plan: _legs_connected(plan)
+    else:
+        agent._commonsense_ok = lambda query, plan: False
+    return agent
+
+
+def _never_accepted_check(plan):
+    """One parsed constraint always fails, so ``_accepted`` is False before and after the repair."""
+    return (1, 2)
+
+
+def test_unaccepted_plan_untouched_when_umbrella_flag_off(monkeypatch):
+    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
+    monkeypatch.setenv("TPC_REPAIR_TRANSPORT_GAPS", "1")
+    agent = _unaccepted_agent()
+    plan = _broken_plan()
+    snapshot = _broken_plan()
+
+    agent._repair_transport_gaps(plan, QUERY, {}, _never_accepted_check)
+
+    assert plan == snapshot  # byte-identical floor: no commit without the umbrella
+
+
+def test_unaccepted_plan_repaired_under_commonsense_first(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent()
+    plan = _broken_plan()
+    assert agent._commonsense_ok(QUERY, plan) is False
+
+    agent._repair_transport_gaps(plan, QUERY, {}, _never_accepted_check)
+
+    assert plan["itinerary"][0]["activities"][1]["transports"] == _leg("Park", "Restaurant", "10:00")
+    assert agent._commonsense_ok(QUERY, plan) is True
+
+
+def test_unaccepted_commit_refused_when_parsed_passes_drop(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent()
+    plan = _broken_plan()
+    snapshot = _broken_plan()
+
+    def check(p):
+        # The repaired trial (connected legs) satisfies one fewer parsed constraint, e.g. a
+        # transport-cost budget clause the grounded leg now breaks.
+        return (1, 3) if _legs_connected(p) else (2, 3)
+
+    agent._repair_transport_gaps(plan, QUERY, {}, check)
+
+    assert plan == snapshot
+
+
+def test_unaccepted_commit_refused_when_commonsense_stays_invalid(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent(commonsense_from_legs=False)
+    plan = _broken_plan()
+    snapshot = _broken_plan()
+
+    agent._repair_transport_gaps(plan, QUERY, {}, _never_accepted_check)
+
+    assert plan == snapshot
+
+
+def test_unaccepted_commit_refused_when_schema_breaks(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent(schema_ok=False)
+    plan = _broken_plan()
+    snapshot = _broken_plan()
+
+    agent._repair_transport_gaps(plan, QUERY, {}, _never_accepted_check)
+
+    assert plan == snapshot
+
+
+def test_already_commonsense_valid_unaccepted_plan_is_not_touched(monkeypatch):
+    """Nothing to gain: the plan already passes commonsense, so the repair must not spend cost."""
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _bare_agent(_zero_time_transport)
+    agent._schema_ok = lambda query, plan: True
+    agent._commonsense_ok = lambda query, plan: True
+    plan = _broken_plan()
+    snapshot = _broken_plan()
+
+    agent._repair_transport_gaps(plan, QUERY, {}, _never_accepted_check)
+
+    assert plan == snapshot
+
+
+def test_accepted_input_keeps_legacy_strict_rule(monkeypatch):
+    """An accepted plan must still be judged by acceptance + preference non-regression only."""
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _unaccepted_agent()
+    plan = _broken_plan()
+    snapshot = _broken_plan()
+
+    # Input reads as accepted, and the repaired trial does not: legacy rule must revert.
+    def check(p):
+        return (0, 1) if _legs_connected(p) else (1, 1)
+
+    agent._repair_transport_gaps(plan, QUERY, {}, check)
+
+    assert plan == snapshot
+
+
+# --- umbrella flag wiring ---------------------------------------------------------------------
+
+
+def test_umbrella_flag_enables_both_repair_passes(monkeypatch):
+    monkeypatch.delenv("TPC_REPAIR_TRANSPORT_GAPS", raising=False)
+    monkeypatch.delenv("TPC_REPAIR_INTERCITY", raising=False)
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    agent = _bare_agent()
+    assert agent._commonsense_first_enabled() is True
+    assert agent._repair_transport_gaps_enabled() is True
+    assert agent._repair_intercity_enabled() is True
+
+
+def test_explicit_zero_overrides_umbrella(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    monkeypatch.setenv("TPC_REPAIR_TRANSPORT_GAPS", "0")
+    agent = _bare_agent()
+    assert agent._repair_transport_gaps_enabled() is False
+    assert agent._repair_intercity_enabled() is True
+
+
+def test_umbrella_flag_off_by_default(monkeypatch):
+    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
+    monkeypatch.delenv("TPC_REPAIR_TRANSPORT_GAPS", raising=False)
+    agent = _bare_agent()
+    assert agent._commonsense_first_enabled() is False
+    assert agent._repair_transport_gaps_enabled() is False
