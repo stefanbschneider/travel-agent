@@ -449,6 +449,17 @@ class TPCAgent(BaseAgent):
         pinned gate before any promotion."""
         return os.environ.get("TPC_REPAIR_TRANSPORT_GAPS", "0") not in ("", "0", "false", "False")
 
+    def _cascade_timed_windows_enabled(self):
+        """Opt-in cascading forward-shift fallback for the post-pin ``timed_visit_named_poi``
+        residual -- still the dominant solver-only failure family *after* ``TPC_PIN_TIMED_WINDOWS``
+        (see the roadmap's "Cascading timed-window shift" section for the measured attribution).
+
+        Default OFF, so the deterministic floor -- and the existing pin flow when this is unset --
+        stays byte-identical: the fallback branch in ``_pin_timed_windows`` is skipped entirely.
+        Enable with ``TPC_CASCADE_TIMED_WINDOWS=1``. Only meaningful together with
+        ``TPC_PIN_TIMED_WINDOWS``, since it runs as a fallback inside ``_pin_timed_windows``."""
+        return os.environ.get("TPC_CASCADE_TIMED_WINDOWS", "0") not in ("", "0", "false", "False")
+
     def _apply_search_constraints(self, constraints, params):
         """Project per-POI dwell/time-window POIs into the required pools (so the base build
         includes them) and a window's latest-start onto an arrive_no_later timing constraint
@@ -1485,8 +1496,29 @@ class TPCAgent(BaseAgent):
                 continue
             # Same-slot retime lacked slack (a fixed neighbour blocks it) -- try reordering the
             # whole day around its target windows instead (roadmap G8 day-resequencer follow-on).
+            resequenced = False
             for day_idx, act_idx in matches:
                 if self._resequence_day(plan, day_idx, query, constraints, check):
+                    resequenced = True
+                    break
+            if resequenced or not self._cascade_timed_windows_enabled():
+                continue
+            # Cascading forward-shift fallback (opt-in; post-pin timed_visit residual). The day is
+            # already in the right ORDER but a windowed activity still starts too early, and pushing
+            # it into its window ripples a delay onto the following activities: _try_pin_activity
+            # reverts that push ("no cascading reorder") and _resequence_day bails because the order
+            # is unchanged. Re-lay the day's movable block in its *current* order with the windows
+            # honored, so the clamp cascades the delay through the following legs. Deepcopy-trialed
+            # and committed only on a still-accepting, non-regressing plan, same as the moves above.
+            # _enforce_windows_in_order re-lays the whole day honoring every window, so one call per
+            # day suffices even when several matched activities share a day -- dedup by day_idx to
+            # avoid redundant deepcopy+relayout+check work.
+            seen_days = set()
+            for day_idx, _act_idx in matches:
+                if day_idx in seen_days:
+                    continue
+                seen_days.add(day_idx)
+                if self._enforce_windows_in_order(plan, day_idx, query, constraints, check):
                     break
 
     def _activity_in_window(self, plan, day_idx, act_idx, lo, hi):
@@ -1654,6 +1686,59 @@ class TPCAgent(BaseAgent):
         trial = deepcopy(plan)
         if not self._relayout_movable_block(trial, day_idx, movable_slots, order, city, people,
                                              windows=windows):
+            return False
+
+        before_key = self._accepted_eval_key(plan)
+        try:
+            if self._accepted(*check(trial)) and self._accepted_eval_key(trial) >= before_key:
+                plan["itinerary"][day_idx]["activities"] = trial["itinerary"][day_idx]["activities"]
+                return True
+        except Exception:
+            return False
+        return False
+
+    def _enforce_windows_in_order(self, plan, day_idx, query, constraints, check):
+        """Cascading forward-shift move (opt-in; post-pin ``timed_visit_named_poi`` residual).
+
+        For the case neither ``_try_pin_activity`` nor ``_resequence_day`` handles: the day is
+        already in the correct order, but a windowed activity still starts before its
+        ``[earliest, end_before]`` clause window, and clamping it into that window would push the
+        following activities later. ``_try_pin_activity`` reverts such a push ("no cascading
+        reorder") and ``_resequence_day`` returns early because the target order equals the current
+        order -- so the window stays unsatisfied. This re-lays the day's contiguous movable
+        (meal/attraction) block in its *current* order with the windows honored, reusing
+        ``_relayout_movable_block``: each windowed slot is clamped to ``max(arrival, earliest)`` and
+        the resulting delay ripples through every following inbound leg. Intercity legs and the
+        day's fixed head/tail are never moved, and if the ripple makes a downstream fixed activity
+        (e.g. an evening train) unreachable, the relayout fails and nothing is committed.
+
+        Deepcopy-trialed and committed only if the full checker still accepts and the preference key
+        does not regress -- the same commit rule as ``_try_pin_activity`` / ``_resequence_day``."""
+        activities = plan["itinerary"][day_idx].get("activities", []) or []
+        movable_slots = [
+            i for i, a in enumerate(activities)
+            if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
+        ]
+        if not movable_slots:
+            return False
+        if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+            # Same contiguity requirement as _resequence_day: a fixed activity between two movable
+            # ones is not safe to re-leg across.
+            return False
+        windows = [
+            w for w in (constraints.get("activity_time_windows", []) or [])
+            if isinstance(w, dict) and w.get("location") and (w.get("earliest") or w.get("end_before"))
+        ]
+        if not windows:
+            return False
+
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        identity_order = list(range(len(movable_slots)))
+
+        trial = deepcopy(plan)
+        if not self._relayout_movable_block(trial, day_idx, movable_slots, identity_order, city,
+                                            people, windows=windows):
             return False
 
         before_key = self._accepted_eval_key(plan)

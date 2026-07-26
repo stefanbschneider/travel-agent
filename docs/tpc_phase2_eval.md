@@ -370,13 +370,15 @@ FPR at `900 s` while keeping local iteration cheap.
 
 ## Command path
 
-Use Make targets rather than duplicating script arguments:
+Use Make targets rather than duplicating script arguments. `P2_BUDGET=900` is the primary gate
+budget (see [Baselines and repetitions](#baselines-and-repetitions)); the smaller budgets below are
+just quick-iteration examples — use `900` for any row you intend to gate or promote.
 
 ```bash
-make phase2-rehearse FOLD=0 P2_FOLDS=10 P2_BUDGET=300 P2_LIMIT=20
+make phase2-rehearse FOLD=0 P2_FOLDS=10 P2_BUDGET=300 P2_LIMIT=20     # quick smoke; gate rows use P2_BUDGET=900
 make phase2-parser-report P2_LIMIT=20
-make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=300 P2_LIMIT=20 P2_REPEATS=2 P2_LABEL=<tag>
-make phase2-timing P2_METHOD=<method> P2_BUDGET=300
+make phase2-baseline FOLD=0 P2_FOLDS=10 P2_BUDGET=900 P2_REPEATS=2 P2_LABEL=<tag>   # promotable row: full split, 900s
+make phase2-timing P2_METHOD=<method> P2_BUDGET=900
 ```
 
 Use `make phase2-help` for the full catalog.
