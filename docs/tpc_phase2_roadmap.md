@@ -19,6 +19,7 @@ Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260
 - **Parser lifted from `~0.20` to `~0.99` familiar-100 F1** with zero missing families — the last step being the comma-in-name entity-resolution segmentation fix (`62df2a0b`, F1 `0.9316 -> 0.9908`; see [the parser chronology in the archive](archive/README.md)).
 - **Timed-window pinning and a within-day resequencer landed opt-in** behind `TPC_PIN_TIMED_WINDOWS` (default off, floor byte-identical), targeting the dominant solver-only failure family. **Gated at `300 s` (PR [#34](https://github.com/stefanbschneider/china-travel-agent/pull/34)): quality up, timeouts regress, not promoted. Re-gated clean at `900 s`** (`familiar_100_val`, sha `a72357c3`, rows [floor](../results/phase2_baselines/runs/20260723T200723Z.json)/[pin](../results/phase2_baselines/runs/20260724T071840Z.json)): e2e continuous `43.72 -> 48.04`, FPR `20.0 -> 25.0`, **timeouts `0 -> 0`** — the `300 s` regression was a budget-boundary artifact, not a real cost; `make phase2-gate` **passes**. Paired with `TPC_SOLVE_CONVERGE_PATIENCE=15` ([row](../results/phase2_baselines/runs/20260724T192503Z.json)) quality holds flat while wall-clock drops further (solve `p50` `366s -> 265s`, below even the floor's `337s`). **Promoted (role 3): both are now harness-default-on** via `solve_phase2.apply_deterministic_solver_defaults()` (called at the top of `run_split`, before the agent is built), mirroring the disjunction/entity-resolution promotion pattern — the library default (unset env var) and the byte-identical opt-in unit tests are unchanged, and an explicit operator override (e.g. the eval tooling's flags-off A/B arm) still wins. `TPC_SOLVE_CONVERGE_PATIENCE=15` is defaulted alongside pin both for the wall-clock win and as a hedge: it makes the submission robust to an organizer per-query timeout shorter than the assumed `900 s` (see [Solver-only headroom](#solver-only-headroom)).
 - **A commonsense-first finalization policy landed and is promoted (`TPC_COMMONSENSE_FIRST`, harness-default-on).** It relaxes the repair-pass commit rule for unaccepted plans and prefers a schema+commonsense-valid candidate at finalization, because the scored C-LPR is conditional on the commonsense pass. Paired `120 s` e2e screen: `overall_true` `51.34 -> 60.98`, C-LPR `67.35 -> 89.95`, commonsense pass `30/40 -> 40/40`, FPR `32.5 -> 35.0`, `logical_micro` flat (see [Commonsense-first finding](#commonsense-first-finding)).
+- **Preference packing landed opt-in behind three flags**: `TPC_PACK_DAV`, `TPC_PACK_DDR`, and `TPC_PACK_HOTEL_BREAKFAST` (all library-default-off, floor byte-identical). The follow-up Task 3 ports the Phase 1 maxpack moves into `_pack_plan` only for already accepted plans, with accepted-key guards and ATT protection via shortest-time rerouting. `TPC_PACK_DAV` screened RED on [`20260726_e2e_n40_b120_pack_dav`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_pack_dav/summary.json): FPR `37.5 -> 32.5`, `overall_true` `61.19 -> 59.32`, timeouts `3 -> 5`. `TPC_PACK_DDR` screened GREEN on [`20260726_e2e_n40_b120_pack_ddr`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_pack_ddr/summary.json): FPR `35.0 -> 37.5`, `overall_true` `60.17 -> 61.36`, timeouts `4 -> 2`; a dedicated full-split `120 s` `eval_tpc.py` comparison was still mixed (official DDR `58.89 -> 65.28`, C-LPR `85.39 -> 86.18`, overall `62.98 -> 63.09`, but FPR `31.25 -> 30.0`), so nothing is promoted from this follow-up. `TPC_PACK_HOTEL_BREAKFAST` remains off pending explicit human approval because its gain depends on the official DDR loophole while the patched score intentionally removes that benefit.
 - **A commonsense-transport repair pass landed opt-in** behind `TPC_REPAIR_TRANSPORT_GAPS` (default off, floor byte-identical), targeting the "Invalid Transport information across positions" residual (see [Commonsense-transport repair](#commonsense-transport-repair)). Since the commonsense-first promotion it is also enabled implicitly by `TPC_COMMONSENSE_FIRST`.
 - **A cascading forward-shift move for the post-pin residual landed opt-in** behind `TPC_CASCADE_TIMED_WINDOWS` (default off, floor byte-identical), targeting the *post-pin* `timed_visit_named_poi` residual — the case where the day is already in the right order but clamping a windowed activity into its window ripples a delay onto the following activities, which `_try_pin_activity` reverts and `_resequence_day` skips. **Gated at `900 s`: no measurable effect, not promoted** (see [Cascading timed-window shift](#cascading-timed-window-shift)).
 - **An early-convergence stop for the random-restart search landed opt-in** behind `TPC_SOLVE_CONVERGE_PATIENCE` (**library** default `0`/off so the floor stays byte-identical; **harness**-default `15` since the `900 s` promotion in the pinning bullet above), targeting the budget-bound-solver-with-no-early-convergence shortcoming (see [Solver-only headroom](#solver-only-headroom)).
@@ -104,7 +105,7 @@ Confirmation commands for a second machine: [`docs/agents/final_night_eval_comma
 | Paired e2e screen, `n=40`, `120 s`, `parallel=7` | `overall_true` `51.34 -> 60.98`, C-LPR `67.35 -> 89.95`, commonsense pass `30/40 -> 40/40`, FPR `32.5 -> 35.0` |
 | Promotion | `TPC_COMMONSENSE_FIRST=1` is a harness default (`apply_deterministic_solver_defaults`) |
 | LLM reachability (optional Task 9) | **not attempted**; see [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls) |
-| Preference packing | **deliberately skipped**; sized at `3.03` official points, second priority |
+| Preference packing | skipped that night; implemented later behind `TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_HOTEL_BREAKFAST`, not promoted from current evidence |
 
 What was explicitly *not* done, and stays not done: no new solver move, no new parser family, no
 agentic loop, no promotion of `TPC_CASCADE_TIMED_WINDOWS`, and no change to Stage 3 refine (both
@@ -284,21 +285,19 @@ order of measured leverage. Implementation-level detail for items 2-4 lives in
    trips before re-placing the endpoint. Small, deterministic, and it is what the endpoint repair
    needs to become effective on that family.
 
-3. **Then reconsider preference packing.** Measured headroom on all-pass plans is `3.03` points of
-   `eval_tpc`'s official aggregate (DAV `85.94`, ATT `88.10`, **DDR `65.42`** — the meal count is the
-   weak axis, and Phase 1's free-hotel-breakfast trick is the known lever). Worth `0.76` on this row's
-   per-query mean, because preference is averaged over all-pass queries only; the official aggregate
-   is the number that counts. Re-check with
-   `.venv/bin/python scripts/phase2_commonsense_headroom.py`.
-
-4. **Close LLM reachability before adding any LLM stage.** The packaged submission cannot reach the
+3. **Close LLM reachability before adding any LLM stage.** The packaged submission cannot reach the
    organizers' endpoint at all (see
    [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls)). Auto-detecting an
    OpenAI-compatible base URL with the parse audit still default-off is the prerequisite; only then is
    a three-arm parse screen (off / audit / `extract`) meaningful.
 
-5. **Do not promote `TPC_CASCADE_TIMED_WINDOWS` from existing evidence**, and keep both Stage 3 refine
+4. **Do not promote `TPC_CASCADE_TIMED_WINDOWS` from existing evidence**, and keep both Stage 3 refine
    variants off until a screen shows `improve_committed > 0`.
+
+Packing note: the only follow-up packing flag with a green quick screen is `TPC_PACK_DDR`, but the
+dedicated full-split `120 s` evaluation remained mixed enough that no packing flag is a harness
+default today. `TPC_PACK_HOTEL_BREAKFAST` stays off until a human explicitly decides the official-
+versus-patched DDR split is acceptable.
 
 **Status note, not a priority item: the cascade fallback for the residual pin leaves behind (`TPC_CASCADE_TIMED_WINDOWS`) gated at `900 s` with no measurable effect** — flat on solver-only (its own target axis), and the apparent end-to-end lift does not clear its own repeat-to-repeat noise; see [Cascading timed-window shift](#cascading-timed-window-shift) for the full breakdown. Not promoted.
 

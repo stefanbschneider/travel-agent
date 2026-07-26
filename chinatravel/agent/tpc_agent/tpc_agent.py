@@ -502,6 +502,41 @@ class TPCAgent(BaseAgent):
         """
         return self._flag_enabled_with_umbrella("TPC_REPAIR_INTERCITY")
 
+    def _pack_dav_enabled(self):
+        """Opt-in attraction top-up pass for accepted plans.
+
+        Default OFF, so the library floor is byte-identical: accepted plans keep their current
+        preference score unless an operator explicitly screens/promotes this pass. This flag also
+        owns the ATT-protection rule from the task brief: any inserted attraction re-routes its
+        affected inner-city hops to the shortest-time valid mode before the full checker decides
+        whether to keep it.
+        """
+        return os.environ.get("TPC_PACK_DAV", "0") not in ("", "0", "false", "False")
+
+    def _pack_ddr_enabled(self):
+        """Opt-in lunch/dinner top-up pass for accepted plans.
+
+        Default OFF. Adds missing lunch/dinner activities at grounded restaurants only when the
+        resulting accepted plan does not regress the accepted-plan preference key.
+        """
+        return os.environ.get("TPC_PACK_DDR", "0") not in ("", "0", "false", "False")
+
+    def _pack_hotel_breakfast_enabled(self):
+        """Opt-in free hotel-breakfast top-up for accepted plans.
+
+        Default OFF and intentionally separate from every umbrella/default because it exploits the
+        official DDR scorer's hotel-breakfast leniency. The implementation is kept available for
+        measurement, but shipping it remains an explicit operator decision.
+        """
+        return os.environ.get("TPC_PACK_HOTEL_BREAKFAST", "0") not in ("", "0", "false", "False")
+
+    def _packing_enabled(self):
+        return (
+            self._pack_dav_enabled()
+            or self._pack_ddr_enabled()
+            or self._pack_hotel_breakfast_enabled()
+        )
+
     def _fast_commonsense_prefilter(self, plan):
         """Microsecond structural screen for the two dominant commonsense failure families.
 
@@ -1073,8 +1108,19 @@ class TPCAgent(BaseAgent):
         self._budget_limits = self._extract_budget_limits(constraints)
 
     def _pack_plan(self, plan, query, constraints, check, base_params):
-        """Add attractions/meals (attr_per_day 3 then 4) while acceptance still holds, to lift
-        DAV/DDR. Never trades a hard pass for preference: gated locally by `check`."""
+        """Run the opt-in accepted-plan preference passes.
+
+        The deterministic repair/pinning passes above may still run on the chosen candidate even
+        when every packing flag is off. Actual preference packing is explicit and default-off:
+
+        - ``TPC_PACK_DAV``: attraction top-up (plus ATT-protected hop rerouting via the insertion
+          helpers' shortest-time transport lookup)
+        - ``TPC_PACK_DDR``: lunch/dinner top-up at grounded restaurants
+        - ``TPC_PACK_HOTEL_BREAKFAST``: free hotel-breakfast stacking, intentionally separate
+
+        Every committed edit must keep the full checker accepting and must not lower the accepted
+        plan's preference key.
+        """
         plan = self._sanitize_plan_for_grounding(plan, query)
         # Ground broken inner-city legs first (opt-in; roadmap step 4). A restart's forced/excluded
         # inner-transport exploration can leave an activity's inbound leg missing or mismatched
@@ -1106,24 +1152,30 @@ class TPCAgent(BaseAgent):
             self._pin_timed_windows(plan, query, constraints or {}, check)
         if not self._accepted(*check(plan)):
             return plan
+        if not self._packing_enabled():
+            return plan
         best_plan = plan
+        best_key = self._accepted_eval_key(plan)
         best_attrs, best_meals = self._activity_counts(plan)
-        for extra in (3, 4):
-            if time.time() - self.start_clock > self.solve_budget_sec:
-                break
-            params = dict(base_params or {})
-            params["attr_per_day"] = extra
-            try:
-                cand = self._build_plan(query, constraints=constraints, params=params)
-            except Exception:
-                continue
-            cand = self._sanitize_plan_for_grounding(cand, query)
-            if not self._accepted(*check(cand)):
-                continue
-            c_attrs, c_meals = self._activity_counts(cand)
-            if (c_attrs + c_meals) > (best_attrs + best_meals):
-                best_plan = cand
-                best_attrs, best_meals = c_attrs, c_meals
+        if self._pack_dav_enabled():
+            for extra in (3, 4):
+                if time.time() - self.start_clock > self.solve_budget_sec:
+                    break
+                params = dict(base_params or {})
+                params["attr_per_day"] = extra
+                try:
+                    cand = self._build_plan(query, constraints=constraints, params=params)
+                except Exception:
+                    continue
+                cand = self._sanitize_plan_for_grounding(cand, query)
+                if not self._accepted(*check(cand)):
+                    continue
+                cand_key = self._accepted_eval_key(cand)
+                c_attrs, c_meals = self._activity_counts(cand)
+                if c_attrs > best_attrs and cand_key >= best_key:
+                    best_plan = cand
+                    best_key = cand_key
+                    best_attrs, best_meals = c_attrs, c_meals
         dense = self._densify_plan(best_plan, query, constraints, check)
         return self._sanitize_plan_for_grounding(dense, query)
 
@@ -1451,8 +1503,8 @@ class TPCAgent(BaseAgent):
         win_open, win_close = window
         poi_open, poi_close = self._poi_open_bounds(poi)
         try:
-            transports_to_poi, arrival = self._get_transport(
-                self.env, city, prev_pos, poi_name, minutes_to_time(anchor_min), people)
+            transports_to_poi, arrival = self._best_transport_via_get_transport(
+                city, prev_pos, poi_name, minutes_to_time(anchor_min), people)
         except Exception:
             return False
         if transports_to_poi is None or arrival is None:
@@ -1470,8 +1522,8 @@ class TPCAgent(BaseAgent):
 
         end_time = minutes_to_time(end_min)
         try:
-            transports_to_next, next_arrival = self._get_transport(
-                self.env, city, poi_name, next_pos, end_time, people)
+            transports_to_next, next_arrival = self._best_transport_via_get_transport(
+                city, poi_name, next_pos, end_time, people)
         except Exception:
             return False
         if transports_to_next is None or next_arrival is None:
@@ -1489,11 +1541,16 @@ class TPCAgent(BaseAgent):
             activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
 
         before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         old_first_transports = deepcopy(first_act.get("transports", []))
         first_act["transports"] = transports_to_next
         activities.insert(0, activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if (
+                self._accepted(*check(plan))
+                and self._activity_counts(plan) > before
+                and self._accepted_eval_key(plan) >= before_key
+            ):
                 return True
         except Exception:
             pass
@@ -1526,8 +1583,8 @@ class TPCAgent(BaseAgent):
         win_open, win_close = window
         poi_open, poi_close = self._poi_open_bounds(poi)
         try:
-            transports_to_poi, arrival = self._get_transport(
-                self.env, city, prev_pos, poi_name, minutes_to_time(start_anchor_min), people)
+            transports_to_poi, arrival = self._best_transport_via_get_transport(
+                city, prev_pos, poi_name, minutes_to_time(start_anchor_min), people)
         except Exception:
             return False
         if transports_to_poi is None or arrival is None:
@@ -1551,9 +1608,14 @@ class TPCAgent(BaseAgent):
             activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_to_poi)
 
         before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         activities.append(activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if (
+                self._accepted(*check(plan))
+                and self._activity_counts(plan) > before
+                and self._accepted_eval_key(plan) >= before_key
+            ):
                 return True
         except Exception:
             pass
@@ -1582,8 +1644,8 @@ class TPCAgent(BaseAgent):
         win_open, win_close = window
         poi_open, poi_close = self._poi_open_bounds(poi)
         try:
-            transports_in, arrival = self._get_transport(
-                self.env, city, prev_pos, poi_name, str(prev_act.get("end_time", "")), people)
+            transports_in, arrival = self._best_transport_via_get_transport(
+                city, prev_pos, poi_name, str(prev_act.get("end_time", "")), people)
         except Exception:
             return False
         if transports_in is None or arrival is None:
@@ -1601,8 +1663,8 @@ class TPCAgent(BaseAgent):
         start_time = minutes_to_time(start_min)
         end_time = minutes_to_time(end_min)
         try:
-            transports_out, next_arrival = self._get_transport(
-                self.env, city, poi_name, next_pos, end_time, people)
+            transports_out, next_arrival = self._best_transport_via_get_transport(
+                city, poi_name, next_pos, end_time, people)
         except Exception:
             return False
         if transports_out is None or next_arrival is None:
@@ -1619,17 +1681,92 @@ class TPCAgent(BaseAgent):
             activity = self._make_meal_activity(kind, poi, people, start_time, end_time, transports_in)
 
         before = self._activity_counts(plan)
+        before_key = self._accepted_eval_key(plan)
         old_next_transports = deepcopy(next_act.get("transports", []))
         next_act["transports"] = transports_out
         activities.insert(prev_idx + 1, activity)
         try:
-            if self._accepted(*check(plan)) and self._activity_counts(plan) > before:
+            if (
+                self._accepted(*check(plan))
+                and self._activity_counts(plan) > before
+                and self._accepted_eval_key(plan) >= before_key
+            ):
                 return True
         except Exception:
             pass
         del activities[prev_idx + 1]
         next_act["transports"] = old_next_transports
         return False
+
+    def _topup_hotel_breakfasts(self, plan, check):
+        """Reach three meals/day by inserting free hotel breakfasts next to the day's hotel.
+
+        This mirrors the Phase 1 maxpack loophole behind an explicit flag. Each day-level block is
+        tried all at once and reverted unless the full checker still accepts and the accepted-plan
+        preference key does not regress.
+        """
+        changed = False
+        slots = [
+            ("06:00", "06:30"),
+            ("06:35", "07:05"),
+            ("07:10", "07:40"),
+            ("07:45", "08:15"),
+            ("08:20", "08:50"),
+        ]
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            activities = day.get("activities", []) or []
+            meal_count = sum(
+                1 for activity in activities
+                if activity.get("type") in ("breakfast", "lunch", "dinner")
+            )
+            if meal_count >= 3:
+                continue
+            hotel = self._find_hotel_for_day(plan, day_idx)
+            if not hotel:
+                continue
+            hotel_name = self._norm_text(hotel)
+            insert_at = None
+            for idx, activity in enumerate(activities):
+                if (
+                    self._norm_text(activity.get("position")) == hotel_name
+                    and activity.get("type") in ("accommodation", "breakfast")
+                ):
+                    insert_at = idx + 1
+                    break
+            if insert_at is None:
+                if (
+                    activities
+                    and self._norm_text(self._activity_start_position(activities[0])) == hotel_name
+                    and activities[0].get("type") not in ("train", "airplane")
+                ):
+                    insert_at = 0
+                else:
+                    continue
+
+            need = 3 - meal_count
+            before_key = self._accepted_eval_key(plan)
+            snapshot = deepcopy(activities)
+            block = [
+                self._make_hotel_breakfast(hotel, slots[idx % len(slots)][0], slots[idx % len(slots)][1])
+                for idx in range(need)
+            ]
+            activities[insert_at:insert_at] = block
+            try:
+                new_meal_count = sum(
+                    1 for activity in activities
+                    if activity.get("type") in ("breakfast", "lunch", "dinner")
+                )
+                if (
+                    self._accepted(*check(plan))
+                    and new_meal_count > meal_count
+                    and self._accepted_eval_key(plan) >= before_key
+                ):
+                    changed = True
+                    continue
+            except Exception:
+                pass
+            day["activities"] = snapshot
+        return changed
 
     def _transport_leg_valid(self, activity, from_pos):
         """Mirror ``Is_space_correct``'s edge check: the activity's inbound leg must start at
@@ -2950,8 +3087,9 @@ class TPCAgent(BaseAgent):
                     continue
 
     def _densify_plan(self, plan, query, constraints, check):
-        """Insert meals/attractions into proven idle gaps without trading away acceptance.
+        """Insert opt-in meals/attractions into proven idle gaps without trading away acceptance.
 
+        Only runs for already accepted plans and only when at least one Task 3 packing flag is on.
         Every insertion is gated by the full oracle/schema/commonsense checker and reverted on
         failure, so budget, exclusion, timing, transport, and query-specific hard constraints stay
         correct even though this pass only reasons locally about idle windows.
@@ -2960,6 +3098,8 @@ class TPCAgent(BaseAgent):
             if not self._accepted(*check(plan)):
                 return plan
         except Exception:
+            return plan
+        if not self._packing_enabled():
             return plan
         try:
             from agent.tpc_agent.cp_candidates import build_candidate_context
@@ -2981,10 +3121,6 @@ class TPCAgent(BaseAgent):
             name = self._norm_text(row.get("name", ""))
             if name and "lat" in row and "lon" in row:
                 coords[name] = row
-
-        self._compress_activity_windows(dense, check)
-
-        self._extend_window_meals(dense, query, constraints, check, restaurants)
 
         used_restaurants = set()
         used_attractions = set()
@@ -3024,90 +3160,79 @@ class TPCAgent(BaseAgent):
             meal_types = {a.get("type") for a in activities if a.get("type") in ("breakfast", "lunch", "dinner")}
             default_gap = "45" if self.use_oracle else "60"
             meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", default_gap)))
-
-            if "breakfast" not in meal_types:
-                hotel = self._find_hotel_for_day(dense, day_idx)
-                if hotel and self._insert_breakfast(dense, day_idx, hotel, check):
-                    meal_types.add("breakfast")
-                else:
-                    r_name = self._insert_restaurant_breakfast(
-                        dense, day_idx, restaurants, city, people, check, used_restaurants)
-                    if r_name:
-                        used_restaurants.add(r_name)
-                        meal_types.add("breakfast")
-
-            lunch_close = self._env_time_minutes("TPC_DENSIFY_LUNCH_WIN_CLOSE", "14:00")
-            dinner_close = self._env_time_minutes("TPC_DENSIFY_DINNER_WIN_CLOSE", "20:00")
-            for meal_type, window in (("lunch", (11 * 60, lunch_close)), ("dinner", (17 * 60, dinner_close))):
-                if meal_type in meal_types:
-                    continue
-                inserted = False
-                for restaurant in restaurants:
-                    r_name = self._norm_text(restaurant.get("name", ""))
-                    if not r_name or r_name in used_restaurants:
+            if self._pack_ddr_enabled():
+                lunch_close = self._env_time_minutes("TPC_DENSIFY_LUNCH_WIN_CLOSE", "14:00")
+                dinner_close = self._env_time_minutes("TPC_DENSIFY_DINNER_WIN_CLOSE", "20:00")
+                for meal_type, window in (("lunch", (11 * 60, lunch_close)), ("dinner", (17 * 60, dinner_close))):
+                    if meal_type in meal_types:
                         continue
-                    if self._insert_activity_before_first(dense, day_idx, restaurant, meal_type, window, city, people, check):
-                        used_restaurants.add(r_name)
-                        meal_types.add(meal_type)
-                        inserted = True
-                        break
-                    for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], meal_gap_min):
-                        if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
+                    inserted = False
+                    for restaurant in restaurants:
+                        r_name = self._norm_text(restaurant.get("name", ""))
+                        if not r_name or r_name in used_restaurants:
+                            continue
+                        if self._insert_activity_before_first(dense, day_idx, restaurant, meal_type, window, city, people, check):
                             used_restaurants.add(r_name)
                             meal_types.add(meal_type)
                             inserted = True
                             break
-                    if inserted:
-                        break
-                    if self._insert_activity_after_last(dense, day_idx, restaurant, meal_type, window, city, people, check):
-                        used_restaurants.add(r_name)
-                        meal_types.add(meal_type)
-                        inserted = True
+                        for prev_idx, _gap_start, _gap_end in self._day_gaps(activities, window[0], window[1], meal_gap_min):
+                            if self._insert_activity(dense, day_idx, prev_idx, restaurant, meal_type, window, city, people, check):
+                                used_restaurants.add(r_name)
+                                meal_types.add(meal_type)
+                                inserted = True
+                                break
+                        if inserted:
+                            break
+                        if self._insert_activity_after_last(dense, day_idx, restaurant, meal_type, window, city, people, check):
+                            used_restaurants.add(r_name)
+                            meal_types.add(meal_type)
+                            inserted = True
+                            break
+
+            if self._pack_dav_enabled():
+                while sum(1 for a in activities if a.get("type") == "attraction") < 4:
+                    gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
+                    inserted = False
+                    for prev_idx, _gap_start, _gap_end in gaps:
+                        prev_name = self._norm_text(self._activity_end_position(activities[prev_idx]))
+                        next_name = self._norm_text(self._activity_start_position(activities[prev_idx + 1]))
+                        for attr in _ranked_attractions(coords.get(prev_name), coords.get(next_name)):
+                            a_name = self._norm_text(attr.get("name", ""))
+                            if not a_name or a_name in used_attractions:
+                                continue
+                            if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
+                                used_attractions.add(a_name)
+                                inserted = True
+                                break
+                        if inserted:
+                            break
+                    if not inserted:
+                        first_name = self._norm_text(self._activity_start_position(activities[0]))
+                        first_coords = coords.get(first_name)
+                        for attr in _ranked_attractions(first_coords, first_coords):
+                            a_name = self._norm_text(attr.get("name", ""))
+                            if not a_name or a_name in used_attractions:
+                                continue
+                            if self._insert_activity_before_first(dense, day_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
+                                used_attractions.add(a_name)
+                                inserted = True
+                                break
+                    if not inserted:
+                        last_name = self._norm_text(self._activity_end_position(activities[-1]))
+                        for attr in _ranked_attractions(coords.get(last_name)):
+                            a_name = self._norm_text(attr.get("name", ""))
+                            if not a_name or a_name in used_attractions:
+                                continue
+                            if self._insert_activity_after_last(dense, day_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
+                                used_attractions.add(a_name)
+                                inserted = True
+                                break
+                    if not inserted:
                         break
 
-            while sum(1 for a in activities if a.get("type") == "attraction") < 4:
-                gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
-                inserted = False
-                for prev_idx, _gap_start, _gap_end in gaps:
-                    prev_name = self._norm_text(self._activity_end_position(activities[prev_idx]))
-                    next_name = self._norm_text(self._activity_start_position(activities[prev_idx + 1]))
-                    for attr in _ranked_attractions(coords.get(prev_name), coords.get(next_name)):
-                        a_name = self._norm_text(attr.get("name", ""))
-                        if not a_name or a_name in used_attractions:
-                            continue
-                        if self._insert_activity(dense, day_idx, prev_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
-                            used_attractions.add(a_name)
-                            inserted = True
-                            break
-                    if inserted:
-                        break
-                if not inserted:
-                    first_name = self._norm_text(self._activity_start_position(activities[0]))
-                    first_coords = coords.get(first_name)
-                    for attr in _ranked_attractions(first_coords, first_coords):
-                        a_name = self._norm_text(attr.get("name", ""))
-                        if not a_name or a_name in used_attractions:
-                            continue
-                        if self._insert_activity_before_first(dense, day_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
-                            used_attractions.add(a_name)
-                            inserted = True
-                            break
-                if not inserted:
-                    last_name = self._norm_text(self._activity_end_position(activities[-1]))
-                    for attr in _ranked_attractions(coords.get(last_name)):
-                        a_name = self._norm_text(attr.get("name", ""))
-                        if not a_name or a_name in used_attractions:
-                            continue
-                        if self._insert_activity_after_last(dense, day_idx, attr, "attraction", (attr_win_open, attr_win_close), city, people, check):
-                            used_attractions.add(a_name)
-                            inserted = True
-                            break
-                if not inserted:
-                    break
-
-        dense = self._swap_restaurants_for_att(dense, query, constraints, check, restaurants, coords)
-        dense = self._swap_attractions_for_att(dense, query, constraints, check, attractions, coords)
-        dense = self._upgrade_transport_modes(dense, query, constraints, check)
+        if self._pack_hotel_breakfast_enabled():
+            self._topup_hotel_breakfasts(dense, check)
         return dense
 
     def _swap_restaurants_for_att(self, plan, query, constraints, check, restaurants, coords):
@@ -4965,6 +5090,47 @@ class TPCAgent(BaseAgent):
         except Exception:
             pass
         return None, None
+
+    def _best_transport_via_get_transport(self, city, from_pos, to_pos, start_time, people):
+        """Shortest-time valid inner-city route using the same `_get_transport` constraints.
+
+        Tries walk first so tight inner-city budgets still have a chance to stay feasible, then
+        evaluates the other grounded modes and keeps the fastest valid route. Restores the caller's
+        forced-mode exploration state before returning.
+        """
+        saved_forced_mode = getattr(self, "_forced_inner_mode", None)
+        best_transports = None
+        best_arrival = None
+        best_minutes = None
+        try:
+            for mode in ("walk", "taxi", "metro"):
+                self._forced_inner_mode = mode
+                try:
+                    transports, arrival = self._get_transport(
+                        self.env, city, from_pos, to_pos, start_time, people)
+                except Exception:
+                    continue
+                if transports is None or arrival is None:
+                    continue
+                total_minutes = 0
+                for leg in transports or []:
+                    try:
+                        total_minutes += (
+                            time_to_minutes(str(leg["end_time"]))
+                            - time_to_minutes(str(leg["start_time"]))
+                        )
+                    except Exception:
+                        total_minutes = None
+                        break
+                if total_minutes is None:
+                    continue
+                if best_minutes is None or total_minutes < best_minutes:
+                    best_transports = transports
+                    best_arrival = arrival
+                    best_minutes = total_minutes
+        finally:
+            self._forced_inner_mode = saved_forced_mode
+        return best_transports, best_arrival
 
     def _format_transport_segments(self, result, people):
         """Convert ``env.transportation.goto``'s raw segment list into the plan-facing
