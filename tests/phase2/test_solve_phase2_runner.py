@@ -49,6 +49,7 @@ def test_runner_writes_official_outputs(tmp_path):
     assert telem_path.exists()
     telem = json.loads(telem_path.read_text(encoding="utf-8"))
     assert telem["llm_backend"] == "none"
+    assert telem["llm_backend_source"] == "none"
 
 
 @pytest.mark.integration
@@ -96,11 +97,13 @@ def test_runner_defaults_llm_parse_on_when_backend_configured(tmp_path, monkeypa
         work_dir=str(work_dir),
     )
     assert summary["llm_backend"] == "fixture"
+    assert summary["llm_backend_source"] == "env-explicit"
     assert summary["llm_parse_attempts"] == 1
     assert summary["llm_fixture_missing"] == 0
     assert summary["uids"][0] == uid
 
     telem = json.loads((work_dir / uid / "telemetry.json").read_text(encoding="utf-8"))
+    assert telem["llm_backend_source"] == "env-explicit"
     assert telem["flags"]["llm_parse"] is True
     assert "parse:" not in str(telem.get("error") or "")
 

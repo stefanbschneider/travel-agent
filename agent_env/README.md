@@ -14,6 +14,7 @@ Use the repository interpreter and install the project dependencies:
 
 The wrapper can start without the database, but any environment lookup or real solve needs it.
 Copy `agent_env/config.toml.example` to the ignored local `agent_env/config.toml` only when a harness or model backend needs configuration.
+For the Phase 2 parser/refinement endpoint specifically, see `agent_env/config.phase2.example.toml` for a tracked OpenAI-compatible SGLang example; copy that `[phase2.llm]` block into your local `agent_env/config.toml` when you want a reachable endpoint, and note that endpoint autodetect still leaves `TPC_P2_LLM_PARSE` off unless you explicitly set it to `1`.
 
 ## Interface categories
 
