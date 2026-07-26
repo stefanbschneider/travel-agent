@@ -16,12 +16,13 @@ Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260
 - **Two eval-only early-stop modes for cheap FPR measurement:** `--fast-fpr` (`TPC_SOLVE_STOP_AT_ACCEPT`, stops at first accept, skips `_pack_plan`) and the newer `--fast-fpr-packed` (`TPC_SOLVE_STOP_AT_ACCEPT_PACKED`, stops at first accept but still runs `_pack_plan` so the pin/transport-repair passes execute). Both default off, never set by the real harness, and are FPR-only/uncalibrated — the packed variant is the one to fast-measure the repair passes' FPR in the `900 s` regime (see [eval doc: Gates](tpc_phase2_eval.md#gates)).
 - Baselines can run from a pinned source revision and publish committed rows under `results/phase2_baselines/`.
 - The official familiar-100 records are imported byte-for-byte with a pinned archive checksum, per-member manifest, dedicated split, and explicit no-oracle boundary.
-- **Parser lifted from `~0.20` to `~0.99` familiar-100 F1** with zero missing families — the last step being the comma-in-name entity-resolution segmentation fix (`62df2a0b`, F1 `0.9316 -> 0.9908`; see [Completed parser work](#completed-parser-work)).
+- **Parser lifted from `~0.20` to `~0.99` familiar-100 F1** with zero missing families — the last step being the comma-in-name entity-resolution segmentation fix (`62df2a0b`, F1 `0.9316 -> 0.9908`; see [the parser chronology in the archive](archive/README.md)).
 - **Timed-window pinning and a within-day resequencer landed opt-in** behind `TPC_PIN_TIMED_WINDOWS` (default off, floor byte-identical), targeting the dominant solver-only failure family. **Gated at `300 s` (PR [#34](https://github.com/stefanbschneider/china-travel-agent/pull/34)): quality up, timeouts regress, not promoted. Re-gated clean at `900 s`** (`familiar_100_val`, sha `a72357c3`, rows [floor](../results/phase2_baselines/runs/20260723T200723Z.json)/[pin](../results/phase2_baselines/runs/20260724T071840Z.json)): e2e continuous `43.72 -> 48.04`, FPR `20.0 -> 25.0`, **timeouts `0 -> 0`** — the `300 s` regression was a budget-boundary artifact, not a real cost; `make phase2-gate` **passes**. Paired with `TPC_SOLVE_CONVERGE_PATIENCE=15` ([row](../results/phase2_baselines/runs/20260724T192503Z.json)) quality holds flat while wall-clock drops further (solve `p50` `366s -> 265s`, below even the floor's `337s`). **Promoted (role 3): both are now harness-default-on** via `solve_phase2.apply_deterministic_solver_defaults()` (called at the top of `run_split`, before the agent is built), mirroring the disjunction/entity-resolution promotion pattern — the library default (unset env var) and the byte-identical opt-in unit tests are unchanged, and an explicit operator override (e.g. the eval tooling's flags-off A/B arm) still wins. `TPC_SOLVE_CONVERGE_PATIENCE=15` is defaulted alongside pin both for the wall-clock win and as a hedge: it makes the submission robust to an organizer per-query timeout shorter than the assumed `900 s` (see [Solver-only headroom](#solver-only-headroom)).
-- **A commonsense-transport repair pass landed opt-in** behind `TPC_REPAIR_TRANSPORT_GAPS` (default off, floor byte-identical), targeting the "Invalid Transport information across positions" residual (see [Commonsense-transport repair](#commonsense-transport-repair)).
+- **A commonsense-first finalization policy landed and is promoted (`TPC_COMMONSENSE_FIRST`, harness-default-on).** It relaxes the repair-pass commit rule for unaccepted plans and prefers a schema+commonsense-valid candidate at finalization, because the scored C-LPR is conditional on the commonsense pass. Paired `120 s` e2e screen: `overall_true` `51.34 -> 60.98`, C-LPR `67.35 -> 89.95`, commonsense pass `30/40 -> 40/40`, FPR `32.5 -> 35.0`, `logical_micro` flat (see [Commonsense-first finding](#commonsense-first-finding)).
+- **A commonsense-transport repair pass landed opt-in** behind `TPC_REPAIR_TRANSPORT_GAPS` (default off, floor byte-identical), targeting the "Invalid Transport information across positions" residual (see [Commonsense-transport repair](#commonsense-transport-repair)). Since the commonsense-first promotion it is also enabled implicitly by `TPC_COMMONSENSE_FIRST`.
 - **A cascading forward-shift move for the post-pin residual landed opt-in** behind `TPC_CASCADE_TIMED_WINDOWS` (default off, floor byte-identical), targeting the *post-pin* `timed_visit_named_poi` residual — the case where the day is already in the right order but clamping a windowed activity into its window ripples a delay onto the following activities, which `_try_pin_activity` reverts and `_resequence_day` skips. **Gated at `900 s`: no measurable effect, not promoted** (see [Cascading timed-window shift](#cascading-timed-window-shift)).
-- **An early-convergence stop for the random-restart search landed opt-in** behind `TPC_SOLVE_CONVERGE_PATIENCE` (**library** default `0`/off so the floor stays byte-identical; **harness**-default `15` since the `900 s` promotion in the pinning bullet above), targeting the budget-bound-solver-with-no-early-convergence shortcoming (see [Solver budget and early convergence](#solver-budget-and-early-convergence)).
-- **The abbreviation-period truncation residual in the base regex parser is fixed on `main`**, landing directly (unconditional bug fix, not a flag) since it only ever discarded data it should have kept — familiar-100 `wrong_value` `6 -> 3`, F1 `0.9908 -> 0.9949` (see [Completed parser work](#completed-parser-work)).
+- **An early-convergence stop for the random-restart search landed opt-in** behind `TPC_SOLVE_CONVERGE_PATIENCE` (**library** default `0`/off so the floor stays byte-identical; **harness**-default `15` since the `900 s` promotion in the pinning bullet above), targeting the budget-bound-solver-with-no-early-convergence shortcoming (see [Solver-only headroom](#solver-only-headroom)).
+- **The abbreviation-period truncation residual in the base regex parser is fixed on `main`**, landing directly (unconditional bug fix, not a flag) since it only ever discarded data it should have kept — familiar-100 `wrong_value` `6 -> 3`, F1 `0.9908 -> 0.9949` (see [the parser chronology in the archive](archive/README.md)).
 - **The current reference row is already LLM-backed at Stage 1.** [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json) records `llm_config.backend=deepinfra`, `TPC_P2_LLM_PARSE=1`, and `llm_parse_attempted=80`, `llm_parse_failed=0`. The main harness is therefore not LLM-free today; the open decision is whether keeping parse audit on is helping enough to justify the cost/risk.
 - **Late-night current-`main` rows did not reveal a new promotion candidate.** On sha `6d354b99`, the single-repeat `900 s` rows [baseline](../results/phase2_baselines/runs/20260725T202012Z.json), [cascade](../results/phase2_baselines/runs/20260725T214823Z.json), [transport](../results/phase2_baselines/runs/20260725T231555Z.json), [intercity](../results/phase2_baselines/runs/20260726T004345Z.json), and [all3](../results/phase2_baselines/runs/20260726T034030Z.json) all kept e2e FPR flat at `21.25`; `all3` nudged `overall_true` to `45.43`, but every arm stayed below the last known good [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json) row's `47.04`. Treat these as cautionary screens, not promotion evidence.
 - **A current-head quick screen makes `TPC_P2_LLM_PARSE` the first policy decision for the final evening.** Local `2026-07-26` end-to-end screen on `main` (`n=10`, `60 s`, DeepInfra timeout `6 s`) gave parse off `FPR 30.0`, `overall_true 54.48`, `1` timeout vs. parse audit on `FPR 20.0`, `overall_true 45.54`, `2` timeouts. That is not enough to promote parse-off by itself, but it is strong enough to stop assuming the current auto-enabled audit is helping current head.
@@ -32,17 +33,37 @@ Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260
 
 Interpretation:
 
-1. Solver-side quality remains the binding ceiling.
-2. The earlier `300 s` timeout regressions for pinning were budget-boundary artifacts; the promoted `900 s` setting absorbs them.
-3. Remaining gains are mostly from solver/repair/refine improvements, not parser recovery.
-4. The harness does use the LLM today, but only for Stage 1 parse audit; the highest-leverage late decision is whether to keep that call at all.
+1. **Solver logical search is not the sole binding ceiling — the commonsense gate on the *emitted*
+   plan was costing more.** C-LPR is scored conditionally on the commonsense pass, so the 21 of 80
+   e2e plans that fail commonsense forfeit logical credit they had already earned (`logical_micro`
+   `89.47` vs C-LPR `66.02`). Closing that gate is worth `~+8.6` `overall_true` on this row's own
+   numbers, more than any remaining solver-search item. See
+   [Commonsense-first finding](#commonsense-first-finding); shipped as `TPC_COMMONSENSE_FIRST`.
+2. The earlier `300 s` timeout regressions for pinning were budget-boundary artifacts; the promoted
+   `900 s` setting absorbs them.
+3. Beyond the commonsense gate, remaining gains are solver/repair/refine improvements, not parser
+   recovery.
+4. The harness *can* use the LLM for Stage 1 parse audit, but only when a backend is configured, and
+   the packaged submission configures none — see
+   [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls).
 
 ## Main insights
 
+- **The commonsense gate on the emitted plan, not solver search, was the largest single leak.** C-LPR
+  is the *conditional* logical micro, so a commonsense-invalid plan scores `0` on `0.25` of the
+  weighting plus its EPR-macro point regardless of how many clauses it satisfies. Fixed by
+  `TPC_COMMONSENSE_FIRST` (harness-default-on): screened `overall_true` `51.34 -> 60.98` with
+  `logical_micro` flat. See [Commonsense-first finding](#commonsense-first-finding).
 - **Parser is no longer the main bottleneck.** Familiar-100 parser quality is already high (latest headline F1 `0.9949`), and incremental parser fixes now have smaller end-to-end leverage than solver-side work.
-- **Promoted deterministic defaults are stable.** `TPC_PIN_TIMED_WINDOWS` plus `TPC_SOLVE_CONVERGE_PATIENCE=15` passed `900 s` gates cleanly and are now harness defaults.
-- **Most additional deterministic repair flags are now de-prioritized by evidence, not by missing implementation.** `TPC_REPAIR_TRANSPORT_GAPS`, `TPC_REPAIR_INTERCITY`, and `TPC_CASCADE_TIMED_WINDOWS` all exist and are tested; the latest current-`main` rows do not justify a last-minute default flip.
-- **LLM-assisted paths remain selective.** The harness already calls DeepInfra/Qwen in Stage 1 when a backend is configured, but current-head evidence now points toward *less* LLM by default, not more: audit parse regressed on the latest quick screen, `TPC_P2_LLM_PARSE_MODE=extract` exists but is unmeasured, and both Stage 3 refine variants still have near-zero accepted commit rate.
+- **Promoted deterministic defaults are stable.** `TPC_PIN_TIMED_WINDOWS` plus `TPC_SOLVE_CONVERGE_PATIENCE=15` passed `900 s` gates cleanly and are now harness defaults, joined by `TPC_COMMONSENSE_FIRST` from the `2026-07-26` screen.
+- **The deterministic repair flags were mis-diagnosed as low value.** `TPC_REPAIR_TRANSPORT_GAPS` and
+  `TPC_REPAIR_INTERCITY` gated flat because their commit rule required full acceptance, which the
+  plans they target never reach — not because the repairs do not work. They are now reachable through
+  the umbrella flag. `TPC_CASCADE_TIMED_WINDOWS` remains unpromoted on its own `900 s` gate.
+- **LLM-assisted paths remain selective, and the packaged submission makes zero LLM calls.** Backend
+  defaults to `none` and `agent_env/config.toml` is gitignored, so nothing in the tree reaches the
+  organizers' endpoint; `TPC_P2_LLM_PARSE_MODE=extract` is unmeasured and both Stage 3 refine variants
+  still show `improve_committed=0`. See [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls).
 
 ## Phase 2 guardrails
 
@@ -67,16 +88,153 @@ Both `make phase2-gate` runs (e2e and solver-only, floor -> pin and floor -> pin
 
 The familiar release has no organizer best plans, so its ceiling is unavailable rather than zero. Every number here is a repository-local development result, not an estimate of final held-out performance.
 
-## Last-evening plan (2026-07-26)
+## Last-evening outcome (2026-07-26)
 
-This is the final realistic plan before the submission window closes. It assumes **no new long end-to-end gates tonight**: only focused unit tests, quick paired screens, and explicit flag choices are still worth the time.
+The final change window is closed. What shipped is **one mechanism**, promoted from a paired
+same-SHA screen: the commonsense-first finalization policy (`TPC_COMMONSENSE_FIRST`, harness-default-on).
+Implementation brief: [`docs/agents/final_night_commonsense_first.md`](agents/final_night_commonsense_first.md).
+Confirmation commands for a second machine: [`docs/agents/final_night_eval_commands.md`](agents/final_night_eval_commands.md).
 
-1. **Protect the last known good floor first.** Treat [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json) (`a72357c3`, pin+converge on) as the submission safety net. Do not enable `TPC_CASCADE_TIMED_WINDOWS`, `TPC_REPAIR_TRANSPORT_GAPS`, `TPC_REPAIR_INTERCITY`, `TPC_P2_LLM_REFINE`, or `TPC_P2_LLM_AGENTIC_REFINE` by default unless a same-SHA quick screen turns clearly green tonight.
-2. **Settle the `TPC_P2_LLM_PARSE` policy before anything else.** The current-head screen is RED for audit-on vs. parse-off, so stop assuming backend auto-enable is helping. If there is time for exactly one more parser experiment, make it a three-arm quick screen on the same subset/budget: parse off vs. audit on vs. extract on (`TPC_P2_LLM_PARSE_MODE=extract`). The bar for shipping any LLM parse mode tonight is simple: beat parse-off on both FPR and `overall_true`, with no new parse failures. If no arm clears that bar, force `TPC_P2_LLM_PARSE=0` for the submission harness instead of relying on backend auto-enable.
-3. **Do not spend more long-eval budget on the landed deterministic repair flags.** The late `6d354b99` rows are flat on FPR and mostly worse or noisy on `overall_true` versus the same-SHA pin+converge baseline. `TPC_CASCADE_TIMED_WINDOWS` is already a no-go from the 2-repeat gate, and `TPC_REPAIR_TRANSPORT_GAPS` / `TPC_REPAIR_INTERCITY` are implemented-and-tested but not currently earning promotion. If one cheap interaction check is still desired, use **one stacked quick screen** (`all3-on` vs. current baseline) only; do not launch separate long gates.
-4. **Treat Stage 3 refine as a stretch only if it starts committing immediately.** `TPC_P2_LLM_REFINE` v1 is real code, not a stub: hooks, prompt, failure summary, feasible-window context, and acceptance gate all exist, and the targeted unit tests pass. The only acceptable tonight investment is one focused prompt/hook tweak followed by a short end-to-end screen that shows `improve_committed > 0`. If commits remain `0`, keep both `TPC_P2_LLM_REFINE` and `TPC_P2_LLM_AGENTIC_REFINE` off and stop.
-5. **Do not start new mechanisms tonight.** No new solver move, no new agentic tool loop, no new parser family. The only realistic late win is a better flag/configuration choice on top of the code already in `main`.
-6. **Freeze early and ship the cleanest evidence-backed configuration.** Best-case late improvement: pin+converge plus a clearly better parser policy. Otherwise, ship the last known good deterministic floor rather than stacking more experimental flags.
+| step | result |
+| --- | --- |
+| Offline sizing (`scripts/phase2_commonsense_headroom.py`) | 21 of 80 e2e plans fail commonsense while passing `8/9`-`11/13` of their logical clauses; projected e2e `overall_true` `47.04 -> 55.69` |
+| Relaxed repair commit rule for unaccepted plans (Task 2) | landed, `TPC_COMMONSENSE_FIRST` |
+| Commonsense-valid finalization preference (`best_cs`, Task 3) | landed, same flag |
+| Per-layer metrics in the quick screen (Task 4) | landed; screens now report EPR micro/macro, C-LPR, logical micro, `all_pass` |
+| Paired e2e screen, `n=40`, `120 s`, `parallel=7` | `overall_true` `51.34 -> 60.98`, C-LPR `67.35 -> 89.95`, commonsense pass `30/40 -> 40/40`, FPR `32.5 -> 35.0` |
+| Promotion | `TPC_COMMONSENSE_FIRST=1` is a harness default (`apply_deterministic_solver_defaults`) |
+| LLM reachability (optional Task 9) | **not attempted**; see [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls) |
+| Preference packing | **deliberately skipped**; sized at `3.03` official points, second priority |
+
+What was explicitly *not* done, and stays not done: no new solver move, no new parser family, no
+agentic loop, no promotion of `TPC_CASCADE_TIMED_WINDOWS`, and no change to Stage 3 refine (both
+`TPC_P2_LLM_REFINE` and `TPC_P2_LLM_AGENTIC_REFINE` remain off with `improve_committed=0`).
+
+The safety net is unchanged: [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)
+remains the last long-budget pinned row, and every new behavior is off when its env var is unset, so
+reverting the evening is a single flag.
+
+## Commonsense-first finding
+
+**The scored C-LPR is conditional on the commonsense gate, and that is where the Phase 2 score was
+leaking.** `eval_tpc.py` takes C-LPR from
+`evaluate_hard_constraints_v2(..., env_pass_id=commonsense_pass_id)`: a query's per-clause logical
+credit is counted only if that query's plan also passes the commonsense checker, while the
+denominator stays the whole batch's clause count. EPR-macro is all-or-nothing per query. So an
+emitted plan that fails commonsense forfeits its logical partial credit (weight `0.25`) *and* its
+EPR-macro point (`0.10`), however many clauses it satisfies.
+
+On the promoted row that is not a hypothetical: `logical_micro` is `89.47` while the scored C-LPR is
+`66.02`, and the entire difference is the 21 of 80 end-to-end plans that fail commonsense — each of
+which passes between `8/9` and `11/13` of its logical clauses. Failure families:
+`Invalid Transport information across positions` (13 uids), `Does not follow Chronological Order`
+(7), and an intercity-endpoint cluster (3). Reproduce with:
+
+```bash
+.venv/bin/python scripts/phase2_commonsense_headroom.py --mode end-to-end
+```
+
+Projected ceiling, holding every logical verdict, the FPR, and the preference metrics fixed:
+C-LPR `66.02 -> 89.47` (`+5.86` overall), EPR-macro `73.75 -> 100` (`+2.62`), EPR-micro `+0.16` —
+e2e `overall_true` `47.04 -> 55.69`. Solver-only projects `+7.83` from 19 failing plans.
+
+### Root cause 1: the repair passes could not commit where the failures live
+
+`TPC_REPAIR_TRANSPORT_GAPS` and `TPC_REPAIR_INTERCITY` both target these exact families, and both
+gated flat. The reason was their commit rule, not their repair logic: each ended with
+`if not self._accepted(*check(trial)): return`, and `_accepted` requires *all* parsed logical
+constraints plus schema plus commonsense. A plan that fails a logical clause is unaccepted by
+definition, so a repair that successfully fixed its transport chain was discarded anyway — on
+precisely the plans whose commonsense failure was costing the C-LPR and EPR-macro credit.
+
+`_repair_commit_allowed` now splits the two regimes. An accepted input keeps the strict legacy rule
+(still accepted, preference key not regressed). An unaccepted input commits when the trial is
+schema-valid, flips commonsense from invalid to valid, and loses no parsed-constraint passes.
+Preference is deliberately unguarded there: a grounded leg costs more than a broken one by
+construction, and the invariant forbids trading a *valid* plan for score, not spending cost to make
+an invalid plan valid.
+
+### Root cause 2: finalization ranked unaccepted candidates without a commonsense term
+
+`_make_checker` only adds the schema/commonsense bonus once the parsed base is fully satisfied, so
+the search key that ranks unaccepted candidates ignores commonsense entirely, and `_solve` emitted
+that leader. Commonsense validity of the emitted plan was therefore incidental — 39 of 60 unaccepted
+plans passed by luck.
+
+`_solve` now tracks a third bucket, `best_cs`: the best schema+commonsense-valid candidate whatever
+its parsed pass count, emitted when nothing is accepted and the leader is invalid. Timeout recovery
+mirrors the same order. Worked example on uid `...00009` at a `150 s` budget: the leader was a
+**transport-less plan** — zero inner-city legs anywhere, yet satisfying `13/14` parsed clauses. With
+the flag on, the emitted plan is fully commonsense-valid, C-LPR goes `0 -> 91.67` and that query's
+`overall_true` goes `9.62 -> 42.92`, at unchanged solve time.
+
+### Cost control: the official evaluator is expensive
+
+A single `evaluate_commonsense_constraints` call costs about `319 ms` (measured), and inside a
+wall-clock-bounded solve each call is paid for with a restart that does not happen. The probe is
+therefore triple-bounded: `_fast_commonsense_prefilter` rejects hopeless candidates for free (it
+mirrors the transport-chain and chronology checks and is no stricter than they are — a transport-less
+plan dies without any evaluator call), `TPC_CS_CHECK_BUDGET=60` caps confirmations, and
+`TPC_CS_CHECK_TIME_FRAC=0.08` caps their share of the solve budget. Verdicts are memoized per plan
+object. Exhausting either bound degrades to the previous selection.
+
+### Screen result and the one caveat
+
+Paired same-SHA end-to-end screen, `familiar_100_val` fold 0, `n=40`, `120 s`, `parallel=7`, LLM
+backend `none` (zero LLM calls), artifacts in
+[`results/phase2_baselines/screens/20260726_e2e_n40_b120_commonsense_first`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_commonsense_first/summary.json):
+
+| metric | off | on | Δ |
+| --- | --- | --- | --- |
+| `overall_true` | `51.34` | `60.98` | **`+9.64`** |
+| commonsense pass | `30/40` | `40/40` | `+10` |
+| EPR-macro | `75.00` | `100.00` | `+25.00` |
+| EPR-micro | `99.04` | `100.00` | `+0.96` |
+| C-LPR | `67.35` | `89.95` | **`+22.60`** |
+| logical micro | `89.95` | `89.95` | `0.00` |
+| FPR | `32.50` | `35.00` | `+2.50` |
+| `all_pass` | `13` | `14` | `+1` |
+| timeouts | `4` | `7` | `+3` |
+
+`logical_micro` being flat is the proof of mechanism: the gain is entirely the commonsense gate
+releasing logical credit the solver had already earned, exactly as the offline projection predicted.
+
+**Caveat:** timeouts rose `4 -> 7`, which is the only reason `make phase2-gate` reports FAIL on this
+pair. All were recovered (`used_fallback=0`, `parse_failures=0`), and the budget is deliberately
+tight — the baseline's own solve `p50` is `108 s` of `120 s`, so any extra per-query work tips
+queries over the wall. This is the same budget-boundary shape `TPC_PIN_TIMED_WINDOWS` showed at
+`300 s` and cleared at `900 s` (`p50 265 s`, zero timeouts). Treat the `900 s` rows from
+[`final_night_eval_commands.md`](agents/final_night_eval_commands.md) as the confirmation.
+
+### Known residual: the intercity-endpoint cluster has a different cause
+
+The 3 uids that fail all four intercity columns (`...00065`, `...00071`, `...00066`) are not fixed by
+this work, and the endpoint repair cannot fix them: each is a **1-day trip whose last activity is an
+overnight accommodation ending `24:00`**, so `_repair_intercity_endpoints` computes a departure floor
+of `24:00` and no return row can be placed after it. The real defect is upstream — a single-day
+itinerary should not contain an overnight stay at all. Dropping a trailing accommodation on a
+single-day trip before re-placing the return leg is the obvious next fix; it was out of scope tonight.
+
+## LLM packaging: the submission makes zero LLM calls
+
+Recorded because it is a packaging fact, not an opinion, and it survives the deadline:
+
+- `TPC_P2_LLM_BACKEND` defaults to `none`, whose client raises on any call.
+- `agent_env/config.toml` is **gitignored** and absent from the repository; only
+  `config.toml.example` is tracked. A submission built from git therefore has no `[phase2.llm]`
+  backend configured.
+- `resolve_llm_client_and_flags` auto-enables `TPC_P2_LLM_PARSE` only when a backend is *already*
+  configured, so with backend `none` the parse audit stays off too.
+- `TPCAgent`'s `backbone_llm` is `TPCLLM`, whose `_get_response` returns the literal string
+  `"Empty LLM response"`.
+
+Consequence: as packaged, the Phase 2 path is fully deterministic and cannot reach the organizers'
+Qwen3.6-27B/SGLang endpoint — the reference row's `llm_config.backend=deepinfra` came from local
+environment variables, not from anything in the tree. The optional plumbing to auto-detect an
+OpenAI-compatible endpoint (`OPENAI_BASE_URL` and friends) with the parse audit still default-off was
+scoped as Task 9 of the final-night brief and **was not implemented**. Given that the latest
+current-head parse screen was RED for audit-on, shipping deterministic is the defensible position;
+the gap to close, if there is ever another window, is reachability, not more LLM stages.
 
 ## Shortcomings of the current agent
 
@@ -85,9 +243,21 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 1. **Solver-only ceiling dominated by one family — pinning + resequencer clears the gate at `900 s`.** `26/100` solver-only pass with perfect constraints; `timed_visit_named_poi` is the *sole* logical blocker in `53` of the `74` failures. The landed pinning + resequencer regressed timeouts at the old `300 s` gate (PR [#34](https://github.com/stefanbschneider/china-travel-agent/pull/34)) but **passes cleanly re-gated at `900 s`**: solver-only continuous `46.86 -> 49.38`, FPR `23.75 -> 27.5`, **zero timeouts either way** (`familiar_100_val`, sha `a72357c3`) — the `300 s` regression was a budget-boundary artifact of the per-trial deepcopy + full-checker revalidation, not a real cost. Paired with the now-landed early-convergence stop (shortcoming 2, `TPC_SOLVE_CONVERGE_PATIENCE=15`), quality holds flat and wall-clock drops below even the floor's. Evidence clears the promotion bar; flipping the default is role 3's to do. See [Solver-only headroom](#solver-only-headroom).
 2. **Current-head absolute performance is not yet a monotonic signal.** The late single-repeat `900 s` rows on `6d354b99` (`final-baseline-pinconv` and companions) sit materially below the promoted `a72357c3` row, so late decisions must compare against a same-SHA baseline and not assume `main` is automatically better because it is newer. Tonight's risk is regression-by-accumulation, not lack of options.
 3. **Stage 3 "improve" is wired, but still acts like a zero-gain feature.** `TPC_P2_LLM_REFINE` is no longer a stub: the orchestrator calls it, `TPCAgent` exposes `ground_and_check` / `apply_refine_edits`, and the failure summary already includes per-clause items, broken-leg diagnostics, and feasible windows. The remaining problem is commit rate: current refine and agentic-refine screens still show `improve_committed=0`, so the gap is now behavioral, not plumbing. See [Stage 3 LLM refine](#stage-3-llm-refine).
-4. **Commonsense residual fixes exist, but current evidence does not justify flipping them on.** `TPC_REPAIR_TRANSPORT_GAPS` and `TPC_REPAIR_INTERCITY` are both implemented and unit-tested; the latest single-repeat `900 s` rows on `6d354b99` are flat on FPR and not convincingly positive on `overall_true` vs. the same-SHA baseline. That makes them poor final-evening promotion candidates even though they remain valid future work.
-5. **Parser value-segmentation residual — largely closed, pending gate.** The comma-/`" and "`-in-name `wrong_value` residual was fixed on `main` (`62df2a0b`) via maximum-munch catalog segmentation plus a restaurant/hotel matching-pool broadening, taking familiar-100 F1 `0.9316 -> 0.9908` (wrong_value `47 -> 6`). It is diagnostic evidence only — not yet through the end-to-end gate. The distinct abbreviation-period truncation bug (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser's `_list_after_marker` is now fixed unconditionally on `main` (F1 `0.9908 -> 0.9949`, wrong_value `6 -> 3`; see [Completed parser work](#completed-parser-work)); a `3`-case `excluded_hotels` residual remains from a separate, already-known limit — a comma-heavy full-address value spans more raw tokens than the entity-resolution merge's bounded `_ENTITY_SEGMENT_MAX_SPAN` (`4`), so it stays fragmented rather than re-merging into one catalog name.
-6. **The LLM-parse policy is unresolved and is the only LLM-side switch likely to matter tonight.** The main harness does call DeepInfra/Qwen today (for example, `llm_parse_attempted=80/80` on [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)), but the latest paired quick screen on `main` is RED for audit-on vs. parse-off. `TPC_P2_LLM_PARSE_MODE=extract` exists and is unit-tested, but has no screening evidence yet, so the remaining work is a fast policy choice, not more parser plumbing.
+4. **Commonsense residual fixes exist and are now reachable — their old commit rule was the blocker.**
+   `TPC_REPAIR_TRANSPORT_GAPS` and `TPC_REPAIR_INTERCITY` are implemented and unit-tested, and both
+   gated flat because they could only commit on a plan that already reached full acceptance — which the
+   plans they target never do. Fixed by `_repair_commit_allowed` and shipped inside
+   `TPC_COMMONSENSE_FIRST` (see [Commonsense-first finding](#commonsense-first-finding)). The residual
+   that remains is the single-day-trip overnight-accommodation defect, which no repair pass can reach
+   today.
+5. **Parser value-segmentation residual — largely closed, pending gate.** The comma-/`" and "`-in-name `wrong_value` residual was fixed on `main` (`62df2a0b`) via maximum-munch catalog segmentation plus a restaurant/hotel matching-pool broadening, taking familiar-100 F1 `0.9316 -> 0.9908` (wrong_value `47 -> 6`). It is diagnostic evidence only — not yet through the end-to-end gate. The distinct abbreviation-period truncation bug (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser's `_list_after_marker` is now fixed unconditionally on `main` (F1 `0.9908 -> 0.9949`, wrong_value `6 -> 3`; see [the parser chronology in the archive](archive/README.md)); a `3`-case `excluded_hotels` residual remains from a separate, already-known limit — a comma-heavy full-address value spans more raw tokens than the entity-resolution merge's bounded `_ENTITY_SEGMENT_MAX_SPAN` (`4`), so it stays fragmented rather than re-merging into one catalog name.
+6. **The LLM is unreachable in the packaged submission, which supersedes the parse-policy question.**
+   Local rows show the harness *can* call DeepInfra/Qwen at Stage 1 (`llm_parse_attempted=80/80` on
+   [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)), but that came from local
+   environment variables: backend defaults to `none`, `agent_env/config.toml` is gitignored, and
+   `TPCLLM` is an empty stub. The latest paired quick screen was also RED for audit-on vs. parse-off, so
+   shipping deterministic is defensible — but the open work item is *reachability*, not parse mode. See
+   [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls).
 
 ## Operating rules
 
@@ -100,15 +270,34 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 
 ## Next steps (priority order)
 
-1. **Freeze the submission floor around the last known good measured config.** Keep [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json) behavior (pin+converge on, everything else off) as the safety net, and compare any late change only against a same-SHA baseline.
+The submission window is effectively closed; this list is what a future window should pick up, in
+order of measured leverage.
 
-2. **Settle `TPC_P2_LLM_PARSE` with quick screens, not intuition.** Screen parse off vs. audit on, and only add `TPC_P2_LLM_PARSE_MODE=extract` if there is time for one extra three-arm comparison. If no LLM parse mode clearly beats parse off on FPR and `overall_true`, ship with `TPC_P2_LLM_PARSE=0` explicitly.
+1. **Confirm the commonsense-first promotion at `900 s`.** Run the two pinned arms in
+   [`final_night_eval_commands.md`](agents/final_night_eval_commands.md). The only open question is
+   the screen's `+3` recovered timeouts at a `120 s` budget; everything else was clean.
 
-3. **Do not promote transport/intercity/cascade from the current evidence.** `TPC_CASCADE_TIMED_WINDOWS` is already a no-go from the 2-repeat gate, and the late single-repeat `TPC_REPAIR_TRANSPORT_GAPS` / `TPC_REPAIR_INTERCITY` rows do not justify more long eval tonight. At most, run one stacked quick screen if an interaction check is still desired.
+2. **Fix the single-day-trip overnight-accommodation defect.** The 3 remaining intercity-endpoint
+   failures all have the same shape: a 1-day itinerary ending in an accommodation that runs to
+   `24:00`, which makes the return leg unplaceable. Drop the trailing accommodation on single-day
+   trips before re-placing the endpoint. Small, deterministic, and it is what the endpoint repair
+   needs to become effective on that family.
 
-4. **If touching Stage 3 refine at all, require an immediate commit-rate signal.** One focused tweak plus one short screen is acceptable; more than that is not. The success bar is `improve_committed > 0` with no quality regression. If that bar is missed, keep both refine variants off.
+3. **Then reconsider preference packing.** Measured headroom on all-pass plans is `3.03` points of
+   `eval_tpc`'s official aggregate (DAV `85.94`, ATT `88.10`, **DDR `65.42`** — the meal count is the
+   weak axis, and Phase 1's free-hotel-breakfast trick is the known lever). Worth `0.76` on this row's
+   per-query mean, because preference is averaged over all-pass queries only; the official aggregate
+   is the number that counts. Re-check with
+   `.venv/bin/python scripts/phase2_commonsense_headroom.py`.
 
-5. **Start no new mechanisms.** No new solver move, no new parser family, no new agentic loop. The final-evening upside is configuration choice, not fresh architecture.
+4. **Close LLM reachability before adding any LLM stage.** The packaged submission cannot reach the
+   organizers' endpoint at all (see
+   [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls)). Auto-detecting an
+   OpenAI-compatible base URL with the parse audit still default-off is the prerequisite; only then is
+   a three-arm parse screen (off / audit / `extract`) meaningful.
+
+5. **Do not promote `TPC_CASCADE_TIMED_WINDOWS` from existing evidence**, and keep both Stage 3 refine
+   variants off until a screen shows `improve_committed > 0`.
 
 **Status note, not a priority item: the cascade fallback for the residual pin leaves behind (`TPC_CASCADE_TIMED_WINDOWS`) gated at `900 s` with no measurable effect** — flat on solver-only (its own target axis), and the apparent end-to-end lift does not clear its own repeat-to-repeat noise; see [Cascading timed-window shift](#cascading-timed-window-shift) for the full breakdown. Not promoted.
 
@@ -239,7 +428,7 @@ Roadmap source of truth for remaining Stage 3 work is the Next steps item above;
 - Preserve hard invariants: no oracle leakage, deterministic re-grounding, commit only on checker acceptance and non-regression.
 - Gate with paired on/off runs at one SHA; do not promote from ad hoc reruns.
 
-## Solver-only headroom
+## Current headroom signal (solver side)
 
 Current practical headroom signal remains solver-side:
 
@@ -253,4 +442,6 @@ Use `scripts/phase2_solver_failure_attribution.py` for offline diagnosis when re
 - [README architecture snapshot](../README.md#architecture-at-a-glance)
 - [Phase 2 evaluation](tpc_phase2_eval.md)
 - [Agent prompts](agents/README.md)
+- [Final-night commonsense-first brief](agents/final_night_commonsense_first.md)
+- [Final-night second-machine eval commands](agents/final_night_eval_commands.md)
 - [Competition reference](reference/competition.md)

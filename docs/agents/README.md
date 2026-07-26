@@ -11,7 +11,7 @@ The generic role-level prompts were retired. The active docs in this folder are 
 | Implementation | **Final-evening commonsense-first lever (`TPC_COMMONSENSE_FIRST`)** | [`final_night_commonsense_first.md`](final_night_commonsense_first.md) | **Active and highest priority.** Last change window before submission; supersedes the three briefs below. |
 | Evaluation | Second-machine pinned `900 s` rows for the final night | [`final_night_eval_commands.md`](final_night_eval_commands.md) | Copy-paste commands only; run after the commonsense-first promotion lands. |
 | Evaluation | Tier 1: commonsense-transport repair gate (`TPC_REPAIR_TRANSPORT_GAPS`) | [`tier1_transport_repair_gate.md`](tier1_transport_repair_gate.md) | Superseded by the commonsense-first brief: the flag's commit rule was the blocker, not its budget. |
-| Implementation | Intercity-transport endpoint grounding (`TPC_REPAIR_INTERCITY`) | [`intercity_transport_grounding.md`](intercity_transport_grounding.md) | Active and prioritized deterministic implementation item. |
+| Implementation | Intercity-transport endpoint grounding (`TPC_REPAIR_INTERCITY`) | brief removed in `7f96c614`; the flag is implemented and now enabled via `TPC_COMMONSENSE_FIRST` | Landed. Remaining residual (single-day trips ending in an overnight accommodation) is recorded in the [roadmap](../tpc_phase2_roadmap.md#known-residual-the-intercity-endpoint-cluster-has-a-different-cause). |
 | Implementation | Stage 3 bounded LLM refine (`TPC_P2_LLM_REFINE`) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | Active, lower priority than intercity deterministic grounding. |
 
 ## How to use these
