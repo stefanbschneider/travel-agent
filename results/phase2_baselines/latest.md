@@ -1,44 +1,44 @@
 # Phase 2 Baseline (Latest)
 
-- run_id: 20260724T192503Z
-- timestamp_utc: 2026-07-24T19:25:03+00:00
-- git_sha: a72357c315bd1fdb7acc43ce9da1a6594fc7356e
+- run_id: 20260726T004535Z
+- timestamp_utc: 2026-07-26T00:45:35+00:00
+- git_sha: 6d354b99b442d1952639405c2a2610299c2691b3
 - split: tpc_phase2_familiar_100_val (set=familiar_100_val, fold=0/1, n=80)
 - data_source_id: ijcai2026_phase2_familiar_100@sha256:32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c
 - data_source_url: https://chinatravel-competition.github.io/IJCAI2026/TPC_IJCAI_2026_phase2_familiar_100_data.zip
 - data_source_archive_sha256: 32a88161342681400f8ded52d0babd5894ed78e5cd359860689561003566519c
 - budget_sec: 900.0
-- label: val-pinconverge-900s
+- label: val-pincascade-900s
 - repeats: 2 (fresh=True)
 
 ## Rehearsal Attribution (FPR)
 
 - ceiling_fpr: unavailable (no evaluated ceiling plans for this data source)
-- solver_only_fpr: 27.5000
-- end_to_end_fpr: 25.0000
+- solver_only_fpr: 28.7500
+- end_to_end_fpr: 26.2500
 - solver_headroom: unavailable
 - parsing_loss: 2.5000
 
 ## Run-To-Run Variance (across repeats)
 
 - repeats: 2
-- e2e_fpr mean/std: 25.6250 / 0.6250
-- solver_only_fpr mean/std: 27.5000 / 0.0000
-- e2e_overall_true mean/std: 47.9810 / 0.9366
-- solver_only_overall_true mean/std: 49.5435 / 0.1740
+- e2e_fpr mean/std: 26.2500 / 0.0000
+- solver_only_fpr mean/std: 28.7500 / 0.0000
+- e2e_overall_true mean/std: 48.1370 / 0.4429
+- solver_only_overall_true mean/std: 50.1306 / 0.4188
 
 ## Rehearsal Attribution (Continuous Score)
 
 - ceiling_overall_true_mean: unavailable (no evaluated ceiling plans for this data source)
-- solver_only_overall_true_mean: 49.7174
-- end_to_end_overall_true_mean: 47.0443
+- solver_only_overall_true_mean: 50.5494
+- end_to_end_overall_true_mean: 47.6941
 - overall_true_solver_headroom: unavailable
-- overall_true_parsing_loss: 2.6731
+- overall_true_parsing_loss: 2.8553
 - ceiling_overall_parsed_mean: unavailable (no evaluated ceiling plans for this data source)
-- solver_only_overall_parsed_mean: 48.7218
-- end_to_end_overall_parsed_mean: 48.9856
+- solver_only_overall_parsed_mean: 49.5360
+- end_to_end_overall_parsed_mean: 49.6849
 - overall_parsed_solver_headroom: unavailable
-- overall_parsed_parsing_loss: -0.2639
+- overall_parsed_parsing_loss: -0.1489
 
 ## Parser Vs Oracle
 
@@ -76,8 +76,8 @@
 
 ## Timing And Reliability
 
-- total_p50_sec: 264.5209
-- total_p95_sec: 498.5897
+- total_p50_sec: 371.4482
+- total_p95_sec: 602.7883
 - valid_output_rate: 1.0000
 - timed_out: 0
 - used_fallback: 0
