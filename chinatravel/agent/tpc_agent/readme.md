@@ -49,9 +49,9 @@ Change one bounded knob at a time, retain the full acceptance gate, and compare 
 - [`solver_constraints.py`](solver_constraints.py): branch-local constraint extraction.
 - [`parsed_verifier.py`](parsed_verifier.py): local no-oracle acceptance interpretation.
 - [`cp_candidates.py`](cp_candidates.py) and [`cp_solver.py`](cp_solver.py): grounded candidate pool and CP-SAT reconstruction.
-- [`AGENT_DESIGN.md`](../../../AGENT_DESIGN.md): cross-phase ownership and data flow.
+- [README architecture snapshot](../../../README.md#architecture-at-a-glance): cross-phase ownership and data flow.
 - [Phase 1 playbook](../../../docs/tpc_phase1_playbook.md): solve, merge, score, and submission operations.
-- [Phase 2 design](../../../docs/tpc_phase2_design.md): bounded orchestration around this core.
+- [Phase 2 roadmap](../../../docs/tpc_phase2_roadmap.md): active no-oracle priorities and guardrails around this core.
 
 Historical Phase 1 measurements and score discussions are preserved in the [Phase 1 archive](../../../docs/archive/phase1/tpc_phase1_playbook_2026-07-15.md).
 Use current generated score output rather than copying score tables into this implementation guide.

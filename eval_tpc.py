@@ -73,40 +73,71 @@ from tqdm import tqdm
 from chinatravel.symbol_verification.concept_func import func_dict
 from copy import deepcopy
 
-def cal_default_pr_score(query_index, query_data, result_data,all_pass_id):
+
+def _clamp_score(value):
+    return max(0.0, min(1.0, value))
+
+
+def _official_default_pr_scores_for_plan(plan):
+    results = []
+    for constraint in DEFAULT_PR:
+        vars_dict = deepcopy(func_dict)
+        vars_dict["plan"] = plan
+        try:
+            exec(
+                constraint,
+                {"__builtins__": {"set": set}},
+                vars_dict,
+            )
+            res_i = vars_dict.get("result", False)
+            results.append(_clamp_score(float(res_i)))
+        except Exception:
+            results.append(0.0)
+    return np.array(results)
+
+
+def _strict_ddr_from_plan(plan):
+    itinerary = plan.get("itinerary", []) if isinstance(plan, dict) else []
+    day_total = len(itinerary)
+    if day_total <= 0:
+        return 0.0
+
+    meal_types = {"breakfast", "lunch", "dinner"}
+    counted_meals = 0
+    for day_plan in itinerary:
+        activities = day_plan.get("activities", []) if isinstance(day_plan, dict) else []
+        day_meals = set()
+        for activity in activities:
+            if not isinstance(activity, dict):
+                continue
+            activity_type = activity.get("type")
+            if activity_type in meal_types:
+                # Count at most one breakfast/lunch/dinner per day.
+                day_meals.add(activity_type)
+        counted_meals += len(day_meals)
+
+    return _clamp_score((counted_meals / float(day_total)) / 3.0)
+
+
+def _strict_default_pr_scores_for_plan(plan):
+    official = _official_default_pr_scores_for_plan(plan)
+    strict = official.copy()
+    strict[2] = _strict_ddr_from_plan(plan)
+    return strict
+
+
+def cal_default_pr_score(query_index, query_data, result_data, all_pass_id, strict_meal_cap=False):
     all_score=[]
-    def clamp(value):
-        return max(0.0, min(1.0, value))
 
     for ii, idx in enumerate(tqdm(query_index)):
         symbolic_input, plan = query_data[idx], result_data[idx]
-        results = []
         if idx not in all_pass_id:
-            results=np.zeros(len(DEFAULT_PR))
             continue
-        for constraint in DEFAULT_PR:
-            vars_dict = deepcopy(func_dict)
-            vars_dict["plan"] = plan
 
-            # exec(constraint, {"__builtins__": {"set": set, "print": print}}, vars_dict)
-            # results.append(vars_dict.get("result", False))
-            try:
-                # Evaluate the constraint in a safe manner
-                exec(
-                    constraint,
-                    {
-                        "__builtins__": {
-                            "set": set,
-                        }
-                    },
-                    vars_dict,
-                )
-                res_i = vars_dict.get("result", False)
-                # print("result: ", res_i)
-                # print(type(res_i))
-                results.append(clamp(res_i))
-            except Exception as e:
-                results.append(0.)
+        if strict_meal_cap:
+            results = _strict_default_pr_scores_for_plan(plan)
+        else:
+            results = _official_default_pr_scores_for_plan(plan)
         all_score.append(np.array(results))
     if len(all_score)==0:
         return np.zeros(len(DEFAULT_PR))
@@ -114,35 +145,21 @@ def cal_default_pr_score(query_index, query_data, result_data,all_pass_id):
     return np.mean(all_score,axis=0)
 
 
-def cal_per_query_pr_scores(query_index, result_data, all_pass_id):
+def cal_per_query_pr_scores(query_index, result_data, all_pass_id, strict_meal_cap=False):
     """Return a dict mapping query_id -> np.array of per-query DEFAULT_PR scores.
 
     Queries not in all_pass_id receive zeros (consistent with cal_default_pr_score).
     """
-    def clamp(value):
-        return max(0.0, min(1.0, value))
-
     per_query = {}
     for idx in query_index:
         if idx not in all_pass_id:
             per_query[idx] = np.zeros(len(DEFAULT_PR))
             continue
         plan = result_data[idx]
-        results = []
-        for constraint in DEFAULT_PR:
-            vars_dict = deepcopy(func_dict)
-            vars_dict["plan"] = plan
-            try:
-                exec(
-                    constraint,
-                    {"__builtins__": {"set": set}},
-                    vars_dict,
-                )
-                res_i = vars_dict.get("result", False)
-                results.append(clamp(res_i))
-            except Exception:
-                results.append(0.)
-        per_query[idx] = np.array(results)
+        if strict_meal_cap:
+            per_query[idx] = _strict_default_pr_scores_for_plan(plan)
+        else:
+            per_query[idx] = _official_default_pr_scores_for_plan(plan)
     return per_query
 
 
@@ -397,6 +414,15 @@ if __name__ == "__main__":
             query_index, query_data, result_data[method], verbose=False, lang=args.lang
         )
 
+        macro_comm_strict, micro_comm_strict, common_result_agg_strict, commonsense_pass_id_strict = evaluate_commonsense_constraints(
+            query_index,
+            query_data,
+            result_data[method],
+            verbose=False,
+            lang=args.lang,
+            strict_time_ordering=True,
+        )
+
         # print("Commonsense constraints:")
         print("Mic.EPR {}".format(micro_comm))
         scores['MicEPR'] = micro_comm
@@ -408,27 +434,65 @@ if __name__ == "__main__":
             query_index, query_data, result_data[method], env_pass_id=commonsense_pass_id, verbose=False, lang=args.lang
         )
 
+        (
+            macro_logi_strict,
+            micro_logi_strict,
+            conditional_macro_logi_strict,
+            conditional_micro_logi_strict,
+            logi_result_agg_strict,
+            logi_pass_id_strict,
+        ) = evaluate_hard_constraints_v2(
+            query_index,
+            query_data,
+            result_data[method],
+            env_pass_id=commonsense_pass_id_strict,
+            verbose=False,
+            lang=args.lang,
+        )
+
 
 
 
         print("C-LPR: {}".format(conditional_micro_logi))
         scores['C-LPR'] = conditional_micro_logi
 
+        print("patched C-LPR: {}".format(conditional_micro_logi_strict))
+        scores['patched_C-LPR'] = conditional_micro_logi_strict
+
         # record the index of the queries that pass the logical constraints
         logical_pass_info = logi_result_agg.iloc[:, 1:]
         id_list = logi_result_agg.iloc[:, 0].tolist()
 
         all_pass_id = list(set(schema_pass_id) & set(commonsense_pass_id) & set(logi_pass_id))
+        all_pass_id_strict = list(set(schema_pass_id) & set(commonsense_pass_id_strict) & set(logi_pass_id_strict))
 
 
         print("FPR: ", 1. * len(all_pass_id) / len(query_index) * 100)
         fpr= 1. * len(all_pass_id) / len(query_index) * 100
         scores['FPR'] = fpr
 
+        print("patched FPR: ", 1. * len(all_pass_id_strict) / len(query_index) * 100)
+        fpr_strict = 1. * len(all_pass_id_strict) / len(query_index) * 100
+        scores['patched_FPR'] = fpr_strict
+
         pre_res=cal_default_pr_score(query_index,query_data,result_data[method],all_pass_id)
         scores['DAV']=pre_res[0]*100
         scores['ATT']=pre_res[1]*100
         scores['DDR']=pre_res[2]*100
+
+        pre_res_strict = cal_default_pr_score(
+            query_index,
+            query_data,
+            result_data[method],
+            all_pass_id_strict,
+            strict_meal_cap=True,
+        )
+        scores['patched_DAV'] = pre_res_strict[0] * 100
+        scores['patched_ATT'] = pre_res_strict[1] * 100
+        scores['patched_DDR'] = pre_res_strict[2] * 100
+
+        scores['patched_MicEPR'] = micro_comm_strict
+        scores['patched_MacEPR'] = macro_comm_strict
 
         commonsense_pass_set = set(commonsense_pass_id)
         logi_pass_set = set(logi_pass_id)
@@ -473,8 +537,19 @@ if __name__ == "__main__":
 
         # Aligned with upstream PR #25: use 10% EPR-micro + 10% EPR-macro.
         final_score=0.1*micro_comm+0.1*macro_comm+0.25*conditional_micro_logi+0.05*scores['DAV']+0.05*scores['ATT']+0.05*scores['DDR']+0.4*fpr
+        patched_final_score = (
+            0.1 * micro_comm_strict
+            + 0.1 * macro_comm_strict
+            + 0.25 * conditional_micro_logi_strict
+            + 0.05 * scores['patched_DAV']
+            + 0.05 * scores['patched_ATT']
+            + 0.05 * scores['patched_DDR']
+            + 0.4 * fpr_strict
+        )
         print('Overall Score (micro+macro): ', final_score)
+        print('patched Overall Score (micro+macro): ', patched_final_score)
         scores['overall'] = final_score
+        scores['patched_overall'] = patched_final_score
         print(scores)
 
         score_file = os.path.join('your_tpc_scores.json')

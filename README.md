@@ -12,6 +12,37 @@ This repository contains a solver-first travel-planning agent for the [Travel Pl
 | Submission | Prediction zip | Self-contained code, prompts, and scaffolding |
 | Evaluation | Public leaderboard | Separate held-out set on Qwen3.6-27B via SGLang on 2 × A800 80 GB GPUs without NVLink |
 
+## Architecture at a glance
+
+Phase 2 no-oracle execution contract:
+
+- Input to the planning path is visible query text plus allowed environment tools only.
+- Oracle verifier fields (`hard_logic*`) are evaluation-only and must be stripped before parsing/solving.
+- LLM steps may propose parse/refine edits but cannot authorize facts; all facts are grounded in `WorldEnv` and pass deterministic acceptance checks.
+
+Shared planner flow:
+
+```text
+query input
+	-> parse + normalize (branch-local variants)
+	-> deterministic base build
+	-> bounded repairs/restarts (+ optional CP-SAT)
+	-> acceptance-gated packing/refinement
+	-> finalization + telemetry + output
+```
+
+Ownership map:
+
+| Component | Responsibility | Primary source |
+| --- | --- | --- |
+| Constraint extraction | Convert query/oracle inputs into solver-facing, branch-local constraints | `chinatravel/agent/tpc_agent/solver_constraints.py`, `parse_constraints.py` |
+| Deterministic planner | Build, repair, restart, rank, pack, and densify itinerary candidates | `chinatravel/agent/tpc_agent/tpc_agent.py` |
+| CP-SAT tier | Construct candidate pools and solve hard residuals | `chinatravel/agent/tpc_agent/cp_candidates.py`, `chinatravel/agent/tpc_agent/cp_solver.py` |
+| Acceptance path | Apply parsed/oracle constraints, then schema and commonsense checks | `chinatravel/agent/tpc_agent/parsed_verifier.py`, `chinatravel/agent/tpc_agent/tpc_agent.py` |
+| Phase 2 orchestration | Allocate bounded stage budgets, call TPCAgent, finalize output | `chinatravel/agent/phase2/orchestrator.py` |
+| Harness boundary | Hide oracle fields, expose tools, and emit official layout | `agent_env/scripts/solve_phase2.py`, `agent_env/` |
+| World facts | POIs, schedules, prices, restaurants, hotels, transport | `chinatravel/environment/` and `WorldEnv` |
+
 ## Setup
 
 Use Python 3.12 from the repository root:
@@ -50,18 +81,20 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 ## Current state
 
-Phase 1 operations are mature. On the familiar-100 development set the parser is now at `~0.99` F1 with zero missing families (the latest step, the comma-in-name entity-resolution segmentation fix, moved F1 `0.9316 -> 0.9908`), so the binding ceiling has shifted from parsing to the solver: with oracle-perfect constraints the solver still passes only `~26/100` (solver-only FPR), dominated by the timed-visit-at-named-POI family. The current flags-on reference is [run `20260721T174336Z`](results/phase2_baselines/runs/20260721T174336Z.json) (mean end-to-end FPR `21.5%`, `overall_true` `45.06`, `300 s` local budget). Timed-window pinning and a within-day resequencer that target the solver ceiling have landed opt-in but are not yet gated. See the [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for the shortcomings review and prioritized next steps. The official development set has no best plans, so no ceiling is available; it is not the final held-out evaluation set.
+Phase 1 operations are mature. The current local `results/best` evaluation reaches a perfect released-set score (`make p1eval SPLIT=tpc_phase1`: MicEPR/MacEPR/C-LPR/FPR/DAV/ATT/DDR all `100.0`, overall `100.0`).
+
+Phase 2 currently runs on a promoted `900 s` familiar-100-val baseline with timed-window pinning + converge patience enabled in harness defaults. The latest recorded baseline is [run `20260724T192503Z`](results/phase2_baselines/runs/20260724T192503Z.json): end-to-end FPR `25.0`, solver-only FPR `27.5`, end-to-end `overall_true` `47.04`, solver-only `overall_true` `49.72`, zero parse failures, and zero timeouts/fallbacks. The parser is no longer the dominant bottleneck; the remaining leverage is solver-side and transport/refine roadmap items. See [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for active priorities.
 
 ## Documentation
 
 - [Phase 1 playbook](docs/tpc_phase1_playbook.md): operating flow and reusable solver lessons.
-- [Phase 2 design](docs/tpc_phase2_design.md): stable architecture and interfaces.
 - [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, gates, and dataset boundaries (HF, local, familiar-100, final).
 - [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions, evidence-backed priorities, and solver headroom.
-- [Parallel agent prompts](docs/agents/README.md): the three-role split (analysis / evaluation / implementation) and the role-2 and role-3 agent prompts.
+- [Architecture at a glance](README.md#architecture-at-a-glance): no-oracle contract, ownership map, and planner flow.
+- [Parallel agent prompts](docs/agents/README.md): concurrent workstreams and currently active focused briefs.
 - [Baseline ledger guide](docs/phase2_baselines/README.md): how to compare generated rows in `results/phase2_baselines/`.
 - [Competition reference](docs/reference/competition.md): dated local summary of official facts.
-- [Agent design](AGENT_DESIGN.md): shared component and data-flow map.
+- [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md): planner internals and tuning knobs.
 - [HPC workflows](slurm/README.md): Phase 1 resource profiles and resume behavior.
 
 ## Sources

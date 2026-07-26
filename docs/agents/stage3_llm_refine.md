@@ -1,13 +1,13 @@
 # Stage 3 — bounded, acceptance-gated LLM plan refinement
 
-You are a Sonnet 5 implementation agent (role 3 — see [`role3_implementation.md`](role3_implementation.md) for the
-general role contract; this file is the focused task prompt for the specific implementation item below). Your job is to
+You are a Sonnet 5 implementation agent (see [parallel workstream guidance](../../CLAUDE.md#parallel-workstreams) for the
+general contract; this file is the focused task prompt for the specific implementation item below). Your job is to
 turn the Phase 2 **Stage 3 "improve" no-op into a real, bounded, acceptance-gated LLM refinement pass**, behind an
-explicit off-by-default flag, preserving every invariant. You run in parallel with a docs/planning agent (role 1) and a
-long-running evaluation agent (role 2); you do not block them and they do not block you.
+explicit off-by-default flag, preserving every invariant. You run in parallel with docs/planning and evaluation
+workstreams; none should block the others.
 
-Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap.md) (Next step 7 and "Shortcomings"
-item 3), the [Phase 2 design doc](../tpc_phase2_design.md) ("Improve" stage and "Extension points"), and the
+Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap.md) (Next step 6 and "Shortcomings"
+item 3), the [README architecture snapshot](../../README.md#architecture-at-a-glance) (no-oracle contract and flow), and the
 [TPCAgent internals](../../chinatravel/agent/tpc_agent/readme.md) before writing code. Read the owning code path
 before editing it.
 
@@ -32,7 +32,7 @@ The problem is that **v1 commits nothing yet.** A quick end-to-end screen on fam
 | `llm_error_or_invalid_json` | 5 | the refine call **errored or returned bad JSON** | partly a screen artifact — see below |
 
 **Reproduce it first** (this is your baseline, and how you'll know v2 works): run the screen from
-[role 3's "Screen your change" step](role3_implementation.md#screen-your-change-before-handing-it-off) with
+[Phase 2 quick-screen guidance](../tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage) with
 `--flag TPC_P2_LLM_REFINE`, and read the `LLM activity (cand)` line and the per-uid `improve_skip_reason` in
 `agent_env/runs/phase2_e2e_*/<uid>/telemetry.json`. **Success = `improve_committed` rises above 0 without any regression,
 and the screen verdict moves off `NO BENEFIT`.**
@@ -132,7 +132,7 @@ or a check that the slice can fit both — skip and record a telemetry reason ot
   ```
 
 - **Then screen your change end-to-end on val** (the self-check that tells you it actually worked — see
-  [role 3's screen step](role3_implementation.md#screen-your-change-before-handing-it-off)):
+  [Phase 2 quick-screen guidance](../tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)):
 
   ```bash
   .venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_REFINE --mode end-to-end \
@@ -152,13 +152,13 @@ or a check that the slice can fit both — skip and record a telemetry reason ot
 Develop on a branch named `claude/phase2-impl-stage3-refine` (create it from the latest `main`). Then:
 
 1. Rebase on the latest `main` before pushing; resolve unexpected changes as user work, never overwrite them.
-2. Push and open a PR. In the body: state the roadmap item (Next step 7 / shortcoming 3), the mechanism (LLM proposes
+2. Push and open a PR. In the body: state the roadmap item (Next step 6 / shortcoming 3), the mechanism (LLM proposes
    bounded edits → deterministic re-grounding → acceptance gate), the flag that gates it (and that the floor stays
-   byte-identical when off), the tests you added, and any offline/solver-free diagnostic evidence — labeled diagnostic,
-   pending role 2's end-to-end gate. Do **not** present familiar-100 or local numbers as final-evaluation performance,
-   and do **not** self-promote: role 2 runs the paired `TPC_P2_LLM_REFINE` on/off gate at one SHA, role 1 records the
-   outcome.
+  byte-identical when off), the tests you added, and any offline/solver-free diagnostic evidence — labeled diagnostic,
+  pending an end-to-end gate. Do **not** present familiar-100 or local numbers as final-evaluation performance,
+  and do **not** self-promote: run the paired `TPC_P2_LLM_REFINE` on/off gate at one SHA and record the outcome in
+  the roadmap.
 3. After opening the PR, wait for GitHub Copilot review comments (poll up to 10 minutes) and address or resolve each one.
 
 Report faithfully: if the mechanism does not flip any plan or a test fails, say so with the output rather than papering
-over it. Hand the gate to role 2.
+over it. Hand the gate to the evaluation workstream.

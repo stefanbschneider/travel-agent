@@ -1,41 +1,25 @@
 # Parallel agent prompts
 
-Phase 2 development runs as three concurrent roles (see the [Parallel agent roles](../../CLAUDE.md#parallel-agent-roles) table in `CLAUDE.md`). Each role owns a branch and opens its own PR; none blocks the others.
+Phase 2 development runs as concurrent workstreams (see [Parallel workstreams](../../CLAUDE.md#parallel-workstreams) in `CLAUDE.md`). Each workstream owns a branch and opens its own PR; none blocks the others.
 
-| Role | Prompt | Model |
-| --- | --- | --- |
-| 1. Analysis / docs / plan | *(this repository's default agent — keeps the [roadmap](../tpc_phase2_roadmap.md) and [eval doc](../tpc_phase2_eval.md) current)* | — |
-| 2. Evaluation (long e2e) | [`role2_evaluation.md`](role2_evaluation.md) | Sonnet 5 |
-| 3. Implementation | [`role3_implementation.md`](role3_implementation.md) | Sonnet 5 |
+The generic role-level prompts were retired. The active docs in this folder are focused task briefs only.
 
-### Focused task prompts (role 3)
+## Active focused prompts
 
-When one implementation item is large or precise enough to warrant its own self-contained brief, it gets a focused prompt
-alongside the generic role-3 one. These are still role-3 work (code + tests under `chinatravel/`, `agent_env/`, `tests/`,
-`scripts/`) and obey the same invariants; they just pre-select the item and spell out the mechanism.
-
-| Task | Prompt | Status |
-| --- | --- | --- |
-| Intercity-transport endpoint grounding | [`intercity_transport_grounding.md`](intercity_transport_grounding.md) | Ready to implement — closes the post-pin intercity commonsense residual (4 queries fail all four intercity families via one structural defect); floor-safe behind `TPC_REPAIR_INTERCITY`, screenable in ~20 min. |
-| Stage 3 LLM refine (roadmap Next step 7) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | A larger new implementation; lower priority than the intercity grounding fix above (bounded LLM refine vs. a deterministic structural fix). |
-
-### Focused task prompts (role 2)
-
-A gate item can also warrant its own self-contained brief when it can run **in parallel** with another
-long gate. These are role-2 work (generated rows only) and obey the same invariants.
-
-| Task | Prompt | Status |
-| --- | --- | --- |
-| Tier 1: commonsense-transport repair gate (`TPC_REPAIR_TRANSPORT_GAPS`) | [`tier1_transport_repair_gate.md`](tier1_transport_repair_gate.md) | Runnable now — no new code (flag already landed); shares its baseline with the cascade gate (PR #39), so it runs concurrently, not after it. |
+| Workstream | Task | Prompt | Status |
+| --- | --- | --- | --- |
+| Evaluation | Tier 1: commonsense-transport repair gate (`TPC_REPAIR_TRANSPORT_GAPS`) | [`tier1_transport_repair_gate.md`](tier1_transport_repair_gate.md) | Keep active. Runnable now, no new code required; shares baseline with other `900 s` val gates. |
+| Implementation | Intercity-transport endpoint grounding (`TPC_REPAIR_INTERCITY`) | [`intercity_transport_grounding.md`](intercity_transport_grounding.md) | Active and prioritized deterministic implementation item. |
+| Implementation | Stage 3 bounded LLM refine (`TPC_P2_LLM_REFINE`) | [`stage3_llm_refine.md`](stage3_llm_refine.md) | Active, lower priority than intercity deterministic grounding. |
 
 ## How to use these
 
-Hand the role-2 and role-3 prompt files to two separate Sonnet 5 agents launched in parallel. Each prompt is self-contained: it names the branch to develop on, the exact commands to run, the invariants to obey, and ends by opening a PR. They take direction from the [roadmap](../tpc_phase2_roadmap.md)'s "Next steps" — role 1 owns that priority order, so re-read it at the start of every run in case `main` has moved. A focused task prompt (above) overrides role 3's "pick the next item" step for that one item; when it lands, delete or supersede it and fall back to the generic role-3 prompt.
+Pick the focused brief that matches the current roadmap item in [Phase 2 roadmap](../tpc_phase2_roadmap.md), then run it as a self-contained task. Each brief contains branch naming, exact commands, invariants, and finish criteria.
 
-The division of labor is strict:
+The division of labor remains strict:
 
-- **Role 2 writes only generated rows** under `results/phase2_baselines/`. It never edits agent, parser, solver, or doc prose. Its job is to turn a roadmap gate item into committed evidence.
-- **Role 3 writes only code and tests** under `chinatravel/`, `agent_env/`, `tests/`, `scripts/`. It never rewrites roadmap priorities and never claims a promotion — a measurement promotes a change only through the gate that role 2 runs.
-- **Role 1 writes only docs** and reconciles both roles' evidence back into the roadmap.
+- **Evaluation writes only generated rows** under `results/phase2_baselines/`.
+- **Implementation writes only code and tests** under `chinatravel/`, `agent_env/`, `tests/`, `scripts/`.
+- **Docs/planning updates docs and priority order** in the roadmap/eval docs.
 
-All three obey the [non-negotiable invariants](../../CLAUDE.md#non-negotiable-invariants) and the [change and branch protocol](../../CLAUDE.md#change-and-branch-protocol): rebase on the latest `main` before pushing, and after opening a PR wait for GitHub Copilot review (poll up to 10 minutes) and address or resolve each comment.
+All workstreams obey the [non-negotiable invariants](../../CLAUDE.md#non-negotiable-invariants) and the [change and branch protocol](../../CLAUDE.md#change-and-branch-protocol).

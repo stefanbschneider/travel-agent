@@ -4,6 +4,16 @@ Phase 1 is offline prediction generation on the released `tpc_phase1` data.
 Only prediction files are submitted.
 The local workflow may use the released oracle fields, including `hard_logic_py`, to optimize and check plans; that privilege does not transfer to Phase 2.
 
+## Current status (2026-07-25)
+
+`results/best` currently evaluates at a perfect released-set score via:
+
+```bash
+make p1eval SPLIT=tpc_phase1
+```
+
+Latest local result: MicEPR `100.0`, MacEPR `100.0`, C-LPR `100.0`, FPR `100.0`, DAV `100.0`, ATT `100.0`, DDR `100.0`, overall `100.0`.
+
 ## Objective and invariants
 
 The operating loop is:

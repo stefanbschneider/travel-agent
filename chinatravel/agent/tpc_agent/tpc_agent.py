@@ -460,6 +460,15 @@ class TPCAgent(BaseAgent):
         ``TPC_PIN_TIMED_WINDOWS``, since it runs as a fallback inside ``_pin_timed_windows``."""
         return os.environ.get("TPC_CASCADE_TIMED_WINDOWS", "0") not in ("", "0", "false", "False")
 
+    def _repair_intercity_enabled(self):
+        """Opt-in flag for intercity endpoint grounding repair.
+
+        Default OFF, so the deterministic floor is byte-identical to before: no endpoint
+        re-grounding and no plan mutation. Enable with ``TPC_REPAIR_INTERCITY=1`` to
+        measure the endpoint commonsense residual before any promotion.
+        """
+        return os.environ.get("TPC_REPAIR_INTERCITY", "0") not in ("", "0", "false", "False")
+
     def _apply_search_constraints(self, constraints, params):
         """Project per-POI dwell/time-window POIs into the required pools (so the base build
         includes them) and a window's latest-start onto an arrive_no_later timing constraint
@@ -811,6 +820,12 @@ class TPCAgent(BaseAgent):
         if self._repair_transport_gaps_enabled():
             self._set_transport_context(constraints or {})
             self._repair_transport_gaps(plan, query, constraints or {}, check)
+        # Re-ground first/last intercity endpoint activities (opt-in). The commonsense
+        # intercity checker requires day-1 activity[0] and last-day activity[-1] to be real
+        # rows from intercity_transport.select(...), with matching IDs/times/prices.
+        if self._repair_intercity_enabled():
+            self._set_transport_context(constraints or {})
+            self._repair_intercity_endpoints(plan, query, constraints or {}, check)
         # Pin named timed-visit POIs into their clause windows first (opt-in; roadmap G8). This runs
         # *before* the acceptance gate below because a window-failing plan is by definition not yet
         # accepted, and each pin is individually gated (committed only if the full checker then
@@ -1450,6 +1465,262 @@ class TPCAgent(BaseAgent):
             pass
         finally:
             self._forced_inner_mode = saved_forced_mode
+
+    def _intercity_mode_preferences(self, constraints):
+        outbound_pref = return_pref = None
+        intercity_mode = (constraints or {}).get("intercity_mode", None)
+        if isinstance(intercity_mode, dict):
+            outbound_pref = intercity_mode.get("outbound", None)
+            return_pref = intercity_mode.get("return", None)
+        elif isinstance(intercity_mode, str):
+            outbound_pref = return_pref = intercity_mode
+        return outbound_pref, return_pref
+
+    def _intercity_mode_order(self, existing_type, preferred_mode):
+        order = []
+        if existing_type in ("airplane", "train"):
+            order.append(existing_type)
+        pref = self._norm_text(preferred_mode)
+        if pref in ("airplane", "flight", "plane"):
+            order.append("airplane")
+        elif pref in ("train", "rail"):
+            order.append("train")
+        for mode in ("airplane", "train"):
+            if mode not in order:
+                order.append(mode)
+        return order
+
+    def _iter_intercity_rows(self, from_city, to_city, mode):
+        try:
+            df = self.env.intercitytransport.select(from_city, to_city, mode)
+        except Exception:
+            return []
+        if df is None or isinstance(df, str):
+            return []
+        rows = []
+        try:
+            for i in range(len(df)):
+                rows.append(df.iloc[i].to_dict())
+        except Exception:
+            return []
+        return rows
+
+    def _intercity_activity_matches_row(self, activity, row, mode):
+        if not isinstance(activity, dict) or mode not in ("airplane", "train"):
+            return False
+        if activity.get("type") != mode:
+            return False
+        required_id = "FlightID" if mode == "airplane" else "TrainID"
+        forbidden_id = "TrainID" if mode == "airplane" else "FlightID"
+        if required_id not in activity or forbidden_id in activity:
+            return False
+        try:
+            row_price = float(row.get("Cost"))
+            activity_price = float(activity.get("price"))
+            tickets = float(activity.get("tickets"))
+            activity_cost = float(activity.get("cost"))
+        except (TypeError, ValueError):
+            return False
+        return (
+            activity.get(required_id) == row.get(required_id)
+            and activity.get("start") == row.get("From")
+            and activity.get("end") == row.get("To")
+            and activity.get("start_time") == row.get("BeginTime")
+            and activity.get("end_time") == row.get("EndTime")
+            and activity_price == row_price
+            and activity_cost == row_price * tickets
+        )
+
+    def _endpoint_is_grounded(self, activity, from_city, to_city):
+        if not self._is_intercity_activity(activity):
+            return False
+        mode = str(activity.get("type", ""))
+        if mode not in ("airplane", "train"):
+            return False
+        for row in self._iter_intercity_rows(from_city, to_city, mode):
+            if self._intercity_activity_matches_row(activity, row, mode):
+                return True
+        return False
+
+    def _safe_time_minutes(self, value):
+        try:
+            return time_to_minutes(str(value))
+        except Exception:
+            return None
+
+    def _safe_inbound_transport(self, city, from_pos, to_pos, depart_time, latest_arrival, people):
+        if not to_pos:
+            return None, None
+        if from_pos == to_pos:
+            return [], depart_time
+        try:
+            transports, arrival = self._get_transport(
+                self.env, city, from_pos, to_pos, depart_time, people)
+        except Exception:
+            return None, None
+        if transports is None or arrival is None:
+            return None, None
+        arr_min = self._safe_time_minutes(arrival)
+        if arr_min is None:
+            return None, None
+        if latest_arrival is not None and arr_min > latest_arrival:
+            return None, None
+        return transports, arrival
+
+    def _repair_intercity_endpoints(self, plan, query, constraints, check):
+        """Repair first/last intercity endpoint grounding in one acceptance-gated trial."""
+        if self.env is None or not isinstance(plan, dict):
+            return
+        itinerary = plan.get("itinerary", []) or []
+        if not isinstance(itinerary, list) or len(itinerary) == 0:
+            return
+
+        start_city = str(query.get("start_city", "") or "")
+        target_city = str(query.get("target_city", "") or "")
+        if not start_city or not target_city:
+            return
+        people = int(query.get("people_number", 1) or 1)
+        outbound_pref, return_pref = self._intercity_mode_preferences(constraints)
+
+        try:
+            was_accepted = self._accepted(*check(plan))
+        except Exception:
+            was_accepted = False
+        trial = deepcopy(plan)
+        changed = False
+
+        # Outbound endpoint: day-1 first activity.
+        first_day = (trial.get("itinerary", []) or [{}])[0] or {}
+        first_day_acts = first_day.get("activities", []) or []
+        first_act = first_day_acts[0] if first_day_acts else None
+        outbound_ok = self._endpoint_is_grounded(first_act, start_city, target_city)
+        if not outbound_ok:
+            existing_type = first_act.get("type") if isinstance(first_act, dict) else None
+            modes = self._intercity_mode_order(existing_type, outbound_pref)
+            first_incity_idx = None
+            for idx, activity in enumerate(first_day_acts):
+                if idx == 0 and self._is_intercity_activity(activity):
+                    continue
+                if not self._is_intercity_activity(activity):
+                    first_incity_idx = idx
+                    break
+            first_incity = first_day_acts[first_incity_idx] if first_incity_idx is not None else None
+            first_incity_start = self._safe_time_minutes(first_incity.get("start_time")) if isinstance(first_incity, dict) else None
+            first_incity_pos = self._activity_start_position(first_incity) if isinstance(first_incity, dict) else None
+
+            chosen_row = None
+            chosen_transports = []
+            for mode in modes:
+                for row in self._iter_intercity_rows(start_city, target_city, mode):
+                    arr_min = self._safe_time_minutes(row.get("EndTime"))
+                    if arr_min is None:
+                        continue
+                    if first_incity_start is not None and arr_min > first_incity_start:
+                        continue
+                    transports_to_first = []
+                    if first_incity is not None:
+                        transports_to_first, _ = self._safe_inbound_transport(
+                            target_city,
+                            str(row.get("To", "")),
+                            first_incity_pos,
+                            str(row.get("EndTime", "")),
+                            first_incity_start,
+                            people,
+                        )
+                        if transports_to_first is None:
+                            continue
+                    chosen_row = row
+                    chosen_transports = transports_to_first
+                    break
+                if chosen_row is not None:
+                    break
+
+            if chosen_row is not None:
+                new_first = self._make_intercity_activity(chosen_row, people, [])
+                if first_day_acts and self._is_intercity_activity(first_day_acts[0]):
+                    first_day_acts[0] = new_first
+                else:
+                    first_day_acts.insert(0, new_first)
+                    if first_incity_idx is not None:
+                        first_incity_idx += 1
+                if first_incity_idx is not None and first_incity_idx < len(first_day_acts):
+                    if not self._is_intercity_activity(first_day_acts[first_incity_idx]):
+                        first_day_acts[first_incity_idx]["transports"] = chosen_transports
+                changed = True
+
+        # Return endpoint: last-day final activity.
+        last_day = (trial.get("itinerary", []) or [{}])[-1] or {}
+        last_day_acts = last_day.get("activities", []) or []
+        last_act = last_day_acts[-1] if last_day_acts else None
+        return_ok = self._endpoint_is_grounded(last_act, target_city, start_city)
+        if not return_ok:
+            existing_type = last_act.get("type") if isinstance(last_act, dict) else None
+            modes = self._intercity_mode_order(existing_type, return_pref)
+
+            last_incity_idx = None
+            search_end = len(last_day_acts) - 1
+            if search_end >= 0 and self._is_intercity_activity(last_day_acts[search_end]):
+                search_end -= 1
+            for idx in range(search_end, -1, -1):
+                if not self._is_intercity_activity(last_day_acts[idx]):
+                    last_incity_idx = idx
+                    break
+
+            floor_time = "00:00"
+            floor_min = 0
+            floor_pos = None
+            if last_incity_idx is not None:
+                anchor = last_day_acts[last_incity_idx]
+                floor_time = str(anchor.get("end_time", "")) or floor_time
+                floor_min = self._safe_time_minutes(floor_time)
+                if floor_min is None:
+                    floor_min = 0
+                    floor_time = "00:00"
+                floor_pos = self._activity_end_position(anchor)
+
+            chosen_row = None
+            chosen_transports = []
+            for mode in modes:
+                for row in self._iter_intercity_rows(target_city, start_city, mode):
+                    dep_min = self._safe_time_minutes(row.get("BeginTime"))
+                    if dep_min is None or dep_min < floor_min:
+                        continue
+                    transports_to_depart = []
+                    if floor_pos:
+                        transports_to_depart, arrival = self._safe_inbound_transport(
+                            target_city,
+                            floor_pos,
+                            str(row.get("From", "")),
+                            floor_time,
+                            dep_min,
+                            people,
+                        )
+                        if transports_to_depart is None or arrival is None:
+                            continue
+                    chosen_row = row
+                    chosen_transports = transports_to_depart
+                    break
+                if chosen_row is not None:
+                    break
+
+            if chosen_row is not None:
+                new_last = self._make_intercity_activity(chosen_row, people, chosen_transports)
+                if last_day_acts and self._is_intercity_activity(last_day_acts[-1]):
+                    last_day_acts[-1] = new_last
+                else:
+                    last_day_acts.append(new_last)
+                changed = True
+
+        if not changed:
+            return
+        try:
+            if not self._accepted(*check(trial)):
+                return
+            if was_accepted and self._accepted_eval_key(trial) < self._accepted_eval_key(plan):
+                return
+            plan["itinerary"] = trial["itinerary"]
+        except Exception:
+            return
 
     def _pin_timed_windows(self, plan, query, constraints, check):
         """Retime a present-but-mistimed named-POI activity into its ``[earliest, end_before]``

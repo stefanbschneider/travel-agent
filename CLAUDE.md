@@ -13,29 +13,29 @@ The human entry point is [README.md](README.md).
 Phase 2 runs in an organizer harness on a held-out set.
 The public material does not specify a per-query timeout or repeat count; local `300 s` and `900 s` settings are assumptions, not rules.
 
-## Parallel agent roles
+## Parallel workstreams
 
-Phase 2 development is split across three roles that run concurrently. Each role works on its own branch and opens its own PR; none blocks the others.
+Phase 2 development is split across concurrent workstreams. Each workstream uses its own branch and opens its own PR; none blocks the others.
 
-| Role | Job | Writes | Must not |
+| Workstream | Job | Writes | Must not |
 | --- | --- | --- | --- |
-| **1. Analysis / docs / plan** | Review status, shortcomings, and options; keep the roadmap and eval docs current with the latest `main`. | `docs/tpc_phase2_*.md`, `CLAUDE.md`, `README.md`. | Change agent/solver behavior, or run long e2e itself. |
-| **2. Evaluation** | Run long pinned e2e / solver-only baselines on a separate machine and commit the resulting rows. Non-blocking and long-running. | `results/phase2_baselines/` (generated rows only). | Edit agent, parser, solver, or doc prose. |
-| **3. Implementation** | Implement the next improvement from the roadmap's "Next steps", with focused tests. | `chinatravel/`, `agent_env/`, `tests/`, `scripts/`. | Rewrite roadmap priorities or promote a row (that is the gate's job). |
+| **Analysis / docs / plan** | Review status, shortcomings, and options; keep the roadmap and eval docs current with the latest `main`. | `docs/tpc_phase2_*.md`, `CLAUDE.md`, `README.md`. | Change agent/solver behavior, or run long e2e itself. |
+| **Evaluation** | Run long pinned e2e / solver-only baselines on a separate machine and commit the resulting rows. Non-blocking and long-running. | `results/phase2_baselines/` (generated rows only). | Edit agent, parser, solver, or doc prose. |
+| **Implementation** | Implement the next improvement from the roadmap's "Next steps", with focused tests. | `chinatravel/`, `agent_env/`, `tests/`, `scripts/`. | Rewrite roadmap priorities or promote a row (that is the gate's job). |
 
-Shared rules for every role: obey the [non-negotiable invariants](#non-negotiable-invariants) and the [change and branch protocol](#change-and-branch-protocol); rebase on the latest `main` before pushing; a measurement promotes a change only through the gate, never by a role asserting it. Role 1 owns priority order; roles 2 and 3 take direction from the roadmap and report evidence back to it. Agent prompts for roles 2 and 3 live in [`docs/agents/`](docs/agents/).
+Shared rules for every workstream: obey the [non-negotiable invariants](#non-negotiable-invariants) and the [change and branch protocol](#change-and-branch-protocol); rebase on the latest `main` before pushing; a measurement promotes a change only through the gate, never by assertion alone. Priority order is maintained in the roadmap, and focused prompts live in [`docs/agents/`](docs/agents/).
 
 ## Source of truth
 
 | Topic | Read this |
 | --- | --- |
 | Project setup and canonical entry | [README.md](README.md) |
-| Shared solver architecture | [AGENT_DESIGN.md](AGENT_DESIGN.md) and [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md) |
+| Shared solver architecture | [README architecture snapshot](README.md#architecture-at-a-glance) and [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md) |
 | Phase 1 operation | [Phase 1 playbook](docs/tpc_phase1_playbook.md) |
-| Phase 2 architecture | [Phase 2 design](docs/tpc_phase2_design.md) |
+| Phase 2 architecture | [README architecture snapshot](README.md#architecture-at-a-glance) and [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Phase 2 metrics, gates, dataset boundaries, and the fast pre-gate A/B screen + cadence | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
 | Phase 2 priorities and solver headroom | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
-| Parallel-agent prompts (roles 2 and 3) | [Agent prompts](docs/agents/README.md) |
+| Parallel-agent focused prompts (evaluation and implementation) | [Agent prompts](docs/agents/README.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |
 | Agent environment | [Human guide](agent_env/README.md) and [agent contract](agent_env/SKILL.md) |
 | Historical decisions and measurements | [Documentation archive](docs/archive/README.md) |

@@ -55,4 +55,4 @@ Both must hide oracle-only fields before the agent path.
 
 The Phase 2 runner writes the plan to `results/<method>/<uid>.json`.
 It writes per-query `evaluation.json` and `telemetry.json` under `agent_env/runs/<method>/<uid>/`, plus `<split>_summary.json` in that method directory.
-Use [Phase 2 design](../docs/tpc_phase2_design.md) for the no-oracle architecture and [Phase 2 evaluation](../docs/tpc_phase2_eval.md) for measurement.
+Use [README architecture snapshot](../README.md#architecture-at-a-glance) for the no-oracle architecture and [Phase 2 evaluation](../docs/tpc_phase2_eval.md) for measurement.

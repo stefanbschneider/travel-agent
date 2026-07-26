@@ -480,7 +480,20 @@ def Is_attractions_correct(symbolic_input, plan_json, verbose=False):
     attraction_list = []
 
     for day_plan_i in plan:
-        for activity_i in day_plan_i["activities"]:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        activities = day_plan_i.get("activities")
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
 
             try: 
                 activity_i["type"]
@@ -833,7 +846,20 @@ def Is_transport_correct(symbolic_input, plan_json, verbose=False):
 
     plan = plan_json["itinerary"]
     for day_plan_i in plan:
-        for activity_i in day_plan_i["activities"]:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        activities = day_plan_i.get("activities")
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
 
             if "transports" in activity_i:
                 
@@ -1040,6 +1066,16 @@ def time2real(time_str):
     time_str = time_str.split("次日")[-1]
     return float(time_str.split(":")[0])*60 + float(time_str.split(":")[1])
 
+
+def _time2real_with_day(time_str):
+    time_raw = str(time_str).strip()
+    day_offset = 24 * 60 if "次日" in time_raw else 0
+    clock = time_raw.split("次日")[-1].strip()
+    if ":" not in clock:
+        raise ValueError("invalid time format: {}".format(time_str))
+    hour_str, minute_str = clock.split(":", 1)
+    return day_offset + float(hour_str) * 60 + float(minute_str)
+
 def Is_time_correct(symbolic_input, plan_json, verbose=False): 
     
 
@@ -1061,7 +1097,20 @@ def Is_time_correct(symbolic_input, plan_json, verbose=False):
 
     plan = plan_json["itinerary"]
     for day_plan_i in plan:
-        for activity_i in day_plan_i["activities"]:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        activities = day_plan_i.get("activities")
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
             
             # print(activity_i)
             try: activity_i["start_time"] and activity_i["end_time"]
@@ -1091,6 +1140,89 @@ def Is_time_correct(symbolic_input, plan_json, verbose=False):
                     error_info.append("Must arrive at the location before starting the activity: " + str(activity_i))
 
             
+
+    if verbose:
+        if table_statistics.loc[0].sum() == 0:
+            print("Time passed!")
+        else:
+            print(error_info)
+            print(table_statistics)
+    return table_statistics, error_info
+
+
+def Is_time_correct_strict(symbolic_input, plan_json, verbose=False):
+    """Stricter chronological checks used for loophole-fixed score reporting.
+
+    Keeps the official checks intact and adds:
+    1) per-day non-overlap ordering across activities,
+    2) each inbound transport departs no earlier than previous activity end.
+    """
+    table_statistics, error_info = Is_time_correct(symbolic_input, plan_json, verbose=False)
+
+    try:
+        plan = plan_json["itinerary"]
+    except Exception:
+        if verbose:
+            print(error_info)
+            print(table_statistics)
+        return table_statistics, error_info
+
+    for day_plan_i in plan:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        previous_activity_end = None
+        activities = day_plan_i.get("activities", [])
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
+            try:
+                activity_st_time = activity_i["start_time"]
+                activity_ed_time = activity_i["end_time"]
+                activity_start = _time2real_with_day(activity_st_time)
+                activity_end = _time2real_with_day(activity_ed_time)
+            except Exception:
+                # Base checker already reports missing/invalid times.
+                continue
+
+            if activity_end <= activity_start:
+                activity_end += 24 * 60
+
+            if previous_activity_end is not None:
+                check_start = activity_start
+                while check_start + 24 * 60 <= previous_activity_end:
+                    check_start += 24 * 60
+                if check_start < previous_activity_end:
+                    table_statistics.loc[0, 'Does not follow Chronological Order'] = 1
+                    error_info.append(
+                        "Activities in a day must be chronologically ordered without overlap: {}".format(
+                            activity_i
+                        )
+                    )
+
+                if "transports" in activity_i and len(activity_i["transports"]) > 0:
+                    try:
+                        transport_start = _time2real_with_day(activity_i["transports"][0]["start_time"])
+                        while transport_start + 24 * 60 <= previous_activity_end:
+                            transport_start += 24 * 60
+                        if transport_start < previous_activity_end:
+                            table_statistics.loc[0, 'Does not follow Chronological Order'] = 1
+                            error_info.append(
+                                "Transport must depart after the previous activity ends: {}".format(
+                                    activity_i
+                                )
+                            )
+                    except Exception:
+                        pass
+
+            previous_activity_end = activity_end
 
     if verbose:
         if table_statistics.loc[0].sum() == 0:

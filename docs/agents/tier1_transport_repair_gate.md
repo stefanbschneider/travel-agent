@@ -1,6 +1,6 @@
 # Tier 1 gate: commonsense-transport repair (`TPC_REPAIR_TRANSPORT_GAPS`)
 
-Role-2 (evaluation) focused brief. Self-contained: hand this file to a separate agent. It runs
+Evaluation-focused brief. Self-contained: hand this file to a separate agent. It runs
 **in parallel with the cascade gate** (PR #39 / `TPC_CASCADE_TIMED_WINDOWS`) — the two gates are
 independent and **share one baseline**, so this does not wait on the cascade run.
 
@@ -9,7 +9,7 @@ independent and **share one baseline**, so this does not wait on the cascade run
 - **No new code.** `TPC_REPAIR_TRANSPORT_GAPS` is already landed opt-in (default off, floor
   byte-identical). See the roadmap's [Commonsense-transport repair](../tpc_phase2_roadmap.md#commonsense-transport-repair)
   section for the mechanism. This brief is purely a **900 s gate**, which is long-running eval work
-  — that is why it is a role-2 task, not implementation.
+  — not an implementation change.
 - **Target metric is commonsense (EPR), not logical FPR.** The pass grounds broken inner-city legs,
   targeting the *"Invalid Transport information across positions"* commonsense residual — the dominant
   commonsense-transport failure family in the post-pin solver-only attribution (run
@@ -87,7 +87,7 @@ make phase2-gate \
 If it clears, promotion is a one-line addition to `apply_deterministic_solver_defaults()` in
 `agent_env/scripts/solve_phase2.py` (mirror the pin/converge default:
 `if "TPC_REPAIR_TRANSPORT_GAPS" not in os.environ: os.environ["TPC_REPAIR_TRANSPORT_GAPS"] = "1"`),
-plus a test case and a roadmap note — that flip is a small role-3 PR, **not** part of this gate.
+plus a test case and a roadmap note — that flip is a small implementation PR, **not** part of this gate.
 
 ## Invariants (unchanged)
 
