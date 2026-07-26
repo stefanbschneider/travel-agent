@@ -22,6 +22,7 @@ import sys
 import tomllib
 from pathlib import Path
 from statistics import mean, pstdev
+import urllib.request
 
 import psutil
 
@@ -45,6 +46,13 @@ DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
 # by more than this many MB since its first solved query. Catches leaks (e.g. func_timeout thread
 # accumulation on timeouts) during long single-process runs; unset by default (opt-in via env).
 MAX_RSS_GROWTH_MB = float(os.environ.get("TPC_P2_MAX_RSS_MB", "0") or "0")
+LLM_MODEL_PROBE_TIMEOUT_SEC = 5.0
+_OPENAI_BASE_URL_ENV_VARS = (
+    "TPC_P2_LLM_BASE_URL",
+    "OPENAI_BASE_URL",
+    "OPENAI_API_BASE",
+    "SGLANG_BASE_URL",
+)
 
 
 def _default_method_for_split(split: str) -> str:
@@ -59,8 +67,79 @@ def _read_local_config(path: Path = DEFAULT_CONFIG_PATH) -> dict:
         return tomllib.load(f)
 
 
+def _first_env_value(names: tuple[str, ...]) -> str | None:
+    for name in names:
+        value = os.environ.get(name)
+        if value not in (None, ""):
+            return str(value)
+    return None
+
+
+def _resolve_openai_api_key(cfg: dict) -> str:
+    return str(
+        cfg.get("api_key")
+        or os.environ.get("TPC_P2_LLM_API_KEY")
+        or os.environ.get("OPENAI_API_KEY")
+        or "EMPTY"
+    )
+
+
+def _probe_openai_model_id(base_url: str, *, api_key: str, timeout_sec: float = LLM_MODEL_PROBE_TIMEOUT_SEC) -> str | None:
+    request = urllib.request.Request(
+        f"{base_url.rstrip('/')}/models",
+        headers={
+            "Accept": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=timeout_sec) as response:
+        status = getattr(response, "status", None)
+        if status is None and hasattr(response, "getcode"):
+            status = response.getcode()
+        if status not in (None, 200):
+            return None
+        payload = json.load(response)
+
+    models = payload.get("data") if isinstance(payload, dict) else None
+    if not isinstance(models, list) or not models:
+        return None
+    first = models[0]
+    model_id = first.get("id") if isinstance(first, dict) else None
+    return str(model_id) if model_id not in (None, "") else None
+
+
+def _resolve_openai_model(cfg: dict, *, base_url: str | None, api_key: str) -> str | None:
+    configured = cfg.get("model") or os.environ.get("TPC_P2_LLM_MODEL") or os.environ.get("OPENAI_MODEL")
+    if configured not in (None, ""):
+        return str(configured)
+    if not base_url:
+        return None
+    return _probe_openai_model_id(base_url, api_key=api_key)
+
+
+def _autodetect_openai_cfg() -> dict | None:
+    base_url = _first_env_value(_OPENAI_BASE_URL_ENV_VARS)
+    if not base_url:
+        return None
+    api_key = _resolve_openai_api_key({})
+    try:
+        model = _resolve_openai_model({}, base_url=base_url, api_key=api_key)
+    except Exception:
+        return None
+    if not model:
+        return None
+    return {
+        "backend": "openai",
+        "backend_source": "autodetect",
+        "base_url": base_url,
+        "model": model,
+        "api_key": api_key,
+    }
+
+
 def _phase2_llm_config() -> dict:
     cfg: dict = {}
+    backend_source = "none"
 
     local_cfg = _read_local_config()
     phase2_cfg = local_cfg.get("phase2") if isinstance(local_cfg, dict) else None
@@ -68,6 +147,8 @@ def _phase2_llm_config() -> dict:
         llm_cfg = phase2_cfg.get("llm")
         if isinstance(llm_cfg, dict):
             cfg.update({k: v for k, v in llm_cfg.items() if v not in (None, "")})
+            if llm_cfg.get("backend") not in (None, ""):
+                backend_source = "config"
 
     env_cfg = {
         "backend": os.environ.get("TPC_P2_LLM_BACKEND"),
@@ -80,6 +161,8 @@ def _phase2_llm_config() -> dict:
         "max_tokens": os.environ.get("TPC_P2_LLM_MAX_TOKENS"),
     }
     cfg.update({k: v for k, v in env_cfg.items() if v not in (None, "")})
+    if env_cfg["backend"] not in (None, ""):
+        backend_source = "env-explicit"
 
     backend = str(cfg.get("backend") or "none").lower()
     cfg["backend"] = backend
@@ -90,7 +173,27 @@ def _phase2_llm_config() -> dict:
             cfg["base_url"] = os.environ["DEEPINFRA_BASE_URL"]
         if "model" not in cfg and os.environ.get("DEEPINFRA_MODEL"):
             cfg["model"] = os.environ["DEEPINFRA_MODEL"]
+    elif backend == "openai":
+        base_url = str(cfg.get("base_url") or _first_env_value(_OPENAI_BASE_URL_ENV_VARS) or "") or None
+        if base_url:
+            cfg["base_url"] = base_url
+        api_key = _resolve_openai_api_key(cfg)
+        try:
+            model = _resolve_openai_model(cfg, base_url=base_url, api_key=api_key)
+        except Exception:
+            model = None
+        if model:
+            cfg["model"] = model
+            cfg["api_key"] = api_key
+        else:
+            cfg["backend"] = "none"
+    elif backend_source != "env-explicit":
+        autodetected = _autodetect_openai_cfg()
+        if autodetected is not None:
+            cfg.update(autodetected)
+            backend_source = "autodetect"
 
+    cfg["backend_source"] = backend_source
     return cfg
 
 
@@ -142,22 +245,28 @@ def resolve_llm_client_and_flags():
     """
     llm_cfg = _phase2_llm_config()
     llm_client = p2_llm.build_llm_client(llm_cfg)
+    llm_backend_source = str(llm_cfg.get("backend_source") or "none")
+    setattr(llm_client, "backend_source", llm_backend_source)
 
     # Acceptance gate is OR-correct by default: enable disjunctive branch generation unless the
     # operator explicitly overrides TPC_P2_DISJUNCTION. The library default (Flags()) stays off, so
     # the deterministic byte-identical invariant tests are unaffected.
     flags = orch.Flags.from_env()
+    flags.llm_backend = getattr(llm_client, "backend", "none")
     if "TPC_P2_DISJUNCTION" not in os.environ:
         flags.disjunction = True
     # Dynamic budget reallocation is a pure timing win (gives Stage 2 whatever Stage 1 -- and
     # Stage 3 when off -- didn't use) with a floor at the static split, so default it on too.
     if "TPC_P2_DYNAMIC_BUDGET" not in os.environ:
         flags.dynamic_budget = True
-    # Same pattern for the LLM corrective parse audit: default it on once a usable backend is
-    # configured (the parse_to_ir fix keeps a deterministic fallback on any LLM failure, so this
-    # is safe to default on), unless the operator explicitly overrides TPC_P2_LLM_PARSE. Library
-    # Flags() and llm_backend="none" (nothing configured) both stay off.
-    if "TPC_P2_LLM_PARSE" not in os.environ and llm_client.backend != "none":
+    # Same pattern for the LLM corrective parse audit, except an auto-detected endpoint never
+    # changes planning behavior by itself: only an explicit operator override can turn llm_parse on
+    # in that case. Library Flags() and llm_backend="none" both stay off.
+    if (
+        "TPC_P2_LLM_PARSE" not in os.environ
+        and llm_client.backend != "none"
+        and llm_backend_source != "autodetect"
+    ):
         flags.llm_parse = True
     # Deterministic entity resolution is pure recall/precision cleanup against the committed POI
     # catalogs. It has no LLM or network dependency, so default it on with disjunction and dynamic
@@ -186,6 +295,24 @@ def apply_deterministic_solver_defaults():
       flat (e2e continuous ``47.98``) while cutting solve ``p50`` ``366 s -> 265 s`` (below even the
       floor's ``337 s``) -- reclaiming wall-clock and making the submission more robust to an
       organizer per-query timeout shorter than the assumed ``900 s``.
+    - ``TPC_COMMONSENSE_FIRST=1``: the commonsense-first finalization policy (relaxed repair commit
+      rule for unaccepted plans + the ``best_cs`` bucket in ``_solve``; see
+      ``docs/agents/final_night_commonsense_first.md``). ``eval_tpc`` scores C-LPR as the
+      *conditional* logical micro, so an emitted plan that fails commonsense forfeits its whole
+      logical partial credit (weight ``0.25``) and its EPR-macro point (``0.10``). Paired same-SHA
+      end-to-end screen (``results/phase2_baselines/screens/20260726_e2e_n40_b120_commonsense_first``,
+      ``familiar_100_val`` fold 0, ``n=40``, ``120 s``, ``parallel=7``, LLM backend ``none``):
+      ``overall_true`` ``51.34 -> 60.98``, commonsense pass ``30/40 -> 40/40``, EPR-macro
+      ``75 -> 100``, C-LPR ``67.35 -> 89.95``, FPR ``32.5 -> 35.0``, ``all_pass`` ``13 -> 14``, zero
+      parse failures. ``logical_micro`` is unchanged at ``89.95``, which is the proof of mechanism:
+      the gain is entirely the commonsense gate releasing logical credit the solver had already
+      earned. **Caveat:** timeouts rose ``4 -> 7`` at that deliberately tight budget (baseline solve
+      ``p50`` is already ``108 s`` of ``120 s``), all recovered with ``used_fallback=0`` -- the same
+      budget-boundary shape ``TPC_PIN_TIMED_WINDOWS`` showed at ``300 s`` and cleared at ``900 s``
+      (``p50 265 s`` there). The probe cost is bounded proportionally
+      (``TPC_CS_CHECK_TIME_FRAC=0.08`` of the solve budget, ``TPC_CS_CHECK_BUDGET=60``
+      confirmations), and ``docs/agents/final_night_eval_commands.md`` carries the ``900 s`` pinned
+      confirmation rows.
 
     Must run *before* ``make_tpcagent_solve_fn`` builds the agent: ``TPCAgent.__init__`` reads
     ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS`` is read lazily at pack time,
@@ -194,6 +321,8 @@ def apply_deterministic_solver_defaults():
         os.environ["TPC_PIN_TIMED_WINDOWS"] = "1"
     if "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ:
         os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] = "15"
+    if "TPC_COMMONSENSE_FIRST" not in os.environ:
+        os.environ["TPC_COMMONSENSE_FIRST"] = "1"
 
 
 def run_split(
@@ -287,6 +416,7 @@ def run_split(
             solve_fn=solve_fn,
             flags=flags,
         )
+        telemetry["llm_backend_source"] = getattr(llm_client, "backend_source", "none")
 
         hb.write_json(result_path, plan)
 
@@ -392,6 +522,7 @@ def run_split(
         "method": method,
         "budget_sec": budget_sec,
         "llm_backend": getattr(llm_client, "backend", "none"),
+        "llm_backend_source": getattr(llm_client, "backend_source", "none"),
         "llm_parse_attempts": llm_parse_attempts,
         "llm_fixture_missing": llm_fixture_missing,
         "llm_parse_failed": llm_parse_failed,

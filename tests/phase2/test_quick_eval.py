@@ -113,3 +113,51 @@ def test_pref_only_improvement_at_flat_fpr_is_green():
     cand = _metrics(20.0, 45.0, timeouts=7)
     v = _verdict(base, cand)
     assert v.startswith("GREEN LIGHT:")
+
+
+# --- per-layer metric extraction --------------------------------------------------------------
+#
+# The screen reports these purely as diagnostics: a change that turns commonsense-invalid plans
+# valid moves EPR-macro and the *conditional* logical micro (C-LPR) long before it moves FPR, so
+# dropping them (as the screen used to) can make a real effect look flat.
+
+
+def test_layer_metrics_extracted_from_raw():
+    mode_report = {
+        "fpr": 25.0,
+        "raw": {
+            "commonsense_pass_count": 59,
+            "commonsense_micro": 98.41,
+            "commonsense_macro": 73.75,
+            "logical_micro": 89.47,
+            "logical_macro": 25.0,
+            "conditional_logical_micro": 66.02,
+            "all_pass_count": 20,
+            "schema_details": [{"data_id": "u1", "schema": 1}],
+        },
+    }
+
+    layers = qe._layer_metrics(mode_report)
+
+    assert layers["commonsense_macro"] == 73.75
+    assert layers["conditional_logical_micro"] == 66.02
+    assert layers["all_pass_count"] == 20
+    # Only the declared keys are copied; bulky per-uid detail stays out of the arm dict.
+    assert set(layers) == set(qe._LAYER_KEYS)
+
+
+def test_layer_metrics_default_to_zero_when_raw_missing():
+    assert qe._layer_metrics({}) == {key: 0 for key in qe._LAYER_KEYS}
+    assert qe._layer_metrics({"raw": {"commonsense_macro": None}})["commonsense_macro"] == 0
+    assert qe._layer_metrics(None)["logical_micro"] == 0
+
+
+def test_layer_metrics_are_not_gate_keys():
+    """The gate must keep judging fpr/continuous_score/timeouts/parse_failures only."""
+    gate = check_gate(
+        {"fpr": 25.0, "continuous_score": 44.0, "timeouts": 0, "parse_failures": 0,
+         "layers": {"commonsense_macro": 73.75}},
+        {"fpr": 25.0, "continuous_score": 44.0, "timeouts": 0, "parse_failures": 0,
+         "layers": {"commonsense_macro": 90.0}},
+    )
+    assert gate["passed"] is True

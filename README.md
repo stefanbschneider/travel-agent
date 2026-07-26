@@ -83,7 +83,9 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 Phase 1 operations are mature. The current local `results/best` evaluation reaches a perfect released-set score (`make p1eval SPLIT=tpc_phase1`: MicEPR/MacEPR/C-LPR/FPR/DAV/ATT/DDR all `100.0`, overall `100.0`).
 
-Phase 2 currently runs on a promoted `900 s` familiar-100-val baseline with timed-window pinning + converge patience enabled in harness defaults. The latest recorded baseline is [run `20260724T192503Z`](results/phase2_baselines/runs/20260724T192503Z.json): end-to-end FPR `25.0`, solver-only FPR `27.5`, end-to-end `overall_true` `47.04`, solver-only `overall_true` `49.72`, zero parse failures, and zero timeouts/fallbacks. The parser is no longer the dominant bottleneck; the remaining leverage is solver-side and transport/refine roadmap items. See [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for active priorities.
+Phase 2 currently runs on a promoted `900 s` familiar-100-val baseline with timed-window pinning + converge patience enabled in harness defaults. The latest recorded baseline is [run `20260724T192503Z`](results/phase2_baselines/runs/20260724T192503Z.json): end-to-end FPR `25.0`, solver-only FPR `27.5`, end-to-end `overall_true` `47.04`, solver-only `overall_true` `49.72`, zero parse failures, and zero timeouts/fallbacks.
+
+Since `2026-07-26` a commonsense-first finalization policy (`TPC_COMMONSENSE_FIRST`) is also harness-default-on. The scored C-LPR is conditional on the commonsense checker passing, so an emitted plan that fails commonsense forfeits logical credit the solver already earned. Promoted on a paired same-SHA quick screen (not yet a full `900 s` gate): end-to-end `overall_true` `51.34 -> 60.98`, C-LPR `67.35 -> 89.95`, commonsense pass `30/40 -> 40/40`, FPR `32.5 -> 35.0`, with `logical_micro` unchanged. The parser is no longer the dominant bottleneck; remaining leverage is solver-side and transport/refine roadmap items. See [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) for active priorities.
 
 ## Documentation
 

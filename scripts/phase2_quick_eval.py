@@ -150,6 +150,32 @@ def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
     }
 
 
+# Per-layer acceptance metrics the rehearsal already computes but the screen used to drop. They are
+# the diagnostic axis for anything that acts on commonsense validity rather than on full acceptance:
+# eval_tpc scores C-LPR as the *conditional* logical micro (env_pass_id=commonsense_pass_id), so a
+# change that turns commonsense-invalid plans valid moves commonsense_macro and
+# conditional_logical_micro long before it moves FPR. Reporting FPR alone hides that entirely.
+_LAYER_KEYS = (
+    "commonsense_pass_count",
+    "commonsense_micro",
+    "commonsense_macro",
+    "logical_micro",
+    "logical_macro",
+    "conditional_logical_micro",
+    "all_pass_count",
+)
+
+
+def _layer_metrics(mode_report: dict) -> dict:
+    """Pull the per-layer metrics out of one rehearsal mode report.
+
+    Missing keys default to ``0`` rather than raising, so an older/partial report still screens (the
+    values are diagnostic only -- they are deliberately not part of the gate-shaped keys).
+    """
+    raw = (mode_report or {}).get("raw") or {}
+    return {key: raw.get(key, 0) or 0 for key in _LAYER_KEYS}
+
+
 def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
                    budget_sec, parallel, chunk_size, fold, folds, seed) -> dict:
     """Run one arm of the A/B with ``env_overrides`` applied, return a metrics dict."""
@@ -181,6 +207,7 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
     quality = m.get("quality", {})
     overall_true = (quality.get("overall_true") or {}).get("mean", 0.0)
     telem = _aggregate_telemetry(mode, split_name, fold_uids)
+    layers = _layer_metrics(m)
     # A uid that produced no result file (`missing`), unreadable JSON, a failed eval, or a solve
     # error is a failure that must count -- otherwise a run where some uids produced no artifact
     # looks greener than it is (the gate blocks on any increase). `missing`/`invalid_json`/
@@ -203,6 +230,7 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
         "telemetry_coverage": telemetry_coverage,
         # richer screen signals:
         "telemetry": telem,
+        "layers": layers,
         "quality_n": {k: quality.get(k) for k in ("requested", "evaluated", "missing")},
     }
 
@@ -355,6 +383,16 @@ def main() -> None:
     print("-" * 72)
     print(f"  FPR (pass %)          {_fmt_delta(baseline['fpr'], candidate['fpr'])}")
     print(f"  overall_true (pref)   {_fmt_delta(baseline['continuous_score'], candidate['continuous_score'])}")
+    # Per-layer acceptance detail: a commonsense-side change shows up here first (C-LPR is scored
+    # conditionally on the commonsense pass, so EPR-macro and C-LPR move before FPR does).
+    bl, cl = baseline.get("layers") or {}, candidate.get("layers") or {}
+    if bl or cl:
+        print(f"  commonsense pass (n)  {_fmt_delta(bl.get('commonsense_pass_count', 0), cl.get('commonsense_pass_count', 0))}")
+        print(f"  EPR-macro             {_fmt_delta(bl.get('commonsense_macro', 0), cl.get('commonsense_macro', 0))}")
+        print(f"  EPR-micro             {_fmt_delta(bl.get('commonsense_micro', 0), cl.get('commonsense_micro', 0))}")
+        print(f"  C-LPR (cond. micro)   {_fmt_delta(bl.get('conditional_logical_micro', 0), cl.get('conditional_logical_micro', 0))}")
+        print(f"  logical micro         {_fmt_delta(bl.get('logical_micro', 0), cl.get('logical_micro', 0))}")
+        print(f"  all_pass (n)          {_fmt_delta(bl.get('all_pass_count', 0), cl.get('all_pass_count', 0))}")
     print(f"  timeouts (count)      {_fmt_delta(baseline['timeouts'], candidate['timeouts'], higher_better=False)}")
     bt, ct = baseline["telemetry"], candidate["telemetry"]
     print(f"  solve p50 (sec)       {_fmt_delta(bt['solve_sec_p50'], ct['solve_sec_p50'], higher_better=False)}")

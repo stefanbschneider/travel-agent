@@ -440,14 +440,46 @@ class TPCAgent(BaseAgent):
         familiar-100 solver-only effect through the pinned gate before any promotion."""
         return os.environ.get("TPC_PIN_TIMED_WINDOWS", "0") not in ("", "0", "false", "False")
 
+    def _commonsense_first_enabled(self):
+        """Opt-in umbrella flag for the commonsense-first finalization policy (final-evening brief).
+
+        ``eval_tpc`` scores C-LPR as the *conditional* logical micro
+        (``evaluate_hard_constraints_py_v2(..., env_pass_id=commonsense_pass_id)``): a query's
+        per-clause logical credit counts only if that query also passes the commonsense checker,
+        while the denominator stays the whole batch's clause count. EPR-macro is all-or-nothing per
+        query too. So emitting a commonsense-invalid plan discards its logical partial credit
+        (weight ``0.25``) *and* its EPR-macro point (weight ``0.10``) even when most of its clauses
+        pass -- measured on the promoted row as C-LPR ``66.02`` against an unconditional
+        ``logical_micro`` of ``89.47`` (see ``scripts/phase2_commonsense_headroom.py``).
+
+        Default OFF, so the deterministic floor stays byte-identical. When on it enables:
+
+        - the relaxed repair commit rule for *unaccepted* plans (``_repair_commit_allowed``),
+        - the commonsense-valid finalization preference in ``_solve`` (the ``best_cs`` bucket),
+        - ``_repair_transport_gaps`` and ``_repair_intercity_endpoints``, whose own flags remain
+          honored as explicit operator overrides (setting either to ``0`` still disables it).
+        """
+        return os.environ.get("TPC_COMMONSENSE_FIRST", "0") not in ("", "0", "false", "False")
+
+    def _flag_enabled_with_umbrella(self, name):
+        """True when ``name`` is set truthy, or when the commonsense-first umbrella implies it.
+
+        An explicit ``name=0`` always wins, so an operator can screen the umbrella minus one pass.
+        """
+        raw = os.environ.get(name)
+        if raw is not None:
+            return str(raw) not in ("", "0", "false", "False")
+        return self._commonsense_first_enabled()
+
     def _repair_transport_gaps_enabled(self):
         """Opt-in flag for the commonsense-transport repair pass (roadmap step 4).
 
         Default OFF, so the deterministic floor is byte-identical to before: no leg
-        recomputation and no plan mutation. Enable with ``TPC_REPAIR_TRANSPORT_GAPS=1`` to
-        measure the "Invalid Transport information across positions" effect through the
-        pinned gate before any promotion."""
-        return os.environ.get("TPC_REPAIR_TRANSPORT_GAPS", "0") not in ("", "0", "false", "False")
+        recomputation and no plan mutation. Enable with ``TPC_REPAIR_TRANSPORT_GAPS=1`` (or
+        implicitly via ``TPC_COMMONSENSE_FIRST=1``) to measure the "Invalid Transport information
+        across positions" effect -- the largest commonsense residual family, 13 of the 21 failing
+        end-to-end plans on the promoted row."""
+        return self._flag_enabled_with_umbrella("TPC_REPAIR_TRANSPORT_GAPS")
 
     def _cascade_timed_windows_enabled(self):
         """Opt-in cascading forward-shift fallback for the post-pin ``timed_visit_named_poi``
@@ -464,10 +496,116 @@ class TPCAgent(BaseAgent):
         """Opt-in flag for intercity endpoint grounding repair.
 
         Default OFF, so the deterministic floor is byte-identical to before: no endpoint
-        re-grounding and no plan mutation. Enable with ``TPC_REPAIR_INTERCITY=1`` to
-        measure the endpoint commonsense residual before any promotion.
+        re-grounding and no plan mutation. Enable with ``TPC_REPAIR_INTERCITY=1`` (or implicitly via
+        ``TPC_COMMONSENSE_FIRST=1``) to measure the endpoint commonsense residual -- 3 of the 21
+        failing end-to-end plans on the promoted row fail all four intercity columns at once.
         """
-        return os.environ.get("TPC_REPAIR_INTERCITY", "0") not in ("", "0", "false", "False")
+        return self._flag_enabled_with_umbrella("TPC_REPAIR_INTERCITY")
+
+    def _fast_commonsense_prefilter(self, plan):
+        """Microsecond structural screen for the two dominant commonsense failure families.
+
+        The official evaluator costs roughly ``300 ms`` per call (it rebuilds DataFrames and
+        re-grounds every activity), and inside a wall-clock-bounded solve every such call is paid for
+        with a restart that does not happen. This screen rejects the candidates that cannot possibly
+        pass, in pure Python and without touching ``WorldEnv``:
+
+        - **transport chain** (``Invalid Transport information across positions``, 13 of the 21
+          failing end-to-end plans on the promoted row): a position change must carry an inbound leg
+          chain that actually connects the previous position to this one. A transport-less plan --
+          the exact shape the search leader takes on that family -- dies here.
+        - **chronology** (``Does not follow Chronological Order``, 7 of the 21): each activity must
+          end no earlier than it starts, must not start before the previous activity of the same day
+          ends, and must start no earlier than its own inbound leg arrives.
+
+        Returns ``True`` for "worth a real evaluator call", never a guarantee. It is deliberately no
+        stricter than the official checks it mirrors, so a plan the official evaluator would accept
+        is not screened out here (back-to-back activities are allowed; only real overlap is not).
+        """
+        if not isinstance(plan, dict):
+            return False
+        itinerary = plan.get("itinerary")
+        if not isinstance(itinerary, list) or not itinerary:
+            return False
+
+        prev_pos = None
+        for day in itinerary:
+            activities = (day or {}).get("activities")
+            if not isinstance(activities, list) or not activities:
+                return False
+            day_prev_end = None
+            for activity in activities:
+                if not isinstance(activity, dict):
+                    return False
+                start_min = self._safe_time_minutes(activity.get("start_time"))
+                end_min = self._safe_time_minutes(activity.get("end_time"))
+                if start_min is None or end_min is None or end_min < start_min:
+                    return False
+                if day_prev_end is not None and start_min < day_prev_end:
+                    return False
+                legs = activity.get("transports") or []
+                is_intercity = self._is_intercity_activity(activity)
+                cur_pos = self._activity_start_position(activity)
+                if (
+                    prev_pos is not None
+                    and not is_intercity
+                    and cur_pos
+                    and normalize_poi_name(cur_pos) != normalize_poi_name(prev_pos)
+                ):
+                    if not legs:
+                        return False
+                    if normalize_poi_name(str(legs[0].get("start", ""))) != normalize_poi_name(prev_pos):
+                        return False
+                    if normalize_poi_name(str(legs[-1].get("end", ""))) != normalize_poi_name(cur_pos):
+                        return False
+                if legs:
+                    leg_end = self._safe_time_minutes(legs[-1].get("end_time"))
+                    if leg_end is not None and leg_end > start_min:
+                        return False
+                prev_pos = self._activity_end_position(activity)
+                day_prev_end = end_min
+        return True
+
+    def _repair_commit_allowed(self, plan, trial, query, check, was_accepted):
+        """Commit rule shared by the deterministic repair passes.
+
+        Two regimes, because the value of a repair depends on what the input plan was worth:
+
+        - **Accepted input**: unchanged legacy rule. The trial must still be accepted and must not
+          regress the preference key -- never trade a valid plan for a repaired-but-worse one.
+        - **Unaccepted input** (only when ``TPC_COMMONSENSE_FIRST`` is on): commit when the trial is
+          schema-valid, turns a commonsense-*invalid* plan commonsense-*valid*, and does not lower
+          the parsed-constraint pass count. This is the case the old rule could never reach: an
+          unaccepted plan fails ``_accepted`` by definition, so a repair that fixed its transport or
+          intercity grounding was always discarded -- on exactly the plans whose commonsense failure
+          zeroes their C-LPR and EPR-macro credit. Preference is deliberately not guarded here: the
+          repaired plan costs more money/time than the broken one by construction, and the invariant
+          forbids trading a *valid* plan for score, not spending cost to make an invalid plan valid.
+
+        Comparing raw ``passed`` counts from ``check`` is safe across the two plans: the ``+2``
+        schema/commonsense bonus only applies once the parsed base is fully satisfied, which is
+        false for both sides in the unaccepted regime.
+        """
+        if was_accepted:
+            if not self._accepted(*check(trial)):
+                return False
+            return self._accepted_eval_key(trial) >= self._accepted_eval_key(plan)
+
+        if self._accepted(*check(trial)):
+            # A repair that reaches full acceptance is always a win, regardless of the umbrella.
+            return True
+        if not self._commonsense_first_enabled():
+            return False
+
+        trial_passed, _ = check(trial)
+        plan_passed, _ = check(plan)
+        if trial_passed < plan_passed:
+            return False
+        # Only worth committing when it actually flips the gate that costs us the score. Both
+        # helpers already degrade to False when the evaluator raises.
+        if self._commonsense_ok(query, plan):
+            return False
+        return self._schema_ok(query, trial) and self._commonsense_ok(query, trial)
 
     def _apply_search_constraints(self, constraints, params):
         """Project per-POI dwell/time-window POIs into the required pools (so the base build
@@ -641,6 +779,20 @@ class TPCAgent(BaseAgent):
         search. Default 0 disables it, so the restart loop's behavior is unchanged (byte-identical
         floor). Unlike ``TPC_SOLVE_STOP_AT_ACCEPT``, this does not stop at the first accept -- it
         keeps polishing preference score until it stalls.
+
+        ``TPC_COMMONSENSE_FIRST`` (see ``_commonsense_first_enabled``) additionally tracks a third
+        bucket, ``best_cs``: the best schema+commonsense-*valid* candidate seen, whatever its parsed
+        pass count. When the search ends with nothing fully accepted and the search-key leader is
+        commonsense-invalid, that bucket is emitted instead. This is a scoring-shape decision, not a
+        relaxation of acceptance: ``eval_tpc`` credits a query's logical clauses only when it also
+        passes commonsense (C-LPR is the conditional logical micro) and gives EPR-macro all-or-
+        nothing per query, so a valid plan with fewer parsed passes scores strictly higher than an
+        invalid leader. The probe is triple-bounded -- a free structural pre-filter
+        (``_fast_commonsense_prefilter``), a confirmation count (``TPC_CS_CHECK_BUDGET``, default
+        60), and a share of the solve budget spent on confirmations (``TPC_CS_CHECK_TIME_FRAC``,
+        default 0.08) -- because each confirmation costs a restart that does not happen. Exhausting
+        either bound degrades to the previous selection. Default off, so the deterministic floor is
+        byte-identical.
         """
         self.reset_timeout_recovery_plan()
         self._last_solve_constraints = None
@@ -658,6 +810,100 @@ class TPCAgent(BaseAgent):
             "check": None,
             "params": None,
         }
+        # Best candidate that is schema- and commonsense-VALID, regardless of how many parsed
+        # constraints it satisfies. Only populated under TPC_COMMONSENSE_FIRST. Rationale: when no
+        # plan is fully accepted we still emit something, and eval_tpc credits that plan's logical
+        # clauses only if it passes commonsense (C-LPR is the *conditional* logical micro), plus a
+        # whole EPR-macro point. The old selection ranked unaccepted candidates by parsed-pass count
+        # alone, so commonsense validity of the emitted plan was incidental -- 21 of 80 end-to-end
+        # plans on the promoted row failed it while passing 8/9..11/13 of their logical clauses.
+        best_cs = {
+            "plan": None,
+            "key": (float("-inf"), float("-inf"), float("-inf"), float("-inf"), float("-inf")),
+            "constraints": None,
+            "check": None,
+            "params": None,
+        }
+        commonsense_first = self._commonsense_first_enabled()
+        # Each confirmed probe runs the full official commonsense evaluator (~300 ms), and inside a
+        # wall-clock-bounded solve that time is paid for with a restart that does not happen. So the
+        # probe is triple-bounded: a free structural pre-filter rejects hopeless candidates, a call
+        # count caps the confirmations, and a share of the solve budget caps their total cost.
+        try:
+            cs_check_budget = int(os.environ.get("TPC_CS_CHECK_BUDGET", "60"))
+        except ValueError:
+            cs_check_budget = 60
+        try:
+            cs_time_frac = float(os.environ.get("TPC_CS_CHECK_TIME_FRAC", "0.08"))
+        except ValueError:
+            cs_time_frac = 0.08
+        cs_time_cap = max(0.0, cs_time_frac) * max(float(self.solve_budget_sec), 0.0)
+        cs_checks_left = [cs_check_budget if commonsense_first else 0]
+        cs_time_spent = [0.0]
+        # Memoized verdicts, keyed by object identity. The plan object is kept in the value so its
+        # id cannot be recycled by the GC while the entry is live, and each distinct plan therefore
+        # costs at most one full-evaluator call no matter how often it is consulted.
+        cs_verdicts: dict[int, tuple] = {}
+
+        def commonsense_valid(plan, *, prefilter=True):
+            """Bounded, memoized schema+commonsense verdict. ``None`` means "not evaluated"."""
+            if plan is None:
+                return None
+            cached = cs_verdicts.get(id(plan))
+            if cached is not None:
+                return cached[1]
+            if prefilter and not self._fast_commonsense_prefilter(plan):
+                # Free rejection: record it so the same plan is never re-screened.
+                cs_verdicts[id(plan)] = (plan, False)
+                return False
+            if cs_checks_left[0] <= 0 or cs_time_spent[0] >= cs_time_cap:
+                return None
+            cs_checks_left[0] -= 1
+            probe_start = time.time()
+            try:
+                verdict = bool(self._schema_ok(query, plan) and self._commonsense_ok(query, plan))
+            except Exception:
+                verdict = False
+            cs_time_spent[0] += time.time() - probe_start
+            cs_verdicts[id(plan)] = (plan, verdict)
+            return verdict
+
+        def probe_commonsense_valid(plan, constraints, check, params, passed, total):
+            """Record ``plan`` in ``best_cs`` when it is schema+commonsense valid (bounded).
+
+            The cheap ranking key is computed first and compared against the incumbent, so the
+            expensive evaluator only runs for candidates that would actually improve the bucket. The
+            gate deliberately is *not* "is this a new search-key leader": a commonsense-valid plan
+            usually satisfies fewer parsed constraints than the leader (that is the whole reason the
+            leader was chosen over it), so keying off the leader would never probe the plans this
+            mechanism exists to find.
+            """
+            # Rank by how much logical credit the valid plan carries, then by preference.
+            fraction = (passed / total) if total else 1.0
+            cs_key = (fraction,) + tuple(self._accepted_eval_key(plan))
+            if best_cs["plan"] is not None and cs_key <= best_cs["key"]:
+                return
+            if not commonsense_valid(plan):
+                return
+            best_cs.update(
+                plan=plan, key=cs_key, constraints=constraints, check=check, params=params
+            )
+
+        def commonsense_valid_export():
+            """Bucket to export/emit when nothing is accepted: prefer a commonsense-valid plan.
+
+            Returns ``None`` (keep the pre-change leader) when the umbrella is off, no valid
+            candidate was found, the leader is itself that candidate, or the leader is known valid.
+            An unevaluated leader (probe budget exhausted) also yields ``None``: without a verdict
+            there is no evidence the swap helps, and the floor behavior is the safe default.
+            """
+            if not commonsense_first or best_cs["plan"] is None:
+                return None
+            if best["plan"] is None or best["plan"] is best_cs["plan"]:
+                return None
+            if commonsense_valid(best["plan"]) is not False:
+                return None
+            return best_cs
 
         def consider(plan, constraints, check, params):
             plan = self._sanitize_plan_for_grounding(plan, query)
@@ -671,6 +917,12 @@ class TPCAgent(BaseAgent):
                 best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params)
                 updated = True
             accepted = self._accepted(passed, total)
+            if commonsense_first and not accepted:
+                # An accepted plan is commonsense-valid by construction (the checker's +2 bonus) and
+                # is handled by best_accepted, so only unaccepted candidates are probed here.
+                probe_commonsense_valid(plan, constraints, check, params, passed, total)
+                if best_cs["plan"] is plan:
+                    updated = True
             if accepted:
                 accepted_key = self._accepted_eval_key(plan)
                 if best_accepted["plan"] is None or accepted_key > best_accepted["key"]:
@@ -688,12 +940,21 @@ class TPCAgent(BaseAgent):
                 # improved best["plan"], the unaccepted search-key leader). Using the current
                 # candidate's constraints unconditionally here would mismatch a stale
                 # best_accepted export, so pull constraints from the same bucket as best_now.
+                # The recovery plan mirrors the final selection's preference order (accepted, then
+                # commonsense-valid, then raw leader) so a timeout recovers the same quality of plan
+                # the full solve would have emitted.
+                cs_export = None
                 if best_accepted["plan"] is not None:
                     best_now = best_accepted["plan"]
                     constraints_now = best_accepted["constraints"]
                 else:
-                    best_now = best["plan"]
-                    constraints_now = best["constraints"]
+                    cs_export = commonsense_valid_export()
+                    if cs_export is not None:
+                        best_now = cs_export["plan"]
+                        constraints_now = cs_export["constraints"]
+                    else:
+                        best_now = best["plan"]
+                        constraints_now = best["constraints"]
                 self._set_timeout_recovery_plan(best_now)
                 self._last_solve_constraints = deepcopy(constraints_now)
             if accepted and (stop_at_accept or stop_at_accept_packed):
@@ -776,6 +1037,14 @@ class TPCAgent(BaseAgent):
             pass
 
         chosen = best_accepted if best_accepted["plan"] is not None else best
+        if best_accepted["plan"] is None:
+            # Nothing was fully accepted. Emitting a commonsense-invalid plan forfeits this query's
+            # logical partial credit (C-LPR is scored conditionally on the commonsense pass) and its
+            # EPR-macro point, so a commonsense-valid candidate with fewer parsed passes is worth
+            # strictly more than an invalid leader. Off unless TPC_COMMONSENSE_FIRST is set.
+            cs_export = commonsense_valid_export()
+            if cs_export is not None:
+                chosen = cs_export
 
         if chosen["plan"] is not None and chosen["check"] is not None and not stop_at_accept:
             packed = self._pack_plan(chosen["plan"], query, chosen["constraints"], chosen["check"], chosen["params"])
@@ -1420,12 +1689,15 @@ class TPCAgent(BaseAgent):
         restart's forced/excluded mode that had no route for this particular pair no longer blocks
         it; real constraint exclusions still apply via ``_set_transport_context``) when the
         existing leg does not already connect the two positions. All fixes land in one deepcopy
-        trial and are committed together only if the full checker then accepts -- never a partial
-        commit, since a single remaining broken leg would still fail the full checker on its own.
-        A grounded leg has a real, nonzero cost where the broken original had none, so the
-        "preference must not regress" guard only applies when the *starting* plan was already
-        accepted: turning an invalid plan valid is a pure win regardless of the small cost added,
-        matching the invariant's own wording (never trade a *valid* plan for a higher score) --
+        trial and are committed together only if the commit rule allows -- never a partial commit,
+        since a single remaining broken leg would still fail the full checker on its own. See
+        ``_repair_commit_allowed``: an already-accepted plan keeps the strict
+        still-accepted-and-no-preference-regression rule, while an *unaccepted* plan (only under
+        ``TPC_COMMONSENSE_FIRST``) commits when the repair turns it commonsense-valid without losing
+        parsed-constraint passes. A grounded leg has a real, nonzero cost where the broken original
+        had none, so the "preference must not regress" guard only applies when the *starting* plan was
+        already accepted: turning an invalid plan valid is a pure win regardless of the small cost
+        added, matching the invariant's own wording (never trade a *valid* plan for a higher score) --
         it does not forbid spending cost to make an invalid plan valid at all."""
         city = query.get("target_city", "")
         people = int(query.get("people_number", 1) or 1)
@@ -1456,9 +1728,7 @@ class TPCAgent(BaseAgent):
                     prev_end = str(activity.get("end_time", "")) or prev_end
             if not changed:
                 return
-            if not self._accepted(*check(trial)):
-                return
-            if was_accepted and self._accepted_eval_key(trial) < self._accepted_eval_key(plan):
+            if not self._repair_commit_allowed(plan, trial, query, check, was_accepted):
                 return
             plan["itinerary"] = trial["itinerary"]
         except Exception:
@@ -1568,7 +1838,12 @@ class TPCAgent(BaseAgent):
         return transports, arrival
 
     def _repair_intercity_endpoints(self, plan, query, constraints, check):
-        """Repair first/last intercity endpoint grounding in one acceptance-gated trial."""
+        """Repair first/last intercity endpoint grounding in one commit-gated trial.
+
+        Commit rule is shared with the transport-gap pass (``_repair_commit_allowed``): an accepted
+        input keeps the strict still-accepted-and-no-preference-regression rule, while an unaccepted
+        input (only under ``TPC_COMMONSENSE_FIRST``) commits when the re-grounding turns the plan
+        commonsense-valid without losing parsed-constraint passes."""
         if self.env is None or not isinstance(plan, dict):
             return
         itinerary = plan.get("itinerary", []) or []
@@ -1714,9 +1989,7 @@ class TPCAgent(BaseAgent):
         if not changed:
             return
         try:
-            if not self._accepted(*check(trial)):
-                return
-            if was_accepted and self._accepted_eval_key(trial) < self._accepted_eval_key(plan):
+            if not self._repair_commit_allowed(plan, trial, query, check, was_accepted):
                 return
             plan["itinerary"] = trial["itinerary"]
         except Exception:
