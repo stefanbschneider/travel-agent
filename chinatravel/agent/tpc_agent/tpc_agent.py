@@ -1514,13 +1514,21 @@ class TPCAgent(BaseAgent):
         forbidden_id = "TrainID" if mode == "airplane" else "FlightID"
         if required_id not in activity or forbidden_id in activity:
             return False
+        try:
+            row_price = float(row.get("Cost"))
+            activity_price = float(activity.get("price"))
+            tickets = float(activity.get("tickets"))
+            activity_cost = float(activity.get("cost"))
+        except (TypeError, ValueError):
+            return False
         return (
             activity.get(required_id) == row.get(required_id)
             and activity.get("start") == row.get("From")
             and activity.get("end") == row.get("To")
             and activity.get("start_time") == row.get("BeginTime")
             and activity.get("end_time") == row.get("EndTime")
-            and activity.get("price") == row.get("Cost")
+            and activity_price == row_price
+            and activity_cost == row_price * tickets
         )
 
     def _endpoint_is_grounded(self, activity, from_city, to_city):

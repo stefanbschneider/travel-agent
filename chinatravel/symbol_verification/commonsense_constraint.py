@@ -480,7 +480,20 @@ def Is_attractions_correct(symbolic_input, plan_json, verbose=False):
     attraction_list = []
 
     for day_plan_i in plan:
-        for activity_i in day_plan_i["activities"]:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        activities = day_plan_i.get("activities")
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
 
             try: 
                 activity_i["type"]
@@ -833,7 +846,20 @@ def Is_transport_correct(symbolic_input, plan_json, verbose=False):
 
     plan = plan_json["itinerary"]
     for day_plan_i in plan:
-        for activity_i in day_plan_i["activities"]:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        activities = day_plan_i.get("activities")
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
 
             if "transports" in activity_i:
                 
@@ -1071,7 +1097,20 @@ def Is_time_correct(symbolic_input, plan_json, verbose=False):
 
     plan = plan_json["itinerary"]
     for day_plan_i in plan:
-        for activity_i in day_plan_i["activities"]:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
+        activities = day_plan_i.get("activities")
+        if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
+            continue
+
+        for activity_i in activities:
             
             # print(activity_i)
             try: activity_i["start_time"] and activity_i["end_time"]
@@ -1129,9 +1168,18 @@ def Is_time_correct_strict(symbolic_input, plan_json, verbose=False):
         return table_statistics, error_info
 
     for day_plan_i in plan:
+        if not isinstance(day_plan_i, dict):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append("Day itinerary entry must be a dict: {}".format(day_plan_i))
+            continue
+
         previous_activity_end = None
         activities = day_plan_i.get("activities", [])
         if not isinstance(activities, list):
+            table_statistics.loc[0, 'Invalid duration information of each activity'] = 1
+            error_info.append(
+                "Day itinerary entry must contain an activities list: {}".format(day_plan_i)
+            )
             continue
 
         for activity_i in activities:

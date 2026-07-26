@@ -73,6 +73,13 @@ def _matches_row(activity, row, mode):
         rid = "FlightID"
     else:
         rid = "TrainID"
+    try:
+        row_price = float(row.get("Cost"))
+        activity_price = float(activity.get("price"))
+        tickets = float(activity.get("tickets"))
+        activity_cost = float(activity.get("cost"))
+    except (TypeError, ValueError):
+        return False
     return (
         activity.get("type") == mode
         and activity.get(rid) == row.get(rid)
@@ -80,7 +87,8 @@ def _matches_row(activity, row, mode):
         and activity.get("end") == row.get("To")
         and activity.get("start_time") == row.get("BeginTime")
         and activity.get("end_time") == row.get("EndTime")
-        and activity.get("price") == row.get("Cost")
+        and activity_price == row_price
+        and activity_cost == row_price * tickets
     )
 
 
@@ -251,6 +259,23 @@ def test_mismatched_endpoint_is_regrounded_to_real_row():
     plan = _base_plan()
     plan["itinerary"][-1]["activities"][-1]["price"] = 999
     plan["itinerary"][-1]["activities"][-1]["cost"] = 1998
+    check = _endpoint_checker(ROWS)
+    assert agent._accepted(*check(plan)) is False
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    last = plan["itinerary"][-1]["activities"][-1]
+    assert last.get("TrainID") == "T_BACK_1"
+    assert last.get("price") == 130
+    assert last.get("cost") == 260
+    assert agent._accepted(*check(plan)) is True
+
+
+def test_price_match_with_wrong_total_cost_is_regrounded():
+    agent = _bare_agent(ROWS)
+    plan = _base_plan()
+    plan["itinerary"][-1]["activities"][-1]["price"] = 130
+    plan["itinerary"][-1]["activities"][-1]["cost"] = 130
     check = _endpoint_checker(ROWS)
     assert agent._accepted(*check(plan)) is False
 
