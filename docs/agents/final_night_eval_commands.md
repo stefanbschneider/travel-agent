@@ -1,9 +1,9 @@
 # Second-Machine Eval Commands (final night, 2026-07-26)
 
-Copy-paste only. Nothing here needs interpretation: run the blocks in order, then commit and push
-the generated rows. No decisions are required from the operator, and no result changes the shipped
-configuration tonight — these rows exist to confirm at the `900 s` working budget what the
-`120 s` screen already showed.
+One command to start, nothing to babysit: `scripts/run_final_night_eval.sh` runs both arms
+sequentially and commits + pushes the generated rows after each one. No decisions are required from
+the operator, and no result changes the shipped configuration tonight — these rows exist to confirm at
+the `900 s` working budget what the `120 s` screen already showed.
 
 **What is being confirmed.** `TPC_COMMONSENSE_FIRST` was promoted to harness-default-on from a
 paired `120 s` screen (`overall_true` `51.34 → 60.98`, C-LPR `67.35 → 89.95`, commonsense pass
@@ -54,7 +54,47 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=60 P2_LIMIT=1
 
 Expect a line like `[1/1] <uid> valid=True fallback=False ...`.
 
-## 1. Arm B first — promoted default (`TPC_COMMONSENSE_FIRST` left unset)
+## 1. Start it (one command, then go to bed)
+
+```bash
+nohup bash scripts/run_final_night_eval.sh > /tmp/final_night.out 2>&1 &
+tail -f /tmp/final_night.out
+```
+
+That is the whole job. The script runs a preflight solve, then both arms sequentially, and **commits
+and pushes after each arm** — so an interrupted night still leaves pushed evidence. `nohup` keeps it
+alive across a closed SSH session; drop it if you are staying at the terminal.
+
+Useful variants:
+
+```bash
+bash scripts/run_final_night_eval.sh --smoke        # ~3 min plumbing check, no commit, no push
+bash scripts/run_final_night_eval.sh --no-push      # commit locally only
+bash scripts/run_final_night_eval.sh --repeats 2    # variance per arm (variant C, ~16-20 h)
+bash scripts/run_final_night_eval.sh --arm on       # promoted arm only (variant B)
+bash scripts/run_final_night_eval.sh --limit 20     # shorter real run, first 20 queries
+bash scripts/run_final_night_eval.sh --help
+```
+
+Run `--smoke` first if you want certainty before committing the night to it: it exercises the exact
+same code path at a `30 s` budget on one query, and skips both commit and push.
+
+What the script does, in order: verifies `.venv`, that the pinned SHA is present locally, and that the
+environment database exists; runs a 1-query preflight solve and aborts if it does not produce a valid
+plan; runs arm B (promoted default) then arm A (`TPC_COMMONSENSE_FIRST=0`); after each arm, stages
+**only** `results/phase2_baselines`, commits, and pushes; finally prints a per-row summary. Logs land
+in `cache/final_night_eval/`.
+
+Two safety properties worth knowing. The commit stages only the ledger path, so concurrent work in
+the tree is never swept into these commits. And a failing arm does not abort the script: the other
+arm still runs and whatever rows exist are still committed.
+
+## Manual equivalent (only if you prefer to drive it yourself)
+
+<details>
+<summary>The same two arms as raw <code>make</code> invocations</summary>
+
+### Arm B first — promoted default (`TPC_COMMONSENSE_FIRST` left unset)
 
 ```bash
 make phase2-baseline-at \
@@ -67,7 +107,7 @@ make phase2-baseline-at \
   P2_LABEL=final-night-csfirst-on
 ```
 
-## 2. Arm A second — flags-off baseline (`TPC_COMMONSENSE_FIRST=0`)
+### Arm A second — flags-off baseline (`TPC_COMMONSENSE_FIRST=0`)
 
 ```bash
 TPC_COMMONSENSE_FIRST=0 \
@@ -81,14 +121,7 @@ make phase2-baseline-at \
   P2_LABEL=final-night-csfirst-off
 ```
 
-Run the arms **one after the other**, not concurrently: each already uses `P2_PARALLEL=3`, and
-overlapping them would make the wall-clock/timeout numbers — the exact thing being measured —
-meaningless.
-
-The pinned `git worktree` at `SHA=c599570b…` means further commits on the branch cannot affect a
-run that is already going, so it is safe to keep developing elsewhere while these run.
-
-## 3. Commit and push the rows
+### Then commit and push
 
 ```bash
 git add results/phase2_baselines/
@@ -96,12 +129,19 @@ git commit -m "phase2: final night pinned 900s rows (commonsense-first on/off)"
 git push
 ```
 
-That is the whole job. The row files land under `results/phase2_baselines/runs/<run_id>.json` with
-their `label` set to the values above.
+</details>
 
-## 4. Optional: print the comparison (no judgement needed)
+Run the arms **one after the other**, not concurrently: each already uses `P2_PARALLEL=3`, and
+overlapping them would make the wall-clock/timeout numbers — the exact thing being measured —
+meaningless.
 
-If both arms finished, this prints the paired numbers so they are in the log next to the rows:
+The pinned `git worktree` at `SHA=c599570b…` means further commits on the branch cannot affect a
+run that is already going, so it is safe to keep developing elsewhere while these run.
+
+## 2. Optional: print the comparison (no judgement needed)
+
+The script already prints a per-row summary at the end. If you want the formal paired comparison in
+the log too:
 
 ```bash
 ls -t results/phase2_baselines/runs/*.json | head -2
