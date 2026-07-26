@@ -271,7 +271,8 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 ## Next steps (priority order)
 
 The submission window is effectively closed; this list is what a future window should pick up, in
-order of measured leverage.
+order of measured leverage. Implementation-level detail for items 2-4 lives in
+[`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
 
 1. **Confirm the commonsense-first promotion at `900 s`.** Run the two pinned arms in
    [`final_night_eval_commands.md`](agents/final_night_eval_commands.md). The only open question is
