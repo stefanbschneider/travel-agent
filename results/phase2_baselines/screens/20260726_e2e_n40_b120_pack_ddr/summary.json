@@ -1,0 +1,103 @@
+{
+  "flag": "TPC_PACK_DDR",
+  "off": "0",
+  "on": "1",
+  "extra_env": {},
+  "mode": "end-to-end",
+  "split": "tpc_phase2_familiar_100_val",
+  "n": 40,
+  "budget_sec": 120.0,
+  "seed": 20260705,
+  "baseline": {
+    "label": "TPC_PACK_DDR=0",
+    "env_overrides": {
+      "TPC_PACK_DDR": "0"
+    },
+    "wall_sec": 508.8,
+    "fpr": 35.0,
+    "continuous_score": 60.165,
+    "parse_failures": 0,
+    "timeouts": 4,
+    "telemetry_coverage": "40/40",
+    "telemetry": {
+      "n_telemetry": 40,
+      "timeouts": 4,
+      "recovered": 4,
+      "used_fallback": 0,
+      "errored": 0,
+      "valid_output": 40,
+      "llm_parse_fired": 0,
+      "llm_parse_skipped": 0,
+      "llm_parse_errored": 0,
+      "refine_called": 0,
+      "refine_committed": 0,
+      "refine_second_attempts": 0,
+      "solve_sec_mean": 76.99178447503364,
+      "solve_sec_p50": 108.06421400001273,
+      "solve_sec_p90": 108.83587204199284
+    },
+    "layers": {
+      "commonsense_pass_count": 40,
+      "commonsense_micro": 100.0,
+      "commonsense_macro": 100.0,
+      "logical_micro": 90.41095890410958,
+      "logical_macro": 35.0,
+      "conditional_logical_micro": 90.41095890410958,
+      "all_pass_count": 14
+    },
+    "quality_n": {
+      "requested": 40,
+      "evaluated": 40,
+      "missing": 0
+    }
+  },
+  "candidate": {
+    "label": "TPC_PACK_DDR=1",
+    "env_overrides": {
+      "TPC_PACK_DDR": "1"
+    },
+    "wall_sec": 506.6,
+    "fpr": 37.5,
+    "continuous_score": 61.364,
+    "parse_failures": 0,
+    "timeouts": 2,
+    "telemetry_coverage": "40/40",
+    "telemetry": {
+      "n_telemetry": 40,
+      "timeouts": 2,
+      "recovered": 2,
+      "used_fallback": 0,
+      "errored": 0,
+      "valid_output": 40,
+      "llm_parse_fired": 0,
+      "llm_parse_skipped": 0,
+      "llm_parse_errored": 0,
+      "refine_called": 0,
+      "refine_committed": 0,
+      "refine_second_attempts": 0,
+      "solve_sec_mean": 77.56777170211134,
+      "solve_sec_p50": 108.07604616694152,
+      "solve_sec_p90": 108.66677175008226
+    },
+    "layers": {
+      "commonsense_pass_count": 40,
+      "commonsense_micro": 100.0,
+      "commonsense_macro": 100.0,
+      "logical_micro": 90.41095890410958,
+      "logical_macro": 37.5,
+      "conditional_logical_micro": 90.41095890410958,
+      "all_pass_count": 15
+    },
+    "quality_n": {
+      "requested": 40,
+      "evaluated": 40,
+      "missing": 0
+    }
+  },
+  "gate": {
+    "passed": true,
+    "reasons": [],
+    "advisories": []
+  },
+  "verdict": "GREEN LIGHT: candidate improves its target signal and passes the like-for-like gate on this screen -> worth a pinned end-to-end gate on the eval machine."
+}
