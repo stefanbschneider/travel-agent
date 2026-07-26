@@ -1,7 +1,7 @@
 {
-  "run_id": "20260724T192503Z",
-  "timestamp_utc": "2026-07-24T19:25:03+00:00",
-  "git_sha": "a72357c315bd1fdb7acc43ce9da1a6594fc7356e",
+  "run_id": "20260726T004535Z",
+  "timestamp_utc": "2026-07-26T00:45:35+00:00",
+  "git_sha": "6d354b99b442d1952639405c2a2610299c2691b3",
   "split_set": "familiar_100_val",
   "split_name": "tpc_phase2_familiar_100_val",
   "data_source": {
@@ -27,34 +27,35 @@
   "n": 80,
   "lang": "en",
   "branch_aware": false,
-  "label": "val-pinconverge-900s",
+  "label": "val-pincascade-900s",
   "repeats": 2,
   "fresh": true,
   "fast_fpr": false,
+  "fast_fpr_packed": false,
   "variance": {
     "repeats": 2,
     "per_repeat": [
       {
         "e2e_fpr": 26.25,
-        "solver_only_fpr": 27.5,
-        "e2e_overall_true": 48.91758538667021,
-        "solver_only_overall_true": 49.36949146862837
+        "solver_only_fpr": 28.75,
+        "e2e_overall_true": 48.579919699356964,
+        "solver_only_overall_true": 49.71185460859953
       },
       {
-        "e2e_fpr": 25.0,
-        "solver_only_fpr": 27.5,
-        "e2e_overall_true": 47.04433389225675,
-        "solver_only_overall_true": 49.71743709745942
+        "e2e_fpr": 26.25,
+        "solver_only_fpr": 28.75,
+        "e2e_overall_true": 47.69410542354338,
+        "solver_only_overall_true": 50.54936068891426
       }
     ],
-    "e2e_fpr_mean": 25.625,
-    "e2e_fpr_std": 0.625,
-    "solver_only_fpr_mean": 27.5,
+    "e2e_fpr_mean": 26.25,
+    "e2e_fpr_std": 0.0,
+    "solver_only_fpr_mean": 28.75,
     "solver_only_fpr_std": 0.0,
-    "e2e_overall_true_mean": 47.98095963946348,
-    "e2e_overall_true_std": 0.9366257472067296,
-    "solver_only_overall_true_mean": 49.54346428304389,
-    "solver_only_overall_true_std": 0.17397281441552437
+    "e2e_overall_true_mean": 48.13701256145017,
+    "e2e_overall_true_std": 0.4429071379067935,
+    "solver_only_overall_true_mean": 50.13060764875689,
+    "solver_only_overall_true_std": 0.41875304015736603
   },
   "rehearsal": {
     "split_name": "tpc_phase2_familiar_100_val",
@@ -65,9 +66,10 @@
     "chunk_size": 5,
     "parallel": 3,
     "fast_fpr": false,
+    "fast_fpr_packed": false,
     "modes": {
       "end-to-end": {
-        "fpr": 25.0,
+        "fpr": 26.25,
         "raw": {
           "split": "tpc_phase2_familiar_100_val",
           "method": "phase2_e2e_tpc_phase2_familiar_100_val",
@@ -76,8 +78,8 @@
           "parse_failures": 0,
           "schema_pass_count": 80,
           "commonsense_pass_count": 59,
-          "logical_pass_count": 20,
-          "all_pass_count": 20,
+          "logical_pass_count": 22,
+          "all_pass_count": 21,
           "all_pass_ids": [
             "phase2_familiar_20250321114538807334_00042",
             "phase2_familiar_20250321141840877581_00048",
@@ -91,6 +93,7 @@
             "phase2_familiar_20250322185221319705_00038",
             "phase2_familiar_20250322193334546588_00051",
             "phase2_familiar_20250322195527737080_00002",
+            "phase2_familiar_20250322210310765461_00074",
             "phase2_familiar_20250323014548418503_00037",
             "phase2_familiar_20250323112746016374_00036",
             "phase2_familiar_20250324215016772997_00064",
@@ -103,10 +106,10 @@
           "schema_rate": 100.0,
           "commonsense_micro": 98.41346153846153,
           "commonsense_macro": 73.75,
-          "logical_micro": 89.46772366930918,
-          "logical_macro": 25.0,
-          "conditional_logical_micro": 66.02491506228766,
-          "conditional_logical_macro": 25.0,
+          "logical_micro": 89.58097395243489,
+          "logical_macro": 27.500000000000004,
+          "conditional_logical_micro": 65.68516421291054,
+          "conditional_logical_macro": 26.25,
           "schema_details": [
             {
               "data_id": "phase2_familiar_20250321012512564936_00022",
@@ -1442,7 +1445,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -1849,7 +1852,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250324215016772997_00064",
@@ -2429,7 +2432,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_m20241028164715213722_00054",
@@ -2487,7 +2490,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_m20241028164747208761_00099",
@@ -3272,10 +3275,10 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
-              "logic_py_9": 0,
+              "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
@@ -3485,7 +3488,7 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 0,
-              "logic_py_11": 1,
+              "logic_py_11": 0,
               "logic_py_12": NaN
             },
             {
@@ -3931,7 +3934,7 @@
               "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
-              "logic_py_9": 0,
+              "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
@@ -3961,7 +3964,7 @@
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
-              "logic_py_7": 1,
+              "logic_py_7": 0,
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 0,
@@ -4042,36 +4045,36 @@
           "eval_failed": 0,
           "overall_true": {
             "count": 80,
-            "mean": 47.04433389225675,
+            "mean": 47.69410542354338,
             "min": 8.076923076923078,
-            "max": 99.44444444444444,
-            "std": 32.02262811272997
+            "max": 99.16666666666666,
+            "std": 32.51021342338793
           },
           "overall_parsed": {
             "count": 80,
-            "mean": 48.98563694684106,
+            "mean": 49.68492710186506,
             "min": 8.076923076923078,
-            "max": 99.44444444444444,
-            "std": 33.45913186093888
+            "max": 99.16666666666666,
+            "std": 33.850904048428504
           },
           "fpr_true": {
             "count": 80,
-            "mean": 25.0,
+            "mean": 26.25,
             "min": 0.0,
             "max": 100.0,
-            "std": 43.30127018922193
+            "std": 43.999289766995105
           },
           "fpr_parsed": {
             "count": 80,
-            "mean": 28.75,
+            "mean": 30.0,
             "min": 0.0,
             "max": 100.0,
-            "std": 45.25966747557918
+            "std": 45.8257569495584
           }
         }
       },
       "solver-only": {
-        "fpr": 27.5,
+        "fpr": 28.75,
         "raw": {
           "split": "tpc_phase2_familiar_100_val",
           "method": "phase2_solver_only_tpc_phase2_familiar_100_val",
@@ -4080,8 +4083,8 @@
           "parse_failures": 0,
           "schema_pass_count": 80,
           "commonsense_pass_count": 61,
-          "logical_pass_count": 23,
-          "all_pass_count": 22,
+          "logical_pass_count": 24,
+          "all_pass_count": 23,
           "all_pass_ids": [
             "phase2_familiar_20250321114538807334_00042",
             "phase2_familiar_20250321141840877581_00048",
@@ -4095,6 +4098,7 @@
             "phase2_familiar_20250322185221319705_00038",
             "phase2_familiar_20250322193334546588_00051",
             "phase2_familiar_20250322195527737080_00002",
+            "phase2_familiar_20250322210310765461_00074",
             "phase2_familiar_20250322220216551788_00009",
             "phase2_familiar_20250323001836416953_00016",
             "phase2_familiar_20250323014548418503_00037",
@@ -4107,12 +4111,12 @@
             "phase2_familiar_m20241028165003809657_00053"
           ],
           "schema_rate": 100.0,
-          "commonsense_micro": 98.125,
+          "commonsense_micro": 98.17307692307692,
           "commonsense_macro": 76.25,
-          "logical_micro": 90.71347678369196,
-          "logical_macro": 28.749999999999996,
-          "conditional_logical_micro": 69.6489241223103,
-          "conditional_logical_macro": 27.500000000000004,
+          "logical_micro": 90.82672706681767,
+          "logical_macro": 30.0,
+          "conditional_logical_micro": 69.76217440543601,
+          "conditional_logical_macro": 28.749999999999996,
           "schema_details": [
             {
               "data_id": "phase2_familiar_20250321012512564936_00022",
@@ -4752,7 +4756,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -5217,7 +5221,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250322193334546588_00051",
@@ -5333,7 +5337,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250322201313997965_00089",
@@ -5361,7 +5365,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -5507,7 +5511,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250323001836416953_00016",
@@ -5855,7 +5859,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250324215016772997_00064",
@@ -6058,7 +6062,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 1,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250325010714662958_00096",
@@ -6406,7 +6410,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_m20241028164712892867_00073",
@@ -6493,7 +6497,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_m20241028164747208761_00099",
@@ -6962,8 +6966,8 @@
               "logic_py_7": 1,
               "logic_py_8": 0,
               "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 0,
+              "logic_py_10": 0,
+              "logic_py_11": 1,
               "logic_py_12": NaN
             },
             {
@@ -7278,10 +7282,10 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
-              "logic_py_9": 0,
+              "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
@@ -7339,7 +7343,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 1,
+              "logic_py_3": 0,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -8048,31 +8052,31 @@
           "eval_failed": 0,
           "overall_true": {
             "count": 80,
-            "mean": 49.71743709745942,
+            "mean": 50.54936068891426,
             "min": 8.076923076923078,
             "max": 100.0,
-            "std": 32.93024274116484
+            "std": 33.4598273540675
           },
           "overall_parsed": {
             "count": 80,
-            "mean": 48.721768703353526,
+            "mean": 49.53599731617589,
             "min": 8.076923076923078,
             "max": 100.0,
-            "std": 32.54153751455473
+            "std": 33.09508504937311
           },
           "fpr_true": {
+            "count": 80,
+            "mean": 28.75,
+            "min": 0.0,
+            "max": 100.0,
+            "std": 45.25966747557918
+          },
+          "fpr_parsed": {
             "count": 80,
             "mean": 27.5,
             "min": 0.0,
             "max": 100.0,
             "std": 44.65142774872938
-          },
-          "fpr_parsed": {
-            "count": 80,
-            "mean": 26.25,
-            "min": 0.0,
-            "max": 100.0,
-            "std": 43.999289766995105
           }
         }
       }
@@ -8736,32 +8740,32 @@
     "n": 80,
     "per_stage": {
       "parse": {
-        "p50": 0.0931527124485001,
-        "p95": 0.22472149769309907,
-        "mean": 0.1029207373445388,
-        "max": 0.33854049700312316
+        "p50": 0.09127836849074811,
+        "p95": 0.22940876340726388,
+        "mean": 0.1027647152368445,
+        "max": 0.3603319919202477
       },
       "solve": {
-        "p50": 264.43366821762174,
-        "p95": 498.57457226392575,
-        "mean": 261.79524870877793,
-        "max": 535.9599759099074
+        "p50": 371.3301573784556,
+        "p95": 602.7010986443842,
+        "mean": 371.52662789701424,
+        "max": 685.0711174330208
       },
       "improve": {
-        "p50": 1.4725374057888985e-06,
-        "p95": 2.6490772143006322e-06,
-        "mean": 1.5714205801486969e-06,
-        "max": 3.455905243754387e-06
+        "p50": 1.4479737728834152e-06,
+        "p95": 2.4363980628550053e-06,
+        "mean": 1.579776289872825e-06,
+        "max": 3.2261013984680176e-06
       },
       "finalize": {
-        "p50": 2.6945490390062332e-06,
-        "p95": 6.692821625620121e-06,
-        "mean": 3.430966171436012e-06,
-        "max": 1.698196865618229e-05
+        "p50": 2.7299392968416214e-06,
+        "p95": 5.76915917918086e-06,
+        "mean": 3.061658935621381e-06,
+        "max": 7.373979315161705e-06
       }
     },
-    "total_p50": 264.5209184171399,
-    "total_p95": 498.58970699796913,
+    "total_p50": 371.448178189341,
+    "total_p95": 602.7882550042239,
     "budget_overruns": 0,
     "timed_out": 0,
     "used_fallback": 0,
