@@ -1,7 +1,7 @@
 {
-  "run_id": "20260726T034030Z",
-  "timestamp_utc": "2026-07-26T03:40:30+00:00",
-  "git_sha": "6d354b99b442d1952639405c2a2610299c2691b3",
+  "run_id": "20260726T235203Z",
+  "timestamp_utc": "2026-07-26T23:52:03+00:00",
+  "git_sha": "c599570b614512681c8aec6c2e6305a5490d7e3a",
   "split_set": "familiar_100_val",
   "split_name": "tpc_phase2_familiar_100_val",
   "data_source": {
@@ -27,7 +27,7 @@
   "n": 80,
   "lang": "en",
   "branch_aware": false,
-  "label": "final-all3-on",
+  "label": "final-night-csfirst-off",
   "repeats": 1,
   "fresh": true,
   "fast_fpr": false,
@@ -36,19 +36,19 @@
     "repeats": 1,
     "per_repeat": [
       {
-        "e2e_fpr": 21.25,
-        "solver_only_fpr": 26.25,
-        "e2e_overall_true": 45.43048190797877,
-        "solver_only_overall_true": 48.2603236816037
+        "e2e_fpr": 25.0,
+        "solver_only_fpr": 23.75,
+        "e2e_overall_true": 47.82420107490354,
+        "solver_only_overall_true": 46.5214845574513
       }
     ],
-    "e2e_fpr_mean": 21.25,
+    "e2e_fpr_mean": 25.0,
     "e2e_fpr_std": 0.0,
-    "solver_only_fpr_mean": 26.25,
+    "solver_only_fpr_mean": 23.75,
     "solver_only_fpr_std": 0.0,
-    "e2e_overall_true_mean": 45.43048190797877,
+    "e2e_overall_true_mean": 47.82420107490354,
     "e2e_overall_true_std": 0.0,
-    "solver_only_overall_true_mean": 48.2603236816037,
+    "solver_only_overall_true_mean": 46.5214845574513,
     "solver_only_overall_true_std": 0.0
   },
   "rehearsal": {
@@ -58,12 +58,12 @@
     "n": 80,
     "fresh": true,
     "chunk_size": 5,
-    "parallel": 7,
+    "parallel": 3,
     "fast_fpr": false,
     "fast_fpr_packed": false,
     "modes": {
       "end-to-end": {
-        "fpr": 21.25,
+        "fpr": 25.0,
         "raw": {
           "split": "tpc_phase2_familiar_100_val",
           "method": "phase2_e2e_tpc_phase2_familiar_100_val",
@@ -72,22 +72,25 @@
           "parse_failures": 0,
           "schema_pass_count": 80,
           "commonsense_pass_count": 61,
-          "logical_pass_count": 18,
-          "all_pass_count": 17,
+          "logical_pass_count": 21,
+          "all_pass_count": 20,
           "all_pass_ids": [
+            "phase2_familiar_20250321114538807334_00042",
+            "phase2_familiar_20250321141840877581_00048",
+            "phase2_familiar_20250321210015834839_00021",
             "phase2_familiar_20250322130318575994_00098",
             "phase2_familiar_20250322132432715549_00008",
-            "phase2_familiar_20250322133107994604_00079",
             "phase2_familiar_20250322162034361396_00018",
             "phase2_familiar_20250322165435882231_00085",
             "phase2_familiar_20250322181512021463_00056",
+            "phase2_familiar_20250322183205470139_00063",
             "phase2_familiar_20250322185221319705_00038",
             "phase2_familiar_20250322193334546588_00051",
             "phase2_familiar_20250322195527737080_00002",
+            "phase2_familiar_20250323014548418503_00037",
             "phase2_familiar_20250323112746016374_00036",
             "phase2_familiar_20250324215016772997_00064",
             "phase2_familiar_20250324223909692415_00081",
-            "phase2_familiar_20250325010714662958_00096",
             "phase2_familiar_e20241028160358265981_00025",
             "phase2_familiar_m20241028164758041148_00040",
             "phase2_familiar_m20241028164913584976_00072",
@@ -96,10 +99,10 @@
           "schema_rate": 100.0,
           "commonsense_micro": 98.50961538461539,
           "commonsense_macro": 76.25,
-          "logical_micro": 86.8629671574179,
-          "logical_macro": 22.5,
-          "conditional_logical_micro": 66.70441676104191,
-          "conditional_logical_macro": 21.25,
+          "logical_micro": 89.46772366930918,
+          "logical_macro": 26.25,
+          "conditional_logical_micro": 68.28992072480182,
+          "conditional_logical_macro": 25.0,
           "schema_details": [
             {
               "data_id": "phase2_familiar_20250321012512564936_00022",
@@ -594,7 +597,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -1435,7 +1438,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -1494,7 +1497,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250323001836416953_00016",
@@ -1580,7 +1583,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -1783,7 +1786,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -1842,7 +1845,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250324215016772997_00064",
@@ -1900,7 +1903,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250324220050355278_00077",
@@ -2015,7 +2018,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 0,
+              "Does not follow Chronological Order": 1,
               "Invalid Transport information across positions": 0
             },
             {
@@ -2045,7 +2048,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250325010714662958_00096",
@@ -2074,7 +2077,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250325013355437592_00050",
@@ -2103,7 +2106,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_20250325015820363948_00047",
@@ -2480,7 +2483,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 1
+              "Invalid Transport information across positions": 0
             },
             {
               "data_id": "phase2_familiar_m20241028164747208761_00099",
@@ -2754,7 +2757,7 @@
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
-              "logic_py_7": 0,
+              "logic_py_7": 1,
               "logic_py_8": 1,
               "logic_py_9": 0,
               "logic_py_10": 1,
@@ -2817,8 +2820,8 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
-              "logic_py_6": 0,
-              "logic_py_7": 0,
+              "logic_py_6": 1,
+              "logic_py_7": 1,
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": NaN,
@@ -2831,7 +2834,7 @@
               "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
-              "logic_py_4": 0,
+              "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
@@ -2865,7 +2868,7 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_6": 1,
               "logic_py_7": 0,
               "logic_py_8": 1,
               "logic_py_9": 1,
@@ -2880,7 +2883,7 @@
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 0,
+              "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
@@ -2929,7 +2932,7 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_6": 1,
               "logic_py_7": 0,
               "logic_py_8": 1,
               "logic_py_9": 1,
@@ -2949,8 +2952,8 @@
               "logic_py_7": 1,
               "logic_py_8": 0,
               "logic_py_9": 1,
-              "logic_py_10": 0,
-              "logic_py_11": 1,
+              "logic_py_10": 1,
+              "logic_py_11": 0,
               "logic_py_12": NaN
             },
             {
@@ -2960,7 +2963,7 @@
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 0,
+              "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
@@ -2977,7 +2980,7 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 0,
-              "logic_py_6": 0,
+              "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 0,
               "logic_py_9": 0,
@@ -3054,7 +3057,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 1,
+              "logic_py_3": 0,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -3118,7 +3121,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 0,
+              "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -3168,7 +3171,7 @@
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 0,
+              "logic_py_5": 1,
               "logic_py_6": 0,
               "logic_py_7": 1,
               "logic_py_8": 1,
@@ -3231,7 +3234,7 @@
               "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
-              "logic_py_4": 0,
+              "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
@@ -3246,7 +3249,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 0,
+              "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -3326,8 +3329,8 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 1,
-              "logic_py_4": 0,
+              "logic_py_3": 0,
+              "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 0,
@@ -3358,12 +3361,12 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 0,
+              "logic_py_3": 1,
               "logic_py_4": 0,
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
-              "logic_py_8": 0,
+              "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": NaN,
               "logic_py_11": NaN,
@@ -3379,7 +3382,7 @@
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
-              "logic_py_8": 0,
+              "logic_py_8": 1,
               "logic_py_9": NaN,
               "logic_py_10": NaN,
               "logic_py_11": NaN,
@@ -3395,7 +3398,7 @@
               "logic_py_5": 0,
               "logic_py_6": 1,
               "logic_py_7": 1,
-              "logic_py_8": 0,
+              "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": NaN,
@@ -3408,8 +3411,8 @@
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 0,
-              "logic_py_6": 0,
+              "logic_py_5": 1,
+              "logic_py_6": 1,
               "logic_py_7": 0,
               "logic_py_8": 1,
               "logic_py_9": 0,
@@ -3455,7 +3458,7 @@
               "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
-              "logic_py_4": 0,
+              "logic_py_4": 1,
               "logic_py_5": 0,
               "logic_py_6": 1,
               "logic_py_7": 1,
@@ -3478,7 +3481,7 @@
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 0,
-              "logic_py_11": 1,
+              "logic_py_11": 0,
               "logic_py_12": NaN
             },
             {
@@ -3489,7 +3492,7 @@
               "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
-              "logic_py_6": 0,
+              "logic_py_6": 1,
               "logic_py_7": 1,
               "logic_py_8": 1,
               "logic_py_9": 1,
@@ -3556,7 +3559,7 @@
               "logic_py_6": 0,
               "logic_py_7": 1,
               "logic_py_8": 1,
-              "logic_py_9": 0,
+              "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": 1,
               "logic_py_12": NaN
@@ -3570,7 +3573,7 @@
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
-              "logic_py_7": 0,
+              "logic_py_7": 1,
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
@@ -3636,7 +3639,7 @@
               "logic_py_6": 1,
               "logic_py_7": 0,
               "logic_py_8": 1,
-              "logic_py_9": 0,
+              "logic_py_9": 1,
               "logic_py_10": 1,
               "logic_py_11": NaN,
               "logic_py_12": NaN
@@ -3647,7 +3650,7 @@
               "logic_py_1": 1,
               "logic_py_2": 1,
               "logic_py_3": 1,
-              "logic_py_4": 1,
+              "logic_py_4": 0,
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
@@ -3667,7 +3670,7 @@
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
-              "logic_py_8": 0,
+              "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": NaN,
               "logic_py_11": NaN,
@@ -3875,7 +3878,7 @@
               "logic_py_5": 1,
               "logic_py_6": 1,
               "logic_py_7": 1,
-              "logic_py_8": 0,
+              "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 0,
               "logic_py_11": 1,
@@ -4035,36 +4038,36 @@
           "eval_failed": 0,
           "overall_true": {
             "count": 80,
-            "mean": 45.43048190797877,
+            "mean": 47.82420107490354,
             "min": 8.076923076923078,
-            "max": 99.58333333333334,
-            "std": 30.173967922909576
+            "max": 99.44444444444444,
+            "std": 31.47984078052001
           },
           "overall_parsed": {
             "count": 80,
-            "mean": 46.73783037548349,
+            "mean": 49.78231216520213,
             "min": 8.076923076923078,
-            "max": 99.58333333333334,
-            "std": 31.31565944854507
+            "max": 99.44444444444444,
+            "std": 32.88939986606574
           },
           "fpr_true": {
             "count": 80,
-            "mean": 21.25,
+            "mean": 25.0,
             "min": 0.0,
             "max": 100.0,
-            "std": 40.90767042988393
+            "std": 43.30127018922193
           },
           "fpr_parsed": {
             "count": 80,
-            "mean": 23.75,
+            "mean": 28.75,
             "min": 0.0,
             "max": 100.0,
-            "std": 42.555111326373
+            "std": 45.25966747557918
           }
         }
       },
       "solver-only": {
-        "fpr": 26.25,
+        "fpr": 23.75,
         "raw": {
           "split": "tpc_phase2_familiar_100_val",
           "method": "phase2_solver_only_tpc_phase2_familiar_100_val",
@@ -4072,9 +4075,9 @@
           "parsed_evaluated": 80,
           "parse_failures": 0,
           "schema_pass_count": 80,
-          "commonsense_pass_count": 60,
-          "logical_pass_count": 22,
-          "all_pass_count": 21,
+          "commonsense_pass_count": 59,
+          "logical_pass_count": 20,
+          "all_pass_count": 19,
           "all_pass_ids": [
             "phase2_familiar_20250321141840877581_00048",
             "phase2_familiar_20250322130318575994_00098",
@@ -4089,22 +4092,20 @@
             "phase2_familiar_20250322220216551788_00009",
             "phase2_familiar_20250323001836416953_00016",
             "phase2_familiar_20250323112746016374_00036",
-            "phase2_familiar_20250324212447508195_00007",
             "phase2_familiar_20250324215016772997_00064",
             "phase2_familiar_20250324223909692415_00081",
             "phase2_familiar_20250325010714662958_00096",
             "phase2_familiar_m20241028164758041148_00040",
             "phase2_familiar_m20241028164913584976_00072",
-            "phase2_familiar_m20241028164929631601_00059",
             "phase2_familiar_m20241028165003809657_00053"
           ],
           "schema_rate": 100.0,
-          "commonsense_micro": 98.125,
-          "commonsense_macro": 75.0,
-          "logical_micro": 88.67497168742922,
-          "logical_macro": 27.500000000000004,
-          "conditional_logical_micro": 66.8176670441676,
-          "conditional_logical_macro": 26.25,
+          "commonsense_micro": 98.07692307692307,
+          "commonsense_macro": 73.75,
+          "logical_micro": 88.4484711211778,
+          "logical_macro": 25.0,
+          "conditional_logical_micro": 65.79841449603624,
+          "conditional_logical_macro": 23.75,
           "schema_details": [
             {
               "data_id": "phase2_familiar_20250321012512564936_00022",
@@ -4774,7 +4775,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250322115606690734_00057",
@@ -5208,7 +5209,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -5266,7 +5267,7 @@
               "Incorrect Information of Inner-City Transporton on price, distance, and duration": 0,
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
-              "Does not follow Chronological Order": 1,
+              "Does not follow Chronological Order": 0,
               "Invalid Transport information across positions": 0
             },
             {
@@ -5325,7 +5326,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250322201313997965_00089",
@@ -5905,7 +5906,7 @@
               "Inccorrect cost information of Inner-City Transport": 0,
               "Invalid duration information of each activity": 0,
               "Does not follow Chronological Order": 0,
-              "Invalid Transport information across positions": 0
+              "Invalid Transport information across positions": 1
             },
             {
               "data_id": "phase2_familiar_20250324220050355278_00077",
@@ -6954,8 +6955,8 @@
               "logic_py_7": 1,
               "logic_py_8": 0,
               "logic_py_9": 1,
-              "logic_py_10": 1,
-              "logic_py_11": 0,
+              "logic_py_10": 0,
+              "logic_py_11": 1,
               "logic_py_12": NaN
             },
             {
@@ -7331,7 +7332,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 0,
+              "logic_py_3": 1,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -7525,9 +7526,9 @@
               "logic_py_2": 1,
               "logic_py_3": 1,
               "logic_py_4": 1,
-              "logic_py_5": 1,
+              "logic_py_5": 0,
               "logic_py_6": 1,
-              "logic_py_7": 1,
+              "logic_py_7": 0,
               "logic_py_8": 1,
               "logic_py_9": 1,
               "logic_py_10": 1,
@@ -7987,7 +7988,7 @@
               "logic_py_0": 1,
               "logic_py_1": 1,
               "logic_py_2": 1,
-              "logic_py_3": 1,
+              "logic_py_3": 0,
               "logic_py_4": 1,
               "logic_py_5": 1,
               "logic_py_6": 1,
@@ -8040,31 +8041,31 @@
           "eval_failed": 0,
           "overall_true": {
             "count": 80,
-            "mean": 48.2603236816037,
+            "mean": 46.5214845574513,
             "min": 8.076923076923078,
             "max": 100.0,
-            "std": 32.94635955552781
+            "std": 32.193292798239746
           },
           "overall_parsed": {
             "count": 80,
-            "mean": 46.55175284272036,
+            "mean": 45.50924939677865,
             "min": 8.076923076923078,
             "max": 100.0,
-            "std": 31.976739211500828
+            "std": 31.701022267013062
           },
           "fpr_true": {
-            "count": 80,
-            "mean": 26.25,
-            "min": 0.0,
-            "max": 100.0,
-            "std": 43.999289766995105
-          },
-          "fpr_parsed": {
             "count": 80,
             "mean": 23.75,
             "min": 0.0,
             "max": 100.0,
             "std": 42.555111326373
+          },
+          "fpr_parsed": {
+            "count": 80,
+            "mean": 22.5,
+            "min": 0.0,
+            "max": 100.0,
+            "std": 41.75823272122516
           }
         }
       }
@@ -8636,14 +8637,14 @@
     "phase2_familiar_20250321040138918100_00001": "0cd53dc5298074a9e7224029e9665adc2603fe89eb4d1d88c0d4adfe3c56c17e",
     "phase2_familiar_20250321044802265544_00014": "44386db8cc098d499633a99796fa060857bfba2b7f5bcb049233526eeba6c940",
     "phase2_familiar_20250321114538807334_00042": "b59ab2849092d36acfe0ae4267e3275feb8ad8e90d970044ec03fe87f644fc1e",
-    "phase2_familiar_20250321141840877581_00048": "922342adc67c89ee3e59ddff765ae475d6471538078a226ecc2d1652dbb16888",
+    "phase2_familiar_20250321141840877581_00048": "981d7c402a2538bdedeb1e4927e1c9b016d4548f5400e037066a043521d11349",
     "phase2_familiar_20250321152320931058_00062": "7edc4dd824c3a543b84d133db259034edaecb730d5738a1aca2be3e5c8f54d75",
     "phase2_familiar_20250321155107635610_00035": "8b5863b9ccfc513ca41648ea0615dfdc1a3198174869187111ecbb1f656fb406",
     "phase2_familiar_20250321210015834839_00021": "a69924d6cb386f351235653219f9e5193c0b4dc8f9007ecaceb256b1b424d882",
     "phase2_familiar_20250322022134656894_00087": "0f4d77baa98c58cc1b474c8aa65984d30f0249f39f385074b27c3430ce7a1ce6",
     "phase2_familiar_20250322103945146888_00080": "827855a4a045253436deeffd23fc2074ea297a1825b5838d0f043bd7a8a95627",
     "phase2_familiar_20250322114324029605_00039": "2643451e1d5c7cc9609fc6951f27d291308a3ddb12627036a9402f1f954b57fc",
-    "phase2_familiar_20250322115606690734_00057": "c94568183f174fa7b1222defad9cb63c557e471caeea220ebc8bd30da66c585a",
+    "phase2_familiar_20250322115606690734_00057": "92a4c70a01fe89cb70465214fbfee2b129998542b99e1fc1d0d4ae6154574d2d",
     "phase2_familiar_20250322120046083322_00028": "70bcc015d4d7bc474d0df4782dd8ec9c8bf017c5643d0f39ab21b3707a10ae9d",
     "phase2_familiar_20250322120414354584_00052": "4a33521291404e56988cb96946fa9fc77296194f49125451764184a6f2414d9b",
     "phase2_familiar_20250322122010666557_00070": "0801f2a893ad4ed67e953935ca1744ab5bd17fd8fd9537828b7d0eecd7dc1343",
@@ -8658,16 +8659,16 @@
     "phase2_familiar_20250322184829394258_00094": "f9eafe09c0f40f04f4ff7087550cb74cb9aa83398d1b5d227c085af6cab3c805",
     "phase2_familiar_20250322185221319705_00038": "850745a8d632774583028b525656a8482c6f31b9c3948eb82e9d0dd5631a5802",
     "phase2_familiar_20250322185757698336_00082": "7ad63724a4711839b78f1b14ccb9a75f1b68c9d5560306c9641afa5f95b3c913",
-    "phase2_familiar_20250322193334546588_00051": "4fcccc3f62af0984ec67cf0439855e156b897c374c5fb1c8cd87f52c22328889",
+    "phase2_familiar_20250322193334546588_00051": "da40ef8d2f7ec63bb020502d1c02c0c73d0761234069b2b3306da8500e1da618",
     "phase2_familiar_20250322195322522932_00044": "6a6bab1619be1bb7bb82797a79a0c5f42e955fc87ff4ed36f8867c4d3608328f",
     "phase2_familiar_20250322195527737080_00002": "71ee4c7cf682432b850c0ee440281b0da891a71edcecf8cdd0592b81e88f0a4a",
-    "phase2_familiar_20250322201024175211_00058": "3fc13f11b41b0589ac23e3b11ebf29307e99dc88d1538c6330d05874558e68b7",
+    "phase2_familiar_20250322201024175211_00058": "4532ccee45e910c18a59c24116374fd4de8ecc3f0e1f326b36acc0b0440e6cd0",
     "phase2_familiar_20250322201313997965_00089": "0557fe5601d68cfdf239fdf36c8ccba80ecc9d92a7ade1c39fb12a08a6b16b3c",
     "phase2_familiar_20250322210310765461_00074": "5c8174ea4e6d382eea11835fe259da24b12a76bd6d6dc60b8454a27031737818",
     "phase2_familiar_20250322220216551788_00009": "1929fb3542262e5a2b5062fa31dd6ee0bf7c80b071306a1ffcc5974cc3e623c3",
     "phase2_familiar_20250322231032581051_00033": "83972b1ddf9d7943c3373cac01414b042bf8faffc7739c1621ddf336066ed4a3",
-    "phase2_familiar_20250322235422616103_00030": "57cf41e1fc45f34022d2be9eca20d5a6a180de2ca35fdabb8580019ba2aaabad",
-    "phase2_familiar_20250323001701860855_00088": "b2023bad3d53e81cc480c31b980181dbcf9286204898c05d452e2ea630273460",
+    "phase2_familiar_20250322235422616103_00030": "08e5b39e0f6e7ff6e357c1a3198539ee940a5ba95568697e095f9c56949c1067",
+    "phase2_familiar_20250323001701860855_00088": "2828946b0425e408dd959a3b5fd71e51deb5cd2683d114f20dc60d471021d808",
     "phase2_familiar_20250323001836416953_00016": "72dfbd63d399ea6dce0cfa197a92e1ff497a3bf3119b7cfdb6cb8df3b74e2ce4",
     "phase2_familiar_20250323014035231483_00041": "f330260b37fbd01289912c5b90a5f8b0e1152069b9fc401e2d527d20d7b20f46",
     "phase2_familiar_20250323014548418503_00037": "84db287dd8aae226b219df7ed5b0db0fd6eaab8721603473fdfeca23b780f3a3",
@@ -8687,14 +8688,14 @@
     "phase2_familiar_20250324223909692415_00081": "b53e40e541b6c911efef4f5f596c3304b9910142de58b08bad88e43b15b6f3fc",
     "phase2_familiar_20250324225955755391_00067": "b7922035e96ff5e45626c92794297372d13df6d06a85f6f665fb0989b6d02438",
     "phase2_familiar_20250324230340923488_00019": "28017d35fc08b2e51e45c37ca67f4638d1ec6342d036751cffc0455fc4bf5dc1",
-    "phase2_familiar_20250325010714662958_00096": "f375bb0cc8b10bf27396f15789ac594bc76073e23b5ca4bb2a585f42d2dc69ea",
+    "phase2_familiar_20250325010714662958_00096": "f47dff6e0abbd25ad2d17987a19173c8018d98c111aff899c7b07d0d2b2029bb",
     "phase2_familiar_20250325013355437592_00050": "05cb5b79cff606c6608ea6fcc34fa2296e8eacd3583dd9fa017a70b16c847a3d",
     "phase2_familiar_20250325015820363948_00047": "ac0ce4cc2de35afcdf6d59ff7b3892f5fc321c0495c4158298c587409ea72477",
     "phase2_familiar_e20241028160301887545_00029": "4ead26a2d58ffe8b0187e2c41051a1eb4139be5137934e7be5329b660424c9b1",
     "phase2_familiar_e20241028160358265981_00025": "1018c5a418d52ff7fedfdb0853e47c0747356ee42d3adf96e22041e1a060bfbe",
     "phase2_familiar_e20241028160403455246_00065": "0125805dc72c45a76e902837edb01a08514ff52a3bbf203ef53a77d73df2c6a3",
     "phase2_familiar_e20241028160409480928_00071": "4145c0cad7eee81178c95f96ff3f30736b10ff91befa0369b4a1073b2e31c585",
-    "phase2_familiar_e20241028160444030851_00066": "699cf9fffab59c307f27a54700c3203dd759c1c99f2165a63e636b877f080c19",
+    "phase2_familiar_e20241028160444030851_00066": "8fa572bd8e51df05ef6519a973159d05237e4d801ab6fb398a1af82493124209",
     "phase2_familiar_m20241028164622142080_00017": "e62b3184266f9438f040e0613da186074b3dfd786d05d4d054ad6bd857ec3f34",
     "phase2_familiar_m20241028164624886634_00043": "741bdc24f191669db4ecd2b3b0b145ca5bd57774ad65dda6a2aea22170ae2ded",
     "phase2_familiar_m20241028164626006100_00060": "2889d3d841a3a00789784838ade0100d3cb85ff78e7aa9e74e7f2a260b05d224",
@@ -8714,7 +8715,7 @@
   },
   "llm_config": {
     "backend": "deepinfra",
-    "model": null
+    "model": "Qwen/Qwen3.6-27B"
   },
   "flags": {
     "disjunction": true,
@@ -8728,32 +8729,32 @@
     "n": 80,
     "per_stage": {
       "parse": {
-        "p50": 0.066012708528433,
-        "p95": 0.1686514628061559,
-        "mean": 0.07438265107193728,
-        "max": 0.23849129199516028
+        "p50": 0.08959639247041196,
+        "p95": 0.22996401219861576,
+        "mean": 0.10188910936994944,
+        "max": 0.342591434950009
       },
       "solve": {
-        "p50": 172.53334993700264,
-        "p95": 309.1342276951705,
-        "mean": 179.3719924760313,
-        "max": 358.71475795900915
+        "p50": 272.6355211890768,
+        "p95": 515.2124023346114,
+        "mean": 262.32283274545335,
+        "max": 563.8459132970311
       },
       "improve": {
-        "p50": 6.874906830489635e-07,
-        "p95": 1.0830583050847053e-06,
-        "mean": 7.338254363276064e-07,
-        "max": 2.500019036233425e-06
+        "p50": 1.5575205907225609e-06,
+        "p95": 2.980651333928108e-06,
+        "mean": 1.7517071682959794e-06,
+        "max": 3.3369287848472595e-06
       },
       "finalize": {
-        "p50": 1.208973117172718e-06,
-        "p95": 2.6711088139563796e-06,
-        "mean": 1.6624879208393395e-06,
-        "max": 1.6915961168706417e-05
+        "p50": 2.764863893389702e-06,
+        "p95": 5.700718611478804e-06,
+        "mean": 3.424534224905074e-06,
+        "max": 1.6650883480906487e-05
       }
     },
-    "total_p50": 172.63812412356492,
-    "total_p95": 309.14435944512365,
+    "total_p50": 272.73152362369,
+    "total_p95": 515.3029310478829,
     "budget_overruns": 0,
     "timed_out": 0,
     "used_fallback": 0,
