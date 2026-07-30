@@ -175,8 +175,9 @@ def _minutes(time_str: str) -> float | None:
 def preference_scores(plan: dict) -> dict | None:
     """Per-plan DAV/ATT/DDR using eval_tpc's DEFAULT_PR formulas.
 
-    DAV = attractions / (4 * days); ATT = (-1/105) * mean innercity leg minutes + 8/7;
-    DDR = (meals / days) / 3. Each clamped to [0, 1] like ``_clamp_score`` in ``eval_tpc.py``.
+    DAV = attractions / (4 * days); ATT = (-1/105) * mean innercity leg minutes + 8/7, or 0 when the
+    plan has no innercity transport at all (upstream PR #30); DDR = (meals / days) / 3.
+    Each clamped to [0, 1] like ``_clamp_score`` in ``eval_tpc.py``.
     """
     itinerary = (plan or {}).get("itinerary")
     if not isinstance(itinerary, list) or not itinerary:
@@ -208,7 +209,8 @@ def preference_scores(plan: dict) -> dict | None:
     avg_leg = (leg_minutes_total / activities_with_transport) if activities_with_transport else -1.0
     return {
         "dav": _clamp01(attractions / (4.0 * days)),
-        "att": _clamp01((-1.0 / 105.0) * avg_leg + 8.0 / 7.0),
+        # Upstream PR #30: no innercity transport scores 0, not the clamped 8/7.
+        "att": _clamp01((-1.0 / 105.0) * avg_leg + 8.0 / 7.0) if activities_with_transport else 0.0,
         "ddr": _clamp01((meals / days) / 3.0),
         "attractions": attractions,
         "meals": meals,
