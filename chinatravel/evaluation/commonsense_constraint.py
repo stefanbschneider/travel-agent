@@ -30,7 +30,6 @@ from chinatravel.symbol_verification.commonsense_constraint import (
     Is_restaurants_correct,
     Is_transport_correct,
     Is_time_correct,
-    Is_time_correct_strict,
     Is_space_correct,
     _infer_lang,
     _set_tool_lang,
@@ -50,27 +49,10 @@ Available
 
 
 
-def evaluate_commonsense_constraints(
-    data_index,
-    symbolic_input_dict,
-    plan_json_dict,
-    verbose=False,
-    lang=None,
-    strict_time_ordering=False,
-):
+def evaluate_commonsense_constraints(data_index, symbolic_input_dict, plan_json_dict, verbose=False, lang=None):
     # assert len(symbolic_input_list)==len(plan_json_list)
 
-    time_func = Is_time_correct_strict if strict_time_ordering else Is_time_correct
-    func_list = [
-        Is_activity_grounded,
-        Is_intercity_transport_correct,
-        Is_attractions_correct,
-        Is_hotels_correct,
-        Is_restaurants_correct,
-        Is_transport_correct,
-        time_func,
-        Is_space_correct,
-    ]
+    func_list = [Is_activity_grounded, Is_intercity_transport_correct, Is_attractions_correct, Is_hotels_correct, Is_restaurants_correct, Is_transport_correct, Is_time_correct, Is_space_correct]
     total_correct = 0
 
     individual_results = []
@@ -89,12 +71,12 @@ def evaluate_commonsense_constraints(
 
 
         symbolic_input, plan_json = symbolic_input_dict[idx], plan_json_dict[idx]
-        _set_tool_lang(lang or _infer_lang(symbolic_input))
         
         if verbose:
             print(symbolic_input)
             print(plan_json)
         try:
+            _set_tool_lang(lang or _infer_lang(symbolic_input))
             for func in func_list:
 
                 table_res, error_info = func(symbolic_input, plan_json, verbose=verbose)
@@ -113,10 +95,14 @@ def evaluate_commonsense_constraints(
                 individual_succ += 1
                 pass_id.append(idx)
         except Exception as message:
-            pass
-            # print("Error: ", message)
-            # print(symbolic_input)
-            # print(plan_json)
+            error_column = 'Commonsense Evaluator Exception'
+            if error_column not in result_agg.columns:
+                result_agg[error_column] = 0
+            result_agg.loc[ii, error_column] = 1
+            print(
+                "Commonsense evaluation failed for {}: {}".format(idx, message),
+                file=sys.stderr,
+            )
         
                             
 
