@@ -4,10 +4,46 @@ This is the active Phase 2 plan.
 Historical experiments, superseded plans, and long-form chronology are in the [Phase 2 archive](archive/README.md).
 For measurement rules and dataset boundaries, see [Phase 2 evaluation](tpc_phase2_eval.md).
 
+## Upstream evaluator sync (2026-07-30) — read this before any number below
+
+Upstream patched the public evaluator on 2026-07-28 (`LAMDA-NeSy/ChinaTravel` `main` `764614c`,
+PRs [#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30)),
+and the organizers confirmed in [issue #28](https://github.com/LAMDA-NeSy/ChinaTravel/issues/28) that
+**the updated public evaluator is the canonical Phase 2 evaluator**, with the Phase 1 leaderboard to be
+re-scored against it. The change is integrated; the full list is in the
+[competition reference](reference/competition.md#evaluator-version).
+
+**Every measurement in this document predates that change and is on the old contract.** Rows and
+screens recorded before 2026-07-30 may be read as chronology; none of them may be gated against a
+post-sync run.
+
+What the sync actually cost us, measured (screen
+[`20260730_upstream_eval_sync`](../results/phase2_baselines/screens/20260730_upstream_eval_sync/README.md),
+`familiar_100_val`, `n=20`, `120 s`, LLM off — a sanity screen, not a gate):
+
+| | MicEPR | MacEPR | C-LPR | FPR | DAV | ATT | DDR | overall |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| end-to-end | `100.00` | `100.00` | `88.15` | `25.00` | `13.13` | `19.25` | `12.92` | **`54.30`** |
+| same plans, old contract | `100.00` | `100.00` | `88.15` | `25.00` | `52.50` | `76.99` | `51.67` | `61.10` |
+| solver-only | `99.07` | `75.00` | `63.03` | `15.00` | `6.88` | `10.37` | `10.83` | `40.57` |
+
+Three conclusions:
+
+1. **The two new commonsense rules cost the end-to-end path nothing.** It emits zero commonsense
+   failures under the strict checker — the commonsense-first finalization policy and
+   `_fast_commonsense_prefilter` already enforced intra-day ordering, and the deterministic builder
+   never stacks a meal type. Phase 1's `results/best` is the opposite story (`100.0 -> 61.16`,
+   `418/1000` plans rejected; see the [Phase 1 playbook](tpc_phase1_playbook.md#current-status-2026-07-30-after-the-upstream-evaluator-sync)).
+2. **The whole `-6.80` is the preference denominator.** DAV/ATT/DDR are now averaged over the entire
+   split with a zero per failing query, so the three preference terms are bounded by FPR. Preference
+   work is now worth `0.05 · FPR` per term at most. **FPR is the only lever that pays twice.**
+3. Solver-only remains behind end-to-end on this data (a known pattern), and is the arm still emitting
+   commonsense-invalid plans (1 chronology, 4 transport-grounding).
+
 ## Current status snapshot
 
 Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)
-(`familiar_100_val`, `900 s`, `a72357c3`, pin+converge defaults on).
+(`familiar_100_val`, `900 s`, `a72357c3`, pin+converge defaults on) — **pre-sync, old contract**.
 
 - A per-query no-oracle orchestrator wraps the deterministic `TPCAgent` and CP-SAT tier.
 - Parser output is normalized into branch-local solver variants with optional entity resolution and disjunction handling.
@@ -19,7 +55,7 @@ Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260
 - **Parser lifted from `~0.20` to `~0.99` familiar-100 F1** with zero missing families — the last step being the comma-in-name entity-resolution segmentation fix (`62df2a0b`, F1 `0.9316 -> 0.9908`; see [the parser chronology in the archive](archive/README.md)).
 - **Timed-window pinning and a within-day resequencer landed opt-in** behind `TPC_PIN_TIMED_WINDOWS` (default off, floor byte-identical), targeting the dominant solver-only failure family. **Gated at `300 s` (PR [#34](https://github.com/stefanbschneider/china-travel-agent/pull/34)): quality up, timeouts regress, not promoted. Re-gated clean at `900 s`** (`familiar_100_val`, sha `a72357c3`, rows [floor](../results/phase2_baselines/runs/20260723T200723Z.json)/[pin](../results/phase2_baselines/runs/20260724T071840Z.json)): e2e continuous `43.72 -> 48.04`, FPR `20.0 -> 25.0`, **timeouts `0 -> 0`** — the `300 s` regression was a budget-boundary artifact, not a real cost; `make phase2-gate` **passes**. Paired with `TPC_SOLVE_CONVERGE_PATIENCE=15` ([row](../results/phase2_baselines/runs/20260724T192503Z.json)) quality holds flat while wall-clock drops further (solve `p50` `366s -> 265s`, below even the floor's `337s`). **Promoted (role 3): both are now harness-default-on** via `solve_phase2.apply_deterministic_solver_defaults()` (called at the top of `run_split`, before the agent is built), mirroring the disjunction/entity-resolution promotion pattern — the library default (unset env var) and the byte-identical opt-in unit tests are unchanged, and an explicit operator override (e.g. the eval tooling's flags-off A/B arm) still wins. `TPC_SOLVE_CONVERGE_PATIENCE=15` is defaulted alongside pin both for the wall-clock win and as a hedge: it makes the submission robust to an organizer per-query timeout shorter than the assumed `900 s` (see [Solver-only headroom](#solver-only-headroom)).
 - **A commonsense-first finalization policy landed and is promoted (`TPC_COMMONSENSE_FIRST`, harness-default-on).** It relaxes the repair-pass commit rule for unaccepted plans and prefers a schema+commonsense-valid candidate at finalization, because the scored C-LPR is conditional on the commonsense pass. Paired `120 s` e2e screen: `overall_true` `51.34 -> 60.98`, C-LPR `67.35 -> 89.95`, commonsense pass `30/40 -> 40/40`, FPR `32.5 -> 35.0`, `logical_micro` flat (see [Commonsense-first finding](#commonsense-first-finding)).
-- **Preference packing landed opt-in behind three flags**: `TPC_PACK_DAV`, `TPC_PACK_DDR`, and `TPC_PACK_HOTEL_BREAKFAST` (all library-default-off, floor byte-identical). The follow-up Task 3 ports the Phase 1 maxpack moves into `_pack_plan` only for already accepted plans, with accepted-key guards and ATT protection via shortest-time rerouting. `TPC_PACK_DAV` screened RED on [`20260726_e2e_n40_b120_pack_dav`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_pack_dav/summary.json): FPR `37.5 -> 32.5`, `overall_true` `61.19 -> 59.32`, timeouts `3 -> 5`. `TPC_PACK_DDR` screened GREEN on [`20260726_e2e_n40_b120_pack_ddr`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_pack_ddr/summary.json): FPR `35.0 -> 37.5`, `overall_true` `60.17 -> 61.36`, timeouts `4 -> 2`; a dedicated full-split `120 s` `eval_tpc.py` comparison was still mixed (official DDR `58.89 -> 65.28`, C-LPR `85.39 -> 86.18`, overall `62.98 -> 63.09`, but FPR `31.25 -> 30.0`), so nothing is promoted from this follow-up. `TPC_PACK_HOTEL_BREAKFAST` remains off pending explicit human approval because its gain depends on the official DDR loophole while the patched score intentionally removes that benefit.
+- **Preference packing landed opt-in behind three flags**: `TPC_PACK_DAV`, `TPC_PACK_DDR`, and `TPC_PACK_HOTEL_BREAKFAST` (all library-default-off, floor byte-identical). The follow-up Task 3 ports the Phase 1 maxpack moves into `_pack_plan` only for already accepted plans, with accepted-key guards and ATT protection via shortest-time rerouting. `TPC_PACK_DAV` screened RED on [`20260726_e2e_n40_b120_pack_dav`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_pack_dav/summary.json): FPR `37.5 -> 32.5`, `overall_true` `61.19 -> 59.32`, timeouts `3 -> 5`. `TPC_PACK_DDR` screened GREEN on [`20260726_e2e_n40_b120_pack_ddr`](../results/phase2_baselines/screens/20260726_e2e_n40_b120_pack_ddr/summary.json): FPR `35.0 -> 37.5`, `overall_true` `60.17 -> 61.36`, timeouts `4 -> 2`; a dedicated full-split `120 s` `eval_tpc.py` comparison was still mixed (official DDR `58.89 -> 65.28`, C-LPR `85.39 -> 86.18`, overall `62.98 -> 63.09`, but FPR `31.25 -> 30.0`), so nothing is promoted from this follow-up. `TPC_PACK_HOTEL_BREAKFAST` is now permanently off: upstream PR #29 (integrated 2026-07-30) made a repeated meal type a commonsense failure, so the DDR loophole it depended on no longer exists and `check` reverts any stacked day. **Both packing screens above predate that evaluator change and are not comparable to anything measured after it.**
 - **A commonsense-transport repair pass landed opt-in** behind `TPC_REPAIR_TRANSPORT_GAPS` (default off, floor byte-identical), targeting the "Invalid Transport information across positions" residual (see [Commonsense-transport repair](#commonsense-transport-repair)). Since the commonsense-first promotion it is also enabled implicitly by `TPC_COMMONSENSE_FIRST`.
 - **A cascading forward-shift move for the post-pin residual landed opt-in** behind `TPC_CASCADE_TIMED_WINDOWS` (default off, floor byte-identical), targeting the *post-pin* `timed_visit_named_poi` residual — the case where the day is already in the right order but clamping a windowed activity into its window ripples a delay onto the following activities, which `_try_pin_activity` reverts and `_resequence_day` skips. **Gated at `900 s`: no measurable effect, not promoted** (see [Cascading timed-window shift](#cascading-timed-window-shift)).
 - **An early-convergence stop for the random-restart search landed opt-in** behind `TPC_SOLVE_CONVERGE_PATIENCE` (**library** default `0`/off so the floor stays byte-identical; **harness**-default `15` since the `900 s` promotion in the pinning bullet above), targeting the budget-bound-solver-with-no-early-convergence shortcoming (see [Solver-only headroom](#solver-only-headroom)).
@@ -271,9 +307,29 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 
 ## Next steps (priority order)
 
-The submission window is effectively closed; this list is what a future window should pick up, in
-order of measured leverage. Implementation-level detail for items 2-4 lives in
+The Phase 2 submission deadline is **not** announced (the organizers listed it as still being
+finalized on 2026-07-30), and evaluation runs 2026-08-01 to 08-07, so treat the window as open but
+short. Implementation-level detail for the older items lives in
 [`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
+
+0. **Re-establish a post-sync baseline before gating anything.** Every committed row is on the old
+   evaluator contract. The first `900 s` `familiar_100_val` run after the sync becomes the new
+   reference row; until it exists, `make phase2-gate` has no valid baseline to compare against.
+
+0b. **Re-solve Phase 1 `results/best` (highest expected value of anything on this list, and it is
+   Phase 1 work).** The organizers will re-score the Phase 1 leaderboard with the new evaluator, and
+   Phase 1 standing decides Phase 2 advancement. `418/1000` of our accepted plans now fail: `344`
+   on intra-day chronology, `149` on repeated meal types. The solver's acceptance gate calls the same
+   evaluator, so simply re-running the Phase 1 loop over
+   `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` cannot re-create either failure
+   family. Two of the failures are also cheap plan-level repairs on already-solved plans (drop the
+   duplicate meal; re-space overlapping activities), which is likely faster than a full re-solve.
+
+0c. **Use the 16 confirmed evaluation CPUs.** The organizers confirmed the harness process is assigned
+   **16 logical CPUs and 112 GiB host RAM**. Our per-query solve is single-threaded by construction
+   (CP-SAT `num_search_workers` 1, sequential restarts), tuned on far smaller dev machines. Parallel
+   restarts and/or a multi-worker CP-SAT tier convert idle cores into search inside the same
+   per-query budget, with no change to the acceptance contract. Screen it like any other change.
 
 1. **Confirm the commonsense-first promotion at `900 s`.** Run the two pinned arms in
    [`final_night_eval_commands.md`](agents/final_night_eval_commands.md). The only open question is
@@ -296,8 +352,9 @@ order of measured leverage. Implementation-level detail for items 2-4 lives in
 
 Packing note: the only follow-up packing flag with a green quick screen is `TPC_PACK_DDR`, but the
 dedicated full-split `120 s` evaluation remained mixed enough that no packing flag is a harness
-default today. `TPC_PACK_HOTEL_BREAKFAST` stays off until a human explicitly decides the official-
-versus-patched DDR split is acceptable.
+default today. Both screens predate the 2026-07-30 evaluator sync and are not comparable to a row
+measured after it. `TPC_PACK_HOTEL_BREAKFAST` stays off permanently: the DDR leniency it depended on
+is closed upstream, and a stacked day is now reverted by `check` rather than scored.
 
 **Status note, not a priority item: the cascade fallback for the residual pin leaves behind (`TPC_CASCADE_TIMED_WINDOWS`) gated at `900 s` with no measurable effect** — flat on solver-only (its own target axis), and the apparent end-to-end lift does not clear its own repeat-to-repeat noise; see [Cascading timed-window shift](#cascading-timed-window-shift) for the full breakdown. Not promoted.
 

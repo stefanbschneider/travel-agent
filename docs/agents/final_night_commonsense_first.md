@@ -302,5 +302,7 @@ submission harness and record that decision in the roadmap.
   timeouts appear in the candidate arm, lower the default to `15` and re-screen.
 - Everything is off by default in the library, so the promoted `20260724T192503Z` configuration stays
   shippable if the screen is not green.
-- Do not chase the `Is_time_correct_strict` "patched" scoring; the official lenient checker is what
-  the organizers run. Patched numbers are a self-audit only.
+- **Obsolete since 2026-07-30:** this doc previously said not to chase the `Is_time_correct_strict`
+  "patched" scoring because the official checker was lenient. Upstream PR #29 folded that strict
+  chronology into the official checker, `Is_time_correct_strict` and the `patched_*` keys are gone,
+  and there is now a single score to chase.

@@ -4,15 +4,34 @@ Phase 1 is offline prediction generation on the released `tpc_phase1` data.
 Only prediction files are submitted.
 The local workflow may use the released oracle fields, including `hard_logic_py`, to optimize and check plans; that privilege does not transfer to Phase 2.
 
-## Current status (2026-07-25)
+## Current status (2026-07-30, after the upstream evaluator sync)
 
-`results/best` currently evaluates at a perfect released-set score via:
+Score `results/best` with:
 
 ```bash
 make p1eval SPLIT=tpc_phase1
 ```
 
-Latest local result: MicEPR `100.0`, MacEPR `100.0`, C-LPR `100.0`, FPR `100.0`, DAV `100.0`, ATT `100.0`, DDR `100.0`, overall `100.0`.
+Latest local result on the upstream-aligned evaluator (upstream `main` `764614c`, PRs
+[#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30)):
+MicEPR `98.17`, MacEPR `58.20`, C-LPR `54.04`, FPR `58.20`, DAV `58.20`, ATT `58.20`, DDR `58.20`,
+overall `61.16`.
+
+The same `results/best` directory scored `100.0` on every metric under the pre-2026-07-28 evaluator.
+Nothing about the stored plans changed — the checker did. `418/1000` accepted plans are now rejected,
+in exactly two families (counted with the commonsense evaluator, no other sub-check regressed):
+
+| Failing commonsense column | Queries | Cause |
+| --- | --- | --- |
+| `Does not follow Chronological Order` | `344` | Upstream `Is_time_correct` now rejects intra-day activity overlap and an inbound transport that departs before the previous activity ends. |
+| `Repeated Meal Types in One Day` | `149` | Upstream `Is_restaurants_correct` now allows at most one breakfast/lunch/dinner per day; the maxpack hotel-breakfast stacking that lifted DDR to `100` is a failure. |
+
+DAV/ATT/DDR all read `58.20` because every still-passing plan scores a perfect `1.0` on each, while a
+failing query now contributes a hard zero to the average (upstream PR #30) instead of being dropped
+from it. Recovering the score means **re-solving the rejected queries**, not re-scoring them: the
+solver's own acceptance gate calls the same evaluator, so a fresh solve cannot re-create either
+failure family. `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` is rewritten by
+every `make p1eval` run and is the work list for that re-solve.
 
 ## Objective and invariants
 

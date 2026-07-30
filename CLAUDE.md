@@ -50,11 +50,12 @@ Use `make help` for Phase 1 commands and `make phase2-help` for Phase 2 commands
 - **Branch-local alternatives.** Keep OR-style constraints separate through normalization, solving, and checking.
 - **Flags off is the floor.** Library-default Phase 2 flags must keep the deterministic path and make zero LLM calls. An extension needs a bounded fallback and an explicit measured configuration.
 - **Output honestly.** Return only data that meets the schema and semantic contract. Surface a genuine failure rather than inventing an itinerary fact.
+- **Upstream evaluator parity.** `chinatravel/evaluation/`, `chinatravel/symbol_verification/`, `eval_tpc.py`'s scoring and `chinatravel/data/load_datasets.py` must reproduce `LAMDA-NeSy/ChinaTravel` `main` exactly (parity point: `764614c`, 2026-07-28, integrated 2026-07-30). Local additions there are limited to performance (lazy per-language tools) and defensive guards on malformed plans; never a scoring difference, and never a private "patched" score. Re-sync upstream before trusting a number.
 
 ## Measurements and ledgers
 
 Promotable Phase 2 evidence is a committed row under `results/phase2_baselines/` produced from a pinned source revision when the run is long.
-Compare rows only when data source, split/fold/limit, budget, repeat count, flags, model/backend, parallelism, and fresh-output policy match.
+Compare rows only when data source, split/fold/limit, budget, repeat count, flags, model/backend, parallelism, fresh-output policy, and evaluator contract match; rows straddling the 2026-07-28 upstream evaluator change are never comparable.
 Parser diagnostics prioritize a failure investigation; they do not by themselves promote a change.
 Gate a like-for-like end-to-end candidate and inspect parse failures, timeouts, recovery/fallback use, stage telemetry, and LLM failure telemetry.
 Familiar-100, local released data, HF data, and final held-out evaluation remain separate signals.
