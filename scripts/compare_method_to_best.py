@@ -46,7 +46,8 @@ def _pref(plan):
     dav = max(0.0, min(1.0, attrs / (4.0 * days)))
     ddr = max(0.0, min(1.0, meals / (3.0 * days)))
     avg = sum(hops) / len(hops) if hops else -1.0
-    att = max(0.0, min(1.0, (-1.0 / 105.0) * avg + 8.0 / 7.0)) if avg >= 0 else 1.0
+    # Upstream PR #30: no innercity transport scores 0, not 1.0.
+    att = max(0.0, min(1.0, (-1.0 / 105.0) * avg + 8.0 / 7.0)) if avg >= 0 else 0.0
     return dav, att, ddr, attrs, meals, avg
 
 

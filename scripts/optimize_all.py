@@ -133,7 +133,8 @@ def _att_of(plan):
             if legs:
                 cnt += 1; tot += _leg_time(legs)
     if cnt == 0:
-        return 100.0
+        # Upstream PR #30: no innercity transport scores 0, not a perfect ATT.
+        return 0.0
     avg = tot / cnt
     return max(0.0, min(1.0, (-1/105)*avg + 8/7)) * 100
 

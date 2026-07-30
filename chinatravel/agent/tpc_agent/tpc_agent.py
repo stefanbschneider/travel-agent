@@ -709,8 +709,13 @@ class TPCAgent(BaseAgent):
                 if transports:
                     transit_total += self._inner_activity_minutes(activity)
                     transit_count += 1
-        average_transit = transit_total / transit_count if transit_count > 0 else -1
-        att = max(0.0, min(1.0, (-1.0 / 105.0) * average_transit + 8.0 / 7.0))
+        # Mirror eval_tpc's DEFAULT_TRANS_PR exactly: since upstream PR #30 a plan with no
+        # innercity transport scores 0 on ATT, not the old clamped 8/7 (== 1.0).
+        if transit_count > 0:
+            average_transit = transit_total / transit_count
+            att = max(0.0, min(1.0, (-1.0 / 105.0) * average_transit + 8.0 / 7.0))
+        else:
+            att = 0.0
         return dav, att, ddr
 
     def _eval_proxy(self, plan):

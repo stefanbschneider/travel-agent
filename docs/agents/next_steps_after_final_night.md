@@ -45,16 +45,18 @@ It runs the same 40-query subset twice — once with your flag off, once on — 
 parse failures for both arms. Trust only the **delta**; the reduced budget makes absolute numbers
 non-comparable to the committed `900 s` rows under `results/phase2_baselines/runs/`.
 
-Two facts about the scoring that determine what is worth doing at all (verified against upstream
-`LAMDA-NeSy/ChinaTravel` on 2026-07-26 — our `eval_tpc.py` reproduces upstream's official numbers to
-the last digit):
+Two facts about the scoring that determine what is worth doing at all (re-verified against upstream
+`LAMDA-NeSy/ChinaTravel` `main` `764614c` on 2026-07-30 — our `eval_tpc.py` reproduces upstream's
+official numbers to the last digit):
 
 1. **C-LPR is conditional on the commonsense pass.** A plan failing commonsense scores `0` on the
    `0.25`-weighted logical term and `0` on EPR-macro (`0.10`), regardless of how many clauses it
    satisfies.
-2. **DAV/ATT/DDR are averaged over all-pass queries only** (`eval_tpc.cal_default_pr_score` skips
-   any uid not in `all_pass_id`). Preference work therefore only pays on plans that already pass
-   everything.
+2. **DAV/ATT/DDR are averaged over every query in the split, with a zero for each non-passing one**
+   (upstream PR #30 changed this on 2026-07-28; `eval_tpc.cal_default_pr_score` used to skip
+   non-passing uids). Preference work still only pays on plans that already pass everything, but its
+   payout is now scaled by FPR: at FPR `f`, perfecting one preference term is worth `0.05 · f · 100`
+   at most, not `0.05 · 100`. FPR is the lever; preference is second order.
 
 Official score weights: `0.10 MicEPR + 0.10 MacEPR + 0.25 C-LPR + 0.40 FPR + 0.05 DAV + 0.05 ATT +
 0.05 DDR`.
@@ -232,20 +234,19 @@ starting, since the numbers move with FPR:
 .venv/bin/python scripts/phase2_commonsense_headroom.py --quiet
 ```
 
-**DDR is the weak axis, and it is where the honesty question lives.** Read this before implementing:
+**DDR is the weak axis. The honesty question that used to live here is closed** (2026-07-30):
 
-- Official DDR is `(meal_count / day_count) / 3`, counting **every** `breakfast`/`lunch`/`dinner`
-  activity, with no per-type cap. `Is_restaurants_correct` treats a breakfast whose position is a
-  hotel as free (price `0`) and does not add hotel breakfasts to the restaurant-uniqueness set. So
-  stacking multiple free hotel breakfasts raises official DDR at zero cost. That is the Phase 1
-  technique documented in `docs/archive/phase1/tpc_phase1_playbook_2026-07-15.md`.
-- Our repository also reports a **patched** score whose `_strict_ddr_from_plan` counts at most one of
-  each meal type per day, precisely to expose that leniency (`eval_tpc.py`, keys prefixed
-  `patched_`).
-- Consequence: meal-stacking raises the official number and does not raise the patched one. The
-  organizers run the official checker. **Implement the mechanism behind its own flag, report both
-  scores, and leave the decision to the human** — do not enable meal stacking by default on your own
-  judgement. Note the split explicitly in your PR description.
+- DDR is still `(meal_count / day_count) / 3`, but upstream PR #29 made a repeated meal type on one
+  day a commonsense failure (`Repeated Meal Types in One Day`). Meal stacking therefore no longer
+  raises DDR — it drops the plan out of `all_pass_id`, forfeiting FPR, C-LPR, EPR-macro and all
+  three preference terms at once.
+- The `patched_*` reporting that existed to expose this leniency is removed; the official checker now
+  is the strict checker.
+- `TPC_PACK_HOTEL_BREAKFAST` (and the duplicate-meal part of `TPC_PACK_DDR`) are consequently dead
+  weight rather than a temptation: `_topup_hotel_breakfasts` commits only when `check(plan)` still
+  accepts, and `check` gates on commonsense once the hard constraints pass, so a stacked day is
+  reverted automatically. The remaining legitimate DDR move is adding a *missing* meal type at a real
+  restaurant.
 
 **Where.** `chinatravel/agent/tpc_agent/tpc_agent.py`. `_pack_plan` already densifies (`attr_per_day`
 3 then 4) and calls `_densify_plan`; both are gated by `check`. `scripts/maxpack.py` contains the
@@ -262,9 +263,9 @@ preference key does not regress (the existing `_accepted_eval_key` comparison):
    Fold into the same flag as (1) — an insertion that wrecks ATT is not an improvement.
 3. **DDR meal top-up**: add missing lunch/dinner at real restaurants where a free gap in the meal
    band exists. Flag `TPC_PACK_DDR`.
-4. **Free hotel-breakfast top-up** (the loophole-dependent one): add breakfasts positioned at the
-   day's accommodation until each day has 3 meals. Separate flag `TPC_PACK_HOTEL_BREAKFAST`, default
-   off, never folded into any umbrella.
+4. ~~**Free hotel-breakfast top-up**~~ — obsolete since the 2026-07-30 upstream evaluator sync. The
+   implementation stays behind `TPC_PACK_HOTEL_BREAKFAST` (default off) but can no longer commit a
+   second breakfast: the day fails `Repeated Meal Types in One Day` and `check` reverts it.
 
 Only run these on plans that are **already accepted** — preference is worthless on a failing plan,
 and this work must never risk acceptance. Bound the work by the remaining solve budget, as
@@ -281,15 +282,14 @@ because it lowers the preference key; a hotel-breakfast top-up committed only wi
 .venv/bin/python scripts/phase2_quick_eval.py --flag TPC_PACK_DAV --on 1 \
   --mode end-to-end --n 40 --budget-sec 120 --parallel 7
 
-# Official AND patched aggregate on a results directory (this is the authority for preference):
+# Official aggregate on a results directory (this is the authority for preference):
 .venv/bin/python eval_tpc.py --splits tpc_phase2_familiar_100_val \
   --method phase2_e2e_tpc_phase2_familiar_100_val --lang en
 ```
 
 **Ship bar.** `DAV`/`ATT`/`DDR` up in the `eval_tpc.py` output with `FPR` and `C-LPR` unchanged or
-better, and no new timeouts in the screen. Promote `TPC_PACK_DAV`/`TPC_PACK_DDR` if clean; leave
-`TPC_PACK_HOTEL_BREAKFAST` off pending an explicit human decision, and state the official-versus-
-patched split in the roadmap.
+better, and no new timeouts in the screen. Promote `TPC_PACK_DAV`/`TPC_PACK_DDR` if clean. There is
+no longer an official-versus-patched split to report: since the upstream sync there is one score.
 
 ---
 

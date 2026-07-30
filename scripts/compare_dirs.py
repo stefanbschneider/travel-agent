@@ -43,7 +43,8 @@ def score_plan(plan):
     avg = tt / tc if tc > 0 else -1
     dav = clamp(n_attr / (4 * days))
     ddr = clamp(n_meal / (3 * days))
-    att = clamp((-1.0 / 105.0) * avg + 8.0 / 7.0) if tc > 0 else 1.0
+    # Upstream PR #30: no innercity transport scores 0, not 1.0.
+    att = clamp((-1.0 / 105.0) * avg + 8.0 / 7.0) if tc > 0 else 0.0
     return dav, att, ddr
 
 

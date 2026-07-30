@@ -26,6 +26,28 @@ $$
 Its per-query score for monotonic merging is different: it assigns both 10% environmental slots from that query's binary commonsense result.
 That implementation choice helps rank merge candidates; it is not a second official aggregate.
 
+### Scoring contract changed on 2026-07-28 (upstream PRs #29/#30)
+
+Upstream patched the public evaluator; we integrated it on 2026-07-30 (see the
+[competition reference](reference/competition.md#evaluator-version) for the full list). Two of the
+changes alter what the preference terms mean, and one removes a local reporting concept:
+
+- **DAV/ATT/DDR are now averaged over every query in the split**, with a zero for each query that is
+  not fully passing. Previously non-passing queries were skipped, so the three preference terms were
+  conditional means over passing plans only. A preference gain on an already-passing plan is now
+  worth strictly less than it was, and FPR bounds all three terms from above.
+- **ATT is `0` for a plan with no innercity transport** (it used to be the clamped `8/7`, i.e. `1.0`).
+  A degenerate transport-free plan no longer scores a perfect ATT.
+- **The local `patched_*` score keys are gone.** They existed to expose the chronology and
+  meal-cap leniencies; upstream now enforces both in the official checker, so the patched arm was a
+  duplicate of the official one. `eval_tpc.py` again runs a single evaluation pass, and
+  `Is_time_correct_strict` / `strict_time_ordering` / `strict_meal_cap` no longer exist.
+
+**Every row recorded before 2026-07-28 is on the old contract.** Rows under
+`results/phase2_baselines/` from that period may be read for chronology, but they must not be gated
+against or compared with a row produced after the sync — the comparability rule below now includes
+the evaluator revision.
+
 ## Dataset boundaries
 
 Phase 2 measurements must name their data source.
@@ -93,6 +115,7 @@ Familiar-100 ledger rows must carry the manifest-derived data-source ID and rema
 Compare rows only when they match on:
 
 - source revision, data source, split, deterministic fold/limit, and language;
+- **evaluator contract**: rows straddling the 2026-07-28 upstream evaluator change (integrated 2026-07-30) are never comparable, whatever else matches;
 - local budget, repeat count, parallelism, and fresh-output policy;
 - parser, solver, and feature flags; and
 - LLM backend/model and cache policy when an LLM is enabled.
