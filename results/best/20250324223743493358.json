@@ -1,901 +1,415 @@
 {
- "people_number": 4,
- "start_city": "Suzhou",
- "target_city": "Hangzhou",
- "elapsed_time(sec)": 440.8823676109314,
- "_eval_score": 99.92446633825944,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 4,
+  "start_city": "Suzhou",
+  "target_city": "Hangzhou",
+  "itinerary": [
     {
-     "type": "train",
-     "start_time": "02:36",
-     "end_time": "05:50",
-     "start": "Suzhou Station",
-     "end": "Hangzhou Railway Station",
-     "price": 60.5,
-     "cost": 242.0,
-     "tickets": 4,
-     "transports": [],
-     "TrainID": "Z175"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:07",
+          "end_time": "10:57",
+          "start": "Suzhou Station",
+          "end": "Hangzhou Railway Station",
+          "price": 60.5,
+          "cost": 242.0,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "Z281"
+        },
+        {
+          "type": "lunch",
+          "position": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
+          "start_time": "11:55",
+          "end_time": "12:55",
+          "price": 468.0,
+          "cost": 1872.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Railway Station",
+              "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
+              "mode": "walk",
+              "start_time": "10:57",
+              "end_time": "11:55",
+              "distance": 4.8755486396672305,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Lingyin Temple",
+          "start_time": "13:28",
+          "end_time": "14:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
+              "end": "Lingyin Temple",
+              "mode": "walk",
+              "start_time": "12:55",
+              "end_time": "13:28",
+              "distance": 2.753899957612995,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 873.0,
+          "cost": 3492.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Lingyin Temple",
+              "end": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "mode": "walk",
+              "start_time": "14:58",
+              "end_time": "15:24",
+              "distance": 2.170487652655197,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Haiwaihai Crown Hotel",
+          "start_time": "19:05",
+          "end_time": "24:00",
+          "price": 598.0,
+          "cost": 2392.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "end": "Haiwaihai Crown Hotel",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "19:05",
+              "distance": 5.495261908630621,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "breakfast",
-     "position": "Fang Chuan Noodle House (Xinhua Road Branch)",
-     "start_time": "06:30",
-     "end_time": "06:35",
-     "price": 22.0,
-     "cost": 88.0,
-     "transports": [
-      {
-       "start": "Hangzhou Railway Station",
-       "end": "Fang Chuan Noodle House (Xinhua Road Branch)",
-       "mode": "taxi",
-       "start_time": "06:07",
-       "end_time": "06:09",
-       "cost": 11.5,
-       "distance": 1.94,
-       "price": 11.5,
-       "cars": 1
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Haiwaihai Crown Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "West Lake Scenic Area",
+          "start_time": "10:04",
+          "end_time": "11:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Haiwaihai Crown Hotel",
+              "end": "West Lake Scenic Area",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "10:04",
+              "distance": 7.84372829641941,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Tea Village: The Essence of Jiangnan",
+          "start_time": "11:43",
+          "end_time": "12:43",
+          "price": 138.0,
+          "cost": 552.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "West Lake Scenic Area",
+              "end": "Tea Village: The Essence of Jiangnan",
+              "mode": "walk",
+              "start_time": "11:34",
+              "end_time": "11:43",
+              "distance": 0.7633547599480676,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Leifeng Pagoda",
+          "start_time": "13:25",
+          "end_time": "14:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Tea Village: The Essence of Jiangnan",
+              "end": "Leifeng Pagoda",
+              "mode": "walk",
+              "start_time": "12:43",
+              "end_time": "13:25",
+              "distance": 3.535041606824316,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 220.0,
+          "cost": 880.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Leifeng Pagoda",
+              "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+              "mode": "walk",
+              "start_time": "14:55",
+              "end_time": "16:22",
+              "distance": 7.260508520623369,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Haiwaihai Crown Hotel",
+          "start_time": "19:28",
+          "end_time": "24:00",
+          "price": 598.0,
+          "cost": 2392.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
+              "end": "Haiwaihai Crown Hotel",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "19:28",
+              "distance": 7.4107512885366384,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Phoenix Mosque",
-     "start_time": "09:00",
-     "end_time": "09:20",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Fang Chuan Noodle House (Xinhua Road Branch)",
-       "end": "Phoenix Mosque",
-       "mode": "walk",
-       "start_time": "08:48",
-       "end_time": "09:00",
-       "cost": 0,
-       "distance": 1.016827813377964,
-       "price": 0
-      }
-     ]
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Haiwaihai Crown Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Qiantang River",
+          "start_time": "12:01",
+          "end_time": "13:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Haiwaihai Crown Hotel",
+              "end": "Qiantang River",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "12:01",
+              "distance": 17.63064119650929,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Qinghefang Street",
+          "start_time": "16:00",
+          "end_time": "17:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qiantang River",
+              "end": "Qinghefang Street",
+              "mode": "walk",
+              "start_time": "13:31",
+              "end_time": "16:00",
+              "distance": 12.42863900516099,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant",
+          "start_time": "17:50",
+          "end_time": "18:50",
+          "price": 498.0,
+          "cost": 1992.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Qinghefang Street",
+              "end": "Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant",
+              "mode": "walk",
+              "start_time": "17:30",
+              "end_time": "17:50",
+              "distance": 1.6712735719789302,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Haiwaihai Crown Hotel",
+          "start_time": "19:42",
+          "end_time": "24:00",
+          "price": 598.0,
+          "cost": 2392.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou Junyue Hotel · Lakeside 28 Chinese Restaurant",
+              "end": "Haiwaihai Crown Hotel",
+              "mode": "walk",
+              "start_time": "18:50",
+              "end_time": "19:42",
+              "distance": 4.385828089731222,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "lunch",
-     "position": "Qingchun Canteen: 102 Handcrafted Plant-Based Dishes",
-     "start_time": "11:00",
-     "end_time": "12:00",
-     "price": 95.0,
-     "cost": 380.0,
-     "transports": [
-      {
-       "start": "Phoenix Mosque",
-       "end": "Qingchun Canteen: 102 Handcrafted Plant-Based Dishes",
-       "mode": "walk",
-       "start_time": "10:39",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 1.7699140234112871,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou Suspended Glass Art Museum",
-     "start_time": "12:36",
-     "end_time": "13:36",
-     "price": 49.9,
-     "tickets": 4,
-     "cost": 199.6,
-     "transports": [
-      {
-       "start": "Qingchun Canteen: 102 Handcrafted Plant-Based Dishes",
-       "end": "Hangzhou Suspended Glass Art Museum",
-       "mode": "taxi",
-       "start_time": "12:09",
-       "end_time": "12:12",
-       "cost": 12.6,
-       "distance": 2.26,
-       "price": 12.6,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Bazi Bridge",
-     "start_time": "14:09",
-     "end_time": "15:09",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hangzhou Suspended Glass Art Museum",
-       "end": "Zhonghe North Road-Metro Station",
-       "mode": "walk",
-       "start_time": "13:46",
-       "end_time": "13:53",
-       "cost": 0,
-       "distance": 0.62,
-       "price": 0
-      },
-      {
-       "start": "Zhonghe North Road-Metro Station",
-       "end": "Zhalongkou-Metro Station",
-       "mode": "metro",
-       "start_time": "13:53",
-       "end_time": "13:58",
-       "cost": 8,
-       "distance": 2.93,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "Zhalongkou-Metro Station",
-       "end": "Bazi Bridge",
-       "mode": "walk",
-       "start_time": "13:58",
-       "end_time": "14:09",
-       "cost": 0,
-       "distance": 0.92,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Bistro ete Summer Long (Stadium Road Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 142.0,
-     "cost": 568.0,
-     "transports": [
-      {
-       "start": "Bazi Bridge",
-       "end": "Bistro ete Summer Long (Stadium Road Branch)",
-       "mode": "walk",
-       "start_time": "16:46",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 1.1839054853828699,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wushan Night Market",
-     "start_time": "18:34",
-     "end_time": "19:34",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Bistro ete Summer Long (Stadium Road Branch)",
-       "end": "Wushan Night Market",
-       "mode": "walk",
-       "start_time": "18:18",
-       "end_time": "18:34",
-       "cost": 0,
-       "distance": 1.3381043081327642,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Feng Qi Chao Ming·The Dragon",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "21:00",
-     "end_time": "24:00",
-     "price": 799.0,
-     "cost": 799.0,
-     "transports": [
-      {
-       "start": "Wushan Night Market",
-       "end": "Feng Qi Chao Ming·The Dragon",
-       "mode": "walk",
-       "start_time": "20:46",
-       "end_time": "21:00",
-       "cost": 0,
-       "distance": 1.2197272041595189,
-       "price": 0
-      }
-     ]
+      "day": 4,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Haiwaihai Crown Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Longjing Village",
+          "start_time": "10:16",
+          "end_time": "11:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Haiwaihai Crown Hotel",
+              "end": "Longjing Village",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "10:16",
+              "distance": 8.916438814423769,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
+          "start_time": "12:25",
+          "end_time": "13:25",
+          "price": 460.0,
+          "cost": 1840.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Longjing Village",
+              "end": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
+              "mode": "walk",
+              "start_time": "11:46",
+              "end_time": "12:25",
+              "distance": 3.2575892156060076,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:02",
+          "end_time": "18:27",
+          "start": "Hangzhou East Railway Station",
+          "end": "Suzhou North Station",
+          "price": 78.65,
+          "cost": 314.6,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hangzhou West Lake Four Seasons Hotel · WL BISTRO West Lake Restaurant",
+              "end": "Hangzhou East Railway Station",
+              "mode": "walk",
+              "start_time": "13:25",
+              "end_time": "15:27",
+              "distance": 10.189229007134644,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "G7192"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Jiande Steamed Buns (Fengqi Road Branch)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 10.0,
-     "cost": 40.0,
-     "transports": [
-      {
-       "start": "Feng Qi Chao Ming·The Dragon",
-       "end": "Jiande Steamed Buns (Fengqi Road Branch)",
-       "mode": "walk",
-       "start_time": "07:07",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 1.9611746354808268,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Lakeside Road Pedestrian Street",
-     "start_time": "08:42",
-     "end_time": "09:42",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Jiande Steamed Buns (Fengqi Road Branch)",
-       "end": "Lakeside Road Pedestrian Street",
-       "mode": "walk",
-       "start_time": "08:40",
-       "end_time": "08:42",
-       "cost": 0,
-       "distance": 0.18024511378945154,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Zhang Sheng Ji (Shuangling Branch)",
-     "start_time": "12:27",
-     "end_time": "13:27",
-     "price": 96.0,
-     "cost": 384.0,
-     "transports": [
-      {
-       "start": "Lakeside Road Pedestrian Street",
-       "end": "Zhonghe North Road-Metro Station",
-       "mode": "walk",
-       "start_time": "12:15",
-       "end_time": "12:20",
-       "cost": 0,
-       "distance": 0.47,
-       "price": 0
-      },
-      {
-       "start": "Zhonghe North Road-Metro Station",
-       "end": "Qingling Road-Metro Station",
-       "mode": "metro",
-       "start_time": "12:20",
-       "end_time": "12:24",
-       "cost": 8,
-       "distance": 2.13,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "Qingling Road-Metro Station",
-       "end": "Zhang Sheng Ji (Shuangling Branch)",
-       "mode": "walk",
-       "start_time": "12:24",
-       "end_time": "12:27",
-       "cost": 0,
-       "distance": 0.29,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "West Lake Foreign Affairs Cruise",
-     "start_time": "13:38",
-     "end_time": "14:38",
-     "price": 48.8,
-     "tickets": 4,
-     "cost": 195.2,
-     "transports": [
-      {
-       "start": "Zhang Sheng Ji (Shuangling Branch)",
-       "end": "West Lake Foreign Affairs Cruise",
-       "mode": "taxi",
-       "start_time": "13:08",
-       "end_time": "13:11",
-       "cost": 13.5,
-       "distance": 2.51,
-       "price": 13.5,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Zhejiang University (Huajiachi Campus) - Botanical Garden",
-     "start_time": "14:43",
-     "end_time": "15:43",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "West Lake Foreign Affairs Cruise",
-       "end": "Zhejiang University (Huajiachi Campus) - Botanical Garden",
-       "mode": "taxi",
-       "start_time": "14:17",
-       "end_time": "14:22",
-       "cost": 17.11,
-       "distance": 3.55,
-       "price": 17.11,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Feng Sanniang's Braised Beef with Feet (Xinhua Road Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 77.0,
-     "cost": 308.0,
-     "transports": [
-      {
-       "start": "Zhejiang University (Huajiachi Campus) - Botanical Garden",
-       "end": "Xintang-Metro Station",
-       "mode": "walk",
-       "start_time": "16:36",
-       "end_time": "16:46",
-       "cost": 0,
-       "distance": 0.84,
-       "price": 0
-      },
-      {
-       "start": "Xintang-Metro Station",
-       "end": "Zhonghe North Road-Metro Station",
-       "mode": "metro",
-       "start_time": "16:46",
-       "end_time": "16:53",
-       "cost": 8,
-       "distance": 3.6,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "Zhonghe North Road-Metro Station",
-       "end": "Feng Sanniang's Braised Beef with Feet (Xinhua Road Branch)",
-       "mode": "walk",
-       "start_time": "16:53",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.61,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Lakeside Sunshine and Rain",
-     "start_time": "19:08",
-     "end_time": "20:08",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Feng Sanniang's Braised Beef with Feet (Xinhua Road Branch)",
-       "end": "Lakeside Sunshine and Rain",
-       "mode": "walk",
-       "start_time": "18:59",
-       "end_time": "19:08",
-       "cost": 0,
-       "distance": 0.7580997876314433,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Feng Qi Chao Ming·The Dragon",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "22:51",
-     "end_time": "24:00",
-     "price": 799.0,
-     "cost": 799.0,
-     "transports": [
-      {
-       "start": "Lakeside Sunshine and Rain",
-       "end": "Feng Qi Chao Ming·The Dragon",
-       "mode": "walk",
-       "start_time": "22:29",
-       "end_time": "22:51",
-       "cost": 0,
-       "distance": 1.8560017080037952,
-       "price": 0
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "day": 3,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Jiangnan Spring (Zhongshan Middle Road Branch)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 15.0,
-     "cost": 60.0,
-     "transports": [
-      {
-       "start": "Feng Qi Chao Ming·The Dragon",
-       "end": "Jiangnan Spring (Zhongshan Middle Road Branch)",
-       "mode": "walk",
-       "start_time": "07:06",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 2.0467613292990245,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Third Park",
-     "start_time": "08:53",
-     "end_time": "09:53",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Jiangnan Spring (Zhongshan Middle Road Branch)",
-       "end": "Third Park",
-       "mode": "walk",
-       "start_time": "08:42",
-       "end_time": "08:53",
-       "cost": 0,
-       "distance": 0.9759083834757303,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou West Lake Scenic Area - First Park",
-     "start_time": "09:57",
-     "end_time": "10:17",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Third Park",
-       "end": "Hangzhou West Lake Scenic Area - First Park",
-       "mode": "walk",
-       "start_time": "09:52",
-       "end_time": "09:57",
-       "cost": 0,
-       "distance": 0.4679296909399359,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Hangzhou Royal Garden Hotel · Li Bai Library Restaurant · Four Seasons Crab Feast (Qiutao Royal Garden Branch)",
-     "start_time": "11:26",
-     "end_time": "12:26",
-     "price": 174.0,
-     "cost": 696.0,
-     "transports": [
-      {
-       "start": "Hangzhou West Lake Scenic Area - First Park",
-       "end": "Longxiang Bridge-Metro Station",
-       "mode": "walk",
-       "start_time": "11:06",
-       "end_time": "11:11",
-       "cost": 0,
-       "distance": 0.48,
-       "price": 0
-      },
-      {
-       "start": "Longxiang Bridge-Metro Station",
-       "end": "Jingfang-Metro Station",
-       "mode": "metro",
-       "start_time": "11:11",
-       "end_time": "11:19",
-       "cost": 12,
-       "distance": 4.35,
-       "price": 3,
-       "tickets": 4
-      },
-      {
-       "start": "Jingfang-Metro Station",
-       "end": "Hangzhou Royal Garden Hotel · Li Bai Library Restaurant · Four Seasons Crab Feast (Qiutao Royal Garden Branch)",
-       "mode": "walk",
-       "start_time": "11:19",
-       "end_time": "11:26",
-       "cost": 0,
-       "distance": 0.63,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Southern Song Imperial Street",
-     "start_time": "12:57",
-     "end_time": "13:57",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hangzhou Royal Garden Hotel · Li Bai Library Restaurant · Four Seasons Crab Feast (Qiutao Royal Garden Branch)",
-       "end": "Jingfang-Metro Station",
-       "mode": "walk",
-       "start_time": "12:39",
-       "end_time": "12:46",
-       "cost": 0,
-       "distance": 0.63,
-       "price": 0
-      },
-      {
-       "start": "Jingfang-Metro Station",
-       "end": "City Station-Metro Station",
-       "mode": "metro",
-       "start_time": "12:46",
-       "end_time": "12:52",
-       "cost": 8,
-       "distance": 3.44,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "City Station-Metro Station",
-       "end": "Southern Song Imperial Street",
-       "mode": "walk",
-       "start_time": "12:52",
-       "end_time": "12:57",
-       "cost": 0,
-       "distance": 0.45,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Lakeside Five Park Pier",
-     "start_time": "14:04",
-     "end_time": "15:04",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Southern Song Imperial Street",
-       "end": "Lakeside Five Park Pier",
-       "mode": "walk",
-       "start_time": "13:41",
-       "end_time": "14:04",
-       "cost": 0,
-       "distance": 1.970922694762022,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Yingying Noodle House (Jianguo Road Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 30.0,
-     "cost": 120.0,
-     "transports": [
-      {
-       "start": "Lakeside Five Park Pier",
-       "end": "Yingying Noodle House (Jianguo Road Branch)",
-       "mode": "walk",
-       "start_time": "16:36",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 2.040202976219092,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Feng Qi Chao Ming·The Dragon",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "18:52",
-     "end_time": "24:00",
-     "price": 799.0,
-     "cost": 799.0,
-     "transports": [
-      {
-       "start": "Yingying Noodle House (Jianguo Road Branch)",
-       "end": "Feng Qi Chao Ming·The Dragon",
-       "mode": "walk",
-       "start_time": "18:36",
-       "end_time": "18:52",
-       "cost": 0,
-       "distance": 1.4123001972426759,
-       "price": 0
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "day": 4,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Anonymous Noodle House",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 28.0,
-     "cost": 112.0,
-     "transports": [
-      {
-       "start": "Feng Qi Chao Ming·The Dragon",
-       "end": "Anonymous Noodle House",
-       "mode": "taxi",
-       "start_time": "07:05",
-       "end_time": "07:08",
-       "cost": 12.08,
-       "distance": 2.11,
-       "price": 12.08,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wulin Square",
-     "start_time": "09:17",
-     "end_time": "09:37",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Anonymous Noodle House",
-       "end": "Longxiang Bridge-Metro Station",
-       "mode": "walk",
-       "start_time": "08:59",
-       "end_time": "09:06",
-       "cost": 0,
-       "distance": 0.64,
-       "price": 0
-      },
-      {
-       "start": "Longxiang Bridge-Metro Station",
-       "end": "West Lake Cultural Plaza-Metro Station",
-       "mode": "metro",
-       "start_time": "09:06",
-       "end_time": "09:11",
-       "cost": 8,
-       "distance": 2.77,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "West Lake Cultural Plaza-Metro Station",
-       "end": "Wulin Square",
-       "mode": "walk",
-       "start_time": "09:11",
-       "end_time": "09:17",
-       "cost": 0,
-       "distance": 0.51,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Flavor Abyss: Artisanal Tonglu Cuisine (Jingfang Branch)",
-     "start_time": "11:00",
-     "end_time": "12:00",
-     "price": 74.0,
-     "cost": 296.0,
-     "transports": [
-      {
-       "start": "Wulin Square",
-       "end": "West Lake Cultural Plaza-Metro Station",
-       "mode": "walk",
-       "start_time": "10:37",
-       "end_time": "10:43",
-       "cost": 0,
-       "distance": 0.51,
-       "price": 0
-      },
-      {
-       "start": "West Lake Cultural Plaza-Metro Station",
-       "end": "Jingfang-Metro Station",
-       "mode": "metro",
-       "start_time": "10:43",
-       "end_time": "10:51",
-       "cost": 12,
-       "distance": 4.36,
-       "price": 3,
-       "tickets": 4
-      },
-      {
-       "start": "Jingfang-Metro Station",
-       "end": "Flavor Abyss: Artisanal Tonglu Cuisine (Jingfang Branch)",
-       "mode": "walk",
-       "start_time": "10:51",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.81,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Van Gogh Starry Night Art Museum (Hangzhou Flagship Store)",
-     "start_time": "12:22",
-     "end_time": "12:42",
-     "price": 39.9,
-     "tickets": 4,
-     "cost": 159.6,
-     "transports": [
-      {
-       "start": "Flavor Abyss: Artisanal Tonglu Cuisine (Jingfang Branch)",
-       "end": "Jingfang-Metro Station",
-       "mode": "walk",
-       "start_time": "11:59",
-       "end_time": "12:08",
-       "cost": 0,
-       "distance": 0.81,
-       "price": 0
-      },
-      {
-       "start": "Jingfang-Metro Station",
-       "end": "West Lake Cultural Plaza-Metro Station",
-       "mode": "metro",
-       "start_time": "12:08",
-       "end_time": "12:16",
-       "cost": 12,
-       "distance": 4.36,
-       "price": 3,
-       "tickets": 4
-      },
-      {
-       "start": "West Lake Cultural Plaza-Metro Station",
-       "end": "Van Gogh Starry Night Art Museum (Hangzhou Flagship Store)",
-       "mode": "walk",
-       "start_time": "12:16",
-       "end_time": "12:22",
-       "cost": 0,
-       "distance": 0.55,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wind and Wave Pavilion",
-     "start_time": "13:00",
-     "end_time": "13:20",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Van Gogh Starry Night Art Museum (Hangzhou Flagship Store)",
-       "end": "Wind and Wave Pavilion",
-       "mode": "walk",
-       "start_time": "12:44",
-       "end_time": "13:00",
-       "cost": 0,
-       "distance": 1.382296852115909,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Qinghefang Street",
-     "start_time": "13:41",
-     "end_time": "14:01",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Wind and Wave Pavilion",
-       "end": "Qinghefang Street",
-       "mode": "taxi",
-       "start_time": "13:11",
-       "end_time": "13:14",
-       "cost": 13.5,
-       "distance": 2.51,
-       "price": 13.5,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Xuan Ke Craft Beer Bistro",
-     "start_time": "17:00",
-     "end_time": "17:05",
-     "price": 146.0,
-     "cost": 584.0,
-     "transports": [
-      {
-       "start": "Qinghefang Street",
-       "end": "Xuan Ke Craft Beer Bistro",
-       "mode": "walk",
-       "start_time": "16:42",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 1.5642766012706117,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "train",
-     "start_time": "20:43",
-     "end_time": "22:07",
-     "start": "Hangzhou East Railway Station",
-     "end": "Suzhou Station",
-     "price": 78.65,
-     "cost": 314.6,
-     "tickets": 4,
-     "transports": [
-      {
-       "start": "Xuan Ke Craft Beer Bistro",
-       "end": "Zhonghe North Road-Metro Station",
-       "mode": "walk",
-       "start_time": "20:22",
-       "end_time": "20:28",
-       "cost": 0,
-       "distance": 0.58,
-       "price": 0
-      },
-      {
-       "start": "Zhonghe North Road-Metro Station",
-       "end": "East Railway Station (East Square)-Metro Station",
-       "mode": "metro",
-       "start_time": "20:28",
-       "end_time": "20:38",
-       "cost": 12,
-       "distance": 5.31,
-       "price": 3,
-       "tickets": 4
-      },
-      {
-       "start": "East Railway Station (East Square)-Metro Station",
-       "end": "Hangzhou East Railway Station",
-       "mode": "walk",
-       "start_time": "20:38",
-       "end_time": "20:43",
-       "cost": 0,
-       "distance": 0.48,
-       "price": 0
-      }
-     ],
-     "TrainID": "G7350"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 62.14849233627319,
+  "_eval_score": 92.76488095238095
 }

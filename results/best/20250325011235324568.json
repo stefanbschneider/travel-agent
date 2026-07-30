@@ -8,54 +8,54 @@
       "activities": [
         {
           "type": "airplane",
-          "start_time": "01:03",
-          "end_time": "02:43",
+          "start_time": "08:04",
+          "end_time": "09:44",
           "start": "Shenzhen Bao'an International Airport",
-          "end": "Chengdu Tianfu International Airport",
-          "price": 715.22,
-          "cost": 1430.44,
+          "end": "Chengdu Shuangliu International Airport",
+          "price": 618.5,
+          "cost": 1237.0,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL210"
+          "FlightID": "FL209"
         },
         {
           "type": "lunch",
-          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "position": "Crane's Call Tea House (People's Park Branch)",
           "start_time": "11:00",
           "end_time": "12:00",
-          "price": 250.0,
-          "cost": 500.0,
+          "price": 45.0,
+          "cost": 90.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Tianfu International Airport",
-              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "start": "Chengdu Shuangliu International Airport",
+              "end": "Crane's Call Tea House (People's Park Branch)",
               "mode": "taxi",
-              "start_time": "02:43",
-              "end_time": "04:05",
-              "distance": 54.78,
-              "price": 241.22,
-              "cost": 241.22,
+              "start_time": "09:44",
+              "end_time": "10:06",
+              "distance": 14.93,
+              "price": 61.87,
+              "cost": 61.87,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Kuanzhai Alley",
-          "start_time": "12:02",
-          "end_time": "13:02",
+          "position": "Chengdu Museum",
+          "start_time": "12:01",
+          "end_time": "13:01",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
-              "end": "Kuanzhai Alley",
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "Chengdu Museum",
               "mode": "taxi",
               "start_time": "12:00",
-              "end_time": "12:02",
-              "distance": 1.59,
+              "end_time": "12:01",
+              "distance": 1.33,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -64,9 +64,158 @@
         },
         {
           "type": "attraction",
+          "position": "Manjushri Lane",
+          "start_time": "13:03",
+          "end_time": "14:03",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Museum",
+              "end": "Manjushri Lane",
+              "mode": "taxi",
+              "start_time": "13:01",
+              "end_time": "13:03",
+              "distance": 1.95,
+              "price": 11.51,
+              "cost": 11.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Panda Valley",
+          "start_time": "15:27",
+          "end_time": "16:27",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Lane",
+              "end": "Panda Valley",
+              "mode": "taxi",
+              "start_time": "14:03",
+              "end_time": "15:27",
+              "distance": 56.24,
+              "price": 247.77,
+              "cost": 247.77,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mawangzi (Taikoo Li Branch)",
+          "start_time": "17:54",
+          "end_time": "18:54",
+          "price": 140.0,
+          "cost": 280.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Panda Valley",
+              "end": "Mawangzi (Taikoo Li Branch)",
+              "mode": "taxi",
+              "start_time": "16:27",
+              "end_time": "17:54",
+              "distance": 58.35,
+              "price": 257.29,
+              "cost": 257.29,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "CHENGDU JOYHUB AIR HOTEL",
+          "start_time": "19:15",
+          "end_time": "24:00",
+          "price": 378.0,
+          "cost": 378.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Mawangzi (Taikoo Li Branch)",
+              "end": "CHENGDU JOYHUB AIR HOTEL",
+              "mode": "taxi",
+              "start_time": "18:54",
+              "end_time": "19:15",
+              "distance": 14.56,
+              "price": 60.24,
+              "cost": 60.24,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "CHENGDU JOYHUB AIR HOTEL",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Temple",
+          "start_time": "08:54",
+          "end_time": "09:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "CHENGDU JOYHUB AIR HOTEL",
+              "end": "Manjushri Temple",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:54",
+              "distance": 16.38,
+              "price": 68.43,
+              "cost": 68.43,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Kuanzhai Alley",
+          "start_time": "09:57",
+          "end_time": "10:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manjushri Temple",
+              "end": "Kuanzhai Alley",
+              "mode": "taxi",
+              "start_time": "09:54",
+              "end_time": "09:57",
+              "distance": 2.23,
+              "price": 12.52,
+              "cost": 12.52,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
           "position": "Jinli Ancient Street",
-          "start_time": "13:05",
-          "end_time": "14:05",
+          "start_time": "11:00",
+          "end_time": "12:00",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -75,8 +224,8 @@
               "start": "Kuanzhai Alley",
               "end": "Jinli Ancient Street",
               "mode": "taxi",
-              "start_time": "13:02",
-              "end_time": "13:05",
+              "start_time": "10:57",
+              "end_time": "11:00",
               "distance": 2.03,
               "price": 11.79,
               "cost": 11.79,
@@ -85,45 +234,45 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Sichuan Museum",
-          "start_time": "14:08",
-          "end_time": "15:08",
-          "price": 0.0,
-          "cost": 0.0,
+          "type": "lunch",
+          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "start_time": "12:01",
+          "end_time": "13:01",
+          "price": 250.0,
+          "cost": 500.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Jinli Ancient Street",
-              "end": "Sichuan Museum",
+              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
               "mode": "taxi",
-              "start_time": "14:05",
-              "end_time": "14:08",
-              "distance": 2.26,
-              "price": 12.59,
-              "cost": 12.59,
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 0.88,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Baihua Tan Park",
-          "start_time": "15:10",
-          "end_time": "16:10",
+          "position": "Sichuan Museum",
+          "start_time": "13:04",
+          "end_time": "14:04",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Sichuan Museum",
-              "end": "Baihua Tan Park",
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Sichuan Museum",
               "mode": "taxi",
-              "start_time": "15:08",
-              "end_time": "15:09",
-              "distance": 1.07,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "13:01",
+              "end_time": "13:04",
+              "distance": 2.58,
+              "price": 13.72,
+              "cost": 13.72,
               "cars": 1
             }
           ]
@@ -138,229 +287,38 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Baihua Tan Park",
+              "start": "Sichuan Museum",
               "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "16:10",
-              "end_time": "16:13",
-              "distance": 2.36,
-              "price": 12.94,
-              "cost": 12.94,
+              "start_time": "14:04",
+              "end_time": "14:09",
+              "distance": 3.36,
+              "price": 16.46,
+              "cost": 16.46,
               "cars": 1
             }
           ]
         },
         {
-          "type": "breakfast",
-          "position": "Celebrity City Hotel",
-          "start_time": "06:01",
-          "end_time": "06:31",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
+          "type": "accommodation",
+          "position": "CHENGDU JOYHUB AIR HOTEL",
+          "start_time": "18:21",
+          "end_time": "24:00",
+          "price": 378.0,
+          "cost": 378.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
           "transports": [
             {
               "start": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-              "end": "Celebrity City Hotel",
-              "mode": "taxi",
-              "start_time": "06:00",
-              "end_time": "06:01",
-              "distance": 1.17,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Celebrity City Hotel",
-          "start_time": "23:00",
-          "end_time": "24:00",
-          "price": 353.0,
-          "cost": 353.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
-          "transports": []
-        }
-      ]
-    },
-    {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Celebrity City Hotel",
-          "start_time": "06:30",
-          "end_time": "07:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Celebrity City Hotel",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Chunxi Road",
-          "start_time": "08:33",
-          "end_time": "09:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Celebrity City Hotel",
-              "end": "Chunxi Road",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:33",
-              "distance": 2.07,
-              "price": 11.96,
-              "cost": 11.96,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Fragrant Alley",
-          "start_time": "09:45",
-          "end_time": "10:45",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Chunxi Road",
-              "end": "Fragrant Alley",
-              "mode": "taxi",
-              "start_time": "09:33",
-              "end_time": "09:34",
-              "distance": 1.22,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chengdu IFS Sculpture Garden",
-          "start_time": "10:59",
-          "end_time": "11:59",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Fragrant Alley",
-              "end": "Chengdu IFS Sculpture Garden",
-              "mode": "taxi",
-              "start_time": "10:45",
-              "end_time": "10:46",
-              "distance": 0.83,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Grill Master Spicy Grilled Fish (IFS Branch)",
-          "start_time": "12:19",
-          "end_time": "13:19",
-          "price": 100.0,
-          "cost": 200.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Chengdu IFS Sculpture Garden",
-              "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
-              "mode": "taxi",
-              "start_time": "11:59",
-              "end_time": "12:00",
-              "distance": 0.99,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Huanglongxi",
-          "start_time": "14:15",
-          "end_time": "15:15",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Grill Master Spicy Grilled Fish (IFS Branch)",
-              "end": "Huanglongxi",
-              "mode": "taxi",
-              "start_time": "13:19",
-              "end_time": "14:15",
-              "distance": 37.96,
-              "price": 165.53,
-              "cost": 165.53,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 984.0,
-          "cost": 1968.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Huanglongxi",
-              "end": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-              "mode": "taxi",
-              "start_time": "15:15",
-              "end_time": "16:00",
-              "distance": 30.15,
-              "price": 130.38,
-              "cost": 130.38,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Celebrity City Hotel",
-          "start_time": "18:11",
-          "end_time": "24:00",
-          "price": 353.0,
-          "cost": 353.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Chengdu Waldorf Astoria Hotel · Qilin · Grill Room Limited Edition - Grill",
-              "end": "Celebrity City Hotel",
+              "end": "CHENGDU JOYHUB AIR HOTEL",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:11",
-              "distance": 7.76,
-              "price": 31.87,
-              "cost": 31.87,
+              "end_time": "18:21",
+              "distance": 14.52,
+              "price": 60.06,
+              "cost": 60.06,
               "cars": 1
             }
           ]
@@ -372,17 +330,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Celebrity City Hotel",
-          "start_time": "06:30",
-          "end_time": "07:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Celebrity City Hotel",
+          "position": "CHENGDU JOYHUB AIR HOTEL",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -392,161 +340,119 @@
         },
         {
           "type": "attraction",
-          "position": "China Shadow Puppet Museum",
-          "start_time": "09:00",
-          "end_time": "10:00",
+          "position": "Chunxi Road",
+          "start_time": "08:53",
+          "end_time": "09:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Celebrity City Hotel",
-              "end": "China Shadow Puppet Museum",
+              "start": "CHENGDU JOYHUB AIR HOTEL",
+              "end": "Chunxi Road",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:31",
-              "distance": 1.07,
-              "price": 11.0,
-              "cost": 11.0,
+              "end_time": "08:53",
+              "distance": 15.37,
+              "price": 63.88,
+              "cost": 63.88,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Chengdu Museum",
-          "start_time": "10:45",
-          "end_time": "11:45",
+          "position": "Jinmen Immersive Republic of China Scenic Area",
+          "start_time": "10:14",
+          "end_time": "11:14",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "China Shadow Puppet Museum",
-              "end": "Chengdu Museum",
-              "mode": "walk",
-              "start_time": "10:00",
-              "end_time": "10:00",
-              "distance": 0.07916972935558433,
-              "price": 0,
-              "cost": 0
+              "start": "Chunxi Road",
+              "end": "Jinmen Immersive Republic of China Scenic Area",
+              "mode": "taxi",
+              "start_time": "09:53",
+              "end_time": "10:14",
+              "distance": 14.5,
+              "price": 59.94,
+              "cost": 59.94,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Manjushri Lane",
-          "start_time": "11:47",
-          "end_time": "12:47",
+          "position": "East Suburb Memory",
+          "start_time": "11:32",
+          "end_time": "12:32",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Chengdu Museum",
-              "end": "Manjushri Lane",
+              "start": "Jinmen Immersive Republic of China Scenic Area",
+              "end": "East Suburb Memory",
               "mode": "taxi",
-              "start_time": "11:45",
-              "end_time": "11:47",
-              "distance": 1.95,
-              "price": 11.51,
-              "cost": 11.51,
+              "start_time": "11:14",
+              "end_time": "11:32",
+              "distance": 12.32,
+              "price": 50.14,
+              "cost": 50.14,
               "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Crane's Call Tea House (People's Park Branch)",
-          "start_time": "12:51",
-          "end_time": "13:51",
-          "price": 45.0,
-          "cost": 90.0,
+          "position": "Grill Master Spicy Grilled Fish (IFS Branch)",
+          "start_time": "12:39",
+          "end_time": "13:39",
+          "price": 100.0,
+          "cost": 200.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Manjushri Lane",
-              "end": "Crane's Call Tea House (People's Park Branch)",
+              "start": "East Suburb Memory",
+              "end": "Grill Master Spicy Grilled Fish (IFS Branch)",
               "mode": "taxi",
-              "start_time": "12:47",
-              "end_time": "12:51",
-              "distance": 3.18,
-              "price": 15.83,
-              "cost": 15.83,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Zhong Dumplings (Main Store at People's Park)",
-          "start_time": "17:00",
-          "end_time": "17:45",
-          "price": 41.0,
-          "cost": 82.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Crane's Call Tea House (People's Park Branch)",
-              "end": "Zhong Dumplings (Main Store at People's Park)",
-              "mode": "walk",
-              "start_time": "17:00",
-              "end_time": "17:00",
-              "distance": 0.037762814216146155,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "The First Street Archway of Western Shu",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Zhong Dumplings (Main Store at People's Park)",
-              "end": "The First Street Archway of Western Shu",
-              "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:30",
-              "distance": 0.42,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "12:32",
+              "end_time": "12:39",
+              "distance": 5.19,
+              "price": 22.88,
+              "cost": 22.88,
               "cars": 1
             }
           ]
         },
         {
           "type": "airplane",
-          "start_time": "22:02",
-          "end_time": "23:42",
+          "start_time": "21:52",
+          "end_time": "23:32",
           "start": "Chengdu Tianfu International Airport",
           "end": "Shenzhen Bao'an International Airport",
-          "price": 655.04,
-          "cost": 1310.08,
+          "price": 713.63,
+          "cost": 1427.26,
           "tickets": 2,
           "transports": [
             {
-              "start": "The First Street Archway of Western Shu",
+              "start": "Grill Master Spicy Grilled Fish (IFS Branch)",
               "end": "Chengdu Tianfu International Airport",
               "mode": "taxi",
-              "start_time": "19:02",
-              "end_time": "20:24",
-              "distance": 55.07,
-              "price": 242.53,
-              "cost": 242.53,
+              "start_time": "13:39",
+              "end_time": "14:59",
+              "distance": 53.62,
+              "price": 235.99,
+              "cost": 235.99,
               "cars": 1
             }
           ],
-          "FlightID": "FL421"
+          "FlightID": "FL426"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 311.2325747013092,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 60.046852350234985,
+  "_eval_score": 97.64285714285714
 }

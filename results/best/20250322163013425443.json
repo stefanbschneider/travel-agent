@@ -7,192 +7,310 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "01:11",
-          "end_time": "03:36",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 923.58,
-          "cost": 923.58,
+          "type": "train",
+          "start_time": "23:54",
+          "end_time": "04:40",
+          "start": "Beijing Fengtai Station",
+          "end": "Shenzhen East Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL095"
-        },
-        {
-          "type": "breakfast",
-          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-          "start_time": "07:00",
-          "end_time": "08:00",
-          "price": 24.0,
-          "cost": 24.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-              "mode": "taxi",
-              "start_time": "03:36",
-              "end_time": "04:14",
-              "distance": 25.7,
-              "price": 110.35,
-              "cost": 110.35,
-              "cars": 1
-            }
-          ]
+          "TrainID": "K105"
         },
         {
           "type": "attraction",
-          "position": "Guan Shanyue Art Museum",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Yantian Branch)",
           "start_time": "09:00",
-          "end_time": "10:00",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-              "end": "Guan Shanyue Art Museum",
-              "mode": "taxi",
-              "start_time": "08:00",
-              "end_time": "08:02",
-              "distance": 1.88,
-              "price": 11.29,
-              "cost": 11.29,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Old Zhou's Shunde Double-Skin Milk",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 20.0,
-          "cost": 20.0,
-          "tickets": 1,
-          "transports": [
+              "start": "Shenzhen East Station",
+              "end": "Buji-Metro Station",
+              "mode": "walk",
+              "start_time": "04:40",
+              "end_time": "04:43",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Guan Shanyue Art Museum",
-              "end": "Old Zhou's Shunde Double-Skin Milk",
-              "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:03",
-              "distance": 2.19,
-              "price": 12.38,
-              "cost": 12.38,
-              "cars": 1
+              "start": "Buji-Metro Station",
+              "end": "Dameisha-Metro Station",
+              "mode": "metro",
+              "start_time": "04:43",
+              "end_time": "05:21",
+              "distance": 19.22,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Yantian Branch)",
+              "mode": "walk",
+              "start_time": "05:21",
+              "end_time": "05:36",
+              "distance": 1.29,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Futian District Sports Park",
-          "start_time": "12:19",
-          "end_time": "13:19",
+          "position": "Dameisha Yacht Rental Center",
+          "start_time": "10:56",
+          "end_time": "12:26",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Yantian Branch)",
+              "end": "Dameisha-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:45",
+              "distance": 1.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Dameisha-Metro Station",
+              "end": "Xiaomeisha-Metro Station",
+              "mode": "metro",
+              "start_time": "10:45",
+              "end_time": "10:49",
+              "distance": 2.12,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Xiaomeisha-Metro Station",
+              "end": "Dameisha Yacht Rental Center",
+              "mode": "walk",
+              "start_time": "10:49",
+              "end_time": "10:56",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Fairy Lake Botanical Garden",
+          "start_time": "13:32",
+          "end_time": "15:02",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Dameisha Yacht Rental Center",
+              "end": "Xiaomeisha-Metro Station",
+              "mode": "walk",
+              "start_time": "12:26",
+              "end_time": "12:33",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiaomeisha-Metro Station",
+              "end": "Liantang-Metro Station",
+              "mode": "metro",
+              "start_time": "12:33",
+              "end_time": "13:05",
+              "distance": 16.21,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Liantang-Metro Station",
+              "end": "Fairy Lake Botanical Garden",
+              "mode": "walk",
+              "start_time": "13:05",
+              "end_time": "13:32",
+              "distance": 2.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "15:55",
+          "end_time": "17:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fairy Lake Botanical Garden",
+              "end": "Liantang-Metro Station",
+              "mode": "walk",
+              "start_time": "15:02",
+              "end_time": "15:29",
+              "distance": 2.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liantang-Metro Station",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "metro",
+              "start_time": "15:29",
+              "end_time": "15:51",
+              "distance": 11.08,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "walk",
+              "start_time": "15:51",
+              "end_time": "15:55",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:36",
+          "end_time": "18:36",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "walk",
+              "start_time": "17:25",
+              "end_time": "17:29",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Meicun-Metro Station",
+              "mode": "metro",
+              "start_time": "17:29",
+              "end_time": "17:34",
+              "distance": 2.7,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "walk",
+              "start_time": "17:34",
+              "end_time": "17:36",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "18:50",
+          "end_time": "20:20",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Futian District Sports Park",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:05",
-              "distance": 3.98,
-              "price": 18.64,
-              "cost": 18.64,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Centennial Orchard Coconut Chicken (Bao'an Main Store)",
-          "start_time": "17:13",
-          "end_time": "17:58",
-          "price": 130.0,
-          "cost": 130.0,
-          "tickets": 1,
-          "transports": [
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:36",
+              "end_time": "18:38",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Futian District Sports Park",
-              "end": "Centennial Orchard Coconut Chicken (Bao'an Main Store)",
-              "mode": "taxi",
-              "start_time": "13:19",
-              "end_time": "13:39",
-              "distance": 13.97,
-              "price": 57.56,
-              "cost": 57.56,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Xibay Seaside Park",
-          "start_time": "07:43",
-          "end_time": "08:43",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
+              "start": "Meicun-Metro Station",
+              "end": "Futian Port-Metro Station",
+              "mode": "metro",
+              "start_time": "18:38",
+              "end_time": "18:49",
+              "distance": 5.91,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
             {
-              "start": "Centennial Orchard Coconut Chicken (Bao'an Main Store)",
-              "end": "Xibay Seaside Park",
-              "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:43",
-              "distance": 8.7,
-              "price": 35.14,
-              "cost": 35.14,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen Airport Ferry Cruise",
-          "start_time": "07:32",
-          "end_time": "08:32",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Xibay Seaside Park",
-              "end": "Shenzhen Airport Ferry Cruise",
-              "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:32",
-              "distance": 1.95,
-              "price": 11.54,
-              "cost": 11.54,
-              "cars": 1
+              "start": "Futian Port-Metro Station",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "walk",
+              "start_time": "18:49",
+              "end_time": "18:50",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-          "start_time": "23:00",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "20:59",
           "end_time": "24:00",
-          "price": 288.0,
-          "cost": 288.0,
+          "price": 231.0,
+          "cost": 231.0,
           "rooms": 1,
-          "room_type": 2,
+          "room_type": 1,
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Airport Ferry Cruise",
-              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-              "mode": "taxi",
-              "start_time": "19:07",
-              "end_time": "19:10",
-              "distance": 2.41,
-              "price": 13.12,
-              "cost": 13.12,
-              "cars": 1
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
+              "mode": "walk",
+              "start_time": "20:20",
+              "end_time": "20:21",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Gankeng-Metro Station",
+              "mode": "metro",
+              "start_time": "20:21",
+              "end_time": "20:51",
+              "distance": 15.03,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "mode": "walk",
+              "start_time": "20:51",
+              "end_time": "20:59",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -203,7 +321,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -212,283 +330,44 @@
           "transports": []
         },
         {
-          "type": "attraction",
-          "position": "Helicopter Aerial Sightseeing Tour",
-          "start_time": "09:34",
-          "end_time": "10:34",
-          "price": 3980.0,
-          "cost": 3980.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-              "end": "Helicopter Aerial Sightseeing Tour",
-              "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:34",
-              "distance": 2.88,
-              "price": 14.79,
-              "cost": 14.79,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "lunch",
-          "position": "Silver Shadow Restaurant",
-          "start_time": "11:11",
-          "end_time": "11:56",
-          "price": 81.0,
-          "cost": 81.0,
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Helicopter Aerial Sightseeing Tour",
-              "end": "Silver Shadow Restaurant",
-              "mode": "taxi",
-              "start_time": "08:11",
-              "end_time": "08:20",
-              "distance": 6.49,
-              "price": 27.42,
-              "cost": 27.42,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Tie Zai Mountain Park",
-          "start_time": "07:43",
-          "end_time": "08:43",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Gankeng-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            },
             {
-              "start": "Silver Shadow Restaurant",
-              "end": "Tie Zai Mountain Park",
-              "mode": "taxi",
-              "start_time": "04:43",
-              "end_time": "04:46",
-              "distance": 2.58,
-              "price": 13.74,
-              "cost": 13.74,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Xixiang Night Market Street",
-          "start_time": "16:02",
-          "end_time": "17:02",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
+              "start": "Gankeng-Metro Station",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "08:57",
+              "distance": 9.81,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
             {
-              "start": "Tie Zai Mountain Park",
-              "end": "Xixiang Night Market Street",
-              "mode": "taxi",
-              "start_time": "16:00",
-              "end_time": "16:02",
-              "distance": 1.43,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Shenzhen Airport Hyatt Hotel · Xiangyue Chinese Restaurant",
-          "start_time": "17:10",
-          "end_time": "17:55",
-          "price": 300.0,
-          "cost": 300.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Xixiang Night Market Street",
-              "end": "Shenzhen Airport Hyatt Hotel · Xiangyue Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "17:00",
-              "end_time": "17:10",
-              "distance": 6.88,
-              "price": 28.79,
-              "cost": 28.79,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Sea Rainbow",
-          "start_time": "09:33",
-          "end_time": "10:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Airport Hyatt Hotel · Xiangyue Chinese Restaurant",
-              "end": "Sea Rainbow",
-              "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:33",
-              "distance": 2.3,
-              "price": 12.76,
-              "cost": 12.76,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-          "start_time": "23:00",
-          "end_time": "24:00",
-          "price": 288.0,
-          "cost": 288.0,
-          "rooms": 1,
-          "room_type": 2,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Sea Rainbow",
-              "end": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-              "mode": "taxi",
-              "start_time": "19:30",
-              "end_time": "19:33",
-              "distance": 2.41,
-              "price": 13.12,
-              "cost": 13.12,
-              "cars": 1
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "day": 3,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Hartman Aviation Experience Center",
-          "start_time": "10:11",
-          "end_time": "11:11",
-          "price": 666.0,
-          "cost": 666.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Vienna Best Sleep International Hotel (Shenzhen Airport flagship)",
-              "end": "Hartman Aviation Experience Center",
-              "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:11",
-              "distance": 7.53,
-              "price": 31.04,
-              "cost": 31.04,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen OCT Tourism Resort",
-          "start_time": "10:50",
-          "end_time": "12:05",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Hartman Aviation Experience Center",
-              "end": "Shenzhen OCT Tourism Resort",
-              "mode": "taxi",
-              "start_time": "07:50",
-              "end_time": "08:05",
-              "distance": 10.62,
-              "price": 42.49,
-              "cost": 42.49,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Fat Tao Gold Medal Tea Restaurant (Huangting Flagship Store)",
-          "start_time": "12:22",
-          "end_time": "13:22",
-          "price": 73.0,
-          "cost": 73.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen OCT Tourism Resort",
-              "end": "Fat Tao Gold Medal Tea Restaurant (Huangting Flagship Store)",
-              "mode": "taxi",
-              "start_time": "12:05",
-              "end_time": "12:15",
-              "distance": 7.2,
-              "price": 29.89,
-              "cost": 29.89,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Galaxy Development Center Building - Fitness Center",
-          "start_time": "13:34",
-          "end_time": "15:04",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Fat Tao Gold Medal Tea Restaurant (Huangting Flagship Store)",
-              "end": "Galaxy Development Center Building - Fitness Center",
-              "mode": "taxi",
-              "start_time": "13:22",
-              "end_time": "13:23",
-              "distance": 0.97,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-          "start_time": "15:37",
-          "end_time": "16:37",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-              "mode": "taxi",
-              "start_time": "15:04",
-              "end_time": "15:05",
-              "distance": 1.01,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "start": "Shangmeilin-Metro Station",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "walk",
+              "start_time": "08:57",
+              "end_time": "09:00",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -502,45 +381,144 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Shangmeilin-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shangmeilin-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:19",
+              "distance": 8.36,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "taxi",
-              "start_time": "16:37",
-              "end_time": "16:47",
-              "distance": 6.73,
-              "price": 28.26,
-              "cost": 28.26,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "12:19",
+              "end_time": "12:21",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
-          "type": "train",
-          "start_time": "19:34",
-          "end_time": "06:33",
-          "start": "Shenzhen North Railway Station",
-          "end": "Beijing West Railway Station",
-          "price": 1165.89,
-          "cost": 1165.89,
+          "type": "accommodation",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "18:33",
+          "end_time": "24:00",
+          "price": 231.0,
+          "cost": 231.0,
+          "rooms": 1,
+          "room_type": 1,
           "tickets": 1,
           "transports": [
             {
               "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Shenzhen North Railway Station",
-              "mode": "taxi",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "walk",
               "start_time": "18:00",
-              "end_time": "18:19",
-              "distance": 13.01,
-              "price": 53.26,
-              "cost": 53.26,
-              "cars": 1
+              "end_time": "18:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
+              "end": "Gankeng-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:25",
+              "distance": 11.69,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "mode": "walk",
+              "start_time": "18:25",
+              "end_time": "18:33",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 777.26,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Overseas Chinese Town Nanyang Inn (Gankeng Ancient Town Shop)",
+              "end": "Gankeng-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.75,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Gankeng-Metro Station",
+              "end": "Buji-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "08:48",
+              "distance": 5.28,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Buji-Metro Station",
+              "end": "Shenzhen East Station",
+              "mode": "walk",
+              "start_time": "08:48",
+              "end_time": "08:51",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
             }
           ],
-          "TrainID": "D902"
+          "TrainID": "K106"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 184.92793822288513,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 62.43681573867798,
+  "_eval_score": 93.97366522366522
 }

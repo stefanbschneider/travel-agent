@@ -1,490 +1,255 @@
 {
- "people_number": 1,
- "start_city": "Shenzhen",
- "target_city": "Nanjing",
- "elapsed_time(sec)": 247.64264106750488,
- "_eval_score": 98.125,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Nanjing",
+  "itinerary": [
     {
-     "type": "train",
-     "start_time": "08:14",
-     "end_time": "20:09",
-     "start": "Shenzhen North Railway Station",
-     "end": "Nanjing South Railway Station",
-     "price": 694.1,
-     "cost": 694.1,
-     "tickets": 1,
-     "transports": [],
-     "TrainID": "D2294"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "08:14",
+          "end_time": "20:09",
+          "start": "Shenzhen North Railway Station",
+          "end": "Nanjing South Railway Station",
+          "price": 694.1,
+          "cost": 694.1,
+          "tickets": 1,
+          "transports": [],
+          "TrainID": "D2294"
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
+          "start_time": "20:29",
+          "end_time": "22:14",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Nanjing South Railway Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "20:09",
+              "end_time": "20:12",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "20:12",
+              "end_time": "20:23",
+              "distance": 5.92,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
+              "mode": "walk",
+              "start_time": "20:23",
+              "end_time": "20:29",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Qingmu • Shang Hotel NanjingNan Sation",
+          "start_time": "22:42",
+          "end_time": "24:00",
+          "price": 301.0,
+          "cost": 301.0,
+          "rooms": 1,
+          "room_type": 1,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "22:14",
+              "end_time": "22:20",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "22:20",
+              "end_time": "22:34",
+              "distance": 7.26,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "Qingmu • Shang Hotel NanjingNan Sation",
+              "mode": "walk",
+              "start_time": "22:34",
+              "end_time": "22:42",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Pure Enlightenment Temple",
-     "start_time": "07:43",
-     "end_time": "08:43",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Nanjing South Railway Station",
-       "end": "Nanjing South Railway Station-Metro Station",
-       "mode": "walk",
-       "start_time": "07:22",
-       "end_time": "07:25",
-       "cost": 0,
-       "distance": 0.29,
-       "price": 0
-      },
-      {
-       "start": "Nanjing South Railway Station-Metro Station",
-       "end": "Changfu Street-Metro Station",
-       "mode": "metro",
-       "start_time": "07:25",
-       "end_time": "07:38",
-       "cost": 3,
-       "distance": 6.94,
-       "price": 3,
-       "tickets": 1
-      },
-      {
-       "start": "Changfu Street-Metro Station",
-       "end": "Pure Enlightenment Temple",
-       "mode": "walk",
-       "start_time": "07:38",
-       "end_time": "07:43",
-       "cost": 0,
-       "distance": 0.46,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Nanjing Folk Museum",
-     "start_time": "10:00",
-     "end_time": "10:20",
-     "price": 18.0,
-     "tickets": 1,
-     "cost": 18.0,
-     "transports": [
-      {
-       "start": "Pure Enlightenment Temple",
-       "end": "Nanjing Folk Museum",
-       "mode": "walk",
-       "start_time": "09:57",
-       "end_time": "10:00",
-       "cost": 0,
-       "distance": 0.2954486132530683,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Through Nanjing",
-     "start_time": "10:25",
-     "end_time": "10:45",
-     "price": 39.9,
-     "tickets": 1,
-     "cost": 39.9,
-     "transports": [
-      {
-       "start": "Nanjing Folk Museum",
-       "end": "Through Nanjing",
-       "mode": "walk",
-       "start_time": "10:19",
-       "end_time": "10:25",
-       "cost": 0,
-       "distance": 0.5166537635479712,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jiangnan Silk Culture Museum",
-     "start_time": "10:50",
-     "end_time": "11:10",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Through Nanjing",
-       "end": "Confucius Temple-Metro Station",
-       "mode": "walk",
-       "start_time": "10:35",
-       "end_time": "10:41",
-       "cost": 0,
-       "distance": 0.52,
-       "price": 0
-      },
-      {
-       "start": "Confucius Temple-Metro Station",
-       "end": "Zhangfuyuan-Metro Station",
-       "mode": "metro",
-       "start_time": "10:41",
-       "end_time": "10:43",
-       "cost": 2,
-       "distance": 1.01,
-       "price": 2,
-       "tickets": 1
-      },
-      {
-       "start": "Zhangfuyuan-Metro Station",
-       "end": "Jiangnan Silk Culture Museum",
-       "mode": "walk",
-       "start_time": "10:43",
-       "end_time": "10:50",
-       "cost": 0,
-       "distance": 0.6,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Sichuan Restaurant (Taiping South Road Branch)",
-     "start_time": "06:20",
-     "end_time": "06:50",
-     "price": 55.0,
-     "cost": 55.0,
-     "transports": [
-      {
-       "start": "Jiangnan Silk Culture Museum",
-       "end": "Zhangfuyuan-Metro Station",
-       "mode": "walk",
-       "start_time": "06:08",
-       "end_time": "06:15",
-       "cost": 0,
-       "distance": 0.6,
-       "price": 0
-      },
-      {
-       "start": "Zhangfuyuan-Metro Station",
-       "end": "Changfu Street-Metro Station",
-       "mode": "metro",
-       "start_time": "06:15",
-       "end_time": "06:16",
-       "cost": 2,
-       "distance": 0.84,
-       "price": 2,
-       "tickets": 1
-      },
-      {
-       "start": "Changfu Street-Metro Station",
-       "end": "Sichuan Restaurant (Taiping South Road Branch)",
-       "mode": "walk",
-       "start_time": "06:16",
-       "end_time": "06:20",
-       "cost": 0,
-       "distance": 0.38,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Li's Halal Restaurant (Dading Lane Branch)",
-     "start_time": "06:00",
-     "end_time": "06:30",
-     "price": 29.0,
-     "cost": 29.0,
-     "transports": [
-      {
-       "start": "Sichuan Restaurant (Taiping South Road Branch)",
-       "end": "Changfu Street-Metro Station",
-       "mode": "walk",
-       "start_time": "05:50",
-       "end_time": "05:54",
-       "cost": 0,
-       "distance": 0.38,
-       "price": 0
-      },
-      {
-       "start": "Changfu Street-Metro Station",
-       "end": "Zhangfuyuan-Metro Station",
-       "mode": "metro",
-       "start_time": "05:54",
-       "end_time": "05:55",
-       "cost": 2,
-       "distance": 0.84,
-       "price": 2,
-       "tickets": 1
-      },
-      {
-       "start": "Zhangfuyuan-Metro Station",
-       "end": "Li's Halal Restaurant (Dading Lane Branch)",
-       "mode": "walk",
-       "start_time": "05:55",
-       "end_time": "06:00",
-       "cost": 0,
-       "distance": 0.44,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Fang Po Cake and Dumpling Shop (Wangfu Street Branch)",
-     "start_time": "06:35",
-     "end_time": "07:05",
-     "price": 14.0,
-     "cost": 14.0,
-     "transports": [
-      {
-       "start": "Li's Halal Restaurant (Dading Lane Branch)",
-       "end": "Fang Po Cake and Dumpling Shop (Wangfu Street Branch)",
-       "mode": "walk",
-       "start_time": "06:24",
-       "end_time": "06:35",
-       "cost": 0,
-       "distance": 0.9947564851971312,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "JiaMei Hotel",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 191.0,
-     "cost": 191.0,
-     "transports": [
-      {
-       "start": "Fang Po Cake and Dumpling Shop (Wangfu Street Branch)",
-       "end": "JiaMei Hotel",
-       "mode": "walk",
-       "start_time": "22:51",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.8190612851865414,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Qingmu • Shang Hotel NanjingNan Sation",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Zhongshan Scenic Area",
+          "start_time": "09:38",
+          "end_time": "11:23",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Qingmu • Shang Hotel NanjingNan Sation",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "09:06",
+              "distance": 14.31,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Zhongshan Scenic Area",
+              "mode": "walk",
+              "start_time": "09:06",
+              "end_time": "09:38",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Museum",
+          "start_time": "12:13",
+          "end_time": "13:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Zhongshan Scenic Area",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "walk",
+              "start_time": "11:23",
+              "end_time": "11:55",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Clover Garden-Metro Station",
+              "mode": "metro",
+              "start_time": "11:55",
+              "end_time": "12:04",
+              "distance": 5.0,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Nanjing Museum",
+              "mode": "walk",
+              "start_time": "12:04",
+              "end_time": "12:13",
+              "distance": 0.81,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "14:52",
+          "start": "Nanjing Station",
+          "end": "Shenzhen Station",
+          "price": 462.73,
+          "cost": 462.73,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Nanjing Museum",
+              "end": "Clover Garden-Metro Station",
+              "mode": "walk",
+              "start_time": "13:58",
+              "end_time": "14:07",
+              "distance": 0.81,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "14:07",
+              "end_time": "14:20",
+              "distance": 6.56,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
+              "end": "Nanjing Station",
+              "mode": "walk",
+              "start_time": "14:20",
+              "end_time": "14:22",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "K33"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Halal Jin Hong Xing Duck Restaurant",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 46.0,
-     "cost": 46.0,
-     "transports": [
-      {
-       "start": "JiaMei Hotel",
-       "end": "Halal Jin Hong Xing Duck Restaurant",
-       "mode": "walk",
-       "start_time": "07:26",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.4065204035670787,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Caogiao Halal Beef Pot Sticker and Dumpling Shop (Hongtuqiao Branch)",
-     "start_time": "06:00",
-     "end_time": "06:30",
-     "price": 25.0,
-     "cost": 25.0,
-     "transports": [
-      {
-       "start": "Halal Jin Hong Xing Duck Restaurant",
-       "end": "Caogiao Halal Beef Pot Sticker and Dumpling Shop (Hongtuqiao Branch)",
-       "mode": "walk",
-       "start_time": "05:54",
-       "end_time": "06:00",
-       "cost": 0,
-       "distance": 0.5757428561825528,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Chaotian Palace",
-     "start_time": "10:13",
-     "end_time": "11:13",
-     "price": 23.0,
-     "tickets": 1,
-     "cost": 23.0,
-     "transports": [
-      {
-       "start": "Caogiao Halal Beef Pot Sticker and Dumpling Shop (Hongtuqiao Branch)",
-       "end": "Chaotian Palace",
-       "mode": "walk",
-       "start_time": "09:59",
-       "end_time": "10:13",
-       "cost": 0,
-       "distance": 1.227893626190237,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Taiping Heavenly Kingdom History Museum (Zhan Garden)",
-     "start_time": "09:59",
-     "end_time": "10:59",
-     "price": 27.0,
-     "tickets": 1,
-     "cost": 27.0,
-     "transports": [
-      {
-       "start": "Chaotian Palace",
-       "end": "Xinjiekou-Metro Station",
-       "mode": "walk",
-       "start_time": "09:48",
-       "end_time": "09:51",
-       "cost": 0,
-       "distance": 0.26,
-       "price": 0
-      },
-      {
-       "start": "Xinjiekou-Metro Station",
-       "end": "Confucius Temple-Metro Station",
-       "mode": "metro",
-       "start_time": "09:51",
-       "end_time": "09:55",
-       "cost": 2,
-       "distance": 2.06,
-       "price": 2,
-       "tickets": 1
-      },
-      {
-       "start": "Confucius Temple-Metro Station",
-       "end": "Taiping Heavenly Kingdom History Museum (Zhan Garden)",
-       "mode": "walk",
-       "start_time": "09:55",
-       "end_time": "09:59",
-       "cost": 0,
-       "distance": 0.35,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "St. Paul's Church",
-     "start_time": "09:06",
-     "end_time": "10:06",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Taiping Heavenly Kingdom History Museum (Zhan Garden)",
-       "end": "St. Paul's Church",
-       "mode": "walk",
-       "start_time": "08:53",
-       "end_time": "09:06",
-       "cost": 0,
-       "distance": 1.109130995220754,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Red Lobster (Chenggelao Lane Branch)",
-     "start_time": "11:06",
-     "end_time": "11:51",
-     "price": 206.0,
-     "cost": 206.0,
-     "transports": [
-      {
-       "start": "St. Paul's Church",
-       "end": "Red Lobster (Chenggelao Lane Branch)",
-       "mode": "walk",
-       "start_time": "10:54",
-       "end_time": "11:06",
-       "cost": 0,
-       "distance": 1.0596565332660783,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Confucius Temple",
-     "start_time": "09:09",
-     "end_time": "10:09",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Red Lobster (Chenggelao Lane Branch)",
-       "end": "Confucius Temple",
-       "mode": "walk",
-       "start_time": "08:55",
-       "end_time": "09:09",
-       "cost": 0,
-       "distance": 1.2255518996200196,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "train",
-     "start_time": "17:00",
-     "end_time": "14:52",
-     "start": "Nanjing Station",
-     "end": "Shenzhen Station",
-     "price": 462.73,
-     "cost": 462.73,
-     "tickets": 1,
-     "transports": [
-      {
-       "start": "Confucius Temple",
-       "end": "Confucius Temple-Metro Station",
-       "mode": "walk",
-       "start_time": "16:38",
-       "end_time": "16:44",
-       "cost": 0,
-       "distance": 0.52,
-       "price": 0
-      },
-      {
-       "start": "Confucius Temple-Metro Station",
-       "end": "Nanjing Station-Metro Station",
-       "mode": "metro",
-       "start_time": "16:44",
-       "end_time": "16:58",
-       "cost": 3,
-       "distance": 7.25,
-       "price": 3,
-       "tickets": 1
-      },
-      {
-       "start": "Nanjing Station-Metro Station",
-       "end": "Nanjing Station",
-       "mode": "walk",
-       "start_time": "16:58",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.25,
-       "price": 0
-      }
-     ],
-     "TrainID": "K33"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 53.06244206428528,
+  "_eval_score": 91.61309523809524
 }

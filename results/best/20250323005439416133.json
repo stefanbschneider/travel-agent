@@ -1,406 +1,213 @@
 {
- "people_number": 3,
- "start_city": "Guangzhou",
- "target_city": "Wuhan",
- "elapsed_time(sec)": 365.77323031425476,
- "_eval_score": 99.65986394557822,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 3,
+  "start_city": "Guangzhou",
+  "target_city": "Wuhan",
+  "itinerary": [
     {
-     "type": "airplane",
-     "start_time": "01:45",
-     "end_time": "02:48",
-     "start": "Guangzhou Baiyun International Airport",
-     "end": "Wuhan Tianhe International Airport",
-     "price": 388.13,
-     "cost": 1164.3899999999999,
-     "tickets": 3,
-     "transports": [],
-     "FlightID": "FL309"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:03",
+          "end_time": "11:16",
+          "start": "Guangzhou South Railway Station",
+          "end": "Wuhan Station",
+          "price": 543.6,
+          "cost": 1630.8000000000002,
+          "tickets": 3,
+          "transports": [],
+          "TrainID": "G835"
+        },
+        {
+          "type": "lunch",
+          "position": "Green Grain Restaurant (East Lake Branch)",
+          "start_time": "12:14",
+          "end_time": "13:14",
+          "price": 306.0,
+          "cost": 918.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Station",
+              "end": "Green Grain Restaurant (East Lake Branch)",
+              "mode": "walk",
+              "start_time": "11:16",
+              "end_time": "12:14",
+              "distance": 4.841181938539623,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Riverside Park",
+          "start_time": "14:34",
+          "end_time": "15:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Green Grain Restaurant (East Lake Branch)",
+              "end": "Hankou Riverside Park",
+              "mode": "walk",
+              "start_time": "13:14",
+              "end_time": "14:34",
+              "distance": 6.667466369673621,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Five Percent Villa Restaurant",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 298.0,
+          "cost": 894.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hankou Riverside Park",
+              "end": "Five Percent Villa Restaurant",
+              "mode": "walk",
+              "start_time": "15:34",
+              "end_time": "16:22",
+              "distance": 4.078955011196228,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hubu Alley",
+          "start_time": "18:38",
+          "end_time": "19:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Five Percent Villa Restaurant",
+              "end": "Hubu Alley",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:38",
+              "distance": 3.2064461444532046,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Lavande Hotel (Wuhan High-speed Railway Station)",
+          "start_time": "22:11",
+          "end_time": "24:00",
+          "price": 253.0,
+          "cost": 506.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hubu Alley",
+              "end": "Lavande Hotel (Wuhan High-speed Railway Station)",
+              "mode": "walk",
+              "start_time": "19:38",
+              "end_time": "22:11",
+              "distance": 12.801347170112585,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "breakfast",
-     "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-     "start_time": "06:30",
-     "end_time": "06:35",
-     "price": 5.0,
-     "cost": 15.0,
-     "transports": [
-      {
-       "start": "Wuhan Tianhe International Airport",
-       "end": "Tianhe Airport-Metro Station",
-       "mode": "walk",
-       "start_time": "05:35",
-       "end_time": "05:41",
-       "cost": 0,
-       "distance": 0.55,
-       "price": 0
-      },
-      {
-       "start": "Tianhe Airport-Metro Station",
-       "end": "Sanyang Road-Metro Station",
-       "mode": "metro",
-       "start_time": "05:41",
-       "end_time": "06:22",
-       "cost": 15,
-       "distance": 20.72,
-       "price": 5,
-       "tickets": 3
-      },
-      {
-       "start": "Sanyang Road-Metro Station",
-       "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-       "mode": "walk",
-       "start_time": "06:22",
-       "end_time": "06:30",
-       "cost": 0,
-       "distance": 0.67,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hankou Historical and Cultural District",
-     "start_time": "07:00",
-     "end_time": "07:20",
-     "price": 0.0,
-     "tickets": 3,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-       "end": "Hankou Historical and Cultural District",
-       "mode": "walk",
-       "start_time": "06:58",
-       "end_time": "07:00",
-       "cost": 0,
-       "distance": 0.24545649770736752,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Laobamen · Hubei Cuisine (Dazhi Road Branch)",
-     "start_time": "11:00",
-     "end_time": "12:00",
-     "price": 228.0,
-     "cost": 684.0,
-     "transports": [
-      {
-       "start": "Hankou Historical and Cultural District",
-       "end": "Laobamen · Hubei Cuisine (Dazhi Road Branch)",
-       "mode": "walk",
-       "start_time": "10:55",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.4216711508593451,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Great Wisdom Unbounded · Sky Town",
-     "start_time": "09:08",
-     "end_time": "10:08",
-     "price": 0.0,
-     "tickets": 3,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Laobamen · Hubei Cuisine (Dazhi Road Branch)",
-       "end": "Great Wisdom Unbounded · Sky Town",
-       "mode": "walk",
-       "start_time": "09:05",
-       "end_time": "09:08",
-       "cost": 0,
-       "distance": 0.2684938329824547,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jiqing Folk Culture Street",
-     "start_time": "13:57",
-     "end_time": "14:57",
-     "price": 0.0,
-     "tickets": 3,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Great Wisdom Unbounded · Sky Town",
-       "end": "Jiqing Folk Culture Street",
-       "mode": "walk",
-       "start_time": "13:52",
-       "end_time": "13:57",
-       "cost": 0,
-       "distance": 0.4894135474911411,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wuhan Art Museum (Hankou Branch)",
-     "start_time": "14:58",
-     "end_time": "15:58",
-     "price": 0.0,
-     "tickets": 3,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Jiqing Folk Culture Street",
-       "end": "Wuhan Art Museum (Hankou Branch)",
-       "mode": "walk",
-       "start_time": "14:56",
-       "end_time": "14:58",
-       "cost": 0,
-       "distance": 0.1837657289015814,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "James Joyce Coffetel (Wuhan Dazhi Road)",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 194.0,
-     "cost": 194.0,
-     "transports": [
-      {
-       "start": "Wuhan Art Museum (Hankou Branch)",
-       "end": "James Joyce Coffetel (Wuhan Dazhi Road)",
-       "mode": "walk",
-       "start_time": "22:53",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.5995801100691,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Lavande Hotel (Wuhan High-speed Railway Station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Wuhan Yangtze River Bridge",
+          "start_time": "11:11",
+          "end_time": "12:11",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Lavande Hotel (Wuhan High-speed Railway Station)",
+              "end": "Wuhan Yangtze River Bridge",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "11:11",
+              "distance": 13.498849591128504,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Good Temple",
+          "start_time": "13:45",
+          "end_time": "14:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Wuhan Yangtze River Bridge",
+              "end": "Good Temple",
+              "mode": "walk",
+              "start_time": "12:11",
+              "end_time": "13:45",
+              "distance": 7.85177688096471,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:03",
+          "end_time": "21:22",
+          "start": "Wuhan Station",
+          "end": "Guangzhou South Railway Station",
+          "price": 543.6,
+          "cost": 1630.8000000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Good Temple",
+              "end": "Wuhan Station",
+              "mode": "walk",
+              "start_time": "14:45",
+              "end_time": "16:55",
+              "distance": 10.900352621958369,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "G695"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Liu's Three Dogs Beef Noodle House",
-     "start_time": "06:30",
-     "end_time": "07:30",
-     "price": 18.0,
-     "cost": 54.0,
-     "transports": [
-      {
-       "start": "James Joyce Coffetel (Wuhan Dazhi Road)",
-       "end": "Liu's Three Dogs Beef Noodle House",
-       "mode": "walk",
-       "start_time": "06:21",
-       "end_time": "06:30",
-       "cost": 0,
-       "distance": 0.7577001965618921,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Sanzhen Minsheng Dessert House (Shengli Street Main Store)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 16.0,
-     "cost": 48.0,
-     "transports": [
-      {
-       "start": "Liu's Three Dogs Beef Noodle House",
-       "end": "Sanzhen Minsheng Dessert House (Shengli Street Main Store)",
-       "mode": "walk",
-       "start_time": "07:29",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.08831712198020697,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jianghan Road Pedestrian Street",
-     "start_time": "09:59",
-     "end_time": "10:19",
-     "price": 0.0,
-     "tickets": 3,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Sanzhen Minsheng Dessert House (Shengli Street Main Store)",
-       "end": "Jianghan Road Pedestrian Street",
-       "mode": "walk",
-       "start_time": "09:55",
-       "end_time": "09:59",
-       "cost": 0,
-       "distance": 0.34978142290595066,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wuhan Hanging Glass Art Gallery",
-     "start_time": "10:28",
-     "end_time": "10:48",
-     "price": 29.9,
-     "tickets": 3,
-     "cost": 89.69999999999999,
-     "transports": [
-      {
-       "start": "Jianghan Road Pedestrian Street",
-       "end": "Wuhan Hanging Glass Art Gallery",
-       "mode": "walk",
-       "start_time": "10:26",
-       "end_time": "10:28",
-       "cost": 0,
-       "distance": 0.1907282588293228,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Wuyou Cafe (Yiyuan Road Branch)",
-     "start_time": "11:00",
-     "end_time": "11:05",
-     "price": 23.0,
-     "cost": 69.0,
-     "transports": [
-      {
-       "start": "Wuhan Hanging Glass Art Gallery",
-       "end": "Wuyou Cafe (Yiyuan Road Branch)",
-       "mode": "walk",
-       "start_time": "10:51",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.774351848545223,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Fly Over Hubei (Jianghan Road Pedestrian Street Branch)",
-     "start_time": "11:33",
-     "end_time": "11:53",
-     "price": 39.9,
-     "tickets": 3,
-     "cost": 119.69999999999999,
-     "transports": [
-      {
-       "start": "Wuyou Cafe (Yiyuan Road Branch)",
-       "end": "Fly Over Hubei (Jianghan Road Pedestrian Street Branch)",
-       "mode": "walk",
-       "start_time": "11:21",
-       "end_time": "11:33",
-       "cost": 0,
-       "distance": 1.050676836492409,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "5D Starry Sky Illusion Art Museum",
-     "start_time": "12:19",
-     "end_time": "12:39",
-     "price": 0.0,
-     "tickets": 3,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Fly Over Hubei (Jianghan Road Pedestrian Street Branch)",
-       "end": "5D Starry Sky Illusion Art Museum",
-       "mode": "walk",
-       "start_time": "12:15",
-       "end_time": "12:19",
-       "cost": 0,
-       "distance": 0.4069840632219016,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Dazhimen Beer House",
-     "start_time": "17:00",
-     "end_time": "17:05",
-     "price": 102.0,
-     "cost": 306.0,
-     "transports": [
-      {
-       "start": "5D Starry Sky Illusion Art Museum",
-       "end": "Dazhimen Beer House",
-       "mode": "walk",
-       "start_time": "16:50",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.916201519271515,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "airplane",
-     "start_time": "21:09",
-     "end_time": "22:12",
-     "start": "Wuhan Tianhe International Airport",
-     "end": "Guangzhou Baiyun International Airport",
-     "price": 453.61,
-     "cost": 1360.83,
-     "tickets": 3,
-     "transports": [
-      {
-       "start": "Dazhimen Beer House",
-       "end": "Sanyang Road-Metro Station",
-       "mode": "walk",
-       "start_time": "20:17",
-       "end_time": "20:22",
-       "cost": 0,
-       "distance": 0.45,
-       "price": 0
-      },
-      {
-       "start": "Sanyang Road-Metro Station",
-       "end": "Tianhe Airport-Metro Station",
-       "mode": "metro",
-       "start_time": "20:22",
-       "end_time": "21:03",
-       "cost": 15,
-       "distance": 20.72,
-       "price": 5,
-       "tickets": 3
-      },
-      {
-       "start": "Tianhe Airport-Metro Station",
-       "end": "Wuhan Tianhe International Airport",
-       "mode": "walk",
-       "start_time": "21:03",
-       "end_time": "21:09",
-       "cost": 0,
-       "distance": 0.55,
-       "price": 0
-      }
-     ],
-     "FlightID": "FL597"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 60.311423540115356,
+  "_eval_score": 91.17857142857143
 }

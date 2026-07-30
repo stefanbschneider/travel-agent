@@ -1,682 +1,692 @@
 {
- "people_number": 2,
- "start_city": "Shanghai",
- "target_city": "Nanjing",
- "elapsed_time(sec)": 87.90863370895386,
- "_eval_score": 99.9978354978355,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 2,
+  "start_city": "Shanghai",
+  "target_city": "Nanjing",
+  "itinerary": [
     {
-     "type": "airplane",
-     "start_time": "00:33",
-     "end_time": "00:53",
-     "start": "Shanghai Pudong International Airport",
-     "end": "Nanjing Lukou International Airport",
-     "price": 242.41,
-     "cost": 484.82,
-     "tickets": 2,
-     "transports": [],
-     "FlightID": "FL074"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:00",
+          "end_time": "08:11",
+          "start": "Shanghai Station",
+          "end": "Nanjing South Railway Station",
+          "price": 175.28,
+          "cost": 350.56,
+          "tickets": 2,
+          "transports": [],
+          "TrainID": "G2"
+        },
+        {
+          "type": "lunch",
+          "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 74.0,
+          "cost": 148.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing South Railway Station",
+              "end": "Nanjing South Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:11",
+              "end_time": "08:14",
+              "distance": 0.29,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing South Railway Station-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "08:14",
+              "end_time": "08:25",
+              "distance": 5.92,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "mode": "walk",
+              "start_time": "08:25",
+              "end_time": "08:29",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jiangsu Garden Expo Park",
+          "start_time": "13:10",
+          "end_time": "14:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:04",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Mengbei-Metro Station",
+              "mode": "metro",
+              "start_time": "12:04",
+              "end_time": "12:43",
+              "distance": 19.71,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Mengbei-Metro Station",
+              "end": "Jiangsu Garden Expo Park",
+              "mode": "walk",
+              "start_time": "12:43",
+              "end_time": "13:10",
+              "distance": 2.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple",
+          "start_time": "15:37",
+          "end_time": "16:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jiangsu Garden Expo Park",
+              "end": "Mengbei-Metro Station",
+              "mode": "walk",
+              "start_time": "14:25",
+              "end_time": "14:52",
+              "distance": 2.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Mengbei-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "14:52",
+              "end_time": "15:31",
+              "distance": 19.71,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Confucius Temple",
+              "mode": "walk",
+              "start_time": "15:31",
+              "end_time": "15:37",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Nanjing Jinling Hotel - Plum Garden",
+          "start_time": "17:03",
+          "end_time": "18:03",
+          "price": 423.0,
+          "cost": 846.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Confucius Temple",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "16:52",
+              "end_time": "16:58",
+              "distance": 0.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "metro",
+              "start_time": "16:58",
+              "end_time": "17:02",
+              "distance": 2.06,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Nanjing Jinling Hotel - Plum Garden",
+              "mode": "walk",
+              "start_time": "17:02",
+              "end_time": "17:03",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Confucius Temple and Qinhuai River Scenic Area",
+          "start_time": "18:14",
+          "end_time": "19:29",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Jinling Hotel - Plum Garden",
+              "end": "Xinjiekou-Metro Station",
+              "mode": "walk",
+              "start_time": "18:03",
+              "end_time": "18:04",
+              "distance": 0.15,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinjiekou-Metro Station",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "metro",
+              "start_time": "18:04",
+              "end_time": "18:08",
+              "distance": 2.06,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Confucius Temple and Qinhuai River Scenic Area",
+              "mode": "walk",
+              "start_time": "18:08",
+              "end_time": "18:14",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "start_time": "19:57",
+          "end_time": "24:00",
+          "price": 379.0,
+          "cost": 379.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Confucius Temple and Qinhuai River Scenic Area",
+              "end": "Confucius Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "19:29",
+              "end_time": "19:35",
+              "distance": 0.53,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Confucius Temple-Metro Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "19:35",
+              "end_time": "19:49",
+              "distance": 7.26,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "UrCove by HYATT Nanjing South Railway Station",
+              "mode": "walk",
+              "start_time": "19:49",
+              "end_time": "19:57",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "breakfast",
-     "position": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-     "start_time": "08:00",
-     "end_time": "08:45",
-     "price": 0,
-     "cost": 0,
-     "transports": [
-      {
-       "start": "Nanjing Lukou International Airport",
-       "end": "Lukou Airport-Metro Station",
-       "mode": "walk",
-       "start_time": "06:38",
-       "end_time": "06:41",
-       "cost": 0,
-       "distance": 0.27,
-       "price": 0
-      },
-      {
-       "start": "Lukou Airport-Metro Station",
-       "end": "Floating Bridge-Metro Station",
-       "mode": "metro",
-       "start_time": "06:41",
-       "end_time": "07:53",
-       "cost": 14,
-       "distance": 36.06,
-       "price": 7,
-       "tickets": 2
-      },
-      {
-       "start": "Floating Bridge-Metro Station",
-       "end": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-       "mode": "walk",
-       "start_time": "07:53",
-       "end_time": "08:00",
-       "cost": 0,
-       "distance": 0.61,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Zhongshan Scenic Area",
+          "start_time": "09:38",
+          "end_time": "10:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "UrCove by HYATT Nanjing South Railway Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "09:06",
+              "distance": 14.31,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Zhongshan Scenic Area",
+              "mode": "walk",
+              "start_time": "09:06",
+              "end_time": "09:38",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Museum",
+          "start_time": "11:43",
+          "end_time": "12:58",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Zhongshan Scenic Area",
+              "end": "Wangjiawan-Metro Station",
+              "mode": "walk",
+              "start_time": "10:53",
+              "end_time": "11:25",
+              "distance": 2.69,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangjiawan-Metro Station",
+              "end": "Clover Garden-Metro Station",
+              "mode": "metro",
+              "start_time": "11:25",
+              "end_time": "11:34",
+              "distance": 5.0,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Nanjing Museum",
+              "mode": "walk",
+              "start_time": "11:34",
+              "end_time": "11:43",
+              "distance": 0.81,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing Presidential Palace",
+          "start_time": "13:23",
+          "end_time": "14:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Museum",
+              "end": "Clover Garden-Metro Station",
+              "mode": "walk",
+              "start_time": "12:58",
+              "end_time": "13:07",
+              "distance": 0.81,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Clover Garden-Metro Station",
+              "end": "Floating Bridge-Metro Station",
+              "mode": "metro",
+              "start_time": "13:07",
+              "end_time": "13:14",
+              "distance": 3.82,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Floating Bridge-Metro Station",
+              "end": "Nanjing Presidential Palace",
+              "mode": "walk",
+              "start_time": "13:14",
+              "end_time": "13:23",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Sun Yat-sen Mausoleum Scenic Area",
+          "start_time": "15:30",
+          "end_time": "16:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing Presidential Palace",
+              "end": "Floating Bridge-Metro Station",
+              "mode": "walk",
+              "start_time": "14:38",
+              "end_time": "14:47",
+              "distance": 0.76,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Floating Bridge-Metro Station",
+              "end": "Zhongling Street-Metro Station",
+              "mode": "metro",
+              "start_time": "14:47",
+              "end_time": "15:01",
+              "distance": 7.0,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Zhongling Street-Metro Station",
+              "end": "Sun Yat-sen Mausoleum Scenic Area",
+              "mode": "walk",
+              "start_time": "15:01",
+              "end_time": "15:30",
+              "distance": 2.47,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+          "start_time": "17:34",
+          "end_time": "18:34",
+          "price": 334.0,
+          "cost": 668.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Sun Yat-sen Mausoleum Scenic Area",
+              "end": "Zhongling Street-Metro Station",
+              "mode": "walk",
+              "start_time": "16:45",
+              "end_time": "17:14",
+              "distance": 2.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Zhongling Street-Metro Station",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "metro",
+              "start_time": "17:14",
+              "end_time": "17:32",
+              "distance": 9.27,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
+              "end": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+              "mode": "walk",
+              "start_time": "17:32",
+              "end_time": "17:34",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "start_time": "19:10",
+          "end_time": "24:00",
+          "price": 379.0,
+          "cost": 379.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Nanjing Shangri-La Hotel · Jiangnan Kitchen",
+              "end": "Xinmofan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:34",
+              "end_time": "18:36",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xinmofan Road-Metro Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "metro",
+              "start_time": "18:36",
+              "end_time": "19:02",
+              "distance": 13.48,
+              "price": 4,
+              "cost": 8,
+              "tickets": 2
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "UrCove by HYATT Nanjing South Railway Station",
+              "mode": "walk",
+              "start_time": "19:02",
+              "end_time": "19:10",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Nanjing Library",
-     "start_time": "10:00",
-     "end_time": "10:50",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-       "end": "Nanjing Library",
-       "mode": "walk",
-       "start_time": "09:59",
-       "end_time": "10:00",
-       "cost": 0,
-       "distance": 0.16562552077800646,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Tao's Authentic Dezhou Braised Chicken (Kexiang Branch)",
-     "start_time": "11:00",
-     "end_time": "12:00",
-     "price": 13.0,
-     "cost": 26.0,
-     "transports": [
-      {
-       "start": "Nanjing Library",
-       "end": "Floating Bridge-Metro Station",
-       "mode": "walk",
-       "start_time": "10:49",
-       "end_time": "10:55",
-       "cost": 0,
-       "distance": 0.57,
-       "price": 0
-      },
-      {
-       "start": "Floating Bridge-Metro Station",
-       "end": "Daxinggong-Metro Station",
-       "mode": "metro",
-       "start_time": "10:55",
-       "end_time": "10:56",
-       "cost": 4,
-       "distance": 0.78,
-       "price": 2,
-       "tickets": 2
-      },
-      {
-       "start": "Daxinggong-Metro Station",
-       "end": "Tao's Authentic Dezhou Braised Chicken (Kexiang Branch)",
-       "mode": "walk",
-       "start_time": "10:56",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.37,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jiangning Weaving Museum",
-     "start_time": "12:18",
-     "end_time": "13:18",
-     "price": 26.0,
-     "tickets": 2,
-     "cost": 52.0,
-     "transports": [
-      {
-       "start": "Tao's Authentic Dezhou Braised Chicken (Kexiang Branch)",
-       "end": "Daxinggong-Metro Station",
-       "mode": "walk",
-       "start_time": "12:09",
-       "end_time": "12:13",
-       "cost": 0,
-       "distance": 0.37,
-       "price": 0
-      },
-      {
-       "start": "Daxinggong-Metro Station",
-       "end": "Floating Bridge-Metro Station",
-       "mode": "metro",
-       "start_time": "12:13",
-       "end_time": "12:14",
-       "cost": 4,
-       "distance": 0.78,
-       "price": 2,
-       "tickets": 2
-      },
-      {
-       "start": "Floating Bridge-Metro Station",
-       "end": "Jiangning Weaving Museum",
-       "mode": "walk",
-       "start_time": "12:14",
-       "end_time": "12:18",
-       "cost": 0,
-       "distance": 0.41,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Nanjing Liji Alley Comfort Women Station Site Memorial Hall",
-     "start_time": "14:44",
-     "end_time": "15:44",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Jiangning Weaving Museum",
-       "end": "Nanjing Liji Alley Comfort Women Station Site Memorial Hall",
-       "mode": "walk",
-       "start_time": "14:38",
-       "end_time": "14:44",
-       "cost": 0,
-       "distance": 0.50480155262144,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Xiaoyunkai Soup Dumpling Shop (Wangjinshi Branch)",
-     "start_time": "17:50",
-     "end_time": "18:50",
-     "price": 21.0,
-     "cost": 42.0,
-     "transports": [
-      {
-       "start": "Nanjing Liji Alley Comfort Women Station Site Memorial Hall",
-       "end": "Xianmen-Metro Station",
-       "mode": "walk",
-       "start_time": "17:35",
-       "end_time": "17:42",
-       "cost": 0,
-       "distance": 0.59,
-       "price": 0
-      },
-      {
-       "start": "Xianmen-Metro Station",
-       "end": "Floating Bridge-Metro Station",
-       "mode": "metro",
-       "start_time": "17:42",
-       "end_time": "17:44",
-       "cost": 4,
-       "distance": 1.32,
-       "price": 2,
-       "tickets": 2
-      },
-      {
-       "start": "Floating Bridge-Metro Station",
-       "end": "Xiaoyunkai Soup Dumpling Shop (Wangjinshi Branch)",
-       "mode": "walk",
-       "start_time": "17:44",
-       "end_time": "17:50",
-       "cost": 0,
-       "distance": 0.55,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Republican Era Folk Stove (Tiger Stove)",
-     "start_time": "10:12",
-     "end_time": "11:12",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Xiaoyunkai Soup Dumpling Shop (Wangjinshi Branch)",
-       "end": "Republican Era Folk Stove (Tiger Stove)",
-       "mode": "taxi",
-       "start_time": "10:11",
-       "end_time": "10:12",
-       "cost": 11.0,
-       "distance": 1.33,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 102.0,
-     "cost": 102.0,
-     "transports": [
-      {
-       "start": "Republican Era Folk Stove (Tiger Stove)",
-       "end": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-       "mode": "walk",
-       "start_time": "22:56",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.3792908463943367,
-       "price": 0
-      }
-     ]
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "UrCove by HYATT Nanjing South Railway Station",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Nanjing City Wall",
+          "start_time": "10:05",
+          "end_time": "11:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "UrCove by HYATT Nanjing South Railway Station",
+              "end": "Hongyun Avenue-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:38",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongyun Avenue-Metro Station",
+              "end": "Forest Farm-Metro Station",
+              "mode": "metro",
+              "start_time": "08:38",
+              "end_time": "09:29",
+              "distance": 25.85,
+              "price": 6,
+              "cost": 12,
+              "tickets": 2
+            },
+            {
+              "start": "Forest Farm-Metro Station",
+              "end": "Nanjing City Wall",
+              "mode": "walk",
+              "start_time": "09:29",
+              "end_time": "10:05",
+              "distance": 3.02,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Xuanwu Lake Scenic Area",
+          "start_time": "12:36",
+          "end_time": "13:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Nanjing City Wall",
+              "end": "Forest Farm-Metro Station",
+              "mode": "walk",
+              "start_time": "11:20",
+              "end_time": "11:56",
+              "distance": 3.02,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Forest Farm-Metro Station",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "metro",
+              "start_time": "11:56",
+              "end_time": "12:28",
+              "distance": 16.3,
+              "price": 5,
+              "cost": 10,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Xuanwu Lake Scenic Area",
+              "mode": "walk",
+              "start_time": "12:28",
+              "end_time": "12:36",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "18:40",
+          "start": "Nanjing Station",
+          "end": "Shanghai Station",
+          "price": 175.28,
+          "cost": 350.56,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Xuanwu Lake Scenic Area",
+              "end": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "mode": "walk",
+              "start_time": "13:51",
+              "end_time": "13:59",
+              "distance": 0.71,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Nanjing Forestry University · Xinzhuang-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "13:59",
+              "end_time": "14:02",
+              "distance": 1.94,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Nanjing Station-Metro Station",
+              "end": "Nanjing Station",
+              "mode": "walk",
+              "start_time": "14:02",
+              "end_time": "14:04",
+              "distance": 0.25,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "G7021"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Site of the Heavenly King's Palace",
-     "start_time": "08:58",
-     "end_time": "09:58",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-       "end": "Site of the Heavenly King's Palace",
-       "mode": "walk",
-       "start_time": "08:54",
-       "end_time": "08:58",
-       "cost": 0,
-       "distance": 0.38629432685239407,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Sun Yat-sen's Provisional Presidential Office",
-     "start_time": "10:00",
-     "end_time": "11:00",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Site of the Heavenly King's Palace",
-       "end": "Sun Yat-sen's Provisional Presidential Office",
-       "mode": "walk",
-       "start_time": "09:59",
-       "end_time": "10:00",
-       "cost": 0,
-       "distance": 0.13017248098988063,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Fuyin Chestnut (Main Store, Kexiang)",
-     "start_time": "11:56",
-     "end_time": "12:56",
-     "price": 22.0,
-     "cost": 44.0,
-     "transports": [
-      {
-       "start": "Sun Yat-sen's Provisional Presidential Office",
-       "end": "Floating Bridge-Metro Station",
-       "mode": "walk",
-       "start_time": "11:45",
-       "end_time": "11:52",
-       "cost": 0,
-       "distance": 0.66,
-       "price": 0
-      },
-      {
-       "start": "Floating Bridge-Metro Station",
-       "end": "Daxinggong-Metro Station",
-       "mode": "metro",
-       "start_time": "11:52",
-       "end_time": "11:53",
-       "cost": 4,
-       "distance": 0.78,
-       "price": 2,
-       "tickets": 2
-      },
-      {
-       "start": "Daxinggong-Metro Station",
-       "end": "Fuyin Chestnut (Main Store, Kexiang)",
-       "mode": "walk",
-       "start_time": "11:53",
-       "end_time": "11:56",
-       "cost": 0,
-       "distance": 0.3,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Six Dynasties Museum",
-     "start_time": "13:15",
-     "end_time": "14:15",
-     "price": 27.0,
-     "tickets": 2,
-     "cost": 54.0,
-     "transports": [
-      {
-       "start": "Fuyin Chestnut (Main Store, Kexiang)",
-       "end": "Daxinggong-Metro Station",
-       "mode": "walk",
-       "start_time": "12:58",
-       "end_time": "13:01",
-       "cost": 0,
-       "distance": 0.3,
-       "price": 0
-      },
-      {
-       "start": "Daxinggong-Metro Station",
-       "end": "Jiuhua Mountain-Metro Station",
-       "mode": "metro",
-       "start_time": "13:01",
-       "end_time": "13:05",
-       "cost": 4,
-       "distance": 2.03,
-       "price": 2,
-       "tickets": 2
-      },
-      {
-       "start": "Jiuhua Mountain-Metro Station",
-       "end": "Six Dynasties Museum",
-       "mode": "walk",
-       "start_time": "13:05",
-       "end_time": "13:15",
-       "cost": 0,
-       "distance": 0.88,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jiangsu Art Museum",
-     "start_time": "09:04",
-     "end_time": "10:04",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Six Dynasties Museum",
-       "end": "Jiangsu Art Museum",
-       "mode": "walk",
-       "start_time": "08:58",
-       "end_time": "09:04",
-       "cost": 0,
-       "distance": 0.5402717428897573,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Zhuoyue Rice Noodle Rolls (Hongmiao Branch)",
-     "start_time": "17:22",
-     "end_time": "18:07",
-     "price": 22.0,
-     "cost": 44.0,
-     "transports": [
-      {
-       "start": "Jiangsu Art Museum",
-       "end": "Zhuoyue Rice Noodle Rolls (Hongmiao Branch)",
-       "mode": "walk",
-       "start_time": "17:11",
-       "end_time": "17:22",
-       "cost": 0,
-       "distance": 0.9179580831496319,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 102.0,
-     "cost": 102.0,
-     "transports": [
-      {
-       "start": "Zhuoyue Rice Noodle Rolls (Hongmiao Branch)",
-       "end": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-       "mode": "walk",
-       "start_time": "22:48",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 1.0728220203715852,
-       "price": 0
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "day": 3,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Nanjing Presidential Palace",
-     "start_time": "08:58",
-     "end_time": "09:58",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "My Home Hotel (Nanjing East Military District General Courtyard Presidential Palace Branch)",
-       "end": "Nanjing Presidential Palace",
-       "mode": "walk",
-       "start_time": "08:53",
-       "end_time": "08:58",
-       "cost": 0,
-       "distance": 0.44462550837664405,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Meiyuan New Village Memorial Hall",
-     "start_time": "09:59",
-     "end_time": "10:59",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Nanjing Presidential Palace",
-       "end": "Meiyuan New Village Memorial Hall",
-       "mode": "walk",
-       "start_time": "09:54",
-       "end_time": "09:59",
-       "cost": 0,
-       "distance": 0.4470965524131541,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Executive Yuan",
-     "start_time": "11:08",
-     "end_time": "12:08",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Meiyuan New Village Memorial Hall",
-       "end": "Executive Yuan",
-       "mode": "walk",
-       "start_time": "11:03",
-       "end_time": "11:08",
-       "cost": 0,
-       "distance": 0.42296685643560544,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Nanjing 1912 Street",
-     "start_time": "12:15",
-     "end_time": "13:05",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Executive Yuan",
-       "end": "Nanjing 1912 Street",
-       "mode": "walk",
-       "start_time": "12:13",
-       "end_time": "12:15",
-       "cost": 0,
-       "distance": 0.18964600882175184,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Liu Changxing (Yixian Bridge Branch)",
-     "start_time": "17:00",
-     "end_time": "17:45",
-     "price": 24.0,
-     "cost": 48.0,
-     "transports": [
-      {
-       "start": "Nanjing 1912 Street",
-       "end": "Jiuhua Mountain-Metro Station",
-       "mode": "walk",
-       "start_time": "16:47",
-       "end_time": "16:54",
-       "cost": 0,
-       "distance": 0.61,
-       "price": 0
-      },
-      {
-       "start": "Jiuhua Mountain-Metro Station",
-       "end": "Xianmen-Metro Station",
-       "mode": "metro",
-       "start_time": "16:54",
-       "end_time": "16:57",
-       "cost": 4,
-       "distance": 1.91,
-       "price": 2,
-       "tickets": 2
-      },
-      {
-       "start": "Xianmen-Metro Station",
-       "end": "Liu Changxing (Yixian Bridge Branch)",
-       "mode": "walk",
-       "start_time": "16:57",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.26,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Xu's Big Bowl Pork Skin Noodle Restaurant (San Tiao Xiang Branch)",
-     "start_time": "11:30",
-     "end_time": "12:15",
-     "price": 26.0,
-     "cost": 52.0,
-     "transports": [
-      {
-       "start": "Liu Changxing (Yixian Bridge Branch)",
-       "end": "Xu's Big Bowl Pork Skin Noodle Restaurant (San Tiao Xiang Branch)",
-       "mode": "walk",
-       "start_time": "11:28",
-       "end_time": "11:30",
-       "cost": 0,
-       "distance": 0.176568461752389,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "airplane",
-     "start_time": "22:30",
-     "end_time": "22:50",
-     "start": "Nanjing Lukou International Airport",
-     "end": "Shanghai Pudong International Airport",
-     "price": 306.84,
-     "cost": 613.68,
-     "tickets": 2,
-     "transports": [
-      {
-       "start": "Xu's Big Bowl Pork Skin Noodle Restaurant (San Tiao Xiang Branch)",
-       "end": "Xianmen-Metro Station",
-       "mode": "walk",
-       "start_time": "21:14",
-       "end_time": "21:18",
-       "cost": 0,
-       "distance": 0.42,
-       "price": 0
-      },
-      {
-       "start": "Xianmen-Metro Station",
-       "end": "Lukou Airport-Metro Station",
-       "mode": "metro",
-       "start_time": "21:18",
-       "end_time": "22:27",
-       "cost": 14,
-       "distance": 34.95,
-       "price": 7,
-       "tickets": 2
-      },
-      {
-       "start": "Lukou Airport-Metro Station",
-       "end": "Nanjing Lukou International Airport",
-       "mode": "walk",
-       "start_time": "22:27",
-       "end_time": "22:30",
-       "cost": 0,
-       "distance": 0.27,
-       "price": 0
-      }
-     ],
-     "FlightID": "FL647"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 61.06465482711792,
+  "_eval_score": 95.10238095238095
 }

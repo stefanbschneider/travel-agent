@@ -1,368 +1,243 @@
 {
- "people_number": 1,
- "start_city": "Shenzhen",
- "target_city": "Shanghai",
- "elapsed_time(sec)": 186.24362683296204,
- "_eval_score": 99.60952380952381,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 1,
+  "start_city": "Shenzhen",
+  "target_city": "Shanghai",
+  "itinerary": [
     {
-     "type": "airplane",
-     "start": "Shenzhen Bao'an International Airport",
-     "end": "Shanghai Hongqiao International Airport",
-     "FlightID": "FL164",
-     "start_time": "03:17",
-     "end_time": "04:48",
-     "price": 571.18,
-     "tickets": 1,
-     "cost": 571.18,
-     "transports": []
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "23:37",
+          "end_time": "01:08",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Shanghai Pudong International Airport",
+          "price": 572.8,
+          "cost": 572.8,
+          "tickets": 1,
+          "transports": [],
+          "FlightID": "FL166"
+        },
+        {
+          "type": "attraction",
+          "position": "Adventure Island",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Pudong International Airport",
+              "end": "Adventure Island",
+              "mode": "taxi",
+              "start_time": "01:08",
+              "end_time": "01:28",
+              "distance": 13.73,
+              "price": 56.46,
+              "cost": 56.46,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "263-meter Main Observation Deck",
+          "start_time": "10:58",
+          "end_time": "12:28",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Adventure Island",
+              "end": "263-meter Main Observation Deck",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:58",
+              "distance": 18.82,
+              "price": 79.41,
+              "cost": 79.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Money Shops (Yuyuan Road Branch)",
+          "start_time": "12:40",
+          "end_time": "13:40",
+          "price": 126.0,
+          "cost": 126.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "263-meter Main Observation Deck",
+              "end": "Money Shops (Yuyuan Road Branch)",
+              "mode": "taxi",
+              "start_time": "12:28",
+              "end_time": "12:40",
+              "distance": 8.47,
+              "price": 34.36,
+              "cost": 34.36,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "1933 Old Millfun",
+          "start_time": "13:52",
+          "end_time": "15:22",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Money Shops (Yuyuan Road Branch)",
+              "end": "1933 Old Millfun",
+              "mode": "taxi",
+              "start_time": "13:40",
+              "end_time": "13:52",
+              "distance": 8.52,
+              "price": 34.51,
+              "cost": 34.51,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Gucun Park Natural Valley Dinosaur Paradise",
+          "start_time": "15:23",
+          "end_time": "16:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1933 Old Millfun",
+              "end": "Gucun Park Natural Valley Dinosaur Paradise",
+              "mode": "taxi",
+              "start_time": "15:22",
+              "end_time": "15:23",
+              "distance": 1.21,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Shanghai Center J Hotel · Jin Yan",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 1380.0,
+          "cost": 1380.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Gucun Park Natural Valley Dinosaur Paradise",
+              "end": "Shanghai Center J Hotel · Jin Yan",
+              "mode": "taxi",
+              "start_time": "16:53",
+              "end_time": "16:58",
+              "distance": 3.88,
+              "price": 18.27,
+              "cost": 18.27,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "start_time": "18:28",
+          "end_time": "24:00",
+          "price": 303.0,
+          "cost": 303.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Shanghai Center J Hotel · Jin Yan",
+              "end": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:28",
+              "distance": 19.32,
+              "price": 81.62,
+              "cost": 81.62,
+              "cars": 1
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "breakfast",
-     "position": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-     "start_time": "08:00",
-     "end_time": "09:00",
-     "price": 0,
-     "cost": 0,
-     "transports": [
-      {
-       "start": "Shanghai Hongqiao International Airport",
-       "end": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-       "mode": "taxi",
-       "start_time": "07:42",
-       "end_time": "08:00",
-       "cost": 49.59,
-       "distance": 12.2,
-       "price": 49.59,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "West Nanjing Road",
-     "start_time": "09:00",
-     "end_time": "10:00",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-       "end": "West Nanjing Road",
-       "mode": "taxi",
-       "start_time": "08:59",
-       "end_time": "09:00",
-       "cost": 11.0,
-       "distance": 0.97,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Tribute to the Master: Picasso Art Center",
-     "start_time": "10:05",
-     "end_time": "11:05",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "West Nanjing Road",
-       "end": "Tribute to the Master: Picasso Art Center",
-       "mode": "taxi",
-       "start_time": "10:05",
-       "end_time": "10:05",
-       "cost": 11.0,
-       "distance": 0.46,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Shanghai Center J Hotel · Jin Yan",
-     "start_time": "12:19",
-     "end_time": "13:19",
-     "price": 1380.0,
-     "cost": 1380.0,
-     "transports": [
-      {
-       "start": "Tribute to the Master: Picasso Art Center",
-       "end": "Shanghai Center J Hotel · Jin Yan",
-       "mode": "taxi",
-       "start_time": "12:12",
-       "end_time": "12:19",
-       "cost": 21.77,
-       "distance": 4.88,
-       "price": 21.77,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shanghai Natural History Museum",
-     "start_time": "13:40",
-     "end_time": "14:40",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shanghai Center J Hotel · Jin Yan",
-       "end": "Shanghai Natural History Museum",
-       "mode": "taxi",
-       "start_time": "13:35",
-       "end_time": "13:40",
-       "cost": 17.5,
-       "distance": 3.66,
-       "price": 17.5,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Zhang Garden",
-     "start_time": "15:16",
-     "end_time": "16:16",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shanghai Natural History Museum",
-       "end": "Zhang Garden",
-       "mode": "taxi",
-       "start_time": "15:15",
-       "end_time": "15:16",
-       "cost": 11.0,
-       "distance": 0.75,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Money Shops (Yuyuan Road Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 126.0,
-     "cost": 126.0,
-     "transports": [
-      {
-       "start": "Zhang Garden",
-       "end": "Money Shops (Yuyuan Road Branch)",
-       "mode": "taxi",
-       "start_time": "16:54",
-       "end_time": "17:00",
-       "cost": 20.7,
-       "distance": 4.57,
-       "price": 20.7,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "19:08",
-     "end_time": "24:00",
-     "price": 307.0,
-     "cost": 307.0,
-     "transports": [
-      {
-       "start": "Money Shops (Yuyuan Road Branch)",
-       "end": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-       "mode": "taxi",
-       "start_time": "19:02",
-       "end_time": "19:08",
-       "cost": 19.25,
-       "distance": 4.16,
-       "price": 19.25,
-       "cars": 1
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "lunch",
+          "position": "Tasteless Comfort Food (Qibao Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 255.0,
+          "cost": 255.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jiahong Hotel (Shanghai Pudong Airport, Chuansha Metro Station)",
+              "end": "Tasteless Comfort Food (Qibao Branch)",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "09:19",
+              "distance": 33.16,
+              "price": 143.94,
+              "cost": 143.94,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "16:36",
+          "end_time": "18:07",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 576.24,
+          "cost": 576.24,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Tasteless Comfort Food (Qibao Branch)",
+              "end": "Shanghai Pudong International Airport",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "13:05",
+              "distance": 43.77,
+              "price": 191.64,
+              "cost": 191.64,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL016"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Eileen Chang's Former Residence",
-     "start_time": "09:23",
-     "end_time": "10:23",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "SuShi Qingshe Hotel (Hanzhong Road subway station)",
-       "end": "Eileen Chang's Former Residence",
-       "mode": "taxi",
-       "start_time": "09:22",
-       "end_time": "09:23",
-       "cost": 11.0,
-       "distance": 1.22,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jing'an Sculpture Park",
-     "start_time": "10:46",
-     "end_time": "11:46",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Eileen Chang's Former Residence",
-       "end": "Jing'an Sculpture Park",
-       "mode": "taxi",
-       "start_time": "10:44",
-       "end_time": "10:46",
-       "cost": 11.38,
-       "distance": 1.91,
-       "price": 11.38,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Tasteless Comfort Food (Qibao Branch)",
-     "start_time": "12:08",
-     "end_time": "13:08",
-     "price": 255.0,
-     "cost": 255.0,
-     "transports": [
-      {
-       "start": "Jing'an Sculpture Park",
-       "end": "Tasteless Comfort Food (Qibao Branch)",
-       "mode": "taxi",
-       "start_time": "11:47",
-       "end_time": "12:08",
-       "cost": 59.56,
-       "distance": 14.41,
-       "price": 59.56,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "The Vanishing Pharaoh—Immersive Exploration Experience of the Khufu Pyramid Exhibition",
-     "start_time": "13:26",
-     "end_time": "14:56",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Tasteless Comfort Food (Qibao Branch)",
-       "end": "The Vanishing Pharaoh—Immersive Exploration Experience of the Khufu Pyramid Exhibition",
-       "mode": "taxi",
-       "start_time": "13:06",
-       "end_time": "13:26",
-       "cost": 57.3,
-       "distance": 13.91,
-       "price": 57.3,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jing'an Temple",
-     "start_time": "15:10",
-     "end_time": "16:10",
-     "price": 0.0,
-     "tickets": 1,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "The Vanishing Pharaoh—Immersive Exploration Experience of the Khufu Pyramid Exhibition",
-       "end": "Jing'an Temple",
-       "mode": "taxi",
-       "start_time": "15:08",
-       "end_time": "15:10",
-       "cost": 11.0,
-       "distance": 1.78,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 28.0,
-     "cost": 28.0,
-     "transports": [
-      {
-       "start": "Jing'an Temple",
-       "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-       "mode": "taxi",
-       "start_time": "17:00",
-       "end_time": "17:00",
-       "cost": 11.0,
-       "distance": 0.66,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "airplane",
-     "start": "Shanghai Hongqiao International Airport",
-     "end": "Shenzhen Bao'an International Airport",
-     "FlightID": "FL017",
-     "start_time": "21:44",
-     "end_time": "23:15",
-     "price": 598.43,
-     "tickets": 1,
-     "cost": 598.43,
-     "transports": [
-      {
-       "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-       "end": "Shanghai Hongqiao International Airport",
-       "mode": "taxi",
-       "start_time": "21:27",
-       "end_time": "21:44",
-       "cost": 46.25,
-       "distance": 11.45,
-       "price": 46.25,
-       "cars": 1
-      }
-     ]
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 60.32431125640869,
+  "_eval_score": 95.38359788359789
 }

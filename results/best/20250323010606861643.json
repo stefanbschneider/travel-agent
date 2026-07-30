@@ -7,101 +7,250 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "08:18",
-          "end_time": "09:31",
-          "start": "Guangzhou Baiyun International Airport",
-          "end": "Chongqing Jiangbei International Airport",
-          "price": 474.01,
-          "cost": 1422.03,
+          "type": "train",
+          "start_time": "07:31",
+          "end_time": "13:47",
+          "start": "Guangzhou South Railway Station",
+          "end": "Chongqing West Railway Station",
+          "price": 636.31,
+          "cost": 1908.9299999999998,
           "tickets": 3,
           "transports": [],
-          "FlightID": "FL275"
+          "TrainID": "G3722"
         },
         {
-          "type": "lunch",
-          "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 96.0,
-          "cost": 288.0,
+          "type": "attraction",
+          "position": "White Mansion",
+          "start_time": "14:00",
+          "end_time": "15:15",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing Jiangbei International Airport",
-              "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "start": "Chongqing West Railway Station",
+              "end": "White Mansion",
               "mode": "taxi",
-              "start_time": "09:31",
-              "end_time": "09:59",
-              "distance": 19.05,
-              "price": 80.42,
-              "cost": 80.42,
+              "start_time": "13:47",
+              "end_time": "14:00",
+              "distance": 9.18,
+              "price": 36.81,
+              "cost": 36.81,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Arhat Temple",
-          "start_time": "12:09",
-          "end_time": "13:39",
+          "position": "Hongya Cave",
+          "start_time": "15:36",
+          "end_time": "16:51",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
-              "end": "Arhat Temple",
+              "start": "White Mansion",
+              "end": "Hongya Cave",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 1.1,
+              "start_time": "15:15",
+              "end_time": "15:36",
+              "distance": 14.26,
+              "price": 58.89,
+              "cost": 58.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 264.0,
+          "cost": 792.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Hongya Cave",
+              "end": "Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang",
+              "mode": "taxi",
+              "start_time": "16:51",
+              "end_time": "16:52",
+              "distance": 1.33,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
             }
           ]
+        },
+        {
+          "type": "attraction",
+          "position": "Ci Qi Kou Ancient Town",
+          "start_time": "18:18",
+          "end_time": "19:33",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Chongqing Jiefangbei Westin Hotel · Jinxiao Xuan · Chuanshang",
+              "end": "Ci Qi Kou Ancient Town",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "18:18",
+              "distance": 12.51,
+              "price": 50.97,
+              "cost": 50.97,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
+          "start_time": "19:43",
+          "end_time": "24:00",
+          "price": 212.0,
+          "cost": 636.0,
+          "rooms": 3,
+          "room_type": 1,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ci Qi Kou Ancient Town",
+              "end": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
+              "mode": "taxi",
+              "start_time": "19:33",
+              "end_time": "19:43",
+              "distance": 6.85,
+              "price": 28.67,
+              "cost": 28.67,
+              "cars": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
         },
         {
           "type": "attraction",
           "position": "Liberation Monument Pedestrian Street",
-          "start_time": "14:10",
-          "end_time": "15:40",
+          "start_time": "08:50",
+          "end_time": "10:05",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Arhat Temple",
+              "start": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
               "end": "Liberation Monument Pedestrian Street",
               "mode": "taxi",
-              "start_time": "13:39",
-              "end_time": "13:39",
-              "distance": 0.5,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "08:30",
+              "end_time": "08:50",
+              "distance": 13.47,
+              "price": 55.34,
+              "cost": 55.34,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "1941 Teahouse and Theater",
-          "start_time": "15:41",
-          "end_time": "16:31",
+          "position": "Two Rivers Ferry",
+          "start_time": "10:05",
+          "end_time": "11:20",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Liberation Monument Pedestrian Street",
-              "end": "1941 Teahouse and Theater",
+              "end": "Two Rivers Ferry",
               "mode": "taxi",
-              "start_time": "15:40",
-              "end_time": "15:40",
-              "distance": 0.14,
+              "start_time": "10:05",
+              "end_time": "10:05",
+              "distance": 0.57,
               "price": 11.0,
               "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+          "start_time": "11:22",
+          "end_time": "12:22",
+          "price": 100.0,
+          "cost": 300.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Two Rivers Ferry",
+              "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "mode": "taxi",
+              "start_time": "11:20",
+              "end_time": "11:22",
+              "distance": 1.58,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cinder Cave",
+          "start_time": "12:41",
+          "end_time": "13:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "end": "Cinder Cave",
+              "mode": "taxi",
+              "start_time": "12:22",
+              "end_time": "12:41",
+              "distance": 13.21,
+              "price": 54.16,
+              "cost": 54.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Nanshan Scenic Area",
+          "start_time": "14:23",
+          "end_time": "15:38",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Cinder Cave",
+              "end": "Nanshan Scenic Area",
+              "mode": "taxi",
+              "start_time": "13:56",
+              "end_time": "14:23",
+              "distance": 18.6,
+              "price": 78.42,
+              "cost": 78.42,
               "cars": 1
             }
           ]
@@ -116,33 +265,11 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "1941 Teahouse and Theater",
+              "start": "Nanshan Scenic Area",
               "end": "Chongqing Regent Hotel · Robbins Steakhouse",
               "mode": "taxi",
-              "start_time": "16:31",
-              "end_time": "16:33",
-              "distance": 1.66,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanshan Scenic Area",
-          "start_time": "18:08",
-          "end_time": "19:38",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Chongqing Regent Hotel · Robbins Steakhouse",
-              "end": "Nanshan Scenic Area",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:08",
+              "start_time": "15:38",
+              "end_time": "15:46",
               "distance": 5.73,
               "price": 24.74,
               "cost": 24.74,
@@ -151,226 +278,25 @@
           ]
         },
         {
-          "type": "breakfast",
-          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-          "start_time": "07:09",
-          "end_time": "07:39",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": [
-            {
-              "start": "Nanshan Scenic Area",
-              "end": "Renji-Metro Station",
-              "mode": "walk",
-              "start_time": "06:00",
-              "end_time": "06:32",
-              "distance": 2.71,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Renji-Metro Station",
-              "end": "Yubei Square-Metro Station",
-              "mode": "metro",
-              "start_time": "06:32",
-              "end_time": "07:06",
-              "distance": 17.29,
-              "price": 5,
-              "cost": 15,
-              "tickets": 3
-            },
-            {
-              "start": "Yubei Square-Metro Station",
-              "end": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-              "mode": "walk",
-              "start_time": "07:06",
-              "end_time": "07:09",
-              "distance": 0.31,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "accommodation",
-          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-          "start_time": "23:00",
+          "position": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
+          "start_time": "18:18",
           "end_time": "24:00",
-          "price": 74.0,
-          "cost": 222.0,
-          "rooms": 3,
-          "room_type": 1,
-          "tickets": 3,
-          "transports": []
-        }
-      ]
-    },
-    {
-      "day": 2,
-      "activities": [
-        {
-          "type": "breakfast",
-          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-          "start_time": "07:30",
-          "end_time": "08:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "attraction",
-          "position": "Liziba Light Rail Station",
-          "start_time": "08:59",
-          "end_time": "10:29",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-              "end": "Liziba Light Rail Station",
-              "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:59",
-              "distance": 19.75,
-              "price": 83.59,
-              "cost": 83.59,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Three Gorges Museum",
-          "start_time": "10:31",
-          "end_time": "12:01",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Liziba Light Rail Station",
-              "end": "Three Gorges Museum",
-              "mode": "taxi",
-              "start_time": "10:29",
-              "end_time": "10:31",
-              "distance": 1.61,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-          "start_time": "12:03",
-          "end_time": "13:03",
-          "price": 100.0,
-          "cost": 300.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Three Gorges Museum",
-              "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-              "mode": "taxi",
-              "start_time": "12:01",
-              "end_time": "12:03",
-              "distance": 1.73,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Shibati Traditional Style Area",
-          "start_time": "13:04",
-          "end_time": "14:34",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
-              "end": "Chongqing Shibati Traditional Style Area",
-              "mode": "taxi",
-              "start_time": "13:03",
-              "end_time": "13:04",
-              "distance": 0.83,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Eighteen Steps",
-          "start_time": "14:44",
-          "end_time": "16:14",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Chongqing Shibati Traditional Style Area",
-              "end": "Eighteen Steps",
-              "mode": "taxi",
-              "start_time": "14:34",
-              "end_time": "14:34",
-              "distance": 0.25,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 210.0,
-          "cost": 630.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Eighteen Steps",
-              "end": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-              "mode": "taxi",
-              "start_time": "16:14",
-              "end_time": "16:14",
-              "distance": 0.48,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "accommodation",
-          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-          "start_time": "18:28",
-          "end_time": "24:00",
-          "price": 74.0,
-          "cost": 222.0,
+          "price": 212.0,
+          "cost": 636.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
           "transports": [
             {
-              "start": "Chongqing International Trade Granvia Hotel · Mountain City Impression Chinese Restaurant",
-              "end": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+              "start": "Chongqing Regent Hotel · Robbins Steakhouse",
+              "end": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
               "mode": "taxi",
               "start_time": "18:00",
-              "end_time": "18:28",
-              "distance": 18.98,
-              "price": 80.13,
-              "cost": 80.13,
+              "end_time": "18:18",
+              "distance": 12.61,
+              "price": 51.43,
+              "cost": 51.43,
               "cars": 1
             }
           ]
@@ -382,7 +308,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
+          "position": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -392,22 +318,66 @@
         },
         {
           "type": "attraction",
-          "position": "Ci Qi Kou Ancient Town",
-          "start_time": "09:03",
-          "end_time": "10:33",
+          "position": "Liziba Light Rail Station",
+          "start_time": "08:44",
+          "end_time": "09:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Speland Boutique Hotel (Jiangbei International Airport Branch)",
-              "end": "Ci Qi Kou Ancient Town",
+              "start": "Vienna Hotel(Chongqing West Railway Station Southwest Hospital Branch)",
+              "end": "Liziba Light Rail Station",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "09:03",
-              "distance": 22.48,
-              "price": 95.85,
-              "cost": 95.85,
+              "end_time": "08:44",
+              "distance": 9.71,
+              "price": 38.67,
+              "cost": 38.67,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Three Gorges Museum",
+          "start_time": "10:01",
+          "end_time": "11:16",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Liziba Light Rail Station",
+              "end": "Three Gorges Museum",
+              "mode": "taxi",
+              "start_time": "09:59",
+              "end_time": "10:01",
+              "distance": 1.61,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Chongqing Shibati Traditional Style Area",
+          "start_time": "11:19",
+          "end_time": "12:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Three Gorges Museum",
+              "end": "Chongqing Shibati Traditional Style Area",
+              "mode": "taxi",
+              "start_time": "11:16",
+              "end_time": "11:19",
+              "distance": 2.44,
+              "price": 13.25,
+              "cost": 13.25,
               "cars": 1
             }
           ]
@@ -415,107 +385,19 @@
         {
           "type": "lunch",
           "position": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "12:34",
+          "end_time": "13:34",
           "price": 89.0,
           "cost": 267.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Ci Qi Kou Ancient Town",
+              "start": "Chongqing Shibati Traditional Style Area",
               "end": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
               "mode": "taxi",
-              "start_time": "10:33",
-              "end_time": "10:51",
-              "distance": 12.17,
-              "price": 49.45,
-              "cost": 49.45,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Loquat Mountain Park",
-          "start_time": "12:09",
-          "end_time": "12:59",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
-              "end": "Chongqing Loquat Mountain Park",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 1.31,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-          "start_time": "13:06",
-          "end_time": "13:56",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Chongqing Loquat Mountain Park",
-              "end": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-              "mode": "taxi",
-              "start_time": "12:59",
-              "end_time": "13:01",
-              "distance": 1.75,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Crown Escalator",
-          "start_time": "14:18",
-          "end_time": "15:08",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall",
-              "end": "Crown Escalator",
-              "mode": "taxi",
-              "start_time": "13:56",
-              "end_time": "13:59",
-              "distance": 2.55,
-              "price": 13.63,
-              "cost": 13.63,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Nameless Braised Dishes",
-          "start_time": "17:00",
-          "end_time": "17:45",
-          "price": 38.0,
-          "cost": 114.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Crown Escalator",
-              "end": "Nameless Braised Dishes",
-              "mode": "taxi",
-              "start_time": "15:08",
-              "end_time": "15:09",
-              "distance": 0.8,
+              "start_time": "12:34",
+              "end_time": "12:34",
+              "distance": 0.42,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -524,31 +406,31 @@
         },
         {
           "type": "airplane",
-          "start_time": "23:21",
-          "end_time": "00:34",
+          "start_time": "19:19",
+          "end_time": "20:32",
           "start": "Chongqing Jiangbei International Airport",
           "end": "Guangzhou Baiyun International Airport",
-          "price": 504.74,
-          "cost": 1514.22,
+          "price": 491.07,
+          "cost": 1473.21,
           "tickets": 3,
           "transports": [
             {
-              "start": "Nameless Braised Dishes",
+              "start": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
               "end": "Chongqing Jiangbei International Airport",
               "mode": "taxi",
-              "start_time": "17:45",
-              "end_time": "18:16",
-              "distance": 20.96,
-              "price": 89.03,
-              "cost": 89.03,
+              "start_time": "13:34",
+              "end_time": "14:03",
+              "distance": 19.6,
+              "price": 82.91,
+              "cost": 82.91,
               "cars": 1
             }
           ],
-          "FlightID": "FL355"
+          "FlightID": "FL352"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 123.121817111969,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 60.17392873764038,
+  "_eval_score": 97.5
 }

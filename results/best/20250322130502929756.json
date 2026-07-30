@@ -1,368 +1,265 @@
 {
- "people_number": 2,
- "start_city": "Wuhan",
- "target_city": "Chengdu",
- "elapsed_time(sec)": 1954.171974182129,
- "_eval_score": 99.73650793650793,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 2,
+  "start_city": "Wuhan",
+  "target_city": "Chengdu",
+  "itinerary": [
     {
-     "type": "airplane",
-     "start": "Wuhan Tianhe International Airport",
-     "end": "Chengdu Shuangliu International Airport",
-     "FlightID": "FL619",
-     "start_time": "06:32",
-     "end_time": "07:45",
-     "price": 491.31,
-     "tickets": 2,
-     "cost": 982.62,
-     "transports": []
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "23:02",
+          "end_time": "00:15",
+          "start": "Wuhan Tianhe International Airport",
+          "end": "Chengdu Tianfu International Airport",
+          "price": 442.14,
+          "cost": 884.28,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL617"
+        },
+        {
+          "type": "attraction",
+          "position": "Chengdu People's Park",
+          "start_time": "09:00",
+          "end_time": "10:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu Tianfu International Airport",
+              "end": "Chengdu People's Park",
+              "mode": "taxi",
+              "start_time": "00:15",
+              "end_time": "01:38",
+              "distance": 55.44,
+              "price": 244.18,
+              "cost": 244.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anshun Covered Bridge",
+          "start_time": "10:34",
+          "end_time": "12:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Chengdu People's Park",
+              "end": "Anshun Covered Bridge",
+              "mode": "taxi",
+              "start_time": "10:30",
+              "end_time": "10:34",
+              "distance": 3.28,
+              "price": 16.18,
+              "cost": 16.18,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "12:09",
+          "end_time": "13:09",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Anshun Covered Bridge",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "12:04",
+              "end_time": "12:09",
+              "distance": 3.42,
+              "price": 16.68,
+              "cost": 16.68,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Atlantis Poseidon Amusement World",
+          "start_time": "14:07",
+          "end_time": "15:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "end": "Atlantis Poseidon Amusement World",
+              "mode": "taxi",
+              "start_time": "13:09",
+              "end_time": "14:07",
+              "distance": 38.71,
+              "price": 168.89,
+              "cost": 168.89,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Anren Ancient Town",
+          "start_time": "16:15",
+          "end_time": "17:45",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Atlantis Poseidon Amusement World",
+              "end": "Anren Ancient Town",
+              "mode": "taxi",
+              "start_time": "15:37",
+              "end_time": "16:15",
+              "distance": 25.64,
+              "price": 110.06,
+              "cost": 110.06,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Grandpa and Grandma Chen's Egg Pancakes",
+          "start_time": "18:50",
+          "end_time": "19:50",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Anren Ancient Town",
+              "end": "Grandpa and Grandma Chen's Egg Pancakes",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:50",
+              "distance": 43.69,
+              "price": 191.31,
+              "cost": 191.31,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
+          "start_time": "20:02",
+          "end_time": "24:00",
+          "price": 167.0,
+          "cost": 167.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Grandpa and Grandma Chen's Egg Pancakes",
+              "end": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "mode": "taxi",
+              "start_time": "19:50",
+              "end_time": "20:02",
+              "distance": 8.35,
+              "price": 33.91,
+              "cost": 33.91,
+              "cars": 1
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "breakfast",
-     "position": "Chengdu Yuehuimei Hotel",
-     "start_time": "07:00",
-     "end_time": "08:00",
-     "price": 0,
-     "cost": 0,
-     "transports": [
-      {
-       "start": "Chengdu Shuangliu International Airport",
-       "end": "Chengdu Yuehuimei Hotel",
-       "mode": "taxi",
-       "start_time": "06:35",
-       "end_time": "07:00",
-       "cost": 71.95,
-       "distance": 17.17,
-       "price": 71.95,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Maha Pond",
-     "start_time": "09:00",
-     "end_time": "10:00",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Chengdu Yuehuimei Hotel",
-       "end": "Maha Pond",
-       "mode": "taxi",
-       "start_time": "09:00",
-       "end_time": "09:00",
-       "cost": 11.0,
-       "distance": 0.62,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-     "start_time": "10:30",
-     "end_time": "11:30",
-     "price": 5.0,
-     "cost": 10.0,
-     "transports": [
-      {
-       "start": "Maha Pond",
-       "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-       "mode": "taxi",
-       "start_time": "10:28",
-       "end_time": "10:30",
-       "cost": 11.0,
-       "distance": 1.43,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Ping'an Bridge Catholic Church",
-     "start_time": "11:35",
-     "end_time": "12:35",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
-       "end": "Ping'an Bridge Catholic Church",
-       "mode": "taxi",
-       "start_time": "11:34",
-       "end_time": "11:35",
-       "cost": 11.0,
-       "distance": 1.12,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Manjushri Lane Manjushri Temple Historical and Cultural Protection Area",
-     "start_time": "13:17",
-     "end_time": "14:47",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Ping'an Bridge Catholic Church",
-       "end": "Manjushri Lane Manjushri Temple Historical and Cultural Protection Area",
-       "mode": "taxi",
-       "start_time": "13:16",
-       "end_time": "13:17",
-       "cost": 11.0,
-       "distance": 1.15,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 10.0,
-     "cost": 20.0,
-     "transports": [
-      {
-       "start": "Manjushri Lane Manjushri Temple Historical and Cultural Protection Area",
-       "end": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
-       "mode": "taxi",
-       "start_time": "16:59",
-       "end_time": "17:00",
-       "cost": 11.0,
-       "distance": 0.78,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Kuixinglou Street",
-     "start_time": "18:17",
-     "end_time": "19:47",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Grandma Yan's Crispy Pancake (Wenshu Temple Branch)",
-       "end": "Kuixinglou Street",
-       "mode": "taxi",
-       "start_time": "18:16",
-       "end_time": "18:17",
-       "cost": 11.0,
-       "distance": 0.72,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Chengdu Yuehuimei Hotel",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "20:22",
-     "end_time": "24:00",
-     "price": 158.0,
-     "cost": 158.0,
-     "transports": [
-      {
-       "start": "Kuixinglou Street",
-       "end": "Chengdu Yuehuimei Hotel",
-       "mode": "taxi",
-       "start_time": "20:21",
-       "end_time": "20:22",
-       "cost": 11.0,
-       "distance": 0.78,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Quigg Hotel (Chengdu Shuangliu Airport)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "lunch",
+          "position": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 5.0,
+          "cost": 10.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Quigg Hotel (Chengdu Shuangliu Airport)",
+              "end": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:45",
+              "distance": 10.32,
+              "price": 41.15,
+              "cost": 41.15,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 9.0,
+          "cost": 18.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.77,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "22:35",
+          "end_time": "23:48",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Wuhan Tianhe International Airport",
+          "price": 443.37,
+          "cost": 886.74,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Su Xiaomeng Beef Pancake Shop (Tianfu Square Branch)",
+              "end": "Chengdu Tianfu International Airport",
+              "mode": "taxi",
+              "start_time": "18:00",
+              "end_time": "19:22",
+              "distance": 54.87,
+              "price": 241.61,
+              "cost": 241.61,
+              "cars": 1
+            }
+          ],
+          "FlightID": "FL466"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Chengdu Yuehuimei Hotel",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Manjushri Lane",
-     "start_time": "09:11",
-     "end_time": "10:41",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Chengdu Yuehuimei Hotel",
-       "end": "Manjushri Lane",
-       "mode": "taxi",
-       "start_time": "09:10",
-       "end_time": "09:11",
-       "cost": 11.0,
-       "distance": 1.06,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
-     "start_time": "11:50",
-     "end_time": "12:50",
-     "price": 6.0,
-     "cost": 12.0,
-     "transports": [
-      {
-       "start": "Manjushri Lane",
-       "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
-       "mode": "taxi",
-       "start_time": "11:49",
-       "end_time": "11:50",
-       "cost": 11.0,
-       "distance": 1.06,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Miao Theater at Wenshu Fang, Chengdu",
-     "start_time": "12:55",
-     "end_time": "13:55",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
-       "end": "Miao Theater at Wenshu Fang, Chengdu",
-       "mode": "taxi",
-       "start_time": "12:54",
-       "end_time": "12:55",
-       "cost": 11.0,
-       "distance": 0.95,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Narrow Alley",
-     "start_time": "13:58",
-     "end_time": "14:58",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Miao Theater at Wenshu Fang, Chengdu",
-       "end": "Narrow Alley",
-       "mode": "taxi",
-       "start_time": "13:56",
-       "end_time": "13:58",
-       "cost": 11.61,
-       "distance": 1.97,
-       "price": 11.61,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Sichuan Science and Technology Museum",
-     "start_time": "15:08",
-     "end_time": "16:08",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Narrow Alley",
-       "end": "Sichuan Science and Technology Museum",
-       "mode": "taxi",
-       "start_time": "15:07",
-       "end_time": "15:08",
-       "cost": 11.0,
-       "distance": 1.11,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Wang's Specialty Guokui (Ma'annan Road Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 16.0,
-     "cost": 32.0,
-     "transports": [
-      {
-       "start": "Sichuan Science and Technology Museum",
-       "end": "Wang's Specialty Guokui (Ma'annan Road Branch)",
-       "mode": "taxi",
-       "start_time": "16:58",
-       "end_time": "17:00",
-       "cost": 11.0,
-       "distance": 1.63,
-       "price": 11.0,
-       "cars": 1
-      }
-     ]
-    },
-    {
-     "type": "airplane",
-     "start": "Chengdu Shuangliu International Airport",
-     "end": "Wuhan Tianhe International Airport",
-     "FlightID": "FL467",
-     "start_time": "20:18",
-     "end_time": "21:31",
-     "price": 447.72,
-     "tickets": 2,
-     "cost": 895.44,
-     "transports": [
-      {
-       "start": "Wang's Specialty Guokui (Ma'annan Road Branch)",
-       "end": "Chengdu Shuangliu International Airport",
-       "mode": "taxi",
-       "start_time": "19:51",
-       "end_time": "20:18",
-       "cost": 76.54,
-       "distance": 18.19,
-       "price": 76.54,
-       "cars": 1
-      }
-     ]
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 61.260976791381836,
+  "_eval_score": 95.64761904761905
 }

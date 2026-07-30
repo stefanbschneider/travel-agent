@@ -1,577 +1,419 @@
 {
- "people_number": 5,
- "start_city": "Suzhou",
- "target_city": "Chengdu",
- "elapsed_time(sec)": 496.03063011169434,
- "_eval_score": 99.12907268170426,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 5,
+  "start_city": "Suzhou",
+  "target_city": "Chengdu",
+  "itinerary": [
     {
-     "type": "train",
-     "start_time": "12:13",
-     "end_time": "17:55",
-     "start": "Suzhou Station",
-     "end": "Chengdu West Railway Station",
-     "price": 630.35,
-     "cost": 3151.75,
-     "tickets": 5,
-     "transports": [],
-     "TrainID": "K1156"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:11",
+          "end_time": "20:40",
+          "start": "Suzhou New District Station",
+          "end": "Chengdu East Railway Station",
+          "price": 945.53,
+          "cost": 4727.65,
+          "tickets": 5,
+          "transports": [],
+          "TrainID": "D637"
+        },
+        {
+          "type": "accommodation",
+          "position": "The Longemont Chengdu",
+          "start_time": "20:45",
+          "end_time": "24:00",
+          "price": 588.0,
+          "cost": 2940.0,
+          "rooms": 5,
+          "room_type": 1,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Chengdu East Railway Station",
+              "end": "The Longemont Chengdu",
+              "mode": "walk",
+              "start_time": "20:40",
+              "end_time": "20:45",
+              "distance": 0.456001994293102,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "dinner",
-     "position": "Demen Diamond - Creative Cuisine for Birthdays, Dates & Anniversaries (Chunxi Branch)",
-     "start_time": "18:17",
-     "end_time": "18:22",
-     "price": 455.0,
-     "cost": 2275.0,
-     "transports": [
-      {
-       "start": "Chengdu West Railway Station",
-       "end": "Chengdu West Railway Station-Metro Station",
-       "mode": "walk",
-       "start_time": "17:50",
-       "end_time": "17:53",
-       "cost": 0,
-       "distance": 0.28,
-       "price": 0
-      },
-      {
-       "start": "Chengdu West Railway Station-Metro Station",
-       "end": "Taisheng South Road-Metro Station",
-       "mode": "metro",
-       "start_time": "17:53",
-       "end_time": "18:12",
-       "cost": 20,
-       "distance": 9.8,
-       "price": 4,
-       "tickets": 5
-      },
-      {
-       "start": "Taisheng South Road-Metro Station",
-       "end": "Demen Diamond - Creative Cuisine for Birthdays, Dates & Anniversaries (Chunxi Branch)",
-       "mode": "walk",
-       "start_time": "18:12",
-       "end_time": "18:17",
-       "cost": 0,
-       "distance": 0.45,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "The Longemont Chengdu",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Manjushri Temple",
+          "start_time": "08:55",
+          "end_time": "10:25",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "The Longemont Chengdu",
+              "end": "Chengdu East Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chengdu East Railway Station-Metro Station",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "08:35",
+              "end_time": "08:50",
+              "distance": 8.0,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "Manjushri Temple",
+              "mode": "walk",
+              "start_time": "08:50",
+              "end_time": "08:55",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Crane's Call Tea House (People's Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 45.0,
+          "cost": 225.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Manjushri Temple",
+              "end": "Liangjia Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "10:25",
+              "end_time": "10:30",
+              "distance": 0.43,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liangjia Lane-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "10:30",
+              "end_time": "10:37",
+              "distance": 3.6,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Crane's Call Tea House (People's Park Branch)",
+              "mode": "walk",
+              "start_time": "10:37",
+              "end_time": "10:40",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Kuanzhai Alley",
+          "start_time": "12:13",
+          "end_time": "13:43",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Crane's Call Tea House (People's Park Branch)",
+              "end": "People's Park-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:03",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Luomashi-Metro Station",
+              "mode": "metro",
+              "start_time": "12:03",
+              "end_time": "12:05",
+              "distance": 1.16,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Kuanzhai Alley",
+              "mode": "walk",
+              "start_time": "12:05",
+              "end_time": "12:13",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Mawangzi (Taikoo Li Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 140.0,
+          "cost": 700.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Kuanzhai Alley",
+              "end": "Luomashi-Metro Station",
+              "mode": "walk",
+              "start_time": "13:43",
+              "end_time": "13:51",
+              "distance": 0.68,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Luomashi-Metro Station",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "13:51",
+              "end_time": "13:55",
+              "distance": 2.01,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
+              "end": "Mawangzi (Taikoo Li Branch)",
+              "mode": "walk",
+              "start_time": "13:55",
+              "end_time": "14:00",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "The Longemont Chengdu",
+          "start_time": "18:22",
+          "end_time": "24:00",
+          "price": 588.0,
+          "cost": 2940.0,
+          "rooms": 5,
+          "room_type": 1,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Mawangzi (Taikoo Li Branch)",
+              "end": "Chunxi Road-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:05",
+              "distance": 0.44,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chunxi Road-Metro Station",
+              "end": "Chengdu East Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "18:05",
+              "end_time": "18:17",
+              "distance": 6.33,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Chengdu East Railway Station-Metro Station",
+              "end": "The Longemont Chengdu",
+              "mode": "walk",
+              "start_time": "18:17",
+              "end_time": "18:22",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Shu Opera World (Tianfu Square Branch)",
-     "start_time": "18:37",
-     "end_time": "18:57",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Demen Diamond - Creative Cuisine for Birthdays, Dates & Anniversaries (Chunxi Branch)",
-       "end": "Shu Opera World (Tianfu Square Branch)",
-       "mode": "walk",
-       "start_time": "18:36",
-       "end_time": "18:37",
-       "cost": 0,
-       "distance": 0.13800582911621687,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "China Shadow Puppet Museum",
-     "start_time": "19:20",
-     "end_time": "19:40",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shu Opera World (Tianfu Square Branch)",
-       "end": "China Shadow Puppet Museum",
-       "mode": "walk",
-       "start_time": "19:17",
-       "end_time": "19:20",
-       "cost": 0,
-       "distance": 0.29231125348485654,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Tianfu Square",
-     "start_time": "19:47",
-     "end_time": "21:02",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "China Shadow Puppet Museum",
-       "end": "Tianfu Square",
-       "mode": "walk",
-       "start_time": "19:45",
-       "end_time": "19:47",
-       "cost": 0,
-       "distance": 0.22584237486761666,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Imperial City Mosque",
-     "start_time": "21:27",
-     "end_time": "21:47",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Tianfu Square",
-       "end": "Imperial City Mosque",
-       "mode": "walk",
-       "start_time": "21:24",
-       "end_time": "21:27",
-       "cost": 0,
-       "distance": 0.30274052627573483,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "The Hidden House (Chengdu Chunxi Road & Tianfu Square Branch)",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 323.0,
-     "cost": 323.0,
-     "transports": [
-      {
-       "start": "Imperial City Mosque",
-       "end": "The Hidden House (Chengdu Chunxi Road & Tianfu Square Branch)",
-       "mode": "walk",
-       "start_time": "22:57",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.3222564902595449,
-       "price": 0
-      }
-     ]
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "The Longemont Chengdu",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Jinli Ancient Street",
+          "start_time": "09:01",
+          "end_time": "10:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "The Longemont Chengdu",
+              "end": "Chengdu East Railway Station-Metro Station",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:35",
+              "distance": 0.46,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chengdu East Railway Station-Metro Station",
+              "end": "People's Park-Metro Station",
+              "mode": "metro",
+              "start_time": "08:35",
+              "end_time": "08:52",
+              "distance": 8.64,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Jinli Ancient Street",
+              "mode": "walk",
+              "start_time": "08:52",
+              "end_time": "09:01",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 250.0,
+          "cost": 1250.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Jinli Ancient Street",
+              "end": "People's Park-Metro Station",
+              "mode": "walk",
+              "start_time": "10:31",
+              "end_time": "10:40",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "People's Park-Metro Station",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:40",
+              "end_time": "10:41",
+              "distance": 0.88,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "mode": "walk",
+              "start_time": "10:41",
+              "end_time": "10:43",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:42",
+          "end_time": "04:27",
+          "start": "Chengdu West Railway Station",
+          "end": "Suzhou Station",
+          "price": 630.35,
+          "cost": 3151.75,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Hilton Canopy TC Cafe Yurong Sky High Restaurant",
+              "end": "Tianfu Square-Metro Station",
+              "mode": "walk",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Tianfu Square-Metro Station",
+              "end": "Chengdu West Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "12:02",
+              "end_time": "12:20",
+              "distance": 9.02,
+              "price": 4,
+              "cost": 20,
+              "tickets": 5
+            },
+            {
+              "start": "Chengdu West Railway Station-Metro Station",
+              "end": "Chengdu West Railway Station",
+              "mode": "walk",
+              "start_time": "12:20",
+              "end_time": "12:23",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "K292"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "St. Regis Chengdu · Xiu Restaurant",
-     "start_time": "06:30",
-     "end_time": "07:30",
-     "price": 191.0,
-     "cost": 955.0,
-     "transports": [
-      {
-       "start": "The Hidden House (Chengdu Chunxi Road & Tianfu Square Branch)",
-       "end": "St. Regis Chengdu · Xiu Restaurant",
-       "mode": "walk",
-       "start_time": "06:27",
-       "end_time": "06:30",
-       "cost": 0,
-       "distance": 0.2864734048680565,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Chengdu Ritz-Carlton Hotel, Fuli - 25th Floor Xianghui All-Day Dining Restaurant",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 252.0,
-     "cost": 1260.0,
-     "transports": [
-      {
-       "start": "St. Regis Chengdu · Xiu Restaurant",
-       "end": "Chengdu Ritz-Carlton Hotel, Fuli - 25th Floor Xianghui All-Day Dining Restaurant",
-       "mode": "walk",
-       "start_time": "07:24",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.522096981562914,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Chengdu People's Park",
-     "start_time": "08:54",
-     "end_time": "09:14",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Chengdu Ritz-Carlton Hotel, Fuli - 25th Floor Xianghui All-Day Dining Restaurant",
-       "end": "Chengdu People's Park",
-       "mode": "walk",
-       "start_time": "08:47",
-       "end_time": "08:54",
-       "cost": 0,
-       "distance": 0.618241378540583,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Chengdu Museum",
-     "start_time": "10:00",
-     "end_time": "10:20",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Chengdu People's Park",
-       "end": "Chengdu Museum",
-       "mode": "walk",
-       "start_time": "09:53",
-       "end_time": "10:00",
-       "cost": 0,
-       "distance": 0.6271923229552177,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Mysteries of Life Museum",
-     "start_time": "10:25",
-     "end_time": "10:45",
-     "price": 89.0,
-     "tickets": 5,
-     "cost": 445.0,
-     "transports": [
-      {
-       "start": "Chengdu Museum",
-       "end": "Mysteries of Life Museum",
-       "mode": "walk",
-       "start_time": "10:22",
-       "end_time": "10:25",
-       "cost": 0,
-       "distance": 0.2680879893700807,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Chengdu Library",
-     "start_time": "09:20",
-     "end_time": "10:35",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Mysteries of Life Museum",
-       "end": "Chengdu Library",
-       "mode": "walk",
-       "start_time": "09:11",
-       "end_time": "09:20",
-       "cost": 0,
-       "distance": 0.7776184077246673,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "The Ritz-Carlton, Chengdu Lobby Lounge",
-     "start_time": "11:00",
-     "end_time": "12:00",
-     "price": 189.0,
-     "cost": 945.0,
-     "transports": [
-      {
-       "start": "Chengdu Library",
-       "end": "The Ritz-Carlton, Chengdu Lobby Lounge",
-       "mode": "walk",
-       "start_time": "10:53",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.6256754605426652,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Xiyuecheng Tan Douhua (Chunxi Road Branch)",
-     "start_time": "11:02",
-     "end_time": "11:47",
-     "price": 28.0,
-     "cost": 140.0,
-     "transports": [
-      {
-       "start": "The Ritz-Carlton, Chengdu Lobby Lounge",
-       "end": "Xiyuecheng Tan Douhua (Chunxi Road Branch)",
-       "mode": "walk",
-       "start_time": "10:53",
-       "end_time": "11:02",
-       "cost": 0,
-       "distance": 0.7853005060013305,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Sichuan Provincial Library",
-     "start_time": "09:23",
-     "end_time": "10:23",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Xiyuecheng Tan Douhua (Chunxi Road Branch)",
-       "end": "Sichuan Provincial Library",
-       "mode": "walk",
-       "start_time": "09:13",
-       "end_time": "09:23",
-       "cost": 0,
-       "distance": 0.8619337335219088,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Yulei Pavilion",
-     "start_time": "08:51",
-     "end_time": "09:51",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Sichuan Provincial Library",
-       "end": "Yulei Pavilion",
-       "mode": "walk",
-       "start_time": "08:36",
-       "end_time": "08:51",
-       "cost": 0,
-       "distance": 1.319750652436212,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "St. Regis Bar",
-     "start_time": "18:30",
-     "end_time": "19:15",
-     "price": 688.0,
-     "cost": 3440.0,
-     "transports": [
-      {
-       "start": "Yulei Pavilion",
-       "end": "St. Regis Bar",
-       "mode": "walk",
-       "start_time": "18:22",
-       "end_time": "18:30",
-       "cost": 0,
-       "distance": 0.7321448324537282,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "The Hidden House (Chengdu Chunxi Road & Tianfu Square Branch)",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 323.0,
-     "cost": 323.0,
-     "transports": [
-      {
-       "start": "St. Regis Bar",
-       "end": "The Hidden House (Chengdu Chunxi Road & Tianfu Square Branch)",
-       "mode": "walk",
-       "start_time": "22:57",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.2834146967853309,
-       "price": 0
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "day": 3,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Flavorful Noodle House (Longxing Street Branch)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 26.0,
-     "cost": 130.0,
-     "transports": [
-      {
-       "start": "The Hidden House (Chengdu Chunxi Road & Tianfu Square Branch)",
-       "end": "Flavorful Noodle House (Longxing Street Branch)",
-       "mode": "walk",
-       "start_time": "07:21",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.8194295004222317,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Gaiwan'er Pear Garden • Sichuan Opera Face-Changing and Fire-Spitting Performance Theater • Intangible Cultural Heritage Inheritance Exhibition Base (Tianfu Square Branch)",
-     "start_time": "10:08",
-     "end_time": "11:08",
-     "price": 118.0,
-     "tickets": 5,
-     "cost": 590.0,
-     "transports": [
-      {
-       "start": "Flavorful Noodle House (Longxing Street Branch)",
-       "end": "Gaiwan'er Pear Garden • Sichuan Opera Face-Changing and Fire-Spitting Performance Theater • Intangible Cultural Heritage Inheritance Exhibition Base (Tianfu Square Branch)",
-       "mode": "walk",
-       "start_time": "10:00",
-       "end_time": "10:08",
-       "cost": 0,
-       "distance": 0.7091772257857691,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-     "start_time": "11:31",
-     "end_time": "12:16",
-     "price": 233.0,
-     "cost": 1165.0,
-     "transports": [
-      {
-       "start": "Gaiwan'er Pear Garden • Sichuan Opera Face-Changing and Fire-Spitting Performance Theater • Intangible Cultural Heritage Inheritance Exhibition Base (Tianfu Square Branch)",
-       "end": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-       "mode": "walk",
-       "start_time": "11:27",
-       "end_time": "11:31",
-       "cost": 0,
-       "distance": 0.352814934402114,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Sichuan Art Museum",
-     "start_time": "09:09",
-     "end_time": "10:09",
-     "price": 0.0,
-     "tickets": 5,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "St. Regis Chengdu · Yan Ting Chinese Restaurant",
-       "end": "Sichuan Art Museum",
-       "mode": "walk",
-       "start_time": "09:00",
-       "end_time": "09:09",
-       "cost": 0,
-       "distance": 0.7520089225807136,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "JW Marriott Hotel Chengdu Mao Ye - Marriott Chinese Restaurant",
-     "start_time": "17:17",
-     "end_time": "18:02",
-     "price": 193.0,
-     "cost": 965.0,
-     "transports": [
-      {
-       "start": "Sichuan Art Museum",
-       "end": "JW Marriott Hotel Chengdu Mao Ye - Marriott Chinese Restaurant",
-       "mode": "walk",
-       "start_time": "17:07",
-       "end_time": "17:17",
-       "cost": 0,
-       "distance": 0.8977669945194621,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "train",
-     "start_time": "17:42",
-     "end_time": "04:27",
-     "start": "Chengdu West Railway Station",
-     "end": "Suzhou Station",
-     "price": 630.35,
-     "cost": 3151.75,
-     "tickets": 5,
-     "transports": [
-      {
-       "start": "JW Marriott Hotel Chengdu Mao Ye - Marriott Chinese Restaurant",
-       "end": "Tianfu Square-Metro Station",
-       "mode": "walk",
-       "start_time": "17:16",
-       "end_time": "17:21",
-       "cost": 0,
-       "distance": 0.43,
-       "price": 0
-      },
-      {
-       "start": "Tianfu Square-Metro Station",
-       "end": "Chengdu West Railway Station-Metro Station",
-       "mode": "metro",
-       "start_time": "17:21",
-       "end_time": "17:39",
-       "cost": 20,
-       "distance": 9.02,
-       "price": 4,
-       "tickets": 5
-      },
-      {
-       "start": "Chengdu West Railway Station-Metro Station",
-       "end": "Chengdu West Railway Station",
-       "mode": "walk",
-       "start_time": "17:39",
-       "end_time": "17:42",
-       "cost": 0,
-       "distance": 0.28,
-       "price": 0
-      }
-     ],
-     "TrainID": "K292"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 60.83568596839905,
+  "_eval_score": 93.87962962962963
 }
