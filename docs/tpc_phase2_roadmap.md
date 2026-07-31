@@ -118,6 +118,13 @@ Interpretation:
 - Pinning + resequencing + converge pairing is promoted at `900 s`.
 - `TPC_REPAIR_TRANSPORT_GAPS` and Stage 3 refine v1 are implemented behind flags.
 - `TPC_REPAIR_INTERCITY` endpoint grounding repair is implemented behind a flag.
+- `TPC_REPAIR_DROP_TRAILING_STAY` single-day trailing-accommodation drop is implemented behind a
+  flag (see [Known residual](#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)).
+- Solver search telemetry (`restarts_used`, `stop_reason`, `candidates_evaluated`,
+  `best_found_at_restart`) is recorded on every `TPCAgent._solve` call and surfaced through
+  `solve_phase2`'s telemetry as `search_telemetry` — pure observation, no behavior change, added so
+  a later parallel-restarts step (roadmap item 0c) can be judged against real data on whether the
+  search is budget-bound or plateaus long before `max_restarts`.
 
 Both `make phase2-gate` runs (e2e and solver-only, floor -> pin and floor -> pin+converge) **pass cleanly** — `continuous_score` up, zero new timeouts, zero parse failures on all four. The `300 s` timeout regression was purely a budget-boundary artifact of the extra per-trial deepcopy + full-checker revalidation `_pin_timed_windows`/`_resequence_day` do (PR #34's causal read holds), not a real correctness cost: at `900 s` the restart loop has enough room to absorb it with zero timeouts either way. `TPC_SOLVE_CONVERGE_PATIENCE=15` adds no quality (flat within noise vs pin-alone) but **reclaims the wall-clock pin spends and then some** — pin+converge's `p50`/`p95` beat even the floor's, confirming the roadmap's own hypothesis that converge would absorb the budget pin spends. Both are now harness-default-on (PR [#41](https://github.com/stefanbschneider/china-travel-agent/pull/41)). See [Solver-only headroom](#solver-only-headroom).
 
@@ -249,8 +256,36 @@ The 3 uids that fail all four intercity columns (`...00065`, `...00071`, `...000
 this work, and the endpoint repair cannot fix them: each is a **1-day trip whose last activity is an
 overnight accommodation ending `24:00`**, so `_repair_intercity_endpoints` computes a departure floor
 of `24:00` and no return row can be placed after it. The real defect is upstream — a single-day
-itinerary should not contain an overnight stay at all. Dropping a trailing accommodation on a
-single-day trip before re-placing the return leg is the obvious next fix; it was out of scope tonight.
+itinerary should not contain an overnight stay at all.
+
+**Landed (2026-07-31): `TPC_REPAIR_DROP_TRAILING_STAY`** (default off, also reachable via the
+`TPC_COMMONSENSE_FIRST` umbrella). Drops a single-day trip's trailing overnight accommodation before
+`_repair_intercity_endpoints` computes the return-departure floor, so the floor is derived from the
+real last in-city activity instead of `24:00`. Unit-tested in
+`tests/phase2/test_repair_intercity_endpoints.py` (flag off byte-identical, the drop+re-placement
+commit, a 2-day plan left untouched, and the no-feasible-return-after-drop byte-identical case).
+Per-uid verification on the 3 named uids at `900 s`: `...00071` clears all four intercity columns
+(`overall_true` `8.52 -> 43.08`); `...00065` and `...00066` are a **distinct, deeper residual the
+drop cannot reach** — their day's other activities (correctly built and ordered) run past every
+same-day return train/flight regardless of the accommodation (confirmed by querying
+`WorldEnv.intercitytransport` directly: the latest same-route departure is earlier than the day's
+last real activity ends), so no forward-only repair can place a return leg without also reshaping
+the day's earlier schedule, which is out of this mechanism's scope. That is a solver-scheduling
+defect (the day was built too dense/late to leave room for the return trip), not a bug in the drop
+logic.
+
+**Not promoted.** The required paired screen (`--flag TPC_REPAIR_DROP_TRAILING_STAY --mode end-to-end
+--n 40 --budget-sec 120 --parallel 7`) came back **RED**: `overall_true` `52.44 -> 51.07`, FPR
+`22.50 -> 20.00`, timeouts `34 -> 37`. The likely cause is that the flag's `_pack_plan` gate
+(`self._repair_intercity_enabled() or self._repair_drop_trailing_stay_enabled()`) reaches
+`_repair_intercity_endpoints` on its own, which also runs the *general* endpoint re-grounding pass
+(normally gated behind `TPC_REPAIR_INTERCITY`) against every query in the screen, not only the rare
+single-day-trailing-stay shape this flag targets — at a tight `120 s` budget that pass's own extra
+per-query deepcopy + full-checker revalidation cost plausibly explains the regression on unrelated
+queries. See
+[Shortcomings and plan, W5](tpc_shortcomings_and_plan.md#w5-drop-the-trailing-stay-on-single-day-trips)
+for the full result and the open re-screening question. The flag stays implemented, tested, and
+default off; `apply_deterministic_solver_defaults()` is untouched.
 
 ## LLM packaging: the submission makes zero LLM calls
 
@@ -342,11 +377,11 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
    [`final_night_eval_commands.md`](agents/final_night_eval_commands.md). The only open question is
    the screen's `+3` recovered timeouts at a `120 s` budget; everything else was clean.
 
-2. **Fix the single-day-trip overnight-accommodation defect.** The 3 remaining intercity-endpoint
-   failures all have the same shape: a 1-day itinerary ending in an accommodation that runs to
-   `24:00`, which makes the return leg unplaceable. Drop the trailing accommodation on single-day
-   trips before re-placing the endpoint. Small, deterministic, and it is what the endpoint repair
-   needs to become effective on that family.
+2. **~~Fix the single-day-trip overnight-accommodation defect.~~ Landed 2026-07-31**
+   (`TPC_REPAIR_DROP_TRAILING_STAY`, see [Known residual](#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)):
+   1 of the 3 named uids fully clears; the other 2 have a deeper, distinct residual (the day's own
+   schedule runs past every same-day return departure regardless of the accommodation) that this
+   move cannot reach by design.
 
 3. **Close LLM reachability before adding any LLM stage.** The packaged submission cannot reach the
    organizers' endpoint at all (see

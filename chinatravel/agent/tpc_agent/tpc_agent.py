@@ -103,6 +103,11 @@ class TPCAgent(BaseAgent):
         # Phase 2 orchestrator's Stage 3 LLM refine can re-check a trialled edit with the exact
         # same checker _solve used, without re-deriving constraints or spending solve budget.
         self._last_solve_constraints = None
+        # Search telemetry from the most recent _solve call (roadmap W4 step 0): restarts_used,
+        # stop_reason ("budget" | "max_restarts" | "converged" | "accepted_stop"),
+        # candidates_evaluated, best_found_at_restart. Pure observation, no behavior change; empty
+        # until the first _solve call completes.
+        self.last_search_telemetry = {}
 
     def reset_timeout_recovery_plan(self):
         self._timeout_recovery_plan = None
@@ -502,6 +507,21 @@ class TPCAgent(BaseAgent):
         """
         return self._flag_enabled_with_umbrella("TPC_REPAIR_INTERCITY")
 
+    def _repair_drop_trailing_stay_enabled(self):
+        """Opt-in flag: drop a trailing overnight accommodation on a single-day trip before the
+        return-endpoint repair computes its departure floor.
+
+        Default OFF, so the deterministic floor is byte-identical. Enable with
+        ``TPC_REPAIR_DROP_TRAILING_STAY=1`` (or implicitly via ``TPC_COMMONSENSE_FIRST=1``, same
+        umbrella wiring as ``TPC_REPAIR_INTERCITY``). Targets the shape ``_repair_intercity_endpoints``
+        cannot reach on its own: a 1-day itinerary whose last activity is an overnight accommodation
+        running to ``24:00``. The floor for the return leg is derived from that activity's
+        ``end_time``, so no train/flight can depart after it and the endpoint repair silently
+        declines. An overnight stay in a single-day itinerary is wrong on its own terms -- dropping it
+        before the floor is computed lets the existing return-row search find a real departure.
+        """
+        return self._flag_enabled_with_umbrella("TPC_REPAIR_DROP_TRAILING_STAY")
+
     def _pack_dav_enabled(self):
         """Opt-in attraction top-up pass for accepted plans.
 
@@ -843,19 +863,23 @@ class TPCAgent(BaseAgent):
         """
         self.reset_timeout_recovery_plan()
         self._last_solve_constraints = None
+        # Reset (rather than leaving the previous query's values) so a timed-out solve -- which
+        # never reaches the final assignment below -- reports "no data" instead of stale numbers.
+        self.last_search_telemetry = {}
         stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")
         stop_at_accept_packed = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", "0") not in ("", "0", "false", "False")
         variants = self._constraint_variants(query) or [None]
         rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
         init_key = (-1, float("-inf"), float("-inf"))
         accepted_init_key = (float("-inf"), float("-inf"), float("-inf"), float("-inf"))
-        best = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None}
+        best = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None, "found_at": 0}
         best_accepted = {
             "plan": None,
             "key": accepted_init_key,
             "constraints": None,
             "check": None,
             "params": None,
+            "found_at": 0,
         }
         # Best candidate that is schema- and commonsense-VALID, regardless of how many parsed
         # constraints it satisfies. Only populated under TPC_COMMONSENSE_FIRST. Rationale: when no
@@ -870,7 +894,12 @@ class TPCAgent(BaseAgent):
             "constraints": None,
             "check": None,
             "params": None,
+            "found_at": 0,
         }
+        # Search telemetry (roadmap W4 step 0): pure observation, no behavior change. restarts is
+        # assigned later in this method but read here by reference (both are locals of the same
+        # function, so closures below see its live value regardless of source order).
+        candidates_evaluated = 0
         commonsense_first = self._commonsense_first_enabled()
         # Each confirmed probe runs the full official commonsense evaluator (~300 ms), and inside a
         # wall-clock-bounded solve that time is paid for with a restart that does not happen. So the
@@ -933,7 +962,8 @@ class TPCAgent(BaseAgent):
             if not commonsense_valid(plan):
                 return
             best_cs.update(
-                plan=plan, key=cs_key, constraints=constraints, check=check, params=params
+                plan=plan, key=cs_key, constraints=constraints, check=check, params=params,
+                found_at=restarts,
             )
 
         def commonsense_valid_export():
@@ -953,6 +983,8 @@ class TPCAgent(BaseAgent):
             return best_cs
 
         def consider(plan, constraints, check, params):
+            nonlocal candidates_evaluated
+            candidates_evaluated += 1
             plan = self._sanitize_plan_for_grounding(plan, query)
             try:
                 passed, total = check(plan)
@@ -961,7 +993,8 @@ class TPCAgent(BaseAgent):
             search_key = (passed, self._eval_proxy(plan), -self._plan_total_cost(plan))
             updated = False
             if best["plan"] is None or search_key > best["key"]:
-                best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params)
+                best.update(plan=plan, key=search_key, constraints=constraints, check=check, params=params,
+                            found_at=restarts)
                 updated = True
             accepted = self._accepted(passed, total)
             if commonsense_first and not accepted:
@@ -979,6 +1012,7 @@ class TPCAgent(BaseAgent):
                         constraints=constraints,
                         check=check,
                         params=params,
+                        found_at=restarts,
                     )
                     updated = True
             if updated:
@@ -1012,6 +1046,8 @@ class TPCAgent(BaseAgent):
             return time.time() - self.start_clock > self.solve_budget_sec
 
         restarts = 0
+        stop_reason = None
+        converged_stop = False
         try:
             for variant in variants:
                 if out_of_budget():
@@ -1064,6 +1100,7 @@ class TPCAgent(BaseAgent):
                 # Per-variant early-convergence tracking (roadmap step 5). Reset per variant since
                 # a new constraint variant starts a fresh scoring landscape.
                 stall_restarts = 0
+                converged_stop = False
                 while restarts < self.max_restarts and not out_of_budget():
                     restarts += 1
                     params = self._random_params(rng, constraints)
@@ -1079,9 +1116,20 @@ class TPCAgent(BaseAgent):
                         else:
                             stall_restarts += 1
                             if stall_restarts >= converge_patience:
+                                converged_stop = True
                                 break
         except _AcceptedEarlyStop:
-            pass
+            stop_reason = "accepted_stop"
+        else:
+            # roadmap W4 step 0: pure observation of why the restart loop actually stopped, so a
+            # later step can tell a budget-bound solve from one that plateaued or exhausted
+            # max_restarts, none of which was previously recorded anywhere.
+            if converged_stop:
+                stop_reason = "converged"
+            elif restarts >= self.max_restarts:
+                stop_reason = "max_restarts"
+            else:
+                stop_reason = "budget"
 
         chosen = best_accepted if best_accepted["plan"] is not None else best
         if best_accepted["plan"] is None:
@@ -1097,6 +1145,13 @@ class TPCAgent(BaseAgent):
             packed = self._pack_plan(chosen["plan"], query, chosen["constraints"], chosen["check"], chosen["params"])
             if packed is not None:
                 chosen["plan"] = packed
+
+        self.last_search_telemetry = {
+            "restarts_used": restarts,
+            "stop_reason": stop_reason,
+            "candidates_evaluated": candidates_evaluated,
+            "best_found_at_restart": chosen.get("found_at", 0),
+        }
 
         if chosen["plan"] is not None:
             resolved = self._sanitize_plan_for_grounding(chosen["plan"], query)
@@ -1150,7 +1205,10 @@ class TPCAgent(BaseAgent):
         # Re-ground first/last intercity endpoint activities (opt-in). The commonsense
         # intercity checker requires day-1 activity[0] and last-day activity[-1] to be real
         # rows from intercity_transport.select(...), with matching IDs/times/prices.
-        if self._repair_intercity_enabled():
+        # TPC_REPAIR_DROP_TRAILING_STAY is its own independent flag (also umbrella-wired to
+        # TPC_COMMONSENSE_FIRST) even though its logic lives inside _repair_intercity_endpoints,
+        # so either flag alone must reach the function.
+        if self._repair_intercity_enabled() or self._repair_drop_trailing_stay_enabled():
             self._set_transport_context(constraints or {})
             self._repair_intercity_endpoints(plan, query, constraints or {}, check)
         # Pin named timed-visit POIs into their clause windows first (opt-in; roadmap G8). This runs
@@ -2080,6 +2138,20 @@ class TPCAgent(BaseAgent):
         if not return_ok:
             existing_type = last_act.get("type") if isinstance(last_act, dict) else None
             modes = self._intercity_mode_order(existing_type, return_pref)
+
+            if (
+                self._repair_drop_trailing_stay_enabled()
+                and len(itinerary) == 1
+                and last_day_acts
+                and isinstance(last_day_acts[-1], dict)
+                and last_day_acts[-1].get("type") == "accommodation"
+            ):
+                # A single-day trip has no business ending in an overnight stay in the first
+                # place, and its 24:00 end_time floors the return-departure search below to
+                # "after midnight" -- no row can ever clear it. Drop it so last_incity_idx/
+                # floor_time/floor_min/floor_pos below are recomputed from the real last
+                # in-city activity, exactly as if it had never been there.
+                last_day_acts.pop()
 
             last_incity_idx = None
             search_end = len(last_day_acts) - 1

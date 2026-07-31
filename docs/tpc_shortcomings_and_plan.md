@@ -1,6 +1,10 @@
 # TPC 2026: Remaining Shortcomings and the Plan to Close Them
 
-**Status:** active work plan, written 2026-07-31 against `main` @ `2645850`.
+**Status:** active work plan, written 2026-07-31 against `main` @ `2645850`; updated 2026-07-31 (evening)
+after a same-day implementation pass closed W1, W4 step 0, W5, and the cheap half of W8 (see
+[Session update](#session-update-2026-07-31-evening) below). This document is now a **residual** work plan
+— everything closed below has its permanent record in the [Phase 1 playbook](tpc_phase1_playbook.md) or
+[Phase 2 roadmap](tpc_phase2_roadmap.md); only what is still open is kept in full detail here.
 **Audience:** an implementing agent that has *not* read the rest of `docs/`. Every work item below states
 why it matters, the exact file and function to touch, the flag name, the tests to write, the command to
 verify, and the bar that decides whether it ships.
@@ -11,6 +15,55 @@ Read this document *with* [`docs/tpc_phase2_roadmap.md`](tpc_phase2_roadmap.md) 
 landed and why) and [`docs/tpc_phase2_eval.md`](tpc_phase2_eval.md) (which defines what a measurement is
 allowed to prove). This document does not restate their history; it states what is still broken and what to
 do about it.
+
+## Session update (2026-07-31, evening)
+
+One implementation session closed the highest-priority, lowest-risk items on this list and left the
+long-running evaluation-workstream items (which this doc itself estimates at `8` h+ each, see
+§5 Sequencing) explicitly open. Per [CLAUDE.md's parallel workstreams](../CLAUDE.md#parallel-workstreams),
+those are a separate workstream's job (a dedicated machine running `make phase2-baseline-at` for many
+hours), not something to fake or shortcut inside an implementation session.
+
+**Closed this session:**
+
+- **W1 (repair the 22-query Phase 1 commonsense tail): partially closed, real gain measured.**
+  `scripts/scan_commonsense_residual.py` and `scripts/repair_commonsense.py` landed exactly as specified
+  (§3, kept below for the record) and repaired **10 of the 22** — `make p1eval SPLIT=tpc_phase1`:
+  overall `96.45 -> 97.47`, FPR `97.80 -> 98.8`, C-LPR `96.47 -> 97.98`. The `98.0`/`99.0` ship-bar was not
+  fully reached: the remaining 12 are a genuinely-resistant residual (a stored intercity activity's own
+  fixed departure time is itself inconsistent with the rest of that day's — correctly ordered — schedule,
+  which no forward-only repair can fix without moving the intercity leg, out of scope by design; a couple
+  of others trade one hard-logic clause for the commonsense fix, which the full-checker gate correctly
+  refuses). See the [Phase 1 playbook](tpc_phase1_playbook.md#w1-repairing-the-22-query-commonsense-tail-2026-07-31)
+  for the full result and residual list.
+- **W5 (drop the trailing stay on single-day trips): closed, NOT promoted.**
+  `TPC_REPAIR_DROP_TRAILING_STAY` landed exactly as specified (§4, kept below for the record). Of the 3
+  named uids, 1 fully clears; the other 2 have a distinct, deeper defect this move cannot reach (see the
+  [roadmap's Known residual section](tpc_phase2_roadmap.md#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)).
+  **The required ship-bar screen came back RED** (`overall_true` `52.44 -> 51.07`, timeouts
+  `34 -> 37`) — likely because the flag's gate also activates the general `TPC_REPAIR_INTERCITY` pass
+  for every query, not only the target shape; see the flag's section below for the full result and the
+  open re-screening question. Per this doc's own rule (a screen triages, it never promotes), the flag
+  stays implemented, tested, and default off.
+- **W4 step 0 (solver search telemetry): closed.** `restarts_used`, `stop_reason`, `candidates_evaluated`,
+  `best_found_at_restart` are now recorded on every `_solve` call and surfaced through `solve_phase2`'s
+  telemetry as `search_telemetry`. Pure observation, no behavior change. **Steps 1-2 (CP-SAT worker
+  screen, parallel restarts) remain open** — they need a quiet multi-core machine and a `900 s` gate, both
+  out of scope for this session.
+- **W8 (partial): closed the cheap half.** `TPC_P2_LLM_PARSE` is now an explicit off-by-default decision
+  in `resolve_llm_client_and_flags` (citing the recorded RED screen), not an auto-enable keyed off backend
+  configuration, and `agent_env/config.phase2.example.toml` + `agent_env/README.md` already documented the
+  `[phase2.llm]` block. **The real-endpoint reachability exercise (item 1 in §8 below) remains open** — it
+  needs a live SGLang/OpenAI-compatible server, which this session did not have.
+- **W2 (close the addressable Phase 1 preference residual): closed, converged with zero gain.** The
+  densify pass over the post-W1 preference-ranked tail found `best_updates: 0`; the full-split score is
+  unchanged (`97.47477963683579`, same as post-W1). Per this item's own ship bar, a clean immediate
+  convergence with no gain means the remaining preference deficit is structural, and the item is closed,
+  not failed.
+
+**Still open, unchanged from the original plan below:** W3, W4 steps 1-2, W6, W7, W9, W10, and W8's
+reachability item. These require either a long (`8` h+) pinned evaluation-machine run or a reachable LLM
+endpoint neither of which this session had; do not re-derive their priority reasoning, it is unchanged.
 
 ---
 
@@ -67,11 +120,19 @@ six times more valuable per point than preference.** Chase acceptance, not polis
 
 ### Phase 1 (`results/best`, 1000 queries, synced evaluator)
 
-`make p1eval SPLIT=tpc_phase1`, recorded 2026-07-31:
+`make p1eval SPLIT=tpc_phase1`, recorded 2026-07-31 morning (before W1) / evening (after W1's repair of
+10 of the 22-query commonsense tail, §3.1/§3.6):
 
-| MicEPR | MacEPR | C-LPR | FPR | DAV | ATT | DDR | **overall** |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `99.89` | `97.80` | `96.47` | `97.80` | `90.11` | `94.46` | `84.26` | **`96.45`** |
+| | MicEPR | MacEPR | C-LPR | FPR | DAV | ATT | DDR | **overall** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| before W1 | `99.89` | `97.80` | `96.47` | `97.80` | `90.11` | `94.46` | `84.26` | **`96.45`** |
+| after W1 | `99.93` | `98.8` | `97.98` | `98.8` | `91.11` | `95.46` | `85.15` | **`97.47`** |
+| after W2 | `99.93` | `98.8` | `97.98` | `98.8` | `91.11` | `95.46` | `85.15` | **`97.47`** |
+
+W2 (the preference pass over the post-W1 split) converged after round 0 with `best_updates: 0` — no
+row changed from after-W1, so the table's last two rows are identical to the digit. See
+[W2](#w2-close-the-addressable-phase-1-preference-residual) for the run and why a null result closes
+this item rather than failing it.
 
 ### Phase 2 (familiar-100 val, no-oracle harness)
 
@@ -96,21 +157,26 @@ estimate survives contact with the implementation.
 
 | # | Shortcoming | Phase | Leverage | Confidence | Item |
 | --- | --- | --- | --- | --- | --- |
-| S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** | **high** (arithmetically confirmed, §3.1) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
-| S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` | medium | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
-| S3 | No post-sync `900 s` reference row — every Phase 2 gate is currently unrunnable | 2 | blocking, `0` on its own | high | [W3](#w3-re-establish-the-post-sync-900-s-reference-row) |
-| S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially, and records no search telemetry | 2 | `+1` to `+4` (unmeasured) | low-medium | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
-| S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) | high | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
-| S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | low | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
-| S7 | The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score | 2 | risk, not gain | high | [W7](#w7-de-risk-the-unconfirmed-budget) |
-| S8 | LLM endpoint autodetect landed but was never exercised against a real endpoint; Stage 3 refine still commits `0` edits | 2 | `0` today; compliance risk | medium | [W8](#w8-verify-llm-reachability-and-close-the-parse-policy-decision) |
-| S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | medium | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
-| S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | high | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
+| S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** est., **`+1.02` measured** (10/22 repaired) | **CLOSED** (partial; §3.1) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
+| S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` est., **`+0` measured** | **CLOSED** (converged with zero gain; §3.2/W2) | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
+| S3 | No post-sync `900 s` reference row — every Phase 2 gate is currently unrunnable | 2 | blocking, `0` on its own | **open** (needs the evaluation workstream's dedicated machine, `8` h+) | [W3](#w3-re-establish-the-post-sync-900-s-reference-row) |
+| S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry) landed, steps 1-2 (use the cores) remain | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, steps 1-2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
+| S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
+| S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | open (needs W3) | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
+| S7 | The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score | 2 | risk, not gain | open (needs W3) | [W7](#w7-de-risk-the-unconfirmed-budget) |
+| S8 | LLM endpoint autodetect landed but was never exercised against a real endpoint; Stage 3 refine still commits `0` edits | 2 | `0` today; compliance risk | **parse-policy decision CLOSED**, reachability exercise open | [W8](#w8-verify-llm-reachability-and-close-the-parse-policy-decision) |
+| S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
+| S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | open (needs W3) | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
 
 **Priority order: W1 → W3 → W5 → W4 → W7 → W2 → W10 → W6 → W9 → W8.**
 W1 is first because Phase 1 standing decides Phase 2 advancement and W1 is the highest-confidence,
 lowest-risk gain on this list. W3 is second because nothing else in Phase 2 can be *promoted* until it
 exists. W1 and W3 are independent and should run concurrently on different machines.
+
+**2026-07-31 evening update:** W1, W5, W4-step-0, and W8's cheap half closed this session (see
+[Session update](#session-update-2026-07-31-evening)); the ordering above is unchanged for the remaining
+items — W3 is still the correct next step for anyone with a dedicated evaluation machine, since W6, W7,
+W9, and W10 all still depend on it.
 
 ---
 
@@ -118,11 +184,18 @@ exists. W1 and W3 are independent and should run concurrently on different machi
 
 ### W1: repair the 22-query Phase 1 commonsense tail
 
+> **Status: CLOSED (partial), 2026-07-31.** `scripts/scan_commonsense_residual.py` and
+> `scripts/repair_commonsense.py` landed exactly as specified below. Result: **10 of 22 repaired**,
+> `make p1eval SPLIT=tpc_phase1` overall `96.45 -> 97.47` (FPR `97.80 -> 98.8`, C-LPR `96.47 -> 97.98`).
+> The `98.0`/`99.0` ship bar (§3.6) was not fully reached — the remaining 12 are genuinely resistant, not
+> an implementation gap; see the [Phase 1 playbook](tpc_phase1_playbook.md#w1-repairing-the-22-query-commonsense-tail-2026-07-31)
+> for the residual diagnosis. The rest of this section is kept as the implementation record.
+
 **Owner:** implementation. **Estimated effort:** one day. **Expected gain: `96.45 → ~98.7`.**
 
 #### 3.1 The diagnosis, and why it is certain
 
-The [Phase 1 playbook](tpc_phase1_playbook.md#current-status-2026-07-31-after-re-solving-the-evaluator-sync-regression)
+The [Phase 1 playbook](tpc_phase1_playbook.md#current-status-2026-07-31-after-repairing-the-22-query-commonsense-tail)
 currently calls the remaining 22 queries "a genuinely hard tail" after three re-solve rounds recovered `0`
 of them. That description is right about the *solver* and wrong about the *plans*. A fresh solve cannot
 recover them; a **targeted repair of the stored plan** almost certainly can, and that was never attempted.
@@ -280,6 +353,21 @@ evidence about the solver, unlike the current "hard tail" framing which this ite
 
 ### W2: close the addressable Phase 1 preference residual
 
+> **Status: CLOSED, 2026-07-31 — converged immediately with zero gain.** Ran exactly the command below
+> (`TPC_PACK_DAV=1 TPC_PACK_DDR=1 scripts/iterate_tail.py ... --rounds 4 --stop-no-improve-rounds 1`)
+> against the post-W1 split. Round 0's densify pass over the 240-query preference-ranked focus split
+> found **`best_updates: 0`** — no plan improved enough to replace its `results/best` entry — so the
+> controller correctly stopped after one no-improve round per `--stop-no-improve-rounds 1`, and the
+> final full-split score is unchanged from post-W1: overall `97.47477963683579` to the same digit
+> (`MicEPR 99.93`, `MacEPR 98.8`, `C-LPR 97.98`, `FPR 98.8`, `DAV 91.11`, `ATT 95.46`, `DDR 85.15`).
+> `results/best/` has zero diffs from this run (verified via `git status`), so there is nothing to
+> merge or commit for this item. Per this section's own ship bar below: **"if this one converges
+> immediately with no gain, record that and stop — the remaining deficit is then structural and this
+> item is closed, not failed."** That is exactly what happened, and matches the same outcome the
+> pre-W1 preference residual analysis predicted was likely once W1's repair changed the set of
+> already-accepted plans the densify pass has to work with. The rest of this section is kept as the
+> record of what was tried.
+
 **Owner:** implementation. **Do W1 first** — preference on a failing plan is worth zero, and W1 changes the
 denominator. **Expected gain: `+0.3` to `+0.6`.**
 
@@ -367,6 +455,33 @@ non-blocking evaluation workstream job — start it first and do other items whi
 
 ### W5: drop the trailing stay on single-day trips
 
+> **Status: CLOSED (implemented, tested, NOT promoted), 2026-07-31.** `TPC_REPAIR_DROP_TRAILING_STAY`
+> landed exactly as specified below, unit-tested in `tests/phase2/test_repair_intercity_endpoints.py`,
+> and default off (byte-identical floor). Of the 3 named uids, 1 (`...00071`) fully clears
+> (`overall_true` `8.52 -> 43.08`); `...00065` and `...00066` have a distinct, deeper residual this move
+> cannot reach (their day's own schedule runs past every same-day return departure regardless of the
+> accommodation — confirmed by querying `WorldEnv.intercitytransport` directly). See the
+> [roadmap's Known residual section](tpc_phase2_roadmap.md#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)
+> for the full per-uid diagnosis.
+>
+> **The required ship-bar screen (`--flag TPC_REPAIR_DROP_TRAILING_STAY --mode end-to-end --n 40
+> --budget-sec 120 --parallel 7`) came back RED**, not clean: `overall_true` `52.44 -> 51.07`
+> (`-1.37`), FPR `22.50 -> 20.00`, timeouts `34 -> 37`, `make phase2-gate`-equivalent monotonic check
+> FAILs. **Root-cause hypothesis, not yet confirmed:** `_pack_plan`'s gate was changed to
+> `if self._repair_intercity_enabled() or self._repair_drop_trailing_stay_enabled():` so the new flag
+> alone reaches `_repair_intercity_endpoints` — but that also activates the *general* endpoint
+> re-grounding pass (normally gated behind `TPC_REPAIR_INTERCITY`) for every query in the screen, not
+> only the rare single-day-trailing-stay shape the new flag targets. At a tight `120 s` budget that
+> pass's own extra per-query deepcopy + full-checker revalidation cost (the same mechanism the roadmap
+> already documents costing timeouts for `TPC_PIN_TIMED_WINDOWS` at `300 s`) plausibly explains the
+> regression on unrelated queries, confounding the measurement. **Per this doc's own ship bar, a RED
+> screen means do not promote — `apply_deterministic_solver_defaults()` is left untouched.** The flag
+> stays implemented, tested, and available for a future re-screen isolated from
+> `TPC_REPAIR_INTERCITY`'s cost (e.g. gating the general pass separately from the trailing-stay
+> sub-step, or re-screening at `900 s` the way `TPC_PIN_TIMED_WINDOWS`'s own `300 s` regression turned
+> out to be a budget-boundary artifact) — not something this session had time to redesign and re-verify.
+> The rest of this section is kept as the implementation record.
+
 **Owner:** implementation. **Effort: half a day.** **Expected gain: `~+0.3` on familiar-100-val.**
 *(Numbered out of order to keep the deterministic-repair items together; do this before W4.)*
 
@@ -445,6 +560,16 @@ throwaway `phase2_stay_check` method directories afterwards.
 ---
 
 ### W4: use the 16 confirmed evaluation CPUs
+
+> **Status: step 0 CLOSED, steps 1-2 open, 2026-07-31.** `restarts_used`, `stop_reason`,
+> `candidates_evaluated`, and `best_found_at_restart` are now recorded on every `_solve` call and
+> surfaced through `solve_phase2`'s telemetry as `search_telemetry` (pure observation, no behavior
+> change; unit-tested in `tests/phase2/test_solve_early_exit.py` and `tests/phase2/test_orchestrator.py`).
+> Steps 1 (CP-SAT worker screen) and 2 (parallel restarts) below are unchanged and still open — they need
+> a quiet multi-core machine and, for step 2's promotion, a `900 s` gate against the W3 reference row.
+> **The `best_found_at_restart` data step 0 was built to collect has not yet been read** — running it
+> against even a handful of real queries at a realistic budget, before spending days on step 2, is now
+> possible and is the cheapest next move on this item.
 
 **Owner:** implementation. **Effort: 2–3 days.** **Expected gain: `+1` to `+4`, unmeasured — the largest
 untapped Phase 2 lever and also the least certain.** **Depends on W3** for a baseline.
@@ -659,6 +784,18 @@ unchanged or better — a packing move that costs one accepted plan has already 
 ---
 
 ### W8: verify LLM reachability and close the parse policy decision
+
+> **Status: parse-policy decision CLOSED, reachability exercise open, 2026-07-31.** Item 2 below is
+> done: `resolve_llm_client_and_flags` no longer auto-enables `TPC_P2_LLM_PARSE` when a backend is
+> configured (the removed branch only re-derived what `Flags.from_env()` already reads from the env);
+> it is now off unless an operator explicitly sets `TPC_P2_LLM_PARSE=1`, with the RED screen cited in
+> the docstring comment. `tests/phase2/test_llm_endpoint_autodetect.py` updated accordingly
+> (`test_explicit_backend_keeps_parse_off_by_default` replaces the old auto-enable assertion; a new
+> `test_operator_override_reaches_explicit_backend` covers the explicit-on path).
+> `agent_env/config.phase2.example.toml` and its `agent_env/README.md` pointer already existed. **Item
+> 1 (exercise the autodetect against a real reachable endpoint) remains open** — it needs a live
+> OpenAI-compatible/SGLang server this session did not have. Item 3 (Stage 3 refine) is unchanged and
+> stays off.
 
 **Owner:** implementation. **Effort: half a day.** **Gain: `0` expected; competition-compliance and
 robustness.**

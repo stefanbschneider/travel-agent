@@ -406,3 +406,166 @@ def test_unaccepted_commit_refused_when_parsed_passes_drop(monkeypatch):
     agent._repair_intercity_endpoints(plan, QUERY, {}, check)
 
     assert plan == snapshot
+
+
+# --- TPC_REPAIR_DROP_TRAILING_STAY ------------------------------------------------------------
+#
+# A 1-day trip whose last activity is an overnight accommodation running to 24:00 floors the
+# return-departure search at 24:00, so no row can ever clear it and the endpoint repair silently
+# declines (docs/tpc_shortcomings_and_plan.md W5).
+
+
+def _single_day_plan():
+    return {
+        "itinerary": [
+            {
+                "activities": [
+                    {
+                        "type": "train",
+                        "TrainID": "T_GO_1",
+                        "start": "A Station",
+                        "end": "B Station",
+                        "start_time": "06:30",
+                        "end_time": "08:00",
+                        "price": 120,
+                        "cost": 240,
+                        "tickets": 2,
+                        "transports": [],
+                    },
+                    {
+                        "type": "breakfast",
+                        "position": "Hotel B",
+                        "start_time": "09:00",
+                        "end_time": "10:00",
+                        "price": 0,
+                        "cost": 0,
+                        "tickets": 0,
+                        "transports": [],
+                    },
+                    {
+                        "type": "accommodation",
+                        "position": "Hotel B",
+                        "start_time": "18:00",
+                        "end_time": "24:00",
+                        "price": 100,
+                        "cost": 200,
+                        "rooms": 1,
+                        "tickets": 2,
+                        "transports": [],
+                    },
+                ]
+            }
+        ]
+    }
+
+
+def test_drop_trailing_stay_flag_off_by_default():
+    assert _bare_agent(ROWS)._repair_drop_trailing_stay_enabled() is False
+
+
+def test_flag_off_single_day_trailing_stay_untouched(monkeypatch):
+    monkeypatch.delenv("TPC_REPAIR_DROP_TRAILING_STAY", raising=False)
+    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
+    agent = _bare_agent(ROWS)
+    plan = _single_day_plan()
+    snapshot = deepcopy(plan)
+    check = _endpoint_checker(ROWS)
+    assert agent._accepted(*check(plan)) is False
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    assert plan == snapshot
+
+
+def test_flag_on_drops_trailing_stay_and_commits_return_leg(monkeypatch):
+    monkeypatch.setenv("TPC_REPAIR_DROP_TRAILING_STAY", "1")
+    agent = _bare_agent(ROWS)
+    plan = _single_day_plan()
+    check = _endpoint_checker(ROWS)
+    assert agent._accepted(*check(plan)) is False
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    activities = plan["itinerary"][-1]["activities"]
+    assert all(a.get("type") != "accommodation" for a in activities)
+    last = activities[-1]
+    assert last.get("TrainID") == "T_BACK_1"
+    assert last.get("start_time") == "16:30"
+    assert agent._accepted(*check(plan)) is True
+
+
+def test_flag_on_two_day_trailing_stay_untouched(monkeypatch):
+    monkeypatch.setenv("TPC_REPAIR_DROP_TRAILING_STAY", "1")
+    agent = _bare_agent(ROWS)
+    plan = _base_plan()
+    # Replace the return train with a trailing overnight stay -- multi-day, must never be dropped.
+    plan["itinerary"][-1]["activities"][-1] = {
+        "type": "accommodation",
+        "position": "Hotel B",
+        "start_time": "18:00",
+        "end_time": "24:00",
+        "price": 100,
+        "cost": 200,
+        "rooms": 1,
+        "tickets": 2,
+        "transports": [],
+    }
+    snapshot = deepcopy(plan)
+    check = _endpoint_checker(ROWS)
+    assert agent._accepted(*check(plan)) is False
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    assert plan == snapshot
+
+
+def test_flag_on_no_feasible_return_after_drop_leaves_plan_unchanged(monkeypatch):
+    monkeypatch.setenv("TPC_REPAIR_DROP_TRAILING_STAY", "1")
+    rows = deepcopy(ROWS)
+    rows[("B", "A", "train")] = [
+        {
+            "TrainID": "T_BACK_TOO_EARLY",
+            "From": "B Station",
+            "To": "A Station",
+            "BeginTime": "08:00",
+            "EndTime": "09:00",
+            "Cost": 99,
+        }
+    ]
+    agent = _bare_agent(rows)
+    plan = _single_day_plan()
+    snapshot = deepcopy(plan)
+    check = _endpoint_checker(rows)
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    assert plan == snapshot
+
+
+def test_drop_trailing_stay_umbrella_on_by_commonsense_first(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    monkeypatch.delenv("TPC_REPAIR_DROP_TRAILING_STAY", raising=False)
+    agent = _bare_agent(ROWS)
+    assert agent._repair_drop_trailing_stay_enabled() is True
+    plan = _single_day_plan()
+    check = _endpoint_checker(ROWS)
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    activities = plan["itinerary"][-1]["activities"]
+    assert all(a.get("type") != "accommodation" for a in activities)
+    assert agent._accepted(*check(plan)) is True
+
+
+def test_drop_trailing_stay_explicit_zero_overrides_umbrella(monkeypatch):
+    monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "1")
+    monkeypatch.setenv("TPC_REPAIR_DROP_TRAILING_STAY", "0")
+    agent = _bare_agent(ROWS)
+    assert agent._repair_drop_trailing_stay_enabled() is False
+    plan = _single_day_plan()
+    snapshot = deepcopy(plan)
+    check = _endpoint_checker(ROWS)
+
+    agent._repair_intercity_endpoints(plan, QUERY, {}, check)
+
+    assert plan == snapshot
