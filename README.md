@@ -96,6 +96,7 @@ Since `2026-07-26` a commonsense-first finalization policy (`TPC_COMMONSENSE_FIR
 - [Phase 1 playbook](docs/tpc_phase1_playbook.md): operating flow and reusable solver lessons.
 - [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, gates, and dataset boundaries (HF, local, familiar-100, final).
 - [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions, evidence-backed priorities, and solver headroom.
+- [Shortcomings and plan](docs/tpc_shortcomings_and_plan.md): what is still broken in both phases, ranked by measured leverage, with a self-contained implementation brief per item.
 - [Architecture at a glance](README.md#architecture-at-a-glance): no-oracle contract, ownership map, and planner flow.
 - [Parallel agent prompts](docs/agents/README.md): concurrent workstreams and currently active focused briefs.
 - [Baseline ledger guide](docs/phase2_baselines/README.md): how to compare generated rows in `results/phase2_baselines/`.
