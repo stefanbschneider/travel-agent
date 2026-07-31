@@ -36,10 +36,15 @@ hours), not something to fake or shortcut inside an implementation session.
   of others trade one hard-logic clause for the commonsense fix, which the full-checker gate correctly
   refuses). See the [Phase 1 playbook](tpc_phase1_playbook.md#w1-repairing-the-22-query-commonsense-tail-2026-07-31)
   for the full result and residual list.
-- **W5 (drop the trailing stay on single-day trips): closed.** `TPC_REPAIR_DROP_TRAILING_STAY` landed
-  exactly as specified (§4, kept below for the record). Of the 3 named uids, 1 fully clears; the other 2
-  have a distinct, deeper defect this move cannot reach (see the
+- **W5 (drop the trailing stay on single-day trips): closed, NOT promoted.**
+  `TPC_REPAIR_DROP_TRAILING_STAY` landed exactly as specified (§4, kept below for the record). Of the 3
+  named uids, 1 fully clears; the other 2 have a distinct, deeper defect this move cannot reach (see the
   [roadmap's Known residual section](tpc_phase2_roadmap.md#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)).
+  **The required ship-bar screen came back RED** (`overall_true` `52.44 -> 51.07`, timeouts
+  `34 -> 37`) — likely because the flag's gate also activates the general `TPC_REPAIR_INTERCITY` pass
+  for every query, not only the target shape; see the flag's section below for the full result and the
+  open re-screening question. Per this doc's own rule (a screen triages, it never promotes), the flag
+  stays implemented, tested, and default off.
 - **W4 step 0 (solver search telemetry): closed.** `restarts_used`, `stop_reason`, `candidates_evaluated`,
   `best_found_at_restart` are now recorded on every `_solve` call and surfaced through `solve_phase2`'s
   telemetry as `search_telemetry`. Pure observation, no behavior change. **Steps 1-2 (CP-SAT worker
@@ -429,14 +434,32 @@ non-blocking evaluation workstream job — start it first and do other items whi
 
 ### W5: drop the trailing stay on single-day trips
 
-> **Status: CLOSED, 2026-07-31.** `TPC_REPAIR_DROP_TRAILING_STAY` landed exactly as specified below,
-> unit-tested in `tests/phase2/test_repair_intercity_endpoints.py`. Of the 3 named uids, 1
-> (`...00071`) fully clears (`overall_true` `8.52 -> 43.08`); `...00065` and `...00066` have a distinct,
-> deeper residual this move cannot reach (their day's own schedule runs past every same-day return
-> departure regardless of the accommodation — confirmed by querying `WorldEnv.intercitytransport`
-> directly). See the [roadmap's Known residual section](tpc_phase2_roadmap.md#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)
-> for the full diagnosis and the ship-bar screen result below. The rest of this section is kept as the
-> implementation record.
+> **Status: CLOSED (implemented, tested, NOT promoted), 2026-07-31.** `TPC_REPAIR_DROP_TRAILING_STAY`
+> landed exactly as specified below, unit-tested in `tests/phase2/test_repair_intercity_endpoints.py`,
+> and default off (byte-identical floor). Of the 3 named uids, 1 (`...00071`) fully clears
+> (`overall_true` `8.52 -> 43.08`); `...00065` and `...00066` have a distinct, deeper residual this move
+> cannot reach (their day's own schedule runs past every same-day return departure regardless of the
+> accommodation — confirmed by querying `WorldEnv.intercitytransport` directly). See the
+> [roadmap's Known residual section](tpc_phase2_roadmap.md#known-residual-the-intercity-endpoint-cluster-has-a-different-cause)
+> for the full per-uid diagnosis.
+>
+> **The required ship-bar screen (`--flag TPC_REPAIR_DROP_TRAILING_STAY --mode end-to-end --n 40
+> --budget-sec 120 --parallel 7`) came back RED**, not clean: `overall_true` `52.44 -> 51.07`
+> (`-1.37`), FPR `22.50 -> 20.00`, timeouts `34 -> 37`, `make phase2-gate`-equivalent monotonic check
+> FAILs. **Root-cause hypothesis, not yet confirmed:** `_pack_plan`'s gate was changed to
+> `if self._repair_intercity_enabled() or self._repair_drop_trailing_stay_enabled():` so the new flag
+> alone reaches `_repair_intercity_endpoints` — but that also activates the *general* endpoint
+> re-grounding pass (normally gated behind `TPC_REPAIR_INTERCITY`) for every query in the screen, not
+> only the rare single-day-trailing-stay shape the new flag targets. At a tight `120 s` budget that
+> pass's own extra per-query deepcopy + full-checker revalidation cost (the same mechanism the roadmap
+> already documents costing timeouts for `TPC_PIN_TIMED_WINDOWS` at `300 s`) plausibly explains the
+> regression on unrelated queries, confounding the measurement. **Per this doc's own ship bar, a RED
+> screen means do not promote — `apply_deterministic_solver_defaults()` is left untouched.** The flag
+> stays implemented, tested, and available for a future re-screen isolated from
+> `TPC_REPAIR_INTERCITY`'s cost (e.g. gating the general pass separately from the trailing-stay
+> sub-step, or re-screening at `900 s` the way `TPC_PIN_TIMED_WINDOWS`'s own `300 s` regression turned
+> out to be a budget-boundary artifact) — not something this session had time to redesign and re-verify.
+> The rest of this section is kept as the implementation record.
 
 **Owner:** implementation. **Effort: half a day.** **Expected gain: `~+0.3` on familiar-100-val.**
 *(Numbered out of order to keep the deterministic-repair items together; do this before W4.)*

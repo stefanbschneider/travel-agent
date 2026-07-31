@@ -272,9 +272,20 @@ same-day return train/flight regardless of the accommodation (confirmed by query
 last real activity ends), so no forward-only repair can place a return leg without also reshaping
 the day's earlier schedule, which is out of this mechanism's scope. That is a solver-scheduling
 defect (the day was built too dense/late to leave room for the return trip), not a bug in the drop
-logic. See the paired `n=40`/`120 s` screen result cited in
+logic.
+
+**Not promoted.** The required paired screen (`--flag TPC_REPAIR_DROP_TRAILING_STAY --mode end-to-end
+--n 40 --budget-sec 120 --parallel 7`) came back **RED**: `overall_true` `52.44 -> 51.07`, FPR
+`22.50 -> 20.00`, timeouts `34 -> 37`. The likely cause is that the flag's `_pack_plan` gate
+(`self._repair_intercity_enabled() or self._repair_drop_trailing_stay_enabled()`) reaches
+`_repair_intercity_endpoints` on its own, which also runs the *general* endpoint re-grounding pass
+(normally gated behind `TPC_REPAIR_INTERCITY`) against every query in the screen, not only the rare
+single-day-trailing-stay shape this flag targets — at a tight `120 s` budget that pass's own extra
+per-query deepcopy + full-checker revalidation cost plausibly explains the regression on unrelated
+queries. See
 [Shortcomings and plan, W5](tpc_shortcomings_and_plan.md#w5-drop-the-trailing-stay-on-single-day-trips)
-for the promotion decision.
+for the full result and the open re-screening question. The flag stays implemented, tested, and
+default off; `apply_deterministic_solver_defaults()` is untouched.
 
 ## LLM packaging: the submission makes zero LLM calls
 
