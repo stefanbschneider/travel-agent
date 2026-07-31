@@ -240,6 +240,49 @@ def test_telemetry_converged_stop_reason(_stop_at_accept_off):
     assert calls["build_plan"] == 3  # base (accepted) + 2 non-improving restarts
 
 
+class _SimulatedAsyncKill(BaseException):
+    """Stands in for func_timeout's asynchronous thread kill: a BaseException (not Exception)
+    subclass, so it propagates past every `except Exception` in the restart loop and out of
+    _solve entirely -- exactly like a real timeout kill, which can land at any bytecode point."""
+
+
+def test_telemetry_survives_a_mid_loop_kill_instead_of_staying_empty(_stop_at_accept_off):
+    """roadmap W4 step 0 follow-up: before this fix, self.last_search_telemetry was assigned only
+    once, at the very end of _solve -- so a func_timeout kill (which lands mid-restart-loop, before
+    that line ever runs) always left {} behind, silently discarding telemetry for exactly the
+    budget-bound queries this instrumentation exists to explain (confirmed against real queries: 2
+    of 8 familiar-100-val solves at a 150s budget came back with search_telemetry == {}). Now every
+    leader-improving consider() call snapshots last_search_telemetry immediately, mirroring
+    _set_timeout_recovery_plan's own snapshot, so a kill after any restart leaves a real partial
+    record instead of an empty one."""
+    agent, calls = _bare_solve_agent(max_restarts=1000, accept_on_call=1)
+    # Strictly-increasing eval_proxy forces every restart to improve the leader, so consider()
+    # updates last_search_telemetry on every call, not just the first.
+    agent._eval_proxy = lambda plan: calls["build_plan"]
+
+    orig_build_plan = agent._build_plan
+
+    def killed_build_plan(query, constraints=None, params=None):
+        plan = orig_build_plan(query, constraints=constraints, params=params)
+        if calls["build_plan"] == 4:
+            raise _SimulatedAsyncKill()
+        return plan
+
+    agent._build_plan = killed_build_plan
+
+    with pytest.raises(_SimulatedAsyncKill):
+        agent._solve({"uid": "u1"})
+
+    # Call #4 is killed before its own consider() ever runs, so the surviving snapshot is from
+    # call #3 (the base build is call #1 at restarts=0; while-loop calls #2/#3 land at restarts=1/2).
+    t = agent.last_search_telemetry
+    assert t  # not {} -- the whole point of this fix
+    assert t["stop_reason"] == "interrupted"
+    assert t["candidates_evaluated"] == 3
+    assert t["restarts_used"] == 2
+    assert t["best_found_at_restart"] == 2
+
+
 def test_telemetry_reset_at_start_of_solve_never_leaks_a_prior_calls_dict(_stop_at_accept_off):
     """A harness-level timeout kills _solve before it reaches its own final assignment (that path
     can't be exercised from inside this bare-agent harness, since every internal exception here is

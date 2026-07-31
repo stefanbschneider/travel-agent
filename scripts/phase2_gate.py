@@ -30,9 +30,25 @@ def check_gate(baseline: dict, candidate: dict, *, tol: float = 0.0) -> dict:
     Passes when candidate is no worse than baseline on the blocking metrics. ``advisories``
     holds non-blocking notes (e.g. an FPR move that isn't gating because continuous_score took
     over as the primary metric) -- always present, may be empty.
+
+    Refuses the comparison outright when the two rows carry a different (or one-sided)
+    ``evaluator_parity`` marker: rows straddling the 2026-07-28 upstream evaluator change are
+    never comparable (docs/tpc_phase2_eval.md#ledger-comparability, CLAUDE.md's upstream
+    evaluator parity invariant), whatever the score deltas say. Rows that both omit the marker
+    (every row recorded before it existed) fall through unchanged for backward compatibility.
     """
     reasons: list[str] = []
     advisories: list[str] = []
+
+    base_parity = baseline.get("evaluator_parity")
+    cand_parity = candidate.get("evaluator_parity")
+    if (base_parity or cand_parity) and base_parity != cand_parity:
+        reasons.append(
+            "evaluator_parity mismatch: baseline="
+            f"{base_parity!r} candidate={cand_parity!r} -- rows on different evaluator "
+            "contracts are never comparable"
+        )
+        return {"passed": False, "reasons": reasons, "advisories": advisories}
 
     use_continuous = "continuous_score" in baseline and "continuous_score" in candidate
     if use_continuous:

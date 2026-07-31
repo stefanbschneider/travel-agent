@@ -89,3 +89,37 @@ def test_gate_falls_back_to_fpr_when_continuous_score_absent_from_either_row():
 def test_gate_reasons_and_advisories_keys_always_present():
     res = G.check_gate(BASE, dict(BASE))
     assert "reasons" in res and "advisories" in res
+
+
+# --- evaluator_parity: refuse to compare rows straddling the 2026-07-28 evaluator sync -------
+
+
+def test_gate_refuses_when_evaluator_parity_differs():
+    base = {**BASE, "evaluator_parity": "764614c"}
+    cand = {"fpr": 99.0, "parse_failures": 0, "timeouts": 0, "evaluator_parity": "old-sha"}
+    res = G.check_gate(base, cand)
+    assert res["passed"] is False
+    assert any("evaluator_parity" in r for r in res["reasons"])
+
+
+def test_gate_refuses_when_only_one_side_carries_evaluator_parity():
+    """A pre-sync row never carries the marker; a post-sync row always does. One-sided presence
+    is exactly the accidental-cross-boundary-comparison shape this guard exists to catch."""
+    base = dict(BASE)  # no marker -- looks like a pre-sync row
+    cand = {**BASE, "fpr": 99.0, "evaluator_parity": "764614c"}
+    res = G.check_gate(base, cand)
+    assert res["passed"] is False
+    assert any("evaluator_parity" in r for r in res["reasons"])
+
+
+def test_gate_allows_comparison_when_both_sides_omit_evaluator_parity():
+    """Backward compatibility: every row recorded before this marker existed lacks it on both
+    sides, and must keep gating exactly as before."""
+    cand = {"fpr": 92.0, "parse_failures": 2, "timeouts": 0}
+    assert G.check_gate(BASE, cand)["passed"] is True
+
+
+def test_gate_allows_comparison_when_evaluator_parity_matches():
+    base = {**BASE, "evaluator_parity": "764614c"}
+    cand = {"fpr": 92.0, "parse_failures": 2, "timeouts": 0, "evaluator_parity": "764614c"}
+    assert G.check_gate(base, cand)["passed"] is True

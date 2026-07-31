@@ -1038,6 +1038,19 @@ class TPCAgent(BaseAgent):
                         constraints_now = best["constraints"]
                 self._set_timeout_recovery_plan(best_now)
                 self._last_solve_constraints = deepcopy(constraints_now)
+                # Mirror the recovery-plan snapshot for search telemetry (roadmap W4 step 0
+                # follow-up): a func_timeout kill lands mid-loop, before the authoritative
+                # self.last_search_telemetry assignment below ever runs, which was silently
+                # producing an empty {} for every timeout-recovered solve -- exactly the
+                # budget-bound queries this telemetry exists to explain. stop_reason
+                # "interrupted" marks this as a partial snapshot, not one of the four real
+                # final stop reasons; a normal completion always overwrites it below.
+                self.last_search_telemetry = {
+                    "restarts_used": restarts,
+                    "stop_reason": "interrupted",
+                    "candidates_evaluated": candidates_evaluated,
+                    "best_found_at_restart": restarts,
+                }
             if accepted and (stop_at_accept or stop_at_accept_packed):
                 raise _AcceptedEarlyStop()
             return accepted
