@@ -178,3 +178,80 @@ def test_plain_stop_at_accept_takes_precedence_over_packed(monkeypatch):
     assert calls["build_plan"] == 1
     assert calls["pack_plan"] == 0  # stop_at_accept's pack-skip wins
     assert plan == {"itinerary": []}
+
+
+# --- Search telemetry (roadmap W4 step 0) ------------------------------------------------------
+#
+# Pure observation, no behavior change: restarts_used, stop_reason, candidates_evaluated,
+# best_found_at_restart, exposed via agent.last_search_telemetry after _solve returns.
+
+
+def test_telemetry_max_restarts_stop(_stop_at_accept_off):
+    agent, calls = _bare_solve_agent(max_restarts=3, accept_on_call=1)
+    agent._solve({"uid": "u1"})
+    t = agent.last_search_telemetry
+    assert t["restarts_used"] == 3
+    assert t["stop_reason"] == "max_restarts"
+    assert t["candidates_evaluated"] == calls["build_plan"] == 4  # base + 3 restarts
+    assert t["best_found_at_restart"] == 0  # accepted on the very first (base, pre-restart) build
+
+
+def test_telemetry_best_found_at_restart_tracks_the_restart_that_won(_stop_at_accept_off):
+    agent, calls = _bare_solve_agent(max_restarts=3, accept_on_call=3)
+    agent._solve({"uid": "u1"})
+    t = agent.last_search_telemetry
+    # base build (restarts=0) + 2 random restarts before the 3rd build_plan call (restarts=2)
+    # is the one that gets accepted.
+    assert t["best_found_at_restart"] == 2
+    # Flag off means all max_restarts=3 restarts still run regardless of acceptance.
+    assert t["candidates_evaluated"] == calls["build_plan"] == 4
+
+
+def test_telemetry_accepted_stop_reason(_stop_at_accept_on):
+    agent, _calls = _bare_solve_agent(max_restarts=3, accept_on_call=1)
+    agent._solve({"uid": "u1"})
+    assert agent.last_search_telemetry["stop_reason"] == "accepted_stop"
+
+
+def test_telemetry_budget_stop_reason(_stop_at_accept_off):
+    agent, calls = _bare_solve_agent(max_restarts=1000, accept_on_call=1)
+    agent.solve_budget_sec = 0.0
+    agent.start_clock = time.time() - 10.0  # already over budget before _solve even starts
+    agent._solve({"uid": "u1"})
+    t = agent.last_search_telemetry
+    assert t["stop_reason"] == "budget"
+    assert t["restarts_used"] == 0
+    assert t["candidates_evaluated"] == 0  # out_of_budget() short-circuits before any consider()
+    # Nothing was ever built/considered, so _solve falls back to one guaranteed unconsidered
+    # build (line ~1160) to still return a plan -- that call bypasses consider() entirely.
+    assert calls["build_plan"] == 1
+
+
+def test_telemetry_converged_stop_reason(_stop_at_accept_off):
+    agent, calls = _bare_solve_agent(max_restarts=100, accept_on_call=1)
+    agent.solve_converge_patience = 2
+    agent._solve({"uid": "u1"})
+    t = agent.last_search_telemetry
+    # Every accepted candidate shares the same (constant) _accepted_eval_key in this fixture, so
+    # the preference key never improves once accepted -- stall_restarts reaches patience=2 after
+    # exactly 2 non-improving restarts past the first accept.
+    assert t["stop_reason"] == "converged"
+    assert t["restarts_used"] == 2
+    assert calls["build_plan"] == 3  # base (accepted) + 2 non-improving restarts
+
+
+def test_telemetry_reset_at_start_of_solve_never_leaks_a_prior_calls_dict(_stop_at_accept_off):
+    """A harness-level timeout kills _solve before it reaches its own final assignment (that path
+    can't be exercised from inside this bare-agent harness, since every internal exception here is
+    already caught and the loop runs to completion). What is testable, and is the actual guard:
+    _solve resets last_search_telemetry to a fresh dict at the top of every call, rather than
+    mutating/reusing the previous call's dict, so a genuinely-killed call can never leave the
+    previous query's numbers looking like they belong to the new one."""
+    agent, _calls = _bare_solve_agent(max_restarts=3, accept_on_call=1)
+    agent._solve({"uid": "u1"})
+    first = agent.last_search_telemetry
+    assert first  # sanity: the first call did populate it
+
+    agent._solve({"uid": "u2"})
+    second = agent.last_search_telemetry
+    assert second is not first

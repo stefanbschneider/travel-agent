@@ -76,6 +76,30 @@ def test_timeout_recovers_best_plan_from_solve_hook(one_query):
     assert plan["itinerary"] == [{"day": 1, "activities": []}]
 
 
+def test_search_telemetry_defaults_empty_when_solve_fn_lacks_the_hook(one_query, fast_solve_fn):
+    """fast_solve_fn (and any injected test stub) exposes no get_search_telemetry, so the
+    orchestrator must degrade to an empty dict rather than raising or fabricating numbers."""
+    _plan, telemetry = O.solve_phase2(one_query, budget_sec=10.0, solve_fn=fast_solve_fn)
+    assert telemetry["search_telemetry"] == {}
+
+
+def test_search_telemetry_surfaces_from_the_solve_fn_hook(one_query, fast_solve_fn):
+    """roadmap W4 step 0: TPCAgent._solve's restarts_used/stop_reason/candidates_evaluated/
+    best_found_at_restart, exposed by make_tpcagent_solve_fn's get_search_telemetry hook, must
+    reach the orchestrator's returned telemetry unchanged."""
+    stub_telemetry = {
+        "restarts_used": 12,
+        "stop_reason": "max_restarts",
+        "candidates_evaluated": 13,
+        "best_found_at_restart": 4,
+    }
+    fast_solve_fn.get_search_telemetry = lambda: dict(stub_telemetry)
+
+    _plan, telemetry = O.solve_phase2(one_query, budget_sec=10.0, solve_fn=fast_solve_fn)
+
+    assert telemetry["search_telemetry"] == stub_telemetry
+
+
 def test_improve_invalid_output_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
     def invalid_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
         return {"not": "a plan"}

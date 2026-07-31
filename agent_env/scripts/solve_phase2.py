@@ -259,15 +259,17 @@ def resolve_llm_client_and_flags():
     # Stage 3 when off -- didn't use) with a floor at the static split, so default it on too.
     if "TPC_P2_DYNAMIC_BUDGET" not in os.environ:
         flags.dynamic_budget = True
-    # Same pattern for the LLM corrective parse audit, except an auto-detected endpoint never
-    # changes planning behavior by itself: only an explicit operator override can turn llm_parse on
-    # in that case. Library Flags() and llm_backend="none" both stay off.
-    if (
-        "TPC_P2_LLM_PARSE" not in os.environ
-        and llm_client.backend != "none"
-        and llm_backend_source != "autodetect"
-    ):
-        flags.llm_parse = True
+    # TPC_P2_LLM_PARSE stays off by default even when a real backend is configured -- an explicit
+    # recorded decision (roadmap W8), not an auto-enable like disjunction/dynamic_budget/
+    # entity_resolution above. `flags.llm_parse` already came from Flags.from_env() above (off
+    # unless TPC_P2_LLM_PARSE is explicitly set), so there is deliberately no auto-enable branch
+    # here. The last paired same-SHA screen on current head was RED for audit-on vs. parse-off
+    # (n=10, 60s, DeepInfra timeout 6s): parse off FPR 30.0/overall_true 54.48/1 timeout vs. audit
+    # on FPR 20.0/overall_true 45.54/2 timeouts -- see docs/tpc_phase2_roadmap.md's "Current status
+    # snapshot". An explicit off is also safer than an auto-enable that fires only when an
+    # endpoint happens to be reachable, since it makes the organizer run behave the same as every
+    # local run. An operator who wants the audit on (e.g. to re-screen against a reachable
+    # endpoint) still can with an explicit TPC_P2_LLM_PARSE=1 override.
     # Deterministic entity resolution is pure recall/precision cleanup against the committed POI
     # catalogs. It has no LLM or network dependency, so default it on with disjunction and dynamic
     # budget unless the operator overrides TPC_P2_ENTITY_RESOLUTION. Library Flags() remains off

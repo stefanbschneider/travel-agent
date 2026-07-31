@@ -4,7 +4,7 @@ Phase 1 is offline prediction generation on the released `tpc_phase1` data.
 Only prediction files are submitted.
 The local workflow may use the released oracle fields, including `hard_logic_py`, to optimize and check plans; that privilege does not transfer to Phase 2.
 
-## Current status (2026-07-31, after re-solving the evaluator-sync regression)
+## Current status (2026-07-31, after repairing the 22-query commonsense tail)
 
 Score `results/best` with:
 
@@ -14,9 +14,45 @@ make p1eval SPLIT=tpc_phase1
 
 Latest local result on the upstream-aligned evaluator (upstream `main` `764614c`, PRs
 [#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30)):
-MicEPR `99.89`, MacEPR `97.80`, C-LPR `96.47`, FPR `97.80`, DAV `90.11`, ATT `94.46`, DDR `84.26`,
-**overall `96.45`** — recovered from the `61.16` post-sync regression (and above the pre-sync `100.0`
-floor's real quality, since that score depended on a preference loophole the new evaluator closes).
+MicEPR `99.93`, MacEPR `98.8`, C-LPR `97.98`, FPR `98.8`, DAV `91.11`, ATT `95.46`, DDR `85.15`,
+**overall `97.47`** — up from `96.45` after W1's targeted repair of the 22-query commonsense tail
+(`scripts/repair_commonsense.py`, see below), on top of the recovery from the `61.16` post-sync
+regression (and above the pre-sync `100.0` floor's real quality, since that score depended on a
+preference loophole the new evaluator closes).
+
+### W1: repairing the 22-query commonsense tail (2026-07-31)
+
+The tail described below as "genuinely hard" was, per the same-day update in that section, actually
+22 plans that already satisfy 100% of their own logical clauses and are rejected purely for a
+scheduling/meal artifact — see
+[Shortcomings and plan, W1](tpc_shortcomings_and_plan.md#w1-repair-the-22-query-phase-1-commonsense-tail)
+for the full diagnosis and repair design. `scripts/scan_commonsense_residual.py` reproduces the
+structural scan (`transport_before_prev_end` 19, `overlap` 16, `repeated_meal` 10, union 22) and
+`scripts/repair_commonsense.py` applies four ordered, full-checker-gated repair moves (drop a
+duplicate meal, restore chronological list order, re-space a real time overlap, re-ground an
+inbound leg that departs too early) on a deepcopy of each stored plan, committing only when the
+result is fully accepted:
+
+```bash
+.venv/bin/python scripts/scan_commonsense_residual.py --out /tmp/p1_tail.txt   # reproduce the 22
+.venv/bin/python scripts/repair_commonsense.py --split p1_commonsense_tail --dry-run
+.venv/bin/python scripts/repair_commonsense.py --split p1_commonsense_tail
+.venv/bin/python scripts/merge.py --split p1_commonsense_tail --method repair_commonsense
+make p1eval SPLIT=tpc_phase1
+```
+
+**Result: 10 of 22 repaired and merged** (FPR `97.80 -> 98.8`, C-LPR `96.47 -> 97.98`, overall
+`96.45 -> 97.47`). The doc's `98.0`/`99.0` ship-bar targets were not fully reached, because the
+remaining 12 are a genuinely-resistant residual, not an implementation gap: inspecting each one
+individually showed a shared shape the four repair moves cannot reach without moving an intercity
+activity's own ticketed time (which is out of scope by design) — the stored plan's fixed
+train/flight departure is itself inconsistent with the rest of that day's (correctly-ordered)
+schedule, so no forward-only shift or drop can satisfy both the flight's fixed time and the day's
+other activities. A few others trade one hard-logic clause (e.g. a named-restaurant timing clause)
+for the commonsense fix, which the full-checker gate correctly refuses to commit. Both are legitimate
+solver-level findings the "hard tail" framing had obscured, not evidence the repair script is
+incomplete. See the unresolved-uid residual reasons printed by `repair_commonsense.py` for the
+current list.
 
 ### How the recovery happened
 

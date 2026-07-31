@@ -50,6 +50,17 @@ def _append_error(telemetry: dict[str, Any], message: str) -> None:
     telemetry["error"] = message if not prev else f"{prev} | {message}"
 
 
+def _recover_search_telemetry(solve_fn) -> dict:
+    getter = getattr(solve_fn, "get_search_telemetry", None)
+    if not callable(getter):
+        return {}
+    try:
+        telemetry = getter()
+    except Exception:
+        return {}
+    return telemetry if isinstance(telemetry, dict) else {}
+
+
 def _recover_solve_plan(solve_fn) -> dict | None:
     getter = getattr(solve_fn, "get_timeout_recovery_plan", None)
     if not callable(getter):
@@ -305,6 +316,9 @@ def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -
     def _get_timeout_recovery_plan() -> dict | None:
         return agent.get_timeout_recovery_plan()
 
+    def _get_search_telemetry() -> dict:
+        return dict(getattr(agent, "last_search_telemetry", None) or {})
+
     def _ground_and_check(plan: dict):
         if last_query is None:
             return False, plan, None, {}
@@ -318,6 +332,7 @@ def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -
         return agent.apply_refine_edits(plan, last_query, edits)
 
     setattr(_solve, "get_timeout_recovery_plan", _get_timeout_recovery_plan)
+    setattr(_solve, "get_search_telemetry", _get_search_telemetry)
     setattr(_solve, "ground_and_check", _ground_and_check)
     setattr(_solve, "apply_refine_edits", _apply_refine_edits)
 
@@ -376,6 +391,11 @@ def solve_phase2(
         "llm_parse_error": None,
         "llm_parse_skipped_deadline": False,
         "variants_count": 0,
+        # roadmap W4 step 0: solver search telemetry (restarts_used, stop_reason,
+        # candidates_evaluated, best_found_at_restart). Empty when the solve stage didn't run
+        # (e.g. no solve_fn) or the underlying solve_fn doesn't expose it (e.g. an injected test
+        # stub); a timed-out solve also reports empty (see TPCAgent._solve's reset comment).
+        "search_telemetry": {},
     }
 
     # --- Stage 1: parse ---------------------------------------------------
@@ -430,6 +450,7 @@ def solve_phase2(
                 telemetry["solve_recovered_from_error"] = True
             else:
                 plan_candidate = None
+        telemetry["search_telemetry"] = _recover_search_telemetry(solve_fn)
     telemetry["stage_sec"]["solve"] = time.perf_counter() - t0
 
     # --- Stage 3: improve (deterministic densify already inside TPCAgent; optional bounded,

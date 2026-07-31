@@ -66,7 +66,10 @@ def test_autodetect_base_url_and_model_stays_parse_off(monkeypatch):
     assert flags.llm_parse is False
 
 
-def test_explicit_backend_keeps_existing_parse_default(monkeypatch):
+def test_explicit_backend_keeps_parse_off_by_default(monkeypatch):
+    """TPC_P2_LLM_PARSE is an explicit recorded decision (roadmap W8), not an auto-enable: a
+    configured backend alone must not turn the parse audit on, only an explicit override does
+    (see test_operator_override_reaches_explicit_backend below)."""
     import solve_phase2 as runner
 
     _clear_llm_env(monkeypatch)
@@ -79,6 +82,21 @@ def test_explicit_backend_keeps_existing_parse_default(monkeypatch):
     assert client.backend == "deepinfra"
     assert client.backend_source == "env-explicit"
     assert flags.llm_backend == "deepinfra"
+    assert flags.llm_parse is False
+
+
+def test_operator_override_reaches_explicit_backend(monkeypatch):
+    import solve_phase2 as runner
+
+    _clear_llm_env(monkeypatch)
+    monkeypatch.setattr(runner, "_read_local_config", lambda path=runner.DEFAULT_CONFIG_PATH: {})
+    _stub_client_builder(monkeypatch, runner)
+    monkeypatch.setenv("TPC_P2_LLM_BACKEND", "deepinfra")
+    monkeypatch.setenv("TPC_P2_LLM_PARSE", "1")
+
+    client, flags = runner.resolve_llm_client_and_flags()
+
+    assert client.backend == "deepinfra"
     assert flags.llm_parse is True
 
 
