@@ -414,13 +414,12 @@
           ]
         },
         {
-          "type": "airplane",
-          "start_time": "18:32",
-          "end_time": "20:03",
-          "start": "Shanghai Pudong International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 582.65,
-          "cost": 582.65,
+          "type": "attraction",
+          "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+          "start_time": "14:18",
+          "end_time": "15:08",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -435,21 +434,64 @@
             },
             {
               "start": "Qufu Road-Metro Station",
-              "end": "Pudong International Airport-Metro Station",
+              "end": "Yuanshen Sports Center-Metro Station",
               "mode": "metro",
               "start_time": "14:04",
+              "end_time": "14:16",
+              "distance": 6.1,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "mode": "walk",
+              "start_time": "14:16",
+              "end_time": "14:18",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:32",
+          "end_time": "20:03",
+          "start": "Shanghai Pudong International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 582.65,
+          "cost": 582.65,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
+              "end": "Yuanshen Sports Center-Metro Station",
+              "mode": "walk",
+              "start_time": "15:08",
               "end_time": "15:10",
-              "distance": 33.41,
-              "price": 7,
-              "cost": 7,
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Yuanshen Sports Center-Metro Station",
+              "end": "Pudong International Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "15:10",
+              "end_time": "16:04",
+              "distance": 27.38,
+              "price": 6,
+              "cost": 6,
               "tickets": 1
             },
             {
               "start": "Pudong International Airport-Metro Station",
               "end": "Shanghai Pudong International Airport",
               "mode": "walk",
-              "start_time": "15:10",
-              "end_time": "15:25",
+              "start_time": "16:04",
+              "end_time": "16:19",
               "distance": 1.27,
               "price": 0,
               "cost": 0
@@ -461,5 +503,5 @@
     }
   ],
   "elapsed_time(sec)": 61.475136518478394,
-  "_eval_score": 94.54523809523809
+  "_eval_score": 95.3728354978355
 }

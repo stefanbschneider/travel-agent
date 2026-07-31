@@ -557,13 +557,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "14:47",
-          "end_time": "21:50",
-          "start": "Wuhan Station",
-          "end": "Chongqing North Railway Station",
-          "price": 452.8,
-          "cost": 1358.4,
+          "type": "attraction",
+          "position": "Former Site of the New Fourth Army Headquarters in Hankou",
+          "start_time": "13:25",
+          "end_time": "14:15",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -578,11 +577,54 @@
             },
             {
               "start": "Erqi Road-Metro Station",
-              "end": "Wuhan Station East Square-Metro Station",
+              "end": "Toudao Street-Metro Station",
               "mode": "metro",
               "start_time": "13:16",
-              "end_time": "13:37",
-              "distance": 10.57,
+              "end_time": "13:17",
+              "distance": 0.92,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Toudao Street-Metro Station",
+              "end": "Former Site of the New Fourth Army Headquarters in Hankou",
+              "mode": "walk",
+              "start_time": "13:17",
+              "end_time": "13:25",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "14:47",
+          "end_time": "21:50",
+          "start": "Wuhan Station",
+          "end": "Chongqing North Railway Station",
+          "price": 452.8,
+          "cost": 1358.4,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Former Site of the New Fourth Army Headquarters in Hankou",
+              "end": "Toudao Street-Metro Station",
+              "mode": "walk",
+              "start_time": "14:15",
+              "end_time": "14:23",
+              "distance": 0.72,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Toudao Street-Metro Station",
+              "end": "Wuhan Station East Square-Metro Station",
+              "mode": "metro",
+              "start_time": "14:23",
+              "end_time": "14:44",
+              "distance": 10.9,
               "price": 4,
               "cost": 12,
               "tickets": 3
@@ -591,8 +633,8 @@
               "start": "Wuhan Station East Square-Metro Station",
               "end": "Wuhan Station",
               "mode": "walk",
-              "start_time": "13:37",
-              "end_time": "13:39",
+              "start_time": "14:44",
+              "end_time": "14:46",
               "distance": 0.19,
               "price": 0,
               "cost": 0
@@ -604,5 +646,5 @@
     }
   ],
   "elapsed_time(sec)": 61.759655237197876,
-  "_eval_score": 94.80067155067155
+  "_eval_score": 95.27437641723355
 }

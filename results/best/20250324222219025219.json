@@ -19,6 +19,50 @@
           "FlightID": "FL173"
         },
         {
+          "type": "lunch",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "11:37",
+          "end_time": "12:22",
+          "price": 7.0,
+          "cost": 28.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Capital International Airport",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "taxi",
+              "start_time": "11:02",
+              "end_time": "11:37",
+              "distance": 23.44,
+              "price": 100.2,
+              "cost": 100.2,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "12:23",
+          "end_time": "13:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "12:22",
+              "end_time": "12:23",
+              "distance": 1.0,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "The Palace Museum",
           "start_time": "15:54",
@@ -28,14 +72,15 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Beijing Capital International Airport",
+              "start": "Corner Tower",
               "end": "The Palace Museum",
-              "mode": "walk",
-              "start_time": "11:02",
-              "end_time": "15:54",
-              "distance": 24.33668728023975,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "13:13",
+              "end_time": "13:13",
+              "distance": 0.63,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ]
         },
@@ -268,5 +313,5 @@
     }
   ],
   "elapsed_time(sec)": 60.866087913513184,
-  "_eval_score": 89.30555555555556
+  "_eval_score": 90.27777777777777
 }

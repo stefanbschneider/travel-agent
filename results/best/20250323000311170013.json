@@ -204,13 +204,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "14:52",
-          "start": "Nanjing Station",
-          "end": "Shenzhen Station",
-          "price": 462.73,
-          "cost": 462.73,
+          "type": "attraction",
+          "position": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+          "start_time": "14:27",
+          "end_time": "15:17",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -225,21 +224,106 @@
             },
             {
               "start": "Clover Garden-Metro Station",
-              "end": "Nanjing Station-Metro Station",
+              "end": "Rooster Crowing Temple-Metro Station",
               "mode": "metro",
               "start_time": "14:07",
-              "end_time": "14:20",
-              "distance": 6.56,
-              "price": 3,
-              "cost": 3,
+              "end_time": "14:14",
+              "distance": 3.99,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "mode": "walk",
+              "start_time": "14:14",
+              "end_time": "14:27",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cherry Blossom Avenue",
+          "start_time": "15:44",
+          "end_time": "16:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Ancient Jiming Temple - Bhikkhuni Buddhist College Library",
+              "end": "Rooster Crowing Temple-Metro Station",
+              "mode": "walk",
+              "start_time": "15:17",
+              "end_time": "15:30",
+              "distance": 1.09,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Rooster Crowing Temple-Metro Station",
+              "end": "Jiuhua Mountain-Metro Station",
+              "mode": "metro",
+              "start_time": "15:30",
+              "end_time": "15:31",
+              "distance": 0.75,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Jiuhua Mountain-Metro Station",
+              "end": "Cherry Blossom Avenue",
+              "mode": "walk",
+              "start_time": "15:31",
+              "end_time": "15:44",
+              "distance": 1.12,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "14:52",
+          "start": "Nanjing Station",
+          "end": "Shenzhen Station",
+          "price": 462.73,
+          "cost": 462.73,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Cherry Blossom Avenue",
+              "end": "Jiuhua Mountain-Metro Station",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "16:47",
+              "distance": 1.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiuhua Mountain-Metro Station",
+              "end": "Nanjing Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:47",
+              "end_time": "16:54",
+              "distance": 3.66,
+              "price": 2,
+              "cost": 2,
               "tickets": 1
             },
             {
               "start": "Nanjing Station-Metro Station",
               "end": "Nanjing Station",
               "mode": "walk",
-              "start_time": "14:20",
-              "end_time": "14:22",
+              "start_time": "16:54",
+              "end_time": "16:56",
               "distance": 0.25,
               "price": 0,
               "cost": 0
@@ -251,5 +335,5 @@
     }
   ],
   "elapsed_time(sec)": 53.06244206428528,
-  "_eval_score": 91.61309523809524
+  "_eval_score": 93.01275510204081
 }

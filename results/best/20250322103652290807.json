@@ -19,6 +19,28 @@
           "TrainID": "D636"
         },
         {
+          "type": "attraction",
+          "position": "Ageless Village",
+          "start_time": "09:19",
+          "end_time": "10:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Nanjing South Railway Station",
+              "end": "Ageless Village",
+              "mode": "taxi",
+              "start_time": "08:46",
+              "end_time": "09:19",
+              "distance": 22.38,
+              "price": 95.42,
+              "cost": 95.42,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
           "start_time": "11:00",
@@ -28,14 +50,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Nanjing South Railway Station",
+              "start": "Ageless Village",
               "end": "Nanjing Grand Restaurant (Fuzimiao Pingjiangfu Branch)",
               "mode": "taxi",
-              "start_time": "08:46",
-              "end_time": "08:54",
-              "distance": 5.8,
-              "price": 25.02,
-              "cost": 25.02,
+              "start_time": "10:09",
+              "end_time": "10:37",
+              "distance": 18.7,
+              "price": 78.87,
+              "cost": 78.87,
               "cars": 1
             }
           ]
@@ -190,6 +212,71 @@
           ]
         },
         {
+          "type": "lunch",
+          "position": "Zhu's Plum Blossom Cake",
+          "start_time": "13:13",
+          "end_time": "13:58",
+          "price": 6.0,
+          "cost": 18.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Ginkgo Lake Amusement Park",
+              "end": "Zhu's Plum Blossom Cake",
+              "mode": "taxi",
+              "start_time": "12:32",
+              "end_time": "13:13",
+              "distance": 27.84,
+              "price": 119.98,
+              "cost": 119.98,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deji Art Museum",
+          "start_time": "14:00",
+          "end_time": "14:50",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Zhu's Plum Blossom Cake",
+              "end": "Deji Art Museum",
+              "mode": "taxi",
+              "start_time": "13:58",
+              "end_time": "14:00",
+              "distance": 1.64,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deji Art Space",
+          "start_time": "14:50",
+          "end_time": "15:40",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Deji Art Museum",
+              "end": "Deji Art Space",
+              "mode": "walk",
+              "start_time": "14:50",
+              "end_time": "14:50",
+              "distance": 0.025846238920026805,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "17:00",
           "end_time": "18:12",
@@ -200,14 +287,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Ginkgo Lake Amusement Park",
+              "start": "Deji Art Space",
               "end": "Nanjing Station",
               "mode": "taxi",
-              "start_time": "12:32",
-              "end_time": "13:19",
-              "distance": 31.89,
-              "price": 138.21,
-              "cost": 138.21,
+              "start_time": "15:40",
+              "end_time": "15:46",
+              "distance": 4.08,
+              "price": 18.98,
+              "cost": 18.98,
               "cars": 1
             }
           ],
@@ -217,5 +304,5 @@
     }
   ],
   "elapsed_time(sec)": 60.22576689720154,
-  "_eval_score": 94.4702380952381
+  "_eval_score": 97.375
 }

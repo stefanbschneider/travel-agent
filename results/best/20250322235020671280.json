@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:00",
-          "end_time": "20:14",
-          "start": "Beijing South Railway Station",
-          "end": "Nanjing South Railway Station",
-          "price": 583.83,
-          "cost": 1751.4900000000002,
+          "type": "attraction",
+          "position": "798 Art District",
+          "start_time": "14:46",
+          "end_time": "15:36",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
@@ -393,21 +392,64 @@
             },
             {
               "start": "National Art Museum of China-Metro Station",
-              "end": "Beijing South Railway Station-Metro Station",
+              "end": "Wangjing South-Metro Station",
               "mode": "metro",
               "start_time": "14:07",
-              "end_time": "14:21",
-              "distance": 7.06,
-              "price": 3,
-              "cost": 9,
+              "end_time": "14:25",
+              "distance": 9.09,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Wangjing South-Metro Station",
+              "end": "798 Art District",
+              "mode": "walk",
+              "start_time": "14:25",
+              "end_time": "14:46",
+              "distance": 1.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:00",
+          "end_time": "20:14",
+          "start": "Beijing South Railway Station",
+          "end": "Nanjing South Railway Station",
+          "price": 583.83,
+          "cost": 1751.4900000000002,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "798 Art District",
+              "end": "Wangjing South-Metro Station",
+              "mode": "walk",
+              "start_time": "15:36",
+              "end_time": "15:57",
+              "distance": 1.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangjing South-Metro Station",
+              "end": "Beijing South Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:57",
+              "end_time": "16:28",
+              "distance": 15.93,
+              "price": 5,
+              "cost": 15,
               "tickets": 3
             },
             {
               "start": "Beijing South Railway Station-Metro Station",
               "end": "Beijing South Railway Station",
               "mode": "walk",
-              "start_time": "14:21",
-              "end_time": "14:21",
+              "start_time": "16:28",
+              "end_time": "16:28",
               "distance": 0.02,
               "price": 0,
               "cost": 0
@@ -419,5 +461,5 @@
     }
   ],
   "elapsed_time(sec)": 61.77208733558655,
-  "_eval_score": 93.91600529100529
+  "_eval_score": 94.41666666666666
 }

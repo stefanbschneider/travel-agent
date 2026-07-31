@@ -19,6 +19,28 @@
           "FlightID": "FL657"
         },
         {
+          "type": "attraction",
+          "position": "Bao Guo Temple",
+          "start_time": "10:05",
+          "end_time": "10:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Daxing International Airport",
+              "end": "Bao Guo Temple",
+              "mode": "taxi",
+              "start_time": "09:00",
+              "end_time": "10:05",
+              "distance": 43.93,
+              "price": 192.37,
+              "cost": 384.74,
+              "cars": 2
+            }
+          ]
+        },
+        {
           "type": "lunch",
           "position": "Tidu (Beijing Fang Branch)",
           "start_time": "11:00",
@@ -28,35 +50,15 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Beijing Daxing International Airport",
-              "end": "Daxing Airport-Metro Station",
-              "mode": "walk",
-              "start_time": "09:00",
-              "end_time": "09:11",
-              "distance": 0.93,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Daxing Airport-Metro Station",
-              "end": "Qianmen-Metro Station",
-              "mode": "metro",
-              "start_time": "09:11",
-              "end_time": "10:37",
-              "distance": 43.2,
-              "price": 8,
-              "cost": 40,
-              "tickets": 5
-            },
-            {
-              "start": "Qianmen-Metro Station",
+              "start": "Bao Guo Temple",
               "end": "Tidu (Beijing Fang Branch)",
-              "mode": "walk",
-              "start_time": "10:37",
-              "end_time": "10:41",
-              "distance": 0.39,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "10:55",
+              "end_time": "10:58",
+              "distance": 2.47,
+              "price": 13.33,
+              "cost": 26.66,
+              "cars": 2
             }
           ]
         },
@@ -330,6 +332,72 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "14:11",
+          "end_time": "15:01",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Yonghe Temple",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "14:07",
+              "end_time": "14:11",
+              "distance": 3.05,
+              "price": 15.38,
+              "cost": 30.76,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Cining Palace",
+          "start_time": "15:02",
+          "end_time": "15:52",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Corner Tower",
+              "end": "Cining Palace",
+              "mode": "taxi",
+              "start_time": "15:01",
+              "end_time": "15:02",
+              "distance": 0.69,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "17:00",
+          "end_time": "17:45",
+          "price": 7.0,
+          "cost": 35.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Cining Palace",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "taxi",
+              "start_time": "15:52",
+              "end_time": "15:54",
+              "distance": 1.45,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "19:54",
           "end_time": "21:01",
@@ -340,35 +408,15 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Yonghe Temple",
-              "end": "Yonghe Temple-Metro Station",
-              "mode": "walk",
-              "start_time": "14:07",
-              "end_time": "14:15",
-              "distance": 0.72,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Yonghe Temple-Metro Station",
-              "end": "Terminal 2-Metro Station",
-              "mode": "metro",
-              "start_time": "14:15",
-              "end_time": "14:56",
-              "distance": 20.82,
-              "price": 5,
-              "cost": 25,
-              "tickets": 5
-            },
-            {
-              "start": "Terminal 2-Metro Station",
+              "start": "Helude Candied Hawthorn Sticks",
               "end": "Beijing Capital International Airport",
-              "mode": "walk",
-              "start_time": "14:56",
-              "end_time": "15:06",
-              "distance": 0.88,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "18:20",
+              "distance": 23.44,
+              "price": 100.2,
+              "cost": 200.4,
+              "cars": 2
             }
           ],
           "FlightID": "FL160"
@@ -377,5 +425,5 @@
     }
   ],
   "elapsed_time(sec)": 62.7610080242157,
-  "_eval_score": 92.79166666666666
+  "_eval_score": 96.67261904761905
 }

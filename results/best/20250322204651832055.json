@@ -372,13 +372,12 @@
           ]
         },
         {
-          "type": "train",
-          "start_time": "17:23",
-          "end_time": "21:33",
-          "start": "Suzhou North Station",
-          "end": "Beijing South Railway Station",
-          "price": 668.44,
-          "cost": 668.44,
+          "type": "attraction",
+          "position": "A Hidden Wonderland",
+          "start_time": "14:30",
+          "end_time": "15:20",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
@@ -393,11 +392,96 @@
             },
             {
               "start": "Oriental Gate-Metro Station",
-              "end": "Suzhou North Railway Station-Metro Station",
+              "end": "Fuyuan Road-Metro Station",
               "mode": "metro",
               "start_time": "13:57",
-              "end_time": "14:21",
-              "distance": 12.07,
+              "end_time": "14:18",
+              "distance": 10.9,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "A Hidden Wonderland",
+              "mode": "walk",
+              "start_time": "14:18",
+              "end_time": "14:30",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Jingu Li Art Gallery",
+          "start_time": "15:56",
+          "end_time": "16:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "A Hidden Wonderland",
+              "end": "Fuyuan Road-Metro Station",
+              "mode": "walk",
+              "start_time": "15:20",
+              "end_time": "15:32",
+              "distance": 1.03,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Fuyuan Road-Metro Station",
+              "end": "Meixiang-Metro Station",
+              "mode": "metro",
+              "start_time": "15:32",
+              "end_time": "15:47",
+              "distance": 7.57,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Meixiang-Metro Station",
+              "end": "Jingu Li Art Gallery",
+              "mode": "walk",
+              "start_time": "15:47",
+              "end_time": "15:56",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "17:23",
+          "end_time": "21:33",
+          "start": "Suzhou North Station",
+          "end": "Beijing South Railway Station",
+          "price": 668.44,
+          "cost": 668.44,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Jingu Li Art Gallery",
+              "end": "Meixiang-Metro Station",
+              "mode": "walk",
+              "start_time": "16:46",
+              "end_time": "16:55",
+              "distance": 0.79,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meixiang-Metro Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "16:55",
+              "end_time": "17:14",
+              "distance": 9.67,
               "price": 4,
               "cost": 4,
               "tickets": 1
@@ -406,8 +490,8 @@
               "start": "Suzhou North Railway Station-Metro Station",
               "end": "Suzhou North Station",
               "mode": "walk",
-              "start_time": "14:21",
-              "end_time": "14:22",
+              "start_time": "17:14",
+              "end_time": "17:15",
               "distance": 0.14,
               "price": 0,
               "cost": 0
@@ -419,5 +503,5 @@
     }
   ],
   "elapsed_time(sec)": 60.851630210876465,
-  "_eval_score": 95.08531746031747
+  "_eval_score": 96.24729437229436
 }
