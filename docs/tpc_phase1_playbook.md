@@ -39,11 +39,18 @@ Recovery was two safe, already-scripted operations, each gated so `results/best`
    higher than what is already there, so this can never regress an untouched query. Three rounds
    (`60s`/`120` restarts, then `300s`/`1200` restarts on the residual, then a
    `TPC_COMMONSENSE_FIRST=1` pass on the smaller residual) took overall `61.16 -> 95.70` and cut the
-   fully-failing count from `418` to `22`. The `22` that remain are a genuinely hard tail — e.g. a
-   3-person train-only round trip where the solver's random-restart search sometimes overrides a hard
-   `intercity_mode` constraint with a random airplane choice (`tpc_agent.py`'s `_random_params`, not a
-   train-availability problem: `WorldEnv` had `31`/`22` train options each way for that example) — not
-   something a bigger budget alone kept fixing; further work here is an open follow-up, not a quick win.
+   fully-failing count from `418` to `22`. The `22` that remain are a genuinely hard tail. One
+   contributing cause, found while diagnosing a 3-person Nanjing<->Chongqing train-only round trip in
+   that tail: the solver's random-restart search sometimes overrode a hard `intercity_mode` constraint
+   with a random airplane choice (`tpc_agent.py`'s `_random_params`), burning restart budget on
+   candidates guaranteed to fail acceptance — not a train-availability problem (`WorldEnv` had `31`/`22`
+   train options each way for that example). Fixed directly (unconditional bug fix, shared TPCAgent
+   code, so it also applies to the Phase 2 no-oracle path): `_random_params` no longer randomizes a
+   direction `constraints.intercity_mode` already pins. Retrying the `22`-query tail under the fix
+   (`TPC_COMMONSENSE_FIRST=1`, `300s`/`2400` restarts) recovered `0` more — the mode override was a
+   real, wasted-budget bug worth fixing on its own merits, but not this tail's binding constraint;
+   whatever else makes these `22` hard (tight same-day arrival/meal scheduling, per manual inspection)
+   remains an open follow-up, not a quick win.
 2. **Densify already-accepted plans** (`TPC_PACK_DAV=1 TPC_PACK_DDR=1 scripts/densify.py`, then
    `make merge`). `densify.py` only mutates a plan that is already accepted, only keeps the result if
    the full checker *still* accepts it and its preference sum is strictly higher, and `make merge`
