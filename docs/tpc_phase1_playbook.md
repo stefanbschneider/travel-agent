@@ -54,6 +54,27 @@ solver-level findings the "hard tail" framing had obscured, not evidence the rep
 incomplete. See the unresolved-uid residual reasons printed by `repair_commonsense.py` for the
 current list.
 
+### W2: preference residual over the post-W1 split (2026-07-31)
+
+Ran the existing densify controller over the preference-ranked tail, per
+[Shortcomings and plan, W2](tpc_shortcomings_and_plan.md#w2-close-the-addressable-phase-1-preference-residual):
+
+```bash
+TPC_PACK_DAV=1 TPC_PACK_DDR=1 .venv/bin/python scripts/iterate_tail.py \
+  --split tpc_phase1 --rank-mode preference --pref-metric overall --runner densify \
+  --rounds 4 --top-k 240 --stop-no-improve-rounds 1 \
+  --run-id phase1-preference-postW1 --resume
+```
+
+**Result: converged after round 0 with `best_updates: 0`.** The 240-query preference-ranked focus
+split produced no plan whose densified preference score beat its existing `results/best` entry, so
+the controller stopped after one no-improve round and the final full-split score is unchanged from
+post-W1 (`97.47477963683579` to the digit). `results/best/` has zero diffs from this run. This is a
+clean null result, not a failure: it means the remaining `~+0.3` to `+0.6` preference headroom
+estimated pre-W1 is structural (travel-day meal gaps that are correct to leave empty, single-day
+trips with no room for a fourth attraction, hops already at their shortest available mode), not
+addressable by inserting more activities into already-accepted plans.
+
 ### How the recovery happened
 
 The `2026-07-30` sync (below) turned `418/1000` accepted plans invalid: `344` failed the new

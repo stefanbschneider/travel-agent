@@ -55,9 +55,13 @@ hours), not something to fake or shortcut inside an implementation session.
   configuration, and `agent_env/config.phase2.example.toml` + `agent_env/README.md` already documented the
   `[phase2.llm]` block. **The real-endpoint reachability exercise (item 1 in §8 below) remains open** — it
   needs a live SGLang/OpenAI-compatible server, which this session did not have.
+- **W2 (close the addressable Phase 1 preference residual): closed, converged with zero gain.** The
+  densify pass over the post-W1 preference-ranked tail found `best_updates: 0`; the full-split score is
+  unchanged (`97.47477963683579`, same as post-W1). Per this item's own ship bar, a clean immediate
+  convergence with no gain means the remaining preference deficit is structural, and the item is closed,
+  not failed.
 
-**Still open, unchanged from the original plan below:** W2 (in progress as of this writing — see its
-section for the live result once the run finishes), W3, W4 steps 1-2, W6, W7, W9, W10, and W8's
+**Still open, unchanged from the original plan below:** W3, W4 steps 1-2, W6, W7, W9, W10, and W8's
 reachability item. These require either a long (`8` h+) pinned evaluation-machine run or a reachable LLM
 endpoint neither of which this session had; do not re-derive their priority reasoning, it is unchanged.
 
@@ -123,10 +127,12 @@ six times more valuable per point than preference.** Chase acceptance, not polis
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | before W1 | `99.89` | `97.80` | `96.47` | `97.80` | `90.11` | `94.46` | `84.26` | **`96.45`** |
 | after W1 | `99.93` | `98.8` | `97.98` | `98.8` | `91.11` | `95.46` | `85.15` | **`97.47`** |
+| after W2 | `99.93` | `98.8` | `97.98` | `98.8` | `91.11` | `95.46` | `85.15` | **`97.47`** |
 
-W2 (the preference pass over the post-W1 split) is in progress; its result will be recorded in the
-[Phase 1 playbook](tpc_phase1_playbook.md) once it converges, per this doc's own protocol of never
-asserting a number this document itself did not measure.
+W2 (the preference pass over the post-W1 split) converged after round 0 with `best_updates: 0` — no
+row changed from after-W1, so the table's last two rows are identical to the digit. See
+[W2](#w2-close-the-addressable-phase-1-preference-residual) for the run and why a null result closes
+this item rather than failing it.
 
 ### Phase 2 (familiar-100 val, no-oracle harness)
 
@@ -152,7 +158,7 @@ estimate survives contact with the implementation.
 | # | Shortcoming | Phase | Leverage | Confidence | Item |
 | --- | --- | --- | --- | --- | --- |
 | S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** est., **`+1.02` measured** (10/22 repaired) | **CLOSED** (partial; §3.1) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
-| S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` | **in progress** | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
+| S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` est., **`+0` measured** | **CLOSED** (converged with zero gain; §3.2/W2) | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
 | S3 | No post-sync `900 s` reference row — every Phase 2 gate is currently unrunnable | 2 | blocking, `0` on its own | **open** (needs the evaluation workstream's dedicated machine, `8` h+) | [W3](#w3-re-establish-the-post-sync-900-s-reference-row) |
 | S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry) landed, steps 1-2 (use the cores) remain | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, steps 1-2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
 | S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
@@ -346,6 +352,21 @@ evidence about the solver, unlike the current "hard tail" framing which this ite
 ---
 
 ### W2: close the addressable Phase 1 preference residual
+
+> **Status: CLOSED, 2026-07-31 — converged immediately with zero gain.** Ran exactly the command below
+> (`TPC_PACK_DAV=1 TPC_PACK_DDR=1 scripts/iterate_tail.py ... --rounds 4 --stop-no-improve-rounds 1`)
+> against the post-W1 split. Round 0's densify pass over the 240-query preference-ranked focus split
+> found **`best_updates: 0`** — no plan improved enough to replace its `results/best` entry — so the
+> controller correctly stopped after one no-improve round per `--stop-no-improve-rounds 1`, and the
+> final full-split score is unchanged from post-W1: overall `97.47477963683579` to the same digit
+> (`MicEPR 99.93`, `MacEPR 98.8`, `C-LPR 97.98`, `FPR 98.8`, `DAV 91.11`, `ATT 95.46`, `DDR 85.15`).
+> `results/best/` has zero diffs from this run (verified via `git status`), so there is nothing to
+> merge or commit for this item. Per this section's own ship bar below: **"if this one converges
+> immediately with no gain, record that and stop — the remaining deficit is then structural and this
+> item is closed, not failed."** That is exactly what happened, and matches the same outcome the
+> pre-W1 preference residual analysis predicted was likely once W1's repair changed the set of
+> already-accepted plans the densify pass has to work with. The rest of this section is kept as the
+> record of what was tried.
 
 **Owner:** implementation. **Do W1 first** — preference on a failing plan is worth zero, and W1 changes the
 denominator. **Expected gain: `+0.3` to `+0.6`.**
