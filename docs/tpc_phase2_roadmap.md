@@ -63,6 +63,8 @@ Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260
 - **The current reference row is already LLM-backed at Stage 1.** [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json) records `llm_config.backend=deepinfra`, `TPC_P2_LLM_PARSE=1`, and `llm_parse_attempted=80`, `llm_parse_failed=0`. The main harness is therefore not LLM-free today; the open decision is whether keeping parse audit on is helping enough to justify the cost/risk.
 - **Late-night current-`main` rows did not reveal a new promotion candidate.** On sha `6d354b99`, the single-repeat `900 s` rows [baseline](../results/phase2_baselines/runs/20260725T202012Z.json), [cascade](../results/phase2_baselines/runs/20260725T214823Z.json), [transport](../results/phase2_baselines/runs/20260725T231555Z.json), [intercity](../results/phase2_baselines/runs/20260726T004345Z.json), and [all3](../results/phase2_baselines/runs/20260726T034030Z.json) all kept e2e FPR flat at `21.25`; `all3` nudged `overall_true` to `45.43`, but every arm stayed below the last known good [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json) row's `47.04`. Treat these as cautionary screens, not promotion evidence.
 - **A current-head quick screen makes `TPC_P2_LLM_PARSE` the first policy decision for the final evening.** Local `2026-07-26` end-to-end screen on `main` (`n=10`, `60 s`, DeepInfra timeout `6 s`) gave parse off `FPR 30.0`, `overall_true 54.48`, `1` timeout vs. parse audit on `FPR 20.0`, `overall_true 45.54`, `2` timeouts. That is not enough to promote parse-off by itself, but it is strong enough to stop assuming the current auto-enabled audit is helping current head.
+- **LLM reachability closed against a real live endpoint (2026-07-31 night).** `TPC_P2_LLM_BACKEND=deepinfra` against the real DeepInfra API (key loaded from `.env` via `load_local_env()`, never read/echoed directly) completes both the happy path (a genuine network call fires and returns a real completion) and the dead-endpoint path (`valid=True fallback=False`, failure recorded only in telemetry, no crash) cleanly. See [Shortcomings and plan W8](tpc_shortcomings_and_plan.md#w8-verify-llm-reachability-and-close-the-parse-policy-decision) for the full record; W8 is now fully closed.
+- **W4 step 0's own telemetry had a blind spot for exactly the queries it exists to explain — now fixed.** Reading `search_telemetry` on 8 real queries found 2 of 8 came back `{}` because a `func_timeout` kill lands mid-restart-loop, before `_solve`'s one-shot final telemetry assignment ever ran. Fixed by snapshotting on every leader-improving `consider()` call (tagged `stop_reason="interrupted"`); pure observation, no behavior change, unit-tested and reverified live. The 8-query read itself shows no single "found early" pattern (`0%-100%` of the restart budget across queries), which favors W4 step 2 (parallel restarts) over step 1. A CP-SAT worker screen (step 1, `1 -> 4` workers matched to a 4-core box) came back RED but is not conclusive at that core count. See [Shortcomings and plan W4](tpc_shortcomings_and_plan.md#w4-use-the-16-confirmed-evaluation-cpus).
 
 - End-to-end: FPR `25.0`, `overall_true 47.04`
 - Solver-only: FPR `27.5`, `overall_true 49.72`
@@ -303,10 +305,14 @@ Recorded because it is a packaging fact, not an opinion, and it survives the dea
 Consequence: as packaged, the Phase 2 path is fully deterministic and cannot reach the organizers'
 Qwen3.6-27B/SGLang endpoint — the reference row's `llm_config.backend=deepinfra` came from local
 environment variables, not from anything in the tree. The optional plumbing to auto-detect an
-OpenAI-compatible endpoint (`OPENAI_BASE_URL` and friends) with the parse audit still default-off was
-scoped as Task 9 of the final-night brief and **was not implemented**. Given that the latest
-current-head parse screen was RED for audit-on, shipping deterministic is the defensible position;
-the gap to close, if there is ever another window, is reachability, not more LLM stages.
+OpenAI-compatible endpoint (`OPENAI_BASE_URL` and friends) with the parse audit still default-off,
+originally scoped as Task 9 of the final-night brief, **has since landed** (`_autodetect_openai_cfg` /
+`resolve_llm_client_and_flags` in `agent_env/scripts/solve_phase2.py`) and was verified 2026-07-31 night
+to work end-to-end against a real live endpoint (both the happy path and the dead-endpoint path — see
+[Current status snapshot](#current-status-snapshot)). It only ever activates when an operator points an
+env var at a real endpoint, which the packaged submission never does, so this does not change the
+packaging fact above. Given that the latest current-head parse screen was RED for audit-on, shipping
+deterministic is the defensible position; the reachability gap this paragraph used to describe is closed.
 
 ## Shortcomings of the current agent
 
@@ -323,12 +329,14 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
    that remains is the single-day-trip overnight-accommodation defect, which no repair pass can reach
    today.
 5. **Parser value-segmentation residual — largely closed, pending gate.** The comma-/`" and "`-in-name `wrong_value` residual was fixed on `main` (`62df2a0b`) via maximum-munch catalog segmentation plus a restaurant/hotel matching-pool broadening, taking familiar-100 F1 `0.9316 -> 0.9908` (wrong_value `47 -> 6`). It is diagnostic evidence only — not yet through the end-to-end gate. The distinct abbreviation-period truncation bug (`"St. Regis"`, `"No. 3955 …"`) in the base regex parser's `_list_after_marker` is now fixed unconditionally on `main` (F1 `0.9908 -> 0.9949`, wrong_value `6 -> 3`; see [the parser chronology in the archive](archive/README.md)); a `3`-case `excluded_hotels` residual remains from a separate, already-known limit — a comma-heavy full-address value spans more raw tokens than the entity-resolution merge's bounded `_ENTITY_SEGMENT_MAX_SPAN` (`4`), so it stays fragmented rather than re-merging into one catalog name.
-6. **The LLM is unreachable in the packaged submission, which supersedes the parse-policy question.**
+6. **The LLM is unreachable in the *packaged* submission by design, and reachability itself is now verified working.**
    Local rows show the harness *can* call DeepInfra/Qwen at Stage 1 (`llm_parse_attempted=80/80` on
-   [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)), but that came from local
-   environment variables: backend defaults to `none`, `agent_env/config.toml` is gitignored, and
-   `TPCLLM` is an empty stub. The latest paired quick screen was also RED for audit-on vs. parse-off, so
-   shipping deterministic is defensible — but the open work item is *reachability*, not parse mode. See
+   [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)), and the 2026-07-31 night
+   session confirmed that call path against a real live endpoint end-to-end (happy path and dead-endpoint
+   path both clean — see [Current status snapshot](#current-status-snapshot)). In the packaged submission
+   it still never fires: backend defaults to `none`, `agent_env/config.toml` is gitignored, and `TPCLLM`
+   is an empty stub. The latest paired quick screen was also RED for audit-on vs. parse-off, so shipping
+   deterministic is defensible and unchanged. See
    [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls).
 
 ## Operating rules
@@ -372,6 +380,15 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
    (CP-SAT `num_search_workers` 1, sequential restarts), tuned on far smaller dev machines. Parallel
    restarts and/or a multi-worker CP-SAT tier convert idle cores into search inside the same
    per-query budget, with no change to the acceptance contract. Screen it like any other change.
+   **Telemetry (2026-07-31 night)**: reading `search_telemetry` on 8 real `familiar_100_val` queries
+   found no single "found early" pattern — 3 converge in the first `5%` of their restart budget, but 5
+   (including 2 that a `func_timeout` kill had been silently hiding until this session's fix) are still
+   improving `47%-100%` of the way to the wall. **A CP-SAT worker screen (`1 -> 4`, matched to this
+   machine's 4 cores, `n=20`/`60 s`) came back RED** (`overall_true` `46.78 -> 45.17`), though not
+   conclusive since `on=4` exhausts the box's own core count. Net read: **parallel restarts (step 2) is
+   the better-motivated remaining lever, not the CP-SAT worker count (step 1)** — see [Shortcomings and
+   plan W4](tpc_shortcomings_and_plan.md#w4-use-the-16-confirmed-evaluation-cpus) for the full per-query
+   table and the screen row.
 
 1. **Confirm the commonsense-first promotion at `900 s`.** Run the two pinned arms in
    [`final_night_eval_commands.md`](agents/final_night_eval_commands.md). The only open question is
@@ -383,11 +400,21 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
    schedule runs past every same-day return departure regardless of the accommodation) that this
    move cannot reach by design.
 
-3. **Close LLM reachability before adding any LLM stage.** The packaged submission cannot reach the
-   organizers' endpoint at all (see
-   [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls)). Auto-detecting an
-   OpenAI-compatible base URL with the parse audit still default-off is the prerequisite; only then is
-   a three-arm parse screen (off / audit / `extract`) meaningful.
+3. **~~Close LLM reachability before adding any LLM stage.~~ Landed 2026-07-31 night.** Exercised
+   `TPC_P2_LLM_BACKEND=deepinfra` against the real live DeepInfra endpoint (`.env`'s
+   `DEEPINFRA_API_KEY`, loaded via `load_local_env()`): a direct client call succeeded, and a full
+   `solve_phase2.py` run with `TPC_P2_LLM_PARSE=1` showed the audit genuinely firing over the network.
+   The dead-endpoint case is also clean — a closed-port `TPC_P2_LLM_BASE_URL` completes with
+   `valid=True fallback=False`, the connection failure recorded only in telemetry, never an unhandled
+   crash. This proves the client plumbing itself is correct against a real OpenAI-compatible-wire
+   endpoint; the organizers' own SGLang/Qwen3.6-27B endpoint specifically remains untested (not
+   reachable from here), but the mechanism it would go through is now verified working, not just
+   monkeypatched. The packaged submission still makes zero LLM calls by default (see
+   [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls)) — this closes the reachability
+   *exercise*, not the packaging default. A three-arm parse screen (off / audit / `extract`) against a
+   working endpoint is still open and lowest-priority (roadmap [Shortcomings and plan
+   W8](tpc_shortcomings_and_plan.md#w8-verify-llm-reachability-and-close-the-parse-policy-decision) item 2
+   already recorded the RED audit-on screen as the reason deterministic stays the default).
 
 4. **Do not promote `TPC_CASCADE_TIMED_WINDOWS` from existing evidence**, and keep both Stage 3 refine
    variants off until a screen shows `improve_committed > 0`.

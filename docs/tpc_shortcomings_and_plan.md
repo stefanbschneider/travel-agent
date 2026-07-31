@@ -2,9 +2,11 @@
 
 **Status:** active work plan, written 2026-07-31 against `main` @ `2645850`; updated 2026-07-31 (evening)
 after a same-day implementation pass closed W1, W4 step 0, W5, and the cheap half of W8 (see
-[Session update](#session-update-2026-07-31-evening) below). This document is now a **residual** work plan
-— everything closed below has its permanent record in the [Phase 1 playbook](tpc_phase1_playbook.md) or
-[Phase 2 roadmap](tpc_phase2_roadmap.md); only what is still open is kept in full detail here.
+[Session update](#session-update-2026-07-31-evening) below), and again 2026-07-31 (night) after a
+follow-up session closed W8's reachability item and made incremental progress on W4 and W3 prep (see
+[Session update: night](#session-update-2026-07-31-night) below). This document is now a **residual**
+work plan — everything closed below has its permanent record in the [Phase 1 playbook](tpc_phase1_playbook.md)
+or [Phase 2 roadmap](tpc_phase2_roadmap.md); only what is still open is kept in full detail here.
 **Audience:** an implementing agent that has *not* read the rest of `docs/`. Every work item below states
 why it matters, the exact file and function to touch, the flag name, the tests to write, the command to
 verify, and the bar that decides whether it ships.
@@ -64,6 +66,107 @@ hours), not something to fake or shortcut inside an implementation session.
 **Still open, unchanged from the original plan below:** W3, W4 steps 1-2, W6, W7, W9, W10, and W8's
 reachability item. These require either a long (`8` h+) pinned evaluation-machine run or a reachable LLM
 endpoint neither of which this session had; do not re-derive their priority reasoning, it is unchanged.
+
+## Session update (2026-07-31, night)
+
+A follow-up implementation session confirmed the DeepInfra endpoint is genuinely reachable via `.env`
+(closing W8 fully), read the W4 step 0 telemetry the previous session's instrumentation was built to
+collect, found and fixed a real gap in that instrumentation along the way, ran the cheap W4 step 1
+screen on this machine's actual 4 cores, and landed the W3 evaluator-contract-marker mechanism ahead of
+the reference row itself. This machine has **4 logical CPUs**, not the organizer's confirmed 16, and no
+dedicated evaluation box was available — per [CLAUDE.md's parallel workstreams](../CLAUDE.md#parallel-workstreams)
+the `8` h+ `900 s` items (W3's actual reference row, W4 step 2's real gate, W6, W7's full sweep, W9,
+W10) stay explicitly out of scope for an implementation session and are **unchanged, still open** below.
+
+**Closed this session:**
+
+- **W8 (reachability item): CLOSED.** Exercised `TPC_P2_LLM_BACKEND=deepinfra` against the real live
+  DeepInfra endpoint (not a mock): a direct `build_llm_client(...).complete(...)` call succeeded, and a
+  full `agent_env/scripts/solve_phase2.py` run with `TPC_P2_LLM_PARSE=1` against
+  `tpc_phase2_familiar_100_val` showed `llm_parse_attempts=2` actually firing (one success, one hitting
+  the tight `6 s` `TPC_P2_LLM_TIMEOUT_SEC` from a reduced-budget screen — expected, not a defect), both
+  queries `valid=True fallback=False`. **The dead-endpoint case is also clean**: `TPC_P2_LLM_BASE_URL`
+  pointed at a closed port (`http://127.0.0.1:1/v1`) completed with exit code `0`, `valid=True
+  fallback=False`, and the connection failure recorded only as `llm_parse_error:
+  APIConnectionError('Connection error.')` in telemetry — never an unhandled crash. W8 is now fully
+  closed: both the parse-policy decision (closed last session) and the reachability exercise (closed
+  this session) are done. **W8 is dropped from the open-items table below.**
+- **W4 step 0 (follow-up): a real gap found and fixed, not just read.** Ran
+  `agent_env/scripts/solve_phase2.py` on 8 real `tpc_phase2_familiar_100_val` queries at a `150 s`
+  budget and inspected `search_telemetry` as the previous session's own next-step flagged. Result: **2 of
+  8 queries came back with `search_telemetry == {}`** — both were timeout-recovered
+  (`solve_recovered_from_timeout=True`). Root cause: `self.last_search_telemetry` was assigned only once,
+  at the very end of `_solve` (`tpc_agent.py:1149`), so a `func_timeout` kill — which lands mid-restart-loop
+  by construction — always discarded it, silently losing telemetry for exactly the budget-bound queries
+  the instrumentation exists to explain. **Fixed**: every leader-improving `consider()` call now also
+  snapshots `self.last_search_telemetry` immediately (mirroring the existing
+  `_set_timeout_recovery_plan` snapshot at the same call site), tagged `stop_reason="interrupted"` so it's
+  never confused with one of the four real final stop reasons; a normal completion still overwrites it.
+  Pure observation, no behavior change on the emitted plan — unit-tested
+  (`tests/phase2/test_solve_early_exit.py::test_telemetry_survives_a_mid_loop_kill_instead_of_staying_empty`,
+  using a `BaseException` subclass raised from a hooked `_build_plan` to simulate the real async kill
+  shape) and reverified live: re-running the same 2 uids after the fix now shows real partial telemetry
+  (`{'restarts_used': 147, 'stop_reason': 'interrupted', ...}` and `{'restarts_used': 36, ...}`).
+  **The combined 8-query read itself is genuinely informative, if small-`n`:**
+
+  | uid (suffix) | restarts_used | stop_reason | best_found_at_restart | found-at share |
+  | --- | --- | --- | --- | --- |
+  | `00022` | 248 | budget | 131 | 52.8% |
+  | `00005` | 368 | budget | 2 | 0.5% |
+  | `00001` | 147 | interrupted | 147 | 100% (still improving at kill) |
+  | `00014` | 310 | budget | 15 | 4.8% |
+  | `00042` | 29 | converged | 14 | 48.3% |
+  | `00048` | 15 | converged | 0 | 0% |
+  | `00062` | 141 | budget | 66 | 46.8% |
+  | `00035` | 36 | interrupted | 36 | 100% (still improving at kill) |
+
+  There is **no single answer** to step 0's decisive question ("is the winner typically found in the
+  first 20% of restarts?"). Three queries converge almost immediately (`0%`, `0.5%`, `4.8%` — parallel
+  restarts would buy these little), but the other five are still improving anywhere from `47%` to `100%`
+  of the way through their restart budget — and pointedly, **both previously-invisible
+  timeout-interrupted queries are in the "still improving at the wall" group**, which is exactly the
+  population W4 step 2 (parallel restarts) would target. This is `n=8` on a `150 s` budget on a 4-core
+  box, not a `900 s`/16-core measurement, so it is suggestive rather than conclusive — but it is a
+  materially better-informed prior than step 0 had before: **step 2 (parallel restarts) looks more likely
+  to pay off than a coin flip, and is now the better-justified next move on W4** once a suitable machine
+  is available.
+- **W4 step 1 (CP-SAT worker screen): screened, RED, not promoted.** Ran the doc-specified screen, sized
+  to this machine's real 4 cores rather than the doc's illustrative `8` (`--parallel 1` as required, so
+  the single solve in flight gets the whole box): `TPC_CP_SEARCH_WORKERS` `1 -> 4`,
+  `TPC_USE_CP_SOLVER=1`, solver-only, `tpc_phase2_familiar_100_val`, `n=20`, `budget=60 s`. Committed at
+  [`20260731_solver_only_n20_b60_cp_search_workers`](../results/phase2_baselines/screens/20260731_solver_only_n20_b60_cp_search_workers/summary.json).
+  Result: FPR flat (`15.0 -> 15.0`), but `overall_true` **regressed** `46.78 -> 45.17` (`-1.61`),
+  commonsense pass `19 -> 18`, EPR-macro `95.0 -> 90.0`, C-LPR `79.15 -> 74.41`, solve `p50` up
+  `60.47s -> 60.63s`, zero new timeouts/parse failures. `phase2_gate.check_gate`-equivalent: **FAIL**
+  (`continuous_score` dropped past tolerance). Per this doc's own screen-reading rule, this is a **RED**
+  verdict: do not default on, and do not spend further time on `TPC_CP_SEARCH_WORKERS` without a reason
+  to expect a different result. **Caveat that keeps this from being a final verdict**: `on=4` exhausts
+  this box's entire core count, so the comparison cannot separate "CP-SAT portfolio search with more
+  workers is genuinely worse in this `60 s`/`n=20` regime" from "4 threads contending with the Python
+  driver process on a 4-core box is worse than 1" — the doc's own ship-bar warning for the *parallel
+  restarts* step ("do not screen at `--parallel 7` on a 4-core box") applies by the same logic here. A
+  16-core box re-screening at `on=8` (the doc's original suggestion) is the right way to settle this, not
+  a re-run here. Combined with the step-0 finding above, **W4 step 2 (parallel restarts) is now the
+  better-motivated of the two remaining W4 steps** — step 1's lever looks like a dead end at this `n`,
+  while step 0's telemetry shows real unresolved restart-budget pressure on several queries.
+- **W3 (prep only, not the reference row itself): the evaluator-contract-marker mechanism landed.**
+  The row itself still needs a dedicated `8` h+ evaluation machine this session did not have, but the
+  "also do" item in W3's brief (a marker so a future reader can't accidentally gate a post-sync row
+  against a pre-sync one) is now implemented ahead of it: `scripts/phase2_record_baseline.py` stamps
+  every recorded row with `evaluator_parity="764614c"` (the parity point `CLAUDE.md` cites), and
+  `scripts/phase2_gate.check_gate` now refuses the comparison outright — `passed: False` with a named
+  reason — when the two rows' markers differ, **including one-sided presence** (a pre-sync row never
+  carries the marker; a post-sync row always will, so "one side has it, one doesn't" is exactly the
+  accidental-cross-boundary shape to catch). Rows that both omit the marker (every row recorded before
+  this landed) fall through unchanged, so no existing comparison breaks. Unit-tested in
+  `tests/phase2/test_phase2_gate.py` (mismatch, one-sided, both-absent-backward-compat, and
+  matching-parity-passes cases). **W3's actual `900 s`/2-repeat reference row is unchanged, still open**
+  below — this only removes one way a future evaluation-workstream run could silently mis-gate against
+  the wrong contract.
+
+**Still open, unchanged reasoning from the original plan:** W3's actual reference row, W4 step 2, W6, W7,
+W9, W10. All still require either the dedicated `8` h+ `900 s` evaluation machine or a direct dependency
+on W3's row; none of that changed this session. W8 is fully closed and dropped from open items.
 
 ---
 
@@ -160,15 +263,18 @@ estimate survives contact with the implementation.
 | S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** est., **`+1.02` measured** (10/22 repaired) | **CLOSED** (partial; §3.1) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
 | S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` est., **`+0` measured** | **CLOSED** (converged with zero gain; §3.2/W2) | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
 | S3 | No post-sync `900 s` reference row — every Phase 2 gate is currently unrunnable | 2 | blocking, `0` on its own | **open** (needs the evaluation workstream's dedicated machine, `8` h+) | [W3](#w3-re-establish-the-post-sync-900-s-reference-row) |
-| S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry) landed, steps 1-2 (use the cores) remain | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, steps 1-2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
+| S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry, + a fixed timeout-kill blind spot) landed, step 1 (CP-SAT workers) screened RED at 4 cores, step 2 (parallel restarts) remains | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, **step 1 screened RED (not conclusive at 4 cores)**, step 2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
 | S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
 | S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | open (needs W3) | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
 | S7 | The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score | 2 | risk, not gain | open (needs W3) | [W7](#w7-de-risk-the-unconfirmed-budget) |
-| S8 | LLM endpoint autodetect landed but was never exercised against a real endpoint; Stage 3 refine still commits `0` edits | 2 | `0` today; compliance risk | **parse-policy decision CLOSED**, reachability exercise open | [W8](#w8-verify-llm-reachability-and-close-the-parse-policy-decision) |
 | S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
 | S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | open (needs W3) | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
 
-**Priority order: W1 → W3 → W5 → W4 → W7 → W2 → W10 → W6 → W9 → W8.**
+`S8` (LLM endpoint reachability) is **fully CLOSED** as of the 2026-07-31 night session (both the
+parse-policy decision and the live reachability exercise) and is dropped from this table; see
+[W8](#w8-verify-llm-reachability-and-close-the-parse-policy-decision) for the closing record.
+
+**Priority order: W1 → W3 → W5 → W4 → W7 → W2 → W10 → W6 → W9 → ~~W8~~.**
 W1 is first because Phase 1 standing decides Phase 2 advancement and W1 is the highest-confidence,
 lowest-risk gain on this list. W3 is second because nothing else in Phase 2 can be *promoted* until it
 exists. W1 and W3 are independent and should run concurrently on different machines.
@@ -177,6 +283,12 @@ exists. W1 and W3 are independent and should run concurrently on different machi
 [Session update](#session-update-2026-07-31-evening)); the ordering above is unchanged for the remaining
 items — W3 is still the correct next step for anyone with a dedicated evaluation machine, since W6, W7,
 W9, and W10 all still depend on it.
+
+**2026-07-31 night update:** W8 fully closed; W4 step 0 gained a real telemetry fix plus an 8-query read
+that favors step 2 over step 1; W4 step 1 screened RED at this machine's 4 cores (not conclusive for the
+organizer's 16-core host); W3's evaluator-contract-marker mechanism landed ahead of the reference row
+itself (see [Session update: night](#session-update-2026-07-31-night)). Ordering is otherwise unchanged —
+W3's actual reference row is still the correct next step for anyone with a dedicated evaluation machine.
 
 ---
 
@@ -419,6 +531,14 @@ closed, not failed.
 
 ### W3: re-establish the post-sync `900 s` reference row
 
+> **Prep status: the "also do" marker mechanism below is CLOSED, 2026-07-31 night; the reference row
+> itself is still open.** `scripts/phase2_record_baseline.py` now stamps every recorded row with
+> `evaluator_parity="764614c"`, and `scripts/phase2_gate.check_gate` refuses the comparison (including
+> one-sided marker presence) when it differs — unit-tested in `tests/phase2/test_phase2_gate.py`. This
+> was implementable without the actual `900 s` row and lands ahead of it so the very first post-sync row
+> is protected from day one. The row itself — the blocking part for W4/W5/W6/W9 — needs the dedicated
+> `8` h+ evaluation-workstream machine this and the prior session did not have.
+
 **Owner:** evaluation. **Blocking for W4, W5, W6, W9.** **Gain: `0` on its own; nothing promotes without it.**
 
 Every row in `results/phase2_baselines/runs/` was produced under the pre-2026-07-28 evaluator contract.
@@ -442,10 +562,10 @@ make phase2-baseline-at SHA=$(git rev-parse HEAD) \
 - committed under `results/phase2_baselines/runs/` with its `git_sha`, and referenced from the roadmap's
   "Current status snapshot" as the new reference row.
 
-**Also do:** add a one-line "evaluator contract" marker to the row (e.g. `evaluator_parity: 764614c`) so a
-future reader cannot accidentally gate a post-sync row against a pre-sync one. `scripts/phase2_gate.py`
-should refuse the comparison when the markers differ; add that check and a unit test for it in
-`tests/phase2/test_phase2_gate.py`.
+**Also do (DONE, 2026-07-31 night):** add a one-line "evaluator contract" marker to the row (e.g.
+`evaluator_parity: 764614c`) so a future reader cannot accidentally gate a post-sync row against a
+pre-sync one. `scripts/phase2_gate.py` refuses the comparison when the markers differ; the check and its
+unit tests already landed in `tests/phase2/test_phase2_gate.py`.
 
 **Ship bar.** The row exists, is committed, is referenced from the roadmap, and `make phase2-gate` run
 against itself passes trivially. Expect roughly `8` hours at `parallel=3`; this is the long-running,
@@ -561,15 +681,33 @@ throwaway `phase2_stay_check` method directories afterwards.
 
 ### W4: use the 16 confirmed evaluation CPUs
 
-> **Status: step 0 CLOSED, steps 1-2 open, 2026-07-31.** `restarts_used`, `stop_reason`,
-> `candidates_evaluated`, and `best_found_at_restart` are now recorded on every `_solve` call and
-> surfaced through `solve_phase2`'s telemetry as `search_telemetry` (pure observation, no behavior
-> change; unit-tested in `tests/phase2/test_solve_early_exit.py` and `tests/phase2/test_orchestrator.py`).
-> Steps 1 (CP-SAT worker screen) and 2 (parallel restarts) below are unchanged and still open — they need
-> a quiet multi-core machine and, for step 2's promotion, a `900 s` gate against the W3 reference row.
-> **The `best_found_at_restart` data step 0 was built to collect has not yet been read** — running it
-> against even a handful of real queries at a realistic budget, before spending days on step 2, is now
-> possible and is the cheapest next move on this item.
+> **Status: step 0 CLOSED (+ a real fix), step 1 screened RED (not conclusive), step 2 open,
+> 2026-07-31 night.** `restarts_used`, `stop_reason`, `candidates_evaluated`, and
+> `best_found_at_restart` are recorded on every `_solve` call and surfaced through `solve_phase2`'s
+> telemetry as `search_telemetry` (unit-tested in `tests/phase2/test_solve_early_exit.py` and
+> `tests/phase2/test_orchestrator.py`). **A follow-up session read this data against 8 real
+> `familiar_100_val` queries at a `150 s` budget and found 2 of 8 came back `search_telemetry == {}`**:
+> `self.last_search_telemetry` was assigned only once, at the very end of `_solve`, so a `func_timeout`
+> kill (which lands mid-restart-loop by construction) always discarded it — exactly for the budget-bound
+> queries this instrumentation exists to explain. Fixed: every leader-improving `consider()` call now
+> snapshots `self.last_search_telemetry` immediately (mirroring the existing `_set_timeout_recovery_plan`
+> snapshot), tagged `stop_reason="interrupted"`; a normal completion still overwrites it. Pure
+> observation, no behavior change; unit-tested and reverified live. **Reading the combined 8-query data
+> found no single "found early vs. late" pattern** — 3 queries converge in the first `5%` of their restart
+> budget, but 5 (including both previously-invisible interrupted ones) are still improving `47%-100%` of
+> the way to the wall, which favors step 2 over step 1 as the next move (see
+> [Session update: night](#session-update-2026-07-31-night) for the full per-query table). **Step 1 (CP-SAT
+> worker screen) was run** on this machine's actual 4 cores (`TPC_CP_SEARCH_WORKERS` `1 -> 4`,
+> `TPC_USE_CP_SOLVER=1`, solver-only, `n=20`, `60 s`) and came back **RED**: `overall_true` regressed
+> `46.78 -> 45.17`, commonsense pass and C-LPR also down, zero timeout/FPR change (row:
+> [`20260731_solver_only_n20_b60_cp_search_workers`](../results/phase2_baselines/screens/20260731_solver_only_n20_b60_cp_search_workers/summary.json)).
+> **Not conclusive** — `on=4` exhausts this box's entire core count, so the result cannot separate a
+> genuine CP-SAT effect from 4-threads-contending-with-the-driver on a 4-core machine (the same caveat the
+> ship bar already states for step 2's `--parallel` choice); a 16-core box re-screening at `on=8` (the
+> original suggestion) is the correct way to settle it, not a re-run here. **Step 2 (parallel restarts)
+> below is unchanged and still open** — it needs a quiet multi-core machine and a `900 s` gate against the
+> W3 reference row, and per the step-0 telemetry above is now the better-motivated of the two remaining
+> steps.
 
 **Owner:** implementation. **Effort: 2–3 days.** **Expected gain: `+1` to `+4`, unmeasured — the largest
 untapped Phase 2 lever and also the least certain.** **Depends on W3** for a baseline.
@@ -785,17 +923,29 @@ unchanged or better — a packing move that costs one accepted plan has already 
 
 ### W8: verify LLM reachability and close the parse policy decision
 
-> **Status: parse-policy decision CLOSED, reachability exercise open, 2026-07-31.** Item 2 below is
-> done: `resolve_llm_client_and_flags` no longer auto-enables `TPC_P2_LLM_PARSE` when a backend is
+> **Status: CLOSED, 2026-07-31 night.** Item 2 (parse-policy decision) closed last session:
+> `resolve_llm_client_and_flags` no longer auto-enables `TPC_P2_LLM_PARSE` when a backend is
 > configured (the removed branch only re-derived what `Flags.from_env()` already reads from the env);
 > it is now off unless an operator explicitly sets `TPC_P2_LLM_PARSE=1`, with the RED screen cited in
 > the docstring comment. `tests/phase2/test_llm_endpoint_autodetect.py` updated accordingly
 > (`test_explicit_backend_keeps_parse_off_by_default` replaces the old auto-enable assertion; a new
 > `test_operator_override_reaches_explicit_backend` covers the explicit-on path).
-> `agent_env/config.phase2.example.toml` and its `agent_env/README.md` pointer already existed. **Item
-> 1 (exercise the autodetect against a real reachable endpoint) remains open** — it needs a live
-> OpenAI-compatible/SGLang server this session did not have. Item 3 (Stage 3 refine) is unchanged and
-> stays off.
+> `agent_env/config.phase2.example.toml` and its `agent_env/README.md` pointer already existed.
+> **Item 1 (reachability) closed this session against the real live DeepInfra endpoint** (`.env`'s
+> `DEEPINFRA_API_KEY`, loaded via `load_local_env()`, never read/echoed directly): a direct
+> `build_llm_client({"backend": "deepinfra"}).complete(...)` call succeeded, and a full
+> `solve_phase2.py --split tpc_phase2_familiar_100_val` run with `TPC_P2_LLM_PARSE=1` showed
+> `llm_parse_attempts=2` genuinely firing over the network (one success, one hitting the tight `6 s`
+> screen timeout — expected). **The dead-endpoint case is clean**: `TPC_P2_LLM_BASE_URL` pointed at a
+> closed port completed with exit `0`, `valid=True fallback=False`, and the failure recorded only as
+> `llm_parse_error: APIConnectionError('Connection error.')` in telemetry, never an unhandled crash.
+> One incidental finding worth a footnote, not a new open item: the generic `OPENAI_BASE_URL` autodetect
+> path (distinct from the dedicated `deepinfra` backend used above) resolves its model by taking the
+> *first* entry from the endpoint's `/v1/models` list — correct for the single-model SGLang deployment
+> autodetect targets, but would pick an arbitrary (possibly non-chat) model against a multi-model gateway
+> like DeepInfra's. Not a live bug: DeepInfra has its own dedicated backend path that bypasses the probe
+> and defaults to the correct chat model. Item 3 (Stage 3 refine) is unchanged and stays off. **W8 is
+> fully closed** — see [Session update: night](#session-update-2026-07-31-night) for the closing record.
 
 **Owner:** implementation. **Effort: half a day.** **Gain: `0` expected; competition-compliance and
 robustness.**
@@ -848,12 +998,12 @@ W2  preference residual             ~4 h     W7  budget sweep on the same config
 machine C (Phase 2 implementation, ≥8 cores)
 ────────────────────────────────────────────
 W5  trailing-stay drop              ~4 h     (independent of W3 for the code; needs W3 to promote)
-W4  Step 0 telemetry                ~2 h     (independent, do while W3 runs)
-W4  Step 1 CP workers screen        ~2 h     (needs a quiet machine)
-W4  Step 2 parallel restarts       ~2 days   (needs W3 to gate)
+W4  Step 0 telemetry                DONE     (closed 2026-07-31; a real timeout-kill blind spot found+fixed)
+W4  Step 1 CP workers screen        DONE     (screened RED at 4 cores 2026-07-31; not conclusive, re-screen on 16 cores)
+W4  Step 2 parallel restarts       ~2 days   (needs W3 to gate; now the better-motivated step per step-0's data)
 W6  timed-window residual           timeboxed (needs W3 for re-derived attribution)
 W9  packing re-decision             ~2 h      (needs W3; lowest priority)
-W8  LLM reachability                ~4 h      (independent of everything)
+W8  LLM reachability                DONE     (closed 2026-07-31 night, live DeepInfra + dead-endpoint both clean)
 ```
 
 Per [CLAUDE.md's parallel workstreams](../CLAUDE.md#parallel-workstreams): the evaluation workstream writes
