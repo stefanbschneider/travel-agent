@@ -1,406 +1,237 @@
 {
- "people_number": 4,
- "start_city": "Suzhou",
- "target_city": "Wuhan",
- "elapsed_time(sec)": 207.03921484947205,
- "_eval_score": 99.67936507936508,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 4,
+  "start_city": "Suzhou",
+  "target_city": "Wuhan",
+  "itinerary": [
     {
-     "type": "train",
-     "start_time": "08:51",
-     "end_time": "13:26",
-     "start": "Suzhou North Station",
-     "end": "Wuhan Station",
-     "price": 392.42,
-     "cost": 1569.68,
-     "tickets": 4,
-     "transports": [],
-     "TrainID": "G586"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "08:51",
+          "end_time": "13:26",
+          "start": "Suzhou North Station",
+          "end": "Wuhan Station",
+          "price": 392.42,
+          "cost": 1569.68,
+          "tickets": 4,
+          "transports": [],
+          "TrainID": "G586"
+        },
+        {
+          "type": "attraction",
+          "position": "Wuhan Yangtze River Bridge",
+          "start_time": "16:12",
+          "end_time": "17:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wuhan Station",
+              "end": "Wuhan Yangtze River Bridge",
+              "mode": "walk",
+              "start_time": "13:26",
+              "end_time": "16:12",
+              "distance": 13.896291327128214,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Five Percent Villa Restaurant",
+          "start_time": "18:32",
+          "end_time": "19:32",
+          "price": 298.0,
+          "cost": 1192.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Wuhan Yangtze River Bridge",
+              "end": "Five Percent Villa Restaurant",
+              "mode": "walk",
+              "start_time": "17:57",
+              "end_time": "18:32",
+              "distance": 2.9434520993903264,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Hankou Riverside Park",
+          "start_time": "20:20",
+          "end_time": "22:05",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Five Percent Villa Restaurant",
+              "end": "Hankou Riverside Park",
+              "mode": "walk",
+              "start_time": "19:32",
+              "end_time": "20:20",
+              "distance": 4.078955011196228,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
+          "start_time": "23:57",
+          "end_time": "24:00",
+          "price": 206.0,
+          "cost": 824.0,
+          "rooms": 4,
+          "room_type": 1,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Hankou Riverside Park",
+              "end": "Home Inn Selected (Wuhan High-speed Railway Station)",
+              "mode": "walk",
+              "start_time": "22:05",
+              "end_time": "23:57",
+              "distance": 9.401309603826283,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Hankou Historical and Cultural District",
-     "start_time": "14:10",
-     "end_time": "15:40",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Wuhan Station",
-       "end": "Wuhan Station East Square-Metro Station",
-       "mode": "walk",
-       "start_time": "13:37",
-       "end_time": "13:39",
-       "cost": 0,
-       "distance": 0.19,
-       "price": 0
-      },
-      {
-       "start": "Wuhan Station East Square-Metro Station",
-       "end": "Dazhi Road-Metro Station",
-       "mode": "metro",
-       "start_time": "13:39",
-       "end_time": "14:04",
-       "cost": 16,
-       "distance": 12.74,
-       "price": 4,
-       "tickets": 4
-      },
-      {
-       "start": "Dazhi Road-Metro Station",
-       "end": "Hankou Historical and Cultural District",
-       "mode": "walk",
-       "start_time": "14:04",
-       "end_time": "14:10",
-       "cost": 0,
-       "distance": 0.53,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Great Wisdom Unbounded · Sky Town",
-     "start_time": "16:05",
-     "end_time": "17:35",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hankou Historical and Cultural District",
-       "end": "Great Wisdom Unbounded · Sky Town",
-       "mode": "walk",
-       "start_time": "16:00",
-       "end_time": "16:05",
-       "cost": 0,
-       "distance": 0.44798069658138884,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Dazhimen Beer House",
-     "start_time": "17:11",
-     "end_time": "17:56",
-     "price": 102.0,
-     "cost": 408.0,
-     "transports": [
-      {
-       "start": "Great Wisdom Unbounded · Sky Town",
-       "end": "Dazhimen Beer House",
-       "mode": "walk",
-       "start_time": "17:07",
-       "end_time": "17:11",
-       "cost": 0,
-       "distance": 0.3363787507259721,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jiqing Folk Culture Street",
-     "start_time": "10:12",
-     "end_time": "11:12",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Dazhimen Beer House",
-       "end": "Jiqing Folk Culture Street",
-       "mode": "walk",
-       "start_time": "10:06",
-       "end_time": "10:12",
-       "cost": 0,
-       "distance": 0.5528083419991265,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-     "start_time": "06:52",
-     "end_time": "07:22",
-     "price": 5.0,
-     "cost": 20.0,
-     "transports": [
-      {
-       "start": "Jiqing Folk Culture Street",
-       "end": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-       "mode": "walk",
-       "start_time": "06:49",
-       "end_time": "06:52",
-       "cost": 0,
-       "distance": 0.2810213693994069,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Laobamen · Hubei Cuisine (Dazhi Road Branch)",
-     "start_time": "11:24",
-     "end_time": "12:09",
-     "price": 228.0,
-     "cost": 912.0,
-     "transports": [
-      {
-       "start": "Yiyuan Road Unique-Flavored Baked Cake (Fengshang Times Plaza Branch)",
-       "end": "Laobamen · Hubei Cuisine (Dazhi Road Branch)",
-       "mode": "walk",
-       "start_time": "11:19",
-       "end_time": "11:24",
-       "cost": 0,
-       "distance": 0.4648199615167605,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wuhan Art Museum (Hankou Branch)",
-     "start_time": "09:20",
-     "end_time": "10:20",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Laobamen · Hubei Cuisine (Dazhi Road Branch)",
-       "end": "Wuhan Art Museum (Hankou Branch)",
-       "mode": "walk",
-       "start_time": "09:13",
-       "end_time": "09:20",
-       "cost": 0,
-       "distance": 0.6004221960337294,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "James Joyce Coffetel (Wuhan Dazhi Road)",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 194.0,
-     "cost": 194.0,
-     "transports": [
-      {
-       "start": "Wuhan Art Museum (Hankou Branch)",
-       "end": "James Joyce Coffetel (Wuhan Dazhi Road)",
-       "mode": "walk",
-       "start_time": "22:53",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.5995801100691,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Home Inn Selected (Wuhan High-speed Railway Station)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake",
+          "start_time": "09:38",
+          "end_time": "11:23",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Home Inn Selected (Wuhan High-speed Railway Station)",
+              "end": "East Lake",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "09:38",
+              "distance": 5.711734958652038,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Green Grain Restaurant (East Lake Branch)",
+          "start_time": "12:17",
+          "end_time": "13:17",
+          "price": 306.0,
+          "cost": 1224.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "East Lake",
+              "end": "Green Grain Restaurant (East Lake Branch)",
+              "mode": "walk",
+              "start_time": "11:23",
+              "end_time": "12:17",
+              "distance": 4.510395143509399,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Canglang Pavilion",
+          "start_time": "13:19",
+          "end_time": "14:09",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Green Grain Restaurant (East Lake Branch)",
+              "end": "Canglang Pavilion",
+              "mode": "taxi",
+              "start_time": "13:17",
+              "end_time": "13:19",
+              "distance": 1.85,
+              "price": 11.16,
+              "cost": 11.16,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Lake Cruise Xingyin Pavilion Pier",
+          "start_time": "14:09",
+          "end_time": "14:59",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Canglang Pavilion",
+              "end": "East Lake Cruise Xingyin Pavilion Pier",
+              "mode": "taxi",
+              "start_time": "14:09",
+              "end_time": "14:09",
+              "distance": 0.33,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "15:09",
+          "end_time": "19:22",
+          "start": "Wuhan Station",
+          "end": "Suzhou North Station",
+          "price": 392.42,
+          "cost": 1569.68,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "East Lake Cruise Xingyin Pavilion Pier",
+              "end": "Wuhan Station",
+              "mode": "taxi",
+              "start_time": "14:59",
+              "end_time": "15:07",
+              "distance": 5.89,
+              "price": 25.31,
+              "cost": 25.31,
+              "cars": 1
+            }
+          ],
+          "TrainID": "G1774"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Liu's Three Dogs Beef Noodle House",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 18.0,
-     "cost": 72.0,
-     "transports": [
-      {
-       "start": "James Joyce Coffetel (Wuhan Dazhi Road)",
-       "end": "Liu's Three Dogs Beef Noodle House",
-       "mode": "walk",
-       "start_time": "07:21",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.7577001965618921,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Jianghan Road Pedestrian Street",
-     "start_time": "08:33",
-     "end_time": "10:03",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Liu's Three Dogs Beef Noodle House",
-       "end": "Jianghan Road Pedestrian Street",
-       "mode": "walk",
-       "start_time": "08:30",
-       "end_time": "08:33",
-       "cost": 0,
-       "distance": 0.2705826692829897,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Wuhan Hanging Glass Art Gallery",
-     "start_time": "10:33",
-     "end_time": "12:03",
-     "price": 29.9,
-     "tickets": 4,
-     "cost": 119.6,
-     "transports": [
-      {
-       "start": "Jianghan Road Pedestrian Street",
-       "end": "Wuhan Hanging Glass Art Gallery",
-       "mode": "walk",
-       "start_time": "10:31",
-       "end_time": "10:33",
-       "cost": 0,
-       "distance": 0.1907282588293228,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Foodie Gathering Thai Street Cuisine",
-     "start_time": "11:31",
-     "end_time": "12:16",
-     "price": 94.0,
-     "cost": 376.0,
-     "transports": [
-      {
-       "start": "Wuhan Hanging Glass Art Gallery",
-       "end": "Foodie Gathering Thai Street Cuisine",
-       "mode": "walk",
-       "start_time": "11:24",
-       "end_time": "11:31",
-       "cost": 0,
-       "distance": 0.648333184089756,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Vive.T·Eternal",
-     "start_time": "17:06",
-     "end_time": "17:51",
-     "price": 199.0,
-     "cost": 796.0,
-     "transports": [
-      {
-       "start": "Foodie Gathering Thai Street Cuisine",
-       "end": "Vive.T·Eternal",
-       "mode": "walk",
-       "start_time": "16:56",
-       "end_time": "17:06",
-       "cost": 0,
-       "distance": 0.8938505728476863,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Xian'an Lane",
-     "start_time": "08:08",
-     "end_time": "09:08",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Vive.T·Eternal",
-       "end": "Xian'an Lane",
-       "mode": "walk",
-       "start_time": "07:55",
-       "end_time": "08:08",
-       "cost": 0,
-       "distance": 1.0984424570430402,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Fly Over Hubei (Jianghan Road Pedestrian Street Branch)",
-     "start_time": "10:07",
-     "end_time": "11:07",
-     "price": 39.9,
-     "tickets": 4,
-     "cost": 159.6,
-     "transports": [
-      {
-       "start": "Xian'an Lane",
-       "end": "Fly Over Hubei (Jianghan Road Pedestrian Street Branch)",
-       "mode": "walk",
-       "start_time": "09:56",
-       "end_time": "10:07",
-       "cost": 0,
-       "distance": 0.9985199302052871,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "train",
-     "start_time": "15:09",
-     "end_time": "19:22",
-     "start": "Wuhan Station",
-     "end": "Suzhou North Station",
-     "price": 392.42,
-     "cost": 1569.68,
-     "tickets": 4,
-     "transports": [
-      {
-       "start": "Fly Over Hubei (Jianghan Road Pedestrian Street Branch)",
-       "end": "Dazhi Road-Metro Station",
-       "mode": "walk",
-       "start_time": "14:37",
-       "end_time": "14:42",
-       "cost": 0,
-       "distance": 0.48,
-       "price": 0
-      },
-      {
-       "start": "Dazhi Road-Metro Station",
-       "end": "Wuhan Station East Square-Metro Station",
-       "mode": "metro",
-       "start_time": "14:42",
-       "end_time": "15:07",
-       "cost": 16,
-       "distance": 12.74,
-       "price": 4,
-       "tickets": 4
-      },
-      {
-       "start": "Wuhan Station East Square-Metro Station",
-       "end": "Wuhan Station",
-       "mode": "walk",
-       "start_time": "15:07",
-       "end_time": "15:09",
-       "cost": 0,
-       "distance": 0.19,
-       "price": 0
-      }
-     ],
-     "TrainID": "G1774"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 60.25478553771973,
+  "_eval_score": 93.7308201058201
 }

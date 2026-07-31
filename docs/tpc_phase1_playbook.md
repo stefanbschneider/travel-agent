@@ -4,7 +4,7 @@ Phase 1 is offline prediction generation on the released `tpc_phase1` data.
 Only prediction files are submitted.
 The local workflow may use the released oracle fields, including `hard_logic_py`, to optimize and check plans; that privilege does not transfer to Phase 2.
 
-## Current status (2026-07-30, after the upstream evaluator sync)
+## Current status (2026-07-31, after re-solving the evaluator-sync regression)
 
 Score `results/best` with:
 
@@ -14,24 +14,71 @@ make p1eval SPLIT=tpc_phase1
 
 Latest local result on the upstream-aligned evaluator (upstream `main` `764614c`, PRs
 [#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30)):
-MicEPR `98.17`, MacEPR `58.20`, C-LPR `54.04`, FPR `58.20`, DAV `58.20`, ATT `58.20`, DDR `58.20`,
-overall `61.16`.
+MicEPR `99.89`, MacEPR `97.80`, C-LPR `96.47`, FPR `97.80`, DAV `90.11`, ATT `94.46`, DDR `84.26`,
+**overall `96.45`** — recovered from the `61.16` post-sync regression (and above the pre-sync `100.0`
+floor's real quality, since that score depended on a preference loophole the new evaluator closes).
 
-The same `results/best` directory scored `100.0` on every metric under the pre-2026-07-28 evaluator.
-Nothing about the stored plans changed — the checker did. `418/1000` accepted plans are now rejected,
-in exactly two families (counted with the commonsense evaluator, no other sub-check regressed):
+### How the recovery happened
+
+The `2026-07-30` sync (below) turned `418/1000` accepted plans invalid: `344` failed the new
+intra-day-chronology check, `149` failed the new one-meal-type-per-day check (`75` failed both).
+Direct inspection of the affected `results/best` entries traced both families to one cause: a legacy
+hotel-breakfast-stacking pattern (predating `TPC_PACK_HOTEL_BREAKFAST` being made opt-in and
+permanently off) baked extra free hotel breakfasts into a day without re-timing the
+activities/transports that followed. The old, pre-2026-07-28 evaluator had no repeated-meal-type or
+intra-day-overlap check, so the stacking was invisible and inflated DDR to `100` for those queries;
+the synced evaluator now rejects it outright.
+
+The current solver already disables that stacking by default (confirmed by resolving one affected
+query fresh: the result had no repeated meals and no overlaps), so no solver code change was needed.
+Recovery was two safe, already-scripted operations, each gated so `results/best` can only improve:
+
+1. **Re-solve the rejected queries** (`scripts/solve.py` against
+   `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt`, then `make merge`). `make merge`
+   only overwrites a `results/best/<uid>.json` when its freshly computed weighted score is *strictly*
+   higher than what is already there, so this can never regress an untouched query. Three rounds
+   (`60s`/`120` restarts, then `300s`/`1200` restarts on the residual, then a
+   `TPC_COMMONSENSE_FIRST=1` pass on the smaller residual) took overall `61.16 -> 95.70` and cut the
+   fully-failing count from `418` to `22`. The `22` that remain are a genuinely hard tail. One
+   contributing cause, found while diagnosing a 3-person Nanjing<->Chongqing train-only round trip in
+   that tail: the solver's random-restart search sometimes overrode a hard `intercity_mode` constraint
+   with a random airplane choice (`tpc_agent.py`'s `_random_params`), burning restart budget on
+   candidates guaranteed to fail acceptance — not a train-availability problem (`WorldEnv` had `31`/`22`
+   train options each way for that example). Fixed directly (unconditional bug fix, shared TPCAgent
+   code, so it also applies to the Phase 2 no-oracle path): `_random_params` no longer randomizes a
+   direction `constraints.intercity_mode` already pins. Retrying the `22`-query tail under the fix
+   (`TPC_COMMONSENSE_FIRST=1`, `300s`/`2400` restarts) recovered `0` more — the mode override was a
+   real, wasted-budget bug worth fixing on its own merits, but not this tail's binding constraint;
+   whatever else makes these `22` hard (tight same-day arrival/meal scheduling, per manual inspection)
+   remains an open follow-up, not a quick win.
+2. **Densify already-accepted plans** (`TPC_PACK_DAV=1 TPC_PACK_DDR=1 scripts/densify.py`, then
+   `make merge`). `densify.py` only mutates a plan that is already accepted, only keeps the result if
+   the full checker *still* accepts it and its preference sum is strictly higher, and `make merge`
+   re-applies its own strictly-greater gate on top — two independent monotonic guards. This is safe to
+   run on the full split regardless of whether a query was part of the `418`; it lifted `overall`
+   `95.70 -> 96.45` (`DAV` `79.63 -> 90.11`, `ATT` `92.22 -> 94.46`, `DDR` `82.04 -> 84.26`) with FPR
+   unchanged, and a second pass found nothing further (converged). `TPC_PACK_HOTEL_BREAKFAST` was left
+   off throughout — it is now a structural no-op, since `check()` reverts any stacked meal day.
+
+`chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` is rewritten by every `make p1eval`
+run and remains the re-solve work list (currently `418` entries — the `22` that still fail a hard
+check, plus queries whose preference score is not literally `100`, which is most of the split and not
+itself evidence of a problem).
+
+### Evaluator-sync history (2026-07-30)
+
+Nothing about the stored plans changed on sync day — the checker did. `418/1000` accepted plans were
+rejected, in exactly two families (counted with the commonsense evaluator, no other sub-check
+regressed):
 
 | Failing commonsense column | Queries | Cause |
 | --- | --- | --- |
 | `Does not follow Chronological Order` | `344` | Upstream `Is_time_correct` now rejects intra-day activity overlap and an inbound transport that departs before the previous activity ends. |
 | `Repeated Meal Types in One Day` | `149` | Upstream `Is_restaurants_correct` now allows at most one breakfast/lunch/dinner per day; the maxpack hotel-breakfast stacking that lifted DDR to `100` is a failure. |
 
-DAV/ATT/DDR all read `58.20` because every still-passing plan scores a perfect `1.0` on each, while a
-failing query now contributes a hard zero to the average (upstream PR #30) instead of being dropped
-from it. Recovering the score means **re-solving the rejected queries**, not re-scoring them: the
-solver's own acceptance gate calls the same evaluator, so a fresh solve cannot re-create either
-failure family. `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` is rewritten by
-every `make p1eval` run and is the work list for that re-solve.
+DAV/ATT/DDR all read `58.20` on that day because every still-passing plan scored a perfect `1.0` on
+each, while a failing query contributed a hard zero to the average (upstream PR #30) instead of being
+dropped from it — see "How the recovery happened" above for what fixed it.
 
 ## Objective and invariants
 

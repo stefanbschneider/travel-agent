@@ -1,395 +1,129 @@
 {
- "people_number": 2,
- "start_city": "Chengdu",
- "target_city": "Hangzhou",
- "elapsed_time(sec)": 304.30765891075134,
- "_eval_score": 98.93968253968254,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 2,
+  "start_city": "Chengdu",
+  "target_city": "Hangzhou",
+  "itinerary": [
     {
-     "type": "airplane",
-     "start_time": "00:24",
-     "end_time": "02:19",
-     "start": "Chengdu Tianfu International Airport",
-     "end": "Hangzhou Xiaoshan International Airport",
-     "price": 730.91,
-     "cost": 1461.82,
-     "tickets": 2,
-     "transports": [],
-     "FlightID": "FL458"
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "07:49",
+          "end_time": "09:44",
+          "start": "Chengdu Tianfu International Airport",
+          "end": "Hangzhou Xiaoshan International Airport",
+          "price": 777.25,
+          "cost": 1554.5,
+          "tickets": 2,
+          "transports": [],
+          "FlightID": "FL456"
+        },
+        {
+          "type": "attraction",
+          "position": "Leifeng Pagoda",
+          "start_time": "15:04",
+          "end_time": "16:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Hangzhou Xiaoshan International Airport",
+              "end": "Leifeng Pagoda",
+              "mode": "walk",
+              "start_time": "09:44",
+              "end_time": "15:04",
+              "distance": 26.669887680829813,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+          "start_time": "17:09",
+          "end_time": "18:09",
+          "price": 873.0,
+          "cost": 1746.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Leifeng Pagoda",
+              "end": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "mode": "walk",
+              "start_time": "16:34",
+              "end_time": "17:09",
+              "distance": 2.981203902853101,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Manju·Hangzhou Xiaoshan International Airport Store",
+          "start_time": "23:54",
+          "end_time": "24:00",
+          "price": 257.0,
+          "cost": 257.0,
+          "rooms": 1,
+          "room_type": 2,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Hangzhou Xizi Lake Four Seasons Hotel · Jin Sha Restaurant",
+              "end": "Manju·Hangzhou Xiaoshan International Airport Store",
+              "mode": "walk",
+              "start_time": "18:09",
+              "end_time": "23:54",
+              "distance": 28.805398381129407,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "breakfast",
-     "position": "Radisson Hangzhou Qianjiang",
-     "start_time": "07:30",
-     "end_time": "07:35",
-     "price": 0,
-     "cost": 0,
-     "transports": [
-      {
-       "start": "Hangzhou Xiaoshan International Airport",
-       "end": "Xiaoshan International Airport-Metro Station",
-       "mode": "walk",
-       "start_time": "06:53",
-       "end_time": "06:54",
-       "cost": 0,
-       "distance": 0.12,
-       "price": 0
-      },
-      {
-       "start": "Xiaoshan International Airport-Metro Station",
-       "end": "Yingfeng Road-Metro Station",
-       "mode": "metro",
-       "start_time": "06:54",
-       "end_time": "07:28",
-       "cost": 10,
-       "distance": 17.39,
-       "price": 5,
-       "tickets": 2
-      },
-      {
-       "start": "Yingfeng Road-Metro Station",
-       "end": "Radisson Hangzhou Qianjiang",
-       "mode": "walk",
-       "start_time": "07:28",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.23,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "G20 Hangzhou Summit Experience Hall",
-     "start_time": "09:14",
-     "end_time": "10:14",
-     "price": 90.0,
-     "tickets": 2,
-     "cost": 180.0,
-     "transports": [
-      {
-       "start": "Radisson Hangzhou Qianjiang",
-       "end": "G20 Hangzhou Summit Experience Hall",
-       "mode": "walk",
-       "start_time": "09:06",
-       "end_time": "09:14",
-       "cost": 0,
-       "distance": 0.6691762229083923,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou International Expo Center",
-     "start_time": "10:24",
-     "end_time": "11:24",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "G20 Hangzhou Summit Experience Hall",
-       "end": "Hangzhou International Expo Center",
-       "mode": "walk",
-       "start_time": "10:23",
-       "end_time": "10:24",
-       "cost": 0,
-       "distance": 0.10561273908819249,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou Century Center",
-     "start_time": "18:30",
-     "end_time": "19:30",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hangzhou International Expo Center",
-       "end": "Hangzhou Century Center",
-       "mode": "walk",
-       "start_time": "18:26",
-       "end_time": "18:30",
-       "cost": 0,
-       "distance": 0.40774207930077194,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Fuchun Mountain Museum",
-     "start_time": "09:03",
-     "end_time": "10:03",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hangzhou Century Center",
-       "end": "Fuchun Mountain Museum",
-       "mode": "walk",
-       "start_time": "08:44",
-       "end_time": "09:03",
-       "cost": 0,
-       "distance": 1.6355372427825479,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Warehouse No. 3 Restaurant (Bodi Center Branch)",
-     "start_time": "12:28",
-     "end_time": "13:13",
-     "price": 149.0,
-     "cost": 298.0,
-     "transports": [
-      {
-       "start": "Fuchun Mountain Museum",
-       "end": "Warehouse No. 3 Restaurant (Bodi Center Branch)",
-       "mode": "walk",
-       "start_time": "12:17",
-       "end_time": "12:28",
-       "cost": 0,
-       "distance": 0.9731745227699977,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Qiaocun Twenty-Eight Dishes (Qianjiang Century City Branch)",
-     "start_time": "17:00",
-     "end_time": "17:45",
-     "price": 196.0,
-     "cost": 392.0,
-     "transports": [
-      {
-       "start": "Warehouse No. 3 Restaurant (Bodi Center Branch)",
-       "end": "Qiaocun Twenty-Eight Dishes (Qianjiang Century City Branch)",
-       "mode": "walk",
-       "start_time": "16:57",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.26586083099419033,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Radisson Hangzhou Qianjiang",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 607.0,
-     "cost": 607.0,
-     "transports": [
-      {
-       "start": "Qiaocun Twenty-Eight Dishes (Qianjiang Century City Branch)",
-       "end": "Radisson Hangzhou Qianjiang",
-       "mode": "walk",
-       "start_time": "22:57",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.2633686595936413,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Manju·Hangzhou Xiaoshan International Airport Store",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:24",
+          "end_time": "20:19",
+          "start": "Hangzhou Xiaoshan International Airport",
+          "end": "Chengdu Tianfu International Airport",
+          "price": 788.36,
+          "cost": 1576.72,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Manju·Hangzhou Xiaoshan International Airport Store",
+              "end": "Hangzhou Xiaoshan International Airport",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "08:39",
+              "distance": 0.7955756244283299,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "FlightID": "FL535"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Radisson Hangzhou Qianjiang",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Asian Games Theme Park",
-     "start_time": "09:01",
-     "end_time": "10:01",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Radisson Hangzhou Qianjiang",
-       "end": "Asian Games Theme Park",
-       "mode": "walk",
-       "start_time": "08:49",
-       "end_time": "09:01",
-       "cost": 0,
-       "distance": 1.0241710202056447,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Niudingwang·Roadside Beef Offal (Xiaoshan Wangjing Branch)",
-     "start_time": "11:00",
-     "end_time": "11:05",
-     "price": 92.0,
-     "cost": 184.0,
-     "transports": [
-      {
-       "start": "Asian Games Theme Park",
-       "end": "Niudingwang·Roadside Beef Offal (Xiaoshan Wangjing Branch)",
-       "mode": "walk",
-       "start_time": "10:45",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 1.2523542417261182,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou Olympic Sports Expo Center",
-     "start_time": "13:24",
-     "end_time": "13:54",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Niudingwang·Roadside Beef Offal (Xiaoshan Wangjing Branch)",
-       "end": "Hangzhou Olympic Sports Expo Center",
-       "mode": "walk",
-       "start_time": "13:07",
-       "end_time": "13:24",
-       "cost": 0,
-       "distance": 1.430595528049575,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou Olympic Sports Center Gymnasium",
-     "start_time": "14:01",
-     "end_time": "14:31",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hangzhou Olympic Sports Expo Center",
-       "end": "Hangzhou Olympic Sports Center Gymnasium",
-       "mode": "walk",
-       "start_time": "13:57",
-       "end_time": "14:01",
-       "cost": 0,
-       "distance": 0.34550856828663223,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Hangzhou Asian Games Museum",
-     "start_time": "14:34",
-     "end_time": "15:04",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Hangzhou Olympic Sports Center Gymnasium",
-       "end": "Hangzhou Asian Games Museum",
-       "mode": "walk",
-       "start_time": "14:26",
-       "end_time": "14:34",
-       "cost": 0,
-       "distance": 0.7046675697152815,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Jiangnan Feast",
-     "start_time": "17:00",
-     "end_time": "17:05",
-     "price": 318.0,
-     "cost": 636.0,
-     "transports": [
-      {
-       "start": "Hangzhou Asian Games Museum",
-       "end": "Jiangnan Feast",
-       "mode": "walk",
-       "start_time": "16:34",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 2.169296632958846,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "airplane",
-     "start_time": "22:23",
-     "end_time": "00:18",
-     "start": "Hangzhou Xiaoshan International Airport",
-     "end": "Chengdu Tianfu International Airport",
-     "price": 728.38,
-     "cost": 1456.76,
-     "tickets": 2,
-     "transports": [
-      {
-       "start": "Jiangnan Feast",
-       "end": "Yingfeng Road-Metro Station",
-       "mode": "walk",
-       "start_time": "21:42",
-       "end_time": "21:48",
-       "cost": 0,
-       "distance": 0.58,
-       "price": 0
-      },
-      {
-       "start": "Yingfeng Road-Metro Station",
-       "end": "Xiaoshan International Airport-Metro Station",
-       "mode": "metro",
-       "start_time": "21:48",
-       "end_time": "22:22",
-       "cost": 10,
-       "distance": 17.39,
-       "price": 5,
-       "tickets": 2
-      },
-      {
-       "start": "Xiaoshan International Airport-Metro Station",
-       "end": "Hangzhou Xiaoshan International Airport",
-       "mode": "walk",
-       "start_time": "22:22",
-       "end_time": "22:23",
-       "cost": 0,
-       "distance": 0.12,
-       "price": 0
-      }
-     ],
-     "FlightID": "FL531"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 43.34799671173096,
+  "_eval_score": 87.29166666666666
 }

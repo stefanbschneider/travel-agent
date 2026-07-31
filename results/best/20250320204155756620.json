@@ -7,211 +7,79 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "00:33",
-          "end_time": "01:24",
-          "start": "Wuhan Tianhe International Airport",
-          "end": "Shanghai Pudong International Airport",
-          "price": 303.66,
-          "cost": 607.32,
+          "type": "train",
+          "start_time": "08:00",
+          "end_time": "11:30",
+          "start": "Wuhan Station",
+          "end": "Shanghai Hongqiao Station",
+          "price": 446.81,
+          "cost": 893.62,
           "tickets": 2,
           "transports": [],
-          "FlightID": "FL566"
-        },
-        {
-          "type": "breakfast",
-          "position": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-          "start_time": "08:00",
-          "end_time": "09:00",
-          "price": 28.0,
-          "cost": 56.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Shanghai Pudong International Airport",
-              "end": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
-              "mode": "taxi",
-              "start_time": "01:24",
-              "end_time": "02:16",
-              "distance": 35.27,
-              "price": 153.41,
-              "cost": 153.41,
-              "cars": 1
-            }
-          ]
+          "TrainID": "G1722"
         },
         {
           "type": "lunch",
           "position": "Sake Devourer (Music Workshop Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
+          "start_time": "11:37",
+          "end_time": "12:37",
           "price": 447.0,
           "cost": 894.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Mei Xin Dim Sum Shop (North Shaanxi Road Branch)",
+              "start": "Shanghai Hongqiao Station",
               "end": "Sake Devourer (Music Workshop Branch)",
               "mode": "taxi",
-              "start_time": "09:00",
-              "end_time": "09:14",
-              "distance": 9.73,
-              "price": 38.74,
-              "cost": 38.74,
+              "start_time": "11:30",
+              "end_time": "11:37",
+              "distance": 5.26,
+              "price": 23.09,
+              "cost": 23.09,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Huangpu River",
-          "start_time": "12:21",
-          "end_time": "13:36",
+          "position": "Guangfulin Cultural Site",
+          "start_time": "13:06",
+          "end_time": "14:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Sake Devourer (Music Workshop Branch)",
-              "end": "Huangpu River",
+              "end": "Guangfulin Cultural Site",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:21",
-              "distance": 14.31,
-              "price": 59.11,
-              "cost": 59.11,
+              "start_time": "12:37",
+              "end_time": "13:06",
+              "distance": 19.97,
+              "price": 84.56,
+              "cost": 84.56,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Bank of China",
-          "start_time": "13:39",
-          "end_time": "15:09",
+          "position": "Zhujiajiao Ancient Town Scenic Area",
+          "start_time": "14:27",
+          "end_time": "15:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Huangpu River",
-              "end": "Bank of China",
+              "start": "Guangfulin Cultural Site",
+              "end": "Zhujiajiao Ancient Town Scenic Area",
               "mode": "taxi",
-              "start_time": "13:36",
-              "end_time": "13:36",
-              "distance": 0.33,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Zhang Garden",
-          "start_time": "15:13",
-          "end_time": "15:23",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Bank of China",
-              "end": "Zhang Garden",
-              "mode": "taxi",
-              "start_time": "15:09",
-              "end_time": "15:13",
-              "distance": 3.01,
-              "price": 15.23,
-              "cost": 15.23,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Yuyuan Road Historical and Cultural Preservation Area",
-          "start_time": "15:26",
-          "end_time": "15:36",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Zhang Garden",
-              "end": "Yuyuan Road Historical and Cultural Preservation Area",
-              "mode": "taxi",
-              "start_time": "15:23",
-              "end_time": "15:26",
-              "distance": 2.26,
-              "price": 12.62,
-              "cost": 12.62,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Columbia Circle",
-          "start_time": "15:38",
-          "end_time": "15:48",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Yuyuan Road Historical and Cultural Preservation Area",
-              "end": "Columbia Circle",
-              "mode": "taxi",
-              "start_time": "15:36",
-              "end_time": "15:38",
-              "distance": 1.77,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Liu Haisu Art Museum",
-          "start_time": "15:49",
-          "end_time": "15:59",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Columbia Circle",
-              "end": "Liu Haisu Art Museum",
-              "mode": "taxi",
-              "start_time": "15:48",
-              "end_time": "15:49",
-              "distance": 0.81,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Zhongshan Park",
-          "start_time": "16:01",
-          "end_time": "16:11",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Liu Haisu Art Museum",
-              "end": "Zhongshan Park",
-              "mode": "taxi",
-              "start_time": "15:59",
-              "end_time": "16:01",
-              "distance": 1.39,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "14:06",
+              "end_time": "14:27",
+              "distance": 14.64,
+              "price": 60.57,
+              "cost": 60.57,
               "cars": 1
             }
           ]
@@ -226,82 +94,38 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhongshan Park",
+              "start": "Zhujiajiao Ancient Town Scenic Area",
               "end": "Fu He Hui",
               "mode": "taxi",
-              "start_time": "16:11",
-              "end_time": "16:12",
-              "distance": 1.15,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Nanjing Road Pedestrian Street",
-          "start_time": "18:09",
-          "end_time": "19:24",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Fu He Hui",
-              "end": "Nanjing Road Pedestrian Street",
-              "mode": "taxi",
-              "start_time": "18:00",
-              "end_time": "18:09",
-              "distance": 6.42,
-              "price": 27.17,
-              "cost": 27.17,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Lujiazui",
-          "start_time": "19:27",
-          "end_time": "20:42",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Nanjing Road Pedestrian Street",
-              "end": "Lujiazui",
-              "mode": "taxi",
-              "start_time": "19:24",
-              "end_time": "19:27",
-              "distance": 2.07,
-              "price": 11.95,
-              "cost": 11.95,
+              "start_time": "15:27",
+              "end_time": "16:22",
+              "distance": 37.01,
+              "price": 161.23,
+              "cost": 161.23,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Fliport Garden Hotel",
-          "start_time": "21:06",
+          "position": "Orange Hotel (Shanghai Hongqiao Railway Station)",
+          "start_time": "18:16",
           "end_time": "24:00",
-          "price": 652.0,
-          "cost": 1304.0,
+          "price": 600.0,
+          "cost": 1200.0,
           "rooms": 2,
           "room_type": 1,
           "tickets": 2,
           "transports": [
             {
-              "start": "Lujiazui",
-              "end": "Fliport Garden Hotel",
+              "start": "Fu He Hui",
+              "end": "Orange Hotel (Shanghai Hongqiao Railway Station)",
               "mode": "taxi",
-              "start_time": "20:42",
-              "end_time": "21:06",
-              "distance": 16.26,
-              "price": 67.88,
-              "cost": 67.88,
+              "start_time": "18:00",
+              "end_time": "18:16",
+              "distance": 11.3,
+              "price": 45.57,
+              "cost": 45.57,
               "cars": 1
             }
           ]
@@ -313,7 +137,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Fliport Garden Hotel",
+          "position": "Orange Hotel (Shanghai Hongqiao Railway Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -322,55 +146,45 @@
           "transports": []
         },
         {
-          "type": "breakfast",
-          "position": "Fliport Garden Hotel",
-          "start_time": "08:31",
-          "end_time": "08:41",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
           "type": "attraction",
-          "position": "Jing'an Sculpture Park",
-          "start_time": "08:48",
-          "end_time": "10:03",
+          "position": "Venice Town",
+          "start_time": "08:42",
+          "end_time": "09:42",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Fliport Garden Hotel",
-              "end": "Jing'an Sculpture Park",
+              "start": "Orange Hotel (Shanghai Hongqiao Railway Station)",
+              "end": "Venice Town",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:48",
-              "distance": 12.57,
-              "price": 51.25,
-              "cost": 51.25,
+              "end_time": "08:42",
+              "distance": 8.36,
+              "price": 33.97,
+              "cost": 33.97,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Shanghai Lavender Park",
-          "start_time": "10:36",
-          "end_time": "11:51",
+          "position": "The Bund",
+          "start_time": "09:58",
+          "end_time": "10:58",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Jing'an Sculpture Park",
-              "end": "Shanghai Lavender Park",
+              "start": "Venice Town",
+              "end": "The Bund",
               "mode": "taxi",
-              "start_time": "10:03",
-              "end_time": "10:36",
-              "distance": 22.65,
-              "price": 96.64,
-              "cost": 96.64,
+              "start_time": "09:42",
+              "end_time": "09:58",
+              "distance": 10.81,
+              "price": 43.33,
+              "cost": 43.33,
               "cars": 1
             }
           ]
@@ -378,65 +192,65 @@
         {
           "type": "lunch",
           "position": "Tasteless Comfort Food (Qibao Branch)",
-          "start_time": "12:37",
-          "end_time": "13:37",
+          "start_time": "11:22",
+          "end_time": "12:22",
           "price": 255.0,
           "cost": 510.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Shanghai Lavender Park",
+              "start": "The Bund",
               "end": "Tasteless Comfort Food (Qibao Branch)",
               "mode": "taxi",
-              "start_time": "11:51",
-              "end_time": "12:37",
-              "distance": 31.24,
-              "price": 135.27,
-              "cost": 135.27,
+              "start_time": "10:58",
+              "end_time": "11:22",
+              "distance": 16.61,
+              "price": 69.43,
+              "cost": 69.43,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Guangfulin Cultural Site",
-          "start_time": "14:03",
-          "end_time": "15:18",
+          "position": "Huangpu River",
+          "start_time": "12:47",
+          "end_time": "13:47",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Tasteless Comfort Food (Qibao Branch)",
-              "end": "Guangfulin Cultural Site",
+              "end": "Huangpu River",
               "mode": "taxi",
-              "start_time": "13:37",
-              "end_time": "14:03",
-              "distance": 17.41,
-              "price": 73.07,
-              "cost": 73.07,
+              "start_time": "12:22",
+              "end_time": "12:47",
+              "distance": 16.84,
+              "price": 70.46,
+              "cost": 70.46,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Zhujiajiao Ancient Town Scenic Area",
-          "start_time": "15:39",
-          "end_time": "16:54",
+          "position": "Bank of China",
+          "start_time": "13:47",
+          "end_time": "14:37",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Guangfulin Cultural Site",
-              "end": "Zhujiajiao Ancient Town Scenic Area",
+              "start": "Huangpu River",
+              "end": "Bank of China",
               "mode": "taxi",
-              "start_time": "15:18",
-              "end_time": "15:39",
-              "distance": 14.64,
-              "price": 60.57,
-              "cost": 60.57,
+              "start_time": "13:47",
+              "end_time": "13:47",
+              "distance": 0.33,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -444,45 +258,45 @@
         {
           "type": "dinner",
           "position": "Kurogi",
-          "start_time": "17:58",
-          "end_time": "18:58",
+          "start_time": "17:00",
+          "end_time": "18:00",
           "price": 3312.0,
           "cost": 6624.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Zhujiajiao Ancient Town Scenic Area",
+              "start": "Bank of China",
               "end": "Kurogi",
               "mode": "taxi",
-              "start_time": "16:54",
-              "end_time": "17:58",
-              "distance": 43.14,
-              "price": 188.82,
-              "cost": 188.82,
+              "start_time": "14:37",
+              "end_time": "14:38",
+              "distance": 0.87,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
         },
         {
           "type": "accommodation",
-          "position": "Fliport Garden Hotel",
-          "start_time": "19:19",
+          "position": "Orange Hotel (Shanghai Hongqiao Railway Station)",
+          "start_time": "18:26",
           "end_time": "24:00",
-          "price": 652.0,
-          "cost": 1304.0,
+          "price": 600.0,
+          "cost": 1200.0,
           "rooms": 2,
           "room_type": 1,
           "tickets": 2,
           "transports": [
             {
               "start": "Kurogi",
-              "end": "Fliport Garden Hotel",
+              "end": "Orange Hotel (Shanghai Hongqiao Railway Station)",
               "mode": "taxi",
-              "start_time": "18:58",
-              "end_time": "19:19",
-              "distance": 14.21,
-              "price": 58.65,
-              "cost": 58.65,
+              "start_time": "18:00",
+              "end_time": "18:26",
+              "distance": 17.45,
+              "price": 73.22,
+              "cost": 73.22,
               "cars": 1
             }
           ]
@@ -494,7 +308,7 @@
       "activities": [
         {
           "type": "breakfast",
-          "position": "Fliport Garden Hotel",
+          "position": "Orange Hotel (Shanghai Hongqiao Railway Station)",
           "start_time": "07:30",
           "end_time": "08:30",
           "price": 0,
@@ -504,44 +318,44 @@
         },
         {
           "type": "attraction",
-          "position": "Venice Town",
-          "start_time": "08:38",
-          "end_time": "09:53",
+          "position": "Nanjing Road Pedestrian Street",
+          "start_time": "08:56",
+          "end_time": "09:56",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Fliport Garden Hotel",
-              "end": "Venice Town",
+              "start": "Orange Hotel (Shanghai Hongqiao Railway Station)",
+              "end": "Nanjing Road Pedestrian Street",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:38",
-              "distance": 5.76,
-              "price": 24.88,
-              "cost": 24.88,
+              "end_time": "08:56",
+              "distance": 17.68,
+              "price": 74.28,
+              "cost": 74.28,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "The Bund",
-          "start_time": "10:09",
-          "end_time": "11:24",
+          "position": "Lujiazui",
+          "start_time": "09:59",
+          "end_time": "10:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Venice Town",
-              "end": "The Bund",
+              "start": "Nanjing Road Pedestrian Street",
+              "end": "Lujiazui",
               "mode": "taxi",
-              "start_time": "09:53",
-              "end_time": "10:09",
-              "distance": 10.81,
-              "price": 43.33,
-              "cost": 43.33,
+              "start_time": "09:56",
+              "end_time": "09:59",
+              "distance": 2.07,
+              "price": 11.95,
+              "cost": 11.95,
               "cars": 1
             }
           ]
@@ -549,21 +363,21 @@
         {
           "type": "lunch",
           "position": "Yong Fu (Huangpu Branch)",
-          "start_time": "11:30",
-          "end_time": "12:30",
+          "start_time": "11:06",
+          "end_time": "12:06",
           "price": 600.0,
           "cost": 1200.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "The Bund",
+              "start": "Lujiazui",
               "end": "Yong Fu (Huangpu Branch)",
               "mode": "taxi",
-              "start_time": "11:24",
-              "end_time": "11:30",
-              "distance": 4.23,
-              "price": 19.5,
-              "cost": 19.5,
+              "start_time": "10:59",
+              "end_time": "11:06",
+              "distance": 5.33,
+              "price": 23.36,
+              "cost": 23.36,
               "cars": 1
             }
           ]
@@ -571,8 +385,8 @@
         {
           "type": "attraction",
           "position": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
-          "start_time": "12:48",
-          "end_time": "14:18",
+          "start_time": "12:16",
+          "end_time": "13:06",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -581,8 +395,8 @@
               "start": "Yong Fu (Huangpu Branch)",
               "end": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "mode": "taxi",
-              "start_time": "12:30",
-              "end_time": "12:40",
+              "start_time": "12:06",
+              "end_time": "12:16",
               "distance": 6.96,
               "price": 29.07,
               "cost": 29.07,
@@ -593,8 +407,8 @@
         {
           "type": "attraction",
           "position": "Century Avenue Cherry Orchard",
-          "start_time": "14:24",
-          "end_time": "15:54",
+          "start_time": "13:07",
+          "end_time": "13:57",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -603,97 +417,9 @@
               "start": "1192 Nong Old Shanghai Style Street (Century Link Plaza Branch)",
               "end": "Century Avenue Cherry Orchard",
               "mode": "taxi",
-              "start_time": "14:18",
-              "end_time": "14:19",
+              "start_time": "13:06",
+              "end_time": "13:07",
               "distance": 1.31,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shanghai Museum (East Hall)",
-          "start_time": "15:58",
-          "end_time": "16:08",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Century Avenue Cherry Orchard",
-              "end": "Shanghai Museum (East Hall)",
-              "mode": "taxi",
-              "start_time": "15:54",
-              "end_time": "15:58",
-              "distance": 2.78,
-              "price": 14.43,
-              "cost": 14.43,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shanghai Library East Branch",
-          "start_time": "16:09",
-          "end_time": "16:19",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Shanghai Museum (East Hall)",
-              "end": "Shanghai Library East Branch",
-              "mode": "taxi",
-              "start_time": "16:08",
-              "end_time": "16:09",
-              "distance": 0.85,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Century Park",
-          "start_time": "16:19",
-          "end_time": "16:29",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Shanghai Library East Branch",
-              "end": "Century Park",
-              "mode": "taxi",
-              "start_time": "16:19",
-              "end_time": "16:19",
-              "distance": 0.66,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Himalaya Art Museum",
-          "start_time": "16:30",
-          "end_time": "16:40",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 2,
-          "transports": [
-            {
-              "start": "Century Park",
-              "end": "Himalaya Art Museum",
-              "mode": "taxi",
-              "start_time": "16:29",
-              "end_time": "16:30",
-              "distance": 1.21,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -711,14 +437,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Himalaya Art Museum",
+              "start": "Century Avenue Cherry Orchard",
               "end": "Shanghai Pudong International Airport",
               "mode": "taxi",
-              "start_time": "16:40",
-              "end_time": "17:17",
-              "distance": 24.72,
-              "price": 105.93,
-              "cost": 105.93,
+              "start_time": "13:57",
+              "end_time": "14:41",
+              "distance": 29.93,
+              "price": 129.36,
+              "cost": 129.36,
               "cars": 1
             }
           ],
@@ -727,6 +453,6 @@
       ]
     }
   ],
-  "elapsed_time(sec)": 134.63306760787964,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 62.43959355354309,
+  "_eval_score": 97.91534391534391
 }

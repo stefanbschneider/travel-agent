@@ -7,167 +7,267 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "01:11",
-          "end_time": "03:36",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 923.58,
-          "cost": 923.58,
+          "type": "train",
+          "start_time": "23:54",
+          "end_time": "04:40",
+          "start": "Beijing Fengtai Station",
+          "end": "Shenzhen East Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL095"
-        },
-        {
-          "type": "breakfast",
-          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-          "start_time": "07:00",
-          "end_time": "08:00",
-          "price": 24.0,
-          "cost": 24.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
-              "mode": "taxi",
-              "start_time": "03:36",
-              "end_time": "04:14",
-              "distance": 25.7,
-              "price": 110.35,
-              "cost": 110.35,
-              "cars": 1
-            }
-          ]
+          "TrainID": "K105"
         },
         {
           "type": "attraction",
           "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
           "start_time": "09:00",
-          "end_time": "10:00",
+          "end_time": "10:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "start": "Shenzhen East Station",
+              "end": "Buji-Metro Station",
+              "mode": "walk",
+              "start_time": "04:40",
+              "end_time": "04:43",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Buji-Metro Station",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "metro",
+              "start_time": "04:43",
+              "end_time": "04:59",
+              "distance": 8.09,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
               "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-              "mode": "taxi",
-              "start_time": "08:00",
-              "end_time": "08:03",
-              "distance": 2.48,
-              "price": 13.38,
-              "cost": 13.38,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "04:59",
+              "end_time": "05:03",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "10:42",
+          "end_time": "12:12",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:34",
+              "distance": 0.37,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
+              "end": "Futian Port-Metro Station",
+              "mode": "metro",
+              "start_time": "10:34",
+              "end_time": "10:41",
+              "distance": 3.52,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "walk",
+              "start_time": "10:41",
+              "end_time": "10:42",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Old Zhou's Shunde Double-Skin Milk",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 20.0,
-          "cost": 20.0,
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "12:27",
+          "end_time": "13:27",
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-              "end": "Old Zhou's Shunde Double-Skin Milk",
-              "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:04",
-              "distance": 2.78,
-              "price": 14.43,
-              "cost": 14.43,
-              "cars": 1
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
+              "mode": "walk",
+              "start_time": "12:12",
+              "end_time": "12:13",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Hongling South-Metro Station",
+              "mode": "metro",
+              "start_time": "12:13",
+              "end_time": "12:22",
+              "distance": 4.62,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Hongling South-Metro Station",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "walk",
+              "start_time": "12:22",
+              "end_time": "12:27",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Futian District Sports Park",
-          "start_time": "12:19",
-          "end_time": "13:19",
+          "position": "Fairy Lake Botanical Garden",
+          "start_time": "14:14",
+          "end_time": "15:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Futian District Sports Park",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:05",
-              "distance": 3.98,
-              "price": 18.64,
-              "cost": 18.64,
-              "cars": 1
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
+              "end": "Hongling South-Metro Station",
+              "mode": "walk",
+              "start_time": "13:27",
+              "end_time": "13:32",
+              "distance": 0.49,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Hongling South-Metro Station",
+              "end": "Liantang-Metro Station",
+              "mode": "metro",
+              "start_time": "13:32",
+              "end_time": "13:47",
+              "distance": 7.64,
+              "price": 3,
+              "cost": 3,
+              "tickets": 1
+            },
+            {
+              "start": "Liantang-Metro Station",
+              "end": "Fairy Lake Botanical Garden",
+              "mode": "walk",
+              "start_time": "13:47",
+              "end_time": "14:14",
+              "distance": 2.27,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Dameisha Yacht Rental Center",
+          "start_time": "16:50",
+          "end_time": "18:20",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Fairy Lake Botanical Garden",
+              "end": "Liantang-Metro Station",
+              "mode": "walk",
+              "start_time": "15:44",
+              "end_time": "16:11",
+              "distance": 2.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Liantang-Metro Station",
+              "end": "Xiaomeisha-Metro Station",
+              "mode": "metro",
+              "start_time": "16:11",
+              "end_time": "16:43",
+              "distance": 16.21,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Xiaomeisha-Metro Station",
+              "end": "Dameisha Yacht Rental Center",
+              "mode": "walk",
+              "start_time": "16:43",
+              "end_time": "16:50",
+              "distance": 0.62,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "East Sea Palace Seafood Restaurant",
-          "start_time": "17:15",
-          "end_time": "18:00",
-          "price": 90.0,
-          "cost": 90.0,
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "19:00",
+          "end_time": "19:45",
+          "price": 22.0,
+          "cost": 22.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Futian District Sports Park",
-              "end": "East Sea Palace Seafood Restaurant",
+              "start": "Dameisha Yacht Rental Center",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
               "mode": "taxi",
-              "start_time": "13:19",
-              "end_time": "13:41",
-              "distance": 14.75,
-              "price": 61.09,
-              "cost": 61.09,
+              "start_time": "18:20",
+              "end_time": "19:00",
+              "distance": 27.19,
+              "price": 117.03,
+              "cost": 117.03,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Bao'an Xibay Mangrove Park",
-          "start_time": "07:40",
-          "end_time": "08:40",
+          "position": "Bao'an Park",
+          "start_time": "20:08",
+          "end_time": "21:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "East Sea Palace Seafood Restaurant",
-              "end": "Bao'an Xibay Mangrove Park",
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Bao'an Park",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:40",
-              "distance": 6.87,
-              "price": 28.76,
-              "cost": 28.76,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Shenzhen Airport Ferry Cruise",
-          "start_time": "07:34",
-          "end_time": "08:34",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Bao'an Xibay Mangrove Park",
-              "end": "Shenzhen Airport Ferry Cruise",
-              "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:34",
-              "distance": 2.67,
-              "price": 14.05,
-              "cost": 14.05,
+              "start_time": "19:45",
+              "end_time": "20:08",
+              "distance": 15.62,
+              "price": 64.99,
+              "cost": 64.99,
               "cars": 1
             }
           ]
@@ -175,7 +275,7 @@
         {
           "type": "accommodation",
           "position": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-          "start_time": "23:00",
+          "start_time": "22:27",
           "end_time": "24:00",
           "price": 570.0,
           "cost": 570.0,
@@ -184,15 +284,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Shenzhen Airport Ferry Cruise",
+              "start": "Bao'an Park",
+              "end": "Xingdong-Metro Station",
+              "mode": "walk",
+              "start_time": "21:38",
+              "end_time": "21:56",
+              "distance": 1.52,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xingdong-Metro Station",
+              "end": "Fuyong-Metro Station",
+              "mode": "metro",
+              "start_time": "21:56",
+              "end_time": "22:26",
+              "distance": 15.43,
+              "price": 5,
+              "cost": 5,
+              "tickets": 1
+            },
+            {
+              "start": "Fuyong-Metro Station",
               "end": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-              "mode": "taxi",
-              "start_time": "20:00",
-              "end_time": "20:11",
-              "distance": 7.51,
-              "price": 30.97,
-              "cost": 30.97,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "22:26",
+              "end_time": "22:27",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -213,108 +333,86 @@
         },
         {
           "type": "attraction",
-          "position": "Lixin Lake Park",
-          "start_time": "11:04",
-          "end_time": "12:04",
+          "position": "Bao'an Jesus the King Church",
+          "start_time": "09:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-              "end": "Lixin Lake Park",
+              "end": "Bao'an Jesus the King Church",
               "mode": "taxi",
-              "start_time": "11:00",
-              "end_time": "11:04",
-              "distance": 3.0,
-              "price": 15.19,
-              "cost": 15.19,
+              "start_time": "08:30",
+              "end_time": "08:52",
+              "distance": 14.69,
+              "price": 60.8,
+              "cost": 60.8,
               "cars": 1
             }
           ]
         },
         {
           "type": "lunch",
-          "position": "Grand East Sea Seafood Restaurant (Fuyong Main Branch)",
-          "start_time": "11:05",
-          "end_time": "11:50",
-          "price": 222.0,
-          "cost": 222.0,
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 24.0,
+          "cost": 24.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Lixin Lake Park",
-              "end": "Grand East Sea Seafood Restaurant (Fuyong Main Branch)",
+              "start": "Bao'an Jesus the King Church",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
               "mode": "taxi",
-              "start_time": "11:00",
-              "end_time": "11:05",
-              "distance": 3.47,
-              "price": 16.86,
-              "cost": 16.86,
+              "start_time": "09:50",
+              "end_time": "10:11",
+              "distance": 14.5,
+              "price": 59.96,
+              "cost": 59.96,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Helicopter Aerial Sightseeing Tour",
-          "start_time": "09:34",
-          "end_time": "10:34",
-          "price": 3980.0,
-          "cost": 3980.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Grand East Sea Seafood Restaurant (Fuyong Main Branch)",
-              "end": "Helicopter Aerial Sightseeing Tour",
-              "mode": "taxi",
-              "start_time": "09:30",
-              "end_time": "09:34",
-              "distance": 2.79,
-              "price": 14.48,
-              "cost": 14.48,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "OAO Art Space",
-          "start_time": "09:06",
-          "end_time": "10:06",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "12:02",
+          "end_time": "12:52",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Helicopter Aerial Sightseeing Tour",
-              "end": "OAO Art Space",
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+              "end": "Guan Shanyue Art Museum",
               "mode": "taxi",
-              "start_time": "09:00",
-              "end_time": "09:06",
-              "distance": 4.06,
-              "price": 18.92,
-              "cost": 18.92,
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "distance": 1.88,
+              "price": 11.29,
+              "cost": 11.29,
               "cars": 1
             }
           ]
         },
         {
-          "type": "dinner",
-          "position": "Yuhua Seafood (Fuyong Branch)",
-          "start_time": "17:11",
-          "end_time": "17:56",
-          "price": 170.0,
-          "cost": 170.0,
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "12:54",
+          "end_time": "13:44",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "OAO Art Space",
-              "end": "Yuhua Seafood (Fuyong Branch)",
+              "start": "Guan Shanyue Art Museum",
+              "end": "Galaxy Development Center Building - Fitness Center",
               "mode": "taxi",
-              "start_time": "14:11",
-              "end_time": "14:13",
-              "distance": 1.54,
+              "start_time": "12:52",
+              "end_time": "12:54",
+              "distance": 1.8,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -323,22 +421,44 @@
         },
         {
           "type": "attraction",
-          "position": "Phoenix Ancient Village",
-          "start_time": "07:36",
-          "end_time": "08:36",
+          "position": "Futian District Sports Park",
+          "start_time": "13:48",
+          "end_time": "14:38",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Yuhua Seafood (Fuyong Branch)",
-              "end": "Phoenix Ancient Village",
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Futian District Sports Park",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:36",
-              "distance": 4.18,
-              "price": 19.33,
-              "cost": 19.33,
+              "start_time": "13:44",
+              "end_time": "13:48",
+              "distance": 2.74,
+              "price": 14.3,
+              "cost": 14.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Old Zhou's Shunde Double-Skin Milk",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 20.0,
+          "cost": 20.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Futian District Sports Park",
+              "end": "Old Zhou's Shunde Double-Skin Milk",
+              "mode": "taxi",
+              "start_time": "14:38",
+              "end_time": "14:43",
+              "distance": 3.98,
+              "price": 18.64,
+              "cost": 18.64,
               "cars": 1
             }
           ]
@@ -346,7 +466,7 @@
         {
           "type": "accommodation",
           "position": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-          "start_time": "23:00",
+          "start_time": "18:58",
           "end_time": "24:00",
           "price": 570.0,
           "cost": 570.0,
@@ -355,15 +475,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Phoenix Ancient Village",
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Meicun-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:02",
+              "distance": 0.24,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Meicun-Metro Station",
+              "end": "Fuyong-Metro Station",
+              "mode": "metro",
+              "start_time": "18:02",
+              "end_time": "18:57",
+              "distance": 27.87,
+              "price": 6,
+              "cost": 6,
+              "tickets": 1
+            },
+            {
+              "start": "Fuyong-Metro Station",
               "end": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-              "mode": "taxi",
-              "start_time": "20:00",
-              "end_time": "20:07",
-              "distance": 4.98,
-              "price": 22.12,
-              "cost": 22.12,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:57",
+              "end_time": "18:58",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -384,163 +524,53 @@
         },
         {
           "type": "attraction",
-          "position": "Bao'an Park",
-          "start_time": "07:50",
-          "end_time": "08:50",
+          "position": "Bao'an Xibay Mangrove Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Vienna Hotel (Shenzhen Fuyong Metro Station)",
-              "end": "Bao'an Park",
+              "end": "Bao'an Xibay Mangrove Park",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:50",
-              "distance": 13.9,
-              "price": 57.27,
-              "cost": 57.27,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Bao'an Jesus the King Church",
-          "start_time": "09:00",
-          "end_time": "10:15",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Bao'an Park",
-              "end": "Bao'an Jesus the King Church",
-              "mode": "taxi",
-              "start_time": "08:50",
-              "end_time": "08:51",
-              "distance": 0.87,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Jumbo Pizza (Jingtian Branch)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 46.0,
-          "cost": 46.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Bao'an Jesus the King Church",
-              "end": "Jumbo Pizza (Jingtian Branch)",
-              "mode": "taxi",
-              "start_time": "10:15",
-              "end_time": "10:36",
-              "distance": 14.17,
-              "price": 58.48,
-              "cost": 58.48,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Galaxy Development Center Building - Fitness Center",
-          "start_time": "13:26",
-          "end_time": "14:56",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Jumbo Pizza (Jingtian Branch)",
-              "end": "Galaxy Development Center Building - Fitness Center",
-              "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:03",
-              "distance": 2.34,
-              "price": 12.88,
-              "cost": 12.88,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Guan Shanyue Art Museum",
-          "start_time": "15:34",
-          "end_time": "16:34",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "Guan Shanyue Art Museum",
-              "mode": "taxi",
-              "start_time": "14:56",
-              "end_time": "14:58",
-              "distance": 1.8,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Old Bowl Society · Shaanxi Handmade Noodles (Qunxing Branch)",
-          "start_time": "17:00",
-          "end_time": "17:45",
-          "price": 38.0,
-          "cost": 38.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Guan Shanyue Art Museum",
-              "end": "Old Bowl Society · Shaanxi Handmade Noodles (Qunxing Branch)",
-              "mode": "taxi",
-              "start_time": "16:34",
-              "end_time": "16:36",
-              "distance": 1.87,
-              "price": 11.26,
-              "cost": 11.26,
+              "start_time": "08:30",
+              "end_time": "08:44",
+              "distance": 9.57,
+              "price": 38.19,
+              "cost": 38.19,
               "cars": 1
             }
           ]
         },
         {
           "type": "train",
-          "start_time": "19:34",
-          "end_time": "06:33",
-          "start": "Shenzhen North Railway Station",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
           "end": "Beijing West Railway Station",
-          "price": 1165.89,
-          "cost": 1165.89,
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [
             {
-              "start": "Old Bowl Society · Shaanxi Handmade Noodles (Qunxing Branch)",
-              "end": "Shenzhen North Railway Station",
+              "start": "Bao'an Xibay Mangrove Park",
+              "end": "Shenzhen East Station",
               "mode": "taxi",
-              "start_time": "17:45",
-              "end_time": "17:58",
-              "distance": 9.09,
-              "price": 36.51,
-              "cost": 36.51,
+              "start_time": "09:50",
+              "end_time": "10:32",
+              "distance": 28.46,
+              "price": 122.77,
+              "cost": 122.77,
               "cars": 1
             }
           ],
-          "TrainID": "D902"
+          "TrainID": "K106"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 185.94536924362183,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 62.16344690322876,
+  "_eval_score": 96.96778711484595
 }

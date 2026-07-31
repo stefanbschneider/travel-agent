@@ -1,619 +1,317 @@
 {
- "people_number": 4,
- "start_city": "Shenzhen",
- "target_city": "Beijing",
- "elapsed_time(sec)": 328.7353050708771,
- "_eval_score": 99.85930735930737,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 4,
+  "start_city": "Shenzhen",
+  "target_city": "Beijing",
+  "itinerary": [
     {
-     "type": "airplane",
-     "start_time": "01:21",
-     "end_time": "03:46",
-     "start": "Shenzhen Bao'an International Airport",
-     "end": "Beijing Capital International Airport",
-     "price": 949.31,
-     "cost": 3797.24,
-     "tickets": 4,
-     "transports": [],
-     "FlightID": "FL171"
+      "day": 1,
+      "activities": [
+        {
+          "type": "airplane",
+          "start_time": "08:37",
+          "end_time": "11:02",
+          "start": "Shenzhen Bao'an International Airport",
+          "end": "Beijing Capital International Airport",
+          "price": 962.59,
+          "cost": 3850.36,
+          "tickets": 4,
+          "transports": [],
+          "FlightID": "FL173"
+        },
+        {
+          "type": "lunch",
+          "position": "Helude Candied Hawthorn Sticks",
+          "start_time": "11:37",
+          "end_time": "12:22",
+          "price": 7.0,
+          "cost": 28.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing Capital International Airport",
+              "end": "Helude Candied Hawthorn Sticks",
+              "mode": "taxi",
+              "start_time": "11:02",
+              "end_time": "11:37",
+              "distance": 23.44,
+              "price": 100.2,
+              "cost": 100.2,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Corner Tower",
+          "start_time": "12:23",
+          "end_time": "13:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Helude Candied Hawthorn Sticks",
+              "end": "Corner Tower",
+              "mode": "taxi",
+              "start_time": "12:22",
+              "end_time": "12:23",
+              "distance": 1.0,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "The Palace Museum",
+          "start_time": "15:54",
+          "end_time": "16:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Corner Tower",
+              "end": "The Palace Museum",
+              "mode": "taxi",
+              "start_time": "13:13",
+              "end_time": "13:13",
+              "distance": 0.63,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jumbo Seafood (Beijing SKP Branch)",
+          "start_time": "18:13",
+          "end_time": "19:13",
+          "price": 401.0,
+          "cost": 1604.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "The Palace Museum",
+              "end": "Jumbo Seafood (Beijing SKP Branch)",
+              "mode": "walk",
+              "start_time": "16:54",
+              "end_time": "18:13",
+              "distance": 6.607223368078893,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+          "start_time": "22:57",
+          "end_time": "24:00",
+          "price": 269.0,
+          "cost": 538.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Jumbo Seafood (Beijing SKP Branch)",
+              "end": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "mode": "walk",
+              "start_time": "19:13",
+              "end_time": "22:57",
+              "distance": 18.684647194213184,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Monument to the People's Heroes",
-     "start_time": "07:00",
-     "end_time": "07:20",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Beijing Capital International Airport",
-       "end": "Terminal 2-Metro Station",
-       "mode": "walk",
-       "start_time": "05:55",
-       "end_time": "06:05",
-       "cost": 0,
-       "distance": 0.88,
-       "price": 0
-      },
-      {
-       "start": "Terminal 2-Metro Station",
-       "end": "Tiananmen East-Metro Station",
-       "mode": "metro",
-       "start_time": "06:05",
-       "end_time": "06:55",
-       "cost": 24,
-       "distance": 25.11,
-       "price": 6,
-       "tickets": 4
-      },
-      {
-       "start": "Tiananmen East-Metro Station",
-       "end": "Monument to the People's Heroes",
-       "mode": "walk",
-       "start_time": "06:55",
-       "end_time": "07:00",
-       "cost": 0,
-       "distance": 0.43,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Tiananmen Square",
+          "start_time": "12:56",
+          "end_time": "13:56",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "end": "Tiananmen Square",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "12:56",
+              "distance": 22.190196435426735,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Yonghe Temple",
+          "start_time": "14:57",
+          "end_time": "15:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Yonghe Temple",
+              "mode": "walk",
+              "start_time": "13:56",
+              "end_time": "14:57",
+              "distance": 5.08520486318879,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shichahai",
+          "start_time": "16:31",
+          "end_time": "17:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Yonghe Temple",
+              "end": "Shichahai",
+              "mode": "walk",
+              "start_time": "15:57",
+              "end_time": "16:31",
+              "distance": 2.8337235809832504,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Wolfgang's Steakhouse (Sanlitun Branch)",
+          "start_time": "18:43",
+          "end_time": "19:43",
+          "price": 1100.0,
+          "cost": 4400.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Shichahai",
+              "end": "Wolfgang's Steakhouse (Sanlitun Branch)",
+              "mode": "walk",
+              "start_time": "17:31",
+              "end_time": "18:43",
+              "distance": 6.017451554282797,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+          "start_time": "23:12",
+          "end_time": "24:00",
+          "price": 269.0,
+          "cost": 538.0,
+          "rooms": 2,
+          "room_type": 2,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Wolfgang's Steakhouse (Sanlitun Branch)",
+              "end": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "mode": "walk",
+              "start_time": "19:43",
+              "end_time": "23:12",
+              "distance": 17.429746296245344,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Tiananmen Square",
-     "start_time": "07:31",
-     "end_time": "07:51",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Monument to the People's Heroes",
-       "end": "Tiananmen Square",
-       "mode": "walk",
-       "start_time": "07:30",
-       "end_time": "07:31",
-       "cost": 0,
-       "distance": 0.09691643645443003,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "breakfast",
-     "position": "Mandarin Oriental Wangfujing, Beijing - Zi Restaurant",
-     "start_time": "08:00",
-     "end_time": "08:05",
-     "price": 568.0,
-     "cost": 2272.0,
-     "transports": [
-      {
-       "start": "Tiananmen Square",
-       "end": "Mandarin Oriental Wangfujing, Beijing - Zi Restaurant",
-       "mode": "walk",
-       "start_time": "07:54",
-       "end_time": "08:00",
-       "cost": 0,
-       "distance": 0.5157897163363956,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Chairman Mao Memorial Hall",
-     "start_time": "08:30",
-     "end_time": "08:50",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Mandarin Oriental Wangfujing, Beijing - Zi Restaurant",
-       "end": "Chairman Mao Memorial Hall",
-       "mode": "walk",
-       "start_time": "08:23",
-       "end_time": "08:30",
-       "cost": 0,
-       "distance": 0.5982987812603545,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Deyong Jujube-Fragrance Roast Duck (Wangfujing Central Mall Branch)",
-     "start_time": "11:00",
-     "end_time": "11:05",
-     "price": 225.0,
-     "cost": 900.0,
-     "transports": [
-      {
-       "start": "Chairman Mao Memorial Hall",
-       "end": "Deyong Jujube-Fragrance Roast Duck (Wangfujing Central Mall Branch)",
-       "mode": "walk",
-       "start_time": "10:53",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.6080562086395364,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Mandarin Oriental Wangfujing, Beijing · MO Bar (Wangfujing Central Mall Branch)",
-     "start_time": "17:00",
-     "end_time": "17:05",
-     "price": 304.0,
-     "cost": 1216.0,
-     "transports": [
-      {
-       "start": "Deyong Jujube-Fragrance Roast Duck (Wangfujing Central Mall Branch)",
-       "end": "Mandarin Oriental Wangfujing, Beijing · MO Bar (Wangfujing Central Mall Branch)",
-       "mode": "walk",
-       "start_time": "17:00",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.02721194686399719,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Chang'an Avenue",
-     "start_time": "17:16",
-     "end_time": "18:46",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Mandarin Oriental Wangfujing, Beijing · MO Bar (Wangfujing Central Mall Branch)",
-       "end": "Chang'an Avenue",
-       "mode": "walk",
-       "start_time": "17:09",
-       "end_time": "17:16",
-       "cost": 0,
-       "distance": 0.5900188055991761,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Madison Hotel Wangfujing Tiananmen Beijing",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 741.0,
-     "cost": 741.0,
-     "transports": [
-      {
-       "start": "Chang'an Avenue",
-       "end": "Madison Hotel Wangfujing Tiananmen Beijing",
-       "mode": "walk",
-       "start_time": "22:52",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.6716716771280139,
-       "price": 0
-      }
-     ]
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Jingshan Park",
+          "start_time": "12:35",
+          "end_time": "13:35",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Beijing LanWan International Hotel (Capital Airport Xinguozhan Branch)",
+              "end": "Jingshan Park",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "12:35",
+              "distance": 20.449465427245396,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "18:19",
+          "end_time": "20:44",
+          "start": "Beijing Capital International Airport",
+          "end": "Shenzhen Bao'an International Airport",
+          "price": 929.69,
+          "cost": 3718.76,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Jingshan Park",
+              "end": "Beijing Capital International Airport",
+              "mode": "walk",
+              "start_time": "13:35",
+              "end_time": "18:19",
+              "distance": 23.734205510170142,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "FlightID": "FL100"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Waldorf Astoria Beijing · Iris Palace 1893 (Jinyu Hutong Branch)",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 846.0,
-     "cost": 3384.0,
-     "transports": [
-      {
-       "start": "Madison Hotel Wangfujing Tiananmen Beijing",
-       "end": "Waldorf Astoria Beijing · Iris Palace 1893 (Jinyu Hutong Branch)",
-       "mode": "walk",
-       "start_time": "07:23",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.649732018908949,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Tiananmen Rostrum",
-     "start_time": "08:47",
-     "end_time": "09:07",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Waldorf Astoria Beijing · Iris Palace 1893 (Jinyu Hutong Branch)",
-       "end": "Tiananmen Rostrum",
-       "mode": "walk",
-       "start_time": "08:37",
-       "end_time": "08:47",
-       "cost": 0,
-       "distance": 0.8563925653410606,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "National Museum of China",
-     "start_time": "09:18",
-     "end_time": "09:38",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Tiananmen Rostrum",
-       "end": "National Museum of China",
-       "mode": "walk",
-       "start_time": "09:12",
-       "end_time": "09:18",
-       "cost": 0,
-       "distance": 0.5649957028817618,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "The Road to Rejuvenation Exhibition Hall",
-     "start_time": "09:55",
-     "end_time": "11:25",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "National Museum of China",
-       "end": "The Road to Rejuvenation Exhibition Hall",
-       "mode": "walk",
-       "start_time": "09:55",
-       "end_time": "09:55",
-       "cost": 0,
-       "distance": 0.011876481898748703,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "The Cheesecake Factory Restaurant (Wangfujing Central Mall Branch)",
-     "start_time": "12:55",
-     "end_time": "13:55",
-     "price": 213.0,
-     "cost": 852.0,
-     "transports": [
-      {
-       "start": "The Road to Rejuvenation Exhibition Hall",
-       "end": "The Cheesecake Factory Restaurant (Wangfujing Central Mall Branch)",
-       "mode": "walk",
-       "start_time": "12:53",
-       "end_time": "12:55",
-       "cost": 0,
-       "distance": 0.20978450534214582,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Beijing Police Museum",
-     "start_time": "09:05",
-     "end_time": "10:05",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "The Cheesecake Factory Restaurant (Wangfujing Central Mall Branch)",
-       "end": "Beijing Police Museum",
-       "mode": "walk",
-       "start_time": "09:00",
-       "end_time": "09:05",
-       "cost": 0,
-       "distance": 0.48123136056523963,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Mandarin Oriental Wangfujing, Beijing - The Mandarin Grill",
-     "start_time": "18:11",
-     "end_time": "18:56",
-     "price": 786.0,
-     "cost": 3144.0,
-     "transports": [
-      {
-       "start": "Beijing Police Museum",
-       "end": "Mandarin Oriental Wangfujing, Beijing - The Mandarin Grill",
-       "mode": "walk",
-       "start_time": "18:06",
-       "end_time": "18:11",
-       "cost": 0,
-       "distance": 0.48706154496280846,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Madison Hotel Wangfujing Tiananmen Beijing",
-     "room_type": 2,
-     "rooms": 1,
-     "start_time": "23:00",
-     "end_time": "24:00",
-     "price": 741.0,
-     "cost": 741.0,
-     "transports": [
-      {
-       "start": "Mandarin Oriental Wangfujing, Beijing - The Mandarin Grill",
-       "end": "Madison Hotel Wangfujing Tiananmen Beijing",
-       "mode": "walk",
-       "start_time": "22:59",
-       "end_time": "23:00",
-       "cost": 0,
-       "distance": 0.16407612724363368,
-       "price": 0
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "day": 3,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Beijing Puxuan Hotel · Left Bank",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 733.0,
-     "cost": 2932.0,
-     "transports": [
-      {
-       "start": "Madison Hotel Wangfujing Tiananmen Beijing",
-       "end": "Wangfujing-Metro Station",
-       "mode": "walk",
-       "start_time": "07:22",
-       "end_time": "07:27",
-       "cost": 0,
-       "distance": 0.43,
-       "price": 0
-      },
-      {
-       "start": "Wangfujing-Metro Station",
-       "end": "National Art Museum of China-Metro Station",
-       "mode": "metro",
-       "start_time": "07:27",
-       "end_time": "07:30",
-       "cost": 8,
-       "distance": 1.74,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "National Art Museum of China-Metro Station",
-       "end": "Beijing Puxuan Hotel · Left Bank",
-       "mode": "walk",
-       "start_time": "07:30",
-       "end_time": "07:30",
-       "cost": 0,
-       "distance": 0.05,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Dongjiaomin Lane",
-     "start_time": "07:43",
-     "end_time": "08:43",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Beijing Puxuan Hotel · Left Bank",
-       "end": "National Art Museum of China-Metro Station",
-       "mode": "walk",
-       "start_time": "07:39",
-       "end_time": "07:39",
-       "cost": 0,
-       "distance": 0.05,
-       "price": 0
-      },
-      {
-       "start": "National Art Museum of China-Metro Station",
-       "end": "Dongdan-Metro Station",
-       "mode": "metro",
-       "start_time": "07:39",
-       "end_time": "07:42",
-       "cost": 8,
-       "distance": 1.83,
-       "price": 2,
-       "tickets": 4
-      },
-      {
-       "start": "Dongdan-Metro Station",
-       "end": "Dongjiaomin Lane",
-       "mode": "walk",
-       "start_time": "07:42",
-       "end_time": "07:43",
-       "cost": 0,
-       "distance": 0.14,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "VEGE WONDER Chinese Vegetarian Cuisine (Wangfujing Central Mall Branch)",
-     "start_time": "11:38",
-     "end_time": "12:23",
-     "price": 946.0,
-     "cost": 3784.0,
-     "transports": [
-      {
-       "start": "Dongjiaomin Lane",
-       "end": "VEGE WONDER Chinese Vegetarian Cuisine (Wangfujing Central Mall Branch)",
-       "mode": "walk",
-       "start_time": "11:28",
-       "end_time": "11:38",
-       "cost": 0,
-       "distance": 0.860176716835545,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "China Numismatic Museum",
-     "start_time": "13:05",
-     "end_time": "13:25",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "VEGE WONDER Chinese Vegetarian Cuisine (Wangfujing Central Mall Branch)",
-       "end": "China Numismatic Museum",
-       "mode": "walk",
-       "start_time": "12:56",
-       "end_time": "13:05",
-       "cost": 0,
-       "distance": 0.7656427540955513,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Da Dong Roast Duck Restaurant (Wangfujing Branch)",
-     "start_time": "17:00",
-     "end_time": "17:05",
-     "price": 430.0,
-     "cost": 1720.0,
-     "transports": [
-      {
-       "start": "China Numismatic Museum",
-       "end": "Da Dong Roast Duck Restaurant (Wangfujing Branch)",
-       "mode": "walk",
-       "start_time": "16:52",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.7487799152153523,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Beijing Working People's Cultural Palace",
-     "start_time": "08:39",
-     "end_time": "09:39",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Da Dong Roast Duck Restaurant (Wangfujing Branch)",
-       "end": "Beijing Working People's Cultural Palace",
-       "mode": "walk",
-       "start_time": "08:27",
-       "end_time": "08:39",
-       "cost": 0,
-       "distance": 1.04966874789996,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Zhongshan Park",
-     "start_time": "08:33",
-     "end_time": "09:33",
-     "price": 0.0,
-     "tickets": 4,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Beijing Working People's Cultural Palace",
-       "end": "Zhongshan Park",
-       "mode": "walk",
-       "start_time": "08:27",
-       "end_time": "08:33",
-       "cost": 0,
-       "distance": 0.5342299373956152,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "train",
-     "start_time": "23:54",
-     "end_time": "04:40",
-     "start": "Beijing Fengtai Station",
-     "end": "Shenzhen East Station",
-     "price": 777.26,
-     "cost": 3109.04,
-     "tickets": 4,
-     "transports": [
-      {
-       "start": "Zhongshan Park",
-       "end": "Goldfish Alley-Metro Station",
-       "mode": "walk",
-       "start_time": "23:09",
-       "end_time": "23:20",
-       "cost": 0,
-       "distance": 0.92,
-       "price": 0
-      },
-      {
-       "start": "Goldfish Alley-Metro Station",
-       "end": "Fengtai East Street-Metro Station",
-       "mode": "metro",
-       "start_time": "23:20",
-       "end_time": "23:44",
-       "cost": 16,
-       "distance": 12.06,
-       "price": 4,
-       "tickets": 4
-      },
-      {
-       "start": "Fengtai East Street-Metro Station",
-       "end": "Beijing Fengtai Station",
-       "mode": "walk",
-       "start_time": "23:44",
-       "end_time": "23:54",
-       "cost": 0,
-       "distance": 0.84,
-       "price": 0
-      }
-     ],
-     "TrainID": "K105"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 60.866087913513184,
+  "_eval_score": 90.27777777777777
 }

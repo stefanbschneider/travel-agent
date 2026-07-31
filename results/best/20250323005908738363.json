@@ -1,575 +1,254 @@
 {
- "people_number": 2,
- "start_city": "Beijing",
- "target_city": "Shenzhen",
- "elapsed_time(sec)": 302.13026094436646,
- "_eval_score": 98.62169312169311,
- "itinerary": [
-  {
-   "day": 1,
-   "activities": [
+  "people_number": 2,
+  "start_city": "Beijing",
+  "target_city": "Shenzhen",
+  "itinerary": [
     {
-     "type": "train",
-     "start_time": "07:26",
-     "end_time": "17:56",
-     "start": "Beijing West Railway Station",
-     "end": "Shenzhen North Railway Station",
-     "price": 1263.04,
-     "cost": 2526.08,
-     "tickets": 2,
-     "transports": [],
-     "TrainID": "G335"
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:26",
+          "end_time": "17:56",
+          "start": "Beijing West Railway Station",
+          "end": "Shenzhen North Railway Station",
+          "price": 1263.04,
+          "cost": 2526.08,
+          "tickets": 2,
+          "transports": [],
+          "TrainID": "G335"
+        },
+        {
+          "type": "dinner",
+          "position": "Always Home Hakka Cuisine (Minkang Road Branch)",
+          "start_time": "17:57",
+          "end_time": "18:42",
+          "price": 66.0,
+          "cost": 132.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shenzhen North Railway Station",
+              "end": "Always Home Hakka Cuisine (Minkang Road Branch)",
+              "mode": "taxi",
+              "start_time": "17:56",
+              "end_time": "17:57",
+              "distance": 1.28,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+          "start_time": "18:44",
+          "end_time": "19:34",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Always Home Hakka Cuisine (Minkang Road Branch)",
+              "end": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "mode": "taxi",
+              "start_time": "18:42",
+              "end_time": "18:44",
+              "distance": 1.83,
+              "price": 11.11,
+              "cost": 11.11,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Shangwei Art Village",
+          "start_time": "20:01",
+          "end_time": "21:31",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Guangdong Xiangyun Skydiving Club (Shenzhen Branch)",
+              "end": "Shangwei Art Village",
+              "mode": "taxi",
+              "start_time": "19:34",
+              "end_time": "19:45",
+              "distance": 7.94,
+              "price": 32.48,
+              "cost": 32.48,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "MeiJing Hotel Shenzhen",
+          "start_time": "23:33",
+          "end_time": "24:00",
+          "price": 398.0,
+          "cost": 796.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shangwei Art Village",
+              "end": "MeiJing Hotel Shenzhen",
+              "mode": "walk",
+              "start_time": "21:31",
+              "end_time": "23:33",
+              "distance": 10.203097817265965,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "dinner",
-     "position": "Tang Palace (Caide Branch)",
-     "start_time": "18:00",
-     "end_time": "19:00",
-     "price": 134.0,
-     "cost": 268.0,
-     "transports": [
-      {
-       "start": "Shenzhen North Railway Station",
-       "end": "Shenzhen North Railway Station-Metro Station",
-       "mode": "walk",
-       "start_time": "17:38",
-       "end_time": "17:39",
-       "cost": 0,
-       "distance": 0.15,
-       "price": 0
-      },
-      {
-       "start": "Shenzhen North Railway Station-Metro Station",
-       "end": "Lianhua Village-Metro Station",
-       "mode": "metro",
-       "start_time": "17:39",
-       "end_time": "17:54",
-       "cost": 6,
-       "distance": 7.86,
-       "price": 3,
-       "tickets": 2
-      },
-      {
-       "start": "Lianhua Village-Metro Station",
-       "end": "Tang Palace (Caide Branch)",
-       "mode": "walk",
-       "start_time": "17:54",
-       "end_time": "18:00",
-       "cost": 0,
-       "distance": 0.55,
-       "price": 0
-      }
-     ]
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "MeiJing Hotel Shenzhen",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Shekou Industrial Zone",
+          "start_time": "12:00",
+          "end_time": "13:30",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "MeiJing Hotel Shenzhen",
+              "end": "Shekou Industrial Zone",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "12:00",
+              "distance": 17.506507886891004,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Merchants Shekou Cruise Home Port Tour",
+          "start_time": "13:49",
+          "end_time": "15:19",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Shekou Industrial Zone",
+              "end": "China Merchants Shekou Cruise Home Port Tour",
+              "mode": "walk",
+              "start_time": "13:30",
+              "end_time": "13:49",
+              "distance": 1.64727178686883,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "MeiJing Hotel Shenzhen",
+          "start_time": "19:06",
+          "end_time": "24:00",
+          "price": 398.0,
+          "cost": 796.0,
+          "rooms": 2,
+          "room_type": 1,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "China Merchants Shekou Cruise Home Port Tour",
+              "end": "MeiJing Hotel Shenzhen",
+              "mode": "walk",
+              "start_time": "15:19",
+              "end_time": "19:06",
+              "distance": 18.99814462979306,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        }
+      ]
     },
     {
-     "type": "attraction",
-     "position": "Shangwei Art Village",
-     "start_time": "16:00",
-     "end_time": "17:00",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Tang Palace (Caide Branch)",
-       "end": "Lianhua Village-Metro Station",
-       "mode": "walk",
-       "start_time": "14:43",
-       "end_time": "14:49",
-       "cost": 0,
-       "distance": 0.55,
-       "price": 0
-      },
-      {
-       "start": "Lianhua Village-Metro Station",
-       "end": "Hehua-Metro Station",
-       "mode": "metro",
-       "start_time": "14:49",
-       "end_time": "15:21",
-       "cost": 10,
-       "distance": 16.17,
-       "price": 5,
-       "tickets": 2
-      },
-      {
-       "start": "Hehua-Metro Station",
-       "end": "Shangwei Art Village",
-       "mode": "walk",
-       "start_time": "15:21",
-       "end_time": "16:00",
-       "cost": 0,
-       "distance": 3.32,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Atour Hotel Shenzhen Futian CBD Civic Center",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "23:31",
-     "end_time": "24:00",
-     "price": 726.0,
-     "cost": 726.0,
-     "transports": [
-      {
-       "start": "Shangwei Art Village",
-       "end": "Hehua-Metro Station",
-       "mode": "walk",
-       "start_time": "22:19",
-       "end_time": "22:58",
-       "cost": 0,
-       "distance": 3.32,
-       "price": 0
-      },
-      {
-       "start": "Hehua-Metro Station",
-       "end": "Lianhua Village-Metro Station",
-       "mode": "metro",
-       "start_time": "22:58",
-       "end_time": "23:30",
-       "cost": 10,
-       "distance": 16.17,
-       "price": 5,
-       "tickets": 2
-      },
-      {
-       "start": "Lianhua Village-Metro Station",
-       "end": "Atour Hotel Shenzhen Futian CBD Civic Center",
-       "mode": "walk",
-       "start_time": "23:30",
-       "end_time": "23:31",
-       "cost": 0,
-       "distance": 0.15,
-       "price": 0
-      }
-     ]
+      "day": 3,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "MeiJing Hotel Shenzhen",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+          "start_time": "12:17",
+          "end_time": "13:47",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "MeiJing Hotel Shenzhen",
+              "end": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "mode": "walk",
+              "start_time": "08:30",
+              "end_time": "12:17",
+              "distance": 18.99814462979306,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "train",
+          "start_time": "19:34",
+          "end_time": "06:33",
+          "start": "Shenzhen North Railway Station",
+          "end": "Beijing West Railway Station",
+          "price": 1165.89,
+          "cost": 2331.78,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
+              "end": "Shenzhen North Railway Station",
+              "mode": "walk",
+              "start_time": "13:47",
+              "end_time": "17:31",
+              "distance": 18.700922226673615,
+              "price": 0,
+              "cost": 0
+            }
+          ],
+          "TrainID": "D902"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "day": 2,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Atour Hotel Shenzhen Futian CBD Civic Center",
-     "start_time": "06:30",
-     "end_time": "07:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "breakfast",
-     "position": "Atour Hotel Shenzhen Futian CBD Civic Center",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Civic Center",
-     "start_time": "08:55",
-     "end_time": "09:55",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Atour Hotel Shenzhen Futian CBD Civic Center",
-       "end": "Shenzhen Civic Center",
-       "mode": "walk",
-       "start_time": "08:53",
-       "end_time": "08:55",
-       "cost": 0,
-       "distance": 0.24864620872800847,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Museum",
-     "start_time": "10:00",
-     "end_time": "10:20",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shenzhen Civic Center",
-       "end": "Shenzhen Museum",
-       "mode": "walk",
-       "start_time": "09:58",
-       "end_time": "10:00",
-       "cost": 0,
-       "distance": 0.2166480463547373,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Industrial Exhibition Hall",
-     "start_time": "10:25",
-     "end_time": "10:45",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shenzhen Museum",
-       "end": "Shenzhen Industrial Exhibition Hall",
-       "mode": "walk",
-       "start_time": "10:22",
-       "end_time": "10:25",
-       "cost": 0,
-       "distance": 0.26734717217226717,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "gaga (Central Book City Branch)",
-     "start_time": "11:00",
-     "end_time": "12:00",
-     "price": 85.0,
-     "cost": 170.0,
-     "transports": [
-      {
-       "start": "Shenzhen Industrial Exhibition Hall",
-       "end": "gaga (Central Book City Branch)",
-       "mode": "walk",
-       "start_time": "10:52",
-       "end_time": "11:00",
-       "cost": 0,
-       "distance": 0.66754414075196,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Museum of History and Folklore",
-     "start_time": "13:05",
-     "end_time": "14:05",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "gaga (Central Book City Branch)",
-       "end": "Shenzhen Museum of History and Folklore",
-       "mode": "walk",
-       "start_time": "12:54",
-       "end_time": "13:05",
-       "cost": 0,
-       "distance": 0.9169353652534236,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-     "start_time": "14:19",
-     "end_time": "15:34",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shenzhen Museum of History and Folklore",
-       "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-       "mode": "walk",
-       "start_time": "14:15",
-       "end_time": "14:19",
-       "cost": 0,
-       "distance": 0.3908100801216047,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Museum of Contemporary Art and Urban Planning",
-     "start_time": "15:36",
-     "end_time": "16:36",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-       "end": "Shenzhen Museum of Contemporary Art and Urban Planning",
-       "mode": "walk",
-       "start_time": "15:30",
-       "end_time": "15:36",
-       "cost": 0,
-       "distance": 0.5631186158232295,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Library",
-     "start_time": "16:45",
-     "end_time": "17:15",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shenzhen Museum of Contemporary Art and Urban Planning",
-       "end": "Shenzhen Library",
-       "mode": "walk",
-       "start_time": "16:40",
-       "end_time": "16:45",
-       "cost": 0,
-       "distance": 0.4253243336609514,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Crane Pine · Sky High Izakaya (Futian Light Show Branch)",
-     "start_time": "17:25",
-     "end_time": "18:00",
-     "price": 480.0,
-     "cost": 960.0,
-     "transports": [
-      {
-       "start": "Shenzhen Library",
-       "end": "Crane Pine · Sky High Izakaya (Futian Light Show Branch)",
-       "mode": "walk",
-       "start_time": "17:14",
-       "end_time": "17:25",
-       "cost": 0,
-       "distance": 0.986041460142713,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "accommodation",
-     "position": "Atour Hotel Shenzhen Futian CBD Civic Center",
-     "room_type": 1,
-     "rooms": 1,
-     "start_time": "19:10",
-     "end_time": "24:00",
-     "price": 726.0,
-     "cost": 726.0,
-     "transports": [
-      {
-       "start": "Crane Pine · Sky High Izakaya (Futian Light Show Branch)",
-       "end": "Atour Hotel Shenzhen Futian CBD Civic Center",
-       "mode": "walk",
-       "start_time": "19:03",
-       "end_time": "19:10",
-       "cost": 0,
-       "distance": 0.6646012794151942,
-       "price": 0
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "day": 3,
-   "activities": [
-    {
-     "type": "breakfast",
-     "position": "Atour Hotel Shenzhen Futian CBD Civic Center",
-     "start_time": "06:30",
-     "end_time": "07:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "breakfast",
-     "position": "Atour Hotel Shenzhen Futian CBD Civic Center",
-     "start_time": "07:30",
-     "end_time": "08:30",
-     "price": 0,
-     "cost": 0,
-     "transports": []
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Concert Hall",
-     "start_time": "09:30",
-     "end_time": "10:30",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Atour Hotel Shenzhen Futian CBD Civic Center",
-       "end": "Shenzhen Concert Hall",
-       "mode": "walk",
-       "start_time": "09:22",
-       "end_time": "09:30",
-       "cost": 0,
-       "distance": 0.7345347665396456,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Shenzhen Book City (Central City Branch)",
-     "start_time": "10:50",
-     "end_time": "12:05",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Shenzhen Concert Hall",
-       "end": "Shenzhen Book City (Central City Branch)",
-       "mode": "walk",
-       "start_time": "10:47",
-       "end_time": "10:50",
-       "cost": 0,
-       "distance": 0.27153179506907954,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "lunch",
-     "position": "Ziyuan Teahouse (Central Book City Branch)",
-     "start_time": "13:00",
-     "end_time": "14:00",
-     "price": 128.0,
-     "cost": 256.0,
-     "transports": [
-      {
-       "start": "Shenzhen Book City (Central City Branch)",
-       "end": "Ziyuan Teahouse (Central Book City Branch)",
-       "mode": "walk",
-       "start_time": "12:48",
-       "end_time": "13:00",
-       "cost": 0,
-       "distance": 1.0205074787618444,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Nellbore Family Center (Zhuoyue Branch)",
-     "start_time": "14:15",
-     "end_time": "15:30",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Ziyuan Teahouse (Central Book City Branch)",
-       "end": "Nellbore Family Center (Zhuoyue Branch)",
-       "mode": "walk",
-       "start_time": "14:00",
-       "end_time": "14:15",
-       "cost": 0,
-       "distance": 1.293593031191675,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "dinner",
-     "position": "Sushi Ichi Japanese Cuisine (Greater China Branch)",
-     "start_time": "17:00",
-     "end_time": "18:00",
-     "price": 1486.0,
-     "cost": 2972.0,
-     "transports": [
-      {
-       "start": "Nellbore Family Center (Zhuoyue Branch)",
-       "end": "Sushi Ichi Japanese Cuisine (Greater China Branch)",
-       "mode": "walk",
-       "start_time": "16:56",
-       "end_time": "17:00",
-       "cost": 0,
-       "distance": 0.3943116301378291,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "attraction",
-     "position": "Galaxy Development Center Building - Fitness Center",
-     "start_time": "18:10",
-     "end_time": "19:10",
-     "price": 0.0,
-     "tickets": 2,
-     "cost": 0.0,
-     "transports": [
-      {
-       "start": "Sushi Ichi Japanese Cuisine (Greater China Branch)",
-       "end": "Galaxy Development Center Building - Fitness Center",
-       "mode": "walk",
-       "start_time": "18:09",
-       "end_time": "18:10",
-       "cost": 0,
-       "distance": 0.09782433170468423,
-       "price": 0
-      }
-     ]
-    },
-    {
-     "type": "train",
-     "start_time": "19:34",
-     "end_time": "06:33",
-     "start": "Shenzhen North Railway Station",
-     "end": "Beijing West Railway Station",
-     "price": 1165.89,
-     "cost": 2331.78,
-     "tickets": 2,
-     "transports": [
-      {
-       "start": "Galaxy Development Center Building - Fitness Center",
-       "end": "Gangxia North-Metro Station",
-       "mode": "walk",
-       "start_time": "19:16",
-       "end_time": "19:16",
-       "cost": 0,
-       "distance": 0.08,
-       "price": 0
-      },
-      {
-       "start": "Gangxia North-Metro Station",
-       "end": "Shenzhen North Railway Station-Metro Station",
-       "mode": "metro",
-       "start_time": "19:16",
-       "end_time": "19:33",
-       "cost": 6,
-       "distance": 8.88,
-       "price": 3,
-       "tickets": 2
-      },
-      {
-       "start": "Shenzhen North Railway Station-Metro Station",
-       "end": "Shenzhen North Railway Station",
-       "mode": "walk",
-       "start_time": "19:33",
-       "end_time": "19:34",
-       "cost": 0,
-       "distance": 0.15,
-       "price": 0
-      }
-     ],
-     "TrainID": "D902"
-    }
-   ]
-  }
- ]
+  ],
+  "elapsed_time(sec)": 60.1533682346344,
+  "_eval_score": 88.94576719576719
 }

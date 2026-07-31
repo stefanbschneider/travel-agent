@@ -7,62 +7,20 @@
       "day": 1,
       "activities": [
         {
-          "type": "airplane",
-          "start_time": "01:11",
-          "end_time": "03:36",
-          "start": "Beijing Capital International Airport",
-          "end": "Shenzhen Bao'an International Airport",
-          "price": 923.58,
-          "cost": 923.58,
+          "type": "train",
+          "start_time": "23:54",
+          "end_time": "04:40",
+          "start": "Beijing Fengtai Station",
+          "end": "Shenzhen East Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [],
-          "FlightID": "FL095"
-        },
-        {
-          "type": "breakfast",
-          "position": "Joyful Gathering (Jingtian Branch)",
-          "start_time": "07:00",
-          "end_time": "08:00",
-          "price": 28.0,
-          "cost": 28.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Shenzhen Bao'an International Airport",
-              "end": "Airport East-Metro Station",
-              "mode": "walk",
-              "start_time": "03:36",
-              "end_time": "03:41",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Airport East-Metro Station",
-              "end": "Xiangmei North-Metro Station",
-              "mode": "metro",
-              "start_time": "03:41",
-              "end_time": "04:28",
-              "distance": 23.94,
-              "price": 6,
-              "cost": 6,
-              "tickets": 1
-            },
-            {
-              "start": "Xiangmei North-Metro Station",
-              "end": "Joyful Gathering (Jingtian Branch)",
-              "mode": "walk",
-              "start_time": "04:28",
-              "end_time": "04:33",
-              "distance": 0.43,
-              "price": 0,
-              "cost": 0
-            }
-          ]
+          "TrainID": "K105"
         },
         {
           "type": "attraction",
-          "position": "Baishilong Music Theme Park",
+          "position": "Bao'an Jesus the King Church",
           "start_time": "09:00",
           "end_time": "10:30",
           "price": 0.0,
@@ -70,56 +28,36 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Joyful Gathering (Jingtian Branch)",
-              "end": "Xiangmei North-Metro Station",
-              "mode": "walk",
-              "start_time": "08:00",
-              "end_time": "08:05",
-              "distance": 0.43,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xiangmei North-Metro Station",
-              "end": "Baishilong-Metro Station",
-              "mode": "metro",
-              "start_time": "08:05",
-              "end_time": "08:15",
-              "distance": 5.37,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Baishilong-Metro Station",
-              "end": "Baishilong Music Theme Park",
-              "mode": "walk",
-              "start_time": "08:15",
-              "end_time": "08:18",
-              "distance": 0.28,
-              "price": 0,
-              "cost": 0
+              "start": "Shenzhen East Station",
+              "end": "Bao'an Jesus the King Church",
+              "mode": "taxi",
+              "start_time": "04:40",
+              "end_time": "05:11",
+              "distance": 20.85,
+              "price": 88.53,
+              "cost": 88.53,
+              "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
-          "start_time": "10:40",
-          "end_time": "12:10",
+          "position": "Bao'an Park",
+          "start_time": "10:31",
+          "end_time": "12:01",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Baishilong Music Theme Park",
-              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "start": "Bao'an Jesus the King Church",
+              "end": "Bao'an Park",
               "mode": "taxi",
               "start_time": "10:30",
-              "end_time": "10:40",
-              "distance": 6.67,
-              "price": 28.06,
-              "cost": 28.06,
+              "end_time": "10:31",
+              "distance": 0.87,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -127,18 +65,40 @@
         {
           "type": "lunch",
           "position": "Old Zhou's Shunde Double-Skin Milk",
-          "start_time": "12:14",
-          "end_time": "13:14",
+          "start_time": "12:23",
+          "end_time": "13:23",
           "price": 20.0,
           "cost": 20.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "start": "Bao'an Park",
               "end": "Old Zhou's Shunde Double-Skin Milk",
               "mode": "taxi",
-              "start_time": "12:10",
-              "end_time": "12:14",
+              "start_time": "12:01",
+              "end_time": "12:23",
+              "distance": 15.08,
+              "price": 62.57,
+              "cost": 62.57,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "13:27",
+          "end_time": "14:57",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Old Zhou's Shunde Double-Skin Milk",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "taxi",
+              "start_time": "13:23",
+              "end_time": "13:27",
               "distance": 2.78,
               "price": 14.43,
               "cost": 14.43,
@@ -148,88 +108,66 @@
         },
         {
           "type": "attraction",
-          "position": "Dashabe Park",
-          "start_time": "07:43",
-          "end_time": "08:43",
+          "position": "Baishilong Music Theme Park",
+          "start_time": "15:07",
+          "end_time": "16:37",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Old Zhou's Shunde Double-Skin Milk",
-              "end": "Dashabe Park",
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Baishilong Music Theme Park",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:43",
-              "distance": 8.76,
-              "price": 35.37,
-              "cost": 35.37,
+              "start_time": "14:57",
+              "end_time": "15:07",
+              "distance": 6.67,
+              "price": 28.06,
+              "cost": 28.06,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Bao'an Park",
-          "start_time": "15:17",
-          "end_time": "16:47",
+          "position": "Balcony Mountain Forest Park",
+          "start_time": "16:51",
+          "end_time": "18:21",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Dashabe Park",
-              "end": "Bao'an Park",
+              "start": "Baishilong Music Theme Park",
+              "end": "Balcony Mountain Forest Park",
               "mode": "taxi",
-              "start_time": "12:17",
-              "end_time": "12:27",
-              "distance": 6.88,
-              "price": 28.78,
-              "cost": 28.78,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Bao'an Library",
-          "start_time": "16:53",
-          "end_time": "18:23",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Bao'an Park",
-              "end": "Bao'an Library",
-              "mode": "taxi",
-              "start_time": "16:47",
-              "end_time": "16:53",
-              "distance": 4.6,
-              "price": 20.82,
-              "cost": 20.82,
+              "start_time": "16:37",
+              "end_time": "16:51",
+              "distance": 9.71,
+              "price": 38.68,
+              "cost": 38.68,
               "cars": 1
             }
           ]
         },
         {
           "type": "dinner",
-          "position": "New World Restaurant (Wanda Branch)",
-          "start_time": "17:02",
-          "end_time": "17:47",
-          "price": 55.0,
-          "cost": 55.0,
+          "position": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
+          "start_time": "18:41",
+          "end_time": "19:41",
+          "price": 24.0,
+          "cost": 24.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Bao'an Library",
-              "end": "New World Restaurant (Wanda Branch)",
+              "start": "Balcony Mountain Forest Park",
+              "end": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
               "mode": "taxi",
-              "start_time": "17:00",
-              "end_time": "17:02",
-              "distance": 1.83,
-              "price": 11.09,
-              "cost": 11.09,
+              "start_time": "18:21",
+              "end_time": "18:41",
+              "distance": 13.46,
+              "price": 55.27,
+              "cost": 55.27,
               "cars": 1
             }
           ]
@@ -237,21 +175,21 @@
         {
           "type": "attraction",
           "position": "Bao'an Xibay Mangrove Park",
-          "start_time": "19:44",
-          "end_time": "21:14",
+          "start_time": "20:14",
+          "end_time": "21:44",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "New World Restaurant (Wanda Branch)",
+              "start": "Xinyiwei Chaoshan Rice Noodle King (Meilin Branch)",
               "end": "Bao'an Xibay Mangrove Park",
               "mode": "taxi",
-              "start_time": "16:44",
-              "end_time": "16:52",
-              "distance": 5.68,
-              "price": 24.56,
-              "cost": 24.56,
+              "start_time": "19:41",
+              "end_time": "20:14",
+              "distance": 22.08,
+              "price": 94.08,
+              "cost": 94.08,
               "cars": 1
             }
           ]
@@ -259,7 +197,7 @@
         {
           "type": "accommodation",
           "position": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
-          "start_time": "21:19",
+          "start_time": "21:49",
           "end_time": "24:00",
           "price": 242.0,
           "cost": 242.0,
@@ -271,8 +209,8 @@
               "start": "Bao'an Xibay Mangrove Park",
               "end": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
               "mode": "taxi",
-              "start_time": "21:14",
-              "end_time": "21:19",
+              "start_time": "21:44",
+              "end_time": "21:49",
               "distance": 3.43,
               "price": 16.69,
               "cost": 16.69,
@@ -297,64 +235,130 @@
         },
         {
           "type": "attraction",
-          "position": "Tie Zai Mountain Park",
-          "start_time": "07:34",
-          "end_time": "08:34",
+          "position": "Dashabe Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
-              "end": "Tie Zai Mountain Park",
+              "end": "Dashabe Park",
               "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:34",
-              "distance": 3.13,
-              "price": 15.65,
-              "cost": 15.65,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "lunch",
-          "position": "Delicious Noodle House (Taoyuan Branch)",
-          "start_time": "11:14",
-          "end_time": "11:59",
-          "price": 26.0,
-          "cost": 26.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Tie Zai Mountain Park",
-              "end": "Delicious Noodle House (Taoyuan Branch)",
-              "mode": "taxi",
-              "start_time": "11:00",
-              "end_time": "11:14",
-              "distance": 9.35,
-              "price": 37.42,
-              "cost": 37.42,
+              "start_time": "08:30",
+              "end_time": "08:50",
+              "distance": 13.99,
+              "price": 57.65,
+              "cost": 57.65,
               "cars": 1
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Nanshan Library",
-          "start_time": "09:01",
-          "end_time": "10:01",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "10:05",
+          "end_time": "10:55",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
-              "start": "Delicious Noodle House (Taoyuan Branch)",
-              "end": "Nanshan Library",
+              "start": "Dashabe Park",
+              "end": "Guan Shanyue Art Museum",
               "mode": "taxi",
-              "start_time": "09:00",
-              "end_time": "09:01",
-              "distance": 1.19,
+              "start_time": "09:50",
+              "end_time": "10:05",
+              "distance": 10.58,
+              "price": 42.33,
+              "cost": 42.33,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "mode": "taxi",
+              "start_time": "10:55",
+              "end_time": "10:57",
+              "distance": 1.89,
+              "price": 11.3,
+              "cost": 11.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Galaxy Development Center Building - Fitness Center",
+          "start_time": "12:05",
+          "end_time": "12:55",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Huang's Wellness Dessert Experts (Meilin Joy Park Branch)",
+              "end": "Galaxy Development Center Building - Fitness Center",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:05",
+              "distance": 3.35,
+              "price": 16.41,
+              "cost": 16.41,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "13:01",
+          "end_time": "13:51",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Galaxy Development Center Building - Fitness Center",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "taxi",
+              "start_time": "12:55",
+              "end_time": "13:01",
+              "distance": 4.49,
+              "price": 20.4,
+              "cost": 20.4,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "YO!Tea (Futian CITIC Plaza Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 22.0,
+          "cost": 22.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "YO!Tea (Futian CITIC Plaza Branch)",
+              "mode": "taxi",
+              "start_time": "13:51",
+              "end_time": "13:53",
+              "distance": 1.41,
               "price": 11.0,
               "cost": 11.0,
               "cars": 1
@@ -362,75 +366,9 @@
           ]
         },
         {
-          "type": "attraction",
-          "position": "Kexing Science and Technology Park",
-          "start_time": "07:33",
-          "end_time": "08:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Nanshan Library",
-              "end": "Kexing Science and Technology Park",
-              "mode": "taxi",
-              "start_time": "07:30",
-              "end_time": "07:33",
-              "distance": 2.63,
-              "price": 13.89,
-              "cost": 13.89,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Bao'an Science and Technology Museum",
-          "start_time": "10:05",
-          "end_time": "11:05",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Kexing Science and Technology Park",
-              "end": "Bao'an Science and Technology Museum",
-              "mode": "taxi",
-              "start_time": "10:00",
-              "end_time": "10:05",
-              "distance": 3.49,
-              "price": 16.9,
-              "cost": 16.9,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Silver Shadow Restaurant",
-          "start_time": "17:12",
-          "end_time": "17:57",
-          "price": 81.0,
-          "cost": 81.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Bao'an Science and Technology Museum",
-              "end": "Silver Shadow Restaurant",
-              "mode": "taxi",
-              "start_time": "17:00",
-              "end_time": "17:12",
-              "distance": 8.18,
-              "price": 33.32,
-              "cost": 33.32,
-              "cars": 1
-            }
-          ]
-        },
-        {
           "type": "accommodation",
           "position": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
-          "start_time": "23:00",
+          "start_time": "18:41",
           "end_time": "24:00",
           "price": 242.0,
           "cost": 242.0,
@@ -439,14 +377,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Silver Shadow Restaurant",
+              "start": "YO!Tea (Futian CITIC Plaza Branch)",
               "end": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
               "mode": "taxi",
-              "start_time": "20:00",
-              "end_time": "20:05",
-              "distance": 3.7,
-              "price": 17.66,
-              "cost": 17.66,
+              "start_time": "18:00",
+              "end_time": "18:41",
+              "distance": 27.44,
+              "price": 118.17,
+              "cost": 118.17,
               "cars": 1
             }
           ]
@@ -468,223 +406,53 @@
         },
         {
           "type": "attraction",
-          "position": "Bao'an Jesus the King Church",
-          "start_time": "09:08",
-          "end_time": "10:08",
+          "position": "Bihai Bay Park",
+          "start_time": "09:00",
+          "end_time": "09:50",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Tomorrow Hotel (Bao'an International Airport Huangtian Subway Station)",
-              "end": "Bao'an Jesus the King Church",
+              "end": "Bihai Bay Park",
               "mode": "taxi",
               "start_time": "08:30",
-              "end_time": "08:41",
-              "distance": 7.95,
-              "price": 32.51,
-              "cost": 32.51,
+              "end_time": "08:35",
+              "distance": 3.88,
+              "price": 18.29,
+              "cost": 18.29,
               "cars": 1
             }
           ]
         },
         {
-          "type": "lunch",
-          "position": "DQ (Shenzhen Liancheng Xintiandi Store)",
-          "start_time": "11:00",
-          "end_time": "12:00",
-          "price": 27.0,
-          "cost": 27.0,
+          "type": "train",
+          "start_time": "11:08",
+          "end_time": "16:36",
+          "start": "Shenzhen East Station",
+          "end": "Beijing West Railway Station",
+          "price": 777.26,
+          "cost": 777.26,
           "tickets": 1,
           "transports": [
             {
-              "start": "Bao'an Jesus the King Church",
-              "end": "Xingdong-Metro Station",
-              "mode": "walk",
-              "start_time": "10:08",
-              "end_time": "10:19",
-              "distance": 0.95,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Xingdong-Metro Station",
-              "end": "Convention and Exhibition Center-Metro Station",
-              "mode": "metro",
-              "start_time": "10:19",
-              "end_time": "10:50",
-              "distance": 15.52,
-              "price": 5,
-              "cost": 5,
-              "tickets": 1
-            },
-            {
-              "start": "Convention and Exhibition Center-Metro Station",
-              "end": "DQ (Shenzhen Liancheng Xintiandi Store)",
-              "mode": "walk",
-              "start_time": "10:50",
-              "end_time": "10:52",
-              "distance": 0.25,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Galaxy Development Center Building - Fitness Center",
-          "start_time": "12:03",
-          "end_time": "13:03",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "DQ (Shenzhen Liancheng Xintiandi Store)",
-              "end": "Galaxy Development Center Building - Fitness Center",
+              "start": "Bihai Bay Park",
+              "end": "Shenzhen East Station",
               "mode": "taxi",
-              "start_time": "12:00",
-              "end_time": "12:01",
-              "distance": 1.06,
-              "price": 11.0,
-              "cost": 11.0,
+              "start_time": "09:50",
+              "end_time": "10:30",
+              "distance": 26.83,
+              "price": 115.41,
+              "cost": 115.41,
               "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Futian Mangrove Ecological Park",
-          "start_time": "13:11",
-          "end_time": "14:11",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Galaxy Development Center Building - Fitness Center",
-              "end": "Futian Mangrove Ecological Park",
-              "mode": "taxi",
-              "start_time": "13:03",
-              "end_time": "13:07",
-              "distance": 3.08,
-              "price": 15.48,
-              "cost": 15.48,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "attraction",
-          "position": "Bauhinia Lane Hong Kong International Style Street",
-          "start_time": "14:33",
-          "end_time": "15:33",
-          "price": 0.0,
-          "cost": 0.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Futian Mangrove Ecological Park",
-              "end": "Bauhinia Lane Hong Kong International Style Street",
-              "mode": "taxi",
-              "start_time": "14:11",
-              "end_time": "14:13",
-              "distance": 1.86,
-              "price": 11.23,
-              "cost": 11.23,
-              "cars": 1
-            }
-          ]
-        },
-        {
-          "type": "dinner",
-          "position": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-          "start_time": "17:00",
-          "end_time": "18:00",
-          "price": 16.0,
-          "cost": 16.0,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Bauhinia Lane Hong Kong International Style Street",
-              "end": "Futian Port-Metro Station",
-              "mode": "walk",
-              "start_time": "15:33",
-              "end_time": "15:34",
-              "distance": 0.14,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Futian Port-Metro Station",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "metro",
-              "start_time": "15:34",
-              "end_time": "15:49",
-              "distance": 7.8,
-              "price": 3,
-              "cost": 3,
-              "tickets": 1
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
-              "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "walk",
-              "start_time": "15:49",
-              "end_time": "15:51",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "airplane",
-          "start_time": "23:24",
-          "end_time": "01:49",
-          "start": "Shenzhen Bao'an International Airport",
-          "end": "Beijing Daxing International Airport",
-          "price": 1006.35,
-          "cost": 1006.35,
-          "tickets": 1,
-          "transports": [
-            {
-              "start": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "end": "Huangbeiling-Metro Station",
-              "mode": "walk",
-              "start_time": "18:00",
-              "end_time": "18:02",
-              "distance": 0.2,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Huangbeiling-Metro Station",
-              "end": "Airport East-Metro Station",
-              "mode": "metro",
-              "start_time": "18:02",
-              "end_time": "19:10",
-              "distance": 34.14,
-              "price": 7,
-              "cost": 7,
-              "tickets": 1
-            },
-            {
-              "start": "Airport East-Metro Station",
-              "end": "Shenzhen Bao'an International Airport",
-              "mode": "walk",
-              "start_time": "19:10",
-              "end_time": "19:15",
-              "distance": 0.45,
-              "price": 0,
-              "cost": 0
             }
           ],
-          "FlightID": "FL174"
+          "TrainID": "K106"
         }
       ]
     }
   ],
-  "elapsed_time(sec)": 181.3448131084442,
-  "_eval_score": 100.0
+  "elapsed_time(sec)": 62.222586154937744,
+  "_eval_score": 97.90079365079364
 }
