@@ -781,9 +781,16 @@ class TPCAgent(BaseAgent):
         forced = rng.choice([None, "metro", "walk", "taxi"])
         if forced is not None:
             params["forced_inner_mode"] = forced
+        # A constraint-pinned intercity_mode (e.g. "must take the train") is a hard requirement in
+        # oracle mode and effectively so in parsed no-oracle mode -- any candidate that deviates from
+        # it fails acceptance outright, so randomizing that direction never helps and only burns a
+        # restart. Only randomize a direction the constraints leave open.
+        fixed_go_pref, fixed_back_pref = self._intercity_mode_preferences(constraints)
         if rng.random() < 0.35:
-            params["intercity_go_pref"] = rng.choice(["airplane", "train"])
-            params["intercity_back_pref"] = rng.choice(["airplane", "train"])
+            if fixed_go_pref is None:
+                params["intercity_go_pref"] = rng.choice(["airplane", "train"])
+            if fixed_back_pref is None:
+                params["intercity_back_pref"] = rng.choice(["airplane", "train"])
         if rng.random() < 0.35:
             params["rest_offset"] = rng.randint(0, 6)
         return params
