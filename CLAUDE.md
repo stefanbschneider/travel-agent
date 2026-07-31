@@ -35,6 +35,7 @@ Shared rules for every workstream: obey the [non-negotiable invariants](#non-neg
 | Phase 2 architecture | [README architecture snapshot](README.md#architecture-at-a-glance) and [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Phase 2 metrics, gates, dataset boundaries, and the fast pre-gate A/B screen + cadence | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
 | Phase 2 priorities and solver headroom | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
+| Cross-phase open shortcomings and the implementation plan for each | [Shortcomings and plan](docs/tpc_shortcomings_and_plan.md) |
 | Parallel-agent focused prompts (evaluation and implementation) | [Agent prompts](docs/agents/README.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |
 | Agent environment | [Human guide](agent_env/README.md) and [agent contract](agent_env/SKILL.md) |

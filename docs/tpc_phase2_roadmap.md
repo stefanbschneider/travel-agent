@@ -312,6 +312,13 @@ finalized on 2026-07-30), and evaluation runs 2026-08-01 to 08-07, so treat the 
 short. Implementation-level detail for the older items lives in
 [`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
 
+**Self-contained implementation briefs for every open item below — plus the Phase 1 items and a
+ranked leverage estimate for each — are in [Shortcomings and plan](tpc_shortcomings_and_plan.md)
+(2026-07-31).** That document is the working plan; this section stays the priority record. Two of its
+findings change what is written below: the Phase 1 "hard tail" is `22` plan-level commonsense defects
+in plans that already satisfy every logical clause (worth `~+2.2` overall, item 0b), and Tasks 1 and 3
+of `next_steps_after_final_night.md` have landed while Task 2 (the single-day trailing stay) has not.
+
 0. **Re-establish a post-sync baseline before gating anything.** Every committed row is on the old
    evaluator contract. The first `900 s` `familiar_100_val` run after the sync becomes the new
    reference row; until it exists, `make phase2-gate` has no valid baseline to compare against.

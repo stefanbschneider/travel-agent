@@ -51,6 +51,18 @@ Recovery was two safe, already-scripted operations, each gated so `results/best`
    real, wasted-budget bug worth fixing on its own merits, but not this tail's binding constraint;
    whatever else makes these `22` hard (tight same-day arrival/meal scheduling, per manual inspection)
    remains an open follow-up, not a quick win.
+
+   **Update (2026-07-31): "hard tail" describes the solver, not the plans.** A structural scan of all
+   `1000` stored plans flags exactly these `22`, and only on the two rules the sync added — `19` have an
+   inbound leg departing before the previous activity ends, `16` have an intra-day overlap or a
+   non-chronological activity list, `10` repeat a meal type (union `22`; no other structural family is
+   violated anywhere in the split). All `22` satisfy **every** one of their logical clauses: they hold
+   `126` of the split's `3568` `hard_logic_py` clauses (`3.53%`) and measured C-LPR is exactly
+   `96.47 = 100 − 3.53`. So a fresh solve cannot recover them, but a targeted **plan-level repair** of
+   the stored plan (drop the duplicate meal, restore chronological order, re-space the overlap,
+   re-ground the early leg) very likely can — worth `~+2.2` overall. That repair was never attempted;
+   it is specified end to end as W1 in
+   [Shortcomings and plan](tpc_shortcomings_and_plan.md#w1-repair-the-22-query-phase-1-commonsense-tail).
 2. **Densify already-accepted plans** (`TPC_PACK_DAV=1 TPC_PACK_DDR=1 scripts/densify.py`, then
    `make merge`). `densify.py` only mutates a plan that is already accepted, only keeps the result if
    the full checker *still* accepts it and its preference sum is strictly higher, and `make merge`
