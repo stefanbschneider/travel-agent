@@ -351,7 +351,7 @@ MEAL_BANDS = {
 }
 
 
-def _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=True):
+def _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=True, prefer_cheap=False):
     """R5: rebuild each day as a maximal feasible chain, dropping what cannot be made to fit.
 
     R3 shifts an overlapping activity later and only drops it as a last resort, which is the right
@@ -398,12 +398,14 @@ def _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=Tru
                 # the stored entry and its stored inbound leg rather than inventing one.
                 kept.append(activity)
                 continue
-            placed = _place_activity(agent, city, people, cursor, activity, tail)
+            placed = _place_activity(
+                agent, city, people, cursor, activity, tail, prefer_cheap=prefer_cheap)
             if placed is None:
                 if activity.get("type") == "accommodation":
                     # Never drop the night's stay; park it wherever it can be reached.
                     parked = _place_activity(
-                        agent, city, people, cursor, activity, tail, relax=True)
+                        agent, city, people, cursor, activity, tail, relax=True,
+                        prefer_cheap=prefer_cheap)
                     if parked is not None:
                         _commit_placement(activity, parked)
                         kept.append(activity)
@@ -515,13 +517,16 @@ def _is_protected(activity, protected):
     return bool(position) and position in protected
 
 
-def _place_activity(agent, city, people, cursor, activity, tail, relax=False):
+def _place_activity(agent, city, people, cursor, activity, tail, relax=False, prefer_cheap=False):
     """Try to reach `activity` from `cursor`, returning (transports, start_min, end_min) or None.
 
     Prefers a leg in the activity's own stored mode -- a repair should fix a broken timing, not
     silently upgrade a free walk to a paid taxi and blow an inner-city-cost clause -- and falls back
     to the shortest-time valid mode when the stored one no longer fits. ``relax`` skips the
-    fit tests, for structural activities that must be kept regardless.
+    fit tests, for structural activities that must be kept regardless. ``prefer_cheap`` widens the
+    candidate modes and returns the cheapest leg that fits rather than the first, for queries whose
+    clauses cap inner-city transport spend; feasibility comes before the ATT the faster mode buys,
+    since a rejected plan scores zero on every preference term anyway.
     """
     if cursor is None:
         return None
@@ -540,11 +545,14 @@ def _place_activity(agent, city, people, cursor, activity, tail, relax=False):
     stored_legs = activity.get("transports") or []
     stored_mode = str(stored_legs[0].get("mode", "")).strip().lower() if stored_legs else ""
 
+    modes = [stored_mode] if stored_mode in ("walk", "metro", "taxi") else []
+    if prefer_cheap:
+        modes += [m for m in ("walk", "metro", "taxi") if m not in modes]
     options = []
-    if stored_mode in ("walk", "metro", "taxi"):
+    for mode in modes:
         saved_forced = getattr(agent, "_forced_inner_mode", None)
         try:
-            agent._forced_inner_mode = stored_mode
+            agent._forced_inner_mode = mode
             options.append(agent._get_transport(agent.env, city, from_pos, to_pos, depart, people))
         except Exception:
             pass
@@ -553,6 +561,7 @@ def _place_activity(agent, city, people, cursor, activity, tail, relax=False):
     options.append(_lookup_transport(agent, city, from_pos, to_pos, depart, people))
 
     fallback = None
+    fitting = []
     for transports, arrival in options:
         if transports is None or arrival is None:
             continue
@@ -588,8 +597,22 @@ def _place_activity(agent, city, people, cursor, activity, tail, relax=False):
                     continue
             except Exception:
                 pass
-        return candidate
+        if not prefer_cheap:
+            return candidate
+        fitting.append(candidate)
+    if fitting:
+        return min(fitting, key=lambda c: (_legs_cost(c[0]), c[2]))
     return fallback if relax else None
+
+
+def _legs_cost(transports):
+    total = 0.0
+    for leg in transports or []:
+        try:
+            total += float(leg.get("cost", 0) or 0)
+        except Exception:
+            continue
+    return total
 
 
 def _commit_placement(activity, placed):
@@ -644,6 +667,18 @@ def _repair_drop_first_unprotected(agent, plan, query, city, people):
     _reground_early_transport(agent, plan, query, city, people)
 
 
+def _repair_drop_first_cheap(agent, plan, query, city, people):
+    """R1 + R5 choosing the cheapest fitting leg instead of the first.
+
+    A query whose clauses cap inner-city transport spend can be pushed over the cap by the repair
+    itself: every regrounded hop is free to pick a paid mode, and the tail's ride to the station is
+    the most expensive one in the plan. This variant trades hop time for fare wherever both ground.
+    """
+    _repair_duplicate_meals(agent, plan, query, city, people)
+    _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=True, prefer_cheap=True)
+    _reground_early_transport(agent, plan, query, city, people)
+
+
 def _variant_key(agent, query, plan):
     """Rank a repair variant the way the leaderboard does: full acceptance first, then the
     schema+commonsense gate that every other component is conditioned on, then satisfied clauses,
@@ -684,7 +719,12 @@ def repair_plan(agent, plan, query):
 
     best = None
     best_key = None
-    for build in (_repair_shift_first, _repair_drop_first, _repair_drop_first_unprotected):
+    for build in (
+        _repair_shift_first,
+        _repair_drop_first,
+        _repair_drop_first_unprotected,
+        _repair_drop_first_cheap,
+    ):
         trial = deepcopy(plan)
         try:
             build(agent, trial, query, city, people)

@@ -380,6 +380,56 @@ def test_repair_plan_returns_the_best_scoring_variant():
     finally:
         rc._variant_key = original_key
 
-    assert len(calls) == 3  # shift-first, drop-first (protected), drop-first (unprotected)
+    # shift-first, drop-first (protected), drop-first (unprotected), drop-first (cheapest legs)
+    assert len(calls) == 4
     assert trial is calls[-1]
     assert trial is not plan
+
+
+def test_r5_cheap_mode_picks_the_cheapest_fitting_leg():
+    """A clause capping inner-city spend loses to a repair that regrounds every hop onto the
+    fastest -- and most expensive -- mode. The cheap variant takes the slower free leg instead."""
+    def _agent():
+        agent = _bare_agent()
+
+        def _get_transport(env, city, from_pos, to_pos, start_time, people):
+            if from_pos == to_pos:
+                return [], start_time
+            mode = getattr(agent, "_forced_inner_mode", None) or "taxi"
+            minutes, cost = {"walk": (40, 0), "metro": (20, 4), "taxi": (5, 30)}[mode]
+            from chinatravel.agent.tpc_agent.tpc_agent import time_to_minutes
+            end_time = minutes_to_time(time_to_minutes(start_time) + minutes)
+            return [{
+                "start": from_pos, "end": to_pos, "mode": mode,
+                "start_time": start_time, "end_time": end_time,
+                "distance": 1.0, "price": cost, "cost": cost,
+            }], end_time
+
+        agent._get_transport = _get_transport
+        agent._best_transport_via_get_transport = (
+            lambda city, f, t, s, p: _get_transport(None, city, f, t, s, p)
+        )
+        agent._lookup_poi_open_bounds = lambda city, position, kind, tickets=None: (0, 24 * 60)
+        return agent
+
+    def _plan():
+        return {"itinerary": [{"day": 1, "activities": [
+            _act("breakfast", "A", "08:00", "08:30"),
+            # No stored inbound leg, so nothing pins the mode: the repair picks it.
+            _act("attraction", "B", "10:00", "11:00"),
+        ]}]}
+
+    query = {"hard_logic_py": [], "nature_language": "", "target_city": CITY, "people_number": 1}
+
+    fast_plan = _plan()
+    rc._rebuild_day_by_dropping(_agent(), fast_plan, query, CITY, 1)
+    fast_leg = fast_plan["itinerary"][0]["activities"][1]["transports"][0]
+    assert fast_leg["mode"] == "taxi"  # shortest-time mode, 30 in fare
+
+    cheap_plan = _plan()
+    rc._rebuild_day_by_dropping(_agent(), cheap_plan, query, CITY, 1, prefer_cheap=True)
+    cheap_leg = cheap_plan["itinerary"][0]["activities"][1]["transports"][0]
+    assert cheap_leg["mode"] == "walk"
+    assert cheap_leg["cost"] == 0
+    # Still arrives in time for the activity's own window -- cheapest *among the fitting* legs.
+    assert cheap_plan["itinerary"][0]["activities"][1]["start_time"] == "10:00"
