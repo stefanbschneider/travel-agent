@@ -235,23 +235,64 @@
         },
         {
           "type": "attraction",
-          "position": "A Hidden Wonderland",
-          "start_time": "14:06",
-          "end_time": "14:56",
+          "position": "Chang Garden",
+          "start_time": "13:57",
+          "end_time": "14:47",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Moon Pavilion (Guanqian Branch)",
-              "end": "A Hidden Wonderland",
-              "mode": "taxi",
+              "end": "Chang Garden",
+              "mode": "walk",
               "start_time": "13:52",
-              "end_time": "14:06",
-              "distance": 9.55,
-              "price": 38.14,
-              "cost": 38.14,
-              "cars": 1
+              "end_time": "13:57",
+              "distance": 0.431483397769297,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Crane Garden",
+          "start_time": "14:54",
+          "end_time": "15:44",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Chang Garden",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "walk",
+              "start_time": "14:47",
+              "end_time": "14:49",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "14:49",
+              "end_time": "14:50",
+              "distance": 0.8,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Crane Garden",
+              "mode": "walk",
+              "start_time": "14:50",
+              "end_time": "14:54",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -266,15 +307,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "A Hidden Wonderland",
+              "start": "Crane Garden",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "15:44",
+              "end_time": "15:48",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Suzhou North Railway Station-Metro Station",
+              "mode": "metro",
+              "start_time": "15:48",
+              "end_time": "16:12",
+              "distance": 12.04,
+              "price": 4,
+              "cost": 4,
+              "tickets": 1
+            },
+            {
+              "start": "Suzhou North Railway Station-Metro Station",
               "end": "Suzhou North Station",
-              "mode": "taxi",
-              "start_time": "14:56",
-              "end_time": "15:00",
-              "distance": 3.04,
-              "price": 15.34,
-              "cost": 15.34,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "16:12",
+              "end_time": "16:13",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ],
           "TrainID": "G24"
@@ -283,5 +344,5 @@
     }
   ],
   "elapsed_time(sec)": 60.111417055130005,
-  "_eval_score": 96.875
+  "_eval_score": 97.5
 }

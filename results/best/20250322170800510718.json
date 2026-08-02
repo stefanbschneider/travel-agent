@@ -66,7 +66,7 @@
           "type": "attraction",
           "position": "Shenzhen OCT Harbour",
           "start_time": "12:09",
-          "end_time": "13:54",
+          "end_time": "13:09",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -86,22 +86,88 @@
         },
         {
           "type": "attraction",
-          "position": "Xichong",
-          "start_time": "15:21",
-          "end_time": "17:06",
+          "position": "Guan Shanyue Art Museum",
+          "start_time": "13:21",
+          "end_time": "14:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen OCT Harbour",
-              "end": "Xichong",
+              "end": "Guan Shanyue Art Museum",
               "mode": "taxi",
-              "start_time": "13:54",
-              "end_time": "15:21",
-              "distance": 58.08,
-              "price": 256.06,
-              "cost": 256.06,
+              "start_time": "13:09",
+              "end_time": "13:21",
+              "distance": 8.35,
+              "price": 33.92,
+              "cost": 33.92,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+          "start_time": "14:17",
+          "end_time": "15:17",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Guan Shanyue Art Museum",
+              "end": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "mode": "taxi",
+              "start_time": "14:11",
+              "end_time": "14:12",
+              "distance": 0.82,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Deng Xiaoping Portrait Square",
+          "start_time": "15:23",
+          "end_time": "16:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Eastern General Aviation Air Taxi Helicopter Flight Base (Greater China Store)",
+              "end": "Deng Xiaoping Portrait Square",
+              "mode": "taxi",
+              "start_time": "15:17",
+              "end_time": "15:23",
+              "distance": 4.04,
+              "price": 18.86,
+              "cost": 18.86,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "East Gate Old Street",
+          "start_time": "16:14",
+          "end_time": "17:04",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Deng Xiaoping Portrait Square",
+              "end": "East Gate Old Street",
+              "mode": "taxi",
+              "start_time": "16:13",
+              "end_time": "16:14",
+              "distance": 1.28,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -116,14 +182,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Xichong",
+              "start": "East Gate Old Street",
               "end": "Shenzhen St. Regis Hotel · PALETTO Italian Restaurant",
               "mode": "taxi",
-              "start_time": "17:06",
-              "end_time": "18:22",
-              "distance": 51.23,
-              "price": 225.22,
-              "cost": 225.22,
+              "start_time": "17:04",
+              "end_time": "17:13",
+              "distance": 6.58,
+              "price": 27.72,
+              "cost": 27.72,
               "cars": 1
             }
           ]
@@ -169,23 +235,43 @@
         },
         {
           "type": "attraction",
-          "position": "Shekou Industrial Zone",
-          "start_time": "08:57",
-          "end_time": "10:42",
+          "position": "Bao'an Library",
+          "start_time": "09:00",
+          "end_time": "10:00",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Hyatt Regency Shenzhen Airport",
-              "end": "Shekou Industrial Zone",
-              "mode": "taxi",
+              "end": "Airport-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:57",
-              "distance": 18.6,
-              "price": 78.39,
-              "cost": 78.39,
-              "cars": 1
+              "end_time": "08:32",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport-Metro Station",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "metro",
+              "start_time": "08:32",
+              "end_time": "08:53",
+              "distance": 10.79,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Bao'an Library",
+              "mode": "walk",
+              "start_time": "08:53",
+              "end_time": "08:55",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -199,37 +285,56 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shekou Industrial Zone",
+              "start": "Bao'an Library",
+              "end": "Bao'an Center-Metro Station",
+              "mode": "walk",
+              "start_time": "10:00",
+              "end_time": "10:02",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Bao'an Center-Metro Station",
+              "end": "Shekou Port-Metro Station",
+              "mode": "metro",
+              "start_time": "10:02",
+              "end_time": "10:20",
+              "distance": 9.01,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Shekou Port-Metro Station",
               "end": "Garden Restaurant No. 6",
-              "mode": "taxi",
-              "start_time": "10:42",
-              "end_time": "10:44",
-              "distance": 1.44,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:24",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Mangrove Seaside Ecological Park",
-          "start_time": "12:16",
-          "end_time": "14:01",
+          "position": "Bay Area Cruise",
+          "start_time": "12:11",
+          "end_time": "13:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Garden Restaurant No. 6",
-              "end": "Mangrove Seaside Ecological Park",
-              "mode": "taxi",
+              "end": "Bay Area Cruise",
+              "mode": "walk",
               "start_time": "12:00",
-              "end_time": "12:16",
-              "distance": 11.17,
-              "price": 44.98,
-              "cost": 44.98,
-              "cars": 1
+              "end_time": "12:11",
+              "distance": 0.9256834743944979,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -237,21 +342,41 @@
           "type": "attraction",
           "position": "Shenzhen Civic Center",
           "start_time": "14:10",
-          "end_time": "15:55",
+          "end_time": "15:10",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Mangrove Seaside Ecological Park",
+              "start": "Bay Area Cruise",
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "13:11",
+              "end_time": "13:21",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Lianhua Village-Metro Station",
+              "mode": "metro",
+              "start_time": "13:21",
+              "end_time": "13:56",
+              "distance": 17.88,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Lianhua Village-Metro Station",
               "end": "Shenzhen Civic Center",
-              "mode": "taxi",
-              "start_time": "14:01",
-              "end_time": "14:10",
-              "distance": 6.4,
-              "price": 27.1,
-              "cost": 27.1,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "13:56",
+              "end_time": "13:58",
+              "distance": 0.19,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -342,7 +467,7 @@
           "type": "attraction",
           "position": "Shekou Port Zhuhai Cruise",
           "start_time": "08:59",
-          "end_time": "10:44",
+          "end_time": "09:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -361,23 +486,45 @@
           ]
         },
         {
-          "type": "lunch",
-          "position": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
-          "start_time": "11:48",
-          "end_time": "12:48",
-          "price": 300.0,
-          "cost": 900.0,
+          "type": "attraction",
+          "position": "China Merchants History Museum",
+          "start_time": "10:00",
+          "end_time": "10:50",
+          "price": 0.0,
+          "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shekou Port Zhuhai Cruise",
-              "end": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
+              "end": "China Merchants History Museum",
               "mode": "taxi",
-              "start_time": "10:44",
-              "end_time": "11:48",
-              "distance": 42.8,
-              "price": 187.29,
-              "cost": 187.29,
+              "start_time": "09:59",
+              "end_time": "10:00",
+              "distance": 1.01,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Salt Talk North American Style Western Restaurant (Sea World Branch)",
+          "start_time": "11:00",
+          "end_time": "12:00",
+          "price": 150.0,
+          "cost": 450.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "China Merchants History Museum",
+              "end": "Salt Talk North American Style Western Restaurant (Sea World Branch)",
+              "mode": "taxi",
+              "start_time": "10:50",
+              "end_time": "10:50",
+              "distance": 0.23,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -386,20 +533,20 @@
           "type": "attraction",
           "position": "China Merchants Shekou Cruise Home Port Tour",
           "start_time": "13:52",
-          "end_time": "15:37",
+          "end_time": "14:52",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Dameisha InterContinental Resort Hotel · Yuan · All-Day Coffee Restaurant",
+              "start": "Salt Talk North American Style Western Restaurant (Sea World Branch)",
               "end": "China Merchants Shekou Cruise Home Port Tour",
               "mode": "taxi",
-              "start_time": "12:48",
-              "end_time": "13:52",
-              "distance": 42.8,
-              "price": 187.28,
-              "cost": 187.28,
+              "start_time": "12:00",
+              "end_time": "12:01",
+              "distance": 1.02,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -408,7 +555,7 @@
           "type": "attraction",
           "position": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
           "start_time": "15:37",
-          "end_time": "17:22",
+          "end_time": "16:37",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -428,23 +575,43 @@
         },
         {
           "type": "dinner",
-          "position": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-          "start_time": "17:35",
-          "end_time": "18:35",
-          "price": 400.0,
-          "cost": 1200.0,
+          "position": "21 Days Secret: Dry-Aged Steak Bistro (Shekou Branch)",
+          "start_time": "17:00",
+          "end_time": "18:00",
+          "price": 391.0,
+          "cost": 1173.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Greater Bay Area No. 1 (Hong Kong-Zhuhai-Macao Bridge Route)",
-              "end": "Shenzhen Yitian Westin Hotel - The Westin Grill",
-              "mode": "taxi",
-              "start_time": "17:22",
-              "end_time": "17:35",
-              "distance": 9.05,
-              "price": 36.39,
-              "cost": 36.39,
-              "cars": 1
+              "end": "Shekou Port-Metro Station",
+              "mode": "walk",
+              "start_time": "16:37",
+              "end_time": "16:46",
+              "distance": 0.82,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shekou Port-Metro Station",
+              "end": "Sea World-Metro Station",
+              "mode": "metro",
+              "start_time": "16:46",
+              "end_time": "16:47",
+              "distance": 0.98,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Sea World-Metro Station",
+              "end": "21 Days Secret: Dry-Aged Steak Bistro (Shekou Branch)",
+              "mode": "walk",
+              "start_time": "16:47",
+              "end_time": "16:48",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -460,15 +627,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Shenzhen Yitian Westin Hotel - The Westin Grill",
+              "start": "21 Days Secret: Dry-Aged Steak Bistro (Shekou Branch)",
+              "end": "Sea World-Metro Station",
+              "mode": "walk",
+              "start_time": "18:00",
+              "end_time": "18:01",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sea World-Metro Station",
+              "end": "Airport-Metro Station",
+              "mode": "metro",
+              "start_time": "18:01",
+              "end_time": "18:38",
+              "distance": 18.59,
+              "price": 5,
+              "cost": 15,
+              "tickets": 3
+            },
+            {
+              "start": "Airport-Metro Station",
               "end": "Hyatt Regency Shenzhen Airport",
-              "mode": "taxi",
-              "start_time": "18:35",
-              "end_time": "19:03",
-              "distance": 19.26,
-              "price": 81.39,
-              "cost": 81.39,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:38",
+              "end_time": "18:40",
+              "distance": 0.23,
+              "price": 0,
+              "cost": 0
             }
           ]
         }
@@ -491,7 +678,7 @@
           "type": "attraction",
           "position": "Shenzhen Bay Park",
           "start_time": "08:59",
-          "end_time": "10:44",
+          "end_time": "09:59",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -511,22 +698,66 @@
         },
         {
           "type": "attraction",
-          "position": "Jujiao Beach",
-          "start_time": "12:15",
-          "end_time": "14:00",
+          "position": "Cave Exploration Factory (Happy Coast Branch)",
+          "start_time": "10:03",
+          "end_time": "10:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Shenzhen Bay Park",
-              "end": "Jujiao Beach",
+              "end": "Cave Exploration Factory (Happy Coast Branch)",
               "mode": "taxi",
-              "start_time": "10:44",
-              "end_time": "12:15",
-              "distance": 61.13,
-              "price": 269.79,
-              "cost": 269.79,
+              "start_time": "09:59",
+              "end_time": "10:03",
+              "distance": 2.84,
+              "price": 14.64,
+              "cost": 14.64,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "11:06",
+          "end_time": "12:06",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Cave Exploration Factory (Happy Coast Branch)",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "taxi",
+              "start_time": "10:53",
+              "end_time": "11:04",
+              "distance": 7.57,
+              "price": 31.19,
+              "cost": 31.19,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Jumbo Pizza (Jingtian Branch)",
+          "start_time": "12:12",
+          "end_time": "12:57",
+          "price": 46.0,
+          "cost": 138.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Jumbo Pizza (Jingtian Branch)",
+              "mode": "taxi",
+              "start_time": "12:06",
+              "end_time": "12:12",
+              "distance": 4.2,
+              "price": 19.42,
+              "cost": 19.42,
               "cars": 1
             }
           ]
@@ -541,14 +772,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Jujiao Beach",
+              "start": "Jumbo Pizza (Jingtian Branch)",
               "end": "Futian Mangrove Ecological Park",
               "mode": "taxi",
-              "start_time": "14:00",
-              "end_time": "15:19",
-              "distance": 53.0,
-              "price": 233.19,
-              "cost": 233.19,
+              "start_time": "12:57",
+              "end_time": "13:02",
+              "distance": 3.52,
+              "price": 17.03,
+              "cost": 17.03,
               "cars": 1
             }
           ]
@@ -603,5 +834,5 @@
     }
   ],
   "elapsed_time(sec)": 61.79934334754944,
-  "_eval_score": 97.38194444444444
+  "_eval_score": 99.58333333333334
 }

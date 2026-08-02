@@ -86,23 +86,43 @@
         },
         {
           "type": "attraction",
-          "position": "798 Art District",
-          "start_time": "15:36",
-          "end_time": "16:26",
+          "position": "Beihai Park",
+          "start_time": "15:35",
+          "end_time": "16:25",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "National Museum of China",
-              "end": "798 Art District",
-              "mode": "taxi",
+              "end": "Wangfujing-Metro Station",
+              "mode": "walk",
               "start_time": "15:19",
-              "end_time": "15:36",
-              "distance": 11.89,
-              "price": 48.21,
-              "cost": 96.42,
-              "cars": 2
+              "end_time": "15:24",
+              "distance": 0.48,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Wangfujing-Metro Station",
+              "end": "Shichahai-Metro Station",
+              "mode": "metro",
+              "start_time": "15:24",
+              "end_time": "15:31",
+              "distance": 3.53,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Beihai Park",
+              "mode": "walk",
+              "start_time": "15:31",
+              "end_time": "15:35",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -116,15 +136,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "798 Art District",
+              "start": "Beihai Park",
+              "end": "Shichahai-Metro Station",
+              "mode": "walk",
+              "start_time": "16:25",
+              "end_time": "16:29",
+              "distance": 0.39,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shichahai-Metro Station",
+              "end": "Dawanglu-Metro Station",
+              "mode": "metro",
+              "start_time": "16:29",
+              "end_time": "16:44",
+              "distance": 7.54,
+              "price": 3,
+              "cost": 15,
+              "tickets": 5
+            },
+            {
+              "start": "Dawanglu-Metro Station",
               "end": "Jumbo Seafood (Beijing SKP Branch)",
-              "mode": "taxi",
-              "start_time": "16:26",
-              "end_time": "16:39",
-              "distance": 9.16,
-              "price": 36.74,
-              "cost": 73.48,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "16:44",
+              "end_time": "16:48",
+              "distance": 0.34,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -278,6 +318,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Beijing Working People's Cultural Palace",
+          "start_time": "14:03",
+          "end_time": "14:53",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Cining Palace",
+              "end": "Beijing Working People's Cultural Palace",
+              "mode": "taxi",
+              "start_time": "14:02",
+              "end_time": "14:03",
+              "distance": 0.86,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Helude Candied Hawthorn Sticks",
           "start_time": "17:00",
@@ -287,12 +349,12 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Cining Palace",
+              "start": "Beijing Working People's Cultural Palace",
               "end": "Helude Candied Hawthorn Sticks",
               "mode": "taxi",
-              "start_time": "14:02",
-              "end_time": "14:04",
-              "distance": 1.45,
+              "start_time": "14:53",
+              "end_time": "14:54",
+              "distance": 1.19,
               "price": 11.0,
               "cost": 22.0,
               "cars": 2
@@ -327,5 +389,5 @@
     }
   ],
   "elapsed_time(sec)": 61.10592198371887,
-  "_eval_score": 98.54166666666666
+  "_eval_score": 99.16666666666666
 }

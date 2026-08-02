@@ -168,6 +168,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "A Hidden Wonderland",
+          "start_time": "15:12",
+          "end_time": "16:02",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Pingjiang Road Historic District",
+              "end": "A Hidden Wonderland",
+              "mode": "taxi",
+              "start_time": "15:00",
+              "end_time": "15:12",
+              "distance": 8.52,
+              "price": 34.54,
+              "cost": 34.54,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Shangri-La Hotel Suzhou · Shang Palace",
           "start_time": "17:00",
@@ -177,14 +199,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Pingjiang Road Historic District",
+              "start": "A Hidden Wonderland",
               "end": "Shangri-La Hotel Suzhou · Shang Palace",
               "mode": "taxi",
-              "start_time": "15:00",
-              "end_time": "15:12",
-              "distance": 8.42,
-              "price": 34.17,
-              "cost": 34.17,
+              "start_time": "16:02",
+              "end_time": "16:22",
+              "distance": 13.45,
+              "price": 55.21,
+              "cost": 55.21,
               "cars": 1
             }
           ]
@@ -230,45 +252,85 @@
         },
         {
           "type": "attraction",
-          "position": "Golden Rooster Lake",
-          "start_time": "08:44",
-          "end_time": "09:59",
+          "position": "Chang Garden",
+          "start_time": "08:41",
+          "end_time": "09:56",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Lichengbieyuan (Suzhou Shantang Street Gardens Culture Shop)",
-              "end": "Golden Rooster Lake",
-              "mode": "taxi",
+              "end": "Shantang Street-Metro Station",
+              "mode": "walk",
               "start_time": "08:30",
-              "end_time": "08:44",
-              "distance": 9.67,
-              "price": 38.53,
-              "cost": 38.53,
-              "cars": 1
+              "end_time": "08:35",
+              "distance": 0.47,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Shantang Street-Metro Station",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "metro",
+              "start_time": "08:35",
+              "end_time": "08:39",
+              "distance": 2.07,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Chang Garden",
+              "mode": "walk",
+              "start_time": "08:39",
+              "end_time": "08:41",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
         {
           "type": "attraction",
-          "position": "Suzhou Water Tour",
-          "start_time": "10:12",
-          "end_time": "11:27",
+          "position": "Crane Garden",
+          "start_time": "10:03",
+          "end_time": "11:18",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Golden Rooster Lake",
-              "end": "Suzhou Water Tour",
-              "mode": "taxi",
+              "start": "Chang Garden",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "walk",
+              "start_time": "09:56",
+              "end_time": "09:58",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "09:58",
+              "end_time": "09:59",
+              "distance": 0.8,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Crane Garden",
+              "mode": "walk",
               "start_time": "09:59",
-              "end_time": "10:12",
-              "distance": 8.84,
-              "price": 35.63,
-              "cost": 35.63,
-              "cars": 1
+              "end_time": "10:03",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -282,15 +344,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Suzhou Water Tour",
+              "start": "Crane Garden",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "11:18",
+              "end_time": "11:22",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Chayuanchang-Metro Station",
+              "mode": "metro",
+              "start_time": "11:22",
+              "end_time": "11:23",
+              "distance": 0.8,
+              "price": 2,
+              "cost": 4,
+              "tickets": 2
+            },
+            {
+              "start": "Chayuanchang-Metro Station",
               "end": "Moon Pavilion (Guanqian Branch)",
-              "mode": "taxi",
-              "start_time": "11:27",
-              "end_time": "11:29",
-              "distance": 1.61,
-              "price": 11.0,
-              "cost": 11.0,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:23",
+              "end_time": "11:27",
+              "distance": 0.41,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -322,5 +404,5 @@
     }
   ],
   "elapsed_time(sec)": 60.21951866149902,
-  "_eval_score": 95.27777777777777
+  "_eval_score": 95.69444444444444
 }

@@ -4,7 +4,7 @@ Phase 1 is offline prediction generation on the released `tpc_phase1` data.
 Only prediction files are submitted.
 The local workflow may use the released oracle fields, including `hard_logic_py`, to optimize and check plans; that privilege does not transfer to Phase 2.
 
-## Current status (2026-07-31, after repairing the 22-query commonsense tail)
+## Current status (2026-08-02, after clearing all but one of the commonsense tail)
 
 Score `results/best` with:
 
@@ -14,13 +14,121 @@ make p1eval SPLIT=tpc_phase1
 
 Latest local result on the upstream-aligned evaluator (upstream `main` `764614c`, PRs
 [#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30)):
-MicEPR `99.93`, MacEPR `98.8`, C-LPR `97.98`, FPR `98.8`, DAV `91.11`, ATT `95.46`, DDR `85.15`,
-**overall `97.47`** — up from `96.45` after W1's targeted repair of the 22-query commonsense tail
-(`scripts/repair_commonsense.py`, see below), on top of the recovery from the `61.16` post-sync
-regression (and above the pre-sync `100.0` floor's real quality, since that score depended on a
-preference loophole the new evaluator closes).
+MicEPR `99.99`, MacEPR `99.9`, C-LPR `99.83`, FPR `99.9`, DAV `95.41`, ATT `98.62`, DDR `87.36`,
+**overall `98.98`** — up from `97.47`, in the two steps recorded as W1b and W2b below. Submitted
+as **v9**.
+
+Two earlier conclusions in this document turned out to be wrong, and both errors had the same shape:
+a residual was recorded as *structural* on evidence that only showed the tried approach had stopped
+working. Neither the 12-query commonsense tail nor the preference deficit was actually structural.
+
+### W1b: the "genuinely-resistant" 12 were an overfull-day artifact (2026-08-02)
+
+[W1 below](#w1-repairing-the-22-query-commonsense-tail-2026-07-31) closed with 10 of 22 repaired and
+the remaining 12 recorded as a residual that "no forward-only shift or drop can satisfy". That
+diagnosis was wrong in one specific way, and the fix follows directly from correcting it: those days
+are **overfull**, and R3's forward shift is the wrong move on an overfull day. Every shift ripples
+into the next activity and eventually pushes a clause-pinned POI out of its own window, so the repair
+trades one failure for another and the full-checker gate correctly refuses to commit — which is what
+made the tail look irreducible.
+
+`scripts/repair_commonsense.py` now builds four variants and keeps the best by `_variant_key` (full
+acceptance, then the schema+commonsense gate every other component is conditioned on, then satisfied
+clauses, then the DAV/ATT/DDR sum):
+
+| variant | move | for |
+| --- | --- | --- |
+| shift-first | R1-R4, unchanged | a merely mistimed day |
+| drop-first | R1 + **R5** | an overfull day: rebuild it as a maximal feasible chain, dropping what a grounded leg cannot reach inside its own opening hours and meal band |
+| drop-first, unprotected | R5 without the clause-named-POI rule | a clause that only names a POI rather than pinning its window |
+| drop-first, cheapest legs | R5 preferring the cheapest *fitting* leg | a query whose clauses cap inner-city transport spend |
+
+Three details inside R5 each fixed real failures in this tail, and each is a fact about the
+evaluator rather than a tuning knob:
+
+- **The day anchor is the previous day's last position**, not the stored opening leg's origin. The
+  space checker walks one global position chain across days, so deriving the anchor from a leg R1
+  may have just dropped silently moves where the day starts.
+- **A leg is rebuilt in the activity's own stored mode first**, falling back to the fastest valid
+  mode. A repair should fix a broken timing, not silently upgrade a free walk to a paid taxi and blow
+  an inner-city-cost clause. When a clause does cap that spend, the fourth variant goes further and
+  takes the cheapest leg that still fits.
+- **A fixed departure leg is only reachable if the last kept activity leaves time to *travel* to the
+  boarding point.** "Ends before the flight departs" is the weaker test, and the gap between the two
+  is exactly what leaves `transport_before_prev_end` flagged after R4 declines to reground the leg.
+
+```bash
+.venv/bin/python scripts/scan_commonsense_residual.py \
+  --out chinatravel/evaluation/default_splits/p1_commonsense_tail.txt
+.venv/bin/python scripts/repair_commonsense.py --split p1_commonsense_tail
+.venv/bin/python scripts/merge.py --split p1_commonsense_tail --method repair_commonsense
+make p1eval SPLIT=tpc_phase1
+```
+
+**Result: 11 of 12 repaired** — FPR `98.8 -> 99.8`, C-LPR `97.98 -> 99.66`, MacEPR `98.8 -> 99.8`,
+overall `97.47 -> 98.53`.
+
+**The twelfth (`20250324200212786306`) is a real solver-level gap, not a repair gap**, and is the
+honest residual this section leaves open. Its clauses require a visit to a named restaurant between
+`11:10` and `12:10`; the stored plan does not contain that activity at all, and repair moves only
+drop and re-time what is already there. A fresh solve of all 12 at `900 s` / `6000` restarts with
+`TPC_COMMONSENSE_FIRST=1` produced nothing acceptable for any of them, so it is not reachable from
+that direction either — closing it needs the solver to construct the missing meal, not the repair to
+rearrange what exists.
+
+### W2b: three unused preference paths, not a converged residual (2026-08-02)
+
+[W2 below](#w2-preference-residual-over-the-post-w1-split-2026-07-31) recorded the preference deficit
+as structural because the densify controller converged with `best_updates: 0`. The controller had
+converged — against a densify pass that never reached three code paths already sitting in
+`tpc_agent.py`, each implemented, flag-gated, and called from nowhere:
+
+- **`_insert_restaurant_breakfast`.** The DDR top-up only ever tried lunch and dinner. Every Phase 1
+  day missing a breakfast is an **arrival day** (`399` of them; not one middle or final day in the
+  split lacks one), so this was the entire breakfast headroom. Now reached from `TPC_PACK_DDR`, at a
+  real priced restaurant inside the evaluator's `06:00 -- 09:00` band — never the free
+  hotel-breakfast variant, which keeps its own flag and stays off.
+- **`_upgrade_transport_modes` / `_swap_attractions_for_att` / `_swap_restaurants_for_att`.** These
+  are the ATT optimizers W2 itself described as "already implemented … and just needs to run
+  standalone over already-accepted plans". They ran only from `scripts/maxpack.py`, a pre-sync
+  loophole tool nothing calls any more. New `TPC_PACK_ATT` runs them in a bounded convergence loop
+  *after* the top-ups, so it also shortens the hops those introduce. Every move preserves activity
+  counts, so DAV/DDR/C-LPR/FPR cannot regress.
+- **`_compress_activity_windows`.** Trims an over-long visit back to the standard dwell, which is
+  what a day whose meal band is merely *occupied* rather than genuinely full needs before a top-up
+  can place anything. Opt-in via `TPC_DENSIFY_COMPRESS_BEFORE`; each trim reverts unless the full
+  checker still accepts, so a `stay_duration` clause that needs the longer visit keeps it.
+
+One further limitation was structural rather than unused: the attraction top-up stopped at a hard
+four per day, but DAV is `attraction_count / (4 * day_count)` — a **plan-level** ratio. A day that
+physically cannot hold four (a travel day around a fixed intercity leg) permanently capped the plan
+even when a later day had room. The stop condition is now the plan's remaining deficit, bounded by
+`TPC_DENSIFY_ATTR_DAY_CAP` (default `8`).
+
+```bash
+TPC_PACK_DAV=1 TPC_PACK_DDR=1 TPC_PACK_ATT=1 \
+  .venv/bin/python scripts/densify.py --split tpc_phase1 --workers 4
+make merge SPLIT=tpc_phase1
+# second pass, with the compress-before knob on
+TPC_PACK_DAV=1 TPC_PACK_DDR=1 TPC_PACK_ATT=1 TPC_DENSIFY_COMPRESS_BEFORE=1 \
+  .venv/bin/python scripts/densify.py --split tpc_phase1 --workers 4
+make merge SPLIT=tpc_phase1
+make p1eval SPLIT=tpc_phase1
+```
+
+**Result: **Result: `+0.44` overall over three passes** (`98.53 -> 98.79 -> 98.98 -> 98.98`, the third pass merging 2 plans and converging). DAV `92.02 -> 95.41`, ATT `96.43 -> 98.62`, DDR `85.95 -> 87.36`, with FPR and C-LPR unchanged — every move is acceptance-gated, so they cannot move. W2's original ship bar ("DAV/ATT/DDR each not lower and at least one materially higher, with FPR and C-LPR unchanged") is met on all three.
+
+**What is still structural, on the measurement that supports it:** the DDR residual. Of the `1107` missing meal-slots W2 counted, `696` fall on travel days where an intercity leg eats the meal band; leaving those empty is correct rather than a defect. That part of W2's conclusion survives — it was the *other* `411` the pass could not reach.**
+
+All four packing flags stay **default off**, so the library floor is byte-identical and the Phase 2
+deterministic path is unchanged. They are Phase 1 offline-optimization switches until a Phase 2
+screen says otherwise ([S9/W9](tpc_shortcomings_and_plan.md#w9-re-decide-preference-packing-on-post-sync-evidence)).
 
 ### W1: repairing the 22-query commonsense tail (2026-07-31)
+
+> Superseded in part by [W1b](#w1b-the-genuinely-resistant-12-were-an-overfull-day-artifact-2026-08-02):
+> the "genuinely-resistant residual" this section describes was 11 repairable plans and one real
+> solver gap. Kept as the record of the first round.
 
 The tail described below as "genuinely hard" was, per the same-day update in that section, actually
 22 plans that already satisfy 100% of their own logical clauses and are rejected purely for a
@@ -55,6 +163,11 @@ incomplete. See the unresolved-uid residual reasons printed by `repair_commonsen
 current list.
 
 ### W2: preference residual over the post-W1 split (2026-07-31)
+
+> Superseded by [W2b](#w2b-three-unused-preference-paths-not-a-converged-residual-2026-08-02): the
+> null result below is real, but it measured a densify pass that could not reach breakfast, the ATT
+> optimizers, or the compress-before trim, and that capped attractions per day rather than per plan.
+> Kept as the record of what was tried.
 
 Ran the existing densify controller over the preference-ranked tail, per
 [Shortcomings and plan, W2](tpc_shortcomings_and_plan.md#w2-close-the-addressable-phase-1-preference-residual):

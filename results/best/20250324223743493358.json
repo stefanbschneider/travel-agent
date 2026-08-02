@@ -29,11 +29,32 @@
           "transports": [
             {
               "start": "Hangzhou Railway Station",
-              "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
+              "end": "City Station-Metro Station",
               "mode": "walk",
               "start_time": "10:57",
-              "end_time": "11:55",
-              "distance": 4.8755486396672305,
+              "end_time": "10:59",
+              "distance": 0.21,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "City Station-Metro Station",
+              "end": "Wushan Square-Metro Station",
+              "mode": "metro",
+              "start_time": "10:59",
+              "end_time": "11:02",
+              "distance": 1.77,
+              "price": 2,
+              "cost": 8,
+              "tickets": 4
+            },
+            {
+              "start": "Wushan Square-Metro Station",
+              "end": "Hangzhou West Lake State Guest House · West Lake's Premier Garden · Ziwei Hall",
+              "mode": "walk",
+              "start_time": "11:02",
+              "end_time": "11:37",
+              "distance": 2.95,
               "price": 0,
               "cost": 0
             }
@@ -296,6 +317,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Beishan Street Historical and Cultural District",
+          "start_time": "15:49",
+          "end_time": "16:39",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 4,
+          "transports": [
+            {
+              "start": "Bai Causeway",
+              "end": "Beishan Street Historical and Cultural District",
+              "mode": "taxi",
+              "start_time": "15:49",
+              "end_time": "15:49",
+              "distance": 0.53,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
           "start_time": "17:00",
@@ -305,14 +348,14 @@
           "tickets": 4,
           "transports": [
             {
-              "start": "Bai Causeway",
+              "start": "Beishan Street Historical and Cultural District",
               "end": "Sheraton Grand Hangzhou Xixi Resort - Cai Yue Xuan Chinese Restaurant",
               "mode": "taxi",
-              "start_time": "15:49",
-              "end_time": "15:58",
-              "distance": 6.45,
-              "price": 27.29,
-              "cost": 27.29,
+              "start_time": "16:39",
+              "end_time": "16:49",
+              "distance": 6.75,
+              "price": 28.32,
+              "cost": 28.32,
               "cars": 1
             }
           ]
@@ -525,5 +568,5 @@
     }
   ],
   "elapsed_time(sec)": 62.14849233627319,
-  "_eval_score": 95.70450680272108
+  "_eval_score": 96.15367965367966
 }
