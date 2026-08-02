@@ -3264,6 +3264,32 @@ class TPCAgent(BaseAgent):
                 ),
             )[:attr_candidate_limit]
 
+        # The official DAV score is plan-level -- ``attraction_count / (4 * day_count)``, clamped
+        # at 1 -- so a day that physically cannot hold four attractions (a travel day around a
+        # fixed train, a day whose POIs all shut early) is recoverable: a later day with room can
+        # carry the shortfall. Packing every day to a hard four leaves that headroom on the table.
+        # Days are visited in order, so the allowance accumulates forward; a deficit on the final
+        # day still cannot be made up, and the per-day ceiling keeps a single day from absorbing
+        # the whole plan.
+        attr_day_cap = max(4, int(os.environ.get("TPC_DENSIFY_ATTR_DAY_CAP", "8")))
+        attr_plan_target = 4 * max(1, len(itinerary))
+
+        def day_attr_cap(day_index):
+            total = sum(
+                1
+                for day_i in itinerary
+                for activity in (day_i.get("activities", []) or [])
+                if activity.get("type") == "attraction"
+            )
+            here = sum(
+                1
+                for activity in (itinerary[day_index].get("activities", []) or [])
+                if activity.get("type") == "attraction"
+            )
+            if total >= attr_plan_target:
+                return 4  # plan already at a perfect DAV; keep the original per-day target
+            return min(attr_day_cap, here + (attr_plan_target - total))
+
         for day_idx, day in enumerate(itinerary):
             activities = day.get("activities", []) or []
             if not activities:
@@ -3312,7 +3338,7 @@ class TPCAgent(BaseAgent):
                             break
 
             if self._pack_dav_enabled():
-                while sum(1 for a in activities if a.get("type") == "attraction") < 4:
+                while sum(1 for a in activities if a.get("type") == "attraction") < day_attr_cap(day_idx):
                     gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
                     inserted = False
                     for prev_idx, _gap_start, _gap_end in gaps:

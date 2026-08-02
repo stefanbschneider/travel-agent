@@ -480,3 +480,88 @@ def test_pack_att_shortens_a_hop_without_changing_activity_counts(monkeypatch):
     assert hop[0]["start_time"] == "10:00"
     assert hop[-1]["end_time"] == "10:05"
     assert on_agent._inner_activity_minutes(activities[1]) == 5
+
+
+def _two_day_plan():
+    """Day 1 is boxed in by a fixed departure-shaped tail; day 2 is wide open. Plan-level DAV
+    (attractions / (4 * days)) lets day 2 carry day 1's shortfall."""
+    def _day(day, activities):
+        return {"day": day, "activities": activities}
+
+    return {
+        "itinerary": [
+            _day(1, [
+                {
+                    "type": "attraction",
+                    "position": "Museum",
+                    "start_time": "09:00",
+                    "end_time": "10:00",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 1,
+                    "transports": [],
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Hotel Alpha",
+                    "start_time": "10:30",
+                    "end_time": "24:00",
+                    "price": 100,
+                    "cost": 100,
+                    "tickets": 1,
+                    "transports": _leg(
+                        "Museum", "Hotel Alpha", "10:10", "10:15", "metro", price=2, cost=2
+                    ),
+                },
+            ]),
+            _day(2, [
+                {
+                    "type": "attraction",
+                    "position": "Gallery",
+                    "start_time": "09:00",
+                    "end_time": "10:00",
+                    "price": 0,
+                    "cost": 0,
+                    "tickets": 1,
+                    "transports": _leg(
+                        "Hotel Alpha", "Gallery", "08:50", "08:55", "metro", price=2, cost=2
+                    ),
+                },
+                {
+                    "type": "accommodation",
+                    "position": "Hotel Alpha",
+                    "start_time": "21:00",
+                    "end_time": "24:00",
+                    "price": 100,
+                    "cost": 100,
+                    "tickets": 1,
+                    "transports": _leg(
+                        "Gallery", "Hotel Alpha", "20:30", "20:35", "metro", price=2, cost=2
+                    ),
+                },
+            ]),
+        ]
+    }
+
+
+def test_pack_dav_lets_a_free_day_carry_the_plan_level_shortfall(monkeypatch):
+    monkeypatch.setenv("TPC_PACK_DAV", "1")
+    plan = _two_day_plan()
+    _install_candidate_context(
+        monkeypatch,
+        attractions=[_row("Park {}".format(i), lat=0.0, lon=0.01 * i) for i in range(1, 12)],
+        hotels=[_row("Hotel Alpha", lat=0.0, lon=0.03)],
+    )
+    agent = _bare_agent()
+    agent._build_plan = lambda *args, **kwargs: deepcopy(plan)
+
+    packed = agent._pack_plan(deepcopy(plan), QUERY, {}, _accepted_check, {})
+
+    per_day = [
+        sum(1 for activity in day["activities"] if activity.get("type") == "attraction")
+        for day in packed["itinerary"]
+    ]
+    # Day 2 is allowed past the old hard four-per-day ceiling because the plan is still short of
+    # its 4 * day_count target, and stops at the TPC_DENSIFY_ATTR_DAY_CAP ceiling.
+    assert per_day[1] > 4
+    assert max(per_day) <= 8
