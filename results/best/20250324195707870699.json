@@ -151,58 +151,28 @@
           ]
         },
         {
-          "type": "breakfast",
-          "position": "Suzhou International Conference Hotel",
-          "start_time": "06:35",
-          "end_time": "07:05",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": [
-            {
-              "start": "Dayu Hot Pot (Suzhou Harmony Constellation Store)",
-              "end": "Times Square-Metro Station",
-              "mode": "walk",
-              "start_time": "06:00",
-              "end_time": "06:05",
-              "distance": 0.46,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Times Square-Metro Station",
-              "end": "Fuxiang Road-Metro Station",
-              "mode": "metro",
-              "start_time": "06:05",
-              "end_time": "06:31",
-              "distance": 13.31,
-              "price": 4,
-              "cost": 12,
-              "tickets": 3
-            },
-            {
-              "start": "Fuxiang Road-Metro Station",
-              "end": "Suzhou International Conference Hotel",
-              "mode": "walk",
-              "start_time": "06:31",
-              "end_time": "06:35",
-              "distance": 0.36,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "accommodation",
           "position": "Suzhou International Conference Hotel",
           "start_time": "23:00",
-          "end_time": "24:00",
+          "end_time": "23:59",
           "price": 699.0,
           "cost": 2097.0,
           "rooms": 3,
           "room_type": 1,
           "tickets": 3,
-          "transports": []
+          "transports": [
+            {
+              "start": "Dayu Hot Pot (Suzhou Harmony Constellation Store)",
+              "end": "Suzhou International Conference Hotel",
+              "mode": "taxi",
+              "start_time": "19:10",
+              "end_time": "19:31",
+              "distance": 14.02,
+              "price": 57.77,
+              "cost": 57.77,
+              "cars": 1
+            }
+          ]
         }
       ]
     },
@@ -214,16 +184,6 @@
           "position": "Suzhou International Conference Hotel",
           "start_time": "06:30",
           "end_time": "07:30",
-          "price": 0,
-          "cost": 0,
-          "tickets": 0,
-          "transports": []
-        },
-        {
-          "type": "breakfast",
-          "position": "Suzhou International Conference Hotel",
-          "start_time": "07:30",
-          "end_time": "08:30",
           "price": 0,
           "cost": 0,
           "tickets": 0,
@@ -242,8 +202,8 @@
               "start": "Suzhou International Conference Hotel",
               "end": "Shantang Street",
               "mode": "taxi",
-              "start_time": "08:30",
-              "end_time": "08:49",
+              "start_time": "07:30",
+              "end_time": "07:49",
               "distance": 12.86,
               "price": 52.56,
               "cost": 52.56,
@@ -340,48 +300,6 @@
           ]
         },
         {
-          "type": "dinner",
-          "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
-          "start_time": "17:16",
-          "end_time": "18:01",
-          "price": 10.0,
-          "cost": 30.0,
-          "tickets": 3,
-          "transports": [
-            {
-              "start": "Changmen Gate",
-              "end": "North Temple Pagoda-Metro Station",
-              "mode": "walk",
-              "start_time": "17:00",
-              "end_time": "17:08",
-              "distance": 0.75,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "North Temple Pagoda-Metro Station",
-              "end": "Sanyuanfang-Metro Station",
-              "mode": "metro",
-              "start_time": "17:08",
-              "end_time": "17:13",
-              "distance": 2.5,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Sanyuanfang-Metro Station",
-              "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
-              "mode": "walk",
-              "start_time": "17:13",
-              "end_time": "17:16",
-              "distance": 0.3,
-              "price": 0,
-              "cost": 0
-            }
-          ]
-        },
-        {
           "type": "train",
           "start_time": "17:24",
           "end_time": "19:08",
@@ -392,35 +310,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
-              "end": "Sanyuanfang-Metro Station",
-              "mode": "walk",
-              "start_time": "14:24",
-              "end_time": "14:27",
-              "distance": 0.3,
-              "price": 0,
-              "cost": 0
-            },
-            {
-              "start": "Sanyuanfang-Metro Station",
-              "end": "Suzhou Railway Station-Metro Station",
-              "mode": "metro",
-              "start_time": "14:27",
-              "end_time": "14:34",
-              "distance": 3.85,
-              "price": 2,
-              "cost": 6,
-              "tickets": 3
-            },
-            {
-              "start": "Suzhou Railway Station-Metro Station",
+              "start": "Changmen Gate",
               "end": "Suzhou Station",
-              "mode": "walk",
-              "start_time": "14:34",
-              "end_time": "14:35",
-              "distance": 0.13,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "17:08",
+              "end_time": "17:09",
+              "distance": 0.92,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
             }
           ],
           "TrainID": "G7374"
@@ -429,5 +327,5 @@
     }
   ],
   "elapsed_time(sec)": 0.029094219207763672,
-  "_eval_score": 100.0
+  "_eval_score": 98.33333333333334
 }

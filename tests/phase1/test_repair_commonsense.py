@@ -247,3 +247,139 @@ def test_dry_run_reports_applicable_repairs_without_touching_disk(tmp_path, monk
     rc._process(args)
 
     assert list(method_dir.glob("*.json")) == []
+
+
+def test_r5_drops_the_activity_that_cannot_be_reached_instead_of_shifting_the_day():
+    """R3's forward shift is wrong on an overfull day: shifting the first overlap pushes the
+    later, clause-pinned lunch out of its own window. R5 drops the unreachable filler instead."""
+    agent = _bare_agent(
+        travel_minutes={("A", "Far"): 200, ("A", "B"): 10, ("Far", "B"): 200},
+        poi_bounds={"Far": (0, 12 * 60), "B": (0, 24 * 60)},  # "Far" shuts at noon
+    )
+    plan = {"itinerary": [{"day": 1, "activities": [
+        _act("breakfast", "A", "08:00", "08:30"),
+        _act("attraction", "Far", "08:40", "09:40"),  # 200 min away: arrives after it closes
+        _act("lunch", "B", "11:00", "12:00"),
+    ]}]}
+    query = {"hard_logic_py": [], "nature_language": "", "target_city": CITY, "people_number": 1}
+
+    rc._rebuild_day_by_dropping(agent, plan, query, CITY, 1)
+
+    acts = plan["itinerary"][0]["activities"]
+    assert [a["position"] for a in acts] == ["A", "B"]
+    # The kept lunch stays in its own band, chained from the breakfast's real end position/time.
+    assert acts[1]["start_time"] == "11:00"
+    assert acts[1]["transports"][0]["start"] == "A"
+
+
+def test_r5_keeps_a_clause_named_poi_in_place_and_drops_what_blocks_it():
+    """A clause pinning 'B' to start no later than 11:00 must survive the repair: the blocking
+    attraction in front of it is dropped rather than B being shifted past its window."""
+    agent = _bare_agent(
+        travel_minutes={("A", "Slow Hill"): 10, ("Slow Hill", "Golden Pig"): 120,
+                        ("A", "Golden Pig"): 10},
+        poi_bounds={"Slow Hill": (0, 24 * 60), "Golden Pig": (0, 24 * 60)},
+    )
+    plan = {"itinerary": [{"day": 1, "activities": [
+        _act("breakfast", "A", "08:00", "08:30"),
+        _act("attraction", "Slow Hill", "09:00", "10:30"),
+        _act("lunch", "Golden Pig", "11:00", "12:00"),
+    ]}]}
+    query = {
+        "hard_logic_py": [
+            "result=False\nfor activity in allactivities(plan):\n"
+            "  if activity_position(activity)=='Golden Pig':\n"
+            "    if activity_start_time(activity)<='11:00':\n      result=True"
+        ],
+        "nature_language": "", "target_city": CITY, "people_number": 1,
+    }
+
+    rc._rebuild_day_by_dropping(agent, plan, query, CITY, 1, protect_named=True)
+
+    acts = plan["itinerary"][0]["activities"]
+    assert [a["position"] for a in acts] == ["A", "Golden Pig"]
+    assert acts[1]["start_time"] == "11:00"
+
+    # Without the protection the same day keeps the blocker and shifts the clause-pinned lunch
+    # past its window -- the exact trade this variant exists to avoid.
+    unprotected = {"itinerary": [{"day": 1, "activities": [
+        _act("breakfast", "A", "08:00", "08:30"),
+        _act("attraction", "Slow Hill", "09:00", "10:30"),
+        _act("lunch", "Golden Pig", "11:00", "12:00"),
+    ]}]}
+    rc._rebuild_day_by_dropping(agent, unprotected, query, CITY, 1, protect_named=False)
+    kept = unprotected["itinerary"][0]["activities"]
+    assert [a["position"] for a in kept] == ["A", "Slow Hill", "Golden Pig"]
+    assert kept[2]["start_time"] == "12:30"
+
+
+def test_r5_trims_trailing_activities_until_the_departure_leg_grounds():
+    """Ending before the flight departs is not the same as reaching the airport in time."""
+    agent = _bare_agent(
+        travel_minutes={("A", "B"): 10, ("B", "Airport"): 90, ("A", "Airport"): 90},
+        poi_bounds={"B": (0, 24 * 60)},
+    )
+    tail = _intercity("airplane", "Airport", "Origin Airport", "18:30", "20:00")
+    plan = {"itinerary": [{"day": 1, "activities": [
+        _act("lunch", "A", "12:00", "13:00"),
+        _act("dinner", "B", "17:20", "18:05"),  # ends before 18:30 but is 90 min from the airport
+        deepcopy(tail),
+    ]}]}
+    query = {"hard_logic_py": [], "nature_language": "", "target_city": CITY, "people_number": 1}
+
+    rc._rebuild_day_by_dropping(agent, plan, query, CITY, 1)
+
+    acts = plan["itinerary"][0]["activities"]
+    assert [a.get("position") or a.get("start") for a in acts] == ["A", "Airport"]
+    assert acts[-1]["transports"][0]["start_time"] == "13:00"  # leaves right after lunch
+    assert acts[-1]["start_time"] == tail["start_time"]  # ticketed departure never moved
+
+
+def test_r5_anchors_a_later_day_at_the_previous_days_last_position():
+    """The space checker walks one global position chain, so day 2 must start where day 1 ended
+    even after R1/R5 reorder or drop the activity whose stored leg carried that origin."""
+    agent = _bare_agent(
+        travel_minutes={("Hotel", "X"): 15, ("X", "Y"): 10},
+        poi_bounds={"X": (0, 24 * 60), "Y": (0, 24 * 60)},
+    )
+    plan = {"itinerary": [
+        {"day": 1, "activities": [_act("accommodation", "Hotel", "20:00", "24:00")]},
+        {"day": 2, "activities": [
+            _act("attraction", "X", "09:00", "10:00", transports=[
+                {"start": "Somewhere Else", "end": "X", "mode": "walk",
+                 "start_time": "08:30", "end_time": "09:00"}
+            ]),
+            _act("attraction", "Y", "10:30", "11:30"),
+        ]},
+    ]}
+    query = {"hard_logic_py": [], "nature_language": "", "target_city": CITY, "people_number": 1}
+
+    rc._rebuild_day_by_dropping(agent, plan, query, CITY, 1)
+
+    acts = plan["itinerary"][1]["activities"]
+    assert [a["position"] for a in acts] == ["X", "Y"]
+    assert acts[0]["transports"][0]["start"] == "Hotel"
+    assert acts[1]["transports"][0]["start"] == "X"
+
+
+def test_repair_plan_returns_the_best_scoring_variant():
+    """repair_plan builds each variant on its own copy and keeps the highest ``_variant_key``."""
+    agent = _bare_agent(travel_minutes={})
+    plan = {"itinerary": [{"day": 1, "activities": [_act("lunch", "A", "11:00", "12:00")]}]}
+    query = {"hard_logic_py": [], "nature_language": "", "target_city": CITY, "people_number": 1}
+    calls = []
+
+    def _fake_key(_agent, _query, candidate):
+        calls.append(candidate)
+        return (0, 0, len(calls), 0.0)  # each later variant scores strictly higher
+
+    original_key = rc._variant_key
+    rc._variant_key = _fake_key
+    try:
+        trial = rc.repair_plan(agent, plan, query)
+    finally:
+        rc._variant_key = original_key
+
+    assert len(calls) == 3  # shift-first, drop-first (protected), drop-first (unprotected)
+    assert trial is calls[-1]
+    assert trial is not plan
