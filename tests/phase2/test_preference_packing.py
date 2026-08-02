@@ -565,3 +565,82 @@ def test_pack_dav_lets_a_free_day_carry_the_plan_level_shortfall(monkeypatch):
     # its 4 * day_count target, and stops at the TPC_DENSIFY_ATTR_DAY_CAP ceiling.
     assert per_day[1] > 4
     assert max(per_day) <= 8
+
+
+def _long_visit_plan():
+    return {
+        "itinerary": [
+            {
+                "day": 1,
+                "activities": [
+                    {
+                        "type": "attraction",
+                        "position": "Museum",
+                        "start_time": "09:00",
+                        "end_time": "14:30",  # 330 minutes, swallowing the whole lunch band
+                        "price": 0,
+                        "cost": 0,
+                        "tickets": 1,
+                        "transports": [],
+                    },
+                    {
+                        "type": "accommodation",
+                        "position": "Hotel Alpha",
+                        "start_time": "21:00",
+                        "end_time": "24:00",
+                        "price": 100,
+                        "cost": 100,
+                        "tickets": 1,
+                        "transports": _leg(
+                            "Museum", "Hotel Alpha", "20:30", "20:35", "metro", price=2, cost=2
+                        ),
+                    },
+                ],
+            }
+        ]
+    }
+
+
+def test_compress_before_is_opt_in_and_frees_room_for_the_meal_top_up(monkeypatch):
+    monkeypatch.setenv("TPC_PACK_DDR", "1")
+    _install_candidate_context(
+        monkeypatch,
+        restaurants=[_row("Bistro", lat=0.0, lon=0.01, price_cents=20)],
+        hotels=[_row("Hotel Alpha", lat=0.0, lon=0.03)],
+    )
+
+    off_agent = _bare_agent()
+    off_agent._build_plan = lambda *args, **kwargs: deepcopy(_long_visit_plan())
+    off_result = off_agent._pack_plan(deepcopy(_long_visit_plan()), QUERY, {}, _accepted_check, {})
+    off_acts = off_result["itinerary"][0]["activities"]
+    assert off_acts[0]["end_time"] == "14:30"
+    assert not [a for a in off_acts if a.get("type") == "lunch"]
+
+    monkeypatch.setenv("TPC_DENSIFY_COMPRESS_BEFORE", "1")
+    monkeypatch.setenv("TPC_DENSIFY_COMPRESS_ATTR_DWELL", "60")
+    on_agent = _bare_agent()
+    on_agent._build_plan = lambda *args, **kwargs: deepcopy(_long_visit_plan())
+    on_result = on_agent._pack_plan(deepcopy(_long_visit_plan()), QUERY, {}, _accepted_check, {})
+    on_acts = on_result["itinerary"][0]["activities"]
+    assert on_acts[0]["end_time"] == "10:00"  # trimmed back to the standard dwell
+    lunches = [a for a in on_acts if a.get("type") == "lunch"]
+    assert len(lunches) == 1
+    assert lunches[0]["position"] == "Bistro"
+
+
+def test_compress_before_reverts_a_trim_the_checker_rejects(monkeypatch):
+    """A stay_duration-style clause that needs the long visit keeps it."""
+    monkeypatch.setenv("TPC_PACK_DDR", "1")
+    monkeypatch.setenv("TPC_DENSIFY_COMPRESS_BEFORE", "1")
+    monkeypatch.setenv("TPC_DENSIFY_COMPRESS_ATTR_DWELL", "60")
+    _install_candidate_context(monkeypatch, restaurants=[], hotels=[])
+
+    def check(candidate):
+        museum = candidate["itinerary"][0]["activities"][0]
+        return (1, 1) if museum["end_time"] >= "14:00" else (0, 1)
+
+    agent = _bare_agent()
+    agent._build_plan = lambda *args, **kwargs: deepcopy(_long_visit_plan())
+    result = agent._pack_plan(deepcopy(_long_visit_plan()), QUERY, {}, check, {})
+
+    assert result["itinerary"][0]["activities"][0]["end_time"] == "14:30"

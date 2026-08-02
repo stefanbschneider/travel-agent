@@ -3244,6 +3244,13 @@ class TPCAgent(BaseAgent):
                     used_attractions.add(name)
 
         itinerary = dense.get("itinerary", []) or []
+        # Opt-in (``TPC_DENSIFY_COMPRESS_BEFORE``, default off): trim over-long visits back to the
+        # standard dwell before packing, so a day whose meal band is merely *occupied* -- not
+        # genuinely full -- can still take the missing meal or attraction. Each trim is reverted
+        # unless the full checker still accepts, so a ``stay_duration`` clause that requires the
+        # longer visit keeps it. Counts and transports are untouched, so this move alone cannot
+        # change any preference term; it only creates room for the passes below.
+        self._compress_activity_windows(dense, check)
         # Idle-gap attraction packing knobs. The former 130-min threshold / 18:00 cutoff left
         # many real 90-120 min gaps (breakfast->lunch, afternoon->dinner) and all evening slots
         # unfilled; every insertion is still gated by the full checker via _insert_activity.
