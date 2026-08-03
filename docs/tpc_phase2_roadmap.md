@@ -350,9 +350,11 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 
 ## Next steps (priority order)
 
-The Phase 2 submission deadline is **not** announced (the organizers listed it as still being
-finalized on 2026-07-30), and evaluation runs 2026-08-01 to 08-07, so treat the window as open but
-short. Implementation-level detail for the older items lives in
+The Phase 2 harness submission deadline is **2026-08-10, 24:00 Beijing Time (UTC+8)**, confirmed by the
+organizers' 2026-08-03 advancement email; submission and evaluation run 2026-08-04 to 08-10 (see the
+[competition reference](reference/competition.md) for the full date table and what packaging detail is
+and isn't confirmed). The per-query timeout is still unannounced — treat the window as short but keep
+budgets a local assumption. Implementation-level detail for the older items lives in
 [`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
 
 **Self-contained implementation briefs for every open item below — plus the Phase 1 items and a

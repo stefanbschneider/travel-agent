@@ -1,6 +1,6 @@
 # TPC @ IJCAI 2026 Competition Reference
 
-**Accessed:** 2026-07-15.
+**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site.
 The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative when this note conflicts with local material.
 This is a concise repository reference, not a replacement for the rules.
 
@@ -9,10 +9,13 @@ This is a concise repository reference, not a replacement for the rules.
 | Milestone | Date |
 | --- | --- |
 | Phase 1 data release and submissions open | 2026-06-01 |
-| Phase 1 submission deadline | 2026-08-01 |
-| Phase 2 evaluation | 2026-08-01 to 2026-08-07 |
-| Technical-report deadline | 2026-08-07 |
-| Final results | 2026-08-10 |
+| Phase 1 submission deadline | 2026-08-03, 24:00 Beijing Time (UTC+8) |
+| Phase 2 submission and evaluation period | 2026-08-04 to 2026-08-10 |
+| Harness submission deadline | 2026-08-10, 24:00 Beijing Time (UTC+8) |
+| Technical-report deadline | 2026-08-10, 24:00 Beijing Time (UTC+8) |
+| Final results | To be announced |
+
+Team fabiundstefan's advancement email (2026-08-03) confirms these dates directly; they also match the milestones rendered on the competition site (`app.js`). This supersedes the earlier `2026-08-01`/`2026-08-07` dates this doc previously carried.
 
 Phase 1 is open to all teams.
 The top five Phase 1 teams, plus every team tied at the fifth-place cutoff, advance to Phase 2.
@@ -34,10 +37,28 @@ Hard-constraint metrics contribute 85%; DAV, ATT, and DDR contribute 15%.
 
 ## Phase 2: harness
 
-Advancing teams submit a self-contained harness with agent code, prompts, scaffolding, and required files.
+Advancing teams submit a self-contained harness with agent code, prompts, dependencies, documentation, and all files required to run the system.
 Organizers evaluate it per query on a separate held-out set using Qwen3.6-27B via SGLang on **2 × A800 80 GB GPUs without NVLink**.
 The [official Agent Environment Guide](https://chinatravel-competition.github.io/IJCAI2026/agent-environment.html) describes the wrapper: its harness removes oracle-only verifier fields before the agent is asked to solve a query.
-Final Phase 2 rankings determine first through third place.
+Final Phase 2 rankings determine first through third place. Top-ranked teams are separately invited to submit a short system description paper for the competition proceedings — this is distinct from the mandatory technical report above.
+
+### Confirmed packaging (2026-08-03 advancement email)
+
+- **Portal:** https://box.nju.edu.cn/u/d/5a1a84297f4b43eda42f/ (same link the competition site lists as "Phase 2 Submission Portal").
+- **Zip name:** `{TeamName}_v{x}.zip`, e.g. `NJUTravel_v1.zip`, `NJUTravel_v2.zip`. **The version number restarts from `v1` in Phase 2** — do not continue the Phase 1 version sequence. The zip filename's team name must match the registered team name.
+- **Contents:** "agent code, prompts, dependencies, documentation, and all files required to run your system" — i.e. a runnable checkout, not predictions.
+- The competition site's own Round 1 packaging note ("extra top-level folders inside the zip are handled normally") is Phase-1-specific guidance; nothing on the site adds Phase-2-specific packaging detail beyond what the email states.
+
+### Still not specified anywhere we've checked
+
+Neither the advancement email nor the [Agent Environment Guide](https://chinatravel-competition.github.io/IJCAI2026/agent-environment.html) nor the competition site's own bundled script (`app.js`, checked 2026-08-03) states:
+
+- an **organizer-enforced per-query timeout** — keep treating local `300 s`/`900 s` as sensitivity assumptions, not budgets;
+- a **repeat count** or retry policy per query;
+- an **execution entry-point contract** for how the organizer's own harness invokes a submitted zip (the Agent Environment Guide documents *our* development-time CLI/HTTP/MCP surface, not the calling convention the organizers' evaluation harness will use against a submitted package — that remains unconfirmed);
+- any **page limit, template, or format** for the mandatory technical report, or for the optional system description paper.
+
+Confirm these before finalizing the submission layout; a clarification request following the pattern of issues [#27](https://github.com/LAMDA-NeSy/ChinaTravel/issues/27)/[#28](https://github.com/LAMDA-NeSy/ChinaTravel/issues/28) is the appropriate channel if they aren't answered by the portal page itself once it's reachable.
 
 ### Confirmed evaluation host (2026-07-30)
 
@@ -118,19 +139,27 @@ Phase 2."* Two consequences beyond the code sync:
 
 ## Details not yet public
 
-As of the organizers' 2026-07-30 replies, three items are explicitly still being finalized and "will be
-announced separately":
+The organizers' 2026-08-03 advancement email resolved two of the three items that were still pending as
+of the 2026-07-30 replies:
 
-- submission deadline and cutoff timezone;
-- submission portal and required package format;
-- **organizer-enforced per-query timeout**.
+- ~~submission deadline and cutoff timezone~~ — **resolved**: harness and technical report both due
+  2026-08-10, 24:00 Beijing Time (UTC+8);
+- ~~submission portal and required package format~~ — **resolved**: portal linked above, zip named
+  `{TeamName}_v{x}.zip` restarting from `v1`, containing "agent code, prompts, dependencies,
+  documentation, and all files required to run your system";
+- **organizer-enforced per-query timeout — still unannounced.** Neither the email nor the linked Agent
+  Environment Guide nor the competition site mentions it (checked 2026-08-03). Treat local `300 s` and
+  `900 s` settings as sensitivity assumptions, not official budgets, and keep the harness robust to a
+  shorter timeout than assumed.
 
-Treat local 300 s and 900 s settings as sensitivity assumptions, not official budgets, and keep the
-harness robust to a shorter timeout than assumed.
+Two further items surfaced while reviewing the 2026-08-03 email that were never asked about explicitly:
+a **technical-report page limit/template** (not stated anywhere we checked) and the **exact entry-point
+contract** the organizers' harness will use to invoke a submitted zip (the Agent Environment Guide only
+documents our own development-time interface). Both are candidates for a follow-up clarification issue.
 
 Clarification issue status:
 
 | Issue | Asks for | Status |
 | --- | --- | --- |
-| [#27](https://github.com/LAMDA-NeSy/ChinaTravel/issues/27) | Submission cutoff/timezone, portal and package format, host CPU/RAM, organizer-enforced per-query timeout | **Answered 2026-07-30 for host resources and runtime versions** (table above); deadline, portal/format and per-query timeout still pending |
+| [#27](https://github.com/LAMDA-NeSy/ChinaTravel/issues/27) | Submission cutoff/timezone, portal and package format, host CPU/RAM, organizer-enforced per-query timeout | **Deadline, portal, and package format answered** (2026-07-30 host/runtime details, 2026-08-03 email for dates/portal/format); **per-query timeout still pending** |
 | [#28](https://github.com/LAMDA-NeSy/ChinaTravel/issues/28) | Which verifier version Phase 2 scores against: unchanged public, patched internal, or a new canonical release | **Answered 2026-07-30**: the updated public evaluator is canonical for Phase 2; the Phase 1 leaderboard will be re-scored against it |
