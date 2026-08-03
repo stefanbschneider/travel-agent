@@ -147,23 +147,22 @@
         },
         {
           "type": "attraction",
-          "position": "East Lake",
-          "start_time": "10:15",
-          "end_time": "11:30",
+          "position": "Hankou Riverside Reed Marsh",
+          "start_time": "10:00",
+          "end_time": "11:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Hankou Riverside Park",
-              "end": "East Lake",
-              "mode": "taxi",
+              "end": "Hankou Riverside Reed Marsh",
+              "mode": "walk",
               "start_time": "09:59",
-              "end_time": "10:15",
-              "distance": 11.12,
-              "price": 44.72,
-              "cost": 44.72,
-              "cars": 1
+              "end_time": "10:00",
+              "distance": 0.09703309955915816,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -177,15 +176,35 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "East Lake",
+              "start": "Hankou Riverside Reed Marsh",
+              "end": "Toudao Street-Metro Station",
+              "mode": "walk",
+              "start_time": "11:15",
+              "end_time": "11:28",
+              "distance": 1.12,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Toudao Street-Metro Station",
+              "end": "Sanjiao Road-Metro Station",
+              "mode": "metro",
+              "start_time": "11:28",
+              "end_time": "11:36",
+              "distance": 4.19,
+              "price": 3,
+              "cost": 6,
+              "tickets": 2
+            },
+            {
+              "start": "Sanjiao Road-Metro Station",
               "end": "Shuiletang Riverside View Restaurant (Greenbelt Riverside Branch)",
-              "mode": "taxi",
-              "start_time": "11:30",
-              "end_time": "11:44",
-              "distance": 9.93,
-              "price": 39.46,
-              "cost": 39.46,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "11:36",
+              "end_time": "11:42",
+              "distance": 0.58,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -234,6 +253,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "All-Star Trampoline Sports Center (Optics Valley Branch)",
+          "start_time": "15:23",
+          "end_time": "16:13",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "2024 Dongfeng Voyah Wuhan Open",
+              "end": "All-Star Trampoline Sports Center (Optics Valley Branch)",
+              "mode": "taxi",
+              "start_time": "15:16",
+              "end_time": "15:23",
+              "distance": 5.31,
+              "price": 23.3,
+              "cost": 23.3,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
           "start_time": "17:00",
@@ -243,14 +284,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "2024 Dongfeng Voyah Wuhan Open",
+              "start": "All-Star Trampoline Sports Center (Optics Valley Branch)",
               "end": "Wuhan Optics Valley Hyatt Hotel · Damiano Italian Restaurant",
               "mode": "taxi",
-              "start_time": "15:16",
-              "end_time": "15:23",
-              "distance": 5.29,
-              "price": 23.23,
-              "cost": 23.23,
+              "start_time": "16:13",
+              "end_time": "16:19",
+              "distance": 4.09,
+              "price": 19.0,
+              "cost": 19.0,
               "cars": 1
             }
           ]
@@ -432,5 +473,5 @@
     }
   ],
   "elapsed_time(sec)": 60.72483849525452,
-  "_eval_score": 97.5
+  "_eval_score": 97.91666666666667
 }

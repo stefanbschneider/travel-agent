@@ -260,14 +260,14 @@ estimate survives contact with the implementation.
 
 | # | Shortcoming | Phase | Leverage | Confidence | Item |
 | --- | --- | --- | --- | --- | --- |
-| S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** est., **`+1.02` measured** (10/22 repaired) | **CLOSED** (partial; §3.1) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
-| S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` est., **`+0` measured** | **CLOSED** (converged with zero gain; §3.2/W2) | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
+| S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** est., **`+2.08` measured** (21/22 repaired over two rounds) | **CLOSED** (21/22; §3.1 + [2026-08-02 update](#session-update-2026-08-02-w1-and-w2-reopened-and-closed-further)) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
+| S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` est., **`+0.44` measured** (after wiring three unreachable helpers; the first round's `+0` was a property of the pass, not the data) | **CLOSED** ([2026-08-02 update](#session-update-2026-08-02-w1-and-w2-reopened-and-closed-further)) | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
 | S3 | No post-sync `900 s` reference row — every Phase 2 gate is currently unrunnable | 2 | blocking, `0` on its own | **open** (needs the evaluation workstream's dedicated machine, `8` h+) | [W3](#w3-re-establish-the-post-sync-900-s-reference-row) |
 | S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry, + a fixed timeout-kill blind spot) landed, step 1 (CP-SAT workers) screened RED at 4 cores, step 2 (parallel restarts) remains | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, **step 1 screened RED (not conclusive at 4 cores)**, step 2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
 | S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
 | S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | open (needs W3) | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
 | S7 | The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score | 2 | risk, not gain | open (needs W3) | [W7](#w7-de-risk-the-unconfirmed-budget) |
-| S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
+| S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
 | S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | open (needs W3) | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
 
 `S8` (LLM endpoint reachability) is **fully CLOSED** as of the 2026-07-31 night session (both the
@@ -1120,3 +1120,65 @@ purely by the commonsense gate.
   axis it acts on.
 - **No revival of `TPC_PACK_HOTEL_BREAKFAST`** or of `arrive_no_later`-from-`end_before`. Both are closed
   by the current evaluator, not merely unpromoted.
+
+---
+
+## Session update (2026-08-02): W1 and W2 reopened and closed further
+
+Two items this document had closed were reopened after re-reading their own evidence, and both
+turned out to have been closed on a reading of the data that did not follow from it. The pattern is
+worth naming, because it is the same one twice: **a residual was called *structural* on evidence
+that only showed the approach tried so far had stopped producing gains.**
+
+### W1 (Phase 1 commonsense tail): 11 of the "resistant" 12 were repairable
+
+W1 shipped 10 of 22 and recorded the remaining 12 as needing to move an intercity activity's own
+ticketed time, "out of scope by design". That is true of the move R3 makes, and only of that move.
+Those days are **overfull**: R3 shifts an overlapping activity later, the shift ripples into the next
+activity, and a clause-pinned POI eventually leaves its window — so the full-checker gate refuses the
+commit and the tail looks irreducible. The opposite move, dropping what cannot be reached, is not
+out of scope and was never tried.
+
+`scripts/repair_commonsense.py` now builds four variants (shift-first R1-R4; drop-first R1+R5;
+drop-first without the clause-named-POI protection; drop-first preferring the cheapest *fitting*
+leg) and keeps the best by `_variant_key`. **11 of 12 repaired**; FPR `98.8 -> 99.8`, C-LPR
+`97.98 -> 99.66`, overall `97.47 -> 98.53`. Full design and the three evaluator facts R5 depends on
+are in the [Phase 1 playbook, W1b](tpc_phase1_playbook.md#w1b-the-genuinely-resistant-12-were-an-overfull-day-artifact-2026-08-02).
+
+**The residual is now one query** (`20250324200212786306`), and it is a genuine **solver** gap rather
+than a repair gap: its clauses require a named restaurant visit between `11:10` and `12:10` that the
+stored plan does not contain, and repair moves only drop and re-time what is already there. A fresh
+solve of all 12 at `900 s` / `6000` restarts under `TPC_COMMONSENSE_FIRST=1` produced nothing
+acceptable for any of them, so it is not reachable from that direction either. Closing it means
+teaching the solver to construct that meal — a solver item, not a repair item.
+
+### W2 (Phase 1 preference residual): the pass had three unreachable code paths
+
+W2's null result (`best_updates: 0`) was correctly measured and wrongly generalized. The densify
+pass it exercised could not reach three helpers that already existed in `tpc_agent.py`, each
+implemented, flag-gated, and called from nowhere: `_insert_restaurant_breakfast` (so the DDR top-up
+never tried breakfast at all — and every Phase 1 day missing a breakfast is an arrival day, `399` of
+them), the three ATT optimizers this document itself said "just needs to run standalone over
+already-accepted plans", and `_compress_activity_windows`. A fourth limitation was structural: the
+attraction top-up capped at four *per day*, while DAV is `attraction_count / (4 * day_count)`, a
+*plan-level* ratio, so a travel day that cannot hold four permanently capped plans whose later days
+had room.
+
+Wiring all four (new `TPC_PACK_ATT`, breakfast under `TPC_PACK_DDR`, `TPC_DENSIFY_COMPRESS_BEFORE`
+reached from `_densify_plan`, plan-level attraction target) and rerunning the same densify command
+moved what W2 had called structural: **DAV `92.02 -> 95.40`, ATT `96.43 -> 98.62`, DDR
+`85.95 -> 87.35`**, overall `98.53 -> 98.98`.
+
+**What is still genuinely structural, on the measurement that supports it:** the DDR residual. Of
+the `1107` missing meal-slots W2 counted, `696` fall on travel days where an intercity leg eats the
+meal band, and leaving those empty is correct rather than a defect. That is the part of W2's
+original conclusion that survives.
+
+### Consequence for W9 (packing on post-sync evidence)
+
+[W9](#w9-re-decide-preference-packing-on-post-sync-evidence) is unchanged in priority but now has a
+larger flag set to decide about: `TPC_PACK_ATT` and `TPC_DENSIFY_COMPRESS_BEFORE` join
+`TPC_PACK_DAV` / `TPC_PACK_DDR`. All are **default off**, so the Phase 2 deterministic floor is
+byte-identical and none of the above is Phase 2 evidence. `TPC_PACK_ATT` is the most plausible
+Phase 2 candidate of the four: it preserves activity counts by construction, so it cannot cost FPR
+or C-LPR, and its only Phase 2 risk is the time it spends inside the per-query budget.

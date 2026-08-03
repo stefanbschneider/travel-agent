@@ -534,12 +534,24 @@ class TPCAgent(BaseAgent):
         return os.environ.get("TPC_PACK_DAV", "0") not in ("", "0", "false", "False")
 
     def _pack_ddr_enabled(self):
-        """Opt-in lunch/dinner top-up pass for accepted plans.
+        """Opt-in breakfast/lunch/dinner top-up pass for accepted plans.
 
-        Default OFF. Adds missing lunch/dinner activities at grounded restaurants only when the
-        resulting accepted plan does not regress the accepted-plan preference key.
+        Default OFF. Adds missing breakfast/lunch/dinner activities at grounded restaurants only
+        when the resulting accepted plan does not regress the accepted-plan preference key. The
+        breakfast slot uses ``_insert_restaurant_breakfast`` (a real, priced restaurant inside the
+        evaluator's ``06:00 -- 09:00`` band), never a free hotel breakfast -- that variant stays
+        behind its own ``TPC_PACK_HOTEL_BREAKFAST`` flag.
         """
         return os.environ.get("TPC_PACK_DDR", "0") not in ("", "0", "false", "False")
+
+    def _pack_att_enabled(self):
+        """Opt-in ATT (average inner-city hop time) optimizer for accepted plans.
+
+        Default OFF. Runs only count-preserving moves -- faster-mode hop rebuilds and nearer-POI
+        swaps -- so DAV/DDR cannot fall and only the transport component can move. Every edit is
+        gated by the full checker plus the accepted-plan preference key, same as the top-up passes.
+        """
+        return os.environ.get("TPC_PACK_ATT", "0") not in ("", "0", "false", "False")
 
     def _pack_hotel_breakfast_enabled(self):
         """Opt-in free hotel-breakfast top-up for accepted plans.
@@ -555,6 +567,7 @@ class TPCAgent(BaseAgent):
             self._pack_dav_enabled()
             or self._pack_ddr_enabled()
             or self._pack_hotel_breakfast_enabled()
+            or self._pack_att_enabled()
         )
 
     def _fast_commonsense_prefilter(self, plan):
@@ -1195,8 +1208,9 @@ class TPCAgent(BaseAgent):
 
         - ``TPC_PACK_DAV``: attraction top-up (plus ATT-protected hop rerouting via the insertion
           helpers' shortest-time transport lookup)
-        - ``TPC_PACK_DDR``: lunch/dinner top-up at grounded restaurants
+        - ``TPC_PACK_DDR``: breakfast/lunch/dinner top-up at grounded restaurants
         - ``TPC_PACK_HOTEL_BREAKFAST``: free hotel-breakfast stacking, intentionally separate
+        - ``TPC_PACK_ATT``: count-preserving average-hop-time optimizer (faster modes, nearer POIs)
 
         Every committed edit must keep the full checker accepting and must not lower the accepted
         plan's preference key.
@@ -3230,6 +3244,13 @@ class TPCAgent(BaseAgent):
                     used_attractions.add(name)
 
         itinerary = dense.get("itinerary", []) or []
+        # Opt-in (``TPC_DENSIFY_COMPRESS_BEFORE``, default off): trim over-long visits back to the
+        # standard dwell before packing, so a day whose meal band is merely *occupied* -- not
+        # genuinely full -- can still take the missing meal or attraction. Each trim is reverted
+        # unless the full checker still accepts, so a ``stay_duration`` clause that requires the
+        # longer visit keeps it. Counts and transports are untouched, so this move alone cannot
+        # change any preference term; it only creates room for the passes below.
+        self._compress_activity_windows(dense, check)
         # Idle-gap attraction packing knobs. The former 130-min threshold / 18:00 cutoff left
         # many real 90-120 min gaps (breakfast->lunch, afternoon->dinner) and all evening slots
         # unfilled; every insertion is still gated by the full checker via _insert_activity.
@@ -3250,6 +3271,32 @@ class TPCAgent(BaseAgent):
                 ),
             )[:attr_candidate_limit]
 
+        # The official DAV score is plan-level -- ``attraction_count / (4 * day_count)``, clamped
+        # at 1 -- so a day that physically cannot hold four attractions (a travel day around a
+        # fixed train, a day whose POIs all shut early) is recoverable: a later day with room can
+        # carry the shortfall. Packing every day to a hard four leaves that headroom on the table.
+        # Days are visited in order, so the allowance accumulates forward; a deficit on the final
+        # day still cannot be made up, and the per-day ceiling keeps a single day from absorbing
+        # the whole plan.
+        attr_day_cap = max(4, int(os.environ.get("TPC_DENSIFY_ATTR_DAY_CAP", "8")))
+        attr_plan_target = 4 * max(1, len(itinerary))
+
+        def day_attr_cap(day_index):
+            total = sum(
+                1
+                for day_i in itinerary
+                for activity in (day_i.get("activities", []) or [])
+                if activity.get("type") == "attraction"
+            )
+            here = sum(
+                1
+                for activity in (itinerary[day_index].get("activities", []) or [])
+                if activity.get("type") == "attraction"
+            )
+            if total >= attr_plan_target:
+                return 4  # plan already at a perfect DAV; keep the original per-day target
+            return min(attr_day_cap, here + (attr_plan_target - total))
+
         for day_idx, day in enumerate(itinerary):
             activities = day.get("activities", []) or []
             if not activities:
@@ -3258,6 +3305,16 @@ class TPCAgent(BaseAgent):
             default_gap = "45" if self.use_oracle else "60"
             meal_gap_min = max(1, int(os.environ.get("TPC_DENSIFY_MEAL_GAP_MIN", default_gap)))
             if self._pack_ddr_enabled():
+                # Breakfast first: it is the earliest band (06:00--09:00) and the only meal the
+                # top-up used to skip entirely, so on an arrival day it competes with nothing.
+                # _insert_restaurant_breakfast owns the band and the before-first/gap/after-last
+                # placement order; every placement it tries is full-checker gated.
+                if "breakfast" not in meal_types:
+                    breakfast_name = self._insert_restaurant_breakfast(
+                        dense, day_idx, restaurants, city, people, check, used_restaurants)
+                    if breakfast_name:
+                        used_restaurants.add(breakfast_name)
+                        meal_types.add("breakfast")
                 lunch_close = self._env_time_minutes("TPC_DENSIFY_LUNCH_WIN_CLOSE", "14:00")
                 dinner_close = self._env_time_minutes("TPC_DENSIFY_DINNER_WIN_CLOSE", "20:00")
                 for meal_type, window in (("lunch", (11 * 60, lunch_close)), ("dinner", (17 * 60, dinner_close))):
@@ -3288,7 +3345,7 @@ class TPCAgent(BaseAgent):
                             break
 
             if self._pack_dav_enabled():
-                while sum(1 for a in activities if a.get("type") == "attraction") < 4:
+                while sum(1 for a in activities if a.get("type") == "attraction") < day_attr_cap(day_idx):
                     gaps = self._day_gaps(activities, attr_win_open, attr_win_close, attr_gap_min)
                     inserted = False
                     for prev_idx, _gap_start, _gap_end in gaps:
@@ -3330,7 +3387,42 @@ class TPCAgent(BaseAgent):
 
         if self._pack_hotel_breakfast_enabled():
             self._topup_hotel_breakfasts(dense, check)
+        if self._pack_att_enabled():
+            dense = self._optimize_att(dense, query, constraints, check, attractions, restaurants, coords)
         return dense
+
+    def _optimize_att(self, plan, query, constraints, check, attractions, restaurants, coords):
+        """Count-preserving ATT pass: faster hop modes, then nearer POIs, until it converges.
+
+        Runs after the top-up passes so it also shortens the hops those passes introduced. Each
+        sub-move is independently full-checker gated and keeps attraction/meal counts fixed, so
+        DAV/DDR/C-LPR/FPR cannot regress; the loop stops as soon as a round stops improving the
+        preference sum (bounded by ``TPC_PACK_ATT_ROUNDS``, default 3).
+        """
+        try:
+            rounds = max(1, int(os.environ.get("TPC_PACK_ATT_ROUNDS", "3")))
+        except Exception:
+            rounds = 3
+        for _ in range(rounds):
+            try:
+                before = sum(self._default_preference_components(plan))
+            except Exception:
+                return plan
+            for step in (
+                lambda p: self._upgrade_transport_modes(p, query, constraints, check),
+                lambda p: self._swap_attractions_for_att(p, query, constraints, check, attractions, coords),
+                lambda p: self._swap_restaurants_for_att(p, query, constraints, check, restaurants, coords),
+            ):
+                try:
+                    plan = step(plan) or plan
+                except Exception:
+                    continue
+            try:
+                if sum(self._default_preference_components(plan)) <= before + 1e-9:
+                    break
+            except Exception:
+                break
+        return plan
 
     def _swap_restaurants_for_att(self, plan, query, constraints, check, restaurants, coords):
         """Replace high-transit meal venues with nearer alternatives.

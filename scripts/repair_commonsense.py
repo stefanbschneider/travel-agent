@@ -7,14 +7,22 @@ schema/commonsense checker accepts it -- scripts/merge.py remains the sole write
 so adoption stays score-monotonic (merge.py's own strictly-greater score gate is a second,
 independent guard).
 
-The four moves, applied in order on the same working copy, then gated once at the end
-(docs/tpc_shortcomings_and_plan.md section 3.3):
+Two variants are built independently and the better one (by ``_variant_key``) is returned:
 
-  R1 -- drop duplicate meal types (repeated_meal)
-  R2 -- restore chronological list order (overlap: list-order-only cases)
-  R3 -- re-space overlapping activities, dropping one if it can't fit (overlap: real time conflicts)
-  R4 -- re-ground an inbound leg that starts before the previous activity ends
-        (transport_before_prev_end), then R3 runs once more to absorb any ripple it creates
+  shift-first (R1-R4), applied in order on one working copy:
+    R1 -- drop duplicate meal types (repeated_meal)
+    R2 -- restore chronological list order (overlap: list-order-only cases)
+    R3 -- re-space overlapping activities, dropping one if it can't fit (overlap: real time conflicts)
+    R4 -- re-ground an inbound leg that starts before the previous activity ends
+          (transport_before_prev_end), then R3 runs once more to absorb any ripple it creates
+
+  drop-first (R1 + R5), for the days R3's forward shift can only make worse:
+    R5 -- rebuild each day as a maximal feasible chain from the previous activity's real end
+          position/time, dropping any activity a grounded leg cannot reach inside its own opening
+          hours and meal band; intercity legs and accommodations are structural and never dropped
+
+R1-R4 is the right move on a merely mistimed day; R5 is the right move on an overfull one, where
+shifting ripples forward and pushes a later constraint-carrying activity out of its own window.
 
 Every leg recomputation reuses TPCAgent's existing grounding helpers (_get_transport,
 _lookup_poi_open_bounds, _activity_end_position/_activity_start_position) -- no new geometry.
@@ -46,6 +54,7 @@ from chinatravel.agent.tpc_agent.tpc_agent import TPCAgent, time_to_minutes, min
 from chinatravel.agent.tpc_agent.tpc_llm import TPCLLM
 from chinatravel.data.load_datasets import NpEncoder, load_query
 from chinatravel.environment.world_env import WorldEnv
+from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
 from scan_commonsense_residual import flag_plan
 
 MEAL_TYPES = ("breakfast", "lunch", "dinner")
@@ -335,18 +344,396 @@ def _reground_early_transport(agent, plan, query, city, people):
     return changed
 
 
+MEAL_BANDS = {
+    "breakfast": (time_to_minutes("06:00"), time_to_minutes("09:00")),
+    "lunch": (time_to_minutes("11:00"), time_to_minutes("14:00")),
+    "dinner": (time_to_minutes("17:00"), time_to_minutes("20:00")),
+}
+
+
+def _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=True, prefer_cheap=False):
+    """R5: rebuild each day as a maximal feasible chain, dropping what cannot be made to fit.
+
+    R3 shifts an overlapping activity later and only drops it as a last resort, which is the right
+    move when the day is merely mistimed. It is the wrong move when the day is *overfull* -- the
+    shift ripples forward and pushes a later, constraint-carrying activity (a named restaurant with
+    a clause window, a POI that must open before noon) out of its own band, so the repair trades one
+    failure for another. This move takes the opposite side: it walks the day in chronological order
+    from the previous activity's real end position/time, keeps an activity only when a grounded leg
+    reaches it inside its own opening hours and meal band, and otherwise removes it outright.
+
+    Intercity legs and accommodations are structural and never dropped -- an intercity activity
+    keeps its ticketed times and only has its inbound leg recomputed, and an accommodation is
+    shifted to its arrival. ``repair_plan`` runs this as an alternative variant, not a replacement,
+    and keeps whichever variant scores better.
+    """
+    changed = False
+    itinerary = plan.get("itinerary", []) or []
+    for day_idx, day in enumerate(itinerary):
+        activities = day.get("activities", []) or []
+        if len(activities) < 2:
+            continue
+
+        head_fixed = agent._is_intercity_activity(activities[0])
+        tail_fixed = agent._is_intercity_activity(activities[-1])
+        start = 1 if head_fixed else 0
+        end = len(activities) - 1 if tail_fixed else len(activities)
+        head = activities[:start]
+        tail = activities[end:]
+        middle = sorted(activities[start:end], key=lambda a: time_to_minutes(a["start_time"]))
+        if not middle:
+            continue
+
+        anchor = head[-1] if head else _day_start_anchor(agent, plan, day_idx, activities)
+        protected = _clause_named_positions(query) if protect_named else set()
+
+        kept = []
+        index = 0
+        while index < len(middle):
+            activity = middle[index]
+            index += 1
+            cursor = kept[-1] if kept else anchor
+            if cursor is None:
+                # No anchor to chain from (day 1 of a trip that starts in the target city): keep
+                # the stored entry and its stored inbound leg rather than inventing one.
+                kept.append(activity)
+                continue
+            placed = _place_activity(
+                agent, city, people, cursor, activity, tail, prefer_cheap=prefer_cheap)
+            if placed is None:
+                if activity.get("type") == "accommodation":
+                    # Never drop the night's stay; park it wherever it can be reached.
+                    parked = _place_activity(
+                        agent, city, people, cursor, activity, tail, relax=True,
+                        prefer_cheap=prefer_cheap)
+                    if parked is not None:
+                        _commit_placement(activity, parked)
+                        kept.append(activity)
+                        changed = True
+                        continue
+                    kept.append(activity)
+                    continue
+                changed = True
+                continue
+
+            transports, new_start_min, new_end_min = placed
+            if (
+                new_start_min > time_to_minutes(activity["start_time"])
+                and _is_protected(activity, protected)
+                and kept
+                and not _is_protected(kept[-1], protected)
+                and kept[-1].get("type") != "accommodation"
+            ):
+                # This activity carries its own hard-logic time window, so shifting it later is
+                # exactly the trade R3 makes and this variant exists to avoid. Drop whatever sits
+                # in front of it instead and retry from the earlier cursor.
+                kept.pop()
+                index -= 1
+                changed = True
+                continue
+
+            _commit_placement(activity, placed)
+            kept.append(activity)
+            changed = True
+
+        # A fixed departure leg is only reachable if the last kept activity leaves enough time to
+        # travel to the boarding point. "Ends before the flight departs" is not the same test --
+        # a 45-minute dinner that ends at 18:07 still misses an 18:32 flight an hour's ride away,
+        # and that gap is exactly what leaves `transport_before_prev_end` flagged after R4 declines
+        # to reground the leg. Trim trailing droppable activities until the leg grounds.
+        if tail:
+            while True:
+                last = kept[-1] if kept else (head[-1] if head else None)
+                if last is None or last is tail[0]:
+                    break
+                if _tail_is_reachable(agent, city, people, last, tail[0]):
+                    break
+                if not kept or kept[-1].get("type") == "accommodation":
+                    break
+                kept.pop()
+                changed = True
+            last = kept[-1] if kept else (head[-1] if head else None)
+            if last is not None and last is not tail[0]:
+                _reground_inbound(agent, city, people, last, tail[0], clamp=False)
+
+        new_activities = head + kept + tail
+        if [id(a) for a in new_activities] != [id(a) for a in activities]:
+            changed = True
+        day["activities"] = new_activities
+    return changed
+
+
+def _day_start_anchor(agent, plan, day_idx, activities):
+    """Where a non-arrival day actually begins, in the space checker's own terms: the end position
+    of the *previous day's last activity* (in practice the night's hotel), departing no earlier
+    than this day's stored opening leg. Returns a synthetic activity-shaped cursor, or ``None``
+    for day 1, whose start is the inbound intercity leg instead.
+
+    The position chain the checker walks is global across days, so reordering or de-duplicating a
+    day's opening activity must not silently change where that day starts -- deriving the anchor
+    from the stored plan's own opening leg would do exactly that once R1 drops the activity that
+    carried it.
+    """
+    if day_idx <= 0:
+        return None
+    try:
+        previous = plan["itinerary"][day_idx - 1]["activities"][-1]
+    except Exception:
+        return None
+    position = agent._activity_end_position(previous)
+    if not position:
+        return None
+    depart = None
+    for activity in activities:
+        legs = activity.get("transports") or []
+        if legs and legs[0].get("start_time"):
+            depart = str(legs[0]["start_time"])
+            break
+        if activity.get("start_time"):
+            depart = str(activity["start_time"])
+            break
+    if not depart:
+        return None
+    return {"type": "accommodation", "position": position, "end_time": depart}
+
+
+def _clause_named_positions(query):
+    """POI names a hard_logic_py clause mentions by name, lowercased.
+
+    A clause that pins a named POI to a time window is the one thing a forward shift most often
+    breaks, so R5 refuses to move these and drops their neighbours instead.
+    """
+    text = "\n".join(str(c) for c in (query.get("hard_logic_py") or []))
+    names = set()
+    for chunk in text.split("'"):
+        chunk = chunk.strip()
+        if len(chunk) > 3 and not chunk.isidentifier():
+            names.add(chunk.lower())
+    return names
+
+
+def _is_protected(activity, protected):
+    position = str(activity.get("position", "") or "").strip().lower()
+    return bool(position) and position in protected
+
+
+def _place_activity(agent, city, people, cursor, activity, tail, relax=False, prefer_cheap=False):
+    """Try to reach `activity` from `cursor`, returning (transports, start_min, end_min) or None.
+
+    Prefers a leg in the activity's own stored mode -- a repair should fix a broken timing, not
+    silently upgrade a free walk to a paid taxi and blow an inner-city-cost clause -- and falls back
+    to the shortest-time valid mode when the stored one no longer fits. ``relax`` skips the
+    fit tests, for structural activities that must be kept regardless. ``prefer_cheap`` widens the
+    candidate modes and returns the cheapest leg that fits rather than the first, for queries whose
+    clauses cap inner-city transport spend; feasibility comes before the ATT the faster mode buys,
+    since a rejected plan scores zero on every preference term anyway.
+    """
+    if cursor is None:
+        return None
+    from_pos = agent._activity_end_position(cursor)
+    to_pos = agent._activity_start_position(activity)
+    depart = str(cursor.get("end_time", ""))
+    if not (from_pos and to_pos and depart):
+        return None
+    try:
+        old_start_min = time_to_minutes(activity["start_time"])
+        duration = max(1, time_to_minutes(activity["end_time"]) - old_start_min)
+    except Exception:
+        return None
+
+    kind = activity.get("type")
+    stored_legs = activity.get("transports") or []
+    stored_mode = str(stored_legs[0].get("mode", "")).strip().lower() if stored_legs else ""
+
+    modes = [stored_mode] if stored_mode in ("walk", "metro", "taxi") else []
+    if prefer_cheap:
+        modes += [m for m in ("walk", "metro", "taxi") if m not in modes]
+    options = []
+    for mode in modes:
+        saved_forced = getattr(agent, "_forced_inner_mode", None)
+        try:
+            agent._forced_inner_mode = mode
+            options.append(agent._get_transport(agent.env, city, from_pos, to_pos, depart, people))
+        except Exception:
+            pass
+        finally:
+            agent._forced_inner_mode = saved_forced
+    options.append(_lookup_transport(agent, city, from_pos, to_pos, depart, people))
+
+    fallback = None
+    fitting = []
+    for transports, arrival in options:
+        if transports is None or arrival is None:
+            continue
+        try:
+            arrival_min = time_to_minutes(arrival)
+        except Exception:
+            continue
+        start_min = max(arrival_min, old_start_min)
+        end_min = start_min + duration
+        if kind == "accommodation":
+            try:
+                end_min = max(end_min, time_to_minutes(activity["end_time"]))
+            except Exception:
+                pass
+        candidate = (transports, start_min, end_min)
+        if fallback is None:
+            fallback = candidate
+        if relax:
+            return candidate
+        if kind in MEAL_BANDS:
+            band_open, band_close = MEAL_BANDS[kind]
+            if start_min >= band_close or end_min > band_close or end_min <= band_open:
+                continue
+        try:
+            bounds = agent._lookup_poi_open_bounds(city, to_pos, kind, activity.get("tickets"))
+        except Exception:
+            bounds = None
+        if bounds is not None and (start_min < bounds[0] or end_min > bounds[1]):
+            continue
+        if tail:
+            try:
+                if end_min > time_to_minutes(tail[0]["start_time"]):
+                    continue
+            except Exception:
+                pass
+        if not prefer_cheap:
+            return candidate
+        fitting.append(candidate)
+    if fitting:
+        return min(fitting, key=lambda c: (_legs_cost(c[0]), c[2]))
+    return fallback if relax else None
+
+
+def _legs_cost(transports):
+    total = 0.0
+    for leg in transports or []:
+        try:
+            total += float(leg.get("cost", 0) or 0)
+        except Exception:
+            continue
+    return total
+
+
+def _commit_placement(activity, placed):
+    transports, start_min, end_min = placed
+    activity["transports"] = transports
+    activity["start_time"] = minutes_to_time(start_min)
+    activity["end_time"] = minutes_to_time(end_min)
+
+
+def _tail_is_reachable(agent, city, people, prev_activity, tail_activity):
+    """True when a grounded leg from `prev_activity`'s end reaches `tail_activity`'s boarding
+    point no later than its own fixed departure time."""
+    from_pos = agent._activity_end_position(prev_activity)
+    to_pos = agent._activity_start_position(tail_activity)
+    depart = str(prev_activity.get("end_time", ""))
+    if not (from_pos and to_pos and depart):
+        return True
+    transports, arrival = _lookup_transport(agent, city, from_pos, to_pos, depart, people)
+    if transports is None or arrival is None:
+        return False
+    try:
+        return time_to_minutes(arrival) <= time_to_minutes(tail_activity["start_time"])
+    except Exception:
+        return True
+
+
+def _repair_shift_first(agent, plan, query, city, people):
+    """The original R1-R4 chain: prefer re-timing an activity over removing it."""
+    _repair_duplicate_meals(agent, plan, query, city, people)
+    _restore_chronological_order(agent, plan, query, city, people)
+    _respace_overlaps(agent, plan, query, city, people)
+    _reground_early_transport(agent, plan, query, city, people)
+    _respace_overlaps(agent, plan, query, city, people)  # absorb any ripple R4 introduced
+
+
+def _repair_drop_first(agent, plan, query, city, people):
+    """R1 + R5: de-duplicate meals, then rebuild each day as a maximal feasible chain."""
+    _repair_duplicate_meals(agent, plan, query, city, people)
+    _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=True)
+    _reground_early_transport(agent, plan, query, city, people)
+
+
+def _repair_drop_first_unprotected(agent, plan, query, city, people):
+    """R1 + R5 without the named-POI protection.
+
+    Refusing to move a clause-named POI costs whatever sits in front of it, which is the right
+    trade when that clause pins a time window and the wrong one when it only names the POI. Both
+    are cheap to build, so run each and let ``_variant_key`` decide.
+    """
+    _repair_duplicate_meals(agent, plan, query, city, people)
+    _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=False)
+    _reground_early_transport(agent, plan, query, city, people)
+
+
+def _repair_drop_first_cheap(agent, plan, query, city, people):
+    """R1 + R5 choosing the cheapest fitting leg instead of the first.
+
+    A query whose clauses cap inner-city transport spend can be pushed over the cap by the repair
+    itself: every regrounded hop is free to pick a paid mode, and the tail's ride to the station is
+    the most expensive one in the plan. This variant trades hop time for fare wherever both ground.
+    """
+    _repair_duplicate_meals(agent, plan, query, city, people)
+    _rebuild_day_by_dropping(agent, plan, query, city, people, protect_named=True, prefer_cheap=True)
+    _reground_early_transport(agent, plan, query, city, people)
+
+
+def _variant_key(agent, query, plan):
+    """Rank a repair variant the way the leaderboard does: full acceptance first, then the
+    schema+commonsense gate that every other component is conditioned on, then satisfied clauses,
+    then the DAV/ATT/DDR preference sum (which only counts for a fully accepted plan)."""
+    try:
+        schema_ok = bool(agent._schema_ok(query, plan))
+    except Exception:
+        schema_ok = False
+    try:
+        commonsense_ok = bool(agent._commonsense_ok(query, plan))
+    except Exception:
+        commonsense_ok = False
+    clauses = query.get("hard_logic_py") or []
+    try:
+        results = evaluate_constraints_py(clauses, plan, verbose=False)
+        passed = sum(1 for r in results if bool(r))
+    except Exception:
+        passed = 0
+    env_ok = schema_ok and commonsense_ok
+    full = env_ok and bool(clauses) and passed == len(clauses)
+    preference = 0.0
+    if full:
+        try:
+            preference = float(sum(agent._default_preference_components(plan)))
+        except Exception:
+            preference = 0.0
+    return (1 if full else 0, 1 if env_ok else 0, passed, preference)
+
+
 def repair_plan(agent, plan, query):
-    """Apply R1-R4 in order on a deepcopy; caller gates commit with the full checker."""
-    trial = deepcopy(plan)
+    """Return the best of the shift-first (R1-R4) and the two drop-first (R1+R5) repair variants.
+
+    Both run on their own deepcopy of the stored plan; the caller gates the commit.
+    """
     city = str(query.get("target_city", ""))
     people = int(query.get("people_number", 1) or 1)
     agent._set_transport_context(agent._collect_constraints(query))
-    _repair_duplicate_meals(agent, trial, query, city, people)
-    _restore_chronological_order(agent, trial, query, city, people)
-    _respace_overlaps(agent, trial, query, city, people)
-    _reground_early_transport(agent, trial, query, city, people)
-    _respace_overlaps(agent, trial, query, city, people)  # absorb any ripple R4 introduced
-    return trial
+
+    best = None
+    best_key = None
+    for build in (
+        _repair_shift_first,
+        _repair_drop_first,
+        _repair_drop_first_unprotected,
+        _repair_drop_first_cheap,
+    ):
+        trial = deepcopy(plan)
+        try:
+            build(agent, trial, query, city, people)
+        except Exception:
+            continue
+        key = _variant_key(agent, query, trial)
+        if best_key is None or key > best_key:
+            best, best_key = trial, key
+    return best if best is not None else deepcopy(plan)
 
 
 def _residual_reason(query, plan):

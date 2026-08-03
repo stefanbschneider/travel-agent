@@ -19,6 +19,48 @@
           "FlightID": "FL020"
         },
         {
+          "type": "breakfast",
+          "position": "New West Garden Restaurant (Jinshuo Road Branch)",
+          "start_time": "07:00",
+          "end_time": "07:45",
+          "price": 40.0,
+          "cost": 120.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Shenzhen Bao'an International Airport",
+              "end": "Airport East-Metro Station",
+              "mode": "walk",
+              "start_time": "04:27",
+              "end_time": "04:32",
+              "distance": 0.45,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Airport East-Metro Station",
+              "end": "Ping Chau-Metro Station",
+              "mode": "metro",
+              "start_time": "04:32",
+              "end_time": "04:51",
+              "distance": 9.96,
+              "price": 4,
+              "cost": 12,
+              "tickets": 3
+            },
+            {
+              "start": "Ping Chau-Metro Station",
+              "end": "New West Garden Restaurant (Jinshuo Road Branch)",
+              "mode": "walk",
+              "start_time": "04:51",
+              "end_time": "04:59",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "attraction",
           "position": "Bihai Bay Park",
           "start_time": "09:00",
@@ -28,15 +70,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Shenzhen Bao'an International Airport",
+              "start": "New West Garden Restaurant (Jinshuo Road Branch)",
+              "end": "Ping Chau-Metro Station",
+              "mode": "walk",
+              "start_time": "07:45",
+              "end_time": "07:53",
+              "distance": 0.74,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Ping Chau-Metro Station",
+              "end": "Bihaiwan-Metro Station",
+              "mode": "metro",
+              "start_time": "07:53",
+              "end_time": "07:56",
+              "distance": 1.65,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Bihaiwan-Metro Station",
               "end": "Bihai Bay Park",
-              "mode": "taxi",
-              "start_time": "04:27",
-              "end_time": "04:37",
-              "distance": 7.11,
-              "price": 29.59,
-              "cost": 29.59,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "07:56",
+              "end_time": "08:16",
+              "distance": 1.71,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -130,23 +192,43 @@
         },
         {
           "type": "attraction",
-          "position": "Four Seasons Snow and Ice Theme Park",
-          "start_time": "17:04",
-          "end_time": "18:34",
+          "position": "Bauhinia Lane Hong Kong International Style Street",
+          "start_time": "16:49",
+          "end_time": "18:19",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Futian District Sports Park",
-              "end": "Four Seasons Snow and Ice Theme Park",
-              "mode": "taxi",
+              "end": "Honey Lake-Metro Station",
+              "mode": "walk",
               "start_time": "16:31",
-              "end_time": "17:04",
-              "distance": 22.02,
-              "price": 93.81,
-              "cost": 93.81,
-              "cars": 1
+              "end_time": "16:41",
+              "distance": 0.87,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Honey Lake-Metro Station",
+              "end": "Futian Port-Metro Station",
+              "mode": "metro",
+              "start_time": "16:41",
+              "end_time": "16:48",
+              "distance": 3.83,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Bauhinia Lane Hong Kong International Style Street",
+              "mode": "walk",
+              "start_time": "16:48",
+              "end_time": "16:49",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -160,15 +242,35 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Four Seasons Snow and Ice Theme Park",
+              "start": "Bauhinia Lane Hong Kong International Style Street",
+              "end": "Futian Port-Metro Station",
+              "mode": "walk",
+              "start_time": "18:19",
+              "end_time": "18:20",
+              "distance": 0.14,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Futian Port-Metro Station",
+              "end": "Huangbeiling-Metro Station",
+              "mode": "metro",
+              "start_time": "18:20",
+              "end_time": "18:35",
+              "distance": 7.8,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Huangbeiling-Metro Station",
               "end": "Turtle Old Lucky Herbal Tea Shop (Fenghuang Road Branch)",
-              "mode": "taxi",
-              "start_time": "18:34",
-              "end_time": "18:54",
-              "distance": 13.4,
-              "price": 54.98,
-              "cost": 54.98,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "18:35",
+              "end_time": "18:37",
+              "distance": 0.2,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -712,5 +814,5 @@
     }
   ],
   "elapsed_time(sec)": 60.07421255111694,
-  "_eval_score": 99.16666666666666
+  "_eval_score": 99.58333333333334
 }

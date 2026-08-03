@@ -165,20 +165,41 @@
         },
         {
           "type": "lunch",
-          "position": "Renhe Hall (Zhaojiabang Road Branch)",
-          "start_time": "12:35",
-          "end_time": "13:35",
-          "price": 203.0,
-          "cost": 609.0,
+          "position": "Large Intestine Noodles",
+          "start_time": "11:26",
+          "end_time": "12:26",
+          "price": 40.0,
+          "cost": 120.0,
           "tickets": 3,
           "transports": [
             {
               "start": "Lujiazui",
-              "end": "Renhe Hall (Zhaojiabang Road Branch)",
+              "end": "Pudong South Road-Metro Station",
               "mode": "walk",
               "start_time": "11:15",
-              "end_time": "12:35",
-              "distance": 6.748947556918294,
+              "end_time": "11:18",
+              "distance": 0.27,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Laoximen-Metro Station",
+              "mode": "metro",
+              "start_time": "11:18",
+              "end_time": "11:24",
+              "distance": 3.48,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Laoximen-Metro Station",
+              "end": "Large Intestine Noodles",
+              "mode": "walk",
+              "start_time": "11:24",
+              "end_time": "11:26",
+              "distance": 0.22,
               "price": 0,
               "cost": 0
             }
@@ -186,20 +207,62 @@
         },
         {
           "type": "attraction",
-          "position": "Jing'an Sculpture Park",
-          "start_time": "14:29",
-          "end_time": "15:29",
+          "position": "Fuxing Park",
+          "start_time": "13:46",
+          "end_time": "14:46",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "Renhe Hall (Zhaojiabang Road Branch)",
-              "end": "Jing'an Sculpture Park",
+              "start": "Large Intestine Noodles",
+              "end": "Laoximen-Metro Station",
               "mode": "walk",
-              "start_time": "13:35",
-              "end_time": "14:29",
-              "distance": 4.504349910807119,
+              "start_time": "12:26",
+              "end_time": "12:28",
+              "distance": 0.22,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Laoximen-Metro Station",
+              "end": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "mode": "metro",
+              "start_time": "12:28",
+              "end_time": "12:30",
+              "distance": 1.17,
+              "price": 2,
+              "cost": 6,
+              "tickets": 3
+            },
+            {
+              "start": "Site of the First National Congress of the Communist Party of China · South Huangpi Road-Metro Station",
+              "end": "Fuxing Park",
+              "mode": "walk",
+              "start_time": "12:30",
+              "end_time": "12:33",
+              "distance": 0.28,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Huaihai Road",
+          "start_time": "15:31",
+          "end_time": "16:21",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Fuxing Park",
+              "end": "Huaihai Road",
+              "mode": "walk",
+              "start_time": "14:46",
+              "end_time": "14:48",
+              "distance": 0.20968168861696815,
               "price": 0,
               "cost": 0
             }
@@ -215,14 +278,15 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Jing'an Sculpture Park",
+              "start": "Huaihai Road",
               "end": "Kurogi",
-              "mode": "walk",
-              "start_time": "15:29",
-              "end_time": "15:48",
-              "distance": 1.6621328468252083,
-              "price": 0,
-              "cost": 0
+              "mode": "taxi",
+              "start_time": "16:21",
+              "end_time": "16:24",
+              "distance": 2.48,
+              "price": 13.38,
+              "cost": 13.38,
+              "cars": 1
             }
           ]
         },
@@ -296,11 +360,32 @@
           "transports": [
             {
               "start": "QIU GUO HOTEL(Shanghai Xujiahui Jiaotong University Subway Station)",
-              "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "end": "Jiaotong University-Metro Station",
               "mode": "walk",
               "start_time": "08:30",
-              "end_time": "10:19",
-              "distance": 9.156833275586717,
+              "end_time": "08:33",
+              "distance": 0.32,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Jiaotong University-Metro Station",
+              "end": "Pudong South Road-Metro Station",
+              "mode": "metro",
+              "start_time": "08:33",
+              "end_time": "08:49",
+              "distance": 8.38,
+              "price": 3,
+              "cost": 9,
+              "tickets": 3
+            },
+            {
+              "start": "Pudong South Road-Metro Station",
+              "end": "Large Eight Italy Lounge & Restaurant (1862 Fashion Art Center Branch)",
+              "mode": "walk",
+              "start_time": "08:49",
+              "end_time": "08:57",
+              "distance": 0.69,
               "price": 0,
               "cost": 0
             }
@@ -333,5 +418,5 @@
     }
   ],
   "elapsed_time(sec)": 61.43960738182068,
-  "_eval_score": 91.58455433455433
+  "_eval_score": 93.0668934240363
 }

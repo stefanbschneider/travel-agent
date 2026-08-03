@@ -64,23 +64,43 @@
         },
         {
           "type": "attraction",
-          "position": "Yangcheng Lake",
-          "start_time": "16:21",
-          "end_time": "17:21",
+          "position": "Crane Garden",
+          "start_time": "16:01",
+          "end_time": "17:01",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 1,
           "transports": [
             {
               "start": "Suzhou Water Tour",
-              "end": "Yangcheng Lake",
-              "mode": "taxi",
+              "end": "Sanyuanfang-Metro Station",
+              "mode": "walk",
               "start_time": "15:48",
-              "end_time": "16:21",
-              "distance": 22.34,
-              "price": 95.22,
-              "cost": 95.22,
-              "cars": 1
+              "end_time": "15:54",
+              "distance": 0.54,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Sanyuanfang-Metro Station",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "metro",
+              "start_time": "15:54",
+              "end_time": "15:57",
+              "distance": 1.84,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Crane Garden",
+              "mode": "walk",
+              "start_time": "15:57",
+              "end_time": "16:01",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -94,15 +114,35 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Yangcheng Lake",
+              "start": "Crane Garden",
+              "end": "Xuanqiao Lane-Metro Station",
+              "mode": "walk",
+              "start_time": "17:01",
+              "end_time": "17:05",
+              "distance": 0.38,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xuanqiao Lane-Metro Station",
+              "end": "Leqiao-Metro Station",
+              "mode": "metro",
+              "start_time": "17:05",
+              "end_time": "17:07",
+              "distance": 1.13,
+              "price": 2,
+              "cost": 2,
+              "tickets": 1
+            },
+            {
+              "start": "Leqiao-Metro Station",
               "end": "Xidayuan Suzhou-Style Private Hot Pot (Guanqian Main Store)",
-              "mode": "taxi",
-              "start_time": "17:21",
-              "end_time": "17:52",
-              "distance": 21.01,
-              "price": 89.25,
-              "cost": 89.25,
-              "cars": 1
+              "mode": "walk",
+              "start_time": "17:07",
+              "end_time": "17:11",
+              "distance": 0.41,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -256,6 +296,27 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Gun Hall No. 1 Live Fire Shooting Club",
+          "start_time": "13:56",
+          "end_time": "14:46",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "transports": [
+            {
+              "start": "Kunqu Tea House",
+              "end": "Gun Hall No. 1 Live Fire Shooting Club",
+              "mode": "walk",
+              "start_time": "13:56",
+              "end_time": "13:56",
+              "distance": 0.04469791168117873,
+              "price": 0,
+              "cost": 0
+            }
+          ]
+        },
+        {
           "type": "train",
           "start_time": "17:23",
           "end_time": "21:33",
@@ -266,14 +327,14 @@
           "tickets": 1,
           "transports": [
             {
-              "start": "Kunqu Tea House",
+              "start": "Gun Hall No. 1 Live Fire Shooting Club",
               "end": "Suzhou North Station",
               "mode": "taxi",
-              "start_time": "13:56",
-              "end_time": "14:16",
-              "distance": 13.43,
-              "price": 55.12,
-              "cost": 55.12,
+              "start_time": "14:46",
+              "end_time": "15:06",
+              "distance": 13.38,
+              "price": 54.92,
+              "cost": 54.92,
               "cars": 1
             }
           ],
@@ -283,5 +344,5 @@
     }
   ],
   "elapsed_time(sec)": 60.31148409843445,
-  "_eval_score": 96.85335497835499
+  "_eval_score": 97.5
 }

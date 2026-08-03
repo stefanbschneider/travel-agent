@@ -20,23 +20,43 @@
         },
         {
           "type": "attraction",
-          "position": "Dushu Lake Park",
-          "start_time": "10:01",
-          "end_time": "11:31",
+          "position": "Dinghui Temple",
+          "start_time": "09:53",
+          "end_time": "11:23",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 5,
           "transports": [
             {
               "start": "Suzhou Station",
-              "end": "Dushu Lake Park",
-              "mode": "taxi",
+              "end": "Suzhou Railway Station-Metro Station",
+              "mode": "walk",
               "start_time": "09:41",
-              "end_time": "10:01",
-              "distance": 13.34,
-              "price": 54.74,
-              "cost": 109.48,
-              "cars": 2
+              "end_time": "09:42",
+              "distance": 0.13,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Suzhou Railway Station-Metro Station",
+              "end": "Xiangmen-Metro Station",
+              "mode": "metro",
+              "start_time": "09:42",
+              "end_time": "09:49",
+              "distance": 3.57,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Xiangmen-Metro Station",
+              "end": "Dinghui Temple",
+              "mode": "walk",
+              "start_time": "09:49",
+              "end_time": "09:53",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -50,15 +70,35 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Dushu Lake Park",
+              "start": "Dinghui Temple",
+              "end": "Xiangmen-Metro Station",
+              "mode": "walk",
+              "start_time": "11:23",
+              "end_time": "11:27",
+              "distance": 0.36,
+              "price": 0,
+              "cost": 0
+            },
+            {
+              "start": "Xiangmen-Metro Station",
+              "end": "Wangxing Bridge Suzhou University-Metro Station",
+              "mode": "metro",
+              "start_time": "11:27",
+              "end_time": "11:28",
+              "distance": 0.88,
+              "price": 2,
+              "cost": 10,
+              "tickets": 5
+            },
+            {
+              "start": "Wangxing Bridge Suzhou University-Metro Station",
               "end": "Wang's Linji Baked Pancake (Shuangta Main Store)",
-              "mode": "taxi",
-              "start_time": "11:31",
-              "end_time": "11:46",
-              "distance": 10.01,
-              "price": 39.73,
-              "cost": 79.46,
-              "cars": 2
+              "mode": "walk",
+              "start_time": "11:28",
+              "end_time": "11:33",
+              "distance": 0.42,
+              "price": 0,
+              "cost": 0
             }
           ]
         },
@@ -322,6 +362,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "City God Temple",
+          "start_time": "13:47",
+          "end_time": "14:37",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Crane Garden",
+              "end": "City God Temple",
+              "mode": "taxi",
+              "start_time": "13:47",
+              "end_time": "13:47",
+              "distance": 0.27,
+              "price": 11.0,
+              "cost": 22.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
           "type": "dinner",
           "position": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
           "start_time": "17:00",
@@ -331,14 +393,14 @@
           "tickets": 5,
           "transports": [
             {
-              "start": "Crane Garden",
+              "start": "City God Temple",
               "end": "Old Wang's Egg Pancake (Shuyuan Alley Branch)",
               "mode": "taxi",
-              "start_time": "13:47",
-              "end_time": "13:49",
-              "distance": 1.98,
-              "price": 11.62,
-              "cost": 23.24,
+              "start_time": "14:37",
+              "end_time": "14:40",
+              "distance": 2.24,
+              "price": 12.54,
+              "cost": 25.08,
               "cars": 2
             }
           ]
@@ -454,5 +516,5 @@
     }
   ],
   "elapsed_time(sec)": 60.04225134849548,
-  "_eval_score": 97.91666666666667
+  "_eval_score": 98.33333333333334
 }

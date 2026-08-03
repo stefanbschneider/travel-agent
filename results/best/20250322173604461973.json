@@ -44,7 +44,7 @@
           "type": "attraction",
           "position": "Kuanzhai Alley",
           "start_time": "13:53",
-          "end_time": "15:08",
+          "end_time": "14:53",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -66,7 +66,7 @@
           "type": "attraction",
           "position": "Jinli Ancient Street",
           "start_time": "15:11",
-          "end_time": "16:26",
+          "end_time": "16:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -88,7 +88,7 @@
           "type": "attraction",
           "position": "Chunxi Road",
           "start_time": "16:30",
-          "end_time": "17:45",
+          "end_time": "17:30",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -171,7 +171,7 @@
           "type": "attraction",
           "position": "Manjushri Lane",
           "start_time": "08:54",
-          "end_time": "10:09",
+          "end_time": "09:54",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
@@ -191,22 +191,44 @@
         },
         {
           "type": "attraction",
-          "position": "Panda Valley",
-          "start_time": "11:33",
-          "end_time": "12:48",
+          "position": "Anshun Covered Bridge",
+          "start_time": "10:27",
+          "end_time": "11:27",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
               "start": "Manjushri Lane",
-              "end": "Panda Valley",
+              "end": "Anshun Covered Bridge",
               "mode": "taxi",
               "start_time": "10:09",
-              "end_time": "11:33",
-              "distance": 56.24,
-              "price": 247.77,
-              "cost": 247.77,
+              "end_time": "10:14",
+              "distance": 3.66,
+              "price": 17.5,
+              "cost": 17.5,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+          "start_time": "11:32",
+          "end_time": "12:17",
+          "price": 6.0,
+          "cost": 12.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Anshun Covered Bridge",
+              "end": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
+              "mode": "taxi",
+              "start_time": "11:27",
+              "end_time": "11:32",
+              "distance": 3.42,
+              "price": 16.68,
+              "cost": 16.68,
               "cars": 1
             }
           ]
@@ -215,20 +237,20 @@
           "type": "attraction",
           "position": "Manjushri Temple",
           "start_time": "14:12",
-          "end_time": "15:27",
+          "end_time": "15:12",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 2,
           "transports": [
             {
-              "start": "Panda Valley",
+              "start": "Second Brother Qiu's Guokui (Jinsi Street Branch)",
               "end": "Manjushri Temple",
               "mode": "taxi",
-              "start_time": "12:48",
-              "end_time": "14:12",
-              "distance": 56.02,
-              "price": 246.8,
-              "cost": 246.8,
+              "start_time": "12:17",
+              "end_time": "12:18",
+              "distance": 1.2,
+              "price": 11.0,
+              "cost": 11.0,
               "cars": 1
             }
           ]
@@ -278,6 +300,28 @@
           ]
         },
         {
+          "type": "attraction",
+          "position": "Chengdu Cultural Park",
+          "start_time": "17:46",
+          "end_time": "18:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 2,
+          "transports": [
+            {
+              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "end": "Chengdu Cultural Park",
+              "mode": "taxi",
+              "start_time": "17:45",
+              "end_time": "17:46",
+              "distance": 0.88,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "airplane",
           "start_time": "20:18",
           "end_time": "21:31",
@@ -288,14 +332,14 @@
           "tickets": 2,
           "transports": [
             {
-              "start": "Deng's New Generation Sweet Oil Glutinous Rice Balls",
+              "start": "Chengdu Cultural Park",
               "end": "Chengdu Shuangliu International Airport",
               "mode": "taxi",
-              "start_time": "17:45",
-              "end_time": "18:09",
-              "distance": 16.04,
-              "price": 66.86,
-              "cost": 66.86,
+              "start_time": "18:36",
+              "end_time": "18:58",
+              "distance": 15.19,
+              "price": 63.04,
+              "cost": 63.04,
               "cars": 1
             }
           ],
@@ -305,5 +349,5 @@
     }
   ],
   "elapsed_time(sec)": 60.28692841529846,
-  "_eval_score": 97.34325396825398
+  "_eval_score": 99.16666666666666
 }

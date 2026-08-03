@@ -66,7 +66,7 @@
           "type": "attraction",
           "position": "Maple Bridge Scenic Area",
           "start_time": "12:15",
-          "end_time": "14:00",
+          "end_time": "13:15",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -88,7 +88,7 @@
           "type": "attraction",
           "position": "Suzhou Museum",
           "start_time": "14:08",
-          "end_time": "15:53",
+          "end_time": "15:08",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -193,7 +193,7 @@
           "type": "attraction",
           "position": "Shantang Street",
           "start_time": "09:24",
-          "end_time": "11:09",
+          "end_time": "10:24",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -215,7 +215,7 @@
           "type": "attraction",
           "position": "Pingjiang Road Historic District",
           "start_time": "11:13",
-          "end_time": "12:58",
+          "end_time": "12:13",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -259,7 +259,7 @@
           "type": "attraction",
           "position": "Golden Rooster Lake",
           "start_time": "14:11",
-          "end_time": "15:56",
+          "end_time": "15:11",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -364,7 +364,7 @@
           "type": "attraction",
           "position": "Yangcheng Lake",
           "start_time": "09:56",
-          "end_time": "11:41",
+          "end_time": "10:56",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -386,7 +386,7 @@
           "type": "attraction",
           "position": "West Garden Temple",
           "start_time": "12:14",
-          "end_time": "13:59",
+          "end_time": "13:14",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
@@ -405,23 +405,67 @@
           ]
         },
         {
+          "type": "lunch",
+          "position": "Yiming Fresh Milk Bar (Shilu Metro Exit 10 Store)",
+          "start_time": "13:15",
+          "end_time": "14:00",
+          "price": 12.0,
+          "cost": 36.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "West Garden Temple",
+              "end": "Yiming Fresh Milk Bar (Shilu Metro Exit 10 Store)",
+              "mode": "taxi",
+              "start_time": "13:14",
+              "end_time": "13:15",
+              "distance": 1.29,
+              "price": 11.0,
+              "cost": 11.0,
+              "cars": 1
+            }
+          ]
+        },
+        {
           "type": "attraction",
-          "position": "Arhat Temple",
-          "start_time": "14:54",
-          "end_time": "15:44",
+          "position": "Beijing-Hangzhou Grand Canal",
+          "start_time": "14:29",
+          "end_time": "15:19",
           "price": 0.0,
           "cost": 0.0,
           "tickets": 3,
           "transports": [
             {
-              "start": "West Garden Temple",
-              "end": "Arhat Temple",
+              "start": "Yiming Fresh Milk Bar (Shilu Metro Exit 10 Store)",
+              "end": "Beijing-Hangzhou Grand Canal",
               "mode": "taxi",
-              "start_time": "13:59",
-              "end_time": "14:54",
-              "distance": 37.0,
-              "price": 161.18,
-              "cost": 161.18,
+              "start_time": "14:00",
+              "end_time": "14:12",
+              "distance": 8.43,
+              "price": 34.22,
+              "cost": 34.22,
+              "cars": 1
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Clear Garden",
+          "start_time": "15:28",
+          "end_time": "16:18",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 3,
+          "transports": [
+            {
+              "start": "Beijing-Hangzhou Grand Canal",
+              "end": "Clear Garden",
+              "mode": "taxi",
+              "start_time": "15:19",
+              "end_time": "15:28",
+              "distance": 6.24,
+              "price": 26.55,
+              "cost": 26.55,
               "cars": 1
             }
           ]
@@ -437,14 +481,14 @@
           "tickets": 3,
           "transports": [
             {
-              "start": "Arhat Temple",
+              "start": "Clear Garden",
               "end": "Suzhou Station",
               "mode": "taxi",
-              "start_time": "15:44",
-              "end_time": "16:42",
-              "distance": 38.86,
-              "price": 169.59,
-              "cost": 169.59,
+              "start_time": "16:18",
+              "end_time": "16:39",
+              "distance": 14.2,
+              "price": 58.6,
+              "cost": 58.6,
               "cars": 1
             }
           ],
@@ -454,5 +498,5 @@
     }
   ],
   "elapsed_time(sec)": 60.31076979637146,
-  "_eval_score": 97.39021164021165
+  "_eval_score": 98.6531746031746
 }
