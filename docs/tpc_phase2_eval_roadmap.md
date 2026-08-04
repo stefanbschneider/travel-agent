@@ -176,6 +176,10 @@ clearly, the pass structure — not the parallelism — is what needs work.
 
 Skip on a machine with fewer than 8 cores: the comparison says more about the box than the code.
 
+**Skipped 2026-08-04, this machine.** `nproc` reports `4` cores — below the roadmap's own `8`-core
+floor for this comparison, so a 1-worker-vs-3-worker (default `CPU-1`) run here would say more about
+this box than about the scheduler. Not run; needs a ≥8-core machine.
+
 ### R4 — pass shape: where should the envelope go?
 
 Every knob is an environment variable, so these need no code change:
