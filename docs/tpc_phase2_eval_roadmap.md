@@ -61,6 +61,23 @@ Expect: a `[sweep] pass 1 (triage) ...` line, one row under
 `results/phase2_baselines/full_runs/`, and `empty_plans` well below the query count. If the run
 ends far short of its envelope, read the last `[sweep]` line — it says why it stopped.
 
+**Run 2026-08-04, this machine (`cpu_count: 4`).** `pytest tests/phase2` passed (804 passed, 1
+skipped). Plumbing row `results/phase2_baselines/full_runs/20260804T200536Z.json`: one triage pass
+(80 queries × 20 s, 3 workers), `empty_plans: 48/80`, `constraints_ok: 24/80`, `overall: 25.97`,
+stopped at `383 s` of `720 s` (`53%`) — the last `[sweep]` line explains why: "no pass would do
+anything new (every candidate would repeat a solve it already had)". That is a **legitimate stop**,
+not a bug: a `720 s` envelope only fits one triage pass at this per-query cadence, so a second pass
+would rerun the same solves with the same budget and the scheduler correctly declines. High
+`empty_plans` at this compressed budget is expected (only `20 s`/query, no repair pass reached) and
+is not informative about R1. Machinery confirmed working; proceeding to R1.
+
+Two gitignore gaps found and fixed before any row could be trusted: `.claude/` (local tool state)
+and `chinatravel/evaluation/default_splits/*_suboptimal.txt` (an `eval_tpc.py` scoring byproduct
+regenerated every run) were both untracked and would have stamped every subsequent row
+`git_dirty: true`. Each run in this queue now uses a distinct `--method` per the roadmap's default
+(`phase2_e2e_<split>`) only where it doesn't collide with a same-split prior run in this queue — see
+each run's row for its actual `method`.
+
 ---
 
 ## Run order
