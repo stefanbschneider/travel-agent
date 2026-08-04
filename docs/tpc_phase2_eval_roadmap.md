@@ -147,6 +147,21 @@ three passes completed (triage → repair → polish) before self-terminating fo
 R1. The predicted "1 h might cut off polish" did not happen — 1 h was still enough headroom. Nearly
 flat vs R1, within likely run-to-run noise for a single-seed comparison.
 
+**3h arm, run 2026-08-04:** `results/phase2_baselines/full_runs/20260804T221103Z.json`,
+`--method phase2_e2e_r2_3h`. `overall 57.86` (vs R1 `57.99`, **`Δ -0.13`**), `FPR` unrecorded here
+but `constraints_ok 36/100` (vs R1's `35`, +1). `run_wall_frac_of_budget 0.37` (`4015 s` of
+`10800 s`), same three-pass shape, same self-termination reason.
+
+**R2 verdict: flat.** `overall` across 1 h / 3 h / 5 h is `57.35 / 57.86 / 57.99` — a `0.64`-point
+spread, well inside single-seed run-to-run noise, with `constraints_ok` moving by only `±1` query.
+**Extra envelope past ~1.3 h buys nothing at this configuration; every "give it more budget" idea
+on the implementation roadmap is dead as stated.** The scheduler self-terminates once every
+candidate would repeat a solve already on file — the binding constraint is the pass shape (what
+each pass tries and when it gives up), not wall-clock. This makes R4 (pass shape) the one with real
+leverage, and reframes R1's unused `3.4 h`/night as reclaimable rather than wasted: a 5 h submission
+run and a ~1.5 h run should score the same on this split, so the organizer's real held-out set is
+the only remaining unknown on whether 100 queries always converge this fast.
+
 ### R3 — worker scaling: does parallelism convert into score?
 
 ```bash
