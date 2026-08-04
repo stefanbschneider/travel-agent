@@ -315,16 +315,17 @@ def run_sweeps(
     queries: dict[str, dict],
     deadline: float,
     config: SweepConfig,
-    on_result: Callable[[str, dict, selfscore.PlanScore, dict], None],
+    on_result: Callable[[str, dict, selfscore.PlanScore, dict, bool], None],
     best: dict[str, selfscore.PlanScore] | None = None,
     parsed_constraints: dict[str, dict] | None = None,
     log: Callable[[str], None] = print,
 ) -> dict[str, Any]:
     """Run triage -> repair -> polish passes until the deadline.
 
-    ``queries`` holds **visible** queries only. ``on_result`` is called for every plan that beats
-    the incumbent for its query -- the caller owns writing it -- and is what makes the run safe to
-    kill at any moment. Returns a summary dict.
+    ``queries`` holds **visible** queries only. ``on_result(uid, plan, score, telemetry, improved)``
+    is called for every completed attempt, with ``improved`` saying whether it beat the incumbent
+    for that query. The caller owns writing: persisting an improved plan immediately is what makes
+    the run safe to kill at any moment. Returns a summary dict.
     """
     best_scores: dict[str, selfscore.PlanScore] = dict(best or {})
     last_budget: dict[str, float] = {}
@@ -522,7 +523,7 @@ def _run_pass(
     executor,
     deadline: float,
     best_scores: dict[str, selfscore.PlanScore],
-    on_result: Callable[[str, dict, selfscore.PlanScore, dict], None],
+    on_result: Callable[[str, dict, selfscore.PlanScore, dict, bool], None],
     parsed_constraints: dict[str, dict],
     record: PassRecord,
     log: Callable[[str], None],
@@ -545,10 +546,14 @@ def _run_pass(
             record.failed += 1
         uid = result["uid"]
         score = _score_from_dict(result.get("score")) or selfscore.ZERO_SCORE
-        if selfscore.is_better(score, best_scores.get(uid)):
+        improved = selfscore.is_better(score, best_scores.get(uid))
+        if improved:
             best_scores[uid] = score
             record.improved += 1
-            on_result(uid, result["plan"], score, result.get("telemetry") or {})
+        # Reported either way: a five-hour run has to be readable afterwards, and "this query was
+        # retried three times and never improved" is exactly the diagnostic worth having. The
+        # caller decides what to persist for a non-improving attempt (telemetry, not the plan).
+        on_result(uid, result["plan"], score, result.get("telemetry") or {}, improved)
 
     if executor is None:
         for task in tasks:

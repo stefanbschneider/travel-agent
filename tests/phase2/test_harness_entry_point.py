@@ -15,6 +15,7 @@ See ``docs/tpc_shortcomings_and_plan.md`` W11 and roadmap item 0a.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -229,6 +230,11 @@ def test_bare_command_end_to_end_produces_a_schema_valid_plan(tmp_path):
     from chinatravel.evaluation.utils import load_json_file
 
     method = "test_bare_entry_point"
+    # The harness writes under results/<method>/ in the repo, and never regresses a query -- so a
+    # stale plan from an earlier run would make this run improve nothing. Start clean.
+    method_dir = PROJECT_ROOT / "results" / method
+    if method_dir.exists():
+        shutil.rmtree(method_dir)
     env = {
         "PATH": "/usr/bin:/bin",  # no opencode/codex binary reachable
         "HOME": str(tmp_path),
@@ -272,3 +278,7 @@ def test_bare_command_end_to_end_produces_a_schema_valid_plan(tmp_path):
     )
     assert telemetry["llm_backend"] == "none"
     assert telemetry["valid_output"] is True
+    # Telemetry is written for every attempt, so `kept` records whether *this* attempt beat the
+    # incumbent -- and a later pass that fails to improve on an already-good plan is a normal,
+    # non-failing outcome. Only its presence is a contract.
+    assert "kept" in telemetry

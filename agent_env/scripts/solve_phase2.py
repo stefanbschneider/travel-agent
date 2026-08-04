@@ -478,11 +478,18 @@ def run_sweeps_split(
             plan, visible[quid], parsed_constraints=parsed.get(quid), lang=lang, uid=quid
         )
 
-    def on_result(quid: str, plan: dict, score: selfscore.PlanScore, telemetry: dict) -> None:
-        hb.write_json(result_method_dir / f"{quid}.json", plan)
+    def on_result(
+        quid: str, plan: dict, score: selfscore.PlanScore, telemetry: dict, improved: bool
+    ) -> None:
+        # Telemetry for every attempt (a query retried and never improved is a finding); the plan
+        # only when it beats the incumbent, so a pass can never regress the split.
+        telemetry["kept"] = improved
         run_dir = work_root / quid
-        hb.write_json(run_dir / "output.json", plan)
         hb.write_json(run_dir / "telemetry.json", telemetry)
+        if not improved:
+            return
+        hb.write_json(result_method_dir / f"{quid}.json", plan)
+        hb.write_json(run_dir / "output.json", plan)
 
     config = sweeps.SweepConfig(
         workers=workers, lang=lang, max_query_sec=budget_sec

@@ -167,7 +167,9 @@ class TestDriver:
             queries=queries,
             deadline=time.monotonic() + deadline_in,
             config=sweeps.SweepConfig(workers=workers, **kwargs),
-            on_result=lambda uid, plan, score, tel: written.append((uid, score.overall)),
+            on_result=lambda uid, plan, score, tel, improved: (
+                written.append((uid, score.overall)) if improved else None
+            ),
             log=lambda _msg: None,
         )
         return calls, written, summary
