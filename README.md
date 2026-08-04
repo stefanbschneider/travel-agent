@@ -77,7 +77,14 @@ Run the no-oracle local harness on a small deterministic validation slice:
 make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 ```
 
-`300 s` is a local working assumption, not an organizer timeout. Use `make phase2-help` for recorder, pinned-evaluation, rehearsal, and gate commands.
+`300 s` is a local per-query development setting; there is no organizer per-query timeout — the organizers confirmed (2026-08-04) a single 5-hour wall-clock budget for the whole 100-query run instead. Use `make phase2-help` for recorder, pinned-evaluation, rehearsal, and gate commands.
+
+**The organizers also confirmed the exact, automated Phase 2 evaluation command:
+`python agent_env/scripts/solve_script_with_harness.py --split <split>`, no other flags.**
+That script does not yet default to this repository's real solver — see
+[`docs/tpc_shortcomings_and_plan.md`, W11](docs/tpc_shortcomings_and_plan.md#w11-wire-the-confirmed-entry-point-to-our-real-solver)
+for the gap and why it's the current top priority, and the [competition reference](docs/reference/competition.md)
+for the full set of organizer answers (execution, versioning, feedback, timeout, technical report).
 
 ## Current state
 

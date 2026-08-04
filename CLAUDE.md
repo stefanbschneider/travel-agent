@@ -10,8 +10,17 @@ The human entry point is [README.md](README.md).
 | Phase 1 | Offline work on released data may use released oracle fields locally. Preserve the accepted-plan and monotonic-merge workflow. |
 | Phase 2 | The agent path receives visible query text and environment tools only. It must not read, derive from, or retain oracle verifier fields. |
 
-Phase 2 runs in an organizer harness on a held-out set.
-The public material does not specify a per-query timeout or repeat count; local `300 s` and `900 s` settings are assumptions, not rules.
+Phase 2 runs in an organizer harness on a held-out set, invoked automatically as exactly
+`python agent_env/scripts/solve_script_with_harness.py --split <split>` — no other flags. All
+harness-specific init/launch logic must be integrated behind that one command.
+There is no per-query timeout: the organizers confirmed (2026-08-04) a single 5-hour wall-clock budget
+for the entire 100-query run, excluding setup. At most two submitted versions are evaluated per team
+(higher score wins if both succeed). Local `300 s`/`900 s` settings remain per-query development gate
+budgets, not organizer rules and not a substitute for a total-wall-clock check against the real 5-hour
+envelope. See the [competition reference](docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
+for the full confirmed contract, and its flagged gap: `solve_script_with_harness.py`'s current default
+harness (`opencode`, an external-CLI demo) is not the repository's real deterministic solver — closing
+that is the top Phase 2 implementation priority (roadmap item 0a).
 
 ## Parallel workstreams
 

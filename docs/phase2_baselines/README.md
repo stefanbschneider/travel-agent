@@ -26,8 +26,11 @@ A comparison is meaningful only when rows use the same source revision, data-sou
 Treat low-`n` rows as smoke checks, not regressions or improvements.
 A pinned evaluation records the source revision it executed; prefer it for long runs.
 
-The public Phase 2 material does not currently specify a query timeout or repeat count.
-`300 s` and `900 s` are local sensitivity assumptions, not organizer rules.
+The organizers confirmed (2026-08-04) there is no per-query timeout: evaluation gives the whole
+100-query run a single 5-hour wall-clock budget, excluding setup — see the
+[competition reference](../reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply).
+`300 s` and `900 s` remain local per-query development gate budgets, not organizer rules; they are not
+a proxy for the real 5-hour total-run constraint, which a per-query-only setting does not model.
 Do not infer final-evaluation performance from local rows or from familiar-100.
 
 ## Read the row before using it

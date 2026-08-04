@@ -68,4 +68,11 @@ Use the repository no-oracle implementation for Phase 2 orchestration:
 ```
 
 Both write plans to `results/<method>/<uid>.json`. The generic harness stores prompt, output, and evaluation artifacts under its configured run directory; the repository runner also stores `telemetry.json`.
-The budget is a local setting, not an organizer-confirmed timeout.
+
+**`solve_script_with_harness.py --split <split>` (no other flags) is the organizer-confirmed Phase 2
+evaluation command** (2026-08-04 direct reply). There is no per-query timeout — the organizers give the
+whole 100-query run a single 5-hour wall-clock budget, excluding setup; `--budget-sec`/`--timeout` values
+above remain local per-query development settings, not organizer rules. As shipped, the confirmed
+command's default harness (`opencode`) is the external-CLI demo, not the real deterministic solver behind
+`solve_phase2.py` — see the [competition reference](../docs/reference/competition.md#a-critical-gap-this-reply-surfaces-our-real-solver-isnt-wired-to-the-confirmed-entry-point)
+for the gap and its fix priority.
