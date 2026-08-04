@@ -66,6 +66,18 @@ bare `--split <split>` command resolves correctly whatever the split is called. 
 does not close, W11: the confirmed entry point still runs the `opencode` demo harness rather than
 our solver.
 
+### Solver-side POI name aliasing (2026-08-04)
+
+Closed a pre-existing gap the PR #32 work surfaced. The verifier resolves both the hard_logic_py
+source and every plan position through `concept_func`'s rename table
+(`normalize_concept_constraint_source` / `normalize_poi_name`); the solver did neither, so it
+searched the catalog for names the catalog does not contain. Released query
+`20250323010327713880` asks to visit **"Bistro Sola"**, which the Shanghai catalog calls
+**"Sola Bistro"** — `select(name == "Bistro Sola")` returns `0` rows, `"Sola Bistro"` returns `1`.
+`_parse_logic_snippet` now normalizes the hard-logic source exactly as the verifier does (covering
+every family its regexes extract), and `_normalize_variant` carries the same rename to the
+no-oracle path's name-bearing keys. Tested in `tests/phase2/test_concept_label_alignment.py`.
+
 ## Current status snapshot
 
 Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)

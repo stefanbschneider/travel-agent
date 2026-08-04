@@ -87,6 +87,59 @@ class OracleLiteralCanonicalizationTests(unittest.TestCase):
         self.assertEqual(variant["required_attractions"], ["Park Hyatt Shanghai"])
 
 
+class PoiNameAliasTests(unittest.TestCase):
+    """The verifier resolves plan positions through ``normalize_poi_name``; the solver must
+    hunt for the same name. Released query `20250323010327713880` asks for "Bistro Sola",
+    which the Shanghai catalog calls "Sola Bistro"."""
+
+    ORACLE_LOGIC = (
+        "result=False\n"
+        "for activity in allactivities(plan):\n"
+        "  if activity_position(activity)=='Bistro Sola':\n"
+        "    if activity_start_time(activity)<='17:00' and "
+        "activity_end_time(activity)>='18:00':\n"
+        "      result=True"
+    )
+
+    def test_oracle_positions_use_the_catalog_name(self):
+        (variant,) = solver_constraint_variants(
+            {"hard_logic_py": [self.ORACLE_LOGIC]}, {}, use_oracle=True
+        )
+
+        self.assertEqual(variant["position_presence"], ["Sola Bistro"])
+        self.assertEqual(
+            [w["location"] for w in variant["activity_time_windows"]], ["Sola Bistro"]
+        )
+
+    def test_parsed_name_families_use_the_catalog_name(self):
+        raw = {
+            "required_restaurants": ["Bistro Sola"],
+            "excluded_attractions": ["Bistro Sola"],
+            "position_presence": ["Bistro Sola"],
+            "stay_duration": [{"location": "Bistro Sola", "min_minutes": 60}],
+            "hotel_nearby": {"reference": "Bistro Sola", "distance_km": 2.0},
+            "poi_distance_hotel": [{"reference": "Bistro Sola", "distance_km": 2.0}],
+        }
+
+        (variant,) = solver_constraint_variants({}, raw, use_oracle=False)
+
+        self.assertEqual(variant["required_restaurants"], ["Sola Bistro"])
+        self.assertEqual(variant["excluded_attractions"], ["Sola Bistro"])
+        self.assertEqual(variant["position_presence"], ["Sola Bistro"])
+        self.assertEqual(variant["stay_duration"][0]["location"], "Sola Bistro")
+        self.assertEqual(variant["hotel_nearby"]["reference"], "Sola Bistro")
+        self.assertEqual(variant["poi_distance_hotel"][0]["reference"], "Sola Bistro")
+
+    def test_unaliased_names_are_untouched(self):
+        raw = {"required_restaurants": ["Sola Bistro", "SOLANA Blue Harbor"]}
+
+        (variant,) = solver_constraint_variants({}, raw, use_oracle=False)
+
+        self.assertEqual(
+            variant["required_restaurants"], ["Sola Bistro", "SOLANA Blue Harbor"]
+        )
+
+
 class CanonicalLabelsMatchSandboxColumnsTests(unittest.TestCase):
     """A canonicalized literal must still be findable in the column the solver filters on."""
 
