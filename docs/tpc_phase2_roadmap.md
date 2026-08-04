@@ -396,7 +396,8 @@ directly on 2026-08-04** (see the [reference doc](reference/competition.md#confi
 evaluation runs the fixed command `python agent_env/scripts/solve_script_with_harness.py --split <split>`
 automatically, at most two submitted versions are scored (higher wins if both succeed), teams get
 feedback after every run, and **there is no per-query timeout** — only a single 5-hour wall-clock budget
-for all 100 queries, excluding setup. Item 0a below is the direct, urgent consequence of that reply.
+for all 100 queries, excluding setup. Item 0a below was the direct, urgent consequence of that reply;
+it landed the same day, so the top open priority is again item 0 (the post-sync reference row).
 Implementation-level detail for the older items lives in
 [`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
 
@@ -411,23 +412,26 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
    evaluator contract. The first `900 s` `familiar_100_val` run after the sync becomes the new
    reference row; until it exists, `make phase2-gate` has no valid baseline to compare against.
 
-0a. **SUBMISSION-BLOCKING: wire the confirmed entry point to our real solver (new, 2026-08-04).**
-   The organizers will invoke exactly `python agent_env/scripts/solve_script_with_harness.py --split
-   <split>` — no other flags — as the entire evaluation run. Today that script's default harness is
-   `opencode`: it shells out to the external `opencode` CLI, which calls an external LLM API (DashScope
-   by default). It does **not** run this repository's actual deterministic, no-oracle `TPCAgent` solver —
-   that lives behind the separate, unnamed `agent_env/scripts/solve_phase2.py` entry point. Left as-is,
-   the organizers' evaluation would either fail outright (no `opencode` binary / no network egress on
-   their internal-network host) or, if it somehow succeeded, score a generic LLM-prompting demo instead
-   of our real solver. **Do:** make the bare command (`--split <split>`, no `--harness` flag) run the
-   deterministic solver by default — either by changing `solve_script_with_harness.py`'s default harness
-   to call the `chinatravel/agent/phase2` no-oracle path in-process, or by making it a thin dispatcher to
-   `solve_phase2`'s logic when no external-CLI harness is explicitly requested. Keep `opencode`/`codex`
-   available as opt-in alternates, not the default. Add a test that invokes the bare command end-to-end
-   (no env vars, no extra flags) and asserts it produces a schema-valid plan without any subprocess call
-   to `opencode`/`codex`. See the [reference doc](reference/competition.md#a-critical-gap-this-reply-surfaces-our-real-solver-isnt-wired-to-the-confirmed-entry-point)
-   for the full finding. This is more urgent than any further solver-quality work below: a quality
-   regression costs points, but this gap costs the entire submission.
+0a. **~~SUBMISSION-BLOCKING: wire the confirmed entry point to our real solver.~~ Landed 2026-08-04.**
+   The organizers invoke exactly `python agent_env/scripts/solve_script_with_harness.py --split <split>`
+   — no other flags — as the entire evaluation run, and that script's default harness was `opencode`:
+   an external CLI calling an external LLM API, not this repository's deterministic no-oracle `TPCAgent`
+   solver (which lived only behind the unnamed `agent_env/scripts/solve_phase2.py`). Left as-is, the
+   evaluation would have failed outright on an internal-network host, or scored a generic LLM-prompting
+   demo. **Done:** the shipped default is now `--harness tpc`, which runs `solve_phase2.run_split`
+   in-process — zero LLM calls, zero network calls, no subprocess — with `opencode`/`codex` kept as
+   explicit opt-ins. The bare command also now enforces the confirmed **5-hour whole-run envelope**
+   instead of a fixed per-query budget (`min(per-query cap, remaining / remaining queries)`, floored,
+   clock starting at interpreter start), because 100 queries × the 300 s working default is 8.3 h and
+   would have been cut off mid-split. `tests/phase2/test_harness_entry_point.py` pins the default, the
+   no-subprocess property, and the budget arithmetic, plus an integration test running the organizers'
+   command shape with `opencode`/`codex` unreachable. Packaging and the submission builder landed with
+   it: `requirements-submission.txt` (nine PyPI packages, no GPU stack) and
+   `scripts/assemble_phase2_submission.py` (build + unpack-and-run verification; uploads nothing). See
+   the [reference doc](reference/competition.md#the-gap-this-reply-surfaced--closed-2026-08-04).
+   **Still open from this item:** the per-query cap that ships (`300 s` today) has not been re-screened
+   against the envelope on a full 100-query run — the total-wall-clock check W7 asks for is the natural
+   place to settle it.
 
 0b. **Re-solve Phase 1 `results/best` (highest expected value of anything on this list, and it is
    Phase 1 work).** The organizers will re-score the Phase 1 leaderboard with the new evaluator, and

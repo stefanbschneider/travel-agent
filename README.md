@@ -40,20 +40,46 @@ Ownership map:
 | CP-SAT tier | Construct candidate pools and solve hard residuals | `chinatravel/agent/tpc_agent/cp_candidates.py`, `chinatravel/agent/tpc_agent/cp_solver.py` |
 | Acceptance path | Apply parsed/oracle constraints, then schema and commonsense checks | `chinatravel/agent/tpc_agent/parsed_verifier.py`, `chinatravel/agent/tpc_agent/tpc_agent.py` |
 | Phase 2 orchestration | Allocate bounded stage budgets, call TPCAgent, finalize output | `chinatravel/agent/phase2/orchestrator.py` |
-| Harness boundary | Hide oracle fields, expose tools, and emit official layout | `agent_env/scripts/solve_phase2.py`, `agent_env/` |
+| Harness boundary | Hide oracle fields, expose tools, and emit official layout | `agent_env/scripts/solve_script_with_harness.py` (the confirmed entry point), `agent_env/scripts/solve_phase2.py`, `agent_env/` |
 | World facts | POIs, schedules, prices, restaurants, hotels, transport | `chinatravel/environment/` and `WorldEnv` |
 
 ## Setup
 
-Use Python 3.12 from the repository root:
+Python 3.12, from the repository root. **To run the Phase 2 system, install the minimal runtime:**
 
 ```bash
 python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements-submission.txt
+```
+
+or the same thing with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements-submission.txt
+```
+
+That is nine PyPI packages, no extra index, no system packages, no GPU stack, and no model
+download — the deterministic solver needs nothing else, and the sandbox database is committed at
+`chinatravel/environment/database_en/`. `pip install .` installs the same set (`pyproject.toml`'s
+core dependencies mirror `requirements-submission.txt`); the heavier stacks are opt-in extras
+(`.[baselines]`, `.[analysis]`, `.[local-llm]`, `.[dev]`).
+
+For the full development environment — upstream's baseline agents, plotting, and the local model
+stack — use `requirements.txt` instead:
+
+```bash
 .venv/bin/python -m pip install -r requirements.txt
 make help
 ```
 
-The environment database remains a prerequisite for real environment lookups and solves. See the [agent-environment guide](agent_env/README.md) for its setup boundary.
+Run the system with the organizer-confirmed command (see [Phase 2](#phase-2) below):
+
+```bash
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split tpc_phase2_familiar_100_val
+```
+
+See the [agent-environment guide](agent_env/README.md) for the environment's setup boundary.
 
 ## Canonical workflows
 
@@ -81,10 +107,29 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 **The organizers also confirmed the exact, automated Phase 2 evaluation command:
 `python agent_env/scripts/solve_script_with_harness.py --split <split>`, no other flags.**
-That script does not yet default to this repository's real solver — see
-[`docs/tpc_shortcomings_and_plan.md`, W11](docs/tpc_shortcomings_and_plan.md#w11-wire-the-confirmed-entry-point-to-our-real-solver)
-for the gap and why it's the current top priority, and the [competition reference](docs/reference/competition.md)
-for the full set of organizer answers (execution, versioning, feedback, timeout, technical report).
+Bare, that command now runs this repository's deterministic no-oracle solver in-process
+(`--harness tpc`, the shipped default): zero LLM calls, zero network calls, no subprocess, and
+oracle fields stripped before the agent path. The external-CLI harnesses (`opencode`, `codex`)
+remain reachable with an explicit `--harness`, but never run by default. The run is bounded by
+the confirmed **5-hour whole-run envelope** rather than a fixed per-query budget: each query gets
+the smaller of the per-query cap and its fair share of the time left, so a slow query cannot
+starve the rest of the split. Rehearse it exactly as they will run it:
+
+```bash
+make phase2-harness P2_SPLIT=tpc_phase2_familiar_100_val
+```
+
+Build the submission archive (code, dependencies, docs, database) and verify it by unpacking and
+running it — this uploads nothing:
+
+```bash
+make phase2-submission-check   # what would ship
+make phase2-submission         # build submissions/fabiundstefan_v<N>.zip, then verify it
+```
+
+The mandatory technical report lives in [`report/`](report/README.md) and is submitted separately
+as a PDF. See the [competition reference](docs/reference/competition.md) for the full set of
+organizer answers (execution, versioning, feedback, timeout, technical report).
 
 ## Current state
 
@@ -111,6 +156,7 @@ Since `2026-07-26` a commonsense-first finalization policy (`TPC_COMMONSENSE_FIR
 - [Architecture at a glance](README.md#architecture-at-a-glance): no-oracle contract, ownership map, and planner flow.
 - [Parallel agent prompts](docs/agents/README.md): concurrent workstreams and currently active focused briefs.
 - [Baseline ledger guide](docs/phase2_baselines/README.md): how to compare generated rows in `results/phase2_baselines/`.
+- [Technical report](report/README.md): the mandatory Phase 2 report, its format rules, and how to build it.
 - [Competition reference](docs/reference/competition.md): dated local summary of official facts.
 - [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md): planner internals and tuning knobs.
 - [HPC workflows](slurm/README.md): Phase 1 resource profiles and resume behavior.

@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
-"""Solve ChinaTravel queries with a non-interactive agent harness and evaluate them."""
+"""Solve ChinaTravel queries with a non-interactive agent harness and evaluate them.
+
+This is the organizer-confirmed Phase 2 entry point. The evaluation host runs exactly
+
+    python agent_env/scripts/solve_script_with_harness.py --split <split>
+
+with no other flags, so a bare invocation must be the whole submission. It therefore defaults to
+``--harness tpc``: this repository's deterministic, no-oracle ``TPCAgent`` solver, run in-process,
+making zero LLM calls and zero subprocess calls. The external-CLI harnesses (``opencode``,
+``codex``) remain available for the LLM-agent baseline comparison, but only when asked for
+explicitly with ``--harness``.
+
+Under ``--harness tpc`` the run is also bounded by a whole-run wall-clock envelope (the
+organizers' confirmed 5 hours for 100 queries) rather than by a fixed per-query budget; see
+``solve_phase2.query_budget_sec``.
+"""
 
 from __future__ import annotations
 
@@ -9,9 +24,15 @@ import os
 import re
 import subprocess
 import sys
+import time
 import tomllib
 from pathlib import Path
 from typing import Any
+
+# Wall-clock zero for the organizer envelope: interpreter startup, imports, and the WorldEnv /
+# database load all run inside the organizers' 5 hours, so the clock starts here rather than at
+# the first solve.
+PROCESS_START_MONOTONIC = time.monotonic()
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
@@ -19,6 +40,13 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 HIDDEN_QUERY_KEYS = {"hard_logic", "hard_logic_py", "hard_logic_nl"}
+
+# ``tpc`` is this repository's own deterministic solver and the default; the other two shell out
+# to an external CLI and are opt-in only.
+TPC_HARNESS = "tpc"
+EXTERNAL_HARNESSES = ("opencode", "codex")
+HARNESS_CHOICES = (TPC_HARNESS,) + EXTERNAL_HARNESSES
+DEFAULT_HARNESS = TPC_HARNESS
 
 
 def _is_oracle_query_key(key: object) -> bool:
@@ -109,6 +137,8 @@ def toml_value(value: Any) -> str:
 
 
 def output_source_name(harness: str) -> str:
+    if harness == TPC_HARNESS:
+        return "TPCAgent"
     return "Codex" if harness == "codex" else "OpenCode"
 
 
@@ -839,12 +869,72 @@ def safe_path_component(value: str) -> str:
 
 
 def default_method(model: str | None, split: str, harness: str) -> str:
+    if harness == TPC_HARNESS:
+        # No model to name (the deterministic path has none); reuse solve_phase2.py's method
+        # convention so a harness run and a local `solve_phase2.py` run of the same split share
+        # `results/<method>/` and resume each other.
+        return f"phase2_e2e_{safe_path_component(split)}"
     return "-".join(
         [
             safe_path_component(method_model_name(model)),
             safe_path_component(split),
             safe_path_component(harness),
         ]
+    )
+
+
+def load_solve_phase2_module():
+    """Import ``solve_phase2`` from this directory lazily.
+
+    Lazy because ``solve_phase2`` imports *this* module for its evaluation helpers; importing it
+    at module level would be circular. Also keeps the external-CLI harnesses free of the solver's
+    import cost.
+    """
+    scripts_dir = Path(__file__).resolve().parent
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    import solve_phase2  # noqa: PLC0415 (deliberately deferred; see docstring)
+
+    return solve_phase2
+
+
+def run_tpc_split(
+    *,
+    split: str,
+    lang: str,
+    method: str,
+    uid: str | None,
+    limit: int | None,
+    resume: bool,
+    budget_sec: float | None,
+    total_budget_sec: float | None,
+    work_dir: str | None,
+) -> dict[str, Any]:
+    """Solve a split with the deterministic no-oracle solver, in-process.
+
+    Writes the same official layout as every other harness (``results/<method>/<uid>.json``,
+    plus per-query ``evaluation.json``/``telemetry.json`` and a split summary under
+    ``<work_dir>/``). No subprocess, no LLM call, no network.
+
+    ``total_budget_sec=None`` means "unspecified", which resolves to the organizers' confirmed
+    5-hour envelope unless ``TPC_P2_TOTAL_BUDGET_SEC`` overrides it. Pass ``0`` to disable the
+    envelope and use a fixed per-query budget instead.
+    """
+    sp2 = load_solve_phase2_module()
+    if total_budget_sec is None and "TPC_P2_TOTAL_BUDGET_SEC" not in os.environ:
+        total_budget_sec = sp2.DEFAULT_TOTAL_BUDGET_SEC
+    total_budget_sec = sp2.resolve_total_budget_sec(total_budget_sec)
+    return sp2.run_split(
+        split,
+        method=method,
+        limit=limit,
+        uid=uid,
+        resume=resume,
+        budget_sec=budget_sec,
+        total_budget_sec=total_budget_sec,
+        start_monotonic=PROCESS_START_MONOTONIC,
+        lang=lang,
+        work_dir=work_dir,
     )
 
 
@@ -987,9 +1077,27 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--harness",
-        choices=["opencode", "codex"],
+        choices=list(HARNESS_CHOICES),
         default=None,
-        help="Harness to run. Overrides [run].harness.",
+        help=(
+            "Harness to run. Overrides [run].harness. Default 'tpc' is this repository's "
+            "deterministic in-process solver; 'opencode'/'codex' shell out to an external CLI."
+        ),
+    )
+    parser.add_argument(
+        "--budget-sec",
+        type=float,
+        default=None,
+        help="tpc harness only: per-query solve budget in seconds. Overrides [tpc].budget_sec.",
+    )
+    parser.add_argument(
+        "--total-budget-sec",
+        type=float,
+        default=None,
+        help=(
+            "tpc harness only: whole-run wall-clock envelope in seconds (default: the "
+            "organizers' confirmed 5 hours). <=0 disables it. Overrides [tpc].total_budget_sec."
+        ),
     )
     parser.add_argument(
         "--model",
@@ -1076,9 +1184,9 @@ def main() -> None:
     args = parse_args()
     config = read_config(Path(args.config))
     run_config = config_section(config, "run")
-    harness = str(choose(args.harness, run_config.get("harness"), "opencode"))
-    if harness not in {"opencode", "codex"}:
-        raise ValueError("Harness must be one of: opencode, codex.")
+    harness = str(choose(args.harness, run_config.get("harness"), DEFAULT_HARNESS))
+    if harness not in HARNESS_CHOICES:
+        raise ValueError(f"Harness must be one of: {', '.join(HARNESS_CHOICES)}.")
     harness_config = config_section(config, harness)
     opencode_config = config_section(config, "opencode")
     codex_config = config_section(config, "codex")
@@ -1087,6 +1195,42 @@ def main() -> None:
     lang = normalize_lang(choose(args.lang, run_config.get("lang"), "en"))
     uid = choose(args.uid, run_config.get("uid"), None)
     limit = choose(args.limit, run_config.get("limit"), None)
+
+    if harness == TPC_HARNESS:
+        method = str(
+            choose_nonempty(
+                args.method,
+                run_config.get("method"),
+                default_method(None, split, harness),
+            )
+        )
+        work_dir = str(
+            choose_nonempty(
+                args.work_dir, run_config.get("work_dir"), f"agent_env/runs/{method}"
+            )
+        )
+        print(f"Config: {Path(args.config)}")
+        print(
+            f"Run: split={split} lang={lang} harness={harness} method={method} "
+            "solver=deterministic TPCAgent (no LLM, no subprocess)"
+        )
+        summary = run_tpc_split(
+            split=split,
+            lang=lang,
+            method=method,
+            uid=str(uid) if uid else None,
+            limit=int(limit) if limit is not None else None,
+            resume=bool(choose(args.resume, run_config.get("resume"), False)),
+            budget_sec=choose(args.budget_sec, harness_config.get("budget_sec"), None),
+            total_budget_sec=choose(
+                args.total_budget_sec, harness_config.get("total_budget_sec"), None
+            ),
+            work_dir=work_dir,
+        )
+        print(f"\nSaved plans: {PROJECT_ROOT / 'results' / method}")
+        print(json.dumps(summary, ensure_ascii=False, indent=2, default=json_default))
+        return
+
     if harness == "opencode":
         harness_model_arg = choose(args.model, args.opencode_model, None)
         selected_config = opencode_config

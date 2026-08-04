@@ -19,6 +19,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import tomllib
 from pathlib import Path
 from statistics import mean, pstdev
@@ -42,6 +43,23 @@ from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 DEFAULT_METHOD_PREFIX = "phase2_e2e_"
 DEFAULT_BUDGET_SEC = orch.DEFAULT_BUDGET_SEC  # 300s (our working default); override via --budget-sec
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
+
+# --- Total wall-clock envelope -------------------------------------------------------------
+# The organizers confirmed (2026-08-04) a single 5-hour wall-clock budget for the whole
+# 100-query run, with no per-query timeout. A fixed per-query budget cannot honour that: at the
+# 300s working default, 100 queries would need 8.3h and the run would be cut off mid-split, so
+# every query after the cutoff scores zero. When ``total_budget_sec`` is set, each query instead
+# gets ``remaining_time / remaining_queries`` (capped by the per-query budget, floored so a late
+# query still gets a real solve). Queries that finish early hand their unused time to the ones
+# after them. Off (``None``) for local development runs, on by default only in the organizer
+# entry point -- see ``solve_script_with_harness.py``.
+DEFAULT_TOTAL_BUDGET_SEC = 5 * 60 * 60.0
+# Held back from the envelope for interpreter startup, WorldEnv/database load, per-query
+# evaluation, and result writes -- work that runs inside the 5h but outside the solve budget.
+TOTAL_BUDGET_RESERVE_FRAC = 0.10
+# A query solved with less than this is not worth budgeting for; below it the orchestrator's
+# stage split degenerates and the fallback plan is the likely output either way.
+MIN_QUERY_BUDGET_SEC = 20.0
 # Warn-only guard: if set, print a warning (never raise/abort) when a single process's RSS grows
 # by more than this many MB since its first solved query. Catches leaks (e.g. func_timeout thread
 # accumulation on timeouts) during long single-process runs; unset by default (opt-in via env).
@@ -225,6 +243,43 @@ def _aggregate_overall_scores(evaluations: list[dict]) -> dict:
     }
 
 
+def resolve_total_budget_sec(explicit: float | None = None) -> float | None:
+    """Resolve the whole-run wall-clock envelope, or ``None`` when it is disabled.
+
+    Precedence: explicit argument, then ``TPC_P2_TOTAL_BUDGET_SEC``. A value ``<= 0`` from either
+    source disables the envelope (back to a fixed per-query budget), which is what every local
+    development run wants.
+    """
+    if explicit is None:
+        raw = os.environ.get("TPC_P2_TOTAL_BUDGET_SEC")
+        if raw in (None, ""):
+            return None
+        try:
+            explicit = float(raw)
+        except ValueError:
+            return None
+    return float(explicit) if float(explicit) > 0 else None
+
+
+def query_budget_sec(
+    *,
+    cap_sec: float,
+    remaining_sec: float,
+    remaining_queries: int,
+    min_sec: float = MIN_QUERY_BUDGET_SEC,
+) -> float:
+    """Per-query budget under a shared wall-clock envelope.
+
+    Even split of what is left over what is left to do, capped by the per-query budget so a run
+    that is ahead of schedule does not spend hours on one query, and floored at ``min_sec`` so a
+    run that is behind schedule still attempts a real solve instead of degrading to fallbacks.
+    """
+    if remaining_queries <= 0:
+        return float(cap_sec)
+    fair_share = float(remaining_sec) / float(remaining_queries)
+    return max(float(min_sec), min(float(cap_sec), fair_share))
+
+
 def _load_queries(split: str, lang: str = "en"):
     """Load queries with oracle fields present (for evaluation only)."""
     from chinatravel.data.load_datasets import load_query
@@ -336,6 +391,8 @@ def run_split(
     uids: list[str] | None = None,
     resume: bool = False,
     budget_sec: float | None = None,
+    total_budget_sec: float | None = None,
+    start_monotonic: float | None = None,
     lang: str = "en",
     work_dir: str | None = None,
     results_dir: str | None = None,
@@ -349,9 +406,20 @@ def run_split(
     ``split`` from the on-disk dataset -- lets a caller (e.g. a single-query CLI) feed an
     ad hoc or file-loaded query through the exact same solve/write/evaluate path used for
     real splits. ``split`` still becomes a label on the written results/evaluation.
+
+    ``budget_sec`` is the per-query budget. ``total_budget_sec``, when set, additionally caps the
+    *whole* run: each query then gets the smaller of ``budget_sec`` and its fair share of the time
+    left (see ``query_budget_sec``). ``start_monotonic`` lets a caller start that clock at process
+    start rather than here, so interpreter and database load count against the envelope.
     """
     method = method or _default_method_for_split(split)
     budget_sec = float(budget_sec if budget_sec is not None else DEFAULT_BUDGET_SEC)
+    run_start = float(start_monotonic if start_monotonic is not None else time.monotonic())
+    deadline = (
+        run_start + float(total_budget_sec) * (1.0 - TOTAL_BUDGET_RESERVE_FRAC)
+        if total_budget_sec
+        else None
+    )
     results_root = Path(results_dir) if results_dir else PROJECT_ROOT / "results"
     work_root = Path(work_dir) if work_dir else PROJECT_ROOT / "agent_env" / "runs" / method
     result_method_dir = results_root / method
@@ -410,15 +478,27 @@ def run_split(
         full_query.setdefault("uid", quid)
         visible = hb.visible_query(full_query)  # oracle hidden from the agent
 
+        if deadline is None:
+            query_budget = budget_sec
+        else:
+            query_budget = query_budget_sec(
+                cap_sec=budget_sec,
+                remaining_sec=deadline - time.monotonic(),
+                remaining_queries=len(selected) - idx + 1,
+            )
+
         plan, telemetry = orch.solve_phase2(
             visible,
             env=env,
             llm_client=llm_client,
-            budget_sec=budget_sec,
+            budget_sec=query_budget,
             solve_fn=solve_fn,
             flags=flags,
         )
         telemetry["llm_backend_source"] = getattr(llm_client, "backend_source", "none")
+        if deadline is not None:
+            telemetry["total_budget_sec"] = float(total_budget_sec)
+            telemetry["total_budget_remaining_sec"] = deadline - time.monotonic()
 
         hb.write_json(result_path, plan)
 
@@ -457,6 +537,7 @@ def run_split(
         print(
             f"[{idx}/{len(selected)}] {quid} "
             f"valid={telemetry.get('valid_output')} fallback={telemetry.get('used_fallback')} "
+            f"budget_sec={query_budget:.0f} "
             f"solve_sec={telemetry.get('stage_sec', {}).get('solve', 0):.2f} "
             f"overall_true={_fmt_score(evaluation.get('overall_true'))} "
             f"overall_parsed={_fmt_score(evaluation.get('overall_parsed'))}"
@@ -523,6 +604,8 @@ def run_split(
         "split": split,
         "method": method,
         "budget_sec": budget_sec,
+        "total_budget_sec": float(total_budget_sec) if total_budget_sec else None,
+        "elapsed_sec": time.monotonic() - run_start,
         "llm_backend": getattr(llm_client, "backend", "none"),
         "llm_backend_source": getattr(llm_client, "backend_source", "none"),
         "llm_parse_attempts": llm_parse_attempts,
@@ -554,7 +637,15 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--method", default=None)
     p.add_argument("--resume", action="store_true")
-    p.add_argument("--budget-sec", type=float, default=None)
+    p.add_argument("--budget-sec", type=float, default=None, help="Per-query budget in seconds.")
+    p.add_argument(
+        "--total-budget-sec",
+        type=float,
+        default=None,
+        help="Whole-run wall-clock envelope in seconds; each query gets the smaller of "
+        "--budget-sec and its fair share of the time left. <=0 disables (the local default). "
+        "Also settable via TPC_P2_TOTAL_BUDGET_SEC.",
+    )
     p.add_argument("--lang", default="en", choices=["en", "zh"])
     p.add_argument("--work-dir", default=None)
     p.add_argument("--results-dir", default=None)
@@ -579,6 +670,7 @@ def main() -> None:
         uids=uids,
         resume=args.resume,
         budget_sec=args.budget_sec,
+        total_budget_sec=resolve_total_budget_sec(args.total_budget_sec),
         lang=args.lang,
         work_dir=args.work_dir,
         results_dir=args.results_dir,

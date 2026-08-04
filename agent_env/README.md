@@ -64,16 +64,33 @@ CHINATRAVEL_LANG=en .venv/bin/python -m agent_env.mcp_stdio
 .venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 1 --budget-sec 300
 ```
 
+```bash
+# The organizer-confirmed Phase 2 evaluation command
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
+```
+
 **`agent_env/scripts/solve_script_with_harness.py --split <split>` is the organizer-confirmed Phase 2
 evaluation command** (2026-08-04 direct reply, no other flags — see the
 [competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
-As shipped, that script's default harness (`opencode`) shells out to an external CLI that calls an
-external LLM API — it is a generic OpenCode/Codex compatibility demo, **not** this repository's real
-deterministic no-oracle solver, which lives behind the separate `solve_phase2.py` entry point above.
-Making the bare confirmed command run the real solver by default is the top Phase 2 implementation
-priority (roadmap item 0a / [W11](../docs/tpc_shortcomings_and_plan.md#w11-wire-the-confirmed-entry-point-to-our-real-solver))
-and is not yet done — treat this as an open gap, not a settled fact, until that lands.
-Both entry points must hide oracle-only fields before the agent path.
+Bare, it runs `--harness tpc`: this repository's deterministic no-oracle solver, in-process, via
+`solve_phase2.run_split`. Zero LLM calls, zero network calls, no subprocess. The external-CLI
+harnesses are still there for the LLM-agent baseline comparison, but only on an explicit
+`--harness opencode` / `--harness codex`, never by default.
+
+| Harness | What it runs | When |
+| --- | --- | --- |
+| `tpc` (default) | deterministic `TPCAgent`, in-process | the submission; every bare invocation |
+| `opencode` / `codex` | an external agent CLI against an external LLM API | opt-in baseline comparison only |
+
+The `tpc` harness bounds the whole run by the confirmed **5-hour wall-clock envelope** instead of a
+fixed per-query budget: each query gets `min(per-query cap, remaining time / remaining queries)`,
+floored so a late query still gets a real solve, with the clock starting at interpreter start so
+database load counts against it. Override with `--budget-sec` / `--total-budget-sec`
+(or `TPC_P2_TOTAL_BUDGET_SEC`; `0` disables the envelope). It writes the same official layout as
+`solve_phase2.py` and shares its `results/phase2_e2e_<split>/` method directory, so the two entry
+points resume each other.
+
+Both entry points hide oracle-only fields before the agent path.
 
 ## Outputs
 

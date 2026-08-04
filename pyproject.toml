@@ -5,40 +5,54 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "chinatravel"
 version = "0.1.0"
-description = "Add your description here"
+description = "Solver-first travel-planning agent for the IJCAI 2026 Travel Planning Challenge"
 requires-python = ">=3.12"
+# Core = exactly what the Phase 2 submission path runs (mirrors requirements-submission.txt), so
+# `pip install .` on the evaluation host is small, pure-PyPI and fast. Everything heavier is an
+# opt-in extra below; requirements.txt still installs the full development environment.
 dependencies = [
-    "accelerate==1.6.0",
-    "datasets==3.3.2",
-    "flashinfer-python==0.2.5",
     "func-timeout==4.3.5",
-    "fuzzywuzzy==0.18.0",
     "geopy==2.4.1",
-    "httpx==0.27.2",
-    "json-repair==0.30.0",
     "jsonschema==4.23.0",
-    "levenshtein>=0.27.3",
-    "matplotlib==3.9.4",
-    "modelscope==1.20.0",
     "numpy==1.26.4",
     "openai==1.53.0",
-    "packaging==24.2",
+    "ortools==9.9.3963",
     "pandas==2.2.3",
     "psutil==7.2.2",
-    "scikit-learn==1.5.2",
-    "seaborn==0.13.2",
-    "tiktoken==0.9.0",
-    "torch==2.6.0",
     "tqdm==4.66.6",
-    "transformers==4.51.3",
-    "vllm==0.8.5",
-    "z3-solver==4.14.1.0",
-    "ortools==9.9.3963",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest==9.1.1",
+]
+# Upstream's LLM/NeSy baseline agents and the HuggingFace dataset loader.
+baselines = [
+    "datasets==3.3.2",
+    "fuzzywuzzy==0.18.0",
+    "httpx==0.27.2",
+    "json-repair==0.30.0",
+    "levenshtein>=0.27.3",
+    "packaging==24.2",
+    "scikit-learn==1.5.2",
+    "tiktoken==0.9.0",
+    "z3-solver==4.14.1.0",
+]
+# Offline plotting/diagnostics only; never imported by a solve.
+analysis = [
+    "matplotlib==3.9.4",
+    "seaborn==0.13.2",
+]
+# Local model serving. The submission serves models over an OpenAI-compatible endpoint instead
+# (SGLang on the evaluation host), and chinatravel/agent/llms.py keeps this stack behind a lazy
+# import, so it must stay out of the core install.
+local-llm = [
+    "accelerate==1.6.0",
+    "flashinfer-python==0.2.5",
+    "modelscope==1.20.0",
+    "torch==2.6.0",
+    "transformers==4.51.3",
+    "vllm==0.8.5",
 ]
 
 [tool.pytest.ini_options]

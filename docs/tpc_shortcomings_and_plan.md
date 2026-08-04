@@ -268,7 +268,7 @@ estimate survives contact with the implementation.
 | S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
 | S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | open (needs W3) | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
 | S7 | ~~The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score~~ — **RESOLVED 2026-08-04: there is no per-query timeout**, only a 5 h total budget for all 100 queries | 2 | risk, reframed | **closed as originally framed; reframed as total-wall-clock risk** | [W7](#w7-de-risk-the-unconfirmed-budget) |
-| S11 | **NEW 2026-08-04, SUBMISSION-BLOCKING:** the organizers' confirmed entry point (`solve_script_with_harness.py --split <split>`, no other flags) defaults to the external OpenCode/Codex demo harness, not our real deterministic no-oracle solver | 2 | blocking — a submission that never invokes the real solver scores at or near zero | **open, highest priority** | [W11](#w11-wire-the-confirmed-entry-point-to-our-real-solver) |
+| S11 | **NEW 2026-08-04, SUBMISSION-BLOCKING:** the organizers' confirmed entry point (`solve_script_with_harness.py --split <split>`, no other flags) defaults to the external OpenCode/Codex demo harness, not our real deterministic no-oracle solver | 2 | blocking — a submission that never invokes the real solver scores at or near zero | **CLOSED 2026-08-04** (default is now `--harness tpc`, in-process, plus the 5 h envelope, minimal packaging, and a submission builder) | [W11](#w11-wire-the-confirmed-entry-point-to-our-real-solver) |
 | S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
 | S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | open (needs W3) | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
 
@@ -844,6 +844,39 @@ safest across the whole range — not which one wins at `900 s`.
 ---
 
 ### W11: wire the confirmed entry point to our real solver
+
+> **Status: CLOSED, 2026-08-04.** All four "Do" items below landed, plus two things this brief did
+> not ask for but the same command needs to survive evaluation:
+>
+> - **Default flipped.** `solve_script_with_harness.py` ships `--harness tpc`, dispatching to
+>   `solve_phase2.run_split` in-process (`run_tpc_split`). `opencode`/`codex` are explicit opt-ins.
+>   Its method name is `phase2_e2e_<split>`, the same one `solve_phase2.py` uses, so the two entry
+>   points share `results/<method>/` and resume each other.
+> - **Whole-run wall-clock envelope (not in the original brief).** A fixed per-query budget cannot
+>   honour the confirmed 5 h: 100 × `300 s` is `8.3 h`, and the run would have been cut off
+>   mid-split with every remaining query scoring zero. Each query now gets
+>   `min(cap, remaining / remaining queries)`, floored at `20 s`, with `10%` of the envelope held
+>   back for startup/evaluation overhead and the clock starting at interpreter start
+>   (`solve_phase2.query_budget_sec`, `TPC_P2_TOTAL_BUDGET_SEC` / `--total-budget-sec` to override,
+>   `0` disables). Off by default in `solve_phase2.py` so no development gate or ledger row changes.
+> - **Minimal install (not in the original brief).** `requirements-submission.txt` is nine PyPI
+>   packages — no `torch`/`vllm`/`transformers`/`accelerate`/`modelscope`/`flashinfer`, no plotting
+>   stack, no extra index — and `pyproject.toml`'s core dependencies now mirror it, with the heavy
+>   stacks moved to `baselines`/`analysis`/`local-llm` extras. Verified by running the confirmed
+>   command in a venv containing only that file's contents.
+> - **Tests.** `tests/phase2/test_harness_entry_point.py` (default harness, no subprocess, budget
+>   arithmetic, envelope resolution, plus an `integration`-marked subprocess run of the organizers'
+>   command shape with `opencode`/`codex` unreachable) and `tests/phase2/test_submission_package.py`
+>   (dependency-set invariants, archive contents, version namespace).
+> - **Submission builder.** `scripts/assemble_phase2_submission.py` (`make phase2-submission`)
+>   packages tracked files at HEAD, writes `SUBMISSION.md` + `submission_manifest.json`, zips as
+>   `{team}_v{N}.zip`, and verifies the archive by unpacking and running it. It uploads nothing.
+>
+> **What is still open:** the ship bar's "for a full split" half. The bare command has been run
+> end-to-end on single queries and verified from a packaged archive, never on all 100 — that is
+> W10's package-verification item and W7's total-wall-clock check, and it needs an evaluation
+> machine. The per-query cap that ships (`300 s`) is also unscreened against the envelope.
+> The rest of this section is kept as the implementation record.
 
 **Owner:** implementation. **Effort: small, but blocking.** **Gain: makes the submission actually run our solver.**
 

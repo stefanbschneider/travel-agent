@@ -9,7 +9,8 @@ SPLIT ?= tpc_phase1
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
 	phase2-help phase2-test phase2-splits phase2-solve phase2-query phase2-rehearse \
 	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
-	phase2-baseline phase2-baseline-at
+	phase2-baseline phase2-baseline-at phase2-harness phase2-submission \
+	phase2-submission-check
 
 # Run phase 1 evaluation
 p1eval:
@@ -110,6 +111,9 @@ phase2-help:
 	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
 	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
+	  '  make phase2-harness         - run the ORGANIZER-CONFIRMED entry point exactly as they will' \
+	  '  make phase2-submission      - build + verify the Phase 2 submission zip (uploads nothing)' \
+	  '  make phase2-submission-check- report what would ship, write nothing' \
 	  'Variables: P2_SPLIT_SET=val|test|familiar_100|familiar_100_val|familiar_100_test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
@@ -125,6 +129,20 @@ phase2-splits:
 phase2-solve:
 	.venv/bin/python agent_env/scripts/solve_phase2.py --split $(P2_SPLIT) \
 	  --method $(P2_METHOD) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+
+# The exact command the organizers run (2026-08-04 confirmation), with nothing added: no flags
+# beyond --split, no env vars. Use it to rehearse the real submission path end to end.
+phase2-harness:
+	$(PYTHON) agent_env/scripts/solve_script_with_harness.py --split $(P2_SPLIT)
+
+# Build the Phase 2 harness submission zip and verify it by unpacking and running it. Uploads
+# nothing -- submission stays a manual step at the portal.
+phase2-submission:
+	$(PYTHON) scripts/assemble_phase2_submission.py $(if $(VERSION),--version $(VERSION))
+
+# Report what would ship (file count, size by tree) without writing anything.
+phase2-submission-check:
+	$(PYTHON) scripts/assemble_phase2_submission.py --dry-run
 
 # Run ONE query end to end (existing uid / a query file / raw NL text). See scripts/run_query.py.
 phase2-query:

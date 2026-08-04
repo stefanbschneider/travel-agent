@@ -18,9 +18,11 @@ for the entire 100-query run, excluding setup. At most two submitted versions ar
 (higher score wins if both succeed). Local `300 s`/`900 s` settings remain per-query development gate
 budgets, not organizer rules and not a substitute for a total-wall-clock check against the real 5-hour
 envelope. See the [competition reference](docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
-for the full confirmed contract, and its flagged gap: `solve_script_with_harness.py`'s current default
-harness (`opencode`, an external-CLI demo) is not the repository's real deterministic solver — closing
-that is the top Phase 2 implementation priority (roadmap item 0a).
+for the full confirmed contract. That command now runs the repository's real deterministic solver:
+its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (zero LLM calls, zero
+subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
+(roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
+`scripts/assemble_phase2_submission.py` packages and verifies the archive.
 
 ## Parallel workstreams
 
@@ -47,6 +49,7 @@ Shared rules for every workstream: obey the [non-negotiable invariants](#non-neg
 | Cross-phase open shortcomings and the implementation plan for each | [Shortcomings and plan](docs/tpc_shortcomings_and_plan.md) |
 | Parallel-agent focused prompts (evaluation and implementation) | [Agent prompts](docs/agents/README.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |
+| Phase 2 submission packaging and the technical report | [Competition reference](docs/reference/competition.md#packaging-this-into-a-submission) and [report guide](report/README.md) |
 | Agent environment | [Human guide](agent_env/README.md) and [agent contract](agent_env/SKILL.md) |
 | Historical decisions and measurements | [Documentation archive](docs/archive/README.md) |
 

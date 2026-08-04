@@ -1,0 +1,130 @@
+%%%% fabiundstefan.tex
+%%%%
+%%%% TPC @ IJCAI 2026 technical report -- SKELETON, NOT WRITTEN YET.
+%%%%
+%%%% Every team that qualified for Phase 2 must submit one (organizers' reply, 2026-08-04):
+%%%%   - official IJCAI paper template (this one, from https://www.ijcai.org/authors_kit),
+%%%%   - maximum 4 pages,
+%%%%   - NOT double-blind: real names and affiliations,
+%%%%   - PDF named after the team: fabiundstefan.pdf,
+%%%%   - same Phase 2 portal as the harness zip, by 2026-08-10, 24:00 Beijing Time (UTC+8).
+%%%% Judged on technical reliability and soundness, innovation, and clarity of presentation.
+%%%%
+%%%% Build:  cd report && make        (see report/README.md)
+%%%% Every section below is a placeholder. Do not submit until the TODOs are gone and every
+%%%% number is a committed measurement -- see report/README.md for where each one comes from.
+
+\documentclass{article}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+
+\usepackage{ijcai26}
+
+% Use the postscript times font!
+\usepackage{times}
+\usepackage{soul}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+
+\urlstyle{same}
+
+% No \linenumbers: the technical report is a camera-ready-style document, not a reviewed
+% submission, and it is explicitly not anonymous.
+
+\pdfinfo{
+/TemplateVersion (IJCAI.2026.0)
+}
+
+\title{Solver-First Deterministic Itinerary Planning for the ChinaTravel Benchmark}
+
+% TODO: real names, affiliations and emails. The report is not anonymous.
+\author{
+    First Author$^1$
+    \and
+    Second Author$^1$
+    \affiliations
+    $^1$Team fabiundstefan
+    \emails
+    \{first, second\}@example.com
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    TODO. One paragraph: the task, the solver-first approach, the no-oracle Phase~2 contract,
+    and the headline result.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+TODO. The Travel Planning Challenge task, why a deterministic solver rather than an LLM agent
+loop, and what this report claims.
+
+\section{System Overview}
+\label{sec:system}
+
+TODO. The pipeline: parse and normalise the visible query into branch-local constraint variants,
+build a deterministic base itinerary, repair and restart under a bounded budget, optionally solve
+the residual with CP-SAT, then accept only what passes the schema, commonsense and logical
+checks. Note the two invariants that shape everything else: no oracle field ever reaches the
+agent path, and every fact is grounded in \texttt{WorldEnv} rather than generated.
+
+\section{Implementation}
+\label{sec:implementation}
+
+TODO. Entry point and packaging (one command, deterministic, zero LLM calls by default), the
+per-query budget policy under the whole-run wall-clock envelope, and how acceptance gating is
+enforced at finalisation.
+
+\section{Experiments}
+\label{sec:experiments}
+
+TODO. Setup: which split, which budget, which evaluator revision. Report the official metric
+decomposition (EPR-micro, EPR-macro, C-LPR, FPR, DAV, ATT, DDR) and the weighted overall score.
+
+% TODO: replace with a committed row from results/phase2_baselines/.
+\begin{table}[t]
+    \centering
+    \begin{tabular}{lccc}
+        \toprule
+        Configuration & FPR & C-LPR & Overall \\
+        \midrule
+        TODO & -- & -- & -- \\
+        \bottomrule
+    \end{tabular}
+    \caption{TODO: main result.}
+    \label{tab:main}
+\end{table}
+
+\subsection{Ablations}
+\label{sec:ablations}
+
+TODO. One row per promoted mechanism, each from a paired same-revision run.
+
+\subsection{Error Analysis}
+\label{sec:errors}
+
+TODO. What still fails and why, by failure family.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+TODO.
+
+\section*{Acknowledgements}
+
+TODO or delete.
+
+\bibliographystyle{named}
+\bibliography{ijcai26}
+
+\end{document}
