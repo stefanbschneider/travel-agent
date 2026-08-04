@@ -12,6 +12,12 @@ import re
 from copy import deepcopy
 from typing import Any
 
+from chinatravel.environment.concept_labels import normalize_concept_value
+from chinatravel.symbol_verification.concept_func import (
+    normalize_concept_constraint_source,
+    normalize_poi_name,
+)
+
 _BRANCH_LOCAL_KEYS = {
     "required_attractions",
     "excluded_attractions",
@@ -67,6 +73,45 @@ _BUDGET_FIELDS = (
     ("total", r"total_cost\s*<=\s*([-+]?\d+(?:\.\d+)?)"),
 )
 _INNER_TRANSPORT_MODES = {"walk", "metro", "taxi"}
+
+# Concept-valued constraint keys, by the sandbox concept kind whose canonical labels they
+# must be expressed in.  The English sandbox exposes one canonical label per concept
+# (``chinatravel/environment/concept_labels.py``), and the verifier normalizes both the
+# hard_logic_py literals (``normalize_concept_constraint_source``) and the values it reads
+# back from the tools (``concept_func.normalize_concept_value``) into that same label.  The
+# solver compares constraint values against tool column values with case-sensitive equality,
+# so it has to canonicalize its own literals the same way or a query asking for
+# "Art Museum" would match none of the attractions the verifier accepts as "Art museum".
+_CONCEPT_VALUE_KEYS = {
+    "attraction": ("required_attraction_types", "excluded_attraction_types"),
+    "restaurant": ("cuisine_preference", "excluded_cuisine_types"),
+    "accommodation": (
+        "hotel_type",
+        "hotel_amenity",
+        "required_hotel_any_types",
+        "required_hotel_all_types",
+    ),
+}
+
+# Constraint families that carry a POI name the plan must match against the environment
+# catalog, split by shape: plain string lists, and dict entries keyed by a name field.
+# ``concept_func._POI_NAME_ALIASES`` is the verifier's own rename table, so a solver that
+# skips it hunts for a name the catalog does not contain.
+_POI_NAME_LIST_KEYS = (
+    "required_attractions",
+    "excluded_attractions",
+    "required_restaurants",
+    "excluded_restaurants",
+    "required_hotels",
+    "excluded_hotels",
+    "position_presence",
+)
+_POI_NAME_DICT_FIELDS = (
+    ("stay_duration", "location"),
+    ("activity_time_windows", "location"),
+    ("hotel_nearby", "reference"),
+    ("poi_distance_hotel", "reference"),
+)
 
 
 
@@ -136,6 +181,12 @@ def _looks_like_branch(text: str) -> bool:
 
 
 def _parse_logic_snippet(logic: str, include_inner_transport: bool) -> dict:
+    # Mirror the verifier: chinatravel/symbol_verification/hard_constraint.py rewrites every
+    # quoted literal in the hard_logic_py source into its canonical concept label and POI name
+    # before evaluating the clause. Doing the same here means every literal the regexes below
+    # extract is the one the verifier will compare against, whichever family it lands in --
+    # e.g. a query asking for 'Bistro Sola' targets the POI the data actually calls 'Sola Bistro'.
+    logic = normalize_concept_constraint_source(logic)
     result: dict[str, Any] = {}
     _parse_name_sets(logic, result)
     _parse_type_sets(logic, result)
@@ -421,9 +472,54 @@ def _normalize_variant(constraints: dict, use_oracle: bool) -> dict:
     else:
         normalized.pop("budgets", None)
 
+    _normalize_concept_values(normalized)
+    _normalize_poi_names(normalized)
     _normalize_hotel_type(normalized)
     _normalize_intercity_mode(normalized)
     return normalized
+
+
+def _normalize_concept_values(normalized: dict) -> None:
+    """Rewrite concept-valued literals into the sandbox's canonical labels, mirroring the
+    verifier's own normalization of hard_logic_py literals and tool column values."""
+    for kind, keys in _CONCEPT_VALUE_KEYS.items():
+        for key in keys:
+            if key not in normalized:
+                continue
+            value = normalized[key]
+            if isinstance(value, str):
+                normalized[key] = normalize_concept_value(kind, value, "en")
+            elif isinstance(value, list):
+                normalized[key] = _dedupe(
+                    normalize_concept_value(kind, v, "en") if isinstance(v, str) else v
+                    for v in value
+                )
+
+
+def _normalize_poi_names(normalized: dict) -> None:
+    """Rewrite POI references into the names the environment data actually uses.
+
+    ``_parse_logic_snippet`` already normalizes the hard_logic_py source, so this is what
+    carries the same guarantee to the no-oracle path, where the names come from the NL parser
+    instead. The verifier applies ``normalize_poi_name`` to every plan position it looks up
+    (``concept_func.activity_position``), so a solver hunting for the un-normalized name would
+    be looking for a POI the catalog does not contain.
+    """
+    for key in _POI_NAME_LIST_KEYS:
+        value = normalized.get(key)
+        if isinstance(value, list):
+            normalized[key] = _dedupe(
+                normalize_poi_name(v) if isinstance(v, str) else v for v in value
+            )
+
+    for key, field in _POI_NAME_DICT_FIELDS:
+        value = normalized.get(key)
+        entries = [value] if isinstance(value, dict) else value
+        if not isinstance(entries, list):
+            continue
+        for entry in entries:
+            if isinstance(entry, dict) and isinstance(entry.get(field), str):
+                entry[field] = normalize_poi_name(entry[field])
 
 
 def _normalize_hotel_type(normalized: dict) -> None:

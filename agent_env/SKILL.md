@@ -9,10 +9,13 @@ Use this skill for one query at a time from the repository root.
 Use the project interpreter for every command:
 
 ```bash
-.venv/bin/python -m agent_env.cli tools
-.venv/bin/python -m agent_env.cli call <tool_name> '<json_arguments>'
-.venv/bin/python -m agent_env.cli world '<WorldEnv command>'
+.venv/bin/python -m agent_env.cli --lang en tools
+.venv/bin/python -m agent_env.cli --lang en call <tool_name> '<json_arguments>'
+.venv/bin/python -m agent_env.cli --lang en world '<WorldEnv command>'
 ```
+
+Pass `--lang en` on every call (or export `CHINATRAVEL_LANG=en`): the CLI defaults to `zh`, and the
+TPC competition data is English. Use English city and POI names to match — `Shanghai`, not `上海`.
 
 ## Query and tool workflow
 

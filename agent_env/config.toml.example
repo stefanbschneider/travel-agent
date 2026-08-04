@@ -1,5 +1,9 @@
 [run]
 split = "easy"
+# Sandbox/query language: "en" or "zh". The TPC competition data is English, so the
+# script's built-in default is "en" and applies to query loading, the environment
+# tools, and both commonsense and hard-logic evaluation.
+lang = "en"
 harness = "opencode"
 method = ""
 work_dir = ""

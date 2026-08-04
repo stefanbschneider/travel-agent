@@ -35,12 +35,19 @@ def default_tool_python() -> str:
     return "uv run python"
 
 
-def load_queries(split: str) -> tuple[list[str], dict[str, Any]]:
+def normalize_lang(lang: Any) -> str:
+    value = str(lang).lower()
+    if value not in {"zh", "en"}:
+        raise ValueError("ChinaTravel language must be 'zh' or 'en'.")
+    return value
+
+
+def load_queries(split: str, lang: str) -> tuple[list[str], dict[str, Any]]:
     from chinatravel.data.load_datasets import load_query
 
     args = argparse.Namespace(
         splits=split,
-        lang="en" if split == "tpc_phase2_familiar_100" else None,
+        lang=lang,
         oracle_translation=True,
     )
     query_ids, query_data = load_query(args)
@@ -49,8 +56,10 @@ def load_queries(split: str) -> tuple[list[str], dict[str, Any]]:
     return query_ids, query_data
 
 
-def load_one_query(split: str, uid: str | None) -> tuple[str, dict[str, Any]]:
-    query_ids, query_data = load_queries(split)
+def load_one_query(
+    split: str, uid: str | None, lang: str = "en"
+) -> tuple[str, dict[str, Any]]:
+    query_ids, query_data = load_queries(split, lang)
     query_uid = uid or query_ids[0]
     if query_uid not in query_data:
         raise RuntimeError(f"Query uid {query_uid!r} not found in split {split!r}")
@@ -153,8 +162,15 @@ def load_plan_from_output_txt(
     )
 
 
-def build_prompt(split: str, uid: str, query: dict[str, Any], tool_python: str) -> str:
+def build_prompt(
+    split: str,
+    uid: str,
+    query: dict[str, Any],
+    tool_python: str,
+    lang: str,
+) -> str:
     query_text = json.dumps(query, ensure_ascii=False, indent=2)
+    cli_python = f"{tool_python} -m agent_env.cli --lang {lang}"
     return f"""You are solving one ChinaTravel benchmark query.
 
 Work quietly. Do not narrate your plan, progress, or calculations. Use CLI calls only
@@ -170,12 +186,12 @@ Run CLI commands from that repository root using this Python command:
 Use this command for every `agent_env.cli` call. Do not use bare `python`.
 
 Important commands:
-- {tool_python} -m agent_env.cli tools
-- {tool_python} -m agent_env.cli call attractions_keys '{{"city":"<target_city>"}}'
-- {tool_python} -m agent_env.cli call restaurants_keys '{{"city":"<target_city>"}}'
-- {tool_python} -m agent_env.cli call accommodations_keys '{{"city":"<target_city>"}}'
-- {tool_python} -m agent_env.cli call intercity_transport_select '{{"start_city":"<start_city>","end_city":"<target_city>","intercity_type":"train","earliest_leave_time":"07:00"}}'
-- {tool_python} -m agent_env.cli call goto '{{"city":"<target_city>","start":"<exact start>","end":"<exact end>","start_time":"HH:MM","transport_type":"metro"}}'
+- {cli_python} tools
+- {cli_python} call attractions_keys '{{"city":"<target_city>"}}'
+- {cli_python} call restaurants_keys '{{"city":"<target_city>"}}'
+- {cli_python} call accommodations_keys '{{"city":"<target_city>"}}'
+- {cli_python} call intercity_transport_select '{{"start_city":"<start_city>","end_city":"<target_city>","intercity_type":"train","earliest_leave_time":"07:00"}}'
+- {cli_python} call goto '{{"city":"<target_city>","start":"<exact start>","end":"<exact end>","start_time":"HH:MM","transport_type":"metro"}}'
 
 Use exact names, prices, costs, times, distances, TrainID/FlightID values, and transport
 segments returned by the CLI. Do not invent environment facts.
@@ -448,7 +464,11 @@ def run_codex(
 
 
 def evaluate_one(
-    split: str, uid: str, query: dict[str, Any], plan: dict[str, Any]
+    split: str,
+    uid: str,
+    query: dict[str, Any],
+    plan: dict[str, Any],
+    lang: str = "en",
 ) -> dict[str, Any]:
     from chinatravel.evaluation.commonsense_constraint import (
         evaluate_commonsense_constraints,
@@ -481,7 +501,7 @@ def evaluate_one(
     )
     macro_comm, micro_comm, common_result_agg, commonsense_pass_id = (
         evaluate_commonsense_constraints(
-            query_index, query_data, result_data, verbose=False
+            query_index, query_data, result_data, verbose=False, lang=lang
         )
     )
     if has_oracle:
@@ -498,6 +518,7 @@ def evaluate_one(
             result_data,
             env_pass_id=commonsense_pass_id,
             verbose=False,
+            lang=lang,
         )
     else:
         macro_logi = micro_logi = conditional_macro_logi = conditional_micro_logi = None
@@ -660,6 +681,7 @@ def evaluate_split(
     method: str,
     query_ids: list[str],
     query_data: dict[str, Any],
+    lang: str = "en",
     parse_failure_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     from chinatravel.evaluation.commonsense_constraint import (
@@ -691,7 +713,7 @@ def evaluate_split(
         )
         macro_comm, micro_comm, common_result_agg, commonsense_pass_id = (
             evaluate_commonsense_constraints(
-                evaluated_ids, query_data, result_data, verbose=False
+                evaluated_ids, query_data, result_data, verbose=False, lang=lang
             )
         )
         (
@@ -707,6 +729,7 @@ def evaluate_split(
             result_data,
             env_pass_id=commonsense_pass_id,
             verbose=False,
+            lang=lang,
         )
         schema_details = schema_result_agg.to_dict(orient="records")
         commonsense_details = common_result_agg.to_dict(orient="records")
@@ -829,6 +852,7 @@ def solve_query(
     *,
     harness: str,
     split: str,
+    lang: str,
     uid: str,
     query: dict[str, Any],
     method: str,
@@ -850,7 +874,7 @@ def solve_query(
     eval_path = run_dir / "evaluation.json"
     result_path = PROJECT_ROOT / "results" / method / f"{uid}.json"
 
-    prompt = build_prompt(split, uid, public_query, tool_python)
+    prompt = build_prompt(split, uid, public_query, tool_python, lang)
     run_dir.mkdir(parents=True, exist_ok=True)
     prompt_path.write_text(prompt, encoding="utf-8")
 
@@ -924,7 +948,7 @@ def solve_query(
     write_json(result_path, plan)
     print(f"Saved plan: {result_path}")
 
-    evaluation = evaluate_one(split, uid, query, plan)
+    evaluation = evaluate_one(split, uid, query, plan, lang)
     write_json(eval_path, evaluation)
     print(f"Saved evaluation: {eval_path}")
     print(json.dumps(evaluation, ensure_ascii=False, indent=2, default=json_default))
@@ -940,6 +964,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--split", default=None, help="ChinaTravel split name. Overrides [run].split."
+    )
+    parser.add_argument(
+        "--lang",
+        choices=["zh", "en"],
+        default=None,
+        help="Query and sandbox language. Overrides [run].lang.",
     )
     parser.add_argument(
         "--uid", default=None, help="Optional query UID. Overrides [run].uid."
@@ -1054,6 +1084,7 @@ def main() -> None:
     codex_config = config_section(config, "codex")
 
     split = str(choose(args.split, run_config.get("split"), "easy"))
+    lang = normalize_lang(choose(args.lang, run_config.get("lang"), "en"))
     uid = choose(args.uid, run_config.get("uid"), None)
     limit = choose(args.limit, run_config.get("limit"), None)
     if harness == "opencode":
@@ -1101,7 +1132,7 @@ def main() -> None:
         )
     )
 
-    query_ids, query_data = load_queries(split)
+    query_ids, query_data = load_queries(split, lang)
     if uid:
         uid = str(uid)
         if uid not in query_data:
@@ -1116,7 +1147,7 @@ def main() -> None:
 
     print(f"Config: {Path(args.config)}")
     print(
-        f"Run: split={split} queries={len(selected_ids)} harness={harness} method={method} "
+        f"Run: split={split} lang={lang} queries={len(selected_ids)} harness={harness} method={method} "
         f"model={model or '<config default>'} resume={resume}"
     )
 
@@ -1132,6 +1163,7 @@ def main() -> None:
         evaluation = solve_query(
             harness=harness,
             split=split,
+            lang=lang,
             uid=uid,
             query=query_data[uid],
             method=method,
@@ -1158,7 +1190,12 @@ def main() -> None:
     if (evaluations or skipped_completed) and not args.uid:
         summary_path = PROJECT_ROOT / work_dir / f"{split}_summary.json"
         summary = evaluate_split(
-            split, method, selected_ids, query_data, parse_failure_ids=parse_failure_ids
+            split,
+            method,
+            selected_ids,
+            query_data,
+            lang,
+            parse_failure_ids=parse_failure_ids,
         )
         summary["skipped_completed"] = skipped_completed
         write_json(summary_path, summary)

@@ -28,22 +28,37 @@ Raw commands accept only direct calls to allowlisted `WorldEnv` functions with l
 
 For exact tool names, request shapes, semantic itinerary rules, and output constraints, read [SKILL.md](SKILL.md).
 
+## Language
+
+Every entry point takes a `zh`/`en` language that selects both the sandbox database and the query
+set. **The TPC competition data is English.** The defaults differ by entry point, so be explicit:
+
+| Entry point | Default | How to set it |
+| --- | --- | --- |
+| `agent_env.cli`, `agent_env.http_server` | `zh` | `--lang en`, or `CHINATRAVEL_LANG=en` |
+| `agent_env.mcp_stdio` | `zh` | `CHINATRAVEL_LANG=en` |
+| `solve_script_with_harness.py` | **`en`** | `--lang zh`, or `[run].lang` in `config.toml` |
+| `solve_phase2.py` | **`en`** | `--lang zh` |
+
+The harness script passes its own `--lang` down into the prompt's CLI examples, so a harnessed agent
+queries the same database the evaluator scores against.
+
 ## One CLI example
 
 ```bash
-.venv/bin/python -m agent_env.cli call attractions_keys '{"city":"上海"}'
+.venv/bin/python -m agent_env.cli --lang en call attractions_keys '{"city":"Shanghai"}'
 ```
 
-Run `.venv/bin/python -m agent_env.cli tools` to inspect the local tool catalog.
+Run `.venv/bin/python -m agent_env.cli --lang en tools` to inspect the local tool catalog.
 
 ## Server and harness entry points
 
 ```bash
 # Stdio MCP-style server
-.venv/bin/python -m agent_env.mcp_stdio
+CHINATRAVEL_LANG=en .venv/bin/python -m agent_env.mcp_stdio
 
 # Local HTTP service
-.venv/bin/python -m agent_env.http_server --host 127.0.0.1 --port 8765
+.venv/bin/python -m agent_env.http_server --lang en --host 127.0.0.1 --port 8765
 
 # Repository Phase 2 per-query runner
 .venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 1 --budget-sec 300

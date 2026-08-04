@@ -40,6 +40,44 @@ Three conclusions:
 3. Solver-only remains behind end-to-end on this data (a known pattern), and is the arm still emitting
    commonsense-invalid plans (1 chronology, 4 transport-grounding).
 
+### Second sync (2026-08-04, upstream PR #32, `c89cfca`)
+
+Upstream merged a follow-up on 2026-08-04; it is integrated. **The seven scoring rules did not
+change** and no released query's score moves on its own. What changed is the sandbox: the English
+tools now expose one canonical label per concept, and the mode-filtered `innercity_transport_*`
+helpers read the `mode` key plan transports actually carry (they read a `type` key that never
+exists, so they silently returned `0`). Because the solver compares constraint literals against tool
+columns with case-sensitive equality, `solver_constraint_variants` now canonicalizes its own
+concept literals through the same table — without that, a query asking for `'Art Museum'` would
+match none of the attractions the verifier accepts as `'Art museum'`.
+
+`EVALUATOR_PARITY_SHA` is now `c89cfca`, so **the reference row below must be re-recorded before it
+can gate anything**; the gate refuses a `764614c` baseline against a `c89cfca` candidate. Full
+detail: [competition reference](reference/competition.md#second-upstream-sync-2026-08-04-pr-32).
+
+### Third sync (2026-08-04, upstream PR #33) — `agent_env` language plumbing
+
+Integrated. `agent_env/` only, so the parity point and the ledger marker do not move. It gives every
+`agent_env` entry point an explicit `zh`/`en`: previously the wrapper always built a **Chinese**
+`WorldEnv` while our data is English, and our local code guessed the language from the split *name*
+(`lang="en" if split == "tpc_phase2_familiar_100"`) — which would have fallen back to Chinese on the
+held-out split, whose name will differ. The harness script now defaults to `en`, so the organizers'
+bare `--split <split>` command resolves correctly whatever the split is called. This narrows, but
+does not close, W11: the confirmed entry point still runs the `opencode` demo harness rather than
+our solver.
+
+### Solver-side POI name aliasing (2026-08-04)
+
+Closed a pre-existing gap the PR #32 work surfaced. The verifier resolves both the hard_logic_py
+source and every plan position through `concept_func`'s rename table
+(`normalize_concept_constraint_source` / `normalize_poi_name`); the solver did neither, so it
+searched the catalog for names the catalog does not contain. Released query
+`20250323010327713880` asks to visit **"Bistro Sola"**, which the Shanghai catalog calls
+**"Sola Bistro"** — `select(name == "Bistro Sola")` returns `0` rows, `"Sola Bistro"` returns `1`.
+`_parse_logic_snippet` now normalizes the hard-logic source exactly as the verifier does (covering
+every family its regexes extract), and `_normalize_variant` carries the same rename to the
+no-oracle path's name-bearing keys. Tested in `tests/phase2/test_concept_label_alignment.py`.
+
 ## Current status snapshot
 
 Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)
