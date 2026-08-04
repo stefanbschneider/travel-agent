@@ -72,6 +72,9 @@ CHINATRAVEL_LANG=en .venv/bin/python -m agent_env.mcp_stdio
 **`agent_env/scripts/solve_script_with_harness.py --split <split>` is the organizer-confirmed Phase 2
 evaluation command** (2026-08-04 direct reply, no other flags — see the
 [competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+A second same-day email restates the command without showing `--split`; `--split` has always been
+optional here (default `split="easy"`, `lang="en"`), so both invocation shapes run identically — see
+the [wording-discrepancy note](../docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email).
 Bare, it runs `--harness tpc`: this repository's deterministic no-oracle solver, in-process, via
 `solve_phase2.run_split`. Zero LLM calls, zero network calls, no subprocess. The external-CLI
 harnesses are still there for the LLM-agent baseline comparison, but only on an explicit

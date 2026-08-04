@@ -1064,6 +1064,16 @@ unchanged or better — a packing move that costs one accepted plan has already 
 > like DeepInfra's. Not a live bug: DeepInfra has its own dedicated backend path that bypasses the probe
 > and defaults to the correct chat model. Item 3 (Stage 3 refine) is unchanged and stays off. **W8 is
 > fully closed** — see [Session update: night](#session-update-2026-07-31-night) for the closing record.
+>
+> **Addendum, 2026-08-04:** the organizers' second update email gave the exact evaluation endpoint —
+> SGLang serving `Qwen3.6-27B` at `http://127.0.0.1:30000/v1` (`--reasoning-parser qwen3`,
+> `--max-running-requests 8`; see [competition
+> reference](reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)).
+> `agent_env/config.phase2.example.toml` now carries the exact confirmed values, and the thinking-mode-off
+> default this section's autodetect finding mentions is no longer `deepinfra`-only — it now also covers
+> the `openai` backend that reaches this endpoint. This closes item 1's "stand up a real SGLang instance"
+> ask in spirit (the exact deployment is now known and configured for), though the endpoint itself is
+> still only reachable from the organizers' evaluation host, not from here.
 
 **Owner:** implementation. **Effort: half a day.** **Gain: `0` expected; competition-compliance and
 robustness.**

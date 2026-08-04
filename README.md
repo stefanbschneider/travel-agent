@@ -116,7 +116,12 @@ make phase2-full-run P2_LABEL="reference 5h parallel"
 The run order for that and everything downstream is the [evaluation roadmap](docs/tpc_phase2_eval_roadmap.md).
 
 **The organizers also confirmed the exact, automated Phase 2 evaluation command:
-`python agent_env/scripts/solve_script_with_harness.py --split <split>`, no other flags.**
+`python agent_env/scripts/solve_script_with_harness.py --split <split>`, no other flags** (a second
+2026-08-04 email restates the same command without the `--split <split>` piece shown; either way
+`--split` has always been optional here, so both forms run the same path — see the [wording
+discrepancy note](docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)).
+**That second email also requires every team to resubmit as `{TeamName}_v1.zip`: files uploaded
+before it are disregarded and do not count toward the two-version cap.**
 Bare, that command now runs this repository's deterministic no-oracle solver in-process
 (`--harness tpc`, the shipped default): zero LLM calls, zero network calls, no subprocess, and
 oracle fields stripped before the agent path. The external-CLI harnesses (`opencode`, `codex`)

@@ -25,6 +25,13 @@ its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (z
 subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
 (roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
 `scripts/assemble_phase2_submission.py` packages and verifies the archive.
+**Resubmission (2026-08-04, second organizer email): every Phase 2 file uploaded before that email is
+disregarded and does not count toward the two-version limit** — re-verify the package against the
+latest harness submission example and upload it as `{TeamName}_v1.zip`. That same email also gave the
+organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,
+OpenAI-compatible); see the [competition
+reference](docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)
+for the full contract — this does not change the zero-LLM-calls library default.
 
 ## Parallel workstreams
 
