@@ -140,6 +140,13 @@ every "give it more budget" idea on the implementation roadmap is dead — which
 negative result. If it climbs to the end, the scheduler is time-starved and the pass shape (R4) is
 where the leverage is.
 
+**1h arm, run 2026-08-04:** `results/phase2_baselines/full_runs/20260804T213636Z.json`,
+`--method phase2_e2e_r2_1h`. `overall 57.35` (vs R1 `57.99`, **`Δ -0.64`**), `FPR 31.0` (vs `33.0`),
+`constraints_ok 35/100` — same as R1. `run_wall_frac_of_budget 0.56` (`2015 s` of `3600 s`), all
+three passes completed (triage → repair → polish) before self-terminating for the same reason as
+R1. The predicted "1 h might cut off polish" did not happen — 1 h was still enough headroom. Nearly
+flat vs R1, within likely run-to-run noise for a single-seed comparison.
+
 ### R3 — worker scaling: does parallelism convert into score?
 
 ```bash
