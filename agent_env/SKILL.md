@@ -59,7 +59,10 @@ If a requirement or verifier behavior is unclear, inspect the source or query th
 ## Harness entry points
 
 **`solve_script_with_harness.py --split <split>` (no other flags) is the organizer-confirmed Phase 2
-evaluation command** (2026-08-04 direct reply). Bare, it runs the deterministic no-oracle solver
+evaluation command** (2026-08-04 direct reply; a second same-day email shows the same command without
+`--split` — either way it's optional here, see [competition
+reference](../docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)).
+Bare, it runs the deterministic no-oracle solver
 in-process — no external CLI, no LLM call, no subprocess:
 
 ```bash

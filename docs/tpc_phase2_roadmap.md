@@ -352,6 +352,18 @@ env var at a real endpoint, which the packaged submission never does, so this do
 packaging fact above. Given that the latest current-head parse screen was RED for audit-on, shipping
 deterministic is the defensible position; the reachability gap this paragraph used to describe is closed.
 
+**The exact endpoint is now confirmed (2026-08-04, second organizer email; see [competition
+reference](reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)):**
+SGLang serving `Qwen3.6-27B` at `http://127.0.0.1:30000/v1`, OpenAI-compatible, `--reasoning-parser
+qwen3` (so it does chain-of-thought reasoning unless the chat template suppresses it),
+`--max-running-requests 8`. `agent_env/config.phase2.example.toml` now carries the exact confirmed
+`base_url`/`model` rather than a plausible placeholder, and `llm_client.py`'s Qwen3 thinking-mode-off
+default (previously `deepinfra`-only, verified 2026-07-11 at ~10x the latency with thinking on) now
+also covers the `openai` backend, since that is the one this endpoint is reached through and our
+30s per-call timeout assumes thinking is off. This closes the *reachability* question only — the
+packaging fact above (zero LLM calls by default) is unchanged, and this endpoint itself remains
+untested from here since it only exists on the evaluation host during a real run.
+
 ## Shortcomings of the current agent
 
 A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAgent`) against the latest evidence surfaces six shortcomings, roughly in leverage order.
@@ -374,7 +386,8 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
    path both clean — see [Current status snapshot](#current-status-snapshot)). In the packaged submission
    it still never fires: backend defaults to `none`, `agent_env/config.toml` is gitignored, and `TPCLLM`
    is an empty stub. The latest paired quick screen was also RED for audit-on vs. parse-off, so shipping
-   deterministic is defensible and unchanged. See
+   deterministic is defensible and unchanged. **The organizers' own endpoint is now confirmed** (SGLang,
+   `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`, 2026-08-04 second email) — see
    [LLM packaging](#llm-packaging-the-submission-makes-zero-llm-calls).
 
 ## Operating rules

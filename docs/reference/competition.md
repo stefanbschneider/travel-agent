@@ -1,6 +1,6 @@
 # TPC @ IJCAI 2026 Competition Reference
 
-**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site; execution, versioning, feedback, per-query timeout, and technical-report answers added 2026-08-04 from the organizers' direct email reply to our clarification questions.
+**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site; execution, versioning, feedback, per-query timeout, and technical-report answers added 2026-08-04 from the organizers' direct email reply to our clarification questions; harness resubmission requirement, runtime reconfirmation, and the confirmed SGLang/LLM endpoint added 2026-08-04 (later the same day) from the organizers' second update email — see [below](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email).
 The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative when this note conflicts with local material.
 This is a concise repository reference, not a replacement for the rules.
 
@@ -79,8 +79,14 @@ The bare command also schedules the run against the 5-hour envelope confirmed ab
 
 ### Still open after the 2026-08-04 reply
 
-- **How the harness reaches the evaluation host's Qwen3.6-27B/SGLang endpoint**, if any code path calls an LLM at all (base URL, auth, reachability from the harness process). Not asked, not answered. Low urgency while the default path stays LLM-free, but blocks any LLM-backed flag we might ship enabled.
+- ~~How the harness reaches the evaluation host's Qwen3.6-27B/SGLang endpoint~~ **Answered the same
+  day** by the organizers' second email — see [Harness resubmission and the confirmed LLM
+  endpoint](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)
+  below: `http://127.0.0.1:30000/v1`, served model name `Qwen3.6-27B`, OpenAI-compatible.
 - Behavior when only one of two submitted versions runs successfully (see versioning above) — inferred as "that one counts," not confirmed.
+- Whether the confirmed evaluation command literally omits `--split` (second email) or literally
+  includes it (direct reply, same day) — see the wording discrepancy noted in the same section below.
+  Does not change our behavior either way, since `--split` has always been optional here.
 - Final-results date remains "to be announced."
 
 ### Confirmed evaluation host (2026-07-30)
@@ -113,6 +119,95 @@ What this changes for us:
   wall-clock budget for the entire 100-query run (see below), so `300 s`/`900 s` per-query local gates
   were never the binding constraint — a slow query now only matters insofar as it eats into the shared
   5 h envelope for the rest of the split.
+
+### Harness resubmission and the confirmed LLM endpoint (2026-08-04, second organizer email)
+
+A second organizer email arrived the same day as the direct reply above ("updated information about
+the TPC 2026 Phase 2 submission requirements, evaluation environment, runtime limit, and technical
+report deadline"). Six new or reconfirmed facts:
+
+1. **Harness ZIP contents, restated.** "Agent code, prompts, harness and execution scripts, required
+   dependencies, configuration files, instructions, and all other files required to run the system" —
+   consistent with, not a change from, the 2026-08-03 advancement email's packaging note and what
+   `scripts/assemble_phase2_submission.py` already builds.
+2. **Output format, now explicit.** `results/<method>/<uid>.json` — matches
+   `solve_script_with_harness.py`'s existing `run_tpc_split` output path exactly; no code change
+   needed.
+3. **Resubmission reset — action required regardless of what was uploaded before.** *"All Phase 2
+   files uploaded before this notice will be disregarded. They will not be formally evaluated and
+   will not count toward the submission limit."* Every team must re-download the current harness
+   submission example, re-verify their package against the startup command, evaluation environment,
+   dependencies, file paths, and output format described in that email, and then upload it as
+   `{TeamName}_v1.zip` — this becomes the team's first official submission regardless of anything
+   uploaded earlier. The `{TeamName}_v1.zip` / `{TeamName}_v2.zip` naming and the two-version cap are
+   unchanged from the [confirmed packaging](#confirmed-packaging-2026-08-03-advancement-email) note
+   above; only the "what counts as v1" clock reset. **Nothing in this repository's git history has
+   been uploaded to the portal yet, so this reset costs us nothing — treat the first archive
+   `scripts/assemble_phase2_submission.py` produces from now on as the real `v1`.**
+4. **Hardware, reconfirmed unchanged.** 16 OS-visible logical CPUs (all assigned to the harness
+   process), 112 GiB total host RAM, 2 × NVIDIA A800 80 GB PCIe without NVLink, driver `575.57.08` —
+   identical to the [2026-07-30 confirmation](#confirmed-evaluation-host-2026-07-30) above.
+5. **Runtime stack, reconfirmed unchanged.** Debian GNU/Linux 12, Python `3.12.13`, PyTorch
+   `2.9.1+cu128` (CUDA 12.8), SGLang `0.5.10`, sglang-kernel `0.4.1`, Transformers `5.3.0`, Triton
+   `3.5.1`, FlashInfer `0.6.7.post2`, evaluation model `Qwen3.6-27B` — identical to the table above.
+6. **Evaluation turnaround.** After a valid `v1`, organizers aim to return a score within 3 days
+   (resource/failure dependent); no real-time execution logs are available to participants, only the
+   score plus "relevant execution information" per run. A team can use the `v1` score to decide
+   whether to submit `v2` before the deadline. Schedule is unchanged: submission/evaluation window
+   2026-08-04 to 2026-08-10, both the harness and the technical report due 2026-08-10, 24:00 Beijing
+   Time.
+
+**A wording discrepancy, flagged, not resolved.** This second email's own invocation line (item 1) is
+`python agent_env/scripts/solve_script_with_harness.py` with no `--split` argument shown, unlike the
+[explicit `--split <split>` command](#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
+the organizers gave in direct reply to our clarification question earlier the same day. We have not
+re-asked which is literal. It does not change our behavior either way: `--split` has always been
+optional here (`solve_script_with_harness.py` defaults to `split="easy"`, `lang="en"` when omitted —
+see `[run]` in `agent_env/config.toml.example`), so both a bare invocation and an explicit
+`--split <split>` run the same `--harness tpc` deterministic path. What it does mean is that if the
+organizers truly invoke the script with zero arguments against the held-out set, the split name that
+resolves the held-out queries is not something we control or can guess from here — only they know how
+their harness supplies query data to whatever `--split` (or its absence) selects on their side.
+
+**The previously open LLM-reachability question is now answered.** The organizers' reply to our
+follow-up question on the LLM API gave the exact deployment:
+
+```
+CUDA_VISIBLE_DEVICES=0,1 sglang serve \
+  --model-path /mnt/hdd/local_llm/Qwen3.6-27B \
+  --served-model-name Qwen3.6-27B \
+  --host 0.0.0.0 --port 30000 \
+  --tp-size 2 --dtype bfloat16 --context-length 131072 \
+  --mem-fraction-static 0.85 --chunked-prefill-size 4096 \
+  --max-running-requests 8 \
+  --reasoning-parser qwen3 --tool-call-parser qwen3_coder
+```
+
+So the OpenAI-compatible endpoint is `http://127.0.0.1:30000/v1`, served model name **`Qwen3.6-27B`**
+(no `Qwen/` prefix — that is DeepInfra's org-qualified naming, a different backend). This closes the
+"how does the harness reach the endpoint" item that was previously "not asked, not answered" below.
+Concretely:
+
+- `agent_env/config.phase2.example.toml`'s `[phase2.llm]` block now uses the exact confirmed
+  `base_url`/`model`, since it previously carried a plausible-but-unconfirmed placeholder.
+- `chinatravel/agent/phase2/llm_client.py`'s Qwen3 "thinking mode" default-off behavior (previously
+  `deepinfra`-only) now also applies to the `openai` backend — the one this endpoint is reached
+  through — since `--reasoning-parser qwen3` confirms the eval deployment does standard
+  chain-of-thought reasoning unless the chat template explicitly suppresses it, and our per-call
+  timeout is sized for the non-thinking case.
+- `--max-running-requests 8` is a real server-side concurrency cap worth remembering if an LLM-backed
+  flag is ever turned on for a run that uses more than 8 parallel workers (the whole-run scheduler
+  defaults to `CPU count - 1` = up to 15): more in-flight requests than that queue or time out
+  server-side, independent of anything our client does.
+- This closes a reachability *question*, not a packaging decision. The invariant is unchanged:
+  library-default Phase 2 flags make zero LLM calls (`TPC_P2_LLM_BACKEND` defaults to `none`,
+  `agent_env/config.toml` is gitignored), and the packaged submission still never reaches this or any
+  other endpoint unless an operator explicitly configures and measures it — see [LLM
+  packaging](../tpc_phase2_roadmap.md#llm-packaging-the-submission-makes-zero-llm-calls).
+- We still cannot reach *this specific* endpoint from here (it only exists on the evaluation host
+  during a real evaluation run), so the client plumbing is verified against a real OpenAI-compatible
+  DeepInfra endpoint (2026-07-31 night) and against the wire format this exact deployment expects, not
+  against the endpoint itself.
 
 ## Official development resources
 
@@ -235,13 +330,14 @@ resolves `lang=en` and loads the 100 English familiar queries.
 ## Details not yet public
 
 As of 2026-08-04, every item we asked the organizers about directly has an answer (see
-[above](#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply) and
-[technical report](#technical-report-2026-08-04-organizer-reply)). What's left is narrower and mostly
-inferred rather than asked:
+[above](#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply),
+[the confirmed LLM endpoint](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email),
+and [technical report](#technical-report-2026-08-04-organizer-reply)). What's left is narrower and
+mostly inferred rather than asked:
 
-- how the harness reaches the evaluation host's Qwen3.6-27B/SGLang endpoint, if a code path calls an LLM
-  (base URL, auth) — not asked;
 - scoring if only one of two submitted versions runs successfully — inferred, not confirmed;
+- whether the evaluation command literally passes `--split` (not asked, and the two 2026-08-04 emails
+  disagree on the command's own text — see the wording-discrepancy note above);
 - final-results date — "to be announced."
 
 Clarification issue status:

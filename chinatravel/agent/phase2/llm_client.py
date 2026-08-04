@@ -7,8 +7,16 @@ Backends, selected by config / the ``TPC_P2_LLM_BACKEND`` env var:
 - ``fixture`` : replays cached responses from a fixtures directory, keyed by ``cache_key``
                 (or a hash of the prompt). Zero network. For dev (hand-produced parses) + tests.
 - ``openai``  : OpenAI-compatible endpoint (SGLang, OpenRouter, local Qwen, ...). Reuses the
-                ``openai`` package. OpenRouter is just a ``base_url`` + ``api_key`` preset.
+                ``openai`` package. OpenRouter is just a ``base_url`` + ``api_key`` preset. This is
+                the backend for the organizer-confirmed evaluation endpoint (SGLang serving
+                ``Qwen3.6-27B`` at ``http://127.0.0.1:30000/v1``, 2026-08-04 organizer email; see
+                ``agent_env/config.phase2.example.toml``) -- unused by the packaged submission,
+                whose library-default backend stays ``none``.
 - ``deepinfra``: DeepInfra preset over the same OpenAI-compatible wire protocol.
+
+Both network backends default Qwen3-family "thinking mode" off (see
+``_thinking_disabled_extra_body``): with it on, a chain-of-thought precedes every answer at
+roughly 10x the latency, which the 30s per-call timeout is not sized for.
 
 Config keys (dict or ``[phase2.llm]`` in agent_env/config.toml):
     backend, model, base_url, api_key, api_key_env, fixtures_dir, temperature, max_tokens.
@@ -245,6 +253,33 @@ class DeepInfraLLMClient(OpenAILLMClient):
     backend = "deepinfra"
 
 
+def _thinking_disabled_extra_body(config: dict) -> dict | None:
+    """``extra_body`` that disables Qwen3-family "thinking mode" unless overridden.
+
+    Thinking mode is on by default for Qwen3-family chat templates (DeepInfra and the
+    organizer-confirmed SGLang deployment alike: ``sglang serve --reasoning-parser qwen3``,
+    2026-08-04 organizer email) and adds a full chain-of-thought before the answer -- verified
+    live against DeepInfra 2026-07-11 (10.6s with thinking vs 1.1s without, for the same trivial
+    prompt, ~10x). We only need the short structured JSON parse/refine response, and
+    ``DEFAULT_LLM_TIMEOUT_SEC`` (30s) is sized for the non-thinking case, so both the ``openai``
+    backend (the one pointed at an OpenAI-compatible SGLang/local endpoint, per
+    ``agent_env/config.phase2.example.toml``) and ``deepinfra`` default it off. Override with
+    config ``enable_thinking: True``, ``TPC_P2_LLM_ENABLE_THINKING=1``, or a raw ``extra_body``
+    config value, which always wins outright.
+    """
+    extra_body = config.get("extra_body")
+    if extra_body is not None:
+        return extra_body
+    enable_thinking = config.get("enable_thinking")
+    if enable_thinking is None:
+        enable_thinking = str(os.environ.get("TPC_P2_LLM_ENABLE_THINKING", "")).lower() in (
+            "1", "true", "yes",
+        )
+    if enable_thinking:
+        return None
+    return {"chat_template_kwargs": {"enable_thinking": False}}
+
+
 def build_llm_client(config: dict | None = None) -> LLMClient:
     """Factory honoring config + ``TPC_P2_LLM_BACKEND``. Default backend is ``none``.
 
@@ -279,6 +314,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
             api_key=api_key,
             temperature=float(config.get("temperature", 0.0)),
             max_tokens=config.get("max_tokens"),
+            extra_body=_thinking_disabled_extra_body(config),
             timeout=_resolve_timeout(config),
         )
         return _maybe_wrap_cache(client, config)
@@ -294,21 +330,7 @@ def build_llm_client(config: dict | None = None) -> LLMClient:
             or os.environ.get("DEEPINFRA_BASE_URL")
             or DEFAULT_DEEPINFRA_BASE_URL
         )
-        # Qwen3-family "thinking mode" is on by default on DeepInfra and generates a full
-        # chain-of-thought (hundreds of tokens, ~10x the latency) before the final answer --
-        # verified live 2026-07-11 (10.6s with thinking vs 1.1s without, for the same trivial
-        # prompt). We only need the short structured JSON audit response, so default it off
-        # (config "enable_thinking": True, or TPC_P2_LLM_ENABLE_THINKING=1, to restore it; a raw
-        # "extra_body" config value always wins).
-        extra_body = config.get("extra_body")
-        if extra_body is None:
-            enable_thinking = config.get("enable_thinking")
-            if enable_thinking is None:
-                enable_thinking = str(os.environ.get("TPC_P2_LLM_ENABLE_THINKING", "")).lower() in (
-                    "1", "true", "yes",
-                )
-            if not enable_thinking:
-                extra_body = {"chat_template_kwargs": {"enable_thinking": False}}
+        extra_body = _thinking_disabled_extra_body(config)
         client = DeepInfraLLMClient(
             model=str(
                 config.get("model")
