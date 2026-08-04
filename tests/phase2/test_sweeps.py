@@ -456,6 +456,19 @@ class TestShutdown:
 
         sweeps.shutdown_now(Minimal(), grace_sec=0.0)  # must not raise
 
+    def test_an_already_joined_pool_does_not_break_the_run(self):
+        """ProcessPoolExecutor sets ``_processes`` to None once shutdown has joined the workers,
+        so the attribute exists and is not a dict. Guarding only its absence crashed the run at
+        the very end -- after a full solve, which is the worst possible moment."""
+
+        class Joined:
+            _processes = None
+
+            def shutdown(self, wait=True, cancel_futures=False):
+                pass
+
+        sweeps.shutdown_now(Joined(), grace_sec=0.0)  # must not raise
+
 
 class TestEnvOverrides:
     """Pass shape is A/B-able without a code edit; that is what the eval roadmap's runs need."""

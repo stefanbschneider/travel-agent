@@ -466,7 +466,9 @@ def shutdown_now(executor, *, grace_sec: float = 5.0) -> None:
     executor.shutdown(wait=False, cancel_futures=True)
     # No public API exposes the worker processes; this is the only way to guarantee the parent
     # can exit on time. Defensive throughout -- a private-attribute change must not break a run.
-    processes = list(getattr(executor, "_processes", {}).values() or [])
+    # `_processes` is a dict while the pool is live and **None** once shutdown has joined it, so
+    # the fallback has to guard the attribute itself, not the result of .values().
+    processes = list((getattr(executor, "_processes", None) or {}).values())
     for process in processes:
         try:
             if process.is_alive():
