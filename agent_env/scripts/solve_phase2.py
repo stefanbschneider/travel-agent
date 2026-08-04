@@ -1,16 +1,26 @@
 #!/usr/bin/env python3
-"""Phase 2 per-query runner: our own orchestrator (not opencode/codex).
+"""Phase 2 split runner: our own orchestrator (not opencode/codex).
 
-For each query it:
-- loads the query with oracle fields available for evaluation, but hides them from the agent,
+Two modes, chosen by whether a whole-run wall-clock envelope is set:
+
+**Per-query** (no ``--total-budget-sec``) — the development mode. Walks the split once, giving each
+query the same budget, and for each query:
+- loads it with oracle fields available for evaluation, but hides them from the agent,
 - runs ``chinatravel.agent.phase2.orchestrator.solve_phase2`` (deterministic; LLM off by default),
 - writes the official ``results/<method>/<uid>.json`` plan,
 - writes ``<work_dir>/<uid>/evaluation.json`` (official evaluators) and ``telemetry.json``,
 - is resume-safe (skips queries whose result file already exists).
 
+**Whole-run** (``--total-budget-sec``, and what the organizer entry point uses) — hands the split to
+the sweep scheduler (``chinatravel.agent.phase2.sweeps``): triage every query cheaply, repair the
+constraint-failing ones at growing budgets, polish the rest, across worker processes, keeping the
+best plan per query. See ``run_sweeps_split``. Scoring is *not* part of this mode -- it would run
+after the deadline; use ``scripts/phase2_full_run.py``, which runs this and then ``eval_tpc.py``.
+
 Usage:
     python agent_env/scripts/solve_phase2.py --split tpc_phase1 --limit 3
     python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --resume --budget-sec 60
+    python agent_env/scripts/solve_phase2.py --split tpc_phase2_familiar_100 --total-budget-sec 18000
 """
 
 from __future__ import annotations
@@ -25,7 +35,14 @@ from pathlib import Path
 from statistics import mean, pstdev
 import urllib.request
 
-import psutil
+try:  # optional: only the opt-in RSS growth warning below needs it
+    import psutil
+except ImportError:  # pragma: no cover - exercised by the dependency-minimality test
+    # Keeping psutil out of the submission install matters: it and ortools are the only two
+    # packages this repository adds to upstream's dependency set, and the organizers asked for
+    # minimal installs. RSS telemetry is a development nicety, so it degrades to absent here
+    # rather than being a hard requirement of the shipped path.
+    psutil = None
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -37,6 +54,7 @@ if str(_THIS_DIR) not in sys.path:
 
 import solve_script_with_harness as hb  # noqa: E402
 
+from chinatravel.agent.phase2 import fallback as fallback_mod  # noqa: E402
 from chinatravel.agent.phase2 import llm_client as p2_llm  # noqa: E402
 from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
@@ -54,9 +72,11 @@ DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
 # after them. Off (``None``) for local development runs, on by default only in the organizer
 # entry point -- see ``solve_script_with_harness.py``.
 DEFAULT_TOTAL_BUDGET_SEC = 5 * 60 * 60.0
-# Held back from the envelope for interpreter startup, WorldEnv/database load, per-query
-# evaluation, and result writes -- work that runs inside the 5h but outside the solve budget.
-TOTAL_BUDGET_RESERVE_FRAC = 0.10
+# Held back from the envelope for interpreter startup, WorldEnv/database load, worker spin-up and
+# result writes -- work that runs inside the 5h but outside any solve budget. The sweep scheduler
+# ends passes gracefully rather than being cut off mid-solve, so this only has to cover setup and
+# straggler drain, not a whole query.
+TOTAL_BUDGET_RESERVE_FRAC = 0.05
 # A query solved with less than this is not worth budgeting for; below it the orchestrator's
 # stage split degenerates and the fallback plan is the likely output either way.
 MIN_QUERY_BUDGET_SEC = 20.0
@@ -243,6 +263,13 @@ def _aggregate_overall_scores(evaluations: list[dict]) -> dict:
     }
 
 
+def current_rss_mb() -> float | None:
+    """This process's resident set size in MB, or ``None`` when psutil is not installed."""
+    if psutil is None:
+        return None
+    return psutil.Process().memory_info().rss / (1024 * 1024)
+
+
 def resolve_total_budget_sec(explicit: float | None = None) -> float | None:
     """Resolve the whole-run wall-clock envelope, or ``None`` when it is disabled.
 
@@ -354,7 +381,7 @@ def apply_deterministic_solver_defaults():
       organizer per-query timeout shorter than the assumed ``900 s``.
     - ``TPC_COMMONSENSE_FIRST=1``: the commonsense-first finalization policy (relaxed repair commit
       rule for unaccepted plans + the ``best_cs`` bucket in ``_solve``; see
-      ``docs/agents/final_night_commonsense_first.md``). ``eval_tpc`` scores C-LPR as the
+      ``docs/archive/agents/final_night_commonsense_first.md``). ``eval_tpc`` scores C-LPR as the
       *conditional* logical micro, so an emitted plan that fails commonsense forfeits its whole
       logical partial credit (weight ``0.25``) and its EPR-macro point (``0.10``). Paired same-SHA
       end-to-end screen (``results/phase2_baselines/screens/20260726_e2e_n40_b120_commonsense_first``,
@@ -368,7 +395,7 @@ def apply_deterministic_solver_defaults():
       budget-boundary shape ``TPC_PIN_TIMED_WINDOWS`` showed at ``300 s`` and cleared at ``900 s``
       (``p50 265 s`` there). The probe cost is bounded proportionally
       (``TPC_CS_CHECK_TIME_FRAC=0.08`` of the solve budget, ``TPC_CS_CHECK_BUDGET=60``
-      confirmations), and ``docs/agents/final_night_eval_commands.md`` carries the ``900 s`` pinned
+      confirmations), and ``docs/archive/agents/final_night_eval_commands.md`` carries the ``900 s`` pinned
       confirmation rows.
 
     Must run *before* ``make_tpcagent_solve_fn`` builds the agent: ``TPCAgent.__init__`` reads
@@ -382,6 +409,118 @@ def apply_deterministic_solver_defaults():
         os.environ["TPC_COMMONSENSE_FIRST"] = "1"
 
 
+def run_sweeps_split(
+    *,
+    split: str,
+    method: str,
+    selected: list[str],
+    query_data: dict,
+    deadline: float,
+    run_start: float,
+    budget_sec: float,
+    total_budget_sec: float,
+    lang: str,
+    workers: int | None,
+    resume: bool,
+    result_method_dir: Path,
+    work_root: Path,
+) -> dict:
+    """Run a split under a whole-run wall-clock envelope, constraint-first and in parallel.
+
+    Three properties matter more than throughput here, and each costs something:
+
+    - **A valid answer exists at every instant.** Every query gets a schema-valid fallback plan on
+      disk *before* any solving starts, so a run cut off at any point -- including one killed
+      before its first solve returns -- still submits a complete set of plans.
+    - **Nothing ever regresses.** Each result is scored oracle-free and written only if it beats
+      what is already there, so later passes can only improve the split.
+    - **Nothing runs past the deadline.** The scheduler stops starting work it cannot finish, and
+      this function does no post-deadline work (evaluation is a separate step, see
+      ``scripts/phase2_full_run.py``) -- the organizers' clock covers the whole process.
+    """
+    from chinatravel.agent.phase2 import selfscore, sweeps
+
+    workers = int(workers) if workers else sweeps.default_workers()
+    visible: dict[str, dict] = {}
+    parsed: dict[str, dict] = {}
+    for quid in selected:
+        full_query = query_data[quid]
+        full_query.setdefault("uid", quid)
+        visible[quid] = hb.visible_query(full_query)
+        try:
+            parsed[quid] = selfscore.derive_parsed_constraints(visible[quid])
+        except Exception:
+            parsed[quid] = {}
+
+    # Insurance first: a complete, schema-valid submission before a single query is solved.
+    fallbacks_written = 0
+    for quid in selected:
+        result_path = result_method_dir / f"{quid}.json"
+        if not result_path.exists():
+            hb.write_json(result_path, fallback_mod.minimal_plan(visible[quid]))
+            fallbacks_written += 1
+
+    # Any real plan already on disk is an incumbent to beat, whether or not --resume was passed:
+    # "never regress a query" has to hold across runs too, and the only way to honour it is to
+    # know what the existing plan scores. Starting clean is `--fresh` (delete the directory), not
+    # "overwrite whatever is there with whatever comes out first". Costs nothing on the organizer
+    # run, where the directory is empty.
+    best: dict[str, selfscore.PlanScore] = {}
+    for quid in selected:
+        result_path = result_method_dir / f"{quid}.json"
+        try:
+            plan = hb.read_json(result_path)
+        except Exception:
+            continue
+        if not isinstance(plan, dict) or not plan.get("itinerary"):
+            continue  # a bare fallback is not an incumbent worth defending
+        best[quid] = selfscore.score_plan(
+            plan, visible[quid], parsed_constraints=parsed.get(quid), lang=lang, uid=quid
+        )
+
+    def on_result(quid: str, plan: dict, score: selfscore.PlanScore, telemetry: dict) -> None:
+        hb.write_json(result_method_dir / f"{quid}.json", plan)
+        run_dir = work_root / quid
+        hb.write_json(run_dir / "output.json", plan)
+        hb.write_json(run_dir / "telemetry.json", telemetry)
+
+    config = sweeps.SweepConfig(
+        workers=workers, lang=lang, max_query_sec=budget_sec
+    ).apply_env_overrides()
+    print(
+        f"[sweep] {len(selected)} queries, {workers} worker(s), "
+        f"{(deadline - time.monotonic()) / 60:.1f} min usable of a "
+        f"{total_budget_sec / 3600:.2f} h envelope, per-query cap {budget_sec:.0f}s"
+    )
+    sweep_summary = sweeps.run_sweeps(
+        uids=selected,
+        queries=visible,
+        deadline=deadline,
+        config=config,
+        on_result=on_result,
+        best=best,
+        parsed_constraints=parsed,
+    )
+
+    summary = {
+        "split": split,
+        "method": method,
+        "strategy": "sweeps",
+        "budget_sec": budget_sec,
+        "total_budget_sec": total_budget_sec,
+        "elapsed_sec": time.monotonic() - run_start,
+        "selected": len(selected),
+        "resume_requested": resume,
+        "incumbents_scored": len(best),
+        "fallbacks_prewritten": fallbacks_written,
+        "uids": list(selected),
+        **sweep_summary,
+    }
+    hb.write_json(work_root / f"{split}_summary.json", summary)
+    print(json.dumps(summary, ensure_ascii=False, indent=2, default=str))
+    return summary
+
+
 def run_split(
     split: str,
     *,
@@ -393,6 +532,7 @@ def run_split(
     budget_sec: float | None = None,
     total_budget_sec: float | None = None,
     start_monotonic: float | None = None,
+    workers: int | None = None,
     lang: str = "en",
     work_dir: str | None = None,
     results_dir: str | None = None,
@@ -440,6 +580,25 @@ def run_split(
         selected = [uid]
     else:
         selected = query_ids[: int(limit)] if limit else query_ids
+
+    if deadline is not None and solve_fn is None:
+        # A whole-run envelope is exactly the situation the sweep scheduler exists for: it decides
+        # what to work on next from what is already solved, instead of walking the split once.
+        return run_sweeps_split(
+            split=split,
+            method=method,
+            selected=selected,
+            query_data=query_data,
+            deadline=deadline,
+            run_start=run_start,
+            budget_sec=budget_sec,
+            total_budget_sec=float(total_budget_sec),
+            lang=lang,
+            workers=workers,
+            resume=resume,
+            result_method_dir=result_method_dir,
+            work_root=work_root,
+        )
 
     # Build the deterministic TPCAgent-backed solve function once (unless injected).
     if solve_fn is None:
@@ -502,9 +661,9 @@ def run_split(
 
         hb.write_json(result_path, plan)
 
-        rss_mb = psutil.Process().memory_info().rss / (1024 * 1024)
+        rss_mb = current_rss_mb()
         telemetry["rss_mb"] = rss_mb
-        if MAX_RSS_GROWTH_MB > 0:
+        if MAX_RSS_GROWTH_MB > 0 and rss_mb is not None:
             if rss_baseline_mb is None:
                 rss_baseline_mb = rss_mb
             elif rss_mb - rss_baseline_mb > MAX_RSS_GROWTH_MB:
@@ -646,6 +805,13 @@ def parse_args() -> argparse.Namespace:
         "--budget-sec and its fair share of the time left. <=0 disables (the local default). "
         "Also settable via TPC_P2_TOTAL_BUDGET_SEC.",
     )
+    p.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="Worker processes for the sweep scheduler (whole-run-envelope runs only). "
+        "Default: CPU count - 1. Also settable via TPC_P2_WORKERS.",
+    )
     p.add_argument("--lang", default="en", choices=["en", "zh"])
     p.add_argument("--work-dir", default=None)
     p.add_argument("--results-dir", default=None)
@@ -671,6 +837,7 @@ def main() -> None:
         resume=args.resume,
         budget_sec=args.budget_sec,
         total_budget_sec=resolve_total_budget_sec(args.total_budget_sec),
+        workers=args.workers,
         lang=args.lang,
         work_dir=args.work_dir,
         results_dir=args.results_dir,

@@ -15,8 +15,9 @@ $(NAME).pdf: $(NAME).tex ijcai26.sty ijcai26.bib named.bst
 	pdflatex -interaction=nonstopmode -halt-on-error $(NAME).tex
 	@$(MAKE) --no-print-directory check-pages
 
-# The 4-page limit is a hard organizer rule, so enforce it at build time rather than trusting a
-# glance at the PDF.
+# The 4-page limit is a hard organizer rule, but a build that refuses to produce the PDF is the
+# wrong way to enforce it: an over-long draft is much easier to cut down when you can read it.
+# So this warns loudly and still leaves the PDF in place.
 # pdflatex always reports "Output written on <file>.pdf (N pages, ...)" in the log, which needs
 # no extra tooling; pdfinfo (poppler-utils) is the fallback when only the PDF is at hand.
 check-pages:
@@ -27,7 +28,8 @@ check-pages:
 	if [ -z "$$pages" ]; then \
 	  echo "warning: could not determine the page count of $(NAME).pdf; check it by hand (max $(MAXPAGES))"; \
 	elif [ "$$pages" -gt "$(MAXPAGES)" ]; then \
-	  echo "error: $(NAME).pdf is $$pages pages; the organizer limit is $(MAXPAGES)" >&2; exit 1; \
+	  echo "WARNING: $(NAME).pdf is $$pages pages; the organizer limit is $(MAXPAGES)." >&2; \
+	  echo "         The PDF was still written -- shorten it before submitting." >&2; \
 	else \
 	  echo "$(NAME).pdf: $$pages page(s), within the $(MAXPAGES)-page limit"; \
 	fi

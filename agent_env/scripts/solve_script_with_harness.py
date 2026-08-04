@@ -908,6 +908,7 @@ def run_tpc_split(
     resume: bool,
     budget_sec: float | None,
     total_budget_sec: float | None,
+    workers: int | None,
     work_dir: str | None,
 ) -> dict[str, Any]:
     """Solve a split with the deterministic no-oracle solver, in-process.
@@ -932,6 +933,7 @@ def run_tpc_split(
         resume=resume,
         budget_sec=budget_sec,
         total_budget_sec=total_budget_sec,
+        workers=workers,
         start_monotonic=PROCESS_START_MONOTONIC,
         lang=lang,
         work_dir=work_dir,
@@ -1100,6 +1102,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help=(
+            "tpc harness only: worker processes solving queries in parallel. "
+            "Default: CPU count - 1. Overrides [tpc].workers."
+        ),
+    )
+    parser.add_argument(
         "--model",
         default=None,
         help="Optional model override for the selected harness.",
@@ -1225,6 +1236,7 @@ def main() -> None:
             total_budget_sec=choose(
                 args.total_budget_sec, harness_config.get("total_budget_sec"), None
             ),
+            workers=choose(args.workers, harness_config.get("workers"), None),
             work_dir=work_dir,
         )
         print(f"\nSaved plans: {PROJECT_ROOT / 'results' / method}")

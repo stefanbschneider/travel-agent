@@ -264,10 +264,10 @@ estimate survives contact with the implementation.
 | S1 | 22 stored plans violate the two new commonsense rules; all 22 satisfy 100% of their logical clauses | 1 | **`+2.2` to `+2.3`** est., **`+2.08` measured** (21/22 repaired over two rounds) | **CLOSED** (21/22; §3.1 + [2026-08-02 update](#session-update-2026-08-02-w1-and-w2-reopened-and-closed-further)) | [W1](#w1-repair-the-22-query-phase-1-commonsense-tail) |
 | S2 | Addressable preference residual: `68` non-travel-day missing-meal days, `275` plans below 4 attractions/day, `260` plans with mean hop > 15 min | 1 | `+0.3` to `+0.6` est., **`+0.44` measured** (after wiring three unreachable helpers; the first round's `+0` was a property of the pass, not the data) | **CLOSED** ([2026-08-02 update](#session-update-2026-08-02-w1-and-w2-reopened-and-closed-further)) | [W2](#w2-close-the-addressable-phase-1-preference-residual) |
 | S3 | No post-sync `900 s` reference row — every Phase 2 gate is currently unrunnable | 2 | blocking, `0` on its own | **open** (needs the evaluation workstream's dedicated machine, `8` h+) | [W3](#w3-re-establish-the-post-sync-900-s-reference-row) |
-| S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry, + a fixed timeout-kill blind spot) landed, step 1 (CP-SAT workers) screened RED at 4 cores, step 2 (parallel restarts) remains | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, **step 1 screened RED (not conclusive at 4 cores)**, step 2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
+| S4 | The organizer host gives **16 logical CPUs**; our solve used **one**, sequentially | 2 | `+1` to `+4` (unmeasured) | **cross-query parallelism CLOSED 2026-08-04** (the whole-run scheduler runs `CPU count - 1` worker processes; unmeasured until [eval roadmap R3](tpc_phase2_eval_roadmap.md#r3--worker-scaling-does-parallelism-convert-into-score)). Within-query parallelism still open and now weaker: it competes for the same cores | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
 | S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
 | S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | open (needs W3) | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
-| S7 | ~~The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score~~ — **RESOLVED 2026-08-04: there is no per-query timeout**, only a 5 h total budget for all 100 queries | 2 | risk, reframed | **closed as originally framed; reframed as total-wall-clock risk** | [W7](#w7-de-risk-the-unconfirmed-budget) |
+| S7 | ~~The `900 s` per-query budget is an unconfirmed assumption~~ — **RESOLVED 2026-08-04: there is no per-query timeout**, only a 5 h total budget for all 100 queries, and slow queries could starve later ones | 2 | risk, reframed | **CLOSED 2026-08-04**: the run is now scheduled against the envelope (triage-first, deadline-aware), so a slow query cannot starve the split. Measurement is [eval roadmap R1/R2](tpc_phase2_eval_roadmap.md#run-order) | [W7](#w7-de-risk-the-unconfirmed-budget) |
 | S11 | **NEW 2026-08-04, SUBMISSION-BLOCKING:** the organizers' confirmed entry point (`solve_script_with_harness.py --split <split>`, no other flags) defaults to the external OpenCode/Codex demo harness, not our real deterministic no-oracle solver | 2 | blocking — a submission that never invokes the real solver scores at or near zero | **CLOSED 2026-08-04** (default is now `--harness tpc`, in-process, plus the 5 h envelope, minimal packaging, and a submission builder) | [W11](#w11-wire-the-confirmed-entry-point-to-our-real-solver) |
 | S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
 | S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | open (needs W3) | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
@@ -613,7 +613,7 @@ non-blocking evaluation workstream job — start it first and do other items whi
 *(Numbered out of order to keep the deterministic-repair items together; do this before W4.)*
 
 This is the one fully-specified, never-implemented item from
-[`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md) — Tasks 1 and 3 of that brief
+[`next_steps_after_final_night.md`](archive/agents/next_steps_after_final_night.md) — Tasks 1 and 3 of that brief
 landed (`llm_backend_source` and the autodetect path exist in `agent_env/scripts/solve_phase2.py`;
 `TPC_PACK_DAV` / `TPC_PACK_DDR` exist in `tpc_agent.py`), but **Task 2 was never done** — `grep -r
 TPC_REPAIR_DROP_TRAILING_STAY` returns nothing.
@@ -688,6 +688,17 @@ throwaway `phase2_stay_check` method directories afterwards.
 
 ### W4: use the 16 confirmed evaluation CPUs
 
+> **Status update 2026-08-04: the cores are now used — across queries, not inside one.** The
+> whole-run scheduler (`chinatravel/agent/phase2/sweeps.py`) solves `CPU count - 1` queries
+> concurrently in worker processes, so a pass over `n` queries costs `ceil(n / workers)`
+> query-budgets of wall clock instead of `n`. That is the change that makes a large per-query
+> budget affordable inside the 5 h envelope at all; measurement is
+> [eval roadmap R3](tpc_phase2_eval_roadmap.md#r3--worker-scaling-does-parallelism-convert-into-score).
+> **This weakens, rather than closes, the within-query steps below.** Parallel restarts and a
+> multi-worker CP-SAT tier no longer convert *idle* cores into search — they take cores away from
+> other queries, so each has to beat the alternative use of that core, not merely beat zero. The
+> step-1 RED screen already pointed that way. Read the rest of this section with that in mind.
+>
 > **Status: step 0 CLOSED (+ a real fix), step 1 screened RED (not conclusive), step 2 open,
 > 2026-07-31 night.** `restarts_used`, `stop_reason`, `candidates_evaluated`, and
 > `best_found_at_restart` are recorded on every `_solve` call and surfaced through `solve_phase2`'s
@@ -801,6 +812,17 @@ worse, and the two must be judged together.
 ---
 
 ### W7: de-risk the unconfirmed budget
+
+> **Status: the implementation half is CLOSED (2026-08-04); the measurement half is now
+> [eval roadmap R1/R2](tpc_phase2_eval_roadmap.md#run-order).** The risk this item names — a few
+> slow queries eating the shared envelope and starving the rest of the split — is now handled
+> structurally rather than by tuning a per-query budget: the run is scheduled in passes against
+> the 5 h deadline (`chinatravel/agent/phase2/sweeps.py`), every query is triaged at a small
+> budget before any query gets a large one, and the scheduler stops starting work it cannot
+> finish. A query can no longer starve the ones after it, because the ones after it are already
+> solved by the time long budgets are handed out. What remains is measuring it: the whole-run
+> reference row (R1) and the envelope-sensitivity pair (R2). The budget-sweep steps below still
+> apply to the *per-query* contract used for solver A/Bs.
 
 **Owner:** implementation + evaluation. **Effort: half a day of compute.** **Gain: risk reduction.**
 

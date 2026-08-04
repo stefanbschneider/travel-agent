@@ -82,13 +82,28 @@ harnesses are still there for the LLM-agent baseline comparison, but only on an 
 | `tpc` (default) | deterministic `TPCAgent`, in-process | the submission; every bare invocation |
 | `opencode` / `codex` | an external agent CLI against an external LLM API | opt-in baseline comparison only |
 
-The `tpc` harness bounds the whole run by the confirmed **5-hour wall-clock envelope** instead of a
-fixed per-query budget: each query gets `min(per-query cap, remaining time / remaining queries)`,
-floored so a late query still gets a real solve, with the clock starting at interpreter start so
-database load counts against it. Override with `--budget-sec` / `--total-budget-sec`
-(or `TPC_P2_TOTAL_BUDGET_SEC`; `0` disables the envelope). It writes the same official layout as
-`solve_phase2.py` and shares its `results/phase2_e2e_<split>/` method directory, so the two entry
-points resume each other.
+The `tpc` harness schedules the whole split against the confirmed **5-hour wall-clock envelope**
+instead of giving each query a fixed budget (`chinatravel/agent/phase2/sweeps.py`):
+
+1. **triage** every query once at a small budget (`120 s` cap), so cheap wins are banked first and
+   every query has a real plan early;
+2. **repair** the queries whose plan does not satisfy its constraints, at a larger budget each
+   pass, most-nearly-passing first;
+3. **polish** preference terms on constraint-satisfying queries with the time left — the evaluator
+   zeroes preferences for a failing query, so they are worth nothing before this point.
+
+Passes run across `CPU count - 1` worker processes (`--workers`, `TPC_P2_WORKERS`), each result is
+scored oracle-free (`chinatravel/agent/phase2/selfscore.py`) and written only if it beats the plan
+already on disk, and a schema-valid fallback for every query is written **before** the first solve.
+A run killed at any instant therefore still leaves a complete, non-regressed set of plans. The
+clock starts at interpreter start, so the database load counts against the envelope.
+
+Override with `--total-budget-sec` (or `TPC_P2_TOTAL_BUDGET_SEC`; `0` disables the envelope and
+falls back to a fixed per-query budget), `--budget-sec` (the per-query cap), `--workers`, and the
+pass-shape variables in
+[the evaluation roadmap](../docs/tpc_phase2_eval_roadmap.md#r4--pass-shape-where-should-the-envelope-go).
+It writes the same official layout as `solve_phase2.py` and shares its
+`results/phase2_e2e_<split>/` method directory, so the two entry points build on each other.
 
 Both entry points hide oracle-only fields before the agent path.
 

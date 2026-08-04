@@ -53,13 +53,19 @@ def test_runner_writes_official_outputs(tmp_path):
 
 
 @pytest.mark.integration
-def test_runner_defaults_llm_parse_on_when_backend_configured(tmp_path, monkeypatch):
-    """Mirrors the existing TPC_P2_DISJUNCTION default-on pattern: once a usable LLM backend is
-    configured, llm_parse defaults on unless the operator explicitly sets TPC_P2_LLM_PARSE.
+def test_runner_keeps_llm_parse_off_until_explicitly_enabled(tmp_path, monkeypatch):
+    """A configured LLM backend must NOT switch the parse audit on by itself.
+
+    This test previously asserted the opposite -- llm_parse defaulting on with a usable backend,
+    mirroring TPC_P2_DISJUNCTION -- and had been failing since that decision was reversed in
+    ``resolve_llm_client_and_flags`` (roadmap W8): the paired same-SHA screen came back RED for
+    audit-on, and an auto-enable that fires only when an endpoint happens to be reachable would
+    make the organizer run behave differently from every local run. Both arms are checked here,
+    since "off by default" is only meaningful if the explicit opt-in still works.
+
     Uses the fixture backend (zero network) with a pre-recorded empty-patch response for this
-    split's first uid, so the deterministic parse is unchanged -- this checks the flag actually
-    took effect and the audit call succeeds (not just that a missing fixture harmlessly falls
-    back, which the step6a fix already covers separately)."""
+    split's first uid, so the deterministic parse is unchanged: this checks the flag plumbing,
+    not the audit's content."""
     import solve_phase2 as runner
     from chinatravel.agent.phase2 import normalize
     from chinatravel.data.load_datasets import load_query
@@ -98,14 +104,32 @@ def test_runner_defaults_llm_parse_on_when_backend_configured(tmp_path, monkeypa
     )
     assert summary["llm_backend"] == "fixture"
     assert summary["llm_backend_source"] == "env-explicit"
-    assert summary["llm_parse_attempts"] == 1
-    assert summary["llm_fixture_missing"] == 0
+    assert summary["llm_parse_attempts"] == 0, "a reachable backend must not enable the audit"
     assert summary["uids"][0] == uid
 
     telem = json.loads((work_dir / uid / "telemetry.json").read_text(encoding="utf-8"))
     assert telem["llm_backend_source"] == "env-explicit"
-    assert telem["flags"]["llm_parse"] is True
-    assert "parse:" not in str(telem.get("error") or "")
+    assert telem["flags"]["llm_parse"] is False
+
+    # ... and the explicit opt-in still reaches the LLM.
+    monkeypatch.setenv("TPC_P2_LLM_PARSE", "1")
+    opt_in_work_dir = tmp_path / "runs_opt_in"
+    opt_in_summary = runner.run_split(
+        "tpc_phase1",
+        method=method + "_opt_in",
+        limit=1,
+        budget_sec=20.0,
+        results_dir=str(results_dir),
+        work_dir=str(opt_in_work_dir),
+    )
+    assert opt_in_summary["llm_parse_attempts"] == 1
+    assert opt_in_summary["llm_fixture_missing"] == 0
+
+    opt_in_telem = json.loads(
+        (opt_in_work_dir / uid / "telemetry.json").read_text(encoding="utf-8")
+    )
+    assert opt_in_telem["flags"]["llm_parse"] is True
+    assert "parse:" not in str(opt_in_telem.get("error") or "")
 
 
 def _fast_solve(query, variants, budget_sec):
@@ -164,7 +188,7 @@ def test_rss_guard_warns_when_growth_exceeds_threshold(tmp_path, monkeypatch, ca
         def memory_info(self):
             return FakeMemInfo(next(rss_values_mb))
 
-    monkeypatch.setattr(runner.psutil, "Process", lambda: FakeProcess())
+    monkeypatch.setattr(runner, "current_rss_mb", lambda: FakeProcess().memory_info().rss / (1024 * 1024))
     monkeypatch.setattr(runner, "MAX_RSS_GROWTH_MB", 500.0)
 
     summary = runner.run_split(
@@ -196,7 +220,7 @@ def test_rss_guard_silent_when_disabled(tmp_path, monkeypatch, capsys):
         def memory_info(self):
             return FakeMemInfo(next(rss_values_mb))
 
-    monkeypatch.setattr(runner.psutil, "Process", lambda: FakeProcess())
+    monkeypatch.setattr(runner, "current_rss_mb", lambda: FakeProcess().memory_info().rss / (1024 * 1024))
     monkeypatch.setattr(runner, "MAX_RSS_GROWTH_MB", 0.0)  # disabled (default)
 
     runner.run_split(

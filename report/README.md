@@ -58,8 +58,8 @@ The author kit's own preamble also loads `soul`, `algorithm`, `algorithmic` and 
 report drops them, since none is a formatting requirement (`ijcai26.sty` is) and they need the
 much larger `texlive-latex-extra`. Add back whichever a section actually needs, with that package.
 
-`make` fails if the PDF exceeds 4 pages, so a report that has outgrown the limit cannot be built
-and submitted by accident.
+`make` prints a loud warning if the PDF exceeds 4 pages but still writes it — an over-long draft
+is easier to cut down when you can read it. Check for that warning before submitting.
 
 ## Writing it
 

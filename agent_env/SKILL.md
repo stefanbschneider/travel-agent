@@ -83,7 +83,10 @@ output, and evaluation artifacts under its configured run directory; the determi
 stores `telemetry.json`.
 
 There is no per-query timeout — the organizers give the whole 100-query run a single 5-hour
-wall-clock budget, excluding setup. The confirmed command enforces that envelope itself, handing
-each query the smaller of the per-query cap and its fair share of the time remaining;
-`--budget-sec`/`--timeout` remain local per-query development settings, not organizer rules. See
-the [competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply).
+wall-clock budget, excluding setup. The confirmed command schedules against that envelope itself:
+triage every query cheaply, then repair the constraint-failing ones at growing budgets, then polish
+preferences, across `CPU count - 1` worker processes, keeping the best plan found for each query
+and pre-writing a valid fallback for all of them. `--budget-sec`/`--timeout` remain local per-query
+development settings, not organizer rules. See the
+[competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
+and [agent_env/README.md](README.md#server-and-harness-entry-points).

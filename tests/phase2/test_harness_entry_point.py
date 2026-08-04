@@ -71,6 +71,7 @@ def test_bare_invocation_runs_the_tpc_harness(monkeypatch, no_local_config, no_s
     # Unspecified: resolved to the organizer envelope inside run_tpc_split, not here.
     assert captured["total_budget_sec"] is None
     assert captured["budget_sec"] is None
+    assert captured["workers"] is None  # resolved to CPU count - 1 inside run_tpc_split
     assert captured["uid"] is None and captured["limit"] is None
 
 
@@ -123,6 +124,7 @@ def test_run_tpc_split_defaults_to_the_confirmed_five_hour_envelope(monkeypatch)
         resume=False,
         budget_sec=None,
         total_budget_sec=None,
+        workers=None,
         work_dir=None,
     )
 
@@ -155,6 +157,7 @@ def test_run_tpc_split_honours_an_explicit_disable(monkeypatch):
         resume=False,
         budget_sec=None,
         total_budget_sec=0,
+        workers=None,
         work_dir=None,
     )
 

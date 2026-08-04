@@ -40,6 +40,7 @@ Ownership map:
 | CP-SAT tier | Construct candidate pools and solve hard residuals | `chinatravel/agent/tpc_agent/cp_candidates.py`, `chinatravel/agent/tpc_agent/cp_solver.py` |
 | Acceptance path | Apply parsed/oracle constraints, then schema and commonsense checks | `chinatravel/agent/tpc_agent/parsed_verifier.py`, `chinatravel/agent/tpc_agent/tpc_agent.py` |
 | Phase 2 orchestration | Allocate bounded stage budgets, call TPCAgent, finalize output | `chinatravel/agent/phase2/orchestrator.py` |
+| Whole-run scheduling | Spend the 5 h envelope across the split: triage, repair, polish, in parallel, keep-best | `chinatravel/agent/phase2/sweeps.py`, `chinatravel/agent/phase2/selfscore.py` |
 | Harness boundary | Hide oracle fields, expose tools, and emit official layout | `agent_env/scripts/solve_script_with_harness.py` (the confirmed entry point), `agent_env/scripts/solve_phase2.py`, `agent_env/` |
 | World facts | POIs, schedules, prices, restaurants, hotels, transport | `chinatravel/environment/` and `WorldEnv` |
 
@@ -105,15 +106,37 @@ make phase2-solve P2_SPLIT_SET=val P2_BUDGET=300 P2_LIMIT=1
 
 `300 s` is a local per-query development setting; there is no organizer per-query timeout — the organizers confirmed (2026-08-04) a single 5-hour wall-clock budget for the whole 100-query run instead. Use `make phase2-help` for recorder, pinned-evaluation, rehearsal, and gate commands.
 
+Measure what we would actually score with a **whole-run** evaluation: the real entry point, the 5-hour
+envelope, all of `familiar_100`, scored by `eval_tpc.py` and recorded as a row:
+
+```bash
+make phase2-full-run P2_LABEL="reference 5h parallel"
+```
+
+The run order for that and everything downstream is the [evaluation roadmap](docs/tpc_phase2_eval_roadmap.md).
+
 **The organizers also confirmed the exact, automated Phase 2 evaluation command:
 `python agent_env/scripts/solve_script_with_harness.py --split <split>`, no other flags.**
 Bare, that command now runs this repository's deterministic no-oracle solver in-process
 (`--harness tpc`, the shipped default): zero LLM calls, zero network calls, no subprocess, and
 oracle fields stripped before the agent path. The external-CLI harnesses (`opencode`, `codex`)
-remain reachable with an explicit `--harness`, but never run by default. The run is bounded by
-the confirmed **5-hour whole-run envelope** rather than a fixed per-query budget: each query gets
-the smaller of the per-query cap and its fair share of the time left, so a slow query cannot
-starve the rest of the split. Rehearse it exactly as they will run it:
+remain reachable with an explicit `--harness`, but never run by default.
+
+The run is scheduled against the confirmed **5-hour whole-run envelope** rather than a fixed
+per-query budget, because every query is weighted equally and one hard query must not starve the
+rest of the split:
+
+1. **triage** every query once at a small budget — cheap wins first, and every query has a real
+   plan on disk early;
+2. **repair** only the queries whose plan does not satisfy its constraints, at a larger budget each
+   pass, most-nearly-passing first;
+3. **polish** preferences on constraint-satisfying queries with whatever time is left — preference
+   terms are zeroed by the evaluator for a failing query, so they are worth nothing until then.
+
+Passes run across `CPU count - 1` worker processes, every result is scored oracle-free and kept only
+if it beats what is on disk, and a schema-valid fallback for every query is written *before* the
+first solve — so the run can be cut off at any instant and still submit a complete set of plans.
+Rehearse it exactly as they will run it:
 
 ```bash
 make phase2-harness P2_SPLIT=tpc_phase2_familiar_100_val
@@ -151,6 +174,7 @@ Since `2026-07-26` a commonsense-first finalization policy (`TPC_COMMONSENSE_FIR
 
 - [Phase 1 playbook](docs/tpc_phase1_playbook.md): operating flow and reusable solver lessons.
 - [Phase 2 evaluation](docs/tpc_phase2_eval.md): methodology, metrics, gates, and dataset boundaries (HF, local, familiar-100, final).
+- [Phase 2 evaluation roadmap](docs/tpc_phase2_eval_roadmap.md): what to run next under the 5-hour whole-run envelope, in order.
 - [Phase 2 roadmap](docs/tpc_phase2_roadmap.md): current decisions, evidence-backed priorities, and solver headroom.
 - [Shortcomings and plan](docs/tpc_shortcomings_and_plan.md): what is still broken in both phases, ranked by measured leverage, with a self-contained implementation brief per item.
 - [Architecture at a glance](README.md#architecture-at-a-glance): no-oracle contract, ownership map, and planner flow.

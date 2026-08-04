@@ -185,7 +185,14 @@ def tracked_files() -> list[str]:
     ).stdout
     paths = [p for p in raw.split("\0") if p]
     return sorted(
-        p for p in paths if not p.startswith(EXCLUDED_PREFIXES) and not is_secret_path(p)
+        p
+        for p in paths
+        if not p.startswith(EXCLUDED_PREFIXES)
+        and not is_secret_path(p)
+        # `git ls-files` lists index entries, which can name a file deleted from the working tree
+        # (an unstaged `rm`, or a `git mv` whose staging was undone). Copying one would crash the
+        # build; dropping one that actually matters is caught by check_required().
+        and (ROOT / p).exists()
     )
 
 

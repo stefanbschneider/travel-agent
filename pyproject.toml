@@ -18,12 +18,12 @@ dependencies = [
     "openai==1.53.0",
     "ortools==9.9.3963",
     "pandas==2.2.3",
-    "psutil==7.2.2",
     "tqdm==4.66.6",
 ]
 
 [project.optional-dependencies]
 dev = [
+    "psutil==7.2.2",  # optional at runtime: RSS telemetry only, kept out of the core install
     "pytest==9.1.1",
 ]
 # Upstream's LLM/NeSy baseline agents and the HuggingFace dataset loader.

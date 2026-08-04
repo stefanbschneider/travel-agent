@@ -3,6 +3,30 @@
 This document defines how to measure a no-oracle harness without confusing local diagnostics for organizer results, and which data source each measurement is drawn from.
 Generated rows live in [`results/phase2_baselines/`](../results/phase2_baselines/); this document defines their interpretation.
 
+**What to run next, in order, is in the [evaluation roadmap](tpc_phase2_eval_roadmap.md)** (rewritten
+2026-08-04 for the whole-run envelope). This document stays the definitions; that one is the queue.
+
+## Two measurement contracts, and which one decides what we ship
+
+Since the organizers confirmed the real execution contract (2026-08-04), there are two different
+questions and two different run shapes for them. Mixing their rows is the easiest way to draw a
+wrong conclusion.
+
+| | **Whole-run** (what we ship) | **Per-query** (solver quality) |
+| --- | --- | --- |
+| Question | what would this score in the real evaluation? | is the solver better on a query at a fixed budget? |
+| Time contract | one 5 h wall clock for all 100 queries | fixed `900 s` (or `300 s`) *per query* |
+| Scheduling | triage → repair → polish passes, best-so-far kept | one pass, split order |
+| Parallelism | `CPU count - 1` worker processes | one query at a time per chunk |
+| Tool | `scripts/phase2_full_run.py` (runs the real entry point) | `make phase2-baseline` / `phase2-rehearse` |
+| Rows | `results/phase2_baselines/full_runs/` | `results/phase2_baselines/runs/` |
+| Promotes | the submission configuration | a solver change, via the [gate](#gates) |
+
+**Rows from the two contracts are never comparable.** A per-query row gives every query `900 s`
+alone; a whole-run row gives the split `5 h` between them and spends it adaptively. Both are
+useful; neither substitutes for the other. Every row records which it is (`kind: "full_run"` on
+the whole-run side).
+
 ## Three axes
 
 | Axis | Input and purpose | Meaning |
@@ -113,25 +137,24 @@ Use a deterministic fold, fresh outputs, and a pinned source revision for a prom
 Long runs should use `make phase2-baseline-at SHA=<ref> ...` so the recorded revision is the code that executed.
 Record a local repeat count whenever variance matters.
 
-**Primary gate budget: `900 s` per query (since 2026-07-24).** The organizers confirmed on 2026-08-04
-that **there is no per-query timeout at all** — evaluation instead gives the whole 100-query run a single
-5-hour wall-clock budget, excluding setup, starting from the confirmed entry point invocation (see the
-[competition reference](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
-`900 s` per query therefore isn't "the assumed official timeout" any more — it never was one, and now we
-know there isn't one to assume — but it remains a reasonable **development gate budget**: a `100`-query
-run at `900 s`/query worst case is `25 h`, well over the real `5 h` envelope, so `900 s` is deliberately
-generous headroom for judging solver quality in isolation, not a claim about what a real run costs.
-Development gates run at **`900 s`** so a change is judged with the solver allowed to actually converge;
-several landed solver features (`TPC_PIN_TIMED_WINDOWS`, `TPC_REPAIR_TRANSPORT_GAPS`) trade wall-clock for
-FPR and were blocked only by a `300 s` no-new-timeouts guard that a `900 s` gate relaxes. `300 s` is
-retained as a **faster sensitivity setting** (and the quick A/B screen still runs at a reduced `60 s`);
-the `make phase2-budget-sweep` (`30,60,120,300,900`) attribution stays the tool for checking a promotion
-isn't fragile at a shorter per-query budget. What changed with the 2026-08-04 confirmation is the risk
-this protects against: it's no longer "the organizer's real per-query cutoff might be shorter than `900 s`,"
-it's "a handful of pathologically slow queries can eat the shared `5 h` envelope and starve every query
-after them" — a **total-wall-clock** check (sum of per-query solve time against `5 h` on the full
-`familiar_100` split, at whatever per-query budget ships) is the more direct signal for that and is not
-yet a standing gate.
+**Per-query gate budget: `900 s` (since 2026-07-24), for solver A/Bs only.** The organizers confirmed on
+2026-08-04 that **there is no per-query timeout at all** — evaluation gives the whole 100-query run a
+single 5-hour wall-clock budget, excluding setup, starting from the confirmed entry-point invocation (see
+the [competition reference](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+`900 s` per query was never an official timeout, and now we know there is none to assume. It survives as a
+**development gate budget** for the per-query contract above: a change is judged with the solver allowed
+to converge, which is what several landed features (`TPC_PIN_TIMED_WINDOWS`, `TPC_REPAIR_TRANSPORT_GAPS`)
+needed — they trade wall-clock for FPR and were blocked only by a `300 s` no-new-timeouts guard. `300 s`
+remains a faster sensitivity setting, the quick A/B screen runs at `60 s`, and `make phase2-budget-sweep`
+(`30,60,120,300,900`) still checks a promotion isn't fragile at a shorter budget.
+
+**What a per-query row can no longer tell you is what we would score.** Under the real contract the
+per-query budget is not a constant at all: the scheduler hands each query the smaller of a cap and its
+fair share of the time left, growing it pass by pass, so the same query may be solved at `40 s` in triage
+and `600 s` in a later repair pass. Only a whole-run row measures that. The risk a whole-run row protects
+against is also different: not "the organizer's cutoff might be shorter than assumed" but "a handful of
+pathologically slow queries eat the shared envelope and starve everything after them" — which the
+scheduler is built to prevent and a whole-run row is the only way to confirm.
 
 Familiar-100 ledger rows must carry the manifest-derived data-source ID and remain separate from the repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
 
@@ -139,11 +162,15 @@ Familiar-100 ledger rows must carry the manifest-derived data-source ID and rema
 
 Compare rows only when they match on:
 
+- **measurement contract**: a whole-run row (`results/phase2_baselines/full_runs/`, `kind: "full_run"`) is never comparable to a per-query row (`results/phase2_baselines/runs/`), whatever else matches — different budget contract, scheduler, and parallelism;
 - source revision, data source, split, deterministic fold/limit, and language;
 - **evaluator contract**: rows straddling either upstream sync — 2026-07-28 `764614c` (integrated 2026-07-30) or 2026-08-04 `c89cfca` (integrated 2026-08-04) — are never comparable, whatever else matches; each recorded row's `evaluator_parity` field names its side;
-- local budget, repeat count, parallelism, and fresh-output policy;
+- local budget, repeat count, parallelism, and fresh-output policy — for a whole-run row that means `total_budget_sec`, `workers`, and any `TPC_P2_*` pass-shape override;
 - parser, solver, and feature flags; and
 - LLM backend/model and cache policy when an LLM is enabled.
+
+Whole-run rows additionally require the **same machine**: worker count and core count move the result
+directly, so a row from a 4-core box says nothing about a 16-core evaluation host.
 
 A row must expose enough telemetry to explain its score: valid-output rate, parse failures, timeout and recovery counts, fallback use, stage timings, LLM attempts/failures, and the three attribution axes.
 Low-`n` rows are smoke checks, not promotion evidence.

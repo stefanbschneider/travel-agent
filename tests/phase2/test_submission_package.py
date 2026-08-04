@@ -64,6 +64,70 @@ def test_submission_requirements_are_a_subset_of_the_development_pins():
         )
 
 
+# Upstream LAMDA-NeSy/ChinaTravel's requirements.txt at the current parity point (c89cfca).
+# The evaluation host installs from *our* file, so every package we name that upstream does not,
+# and every version we pin differently, is extra risk on a slow internal network for no gain.
+UPSTREAM_REQUIREMENTS = {
+    "accelerate": "1.6.0",
+    "datasets": "3.3.2",
+    "flashinfer-python": "0.2.5",
+    "func-timeout": "4.3.5",
+    "fuzzywuzzy": "0.18.0",
+    "geopy": "2.4.1",
+    "httpx": "0.27.2",
+    "json-repair": "0.30.0",
+    "jsonschema": "4.23.0",
+    "matplotlib": "3.9.4",
+    "modelscope": "1.20.0",
+    "numpy": "1.26.4",
+    "openai": "1.53.0",
+    "packaging": "24.2",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.5.2",
+    "seaborn": "0.13.2",
+    "tiktoken": "0.9.0",
+    "torch": "2.6.0",
+    "tqdm": "4.66.6",
+    "transformers": "4.51.3",
+    "vllm": "0.8.5",
+    "z3-solver": "4.14.1.0",
+}
+# The CP-SAT tier (chinatravel/agent/tpc_agent/cp_solver.py) is ours, so ortools has no upstream
+# pin to match. It is the *only* package the submission may add.
+ALLOWED_EXTRA_PACKAGES = {"ortools"}
+
+
+def test_submission_adds_at_most_one_package_to_upstreams_set():
+    extra = set(_requirements(SUBMISSION_REQS)) - set(UPSTREAM_REQUIREMENTS)
+    assert extra <= ALLOWED_EXTRA_PACKAGES, (
+        f"new dependencies beyond upstream's set: {sorted(extra - ALLOWED_EXTRA_PACKAGES)}. "
+        "Prefer an optional import over a required install."
+    )
+
+
+def test_submission_versions_match_upstreams_pins():
+    """No version drift from upstream on any shared package: the organizers run our install on
+    the same benchmark code they maintain."""
+    for name, line in _requirements(SUBMISSION_REQS).items():
+        if name not in UPSTREAM_REQUIREMENTS:
+            continue
+        pinned = line.split("==")[-1].strip()
+        assert pinned == UPSTREAM_REQUIREMENTS[name], (
+            f"{name} pinned at {pinned}, upstream pins {UPSTREAM_REQUIREMENTS[name]}"
+        )
+
+
+def test_psutil_is_optional_at_runtime():
+    """It is used for RSS telemetry only. Requiring it would make two additions to upstream's
+    dependency set instead of one."""
+    import solve_phase2 as sp2
+
+    assert "psutil" not in _requirements(SUBMISSION_REQS)
+    source = Path(sp2.__file__).read_text(encoding="utf-8")
+    assert "except ImportError" in source
+    assert hasattr(sp2, "current_rss_mb")
+
+
 def test_submission_requirements_exclude_the_heavy_stack():
     submission = set(_requirements(SUBMISSION_REQS))
     leaked = submission & FORBIDDEN_IN_SUBMISSION
