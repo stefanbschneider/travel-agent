@@ -96,17 +96,25 @@ Use a deterministic fold, fresh outputs, and a pinned source revision for a prom
 Long runs should use `make phase2-baseline-at SHA=<ref> ...` so the recorded revision is the code that executed.
 Record a local repeat count whenever variance matters.
 
-**Primary gate budget: `900 s` (since 2026-07-24).** The public competition material still does not
-specify a repeat count or per-query timeout, so every budget remains a local assumption — but the
-working expectation is now that the official per-query timeout is closer to `900 s` than to the `300 s`
-we originally used to keep e2e eval fast. Development gates therefore run at **`900 s`** so a change is
-judged in the budget regime it will actually run in; several landed solver features (`TPC_PIN_TIMED_WINDOWS`,
-`TPC_REPAIR_TRANSPORT_GAPS`) trade wall-clock for FPR and were blocked only by the `300 s` no-new-timeouts
-guard, which a `900 s` gate is expected to relax. `300 s` is retained as a **faster sensitivity setting**
-(and the quick A/B screen still runs at a reduced `60 s`); the `make phase2-budget-sweep`
-(`30,60,120,300,900`) attribution stays the tool for checking a promotion is not `900 s`-fragile — a
-change that only helps at the full `900 s` and collapses at, say, `600 s` is a warning, since the true
-timeout is unconfirmed. Do not overfit any single budget number the organizer has not published.
+**Primary gate budget: `900 s` per query (since 2026-07-24).** The organizers confirmed on 2026-08-04
+that **there is no per-query timeout at all** — evaluation instead gives the whole 100-query run a single
+5-hour wall-clock budget, excluding setup, starting from the confirmed entry point invocation (see the
+[competition reference](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+`900 s` per query therefore isn't "the assumed official timeout" any more — it never was one, and now we
+know there isn't one to assume — but it remains a reasonable **development gate budget**: a `100`-query
+run at `900 s`/query worst case is `25 h`, well over the real `5 h` envelope, so `900 s` is deliberately
+generous headroom for judging solver quality in isolation, not a claim about what a real run costs.
+Development gates run at **`900 s`** so a change is judged with the solver allowed to actually converge;
+several landed solver features (`TPC_PIN_TIMED_WINDOWS`, `TPC_REPAIR_TRANSPORT_GAPS`) trade wall-clock for
+FPR and were blocked only by a `300 s` no-new-timeouts guard that a `900 s` gate relaxes. `300 s` is
+retained as a **faster sensitivity setting** (and the quick A/B screen still runs at a reduced `60 s`);
+the `make phase2-budget-sweep` (`30,60,120,300,900`) attribution stays the tool for checking a promotion
+isn't fragile at a shorter per-query budget. What changed with the 2026-08-04 confirmation is the risk
+this protects against: it's no longer "the organizer's real per-query cutoff might be shorter than `900 s`,"
+it's "a handful of pathologically slow queries can eat the shared `5 h` envelope and starve every query
+after them" — a **total-wall-clock** check (sum of per-query solve time against `5 h` on the full
+`familiar_100` split, at whatever per-query budget ships) is the more direct signal for that and is not
+yet a standing gate.
 
 Familiar-100 ledger rows must carry the manifest-derived data-source ID and remain separate from the repository-local `tpc_phase2_val`/`tpc_phase2_test` partitions and the organizer final held-out set.
 

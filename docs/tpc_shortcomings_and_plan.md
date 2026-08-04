@@ -266,7 +266,8 @@ estimate survives contact with the implementation.
 | S4 | The organizer host gives **16 logical CPUs**; our per-query solve uses **one**, sequentially; step 0 (telemetry, + a fixed timeout-kill blind spot) landed, step 1 (CP-SAT workers) screened RED at 4 cores, step 2 (parallel restarts) remains | 2 | `+1` to `+4` (unmeasured) | **step 0 CLOSED**, **step 1 screened RED (not conclusive at 4 cores)**, step 2 open | [W4](#w4-use-the-16-confirmed-evaluation-cpus) |
 | S5 | Single-day trips ending in an overnight accommodation make the return leg unplaceable — 3 uids fail all four intercity commonsense columns | 2 | `+0.3` (3/80 queries) est., `1/3` uids fully cleared measured | **CLOSED** (partial; see roadmap's Known residual) | [W5](#w5-drop-the-trailing-stay-on-single-day-trips) |
 | S6 | `timed_visit_named_poi` is still the sole logical blocker in `53` of `74` solver-only failures *after* pinning | 2 | `+2` to `+5` if closed | open (needs W3) | [W6](#w6-attack-the-post-pin-timed_visit_named_poi-residual) |
-| S7 | The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score | 2 | risk, not gain | open (needs W3) | [W7](#w7-de-risk-the-unconfirmed-budget) |
+| S7 | ~~The `900 s` per-query budget is an unconfirmed assumption; a shorter organizer timeout would silently halve our score~~ — **RESOLVED 2026-08-04: there is no per-query timeout**, only a 5 h total budget for all 100 queries | 2 | risk, reframed | **closed as originally framed; reframed as total-wall-clock risk** | [W7](#w7-de-risk-the-unconfirmed-budget) |
+| S11 | **NEW 2026-08-04, SUBMISSION-BLOCKING:** the organizers' confirmed entry point (`solve_script_with_harness.py --split <split>`, no other flags) defaults to the external OpenCode/Codex demo harness, not our real deterministic no-oracle solver | 2 | blocking — a submission that never invokes the real solver scores at or near zero | **open, highest priority** | [W11](#w11-wire-the-confirmed-entry-point-to-our-real-solver) |
 | S9 | Preference packing (`TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE`) is implemented, unpromoted, and all its evidence predates the sync | 2 | `≤ +1.5` at FPR 25 | open (needs W3) | [W9](#w9-re-decide-preference-packing-on-post-sync-evidence) |
 | S10 | The familiar-100 held-out test split has never been run post-sync; no overfitting tripwire | 2 | risk, not gain | open (needs W3) | [W10](#w10-run-the-test-tripwire-and-verify-the-shipped-package) |
 
@@ -797,11 +798,20 @@ worse, and the two must be judged together.
 
 **Owner:** implementation + evaluation. **Effort: half a day of compute.** **Gain: risk reduction.**
 
-Every budget number in this repository is a local assumption. The public material specifies neither a
-per-query timeout nor a repeat count; `900 s` has been the working expectation only since 2026-07-24. If
-the organizer's real timeout is `300 s` or `120 s`, a configuration tuned at `900 s` degrades in a way no
-local gate would have caught — and `TPC_PIN_TIMED_WINDOWS` already demonstrated exactly this failure mode
-in reverse (it regressed timeouts at `300 s` and cleared cleanly at `900 s`).
+**Update 2026-08-04:** the organizers confirmed directly that there is **no per-query timeout** — instead
+a single **5-hour wall-clock budget for the entire 100-query run**, excluding environment setup (see the
+[competition reference](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+The original framing below ("what if the real per-query timeout is shorter than `900 s`") no longer
+applies as stated — there is no per-query cutoff to undershoot. The risk this section should now cover is
+different: **a handful of pathologically slow queries consuming enough of the shared 5 h envelope that
+later queries in the split time out or never run.** The budget sweep and convergence-patience hedge below
+are still useful for that, but step 5 (new) is the one that actually measures the real constraint.
+
+Every budget number in this repository was, until 2026-08-04, a local assumption. `900 s` had been the
+working expectation only since 2026-07-24. If the organizer's real timeout were `300 s` or `120 s`, a
+configuration tuned at `900 s` would degrade in a way no local gate would have caught — and
+`TPC_PIN_TIMED_WINDOWS` already demonstrated exactly this failure mode in reverse (it regressed timeouts
+at `300 s` and cleared cleanly at `900 s`). Kept as historical rationale for why the sweep below exists.
 
 **Do:**
 
@@ -817,9 +827,56 @@ in reverse (it regressed timeouts at `300 s` and cleared cleanly at `900 s`).
    `solve_recovered_from_timeout=1` where timeouts occur.
 4. Re-check after W4 lands: parallel restarts change the shape of the curve, so the sweep must be re-run
    on whatever ships.
+5. **New (2026-08-04): sum per-query solve time on a full `familiar_100` run at the per-query budget
+   that ships, and compare the total against the real `5 h` envelope** (setup time excluded, matching how
+   the organizers measure it). This is the actual constraint now — a per-query-only sweep does not show
+   whether 100 queries collectively fit.
 
 **Ship bar.** The curve is committed and the roadmap states, in one sentence, which configuration is
 safest across the whole range — not which one wins at `900 s`.
+
+---
+
+### W11: wire the confirmed entry point to our real solver
+
+**Owner:** implementation. **Effort: small, but blocking.** **Gain: makes the submission actually run our solver.**
+
+**New 2026-08-04.** The organizers' direct reply named the exact, unmodifiable evaluation command:
+
+```
+python agent_env/scripts/solve_script_with_harness.py --split <split>
+```
+
+No other flags. "All harness-specific initialization and launch logic" must be behind that one command.
+Today, bare (no `--harness`), that script defaults to `harness="opencode"`: it shells out to the external
+`opencode` CLI, which calls an external LLM API (DashScope by default in `config.toml.example`). That is
+the repository's generic OpenCode/Codex **demo** harness — not this project's actual deterministic,
+no-oracle `TPCAgent` solver, which lives behind the separate, unnamed `agent_env/scripts/solve_phase2.py`
+entry point. Left unfixed, the confirmed command either fails outright on the organizers' internal-network
+host (no `opencode` binary, no egress to DashScope) or, if it somehow ran, would score a generic
+LLM-prompting demo instead of the solver this repository actually competes with — either way, none of the
+Phase 1/2 solver work in this document reaches evaluation.
+
+**Do:**
+
+1. Make the bare command (`--split <split>`, no `--harness`) run the deterministic no-oracle solver by
+   default — either change `solve_script_with_harness.py`'s default harness to call the
+   `chinatravel/agent/phase2` path in-process, or make it dispatch to `solve_phase2`'s logic when no
+   external-CLI harness is explicitly requested.
+2. Keep `opencode`/`codex` available as explicit opt-in alternates (`--harness opencode` /
+   `--harness codex`), not the default — useful for the LLM-agent baseline comparison, but must never be
+   what a bare invocation runs.
+3. Add a test that runs the bare command end-to-end (no env vars beyond what a clean checkout has, no
+   extra flags) on a small split/limit and asserts: a schema-valid plan is produced, and no subprocess
+   call to `opencode` or `codex` occurs.
+4. Update `agent_env/README.md` and `agent_env/SKILL.md` so the documented "harness entry points" section
+   states plainly which command is the organizer-confirmed one and that it now runs the real solver by
+   default.
+
+**Ship bar.** `python agent_env/scripts/solve_script_with_harness.py --split <split>` on a clean checkout
+(fresh `pip install`, no `opencode`/`codex` installed, no external API key set) produces evaluator-valid
+plans for a full split using this repository's actual solver — matching what item 0a in the
+[roadmap](tpc_phase2_roadmap.md#next-steps-priority-order) tracks as the top implementation priority.
 
 ---
 
@@ -1017,7 +1074,9 @@ its own branch and rebases on latest `main` before pushing.
 
 | Risk | Likelihood | Impact | Mitigation |
 | --- | --- | --- | --- |
-| The organizer's per-query timeout is far below `900 s` | medium | high | W7's sweep; `TPC_SOLVE_CONVERGE_PATIENCE=15` is already a hedge; the timeout-recovery snapshot always emits the best plan so far |
+| ~~The organizer's per-query timeout is far below `900 s`~~ — resolved 2026-08-04, no per-query timeout exists | n/a | n/a | closed as stated |
+| **New 2026-08-04:** a few pathologically slow queries exhaust the shared 5 h/100-query envelope, starving later queries | medium | high | W7's new total-wall-clock check (step 5); `TPC_SOLVE_CONVERGE_PATIENCE=15` hedge; the timeout-recovery snapshot always emits the best plan so far |
+| **New 2026-08-04:** the confirmed entry point (`solve_script_with_harness.py`, no flags) never reaches our real solver | high until W11 lands | critical | W11 |
 | W1's repairs break a logical clause while fixing commonsense | low | low | Every repair is full-checker gated and `merge.py` applies a strictly-greater score gate on top — the score cannot go down |
 | W4's parallel restarts break determinism | medium | high | Fold results in draw order; assert `W=1` and `W=4` produce identical plans on a fixed seed |
 | W4 raises `p95` solve time and creates timeouts at the real budget | medium | medium | Judge W4's gate together with W7's curve, never alone |
@@ -1182,3 +1241,35 @@ larger flag set to decide about: `TPC_PACK_ATT` and `TPC_DENSIFY_COMPRESS_BEFORE
 byte-identical and none of the above is Phase 2 evidence. `TPC_PACK_ATT` is the most plausible
 Phase 2 candidate of the four: it preserves activity counts by construction, so it cannot cost FPR
 or C-LPR, and its only Phase 2 risk is the time it spends inside the per-query budget.
+
+---
+
+## Session update (2026-08-04): organizer clarifications resolve S7, surface a submission-blocking gap (S11/W11)
+
+We asked the organizers directly how Phase 2 evaluation actually runs (execution, versioning, feedback,
+timeout) and separately what the mandatory technical report requires. Full detail is in the
+[competition reference](reference/competition.md); this note is the consequence for this document's
+priority order.
+
+**S7 (unconfirmed per-query budget) is resolved, not the way we expected.** There is no per-query
+timeout at all — evaluation gives the whole 100-query run a single 5-hour wall-clock budget, excluding
+setup. `TPC_PIN_TIMED_WINDOWS`, `TPC_SOLVE_CONVERGE_PATIENCE=15`, and the rest of W7's hedges remain
+sound engineering, but the specific risk they were built against (a shorter-than-`900 s` per-query
+cutoff) doesn't exist. The risk that does exist — a few slow queries consuming the shared `5 h` envelope
+— is new and not yet covered by a standing gate; W7 now carries a fifth step for it.
+
+**S11/W11 (new) is the actual headline finding, and it's more urgent than any item above it in this
+document.** The organizers named the exact, unmodifiable evaluation command:
+`python agent_env/scripts/solve_script_with_harness.py --split <split>`, no other flags. That script's
+current default (`harness="opencode"`) shells out to an external CLI that calls an external LLM API —
+it is the repository's OpenCode/Codex **demo**, not the deterministic no-oracle `TPCAgent` solver this
+project actually competes with (that solver sits behind the separate `solve_phase2.py`, which the
+organizers did not name). Every item in this document — W1 through W10, all of Phase 1 and Phase 2 work
+— is moot for the actual competition submission until the confirmed bare command runs the real solver.
+**Do W11 first**, ahead of any further solver-quality work, including anything already in flight from the
+sequencing in §5.
+
+The technical report requirements (all Phase 2 teams, IJCAI template, ≤4 pages, no double-blind, due
+with the harness on 2026-08-10) are documented in the [competition reference](reference/competition.md#technical-report-2026-08-04-organizer-reply)
+and don't change this document's engineering priorities, but the 4-page report is itself an unscheduled
+piece of work competing for the same remaining time — worth naming here so it isn't discovered late.

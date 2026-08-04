@@ -353,8 +353,13 @@ A review of the Phase 2 path (`chinatravel/agent/phase2/` + the no-oracle `TPCAg
 The Phase 2 harness submission deadline is **2026-08-10, 24:00 Beijing Time (UTC+8)**, confirmed by the
 organizers' 2026-08-03 advancement email; submission and evaluation run 2026-08-04 to 08-10 (see the
 [competition reference](reference/competition.md) for the full date table and what packaging detail is
-and isn't confirmed). The per-query timeout is still unannounced — treat the window as short but keep
-budgets a local assumption. Implementation-level detail for the older items lives in
+and isn't confirmed). **The organizers answered our execution/versioning/feedback/timeout questions
+directly on 2026-08-04** (see the [reference doc](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)):
+evaluation runs the fixed command `python agent_env/scripts/solve_script_with_harness.py --split <split>`
+automatically, at most two submitted versions are scored (higher wins if both succeed), teams get
+feedback after every run, and **there is no per-query timeout** — only a single 5-hour wall-clock budget
+for all 100 queries, excluding setup. Item 0a below is the direct, urgent consequence of that reply.
+Implementation-level detail for the older items lives in
 [`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
 
 **Self-contained implementation briefs for every open item below — plus the Phase 1 items and a
@@ -367,6 +372,24 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
 0. **Re-establish a post-sync baseline before gating anything.** Every committed row is on the old
    evaluator contract. The first `900 s` `familiar_100_val` run after the sync becomes the new
    reference row; until it exists, `make phase2-gate` has no valid baseline to compare against.
+
+0a. **SUBMISSION-BLOCKING: wire the confirmed entry point to our real solver (new, 2026-08-04).**
+   The organizers will invoke exactly `python agent_env/scripts/solve_script_with_harness.py --split
+   <split>` — no other flags — as the entire evaluation run. Today that script's default harness is
+   `opencode`: it shells out to the external `opencode` CLI, which calls an external LLM API (DashScope
+   by default). It does **not** run this repository's actual deterministic, no-oracle `TPCAgent` solver —
+   that lives behind the separate, unnamed `agent_env/scripts/solve_phase2.py` entry point. Left as-is,
+   the organizers' evaluation would either fail outright (no `opencode` binary / no network egress on
+   their internal-network host) or, if it somehow succeeded, score a generic LLM-prompting demo instead
+   of our real solver. **Do:** make the bare command (`--split <split>`, no `--harness` flag) run the
+   deterministic solver by default — either by changing `solve_script_with_harness.py`'s default harness
+   to call the `chinatravel/agent/phase2` no-oracle path in-process, or by making it a thin dispatcher to
+   `solve_phase2`'s logic when no external-CLI harness is explicitly requested. Keep `opencode`/`codex`
+   available as opt-in alternates, not the default. Add a test that invokes the bare command end-to-end
+   (no env vars, no extra flags) and asserts it produces a schema-valid plan without any subprocess call
+   to `opencode`/`codex`. See the [reference doc](reference/competition.md#a-critical-gap-this-reply-surfaces-our-real-solver-isnt-wired-to-the-confirmed-entry-point)
+   for the full finding. This is more urgent than any further solver-quality work below: a quality
+   regression costs points, but this gap costs the entire submission.
 
 0b. **Re-solve Phase 1 `results/best` (highest expected value of anything on this list, and it is
    Phase 1 work).** The organizers will re-score the Phase 1 leaderboard with the new evaluator, and
@@ -429,7 +452,28 @@ is closed upstream, and a stacked day is now reverted by `check` rather than sco
 
 **Status note, not a priority item: the cascade fallback for the residual pin leaves behind (`TPC_CASCADE_TIMED_WINDOWS`) gated at `900 s` with no measurable effect** — flat on solver-only (its own target axis), and the apparent end-to-end lift does not clear its own repeat-to-repeat noise; see [Cascading timed-window shift](#cascading-timed-window-shift) for the full breakdown. Not promoted.
 
+**Update 2026-08-04: the organizers confirmed there is no per-query timeout** — the real constraint is a
+single 5-hour wall-clock budget for the whole 100-query run, excluding setup (see the
+[reference doc](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+Everything below this line about a `~900 s` "official per-query timeout" working expectation was a
+pre-confirmation guess and is now superseded — kept as historical record of why `900 s` became the
+development gate budget, not as current guidance. The `900 s` gate remains a reasonable *per-query*
+development setting (a 5 h / 100-query average is `180 s`, but nothing stops one query from taking
+longer than another as long as the total holds), but the framing changes: the thing to protect against
+is no longer "a shorter organizer per-query cutoff than assumed," it's **the shared 5 h envelope running
+out before the split finishes** — a small number of pathologically slow queries can now starve every
+query after them, which a per-query-only gate does not model. The `30,60,120,300,900` budget sweep and
+the timeout-recovery snapshot (`TPC_SOLVE_CONVERGE_PATIENCE=15`) remain useful, but a dedicated
+total-wall-clock check (sum of per-query solve times against the 5 h budget, on the full `familiar_100`
+split at whatever per-query budget ships) is now the more direct signal and is not yet a standing gate —
+see also [W7 in Shortcomings and plan](tpc_shortcomings_and_plan.md#w7-de-risk-the-unconfirmed-budget), updated the same day.
+
+<details>
+<summary>Original pre-confirmation paragraph (superseded 2026-08-04, kept for history)</summary>
+
 The public material still does not specify a runtime contract, so every budget stays an assumption. Since 2026-07-24 the **working expectation is a `~900 s` official per-query timeout**, and development gates run at `900 s` (see [eval doc: Baselines and repetitions](tpc_phase2_eval.md#baselines-and-repetitions)); `300 s` is retained as a faster sensitivity setting and the `30,60,120,300,900` budget sweep guards against a `900 s`-fragile promotion. The original `300 s` gate budget was chosen to make e2e eval fast, not because the organizer confirmed it — so the shift removed a self-imposed constraint, and the remaining final-evening question is no longer "should these landed flags be re-gated at `900 s`?" but "which already-measured configuration is safest to ship?" Do not overfit any single unconfirmed budget number.
+
+</details>
 
 ## Solver-only headroom
 

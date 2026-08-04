@@ -49,8 +49,16 @@ Run `.venv/bin/python -m agent_env.cli tools` to inspect the local tool catalog.
 .venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 1 --budget-sec 300
 ```
 
-`agent_env/scripts/solve_script_with_harness.py` is the generic OpenCode/Codex compatibility harness; `solve_phase2.py` is this repository's deterministic-orchestrator runner.
-Both must hide oracle-only fields before the agent path.
+**`agent_env/scripts/solve_script_with_harness.py --split <split>` is the organizer-confirmed Phase 2
+evaluation command** (2026-08-04 direct reply, no other flags — see the
+[competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+As shipped, that script's default harness (`opencode`) shells out to an external CLI that calls an
+external LLM API — it is a generic OpenCode/Codex compatibility demo, **not** this repository's real
+deterministic no-oracle solver, which lives behind the separate `solve_phase2.py` entry point above.
+Making the bare confirmed command run the real solver by default is the top Phase 2 implementation
+priority (roadmap item 0a / [W11](../docs/tpc_shortcomings_and_plan.md#w11-wire-the-confirmed-entry-point-to-our-real-solver))
+and is not yet done — treat this as an open gap, not a settled fact, until that lands.
+Both entry points must hide oracle-only fields before the agent path.
 
 ## Outputs
 
