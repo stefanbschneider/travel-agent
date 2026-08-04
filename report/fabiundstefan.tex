@@ -22,7 +22,9 @@
 
 % Use the postscript times font!
 \usepackage{times}
-\usepackage{soul}
+% The author kit also loads soul, algorithm, algorithmic and lineno. None of them is a formatting
+% requirement (ijcai26.sty is), this report uses none of them, and each pulls in a larger TeX
+% install; add back whichever a section actually needs.
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage[utf8]{inputenc}

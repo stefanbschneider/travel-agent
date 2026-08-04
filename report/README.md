@@ -45,14 +45,18 @@ cd report && make          # pdflatex -> bibtex -> pdflatex x2 -> fabiundstefan.
 make clean                 # remove aux/log/bbl/blg/out, keep the PDF
 ```
 
-Needs a TeX installation providing `pdflatex`, `bibtex`, and the packages the template pulls in
-(`times`, `soul`, `url`, `hyperref`, `caption`, `graphicx`, `amsmath`, `amsthm`, `booktabs`).
-On Debian/Ubuntu:
+Needs a TeX installation providing `pdflatex`, `bibtex`, and the packages the report loads
+(`times`, `url`, `hyperref`, `caption`, `graphicx`, `amsmath`, `amsthm`, `booktabs`). On
+Debian/Ubuntu that is three packages:
 
 ```bash
 apt-get install -y --no-install-recommends \
-  texlive-latex-base texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra
+  texlive-latex-base texlive-latex-recommended texlive-fonts-recommended
 ```
+
+The author kit's own preamble also loads `soul`, `algorithm`, `algorithmic` and `lineno`; the
+report drops them, since none is a formatting requirement (`ijcai26.sty` is) and they need the
+much larger `texlive-latex-extra`. Add back whichever a section actually needs, with that package.
 
 `make` fails if the PDF exceeds 4 pages, so a report that has outgrown the limit cannot be built
 and submitted by accident.

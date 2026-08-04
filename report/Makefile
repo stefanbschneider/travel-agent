@@ -17,9 +17,11 @@ $(NAME).pdf: $(NAME).tex ijcai26.sty ijcai26.bib named.bst
 
 # The 4-page limit is a hard organizer rule, so enforce it at build time rather than trusting a
 # glance at the PDF.
+# pdflatex always reports "Output written on <file>.pdf (N pages, ...)" in the log, which needs
+# no extra tooling; pdfinfo (poppler-utils) is the fallback when only the PDF is at hand.
 check-pages:
-	@pages=$$(grep -c '^/Type\s*/Page$$' $(NAME).pdf 2>/dev/null || true); \
-	if [ -z "$$pages" ] || [ "$$pages" = "0" ]; then \
+	@pages=$$(sed -n 's/.*Output written on .*(\([0-9][0-9]*\) page.*/\1/p' $(NAME).log 2>/dev/null | tail -1); \
+	if [ -z "$$pages" ]; then \
 	  pages=$$(pdfinfo $(NAME).pdf 2>/dev/null | awk '/^Pages:/ {print $$2}'); \
 	fi; \
 	if [ -z "$$pages" ]; then \
