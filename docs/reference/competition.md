@@ -190,6 +190,29 @@ that, a constraint asking for `'Art Museum'` would match no attraction the verif
 `EVALUATOR_PARITY_SHA` moves to `c89cfca` accordingly, so the gate refuses to compare rows recorded
 across this sync.
 
+### Third upstream sync (2026-08-04, PR #33)
+
+Upstream merged [PR #33](https://github.com/LAMDA-NeSy/ChinaTravel/pull/33) ("Fix English language
+propagation in agent harness", `456b60a`) later the same day; integrated here. It touches
+`agent_env/` only — no evaluator file, so the parity point stays `c89cfca` and the ledger marker
+does not move.
+
+The substance is that `agent_env` had no way to say "English". Every entry point built
+`WorldEnv()` and called `load_query` without a language, so the wrapper served the **Chinese**
+database while the TPC competition data is English — `attractions_keys('Shanghai')` simply
+returned `success: false`. Upstream threads an explicit `zh`/`en` through the adapter (constructor
+argument, or `CHINATRAVEL_LANG`), `agent_env.cli`, `agent_env.http_server`, and
+`solve_script_with_harness.py`, which also passes it into the evaluator calls and into the CLI
+examples in its generated prompt.
+
+This matters for the confirmed entry point. Our local code previously guessed the language from
+the split *name* (`lang="en" if split == "tpc_phase2_familiar_100"`), which would have silently
+fallen back to Chinese on the held-out split, since that split will not be named
+`tpc_phase2_familiar_100`. Upstream's default for the harness script is `en`, so the organizers'
+exact `python agent_env/scripts/solve_script_with_harness.py --split <split>` now resolves to
+English whatever the split is called. Verified: with no `config.toml` present, that command shape
+resolves `lang=en` and loads the 100 English familiar queries.
+
 ## Technical report (2026-08-04 organizer reply)
 
 - **Who:** required from **every** team that qualified for Phase 2 — not just top finishers. (Distinct

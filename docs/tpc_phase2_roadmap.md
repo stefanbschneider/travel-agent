@@ -55,6 +55,17 @@ match none of the attractions the verifier accepts as `'Art museum'`.
 can gate anything**; the gate refuses a `764614c` baseline against a `c89cfca` candidate. Full
 detail: [competition reference](reference/competition.md#second-upstream-sync-2026-08-04-pr-32).
 
+### Third sync (2026-08-04, upstream PR #33) — `agent_env` language plumbing
+
+Integrated. `agent_env/` only, so the parity point and the ledger marker do not move. It gives every
+`agent_env` entry point an explicit `zh`/`en`: previously the wrapper always built a **Chinese**
+`WorldEnv` while our data is English, and our local code guessed the language from the split *name*
+(`lang="en" if split == "tpc_phase2_familiar_100"`) — which would have fallen back to Chinese on the
+held-out split, whose name will differ. The harness script now defaults to `en`, so the organizers'
+bare `--split <split>` command resolves correctly whatever the split is called. This narrows, but
+does not close, W11: the confirmed entry point still runs the `opencode` demo harness rather than
+our solver.
+
 ## Current status snapshot
 
 Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)

@@ -80,7 +80,7 @@ def test_familiar_agent_paths_hide_all_oracle_fields():
     uid = query_ids[0]
     oracle_query = oracle_queries[uid]
     assert "hard_logic_py" in oracle_query
-    harness_ids, harness_queries = harness_load_queries(SPLIT)
+    harness_ids, harness_queries = harness_load_queries(SPLIT, "en")
     assert harness_ids == query_ids
     assert harness_queries[uid] == oracle_query
 
@@ -89,7 +89,7 @@ def test_familiar_agent_paths_hide_all_oracle_fields():
     assert public_ids == query_ids
     assert set(public_queries[uid]) == EXPECTED_VISIBLE_FIELDS
 
-    adapter_result = ChinaTravelEnvAdapter().load_query(SPLIT, uid=uid)
+    adapter_result = ChinaTravelEnvAdapter(lang="en").load_query(SPLIT, uid=uid)
     assert adapter_result["success"] is True
     assert adapter_result["query"] == public_queries[uid]
 
