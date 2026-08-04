@@ -125,6 +125,8 @@ Every knob is an environment variable, so these need no code change:
 | `TPC_P2_MAX_QUERY_SEC` | `900` | ceiling on any single query's solve |
 | `TPC_P2_MIN_QUERY_SEC` | `20` | floor below which a query is not worth starting |
 | `TPC_P2_MAX_PASSES` | `24` | hard stop on pass count |
+| `TPC_P2_FAST_TRIAGE` | `1` | triage stops each query at its first accepted plan instead of polishing preference |
+| `TPC_P2_WORKERS` | `CPU - 1` | worker processes |
 
 Two arms worth running once R1 exists, at a **reduced 2 h envelope** so each is ~2 h:
 
@@ -137,7 +139,21 @@ TPC_P2_MAX_QUERY_SEC=300 .venv/bin/python scripts/phase2_full_run.py \
   --total-budget-sec 7200 --label "per-query cap 300"
 ```
 
-Both must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
+A third arm worth the same 2 h, and the one with the clearest hypothesis:
+
+```bash
+# C: triage spends its whole slot polishing instead of stopping at the first accept
+TPC_P2_FAST_TRIAGE=0 .venv/bin/python scripts/phase2_full_run.py \
+  --total-budget-sec 7200 --label "no fast triage"
+```
+
+Fast triage is on by default on the argument that an accepted plan for another query is worth more
+than a better preference key for this one (constraints carry `0.65` of a query's score; preference
+terms are zeroed until it passes) and that an early accept hands its remaining slot back to the
+pass. That is reasoning, not a measurement. If arm C wins, the reasoning is wrong somewhere —
+most likely because the polish pass rarely runs, so first-accept preference is what actually ships.
+
+All three must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
 against R1.
 
 ### R5 — the held-out tripwire (once, and only after R1 is settled)

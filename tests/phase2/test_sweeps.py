@@ -10,6 +10,7 @@ What these tests defend, in the order the run depends on them:
 
 from __future__ import annotations
 
+import os
 import time
 
 import pytest
@@ -299,6 +300,161 @@ class TestDriver:
         # Averaged over the whole split, as the official scorer does.
         assert summary["self_overall_mean"] == pytest.approx((90.0 + 30.0 + 30.0) / 3, abs=1e-3)
         assert summary["self_fpr_mean"] == pytest.approx(100.0 / 3, abs=1e-3)
+
+
+class TestFastTriage:
+    """Triage stops at the first accepted plan; later passes run the full search.
+
+    Under a shared envelope an accepted plan for another query beats a better preference key for
+    this one -- and preference is zeroed anyway until a query passes its constraints.
+    """
+
+    def test_only_triage_tasks_ask_for_the_early_stop(self, monkeypatch):
+        seen: list[tuple[str, bool]] = []
+
+        def fake_solve_one(task):
+            seen.append((task["kind"], task["fast_accept"]))
+            ok = task["kind"] != "triage"
+            return {
+                "uid": task["uid"],
+                "plan": {"itinerary": [{"day": 1}]},
+                "telemetry": {},
+                "score": _score(ok=ok, overall=90.0 if ok else 20.0).to_dict(),
+            }
+
+        monkeypatch.setattr(sweeps, "solve_one", fake_solve_one)
+        sweeps.run_sweeps(
+            uids=["q1"],
+            queries={"q1": {"uid": "q1"}},
+            deadline=time.monotonic() + 600,
+            config=sweeps.SweepConfig(workers=1),
+            on_result=lambda *args: None,
+            log=lambda _msg: None,
+        )
+        assert ("triage", True) in seen
+        assert all(not fast for kind, fast in seen if kind != "triage")
+
+    def test_disabling_fast_triage_reaches_the_task(self, monkeypatch):
+        seen: list[bool] = []
+
+        monkeypatch.setattr(
+            sweeps,
+            "solve_one",
+            lambda task: (
+                seen.append(task["fast_accept"]),
+                {
+                    "uid": task["uid"],
+                    "plan": {"itinerary": [{"day": 1}]},
+                    "telemetry": {},
+                    "score": _score(ok=True, overall=90.0).to_dict(),
+                },
+            )[1],
+        )
+        sweeps.run_sweeps(
+            uids=["q1"],
+            queries={"q1": {"uid": "q1"}},
+            deadline=time.monotonic() + 600,
+            config=sweeps.SweepConfig(workers=1, fast_triage=False),
+            on_result=lambda *args: None,
+            log=lambda _msg: None,
+        )
+        # Triage passes, so a polish pass follows; neither may ask for the early stop.
+        assert seen and not any(seen)
+
+    def test_the_env_flag_is_set_only_for_the_duration_of_the_solve(self, monkeypatch):
+        monkeypatch.delenv(sweeps.FAST_ACCEPT_ENV, raising=False)
+        with sweeps._fast_accept(True):
+            assert os.environ[sweeps.FAST_ACCEPT_ENV] == "1"
+        assert sweeps.FAST_ACCEPT_ENV not in os.environ
+
+    def test_a_pre_existing_operator_value_is_restored(self, monkeypatch):
+        monkeypatch.setenv(sweeps.FAST_ACCEPT_ENV, "0")
+        with sweeps._fast_accept(True):
+            assert os.environ[sweeps.FAST_ACCEPT_ENV] == "1"
+        assert os.environ[sweeps.FAST_ACCEPT_ENV] == "0"
+
+    def test_disabled_leaves_the_environment_untouched(self, monkeypatch):
+        monkeypatch.delenv(sweeps.FAST_ACCEPT_ENV, raising=False)
+        with sweeps._fast_accept(False):
+            assert sweeps.FAST_ACCEPT_ENV not in os.environ
+
+
+class TestShutdown:
+    """The parent must be able to exit on time even with a query still solving.
+
+    ``shutdown(wait=False)`` does not stop a running task, and ``concurrent.futures``'s atexit
+    hook joins the workers -- so without this the process could outlive the organizers' envelope.
+    """
+
+    def test_workers_are_terminated_not_waited_for(self):
+        class FakeProcess:
+            def __init__(self):
+                self.alive = True
+                self.terminated = False
+                self.killed = False
+
+            def is_alive(self):
+                return self.alive
+
+            def terminate(self):
+                self.terminated = True
+                self.alive = False
+
+            def kill(self):
+                self.killed = True
+
+            def join(self, timeout=None):
+                return None
+
+        class FakeExecutor:
+            def __init__(self, processes):
+                self._processes = processes
+                self.shutdown_args = None
+
+            def shutdown(self, wait=True, cancel_futures=False):
+                self.shutdown_args = (wait, cancel_futures)
+
+        procs = {1: FakeProcess(), 2: FakeProcess()}
+        executor = FakeExecutor(procs)
+        sweeps.shutdown_now(executor, grace_sec=0.0)
+
+        assert executor.shutdown_args == (False, True)
+        assert all(p.terminated for p in procs.values())
+
+    def test_a_worker_that_ignores_sigterm_is_killed(self):
+        class Stubborn:
+            def __init__(self):
+                self.killed = False
+
+            def is_alive(self):
+                return not self.killed
+
+            def terminate(self):
+                pass
+
+            def kill(self):
+                self.killed = True
+
+            def join(self, timeout=None):
+                return None
+
+        class FakeExecutor:
+            def __init__(self, processes):
+                self._processes = processes
+
+            def shutdown(self, wait=True, cancel_futures=False):
+                pass
+
+        stubborn = Stubborn()
+        sweeps.shutdown_now(FakeExecutor({1: stubborn}), grace_sec=0.0)
+        assert stubborn.killed
+
+    def test_a_missing_private_attribute_does_not_break_the_run(self):
+        class Minimal:
+            def shutdown(self, wait=True, cancel_futures=False):
+                pass
+
+        sweeps.shutdown_now(Minimal(), grace_sec=0.0)  # must not raise
 
 
 class TestEnvOverrides:

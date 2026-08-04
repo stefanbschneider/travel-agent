@@ -32,6 +32,7 @@ import os
 import sys
 import time
 from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
@@ -59,6 +60,15 @@ MIN_BUDGET_GROWTH = 1.25
 # Two escalations that improve nothing mean the remaining failures are structural, not starved.
 MAX_STALLED_REPAIR_PASSES = 2
 DEFAULT_MAX_PASSES = 24
+# Triage stops each query's search at the first accepted plan (still finalising it through
+# ``_pack_plan``) instead of spending the rest of its budget polishing preference score. Two
+# reasons: constraints are worth ``0.65`` of a query's score and preference terms are zeroed until
+# they pass, so an accepted plan for another query is always worth more than a better preference
+# key for this one; and a query that accepts in 5s of a 120s slot hands the other 115s back to the
+# pass, which flows into the next pass's budget. Preference is recovered later by the polish pass,
+# and keep-best means it can only improve. Override with ``TPC_P2_FAST_TRIAGE=0``.
+DEFAULT_FAST_TRIAGE = True
+FAST_ACCEPT_ENV = "TPC_SOLVE_STOP_AT_ACCEPT_PACKED"
 
 
 def default_workers() -> int:
@@ -172,6 +182,7 @@ class SweepConfig:
     max_query_sec: float = DEFAULT_MAX_QUERY_SEC
     min_query_sec: float = DEFAULT_MIN_QUERY_SEC
     max_passes: int = DEFAULT_MAX_PASSES
+    fast_triage: bool = DEFAULT_FAST_TRIAGE
     lang: str = "en"
     # Extra grace, per query, between the orchestrator's own internal timeout and the point at
     # which the parent stops waiting on a straggler.
@@ -187,6 +198,7 @@ class SweepConfig:
         "max_query_sec": "TPC_P2_MAX_QUERY_SEC",
         "min_query_sec": "TPC_P2_MIN_QUERY_SEC",
         "max_passes": "TPC_P2_MAX_PASSES",
+        "fast_triage": "TPC_P2_FAST_TRIAGE",
     }
 
     def apply_env_overrides(self, env: Any = None) -> "SweepConfig":
@@ -196,7 +208,12 @@ class SweepConfig:
             if raw in (None, ""):
                 continue
             try:
-                value = int(raw) if attr == "max_passes" else float(raw)
+                if attr == "fast_triage":
+                    value: Any = str(raw) not in ("0", "false", "False")
+                elif attr == "max_passes":
+                    value = int(raw)
+                else:
+                    value = float(raw)
             except ValueError:
                 continue
             setattr(self, attr, value)
@@ -247,6 +264,28 @@ def init_worker(lang: str = "en") -> None:
     )
 
 
+@contextmanager
+def _fast_accept(enabled: bool):
+    """Stop this solve at the first accepted plan (finalisation still runs).
+
+    Set per task rather than per worker, because the same worker process serves triage tasks
+    (where stopping early is the point) and repair/polish tasks (where the full search is the
+    point). Restores the previous value so nothing leaks between tasks.
+    """
+    if not enabled:
+        yield
+        return
+    previous = os.environ.get(FAST_ACCEPT_ENV)
+    os.environ[FAST_ACCEPT_ENV] = "1"
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop(FAST_ACCEPT_ENV, None)
+        else:
+            os.environ[FAST_ACCEPT_ENV] = previous
+
+
 def solve_one(task: dict) -> dict:
     """Solve and oracle-free-score one query. Returns a picklable result dict.
 
@@ -259,14 +298,15 @@ def solve_one(task: dict) -> dict:
     started = time.monotonic()
     try:
         init_worker(task.get("lang", "en"))
-        plan, telemetry = orch.solve_phase2(
-            visible_query,
-            env=_WORKER["env"],
-            llm_client=_WORKER["llm_client"],
-            budget_sec=budget_sec,
-            solve_fn=_WORKER["solve_fn"],
-            flags=_WORKER["flags"],
-        )
+        with _fast_accept(bool(task.get("fast_accept"))):
+            plan, telemetry = orch.solve_phase2(
+                visible_query,
+                env=_WORKER["env"],
+                llm_client=_WORKER["llm_client"],
+                budget_sec=budget_sec,
+                solve_fn=_WORKER["solve_fn"],
+                flags=_WORKER["flags"],
+            )
         score = selfscore.score_plan(
             plan,
             visible_query,
@@ -276,6 +316,7 @@ def solve_one(task: dict) -> dict:
         )
         telemetry["llm_backend_source"] = getattr(_WORKER["llm_client"], "backend_source", "none")
         telemetry["pass_kind"] = task.get("kind")
+        telemetry["fast_accept"] = bool(task.get("fast_accept"))
         telemetry["self_score"] = score.to_dict()
         return {
             "uid": uid,
@@ -401,16 +442,46 @@ def run_sweeps(
                 # killer poisons it for good), not that every query is hard. Rebuild it rather
                 # than spending the rest of the envelope failing instantly.
                 log("[sweep] every task in that pass failed; rebuilding the worker pool")
-                executor.shutdown(wait=False, cancel_futures=True)
+                shutdown_now(executor)
                 executor = _make_executor(config)
             if remaining() <= config.min_query_sec:
                 log("[sweep] envelope spent; stopping")
                 break
     finally:
         if executor is not None:
-            executor.shutdown(wait=False, cancel_futures=True)
+            shutdown_now(executor)
 
     return summarize(uids, best_scores, config, remaining())
+
+
+def shutdown_now(executor, *, grace_sec: float = 5.0) -> None:
+    """Stop the pool without waiting for a straggler to finish.
+
+    ``ProcessPoolExecutor.shutdown(wait=False)`` does not stop a task that is already running, and
+    ``concurrent.futures`` registers an ``atexit`` hook that *joins* the workers -- so a query
+    still solving when the deadline passes would hold the process open past the organizers'
+    envelope. Every result is already on disk by then, so the in-flight attempt is worth nothing
+    and the workers are terminated: SIGTERM, then SIGKILL for anything that ignores it.
+    """
+    executor.shutdown(wait=False, cancel_futures=True)
+    # No public API exposes the worker processes; this is the only way to guarantee the parent
+    # can exit on time. Defensive throughout -- a private-attribute change must not break a run.
+    processes = list(getattr(executor, "_processes", {}).values() or [])
+    for process in processes:
+        try:
+            if process.is_alive():
+                process.terminate()
+        except Exception:
+            pass
+    deadline = time.monotonic() + max(grace_sec, 0.0)
+    for process in processes:
+        try:
+            process.join(timeout=max(0.0, deadline - time.monotonic()))
+            if process.is_alive():
+                process.kill()
+                process.join(timeout=1.0)
+        except Exception:
+            pass
 
 
 def _make_executor(config: SweepConfig):
@@ -535,6 +606,7 @@ def _run_pass(
             "budget_sec": budget,
             "lang": config.lang,
             "kind": kind,
+            "fast_accept": kind == "triage" and config.fast_triage,
             "parsed_constraints": parsed_constraints.get(uid),
         }
         for uid in pass_uids
