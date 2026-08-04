@@ -100,6 +100,30 @@ Read from the row: `overall`, `official_scores` (the full decomposition), `run_w
 (how much of the envelope was actually used), `empty_plans` (must be `0`), and the per-pass table
 (how many passes ran, and where the improvements came from).
 
+**Run 2026-08-04, this machine (4 cores, 3 workers).**
+`results/phase2_baselines/full_runs/20260804T201638Z.json`, `--method phase2_e2e_r1_ref`
+(distinct method dir so R2/R4 don't overwrite this row's per-query outputs — every later run in
+this queue does the same).
+
+| | |
+| --- | --- |
+| `overall` | `57.99` |
+| `official_scores` | MicEPR `99.48`, MacEPR `97.00`, C-LPR `87.83`, **FPR `33.00`**, DAV `18.15`, ATT `26.25`, DDR `19.39` |
+| `empty_plans` | `0 / 100` |
+| `constraints_ok` | `35 / 100` |
+| `run_wall_frac_of_budget` | **`0.26`** (`4723 s` of `18000 s`) |
+| passes | 1 triage (`100×120s`, improved 100, 37.3 min) → 2 repair (`66×300s`, improved 2, 37.3 min) → 3 polish (`34×300s`, improved 11, 4.1 min) → stopped: "no pass would do anything new" |
+
+**The headline finding: R1 self-terminates at 26% of the envelope, not 100%.** `3.4 h` of the `5 h`
+went unused because every remaining candidate would have repeated a solve already on file. This
+pre-answers part of R2 before it runs: since R1 itself doesn't need the 5th hour, extra envelope
+past the point of convergence (~`1.3 h` here) cannot move `overall` — there is nothing left for it
+to spend on. R2's 1 h arm is the one to watch instead: `1 h < 1.31 h` natural convergence, so it may
+cut off pass 3 (polish, which alone lifted `constraints_ok` by 11) before it finishes and score
+below R1, even though R1 itself would be flat from ~1.5 h to 5 h. FPR (`33.0`) sits well below
+`constraints_ok/100` (`35`) only because FPR is stricter than the self-scored oracle-free
+`constraints_ok` proxy — expected, not a discrepancy to chase.
+
 **Three things this row settles that nothing else can:** whether the split fits the envelope at
 all, how much of the 5 h the scheduler actually spends, and how many queries reach
 `constraints_ok` — the state that carries `0.65` of the score.
