@@ -848,8 +848,14 @@ class TPCAgent(BaseAgent):
         commits changes that keep the checker accepting and do not regress the preference key -- so
         it is the mode to use for fast FPR-only measurement in a longer (e.g. 900 s) budget regime
         without skipping the repair passes under test. Like ``TPC_SOLVE_STOP_AT_ACCEPT``, its
-        continuous/preference score is uncalibrated (the search stops before polishing), and it is
-        never set by the real harness. If both flags are set, ``TPC_SOLVE_STOP_AT_ACCEPT``'s
+        continuous/preference score is uncalibrated (the search stops before polishing).
+
+        **The harness does set this one, for triage passes only** (2026-08-04,
+        ``chinatravel/agent/phase2/sweeps.py``): under a shared whole-run envelope, an accepted
+        plan for some *other* query is worth more than a better preference key for this one, and a
+        query that accepts early hands its remaining slot back to the pass. Preference is recovered
+        by the later polish pass, which can only improve on it. Repair and polish passes leave the
+        flag off, so the full search still runs there. ``TPC_P2_FAST_TRIAGE=0`` disables it. If both flags are set, ``TPC_SOLVE_STOP_AT_ACCEPT``'s
         pack-skip wins; do not set both.
 
         ``TPC_SOLVE_CONVERGE_PATIENCE`` (``self.solve_converge_patience``) is a separate, opt-in

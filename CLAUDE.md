@@ -16,11 +16,15 @@ harness-specific init/launch logic must be integrated behind that one command.
 There is no per-query timeout: the organizers confirmed (2026-08-04) a single 5-hour wall-clock budget
 for the entire 100-query run, excluding setup. At most two submitted versions are evaluated per team
 (higher score wins if both succeed). Local `300 s`/`900 s` settings remain per-query development gate
-budgets, not organizer rules and not a substitute for a total-wall-clock check against the real 5-hour
-envelope. See the [competition reference](docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
-for the full confirmed contract, and its flagged gap: `solve_script_with_harness.py`'s current default
-harness (`opencode`, an external-CLI demo) is not the repository's real deterministic solver — closing
-that is the top Phase 2 implementation priority (roadmap item 0a).
+budgets for solver A/Bs, never a description of what the submission does: the shipped run schedules the
+whole split against the 5-hour envelope (`chinatravel/agent/phase2/sweeps.py` — triage, then repair,
+then polish, in parallel, keep-best, fallbacks pre-written), and `make phase2-full-run` is the
+measurement that matches it. See the [competition reference](docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
+for the full confirmed contract. That command now runs the repository's real deterministic solver:
+its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (zero LLM calls, zero
+subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
+(roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
+`scripts/assemble_phase2_submission.py` packages and verifies the archive.
 
 ## Parallel workstreams
 
@@ -29,7 +33,7 @@ Phase 2 development is split across concurrent workstreams. Each workstream uses
 | Workstream | Job | Writes | Must not |
 | --- | --- | --- | --- |
 | **Analysis / docs / plan** | Review status, shortcomings, and options; keep the roadmap and eval docs current with the latest `main`. | `docs/tpc_phase2_*.md`, `CLAUDE.md`, `README.md`. | Change agent/solver behavior, or run long e2e itself. |
-| **Evaluation** | Run long pinned e2e / solver-only baselines on a separate machine and commit the resulting rows. Non-blocking and long-running. | `results/phase2_baselines/` (generated rows only). | Edit agent, parser, solver, or doc prose. |
+| **Evaluation** | Work the [evaluation roadmap](docs/tpc_phase2_eval_roadmap.md) in order on a separate machine and commit the resulting rows: whole-run rows (`make phase2-full-run`, the 5 h envelope — this is what decides the submission) and per-query rows for solver A/Bs. Non-blocking and long-running. | `results/phase2_baselines/` (generated rows only). | Edit agent, parser, solver, or doc prose. |
 | **Implementation** | Implement the next improvement from the roadmap's "Next steps", with focused tests. | `chinatravel/`, `agent_env/`, `tests/`, `scripts/`. | Rewrite roadmap priorities or promote a row (that is the gate's job). |
 
 Shared rules for every workstream: obey the [non-negotiable invariants](#non-negotiable-invariants) and the [change and branch protocol](#change-and-branch-protocol); rebase on the latest `main` before pushing; a measurement promotes a change only through the gate, never by assertion alone. Priority order is maintained in the roadmap, and focused prompts live in [`docs/agents/`](docs/agents/).
@@ -43,10 +47,12 @@ Shared rules for every workstream: obey the [non-negotiable invariants](#non-neg
 | Phase 1 operation | [Phase 1 playbook](docs/tpc_phase1_playbook.md) |
 | Phase 2 architecture | [README architecture snapshot](README.md#architecture-at-a-glance) and [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Phase 2 metrics, gates, dataset boundaries, and the fast pre-gate A/B screen + cadence | [Phase 2 evaluation](docs/tpc_phase2_eval.md) |
+| **What to evaluate next** (5 h whole-run envelope, parallel) | [Phase 2 evaluation roadmap](docs/tpc_phase2_eval_roadmap.md) |
 | Phase 2 priorities and solver headroom | [Phase 2 roadmap](docs/tpc_phase2_roadmap.md) |
 | Cross-phase open shortcomings and the implementation plan for each | [Shortcomings and plan](docs/tpc_shortcomings_and_plan.md) |
 | Parallel-agent focused prompts (evaluation and implementation) | [Agent prompts](docs/agents/README.md) |
 | Competition facts | [Competition reference](docs/reference/competition.md) |
+| Phase 2 submission packaging and the technical report | [Competition reference](docs/reference/competition.md#packaging-this-into-a-submission) and [report guide](report/README.md) |
 | Agent environment | [Human guide](agent_env/README.md) and [agent contract](agent_env/SKILL.md) |
 | Historical decisions and measurements | [Documentation archive](docs/archive/README.md) |
 
@@ -65,6 +71,7 @@ Use `make help` for Phase 1 commands and `make phase2-help` for Phase 2 commands
 ## Measurements and ledgers
 
 Promotable Phase 2 evidence is a committed row under `results/phase2_baselines/` produced from a pinned source revision when the run is long.
+Two contracts coexist and their rows are never comparable: **whole-run** rows (`full_runs/`, one 5 h envelope for the split, parallel, triage-first — what the submission is judged by) and **per-query** rows (`runs/`, fixed `900 s`/query, sequential — for solver A/Bs). See [Phase 2 evaluation](docs/tpc_phase2_eval.md#two-measurement-contracts-and-which-one-decides-what-we-ship).
 Compare rows only when data source, split/fold/limit, budget, repeat count, flags, model/backend, parallelism, fresh-output policy, and evaluator contract match; rows straddling either upstream evaluator sync (2026-07-28 `764614c`, 2026-08-04 `c89cfca`) are never comparable — `evaluator_parity` on each recorded row says which side it is on.
 Parser diagnostics prioritize a failure investigation; they do not by themselves promote a change.
 Gate a like-for-like end-to-end candidate and inspect parse failures, timeouts, recovery/fallback use, stage telemetry, and LLM failure telemetry.

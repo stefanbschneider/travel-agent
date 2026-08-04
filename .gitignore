@@ -36,6 +36,14 @@ agent_env/config.toml
 
 .vscode/
 
+# LaTeX build artifacts. The report PDF itself stays tracked: it is the submitted deliverable.
+report/*.aux
+report/*.log
+report/*.bbl
+report/*.blg
+report/*.out
+report/*.synctex.gz
+
 # Generated split shards/focus files from solve.py and iterate_tail.py
 chinatravel/evaluation/default_splits/_tmp_*_shard*.txt
 

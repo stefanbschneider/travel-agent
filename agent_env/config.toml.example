@@ -4,7 +4,11 @@ split = "easy"
 # script's built-in default is "en" and applies to query loading, the environment
 # tools, and both commonsense and hard-logic evaluation.
 lang = "en"
-harness = "opencode"
+# "tpc" (the shipped default) runs this repository's deterministic solver in-process, which is
+# what the organizer-confirmed `--split <split>` invocation must do. Set "opencode"/"codex" here
+# only for a deliberate external-CLI baseline comparison -- a local config.toml that changes this
+# makes the bare command behave differently on your machine than in evaluation.
+harness = "tpc"
 method = ""
 work_dir = ""
 tool_python = "UV_CACHE_DIR=/tmp/uv_cache uv run python"
@@ -13,6 +17,14 @@ limit = 1
 no_run_harness = false
 resume = false
 plan_file = ""
+
+[tpc]
+# Per-query solve budget cap, in seconds.
+budget_sec = 300
+# Whole-run wall-clock envelope, in seconds; each query gets the smaller of budget_sec and its
+# fair share of the time left. 18000 (5 h) is the organizers' confirmed budget for a 100-query
+# run and the built-in default; 0 disables the envelope and uses budget_sec for every query.
+total_budget_sec = 18000
 
 [opencode]
 model = "dashscope/qwen3.6-27b"

@@ -58,24 +58,35 @@ If a requirement or verifier behavior is unclear, inspect the source or query th
 
 ## Harness entry points
 
-Use the generic compatibility harness when a caller asks for OpenCode or Codex execution:
+**`solve_script_with_harness.py --split <split>` (no other flags) is the organizer-confirmed Phase 2
+evaluation command** (2026-08-04 direct reply). Bare, it runs the deterministic no-oracle solver
+in-process — no external CLI, no LLM call, no subprocess:
 
 ```bash
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split> --uid <uid>
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
 ```
 
-Use the repository no-oracle implementation for Phase 2 orchestration:
+The same script drives an external agent CLI only when asked explicitly, for baseline comparison:
+
+```bash
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --harness opencode --split <split> --uid <uid>
+```
+
+`solve_phase2.py` remains the direct, development-facing runner for the same solver:
 
 ```bash
 .venv/bin/python agent_env/scripts/solve_phase2.py --split <split> --limit 1 --budget-sec 300
 ```
 
-Both write plans to `results/<method>/<uid>.json`. The generic harness stores prompt, output, and evaluation artifacts under its configured run directory; the repository runner also stores `telemetry.json`.
+All of them write plans to `results/<method>/<uid>.json`. The external-CLI harness stores prompt,
+output, and evaluation artifacts under its configured run directory; the deterministic path also
+stores `telemetry.json`.
 
-**`solve_script_with_harness.py --split <split>` (no other flags) is the organizer-confirmed Phase 2
-evaluation command** (2026-08-04 direct reply). There is no per-query timeout — the organizers give the
-whole 100-query run a single 5-hour wall-clock budget, excluding setup; `--budget-sec`/`--timeout` values
-above remain local per-query development settings, not organizer rules. As shipped, the confirmed
-command's default harness (`opencode`) is the external-CLI demo, not the real deterministic solver behind
-`solve_phase2.py` — see the [competition reference](../docs/reference/competition.md#a-critical-gap-this-reply-surfaces-our-real-solver-isnt-wired-to-the-confirmed-entry-point)
-for the gap and its fix priority.
+There is no per-query timeout — the organizers give the whole 100-query run a single 5-hour
+wall-clock budget, excluding setup. The confirmed command schedules against that envelope itself:
+triage every query cheaply, then repair the constraint-failing ones at growing budgets, then polish
+preferences, across `CPU count - 1` worker processes, keeping the best plan found for each query
+and pre-writing a valid fallback for all of them. `--budget-sec`/`--timeout` remain local per-query
+development settings, not organizer rules. See the
+[competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
+and [agent_env/README.md](README.md#server-and-harness-entry-points).

@@ -1,0 +1,26 @@
+# Minimal runtime for the Phase 2 submission.
+#
+# This is everything `python agent_env/scripts/solve_script_with_harness.py --split <split>`
+# needs and nothing else: pure `pip install -r`, PyPI only, no extra index, no system packages,
+# no GPU stack. The organizers evaluate on an internal network where slow or exotic installs cost
+# their limited evaluation time, so the submitted path deliberately does not import torch, vllm,
+# transformers, accelerate, modelscope, or flashinfer (the local-model backend behind
+# `chinatravel/agent/llms.py`'s lazy import), nor the analysis/plotting stack.
+#
+# Verified by tests/phase2/test_submission_package.py; the full development environment is
+# requirements.txt.
+# Every pin below is byte-identical to upstream LAMDA-NeSy/ChinaTravel's requirements.txt, and
+# `ortools` is the only package this repository adds to upstream's set (the CP-SAT tier needs it;
+# psutil, our only other addition, is now an optional import used for RSS telemetry alone).
+# tests/phase2/test_submission_package.py enforces both properties.
+geopy==2.4.1
+jsonschema==4.23.0
+numpy==1.26.4
+ortools==9.9.3963
+pandas==2.2.3
+tqdm==4.66.6
+func_timeout==4.3.5
+
+# Only used when an LLM-backed flag is switched on explicitly. The default path makes zero LLM
+# calls and never imports it; kept here so enabling a flag does not need a second install.
+openai==1.53.0

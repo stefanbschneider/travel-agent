@@ -176,8 +176,8 @@ The familiar release has no organizer best plans, so its ceiling is unavailable 
 
 The final change window is closed. What shipped is **one mechanism**, promoted from a paired
 same-SHA screen: the commonsense-first finalization policy (`TPC_COMMONSENSE_FIRST`, harness-default-on).
-Implementation brief: [`docs/agents/final_night_commonsense_first.md`](agents/final_night_commonsense_first.md).
-Confirmation commands for a second machine: [`docs/agents/final_night_eval_commands.md`](agents/final_night_eval_commands.md).
+Implementation brief: [`docs/archive/agents/final_night_commonsense_first.md`](archive/agents/final_night_commonsense_first.md).
+Confirmation commands for a second machine: [`docs/archive/agents/final_night_eval_commands.md`](archive/agents/final_night_eval_commands.md).
 
 | step | result |
 | --- | --- |
@@ -288,7 +288,7 @@ pair. All were recovered (`used_fallback=0`, `parse_failures=0`), and the budget
 tight — the baseline's own solve `p50` is `108 s` of `120 s`, so any extra per-query work tips
 queries over the wall. This is the same budget-boundary shape `TPC_PIN_TIMED_WINDOWS` showed at
 `300 s` and cleared at `900 s` (`p50 265 s`, zero timeouts). Treat the `900 s` rows from
-[`final_night_eval_commands.md`](agents/final_night_eval_commands.md) as the confirmation.
+[`final_night_eval_commands.md`](archive/agents/final_night_eval_commands.md) as the confirmation.
 
 ### Known residual: the intercity-endpoint cluster has a different cause
 
@@ -396,9 +396,10 @@ directly on 2026-08-04** (see the [reference doc](reference/competition.md#confi
 evaluation runs the fixed command `python agent_env/scripts/solve_script_with_harness.py --split <split>`
 automatically, at most two submitted versions are scored (higher wins if both succeed), teams get
 feedback after every run, and **there is no per-query timeout** — only a single 5-hour wall-clock budget
-for all 100 queries, excluding setup. Item 0a below is the direct, urgent consequence of that reply.
+for all 100 queries, excluding setup. Item 0a below was the direct, urgent consequence of that reply;
+it landed the same day, so the top open priority is again item 0 (the post-sync reference row).
 Implementation-level detail for the older items lives in
-[`next_steps_after_final_night.md`](agents/next_steps_after_final_night.md).
+[`next_steps_after_final_night.md`](archive/agents/next_steps_after_final_night.md).
 
 **Self-contained implementation briefs for every open item below — plus the Phase 1 items and a
 ranked leverage estimate for each — are in [Shortcomings and plan](tpc_shortcomings_and_plan.md)
@@ -407,27 +408,35 @@ findings change what is written below: the Phase 1 "hard tail" is `22` plan-leve
 in plans that already satisfy every logical clause (worth `~+2.2` overall, item 0b), and Tasks 1 and 3
 of `next_steps_after_final_night.md` have landed while Task 2 (the single-day trailing stay) has not.
 
-0. **Re-establish a post-sync baseline before gating anything.** Every committed row is on the old
-   evaluator contract. The first `900 s` `familiar_100_val` run after the sync becomes the new
-   reference row; until it exists, `make phase2-gate` has no valid baseline to compare against.
+0. **Re-establish a baseline before gating anything — now a *whole-run* baseline.** Every committed
+   row is on the old evaluator contract *and* the old per-query budget contract. The reference row
+   the submission is judged by is the first 5-hour, parallel `familiar_100` run recorded by
+   `scripts/phase2_full_run.py` (`make phase2-full-run`); until it exists we do not know what we
+   would score. The run order for it and everything downstream is the
+   [evaluation roadmap](tpc_phase2_eval_roadmap.md) (R1 first). A `900 s` per-query
+   `familiar_100_val` row is still worth having for solver A/Bs through `make phase2-gate`, but it
+   no longer describes the submission.
 
-0a. **SUBMISSION-BLOCKING: wire the confirmed entry point to our real solver (new, 2026-08-04).**
-   The organizers will invoke exactly `python agent_env/scripts/solve_script_with_harness.py --split
-   <split>` — no other flags — as the entire evaluation run. Today that script's default harness is
-   `opencode`: it shells out to the external `opencode` CLI, which calls an external LLM API (DashScope
-   by default). It does **not** run this repository's actual deterministic, no-oracle `TPCAgent` solver —
-   that lives behind the separate, unnamed `agent_env/scripts/solve_phase2.py` entry point. Left as-is,
-   the organizers' evaluation would either fail outright (no `opencode` binary / no network egress on
-   their internal-network host) or, if it somehow succeeded, score a generic LLM-prompting demo instead
-   of our real solver. **Do:** make the bare command (`--split <split>`, no `--harness` flag) run the
-   deterministic solver by default — either by changing `solve_script_with_harness.py`'s default harness
-   to call the `chinatravel/agent/phase2` no-oracle path in-process, or by making it a thin dispatcher to
-   `solve_phase2`'s logic when no external-CLI harness is explicitly requested. Keep `opencode`/`codex`
-   available as opt-in alternates, not the default. Add a test that invokes the bare command end-to-end
-   (no env vars, no extra flags) and asserts it produces a schema-valid plan without any subprocess call
-   to `opencode`/`codex`. See the [reference doc](reference/competition.md#a-critical-gap-this-reply-surfaces-our-real-solver-isnt-wired-to-the-confirmed-entry-point)
-   for the full finding. This is more urgent than any further solver-quality work below: a quality
-   regression costs points, but this gap costs the entire submission.
+0a. **~~SUBMISSION-BLOCKING: wire the confirmed entry point to our real solver.~~ Landed 2026-08-04.**
+   The organizers invoke exactly `python agent_env/scripts/solve_script_with_harness.py --split <split>`
+   — no other flags — as the entire evaluation run, and that script's default harness was `opencode`:
+   an external CLI calling an external LLM API, not this repository's deterministic no-oracle `TPCAgent`
+   solver (which lived only behind the unnamed `agent_env/scripts/solve_phase2.py`). Left as-is, the
+   evaluation would have failed outright on an internal-network host, or scored a generic LLM-prompting
+   demo. **Done:** the shipped default is now `--harness tpc`, which runs `solve_phase2.run_split`
+   in-process — zero LLM calls, zero network calls, no subprocess — with `opencode`/`codex` kept as
+   explicit opt-ins. The bare command also now enforces the confirmed **5-hour whole-run envelope**
+   instead of a fixed per-query budget (`min(per-query cap, remaining / remaining queries)`, floored,
+   clock starting at interpreter start), because 100 queries × the 300 s working default is 8.3 h and
+   would have been cut off mid-split. `tests/phase2/test_harness_entry_point.py` pins the default, the
+   no-subprocess property, and the budget arithmetic, plus an integration test running the organizers'
+   command shape with `opencode`/`codex` unreachable. Packaging and the submission builder landed with
+   it: `requirements-submission.txt` (nine PyPI packages, no GPU stack) and
+   `scripts/assemble_phase2_submission.py` (build + unpack-and-run verification; uploads nothing). See
+   the [reference doc](reference/competition.md#the-gap-this-reply-surfaced--closed-2026-08-04).
+   **Still open from this item:** the per-query cap that ships (`300 s` today) has not been re-screened
+   against the envelope on a full 100-query run — the total-wall-clock check W7 asks for is the natural
+   place to settle it.
 
 0b. **Re-solve Phase 1 `results/best` (highest expected value of anything on this list, and it is
    Phase 1 work).** The organizers will re-score the Phase 1 leaderboard with the new evaluator, and
@@ -438,11 +447,19 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
    family. Two of the failures are also cheap plan-level repairs on already-solved plans (drop the
    duplicate meal; re-space overlapping activities), which is likely faster than a full re-solve.
 
-0c. **Use the 16 confirmed evaluation CPUs.** The organizers confirmed the harness process is assigned
-   **16 logical CPUs and 112 GiB host RAM**. Our per-query solve is single-threaded by construction
-   (CP-SAT `num_search_workers` 1, sequential restarts), tuned on far smaller dev machines. Parallel
-   restarts and/or a multi-worker CP-SAT tier convert idle cores into search inside the same
-   per-query budget, with no change to the acceptance contract. Screen it like any other change.
+0c. **~~Use the 16 confirmed evaluation CPUs.~~ Landed 2026-08-04 at the scheduler level; the
+   *within-query* half is still open.** The organizers confirmed the harness process is assigned
+   **16 logical CPUs and 112 GiB host RAM**, while a single solve is single-threaded by construction
+   (CP-SAT `num_search_workers` 1, sequential restarts). The whole-run scheduler now spends those
+   cores **across queries**: `CPU count - 1` worker processes, so a pass over `n` queries costs
+   `ceil(n / workers)` query-budgets of wall clock instead of `n`. That is what makes a large
+   per-query budget affordable at all inside 5 h — with 15 workers a 100-query pass is 7 rounds, so
+   the same envelope buys roughly 14× the per-query time a sequential run could. Unmeasured until
+   [eval roadmap R3](tpc_phase2_eval_roadmap.md#r3--worker-scaling-does-parallelism-convert-into-score)
+   compares it against a 1-worker run at the same envelope.
+   **Still open:** parallelism *inside* one query (parallel restarts, multi-worker CP-SAT). Note it
+   now competes with cross-query parallelism for the same cores rather than filling idle ones, so
+   its case is weaker than when this item was written. The earlier screen is unchanged:
    **Telemetry (2026-07-31 night)**: reading `search_telemetry` on 8 real `familiar_100_val` queries
    found no single "found early" pattern — 3 converge in the first `5%` of their restart budget, but 5
    (including 2 that a `func_timeout` kill had been silently hiding until this session's fix) are still
@@ -454,7 +471,7 @@ of `next_steps_after_final_night.md` have landed while Task 2 (the single-day tr
    table and the screen row.
 
 1. **Confirm the commonsense-first promotion at `900 s`.** Run the two pinned arms in
-   [`final_night_eval_commands.md`](agents/final_night_eval_commands.md). The only open question is
+   [`final_night_eval_commands.md`](archive/agents/final_night_eval_commands.md). The only open question is
    the screen's `+3` recovered timeouts at a `120 s` budget; everything else was clean.
 
 2. **~~Fix the single-day-trip overnight-accommodation defect.~~ Landed 2026-07-31**
@@ -493,6 +510,14 @@ is closed upstream, and a stacked day is now reverted by `check` rather than sco
 **Update 2026-08-04: the organizers confirmed there is no per-query timeout** — the real constraint is a
 single 5-hour wall-clock budget for the whole 100-query run, excluding setup (see the
 [reference doc](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
+**The submission path was rewritten the same day to schedule against that envelope directly**
+(`chinatravel/agent/phase2/sweeps.py`): triage every query at a small budget, then repair only the
+constraint-failing ones at a growing budget, then polish preferences, all across `CPU count - 1`
+worker processes, with every result scored oracle-free and kept only if it beats what is on disk.
+A fallback plan for every query is written *before* the first solve, so a run cut off at any instant
+still submits a complete set. The per-query budget is therefore no longer a constant to tune but an
+output of the schedule. What to measure about it is the
+[evaluation roadmap](tpc_phase2_eval_roadmap.md).
 Everything below this line about a `~900 s` "official per-query timeout" working expectation was a
 pre-confirmation guess and is now superseded — kept as historical record of why `900 s` became the
 development gate budget, not as current guidance. The `900 s` gate remains a reasonable *per-query*
@@ -652,6 +677,7 @@ Use `scripts/phase2_solver_failure_attribution.py` for offline diagnosis when re
 - [README architecture snapshot](../README.md#architecture-at-a-glance)
 - [Phase 2 evaluation](tpc_phase2_eval.md)
 - [Agent prompts](agents/README.md)
-- [Final-night commonsense-first brief](agents/final_night_commonsense_first.md)
-- [Final-night second-machine eval commands](agents/final_night_eval_commands.md)
+- [Evaluation roadmap](tpc_phase2_eval_roadmap.md) — what to run next under the 5 h envelope
+- [Final-night commonsense-first brief (archived)](archive/agents/final_night_commonsense_first.md)
+- [Final-night second-machine eval commands (archived)](archive/agents/final_night_eval_commands.md)
 - [Competition reference](reference/competition.md)

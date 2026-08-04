@@ -331,7 +331,7 @@ def test_broken_outbound_endpoint_is_repaired_symmetrically():
 # 3 of the 21 failing end-to-end plans on the promoted row fail all four intercity commonsense
 # columns at once ("Intercity transportation events must occur" and friends). Those plans are also
 # unaccepted, so the legacy `if not self._accepted(*check(trial)): return` guard discarded the
-# re-grounding every time -- see docs/agents/final_night_commonsense_first.md.
+# re-grounding every time -- see docs/archive/agents/final_night_commonsense_first.md.
 
 
 def _endpoints_grounded(plan):

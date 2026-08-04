@@ -9,7 +9,8 @@ SPLIT ?= tpc_phase1
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
 	phase2-help phase2-test phase2-splits phase2-solve phase2-query phase2-rehearse \
 	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
-	phase2-baseline phase2-baseline-at
+	phase2-baseline phase2-baseline-at phase2-harness phase2-submission \
+	phase2-submission-check phase2-full-run
 
 # Run phase 1 evaluation
 p1eval:
@@ -92,6 +93,11 @@ P2_FAST_FPR_FLAG = $(if $(filter 1,$(P2_FAST_FPR)),--fast-fpr,)
 #   make phase2-query P2_QUERY_ARGS="--query-file my_query.json --budget-sec 120"
 #   make phase2-query P2_QUERY_ARGS='--query-text "3 days Beijing to Chengdu, 2 people" --start-city Beijing --target-city Chengdu --days 3'
 P2_QUERY_ARGS ?=
+# Whole-run evaluation (docs/tpc_phase2_eval_roadmap.md). The envelope is the organizers' confirmed
+# 5 hours for the whole split; workers default to CPU count - 1 inside the runner.
+P2_FULL_SPLIT ?= tpc_phase2_familiar_100
+P2_TOTAL_BUDGET ?= 18000
+P2_WORKERS ?=
 
 phase2-help:
 	@printf '%s\n' \
@@ -110,6 +116,10 @@ phase2-help:
 	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
 	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
+	  '  make phase2-harness         - run the ORGANIZER-CONFIRMED entry point exactly as they will' \
+	  '  make phase2-full-run        - WHOLE-RUN eval: real entry point under the 5h envelope, scored + recorded' \
+	  '  make phase2-submission      - build + verify the Phase 2 submission zip (uploads nothing)' \
+	  '  make phase2-submission-check- report what would ship, write nothing' \
 	  'Variables: P2_SPLIT_SET=val|test|familiar_100|familiar_100_val|familiar_100_test  FOLD=$(FOLD)  P2_FOLDS=$(P2_FOLDS)  P2_BUDGET=$(P2_BUDGET)  P2_BUDGETS=$(P2_BUDGETS)  P2_LIMIT=<n>  P2_METHOD=$(P2_METHOD)  P2_BRANCH_AWARE=0|1  P2_PARALLEL=$(P2_PARALLEL)  P2_FAST_FPR=0|1  P2_QUERY_ARGS="..."'
 
 # Run the Phase 2 test suite (unit by default; integration is opt-in).
@@ -125,6 +135,29 @@ phase2-splits:
 phase2-solve:
 	.venv/bin/python agent_env/scripts/solve_phase2.py --split $(P2_SPLIT) \
 	  --method $(P2_METHOD) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
+
+# The exact command the organizers run (2026-08-04 confirmation), with nothing added: no flags
+# beyond --split, no env vars. Use it to rehearse the real submission path end to end.
+phase2-harness:
+	$(PYTHON) agent_env/scripts/solve_script_with_harness.py --split $(P2_SPLIT)
+
+# Whole-run evaluation: run the shipped path under the 5h envelope on all of familiar_100, score it
+# with eval_tpc.py, and record a row under results/phase2_baselines/full_runs/. This is the run that
+# says what we would score; per-query rows (phase2-baseline) answer a different question. See
+# docs/tpc_phase2_eval_roadmap.md. Tunables: P2_TOTAL_BUDGET, P2_WORKERS, P2_SPLIT, P2_LABEL.
+phase2-full-run:
+	$(PYTHON) scripts/phase2_full_run.py --split $(P2_FULL_SPLIT) \
+	  --total-budget-sec $(P2_TOTAL_BUDGET) $(if $(P2_WORKERS),--workers $(P2_WORKERS),) \
+	  $(if $(P2_LABEL),--label "$(P2_LABEL)",)
+
+# Build the Phase 2 harness submission zip and verify it by unpacking and running it. Uploads
+# nothing -- submission stays a manual step at the portal.
+phase2-submission:
+	$(PYTHON) scripts/assemble_phase2_submission.py $(if $(VERSION),--version $(VERSION))
+
+# Report what would ship (file count, size by tree) without writing anything.
+phase2-submission-check:
+	$(PYTHON) scripts/assemble_phase2_submission.py --dry-run
 
 # Run ONE query end to end (existing uid / a query file / raw NL text). See scripts/run_query.py.
 phase2-query:

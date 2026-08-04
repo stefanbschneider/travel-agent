@@ -64,16 +64,48 @@ CHINATRAVEL_LANG=en .venv/bin/python -m agent_env.mcp_stdio
 .venv/bin/python agent_env/scripts/solve_phase2.py --split tpc_phase2_val --limit 1 --budget-sec 300
 ```
 
+```bash
+# The organizer-confirmed Phase 2 evaluation command
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
+```
+
 **`agent_env/scripts/solve_script_with_harness.py --split <split>` is the organizer-confirmed Phase 2
 evaluation command** (2026-08-04 direct reply, no other flags — see the
 [competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
-As shipped, that script's default harness (`opencode`) shells out to an external CLI that calls an
-external LLM API — it is a generic OpenCode/Codex compatibility demo, **not** this repository's real
-deterministic no-oracle solver, which lives behind the separate `solve_phase2.py` entry point above.
-Making the bare confirmed command run the real solver by default is the top Phase 2 implementation
-priority (roadmap item 0a / [W11](../docs/tpc_shortcomings_and_plan.md#w11-wire-the-confirmed-entry-point-to-our-real-solver))
-and is not yet done — treat this as an open gap, not a settled fact, until that lands.
-Both entry points must hide oracle-only fields before the agent path.
+Bare, it runs `--harness tpc`: this repository's deterministic no-oracle solver, in-process, via
+`solve_phase2.run_split`. Zero LLM calls, zero network calls, no subprocess. The external-CLI
+harnesses are still there for the LLM-agent baseline comparison, but only on an explicit
+`--harness opencode` / `--harness codex`, never by default.
+
+| Harness | What it runs | When |
+| --- | --- | --- |
+| `tpc` (default) | deterministic `TPCAgent`, in-process | the submission; every bare invocation |
+| `opencode` / `codex` | an external agent CLI against an external LLM API | opt-in baseline comparison only |
+
+The `tpc` harness schedules the whole split against the confirmed **5-hour wall-clock envelope**
+instead of giving each query a fixed budget (`chinatravel/agent/phase2/sweeps.py`):
+
+1. **triage** every query once at a small budget (`120 s` cap), so cheap wins are banked first and
+   every query has a real plan early;
+2. **repair** the queries whose plan does not satisfy its constraints, at a larger budget each
+   pass, most-nearly-passing first;
+3. **polish** preference terms on constraint-satisfying queries with the time left — the evaluator
+   zeroes preferences for a failing query, so they are worth nothing before this point.
+
+Passes run across `CPU count - 1` worker processes (`--workers`, `TPC_P2_WORKERS`), each result is
+scored oracle-free (`chinatravel/agent/phase2/selfscore.py`) and written only if it beats the plan
+already on disk, and a schema-valid fallback for every query is written **before** the first solve.
+A run killed at any instant therefore still leaves a complete, non-regressed set of plans. The
+clock starts at interpreter start, so the database load counts against the envelope.
+
+Override with `--total-budget-sec` (or `TPC_P2_TOTAL_BUDGET_SEC`; `0` disables the envelope and
+falls back to a fixed per-query budget), `--budget-sec` (the per-query cap), `--workers`, and the
+pass-shape variables in
+[the evaluation roadmap](../docs/tpc_phase2_eval_roadmap.md#r4--pass-shape-where-should-the-envelope-go).
+It writes the same official layout as `solve_phase2.py` and shares its
+`results/phase2_e2e_<split>/` method directory, so the two entry points build on each other.
+
+Both entry points hide oracle-only fields before the agent path.
 
 ## Outputs
 
