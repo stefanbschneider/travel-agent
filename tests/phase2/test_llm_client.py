@@ -356,34 +356,11 @@ def _fake_openai_harness(monkeypatch):
     return captured
 
 
-def test_openai_backend_disables_thinking_by_default(monkeypatch):
+def test_openai_backend_disables_thinking_by_default_for_qwen3_model(monkeypatch):
     """The organizer-confirmed evaluation endpoint (SGLang serving Qwen3.6-27B) is reached
-    through this backend, so it must get the same thinking-mode-off default as deepinfra --
-    otherwise a parse/refine call against it risks the same ~10x latency regression."""
-    captured = {}
-
-    class FakeMessage:
-        content = "ok"
-
-    class FakeChoice:
-        message = FakeMessage()
-
-    class FakeCompletion:
-        choices = [FakeChoice()]
-
-    class FakeCompletions:
-        def create(self, **kwargs):
-            captured.update(kwargs)
-            return FakeCompletion()
-
-    class FakeChat:
-        completions = FakeCompletions()
-
-    class FakeOpenAI:
-        def __init__(self, **kwargs):
-            self.chat = FakeChat()
-
-    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+    through this backend, so a Qwen3-family model must get the same thinking-mode-off default as
+    deepinfra -- otherwise a parse/refine call against it risks the same ~10x latency regression."""
+    captured = _fake_openai_harness(monkeypatch)
     monkeypatch.delenv("TPC_P2_LLM_ENABLE_THINKING", raising=False)
 
     client = lc.build_llm_client(
@@ -393,34 +370,27 @@ def test_openai_backend_disables_thinking_by_default(monkeypatch):
     assert captured["extra_body"] == {"chat_template_kwargs": {"enable_thinking": False}}
 
 
-def test_openai_backend_enable_thinking_override(monkeypatch):
-    captured = {}
-
-    class FakeMessage:
-        content = "ok"
-
-    class FakeChoice:
-        message = FakeMessage()
-
-    class FakeCompletion:
-        choices = [FakeChoice()]
-
-    class FakeCompletions:
-        def create(self, **kwargs):
-            captured.update(kwargs)
-            return FakeCompletion()
-
-    class FakeChat:
-        completions = FakeCompletions()
-
-    class FakeOpenAI:
-        def __init__(self, **kwargs):
-            self.chat = FakeChat()
-
-    monkeypatch.setattr(lc, "_load_openai_class", lambda: FakeOpenAI)
+def test_openai_backend_keeps_default_for_non_qwen3_model(monkeypatch):
+    """Regression test: the ``openai`` backend is documented as generic (SGLang, OpenRouter, plain
+    OpenAI, ...), and ``chat_template_kwargs`` is an SGLang/vLLM extension outside the OpenAI wire
+    spec. Injecting it unconditionally would break a non-Qwen3 provider that rejects unknown
+    request fields, so the thinking-mode-off default must only fire for a model name that looks
+    like Qwen3 (see Copilot review on PR #57)."""
+    captured = _fake_openai_harness(monkeypatch)
+    monkeypatch.delenv("TPC_P2_LLM_ENABLE_THINKING", raising=False)
 
     client = lc.build_llm_client(
-        {"backend": "openai", "model": "m", "cache": False, "enable_thinking": True}
+        {"backend": "openai", "model": "gpt-4o-mini", "base_url": "https://api.openai.com/v1", "cache": False}
+    )
+    client.complete("hi")
+    assert "extra_body" not in captured
+
+
+def test_openai_backend_enable_thinking_override(monkeypatch):
+    captured = _fake_openai_harness(monkeypatch)
+
+    client = lc.build_llm_client(
+        {"backend": "openai", "model": "Qwen3.6-27B", "cache": False, "enable_thinking": True}
     )
     client.complete("hi")
     assert "extra_body" not in captured
