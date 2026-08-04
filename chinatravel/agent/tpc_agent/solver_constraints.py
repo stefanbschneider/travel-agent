@@ -12,6 +12,8 @@ import re
 from copy import deepcopy
 from typing import Any
 
+from chinatravel.environment.concept_labels import normalize_concept_value
+
 _BRANCH_LOCAL_KEYS = {
     "required_attractions",
     "excluded_attractions",
@@ -67,6 +69,25 @@ _BUDGET_FIELDS = (
     ("total", r"total_cost\s*<=\s*([-+]?\d+(?:\.\d+)?)"),
 )
 _INNER_TRANSPORT_MODES = {"walk", "metro", "taxi"}
+
+# Concept-valued constraint keys, by the sandbox concept kind whose canonical labels they
+# must be expressed in.  The English sandbox exposes one canonical label per concept
+# (``chinatravel/environment/concept_labels.py``), and the verifier normalizes both the
+# hard_logic_py literals (``normalize_concept_constraint_source``) and the values it reads
+# back from the tools (``concept_func.normalize_concept_value``) into that same label.  The
+# solver compares constraint values against tool column values with case-sensitive equality,
+# so it has to canonicalize its own literals the same way or a query asking for
+# "Art Museum" would match none of the attractions the verifier accepts as "Art museum".
+_CONCEPT_VALUE_KEYS = {
+    "attraction": ("required_attraction_types", "excluded_attraction_types"),
+    "restaurant": ("cuisine_preference", "excluded_cuisine_types"),
+    "accommodation": (
+        "hotel_type",
+        "hotel_amenity",
+        "required_hotel_any_types",
+        "required_hotel_all_types",
+    ),
+}
 
 
 
@@ -421,9 +442,27 @@ def _normalize_variant(constraints: dict, use_oracle: bool) -> dict:
     else:
         normalized.pop("budgets", None)
 
+    _normalize_concept_values(normalized)
     _normalize_hotel_type(normalized)
     _normalize_intercity_mode(normalized)
     return normalized
+
+
+def _normalize_concept_values(normalized: dict) -> None:
+    """Rewrite concept-valued literals into the sandbox's canonical labels, mirroring the
+    verifier's own normalization of hard_logic_py literals and tool column values."""
+    for kind, keys in _CONCEPT_VALUE_KEYS.items():
+        for key in keys:
+            if key not in normalized:
+                continue
+            value = normalized[key]
+            if isinstance(value, str):
+                normalized[key] = normalize_concept_value(kind, value, "en")
+            elif isinstance(value, list):
+                normalized[key] = _dedupe(
+                    normalize_concept_value(kind, v, "en") if isinstance(v, str) else v
+                    for v in value
+                )
 
 
 def _normalize_hotel_type(normalized: dict) -> None:

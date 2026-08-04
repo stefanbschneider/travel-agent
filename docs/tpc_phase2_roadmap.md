@@ -40,6 +40,21 @@ Three conclusions:
 3. Solver-only remains behind end-to-end on this data (a known pattern), and is the arm still emitting
    commonsense-invalid plans (1 chronology, 4 transport-grounding).
 
+### Second sync (2026-08-04, upstream PR #32, `c89cfca`)
+
+Upstream merged a follow-up on 2026-08-04; it is integrated. **The seven scoring rules did not
+change** and no released query's score moves on its own. What changed is the sandbox: the English
+tools now expose one canonical label per concept, and the mode-filtered `innercity_transport_*`
+helpers read the `mode` key plan transports actually carry (they read a `type` key that never
+exists, so they silently returned `0`). Because the solver compares constraint literals against tool
+columns with case-sensitive equality, `solver_constraint_variants` now canonicalizes its own
+concept literals through the same table — without that, a query asking for `'Art Museum'` would
+match none of the attractions the verifier accepts as `'Art museum'`.
+
+`EVALUATOR_PARITY_SHA` is now `c89cfca`, so **the reference row below must be re-recorded before it
+can gate anything**; the gate refuses a `764614c` baseline against a `c89cfca` candidate. Full
+detail: [competition reference](reference/competition.md#second-upstream-sync-2026-08-04-pr-32).
+
 ## Current status snapshot
 
 Current reference row: [20260724T192503Z](../results/phase2_baselines/runs/20260724T192503Z.json)

@@ -153,7 +153,8 @@ W10) stay explicitly out of scope for an implementation session and are **unchan
   The row itself still needs a dedicated `8` h+ evaluation machine this session did not have, but the
   "also do" item in W3's brief (a marker so a future reader can't accidentally gate a post-sync row
   against a pre-sync one) is now implemented ahead of it: `scripts/phase2_record_baseline.py` stamps
-  every recorded row with `evaluator_parity="764614c"` (the parity point `CLAUDE.md` cites), and
+  every recorded row with `evaluator_parity` set to the parity point `CLAUDE.md` cites (`764614c`
+  when this landed; `c89cfca` since the 2026-08-04 sync), and
   `scripts/phase2_gate.check_gate` now refuses the comparison outright — `passed: False` with a named
   reason — when the two rows' markers differ, **including one-sided presence** (a pre-sync row never
   carries the marker; a post-sync row always will, so "one side has it, one doesn't" is exactly the
@@ -545,6 +546,11 @@ closed, not failed.
 Every row in `results/phase2_baselines/runs/` was produced under the pre-2026-07-28 evaluator contract.
 Rows straddling that change are **never** comparable ([eval doc](tpc_phase2_eval.md#ledger-comparability)),
 so `make phase2-gate` currently has no legal baseline and no Phase 2 default can be flipped.
+
+**Updated 2026-08-04:** upstream synced again (`c89cfca`, PR #32) and the marker value moved with it —
+`EVALUATOR_PARITY_SHA` is now `c89cfca`, so the row this item asks for must be recorded on the current
+checkout. The quoted marker value `764614c` below is the one that shipped with the mechanism, not the
+one a new row will carry.
 
 Run the current promoted configuration — harness defaults, which means `TPC_PIN_TIMED_WINDOWS=1`,
 `TPC_SOLVE_CONVERGE_PATIENCE=15`, `TPC_COMMONSENSE_FIRST=1`, LLM backend `none` — as a pinned row:
@@ -1080,7 +1086,7 @@ its own branch and rebases on latest `main` before pushing.
 | W1's repairs break a logical clause while fixing commonsense | low | low | Every repair is full-checker gated and `merge.py` applies a strictly-greater score gate on top — the score cannot go down |
 | W4's parallel restarts break determinism | medium | high | Fold results in draw order; assert `W=1` and `W=4` produce identical plans on a fixed seed |
 | W4 raises `p95` solve time and creates timeouts at the real budget | medium | medium | Judge W4's gate together with W7's curve, never alone |
-| Another upstream evaluator change before the deadline | low | high | Re-sync and re-establish the reference row before trusting any number; `chinatravel/evaluation/` must reproduce upstream `main` exactly (parity point `764614c`) |
+| Another upstream evaluator change before the deadline | **materialized twice** (2026-07-28 `764614c`, 2026-08-04 `c89cfca`) | high | Re-sync and re-establish the reference row before trusting any number; `chinatravel/evaluation/`, `chinatravel/symbol_verification/` and `chinatravel/environment/` must reproduce upstream `main` exactly (parity point `c89cfca`) |
 | Overfitting `familiar_100_val` across ~20 screens | medium | medium | W10's test tripwire; never tune on the test split |
 | Time runs out mid-item | high | medium | Every item is independently shippable and every Phase 2 change is off by default — abandoning an item costs nothing |
 

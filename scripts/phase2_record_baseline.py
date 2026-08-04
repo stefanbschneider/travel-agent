@@ -53,11 +53,12 @@ runner_mod = _load_script_module("solve_phase2", "agent_env/scripts/solve_phase2
 
 
 # CLAUDE.md's "Upstream evaluator parity" invariant: chinatravel/evaluation/,
-# chinatravel/symbol_verification/, eval_tpc.py's scoring, and load_datasets.py must reproduce
-# LAMDA-NeSy/ChinaTravel main exactly as of this upstream sha. Stamped onto every recorded row so
-# phase2_gate.py can refuse to compare rows that straddle a future evaluator change (roadmap W3;
-# docs/tpc_phase2_eval.md#ledger-comparability).
-EVALUATOR_PARITY_SHA = "764614c"
+# chinatravel/symbol_verification/, chinatravel/environment/ (concept labels and tools),
+# eval_tpc.py's scoring, and load_datasets.py must reproduce LAMDA-NeSy/ChinaTravel main exactly as
+# of this upstream sha. Stamped onto every recorded row so phase2_gate.py can refuse to compare rows
+# that straddle an evaluator change (roadmap W3; docs/tpc_phase2_eval.md#ledger-comparability).
+# 764614c (2026-07-28) -> c89cfca (2026-08-04, upstream PR #32).
+EVALUATOR_PARITY_SHA = "c89cfca"
 
 DEFAULT_HISTORY_DIR = PROJECT_ROOT / "results" / "phase2_baselines"
 HISTORY_JSONL = "history.jsonl"

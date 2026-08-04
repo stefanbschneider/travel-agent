@@ -119,7 +119,10 @@ The examples are drawn from the same distribution as final evaluation but are de
 
 ## Evaluator version
 
-**Parity point: upstream `LAMDA-NeSy/ChinaTravel` `main` at `764614c` (2026-07-28), integrated here on 2026-07-30.**
+**Parity point: upstream `LAMDA-NeSy/ChinaTravel` `main` at `c89cfca` (2026-08-04), integrated here on 2026-08-04.**
+The previous parity point was `764614c` (2026-07-28); the scoring contract described below is still
+the current one — see [the 2026-08-04 sync](#second-upstream-sync-2026-08-04-pr-32) for what the
+newer commits changed.
 
 The organizers changed the *public* evaluator two days after our clarification issues were filed, via
 two maintainer PRs ([#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) chronology and meal
@@ -156,6 +159,36 @@ Phase 2."* Two consequences beyond the code sync:
   `100.0 -> 61.16` exposure the local re-score shows (see the [Phase 1 playbook](../tpc_phase1_playbook.md#current-status-2026-07-30-after-the-upstream-evaluator-sync)).
 - **Track upstream `main`, not a pinned copy.** Teams are told to "use the latest public evaluator
   rather than the earlier verifier version". Re-check upstream before any measurement that matters.
+
+### Second upstream sync (2026-08-04, PR #32)
+
+Upstream merged [PR #32](https://github.com/LAMDA-NeSy/ChinaTravel/pull/32) ("Synchronize evaluator
+normalization and performance fixes", commits `90d1fca` + `24adf87`, merged `c89cfca`) on 2026-08-04.
+It is integrated here the same day. Three behavioural changes, none of which touches the seven
+scoring rules above:
+
+1. **Concept labels moved into the sandbox.** The English alias table that `concept_func` used to
+   own now lives in `chinatravel/environment/concept_labels.py`, and `Attractions`, `Restaurants`
+   and `Accommodations` canonicalize their `type`/`cuisine`/`featurehoteltype` columns at load time
+   when `lang="en"`. The verifier already normalized both sides (constraint literals via
+   `normalize_concept_constraint_source`, tool reads via `normalize_concept_value`), so **the score
+   of a given plan is unchanged** — but an agent querying the environment now sees one canonical
+   label per concept instead of a per-city mix (`Art Museum` and `Art museum` are both `Art museum`).
+2. **`innercity_transport_{cost,distance,time}` honour the `mode` key.** They filtered on
+   `transport["type"]`, which plan transports never carry — they carry `mode` — so a mode-filtered
+   call silently returned `0`. `innercity_transport_time` additionally ignored its `mode` argument
+   entirely. This *is* a scoring change for any query whose `hard_logic_py` passes a mode; no query
+   in the released Phase 1 or familiar-100 data does, so no released-data score moves, but a
+   held-out query could.
+3. **Performance only:** one compiled `jsonschema` validator per batch instead of one per plan,
+   a per-POI nearest-metro-station cache, and `geographiclib` called directly instead of through
+   `geopy.distance.geodesic` (same WGS84 result).
+
+Item 1 changes what the *solver* sees, so `solver_constraint_variants` now canonicalizes its own
+concept literals through the same table (`tests/phase2/test_concept_label_alignment.py`); without
+that, a constraint asking for `'Art Museum'` would match no attraction the verifier accepts.
+`EVALUATOR_PARITY_SHA` moves to `c89cfca` accordingly, so the gate refuses to compare rows recorded
+across this sync.
 
 ## Technical report (2026-08-04 organizer reply)
 

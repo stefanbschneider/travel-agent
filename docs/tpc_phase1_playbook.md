@@ -12,8 +12,9 @@ Score `results/best` with:
 make p1eval SPLIT=tpc_phase1
 ```
 
-Latest local result on the upstream-aligned evaluator (upstream `main` `764614c`, PRs
-[#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30)):
+Latest local result on the upstream-aligned evaluator (measured against upstream `main` `764614c`, PRs
+[#29](https://github.com/LAMDA-NeSy/ChinaTravel/pull/29) / [#30](https://github.com/LAMDA-NeSy/ChinaTravel/pull/30);
+the 2026-08-04 sync to `c89cfca` left the scoring rules untouched, so these numbers still stand):
 MicEPR `99.99`, MacEPR `99.9`, C-LPR `99.83`, FPR `99.9`, DAV `95.41`, ATT `98.62`, DDR `87.36`,
 **overall `98.98`** — up from `97.47`, in the two steps recorded as W1b and W2b below. Submitted
 as **v9**.

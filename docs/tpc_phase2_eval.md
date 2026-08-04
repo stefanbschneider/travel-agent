@@ -48,6 +48,23 @@ changes alter what the preference terms mean, and one removes a local reporting 
 against or compared with a row produced after the sync — the comparability rule below now includes
 the evaluator revision.
 
+### Second upstream sync on 2026-08-04 (upstream PR #32, `c89cfca`)
+
+The seven scoring rules are unchanged. What moved is the sandbox and the solver's view of it: the
+English environment tools now expose one canonical label per concept (`Art Museum` and `Art museum`
+are both `Art museum`), and the mode-filtered `innercity_transport_*` helpers finally read the
+`mode` key that plan transports actually carry. See the
+[competition reference](reference/competition.md#second-upstream-sync-2026-08-04-pr-32) for the
+detail. Consequences for measurement:
+
+- **A given plan scores the same as it did before the sync** on released data — the verifier already
+  normalized both sides of every concept comparison, and no released query passes a mode argument to
+  an `innercity_transport_*` helper.
+- **End-to-end rows still move**, because the solver now sees canonical labels and canonicalizes its
+  own constraint literals to match. `EVALUATOR_PARITY_SHA` is `c89cfca`, so
+  `scripts/phase2_gate.py` refuses to gate a row recorded after this sync against a `764614c` row.
+  Re-record the reference row before gating anything.
+
 ## Dataset boundaries
 
 Phase 2 measurements must name their data source.
@@ -123,7 +140,7 @@ Familiar-100 ledger rows must carry the manifest-derived data-source ID and rema
 Compare rows only when they match on:
 
 - source revision, data source, split, deterministic fold/limit, and language;
-- **evaluator contract**: rows straddling the 2026-07-28 upstream evaluator change (integrated 2026-07-30) are never comparable, whatever else matches;
+- **evaluator contract**: rows straddling either upstream sync — 2026-07-28 `764614c` (integrated 2026-07-30) or 2026-08-04 `c89cfca` (integrated 2026-08-04) — are never comparable, whatever else matches; each recorded row's `evaluator_parity` field names its side;
 - local budget, repeat count, parallelism, and fresh-output policy;
 - parser, solver, and feature flags; and
 - LLM backend/model and cache policy when an LLM is enabled.
