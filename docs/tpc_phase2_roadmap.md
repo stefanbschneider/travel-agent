@@ -198,11 +198,17 @@ clauses:
 (plus `7` sole-blocker queries needing a combination). So the family is still the whole story, and it
 is still one clause short on a third of the split.
 
-**Why P1's relayout left them — measured, and the reason P8 is a different move.** `_relayout_movable_block`
-re-derives *every* leg in the day through `_get_transport` at its new departure time and places each
-activity at earliest arrival. That is the wrong granularity for a 5-minute fix, because each
-re-derived leg lands a little later than the plan's original leg and the error accumulates. Replaying
-it on `phase2_familiar_20250321155107635610_00035` day 1 — a breakfast needing `+15 min` —
+**Why P1's relayout left them — the *effect* is measured, the *cause below is a hypothesis*.**
+`_relayout_movable_block` re-derives *every* leg in the day through `_get_transport` at its new
+departure time and places each activity at earliest arrival. The sentence that followed — "because
+each re-derived leg lands a little later than the plan's original leg and the error accumulates" —
+**cannot be the mechanism**: a leg's duration does not depend on its departure time, so re-deriving
+at a later clock cannot lengthen it. See [addendum item 3](#p8-implementation-addendum-2026-08-05)
+for the likelier cause (a mode change) and treat neither account as established until the uid is
+replayed. The before/after below is a real replay and the cascade is real; only its explanation is
+open. That the whole-day relayout is the wrong granularity for a 5-minute fix does not depend on
+which explanation holds. Replaying it on `phase2_familiar_20250321155107635610_00035` day 1 — a
+breakfast needing `+15 min` —
 
 ```
 before: brea 07:30-08:30  attr 09:04  attr 10:37  lunc 12:05  attr 13:58  attr 15:19  dinn 17:25  acco 18:54
@@ -284,10 +290,11 @@ the retracted trap paragraph:
   re-calls `goto(city, transports[0]["start"], transports[-1]["end"], transports[0]["start_time"],
   mode)` for **every** leg — the 3-segment metro shape and the 1-segment walk/taxi shape alike — and
   requires **exact string equality** of every segment's `start_time` and `end_time` (plus `price` and
-  `distance` within `0.1`). It reports *Incorrect Information of Inner-City Transport on price,
-  distance, and duration*. The column P8 named, *Invalid Transport information across positions*,
-  belongs to `Is_space_correct` (`commonsense_constraint.py:1169-1273`), which only checks endpoint
-  names and non-empty `transports` and **never looks at a time**.
+  `distance` within `0.1`). It reports under the column spelled, upstream typo included,
+  `'Incorrect Information of Inner-City Transporton on price, distance, and duration'` — grep for
+  `Transporton` to find every write site. The column P8 named, `'Invalid Transport information across
+  positions'`, belongs to `Is_space_correct` (`commonsense_constraint.py:1169-1273`), which only
+  checks endpoint names and non-empty `transports` and **never looks at a time**.
 - Therefore **shifting every segment of a leg by the same whole-minute delta reproduces exactly what
   `goto` returns at the shifted departure time, for every mode including metro.** Translation is not
   the risky option; it is the provably exact one.
@@ -308,8 +315,9 @@ ATT-fraction friction that forced P1's two-regime commit rule does not arise —
 need to reason about mode selection (item 3). Use `_repair_commit_allowed`'s two-regime rule anyway,
 for the same reason `_anchor_timed_windows` does: the input plan is unaccepted by construction.
 
-**3. Unverified: why P1's relayout cascaded.** The section above attributes it to re-derivation drift
-("each re-derived leg lands a little later than the plan's original leg and the error accumulates").
+**3. Unverified: why P1's relayout cascaded.** The cascade itself is a real replay; its published
+cause was re-derivation drift ("each re-derived leg lands a little later than the plan's original leg
+and the error accumulates"), now marked as a hypothesis in the section above.
 That cannot be the mechanism as stated, because item 2 establishes a leg's duration is independent of
 its departure time. In the replayed day the same hotel→attraction leg takes `34 min` before and
 `50 min` after, which is a **mode change**, not drift: `_get_transport`
