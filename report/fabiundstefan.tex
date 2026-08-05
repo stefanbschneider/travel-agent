@@ -1,8 +1,8 @@
 %%%% fabiundstefan.tex
 %%%%
-%%%% TPC @ IJCAI 2026 technical report -- SKELETON, NOT WRITTEN YET.
+%%%% TPC @ IJCAI 2026 technical report -- FIRST FULL DRAFT (2026-08-05).
 %%%%
-%%%% Every team that qualified for Phase 2 must submit one (organizers' reply, 2026-08-04):
+%%%% Requirements (organizers' reply, 2026-08-04):
 %%%%   - official IJCAI paper template (this one, from https://www.ijcai.org/authors_kit),
 %%%%   - maximum 4 pages,
 %%%%   - NOT double-blind: real names and affiliations,
@@ -11,8 +11,13 @@
 %%%% Judged on technical reliability and soundness, innovation, and clarity of presentation.
 %%%%
 %%%% Build:  cd report && make        (see report/README.md)
-%%%% Every section below is a placeholder. Do not submit until the TODOs are gone and every
-%%%% number is a committed measurement -- see report/README.md for where each one comes from.
+%%%%
+%%%% EVERY number below traces to a committed artefact; the source is named in a comment next to
+%%%% it. Two classes of evidence appear, and the text always says which:
+%%%%   ROW    = results/phase2_baselines/full_runs/<id>.json  (whole 100-query split, real budget)
+%%%%   SCREEN = paired A/B at reduced n and budget; triage instrument, never a promotion.
+%%%%
+%%%% OPEN TODOs BEFORE SUBMITTING -- see the end of the file for the full list.
 
 \documentclass{article}
 \pdfpagewidth=8.5in
@@ -43,17 +48,17 @@
 /TemplateVersion (IJCAI.2026.0)
 }
 
-\title{Solver-First Deterministic Itinerary Planning for the ChinaTravel Benchmark}
+\title{Solver-First Itinerary Planning for ChinaTravel:\\
+Where the Language Model Helped, and Where We Measured That It Did Not}
 
-% TODO: real names, affiliations and emails. The report is not anonymous.
 \author{
-    First Author$^1$
+    Stefan Schneider$^1$
     \and
-    Second Author$^1$
+    Fabian Missbrenner$^2$
     \affiliations
-    $^1$Team fabiundstefan
+    $^1$Digital Rail (DB InfraGO AG), $^2$TU Berlin
     \emails
-    \{first, second\}@example.com
+    stefan.sh.schneider@deutschebahn.com, mail@fabimi.net
 }
 
 \begin{document}
@@ -61,70 +66,349 @@
 \maketitle
 
 \begin{abstract}
-    TODO. One paragraph: the task, the solver-first approach, the no-oracle Phase~2 contract,
-    and the headline result.
+    We describe team \texttt{fabiundstefan}'s Phase~2 entry to the Travel Planning Challenge at
+    IJCAI~2026. The system is a deterministic, solver-first planner: it extracts branch-local
+    constraints from the visible query text, builds itineraries whose every fact is read from the
+    sandbox environment, and emits a plan only after the official schema, commonsense and logical
+    checks accept it. The submitted path makes \textbf{zero language-model calls and zero network
+    calls}, and scores \textbf{57.99 overall} (final pass rate 33.0) on the released
+    \texttt{familiar\_100} split while using 26\% of its five-hour budget. That the entry to a
+    \emph{language agent} challenge contains no language model at inference time is a measured
+    decision, not an omission: we built LLM-backed constraint extraction and LLM-backed plan repair,
+    and both were screened out --- the parse audit costs $-3.2$ score once it actually fires, and the
+    refiner committed 0 of 18 proposed edits. Meanwhile the model was central to \emph{building} the
+    system: 172 of 759 commits are agent-co-authored. We argue this split --- LLM in the outer
+    development loop, solver in the inner inference loop --- is the useful finding, and we report the
+    measurement discipline that made it visible, including a failure mode in which an LLM component
+    looks beneficial precisely because it silently never ran.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-TODO. The Travel Planning Challenge task, why a deterministic solver rather than an LLM agent
-loop, and what this report claims.
+ChinaTravel~\cite{shao2024chinatravel} asks an agent to turn an open-ended natural-language request
+(``three days in Suzhou, we must be at the Humble Administrator's Garden between 9 and 11, budget
+under 3000 yuan'') into a multi-day itinerary whose attractions, restaurants, hotels, inner-city legs
+and intercity transport all exist in a sandbox database, and whose every stated requirement is
+checked by a compositional verifier. Unlike slot-filling benchmarks~\cite{xie2024travelplanner},
+requirements are compositional, sometimes disjunctive, and often implicit. The benchmark's own study
+reports a large gap between purely neural agents and neuro-symbolic ones, the latter reaching roughly
+37\% constraint satisfaction on human queries --- about an order of magnitude better.
 
-\section{System Overview}
+Our Phase~2 system takes that gap to its conclusion. It is a deterministic planner with an
+acceptance gate: nothing is emitted that the official checkers have not already accepted, and no
+itinerary fact is generated as text. We placed second in Phase~1 with 98.98 overall after the
+organizers' re-scoring, and deliberately do not lean on that number: Phase~1 is offline prediction
+that permits oracle constraint programs locally and lets a submission be assembled over weeks from
+many passes --- solve, repair, monotonic best-plan merge --- whereas Phase~2 strips the oracle fields
+and gives one command five hours for all 100 plans. What does carry across is the \emph{mechanism}:
+$+1.06$ of Phase~1's final $+1.5$ came from one new set of repair variants that fixed 11 of the 12
+remaining commonsense failures, not from more search --- and Section~\ref{sec:diagnosis} finds
+Phase~2 gated the same way.
+
+The interesting part is what happened to the language model. The organizers even provide one on the
+evaluation host (a local SGLang deployment of \texttt{Qwen3.6-27B}), so using it would have been
+free. We nonetheless ship a system that never calls it. This is the outcome of a deliberate
+experiment rather than a prior: we implemented the two places where an LLM plausibly helps a
+solver-first pipeline --- correcting the constraint extraction, and proposing repairs to a plan the
+checker rejected --- measured both, and turned both off.
+
+\paragraph{Contributions.}
+(i) A deterministic, interruption-safe planner and whole-run scheduler that fits an unbounded search
+problem into a fixed five-hour wall clock (Section~\ref{sec:system}).
+(ii) A diagnosis that our score is \emph{representation}-bound, not compute-bound: five times the
+budget buys $+0.64$ overall, while one missing solver move buys $+10$ final pass rate
+(Section~\ref{sec:diagnosis}).
+(iii) Ablations for every promoted mechanism and for both LLM stages (Section~\ref{sec:experiments}).
+(iv) Methodology: how the model was used to build the system, and two traps that make LLM-component
+measurements lie (Section~\ref{sec:method}).
+
+\section{System}
 \label{sec:system}
 
-TODO. The pipeline: parse and normalise the visible query into branch-local constraint variants,
-build a deterministic base itinerary, repair and restart under a bounded budget, optionally solve
-the residual with CP-SAT, then accept only what passes the schema, commonsense and logical
-checks. Note the two invariants that shape everything else: no oracle field ever reaches the
-agent path, and every fact is grounded in \texttt{WorldEnv} rather than generated.
+\paragraph{Execution contract.}
+The agent path receives the visible query text and the environment tools, nothing else. Oracle
+verifier fields are removed before parsing. Every POI, price, opening hour, schedule and travel time
+comes from a \texttt{WorldEnv} query. Installation is eight PyPI packages; there is no model
+download, no external index and no egress. The whole run is one command with no flags, as the
+organizers specified.
 
-\section{Implementation}
-\label{sec:implementation}
+\paragraph{Per-query pipeline.}
+\emph{Parse} extracts constraints from the query text with a rule-based grammar over the benchmark's
+constraint families. \emph{Normalize} turns them into solver-facing variants, resolving named
+entities against the database, canonicalizing concept labels, and --- importantly --- keeping
+disjunctive requirements as separate branches rather than flattening them into one conjunction, end
+to end through solving and checking. \emph{Solve} constructs a base itinerary greedily, then runs
+bounded randomized restarts over a small parameter space (day offsets, hotel choice, attractions per
+day, visit durations, forced transport mode, meal offsets), with an optional CP-SAT
+tier~\cite{ortools} for candidate pools and hard residuals, and acceptance-gated repair and
+densification passes. \emph{Finalize} selects a candidate under an explicit acceptance ordering ---
+a fully accepted plan wins; failing that, the best schema- and commonsense-valid candidate is
+preferred over a higher-scoring invalid one, because the scored logical pass rate is conditional on
+the commonsense pass --- and emits telemetry. This is the LLM-Modulo
+arrangement~\cite{kambhampati2024llmmodulo} with the generator replaced by a deterministic one.
 
-TODO. Entry point and packaging (one command, deterministic, zero LLM calls by default), the
-per-query budget policy under the whole-run wall-clock envelope, and how acceptance gating is
-enforced at finalisation.
+\paragraph{Whole-run scheduling.}
+Phase~2 grants one five-hour envelope for 100 queries, and every query is weighted equally, so a
+structurally unsolvable query must not starve the rest of the split. Rather than giving each query
+$1/n$ of the clock, we run passes across $\mathit{cores}-1$ worker processes (a single solve is
+single-threaded): \textbf{triage} solves every query once at a small budget, so the split has real
+plans early; \textbf{repair} revisits only constraint-failing queries at a growing budget,
+most-nearly-passing first; \textbf{polish} improves preference terms on already-passing queries with
+whatever time is left --- last, because the evaluator zeroes all preference terms of a failing query.
+Three properties make the run safe: a schema-valid plan for every query is written \emph{before} the
+first solve; every later result is scored oracle-free and kept only if it beats what is on disk
+(keep-best, so no pass can regress a query); and the scheduler refuses to start work the envelope
+cannot finish. The run can be killed at any instant and still leaves a complete, non-regressed set of
+plans.
+
+\section{Where the points are}
+\label{sec:diagnosis}
+
+The official score is
+$0.10\,\mathrm{MicEPR} + 0.10\,\mathrm{MacEPR} + 0.25\,\text{C-LPR} + 0.40\,\mathrm{FPR} +
+0.05(\mathrm{DAV}+\mathrm{ATT}+\mathrm{DDR})$,
+where FPR is the fraction of queries satisfying \emph{every} constraint and the three preference
+terms (attraction diversity, inner-city transport, restaurant diversity) are zeroed on any query that
+does not. At our operating point one FPR point is worth about $0.85$ overall, whereas perfecting all
+three preference terms is worth about $1.5$ in total. FPR is the only number that matters.
+
+\paragraph{The search is bimodal.}
+Per-query telemetry from a one-hour diagnostic run shows two populations and no middle. Of 42 triaged
+queries, the 15 that were accepted were accepted by the \emph{first constructed plan}, in a median of
+3.2 seconds with a median of 0 restarts. The 27 that failed spent their entire slice (median 22.7 s
+of 23 s) on a median of 39 randomized restarts and found nothing acceptable. Giving the failures
+$2.5\times$ the time raised the median restart count to 166 and flipped \textbf{one query in 68}.
+
+\paragraph{So more compute is not the answer, and we measured that rather than assuming it.}
+Four whole-split runs at different envelopes (Table~\ref{tab:main}, lower block) score
+$57.35 / 57.81 / 57.86 / 57.99$ at $1/2/3/5$ hours. Every knob we have --- budget, restart cap,
+worker count, fresh seeds --- is the same intervention: draw more tuples from a parameter space of a
+few thousand combinations. The measurement says that space does not contain the fix.
+
+\paragraph{One constraint family accounts for almost all of the loss.}
+Feeding the solver oracle constraints and attributing its failures by family, the shape ``be at
+\emph{this named POI} within \emph{this time window}'' was the \emph{only} failing family in 45 of 61
+failing queries. The sampler has no parameter that pins one activity inside a window and reflows the
+rest of the day around it, which is exactly why extra draws never help. Adding that one move
+(\texttt{TPC\_WINDOW\_ANCHOR}: a window-anchored day relayout) at identical budget, restart count and
+seed moved FPR $32.5 \rightarrow 42.5$ on both the solver-only and the end-to-end axis
+(Table~\ref{tab:abl}). The gap was representation, not search time.
+
+\paragraph{Parsing is not the bottleneck either.}
+Rule-based extraction reaches $F_1 = 0.959$ against the oracle constraints with no missing family,
+and --- the stronger statement --- handing the solver the \emph{oracle} constraints instead of parsed
+ones does not raise FPR ($23.75$ solver-only vs.\ $25.00$ end-to-end on the same per-query contract).
+A perfect parser is worth approximately nothing here. This is the quantitative reason the LLM parse
+stage had little to win, and Section~\ref{sec:llm} reports what it actually did.
 
 \section{Experiments}
 \label{sec:experiments}
 
-TODO. Setup: which split, which budget, which evaluator revision. Report the official metric
-decomposition (EPR-micro, EPR-macro, C-LPR, FPR, DAV, ATT, DDR) and the weighted overall score.
+\paragraph{Setup.}
+All numbers are on the released \texttt{familiar\_100} data with the upstream evaluator at
+\texttt{c89cfca} (our evaluation code reproduces upstream exactly; the only local deltas are lazy
+tool loading and defensive guards on malformed plans, never a scoring difference). Whole-split
+\emph{rows} use the real 5\,h envelope with 3 workers. Paired \emph{screens} use an 80- or 30-query
+subset at a 90\,s per-query budget with a fixed seed; they are a triage instrument for deciding what
+deserves a full run, their absolute values are not comparable to rows, and they never promote a
+default on their own.
 
-% TODO: replace with a committed row from results/phase2_baselines/.
 \begin{table}[t]
     \centering
-    \begin{tabular}{lccc}
+    \begin{tabular}{lrrr}
         \toprule
-        Configuration & FPR & C-LPR & Overall \\
+        Metric & value & weight & contributes \\
         \midrule
-        TODO & -- & -- & -- \\
+        FPR      & 33.00 & 0.40 & 13.20 \\
+        C-LPR    & 87.83 & 0.25 & 21.96 \\
+        MicEPR   & 99.48 & 0.10 & \phantom{0}9.95 \\
+        MacEPR   & 97.00 & 0.10 & \phantom{0}9.70 \\
+        DAV      & 18.15 & 0.05 & \phantom{0}0.91 \\
+        ATT      & 26.25 & 0.05 & \phantom{0}1.31 \\
+        DDR      & 19.39 & 0.05 & \phantom{0}0.97 \\
+        \midrule
+        \textbf{Overall} & & & \textbf{57.99} \\
         \bottomrule
     \end{tabular}
-    \caption{TODO: main result.}
+
+    \medskip
+
+    \begin{tabular}{lrrrr}
+        \toprule
+        Envelope & 1\,h & 2\,h & 3\,h & 5\,h \\
+        \midrule
+        Overall & 57.35 & 57.81 & 57.86 & 57.99 \\
+        FPR     & 31.0 & 32.0 & 32.0 & 33.0 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Top: the submitted configuration on the whole 100-query split under the real five-hour
+    envelope, 0 empty plans, finishing in 1.31\,h (26\% of the budget). Bottom: the same system at
+    four envelopes --- five times the time buys $+0.64$ overall, so the system is not compute-bound.
+    (Rows \texttt{20260804T201638Z}, \texttt{213636Z}, \texttt{231910Z}, \texttt{221103Z}.)}
     \label{tab:main}
 \end{table}
 
-\subsection{Ablations}
-\label{sec:ablations}
+\begin{table}[t]
+    \centering
+    \small
+    \begin{tabular}{lrrl}
+        \toprule
+        Mechanism & $\Delta$FPR & $\Delta$score & verdict \\
+        \midrule
+        \multicolumn{4}{l}{\emph{Deterministic mechanisms}} \\
+        Window-anchored relayout$^{a}$ & $+10.0$ & $+5.3$ & adopted \\
+        Pin timed windows$^{b}$ & $+6.67$ & $+6.00$ & adopted \\
+        Repair transport gaps$^{b}$ & $+3.33$ & $+2.72$ & adopted \\
+        Convergence stop$^{b}$ & $\pm0.0$ & $+2.28$ & adopted \\
+        \addlinespace
+        \multicolumn{4}{l}{\emph{Language-model stages}} \\
+        LLM parse audit$^{c}$ & $\pm0.0$ & $-3.20$ & rejected \\
+        LLM plan refine$^{c}$ & $\pm0.0$ & $-0.02$ & rejected \\
+        \addlinespace
+        \multicolumn{4}{l}{\emph{Extraction upper bound}} \\
+        Oracle constraints$^{d}$ & $-1.25$ & $-1.30$ & no gain \\
+        \bottomrule
+    \end{tabular}
+    \caption{Ablations. $^{a}$$n{=}80$, 90\,s, solver-only and end-to-end agree.
+    $^{b}$$n{=}30$, 90\,s. $^{c}$$n{=}30$, 90\,s, DeepInfra \texttt{Qwen3.6-27B}, shared
+    all-LLM-off baseline; LLM activity verified per query. $^{d}$80-query split at 900\,s:
+    the solver fed oracle constraints instead of parsed ones. Screens are paired deltas at reduced
+    budget; they rank mechanisms and do not estimate final performance.}
+    \label{tab:abl}
+\end{table}
 
-TODO. One row per promoted mechanism, each from a paired same-revision run.
+\subsection{The language-model ablation}
+\label{sec:llm}
 
-\subsection{Error Analysis}
+We measured the LLM in both places it could act, with the same paired screen used for every
+deterministic flag, on a shared all-LLM-off baseline, and with per-query telemetry asserting that the
+model actually answered.
+
+\paragraph{Constraint extraction (parse audit).}
+The model receives the query, the rule-based extraction and the constraint schema, and proposes
+patches; every proposal round-trips through the deterministic parser and a whitelist, so it can never
+introduce an unrepresentable constraint. With the audit firing on 30 of 30 queries, FPR was unchanged
+and the continuous score fell $47.38 \rightarrow 44.18$ ($-3.20$): the model rewrites preference-side
+detail it cannot improve on. That is consistent with Section~\ref{sec:diagnosis} --- even a
+\emph{perfect} parse is worth nothing --- so the stage was never going to pay for itself.
+
+\paragraph{Plan repair (bounded refine).}
+When the checkers reject a plan, the model is shown the plan and the failing clauses and proposes
+edits; each edit must ground against \texttt{WorldEnv} and re-pass the full checker before it is
+committed. It was called on 18 rejected plans and committed \textbf{0} edits: 8 proposals referenced
+things that do not exist in the database, 5 produced plans the checker still rejected, 5 errored.
+Meanwhile its reserved time slice raised timeouts from 11 to 19. The telemetry is more informative
+than the score here: the failure is not that the model's ideas are bad, it is that they are not
+\emph{groundable}, and grounding is the whole difficulty of this benchmark.
+
+\paragraph{Why we did not simply keep them off by default and on when available.}
+Every LLM second inside the shared five-hour envelope is a second not spent in search, and an
+external dependency is a reliability liability in a harness where a crashed worker still exits~0
+while shipping empty plans. Given a measured cost and no measured benefit, the defensible default is
+off --- and ``off'' is enforced: with no backend configured the pipeline is byte-identical to the
+deterministic floor, asserted by unit test.
+
+\paragraph{What this does not show.}
+These are screens at reduced budget, not full rows, and they cover two \emph{specific} uses. The one
+untried use is the LLM as a \emph{move proposer} --- not editing a finished plan, but suggesting which
+structural move (shift, shorten, relocate across days, insert a missing activity) a failing query
+needs, with the deterministic solver executing and the checker gating it. Section~\ref{sec:diagnosis}
+says such moves are exactly where the remaining points are, so this is the one direction we would
+still expect to pay, and we keep it open until the submission deadline.
+
+\subsection{Error analysis}
 \label{sec:errors}
 
-TODO. What still fails and why, by failure family.
+After the window-anchored relayout, 43 of 80 validation queries still fail a timed-visit clause, 33
+of them with \emph{nothing else} failing --- the same family, one clause short. Classifying those 57
+failing clauses by the move they need: forward-shift 21, absent POI 15, shorten 11, backward-shift
+10. Twelve sole-blocker queries need only a forward shift or a shortening (11 of them are off by
+5--19 minutes), 6 need only the insertion of a POI that is not in the plan at all, and 8 need a
+cross-day relocation. The remaining failure surface is therefore narrow and mechanical rather than
+diffuse, which is the most useful thing an error analysis can conclude. Schema and commonsense
+checks, by contrast, are near-saturated (78/80 queries), parse failures are 0, and no query is ever
+delivered empty.
+
+\section{Method: the model in the outer loop}
+\label{sec:method}
+
+The system contains no language model; building it was almost entirely model-driven. Over five months
+the repository accumulated 759 commits and about 69k lines of Python, of which 172 commits carry an
+AI co-author trailer, alongside 895 tests. Humans owned the architecture, the invariants, the
+measurement contract and which experiment to run next; the agent wrote most of the implementation and
+kept the documentation consistent with it. Three practices did the load-bearing work, and they
+transfer to any agent-built codebase:
+
+\paragraph{Invariants as a checked-in contract.} A single file states what may never change ---
+acceptance before output, all facts from the environment, no oracle leakage, disjunctions kept
+branch-local, defaults make zero LLM calls, upstream evaluator reproduced exactly --- and is loaded
+into every agent session. Agents are excellent at local optimization and will happily satisfy a
+metric by weakening a check; the invariants exist to make that unavailable rather than to be
+remembered.
+
+\paragraph{Two tiers of evidence, and only one promotes.} A fast paired screen on a subset triages a
+change on the developer's machine; only a whole-split run under a pinned contract, from a pinned
+revision, on a separate machine, can flip a default. Rows record data source, split, budget, flags,
+parallelism and evaluator revision, and rows straddling an evaluator sync are never compared. This is
+what let us reject our own plausible ideas: the preference-packing mechanisms, the extra-seed sweep
+and the LLM stages all sounded good and all failed their measurement.
+
+\paragraph{Assert that a component ran before believing its number.} Both LLM measurements were
+initially wrong, in opposite directions, for the same reason. A first parse-audit screen looked
+$+1.97$ --- because at that timeout 10 of 30 audits silently expired and fell back to the
+deterministic parse, so the ``benefit'' was measuring the deterministic path with extra latency;
+raising the timeout until all 30 fired flipped the verdict to $-3.20$. Earlier, a ledger row labelled
+\texttt{llm\_parse=true} recorded a configuration that had in fact received HTTP~404 for every call.
+A silently-degrading component is the default failure mode of LLM integration, and an A/B where the
+treatment never happened is indistinguishable from a null result unless the harness counts calls. We
+now require an activity counter in telemetry for every optional stage, and treat a green screen
+without it as unmeasured.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-TODO.
+We submit a deterministic solver-first planner that scores 57.99 overall on the released
+\texttt{familiar\_100} split, never fabricates an itinerary fact, and cannot ship a plan its checkers
+rejected. It contains no language model, in a language-agent challenge, on a host that offers one for
+free --- because in the two roles we could measure, the model cost score and committed nothing, while
+the points sat in a single missing symbolic move worth $+10$ FPR. The generalization we would draw is
+not ``LLMs do not help planning''; it is that in a benchmark whose difficulty is \emph{grounding}
+under a strict verifier, the model's comparative advantage is in the loop that writes the solver, not
+the loop that runs it --- and that telling those apart requires an evaluation harness willing to
+falsify your favourite idea, including your idea about the model.
 
 \section*{Acknowledgements}
 
-TODO or delete.
+We thank the ChinaTravel organizers for the benchmark, the sandbox environment and their prompt
+clarifications on the Phase~2 execution contract. The system was developed with substantial
+assistance from LLM-based coding agents under the review protocol described in
+Section~\ref{sec:method}.
+
+%%%% ---------------------------------------------------------------------------------------------
+%%%% OPEN TODOs
+%%%%
+%%%% 1. PHASE 1 (Section 1) -- RESOLVED 2026-08-05 by the repository owner: 98.98 / second place is
+%%%%    the number AFTER the organizers' re-scoring under the fixed evaluator, so it is safe to
+%%%%    state. It is deliberately framed as "we do not lean on this", because the Phase 1
+%%%%    submission was assembled over weeks from many passes with oracle constraint programs
+%%%%    available and some plans hand-constructed -- it is NOT evidence about the Phase 2 agent, and
+%%%%    the report must not imply that one command produced it. Cut the whole passage if space is
+%%%%    needed; nothing else depends on it.
+%%%%    (No committed artefact records the post-re-score leaderboard; the standing is the owner's
+%%%%    confirmation of 2026-08-05. Verify against the official leaderboard before upload.)
+%%%% 2. HEADLINE NUMBER. Table 1 is the pre-P1 reference row (20260804T201638Z). If the
+%%%%    window-anchor gate (R8) produces a better committed whole-run row before the deadline,
+%%%%    replace Table 1, the abstract, and the conclusion with it, and re-check the +0.64 budget
+%%%%    claim on the new configuration.
+%%%% 3. LLM DECISION IS PROVISIONAL by the user's instruction: if the move-proposer experiment
+%%%%    (roadmap P6) screens green before submission, Section 4.1's last paragraph and the framing
+%%%%    in the abstract/conclusion must be rewritten -- the honest version then becomes "the LLM
+%%%%    helps as a move proposer and not as an editor", which is a better paper, not a worse one.
+%%%% 4. AFFILIATIONS/EMAILS: confirm with both authors before upload.
+%%%% 5. PAGE COUNT: `make` warns above 4 pages. Cut candidates, in order: Section 5's third
+%%%%    paragraph, the error-analysis clause counts, the budget-ablation block of Table 1.
+%%%% ---------------------------------------------------------------------------------------------
 
 \bibliographystyle{named}
 \bibliography{ijcai26}
