@@ -45,9 +45,10 @@ def test_hotel_all_types_of_the_type():
 
 # --- activity_time_windows -------------------------------------------------
 
-def _win(loc, earliest=None, latest=None, end_after=None, end_before=None):
+def _win(loc, earliest=None, latest=None, end_after=None, end_before=None, activity_types=None):
     return {"location": loc, "earliest": earliest, "latest": latest,
-            "end_after": end_after, "end_before": end_before}
+            "end_after": end_after, "end_before": end_before,
+            "activity_types": activity_types}
 
 
 def test_arrive_no_later_than_sets_latest():
@@ -89,13 +90,53 @@ def test_numbered_imperative_between_forms_are_contained_windows():
             "3. Stay at Jiahong Hotel between 20:10 and 24:00."
         )
     )
+    # The verb fixes which activity types can satisfy each window. Lines 2 and 3 name the *same*
+    # hotel, so without the type the pair is indistinguishable and unsatisfiable (roadmap P1).
     assert raw.get("activity_time_windows") == [
-        _win("Maple Bridge Scenic Area", earliest="08:15", end_before="10:05"),
-        _win("Jiahong Hotel", earliest="07:45", end_before="08:40"),
-        _win("Jiahong Hotel", earliest="20:10", end_before="24:00"),
+        _win("Maple Bridge Scenic Area", earliest="08:15", end_before="10:05",
+             activity_types=["attraction"]),
+        _win("Jiahong Hotel", earliest="07:45", end_before="08:40",
+             activity_types=["breakfast", "lunch", "dinner"]),
+        _win("Jiahong Hotel", earliest="20:10", end_before="24:00",
+             activity_types=["accommodation"]),
     ]
     assert raw.get("stay_duration") is None
     assert raw.get("position_presence") == ["Maple Bridge Scenic Area", "Jiahong Hotel"]
+
+
+def test_oracle_window_records_the_clause_activity_types():
+    """The oracle clause's ``activity_type`` test is the same fact the sentence's verb carries."""
+    def _logic(type_test, poi, lo, hi):
+        return (
+            "result=False\n"
+            "for activity in allactivities(plan):\n"
+            f"  if activity_type(activity){type_test} and activity_position(activity)==\"{poi}\":\n"
+            f"    if activity_start_time(activity)>=\"{lo}\" and "
+            f"activity_end_time(activity)<=\"{hi}\": result=True"
+        )
+
+    constraints = solver_constraint_variants(
+        {
+            "hard_logic_py": [
+                _logic(" in ['breakfast', 'lunch', 'dinner']", "Jiahong Hotel", "07:45", "08:40"),
+                _logic("=='accommodation'", "Jiahong Hotel", "20:10", "24:00"),
+                _logic("=='attraction'", "Maple Bridge Scenic Area", "08:15", "10:05"),
+            ],
+            "nature_language": "",
+            "people_number": 1,
+            "days": 1,
+        },
+        {},
+        use_oracle=True,
+    )[0]
+    assert constraints.get("activity_time_windows") == [
+        _win("Jiahong Hotel", earliest="07:45", end_before="08:40",
+             activity_types=["breakfast", "lunch", "dinner"]),
+        _win("Jiahong Hotel", earliest="20:10", end_before="24:00",
+             activity_types=["accommodation"]),
+        _win("Maple Bridge Scenic Area", earliest="08:15", end_before="10:05",
+             activity_types=["attraction"]),
+    ], constraints.get("activity_time_windows")
 
 
 def test_oracle_window_location_preserves_apostrophes():
