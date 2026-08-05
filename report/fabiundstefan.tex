@@ -97,10 +97,14 @@ reports a large gap between purely neural agents and neuro-symbolic ones, the la
 
 Our Phase~2 system takes that gap to its conclusion. It is a deterministic planner with an
 acceptance gate: nothing is emitted that the official checkers have not already accepted, and no
-itinerary fact is generated as text. Phase~1 (offline prediction on released data, where oracle
-constraint programs may be used locally) validated the approach --- overall 98.98 on our local run of
-the evaluator of the time, second on the public leaderboard --- and Phase~2 removes that privilege:
-oracle fields are stripped before the agent sees a query.
+itinerary fact is generated as text. We placed second in Phase~1 with 98.98 overall after the
+organizers' re-scoring, and deliberately do not lean on that number: Phase~1 is offline prediction
+that permits oracle constraint programs locally and lets a submission be assembled over weeks from
+many passes --- solve, repair, monotonic best-plan merge --- whereas Phase~2 strips the oracle fields
+and gives one command five hours for all 100 plans. What does carry across is the \emph{mechanism}:
+$+1.06$ of Phase~1's final $+1.5$ came from one new set of repair variants that fixed 11 of the 12
+remaining commonsense failures, not from more search --- and Section~\ref{sec:diagnosis} finds
+Phase~2 gated the same way.
 
 The interesting part is what happened to the language model. The organizers even provide one on the
 evaluation host (a local SGLang deployment of \texttt{Qwen3.6-27B}), so using it would have been
@@ -384,12 +388,15 @@ Section~\ref{sec:method}.
 %%%% ---------------------------------------------------------------------------------------------
 %%%% OPEN TODOs
 %%%%
-%%%% 1. PHASE 1 PLACEMENT (Section 1). "overall 98.98 ... second on the public leaderboard" is our
-%%%%    local score on the pre-2026-07-28 evaluator, and the organizers have announced that the
-%%%%    Phase 1 leaderboard will be RE-SCORED under the fixed evaluator ("may materially affect
-%%%%    some existing scores and leaderboard rankings"); our local re-score exposure is
-%%%%    100.0 -> 61.16. Either drop the number and say only "qualified for Phase 2", or keep it
-%%%%    with the evaluator vintage stated. Do not claim a rank that may no longer hold.
+%%%% 1. PHASE 1 (Section 1) -- RESOLVED 2026-08-05 by the repository owner: 98.98 / second place is
+%%%%    the number AFTER the organizers' re-scoring under the fixed evaluator, so it is safe to
+%%%%    state. It is deliberately framed as "we do not lean on this", because the Phase 1
+%%%%    submission was assembled over weeks from many passes with oracle constraint programs
+%%%%    available and some plans hand-constructed -- it is NOT evidence about the Phase 2 agent, and
+%%%%    the report must not imply that one command produced it. Cut the whole passage if space is
+%%%%    needed; nothing else depends on it.
+%%%%    (No committed artefact records the post-re-score leaderboard; the standing is the owner's
+%%%%    confirmation of 2026-08-05. Verify against the official leaderboard before upload.)
 %%%% 2. HEADLINE NUMBER. Table 1 is the pre-P1 reference row (20260804T201638Z). If the
 %%%%    window-anchor gate (R8) produces a better committed whole-run row before the deadline,
 %%%%    replace Table 1, the abstract, and the conclusion with it, and re-check the +0.64 budget
