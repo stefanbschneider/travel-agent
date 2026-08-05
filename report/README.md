@@ -2,9 +2,18 @@
 
 The Phase 2 technical report for team `fabiundstefan`, in the official IJCAI template.
 
-`fabiundstefan.pdf` is currently a **placeholder build of a skeleton** — every section of
-`fabiundstefan.tex` is a TODO. It exists so the build path is proven and the submission checklist
-has something to point at, not because the report is written.
+`fabiundstefan.pdf` is a **first full draft** (2026-08-05): every section is written and every number
+traces to a committed artefact, but five decisions are still open and are listed as an `OPEN TODOs`
+block at the end of `fabiundstefan.tex`. The most important two: the Phase 1 placement sentence cites
+a score taken on the pre-2026-07-28 evaluator whose leaderboard the organizers have said will be
+re-scored, and Table 1 is the **pre-P1** reference row, so it must be replaced if a better whole-run
+row lands before the deadline.
+
+The draft's frame is deliberate and worth knowing before editing it: the report argues that the LLM
+belongs in the loop that *writes* the solver, not the loop that *runs* it, and it supports the absent
+inference-time LLM with an ablation table (parse audit `−3.20`, refine `0` of `18` edits committed,
+oracle-constraint upper bound `≤ 0`). If the untried move-proposer direction (roadmap `P6`) ever
+screens green, that frame changes rather than breaks — see TODO 3.
 
 ## What the organizers require
 
@@ -43,6 +52,12 @@ Do not edit `ijcai26.sty` or `named.bst` — the formatting is part of the requi
 ```bash
 cd report && make          # pdflatex -> bibtex -> pdflatex x2 -> fabiundstefan.pdf
 make clean                 # remove aux/log/bbl/blg/out, keep the PDF
+```
+
+On macOS with MacTeX the binaries are not on `PATH` by default:
+
+```bash
+cd report && PATH="/Library/TeX/texbin:$PATH" make
 ```
 
 Needs a TeX installation providing `pdflatex`, `bibtex`, and the packages the report loads
