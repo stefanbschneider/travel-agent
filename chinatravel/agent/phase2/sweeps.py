@@ -213,7 +213,7 @@ class SweepConfig:
     passes: list[PassRecord] = field(default_factory=list)
 
     # Every knob that shapes how the envelope is spent is env-overridable, so an A/B of the pass
-    # shape needs no code edit -- see docs/tpc_phase2_eval_roadmap.md.
+    # shape needs no code edit -- see docs/tpc_phase2_design.md.
     ENV_OVERRIDES = {
         "triage_cap_sec": "TPC_P2_TRIAGE_CAP_SEC",
         "triage_fraction": "TPC_P2_TRIAGE_FRACTION",

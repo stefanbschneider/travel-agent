@@ -123,7 +123,7 @@ make p1eval SPLIT=tpc_phase1
 
 All four packing flags stay **default off**, so the library floor is byte-identical and the Phase 2
 deterministic path is unchanged. They are Phase 1 offline-optimization switches until a Phase 2
-screen says otherwise ([S9/W9](tpc_shortcomings_and_plan.md#w9-re-decide-preference-packing-on-post-sync-evidence)).
+screen says otherwise (see the [Phase 2 implementation roadmap](tpc_phase2_roadmap.md#what-not-to-spend-time-on) for why that screen is low priority).
 
 ### W1: repairing the 22-query commonsense tail (2026-07-31)
 
@@ -134,7 +134,7 @@ screen says otherwise ([S9/W9](tpc_shortcomings_and_plan.md#w9-re-decide-prefere
 The tail described below as "genuinely hard" was, per the same-day update in that section, actually
 22 plans that already satisfy 100% of their own logical clauses and are rejected purely for a
 scheduling/meal artifact — see
-[Shortcomings and plan, W1](tpc_shortcomings_and_plan.md#w1-repair-the-22-query-phase-1-commonsense-tail)
+[the archived W1 brief](archive/phase2/tpc_shortcomings_and_plan_2026-08-04.md#w1-repair-the-22-query-phase-1-commonsense-tail)
 for the full diagnosis and repair design. `scripts/scan_commonsense_residual.py` reproduces the
 structural scan (`transport_before_prev_end` 19, `overlap` 16, `repeated_meal` 10, union 22) and
 `scripts/repair_commonsense.py` applies four ordered, full-checker-gated repair moves (drop a
@@ -171,7 +171,7 @@ current list.
 > Kept as the record of what was tried.
 
 Ran the existing densify controller over the preference-ranked tail, per
-[Shortcomings and plan, W2](tpc_shortcomings_and_plan.md#w2-close-the-addressable-phase-1-preference-residual):
+[the archived W2 brief](archive/phase2/tpc_shortcomings_and_plan_2026-08-04.md#w2-close-the-addressable-phase-1-preference-residual):
 
 ```bash
 TPC_PACK_DAV=1 TPC_PACK_DDR=1 .venv/bin/python scripts/iterate_tail.py \
@@ -233,7 +233,7 @@ Recovery was two safe, already-scripted operations, each gated so `results/best`
    the stored plan (drop the duplicate meal, restore chronological order, re-space the overlap,
    re-ground the early leg) very likely can — worth `~+2.2` overall. That repair was never attempted;
    it is specified end to end as W1 in
-   [Shortcomings and plan](tpc_shortcomings_and_plan.md#w1-repair-the-22-query-phase-1-commonsense-tail).
+   [the archived W1 brief](archive/phase2/tpc_shortcomings_and_plan_2026-08-04.md#w1-repair-the-22-query-phase-1-commonsense-tail).
 2. **Densify already-accepted plans** (`TPC_PACK_DAV=1 TPC_PACK_DDR=1 scripts/densify.py`, then
    `make merge`). `densify.py` only mutates a plan that is already accepted, only keeps the result if
    the full checker *still* accepts it and its preference sum is strictly higher, and `make merge`

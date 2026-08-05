@@ -63,7 +63,7 @@ We asked the organizers directly (email + would-be GitHub issue) how evaluation 
   **This is now a hard, load-bearing fact for our submission layout — see the critical gap flagged just below and the top roadmap priority it drives.**
 - **Versioning.** They evaluate **at most two submitted versions per team** (limited eval resources). If both run successfully, **the higher score is the team's final score.** (Unspecified: what happens if only one of two succeeds, or a third version is submitted anyway — treat "at most two" as the operative constraint and don't rely on a third attempt.)
 - **Feedback.** Teams get feedback after *every* evaluation run: the score plus "relevant execution information." Feedback can be delayed because each run takes a while. If the organizers hit an environment issue, runtime error, or apparent bug during evaluation, they'll contact the team proactively.
-- **Per-query timeout: there isn't one.** Instead there's a **single 5-hour wall-clock budget for the whole 100-query run**, starting when the command above is invoked; environment creation, dependency installation, and other setup are excluded from that 5 hours. This replaces every `300 s`/`900 s` per-query assumption this repository has carried since Phase 2 planning began — see the [roadmap](../tpc_phase2_roadmap.md#next-steps-priority-order) for what changes as a result.
+- **Per-query timeout: there isn't one.** Instead there's a **single 5-hour wall-clock budget for the whole 100-query run**, starting when the command above is invoked; environment creation, dependency installation, and other setup are excluded from that 5 hours. This replaces every `300 s`/`900 s` per-query assumption this repository has carried since Phase 2 planning began — see the [design doc](../tpc_phase2_design.md#run-shape) for how the run is scheduled against it.
 
 ### The gap this reply surfaced — CLOSED 2026-08-04
 
@@ -75,7 +75,12 @@ The bare command also schedules the run against the 5-hour envelope confirmed ab
 
 ### Packaging this into a submission
 
-`scripts/assemble_phase2_submission.py` builds `submissions/{team}_v{N}.zip` (archive root `{team}_v{N}/`, version from `phase2-v<N>` git tags, which restart at `v1` for Phase 2) from the **tracked** files at the current commit, minus development-only trees (`results/`, `submissions/`, `docs/archive/`, `report/`, `images/`, `slurm/`). It writes a `SUBMISSION.md` (install + run), a `submission_manifest.json` (commit, evaluator parity point) and a credential-free `agent_env/config.toml` into the archive root, then verifies the result by unpacking it into a temporary directory and running the organizers' command shape there with a stripped `PATH`. It uploads nothing; submission stays manual at the portal above. Installation on the evaluation host is `pip install -r requirements-submission.txt` — nine PyPI packages, no extra index, no GPU stack, database included.
+```bash
+make phase2-submission-check   # dry run: what would ship, file count, unpacked size
+make phase2-submission         # build submissions/{team}_v<N>.zip, then unpack and run it
+```
+
+`scripts/assemble_phase2_submission.py` builds `submissions/{team}_v{N}.zip` (archive root `{team}_v{N}/`, version from `phase2-v<N>` git tags, which restart at `v1` for Phase 2) from the **tracked** files at the current commit, minus development-only trees (`results/`, `submissions/`, `docs/archive/`, `report/`, `images/`, `slurm/`). It writes a `SUBMISSION.md` (install + run), a `submission_manifest.json` (commit, evaluator parity point) and a credential-free `agent_env/config.toml` into the archive root, then verifies the result by unpacking it into a temporary directory and running the organizers' command shape there with a stripped `PATH`. It uploads nothing; submission stays manual at the portal above. Installation on the evaluation host is `pip install -r requirements-submission.txt` — eight PyPI packages, no extra index, no GPU stack, database included.
 
 **Credential exclusion, stated correctly.** An earlier version of this paragraph claimed that reading `git ls-files` is what keeps `.env` and `agent_env/config.toml` out of an archive, "because they are gitignored". That reasoning does not hold: `.gitignore` does not untrack a file that is already tracked, and **`.env` is in fact tracked in this repository** (committed in `82b0455`). What actually protects the archive is the separate `SECRET_PATH_PATTERNS` filter in the assembler, which drops any `.env*`, `config.toml`, `.netrc`, `*.pem` or SSH key path regardless of its git status — verified by `tests/phase2/test_submission_package.py` and by inspecting the built zip. The tracked `.env` remains a repository-hygiene problem in its own right (see below); it is not a submission leak.
 
@@ -303,7 +308,7 @@ Phase 2."* Two consequences beyond the code sync:
   some existing scores and leaderboard rankings" and that they need time to rerun the relevant
   evaluations, verify results and update the leaderboard, with a public update to follow. Phase 1
   standing decides Phase 2 advancement, so our already-submitted Phase 1 predictions carry the same
-  `100.0 -> 61.16` exposure the local re-score shows (see the [Phase 1 playbook](../tpc_phase1_playbook.md#current-status-2026-07-30-after-the-upstream-evaluator-sync)).
+  `100.0 -> 61.16` exposure the local re-score shows (see the [Phase 1 playbook](../tpc_phase1_playbook.md#current-status-2026-08-02-after-clearing-all-but-one-of-the-commonsense-tail)).
 - **Track upstream `main`, not a pinned copy.** Teams are told to "use the latest public evaluator
   rather than the earlier verifier version". Re-check upstream before any measurement that matters.
 

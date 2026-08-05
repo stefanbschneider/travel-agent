@@ -412,7 +412,7 @@ def test_unaccepted_commit_refused_when_parsed_passes_drop(monkeypatch):
 #
 # A 1-day trip whose last activity is an overnight accommodation running to 24:00 floors the
 # return-departure search at 24:00, so no row can ever clear it and the endpoint repair silently
-# declines (docs/tpc_shortcomings_and_plan.md W5).
+# declines (docs/archive/phase2/tpc_shortcomings_and_plan_2026-08-04.md W5).
 
 
 def _single_day_plan():

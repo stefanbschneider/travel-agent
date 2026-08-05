@@ -9,7 +9,7 @@ invocation does *is* the Phase 2 submission. These tests pin the two facts that 
 2. the run is bounded by the confirmed whole-run wall-clock envelope, not by a fixed per-query
    budget that would overrun it.
 
-See ``docs/tpc_shortcomings_and_plan.md`` W11 and roadmap item 0a.
+See ``docs/tpc_phase2_design.md`` ("Entry point") for the shipped contract.
 """
 
 from __future__ import annotations

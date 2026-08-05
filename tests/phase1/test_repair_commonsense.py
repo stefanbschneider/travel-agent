@@ -1,4 +1,4 @@
-"""Unit tests for scripts/repair_commonsense.py (docs/tpc_shortcomings_and_plan.md W1).
+"""Unit tests for scripts/repair_commonsense.py (docs/archive/phase2/tpc_shortcomings_and_plan_2026-08-04.md W1).
 
 These use synthetic plan dicts and a fake, stubbed TPCAgent instance -- no real WorldEnv, no
 solve, no dependency on results/best.

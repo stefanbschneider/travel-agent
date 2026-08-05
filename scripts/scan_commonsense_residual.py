@@ -12,7 +12,8 @@ results/best (or an explicit split) and flags each plan against six structural f
   missing_intercity_endpoint       -- itinerary missing an intercity head or tail activity
   missing_accommodation_nonfinal_day -- a multi-day itinerary with a non-final day lacking an accommodation
 
-See docs/tpc_shortcomings_and_plan.md Appendix 7.1 for the finding this script reproduces.
+See docs/archive/phase2/tpc_shortcomings_and_plan_2026-08-04.md Appendix 7.1 for the finding
+this script reproduces; the outcome is recorded in docs/tpc_phase1_playbook.md.
 """
 import argparse
 import glob
