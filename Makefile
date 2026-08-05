@@ -28,7 +28,7 @@ score:
 submission:
 	$(PYTHON) scripts/assemble_submission.py $(if $(VERSION),--version $(VERSION))
 
-# Upload a built submission zip to the TPC portal (default: newest submissions/fabiundstefan_v*.zip).
+# Upload a built Phase 1 zip to the TPC portal (default: newest submissions/phase1/fabiundstefan_v*.zip).
 upload:
 	$(PYTHON) scripts/submit.py $(if $(VERSION),--version $(VERSION))
 
@@ -46,7 +46,7 @@ help:
 	  'make merge          - monotonic merge only' \
 	  'make score          - evaluate results/best' \
 	  'make submission     - build the next submission zip (version from git tags; override with VERSION=vN)' \
-	  'make upload         - upload the newest built submission zip to the TPC portal (override VERSION=vN)' \
+	  'make upload         - upload the newest built Phase 1 zip to the TPC portal (override VERSION=vN)' \
 	  'make upload-check   - resolve the portal link and show what would be uploaded (no send)' \
 	  'make clean-light    - remove partial oracletranslation solve outputs' \
 	  '' \

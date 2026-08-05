@@ -2,8 +2,8 @@
 """Assemble a submission from results/best.
 
 Drops private (underscore-prefixed) top-level keys such as _eval_score from every plan and
-writes submissions/fabiundstefan_<version>/<uid>.json, then zips them with the archive root
-fabiundstefan_<version>/ (matching the v3 layout). The .gitkeep marker is skipped.
+writes submissions/phase1/fabiundstefan_<version>/<uid>.json, then zips them with the archive
+root fabiundstefan_<version>/ (matching the v3 layout). The .gitkeep marker is skipped.
 """
 import argparse
 import json
@@ -14,6 +14,7 @@ import sys
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SUBMISSIONS_DIR = os.path.join(ROOT, "submissions", "phase1")
 
 
 def latest_submission_version():
@@ -56,7 +57,7 @@ def main():
 
     name = "fabiundstefan_{}".format(version)
     best_dir = os.path.join(ROOT, "results", "best")
-    out_dir = os.path.join(ROOT, "submissions", name)
+    out_dir = os.path.join(SUBMISSIONS_DIR, name)
     os.makedirs(out_dir, exist_ok=True)
 
     count = 0
@@ -70,7 +71,7 @@ def main():
             json.dump(clean, f, ensure_ascii=False, indent=2)
         count += 1
 
-    zip_path = os.path.join(ROOT, "submissions", name + ".zip")
+    zip_path = os.path.join(SUBMISSIONS_DIR, name + ".zip")
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for fname in sorted(os.listdir(out_dir)):
             if fname.endswith(".json"):

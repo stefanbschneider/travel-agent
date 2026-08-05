@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Upload a built submission zip to the TPC Phase-1 portal.
+"""Upload a built Phase 1 submission zip to the TPC portal.
 
 box.nju.edu.cn ("NJU Box") is a Seafile server, not Box.com. Its anonymous upload
 links use a two-step API:
@@ -22,21 +22,21 @@ import urllib.request
 import uuid
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SUBMISSIONS_DIR = os.path.join(ROOT, "submissions", "phase1")
 DEFAULT_PORTAL = "https://box.nju.edu.cn/u/d/998d62d9bd8747ea8659/"
 
 
 def latest_zip():
-    """Path of the highest-version submissions/fabiundstefan_v<N>.zip, or None."""
-    sub = os.path.join(ROOT, "submissions")
-    if not os.path.isdir(sub):
+    """Path of the highest-version Phase 1 fabiundstefan_v<N>.zip, or None."""
+    if not os.path.isdir(SUBMISSIONS_DIR):
         return None
     best = None
-    for fname in os.listdir(sub):
+    for fname in os.listdir(SUBMISSIONS_DIR):
         m = re.fullmatch(r"fabiundstefan_v(\d+)\.zip", fname)
         if m:
             n = int(m.group(1))
             if best is None or n > best[0]:
-                best = (n, os.path.join(sub, fname))
+                best = (n, os.path.join(SUBMISSIONS_DIR, fname))
     return best[1] if best else None
 
 
@@ -87,7 +87,7 @@ def main():
     )
     ap.add_argument("--url", default=os.environ.get("TPC_SUBMIT_URL", DEFAULT_PORTAL),
                     help="portal upload-link URL (default: the TPC Phase-1 portal)")
-    ap.add_argument("--version", help="upload submissions/fabiundstefan_v<N>.zip")
+    ap.add_argument("--version", help="upload submissions/phase1/fabiundstefan_v<N>.zip")
     ap.add_argument("--zip", help="upload this exact zip path (overrides --version)")
     ap.add_argument("--dry-run", action="store_true",
                     help="resolve the link and show the target, but do not upload")
@@ -98,11 +98,11 @@ def main():
     elif args.version:
         if not re.fullmatch(r"v\d+", args.version):
             ap.error("version must look like v<number>, for example v6")
-        zip_path = os.path.join(ROOT, "submissions", "fabiundstefan_{}.zip".format(args.version))
+        zip_path = os.path.join(SUBMISSIONS_DIR, "fabiundstefan_{}.zip".format(args.version))
     else:
         zip_path = latest_zip()
         if zip_path is None:
-            ap.error("no submissions/fabiundstefan_v*.zip found; run `make submission` first")
+            ap.error("no submissions/phase1/fabiundstefan_v*.zip found; run `make submission` first")
     if not os.path.isfile(zip_path):
         ap.error("zip not found: {} (run `make submission`)".format(zip_path))
 

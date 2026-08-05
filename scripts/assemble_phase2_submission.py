@@ -18,7 +18,7 @@ What this script does:
    needed to run the system (see ``EXCLUDED_PREFIXES``);
 3. writes ``SUBMISSION.md`` (install + run, verbatim commands) and ``submission_manifest.json``
    (commit, evaluator parity point, file count) into the archive root;
-4. zips it as ``submissions/{team}_v{N}.zip`` with archive root ``{team}_v{N}/``, matching the
+4. zips it as ``submissions/phase2/{team}_v{N}.zip`` with archive root ``{team}_v{N}/``, matching the
    confirmed ``{TeamName}_v{x}.zip`` naming;
 5. **verifies** the packaged tree by unpacking it into a temporary directory and running the
    organizers' exact command shape there on one query, with ``opencode``/``codex`` unreachable --
@@ -47,6 +47,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SUBMISSIONS_DIR = ROOT / "submissions" / "phase2"
 DEFAULT_TEAM = "fabiundstefan"
 TAG_PREFIX = "phase2-v"
 # Queries the unpack-and-run check solves. Must exceed the worker count so more than one worker
@@ -469,9 +470,9 @@ def main() -> int:
         print("(dry run: nothing written)")
         return 0
 
-    out_dir = ROOT / "submissions" / name
+    out_dir = SUBMISSIONS_DIR / name
     manifest = stage(paths, out_dir, version=version, team=args.team)
-    zip_path = ROOT / "submissions" / f"{name}.zip"
+    zip_path = SUBMISSIONS_DIR / f"{name}.zip"
     count = write_zip(out_dir, zip_path, name)
     print(
         f"wrote {zip_path} ({count} entries, {zip_path.stat().st_size / 1e6:.1f} MB compressed) "
