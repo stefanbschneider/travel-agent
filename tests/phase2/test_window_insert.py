@@ -88,13 +88,14 @@ def test_insert_matches_existing_and_grounded_poi_aliases():
         plan, QUERY, {"activity_time_windows": [alias]}, _check) is False
 
 
-def test_insert_intersects_alias_windows_for_the_same_poi():
+def test_insert_intersects_sibling_alias_windows_for_the_same_poi():
     agent = _bare_agent()
     plan = _plan()
-    alias = dict(WINDOW, location="Museum Scenic Area", earliest="08:30", end_before="09:00")
+    garden_alias = dict(WINDOW, location="Museum Garden")
+    scenic_alias = dict(WINDOW, location="Museum Scenic Area", earliest="08:30", end_before="09:00")
 
     assert agent._insert_absent_timed_window_pois(
-        plan, QUERY, {"activity_time_windows": [WINDOW, alias]}, _check) is False
+        plan, QUERY, {"activity_time_windows": [garden_alias, scenic_alias]}, _check) is False
     assert all(
         activity.get("position") != "Museum"
         for activity in plan["itinerary"][0]["activities"]

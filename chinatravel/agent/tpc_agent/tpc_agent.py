@@ -3119,6 +3119,7 @@ class TPCAgent(BaseAgent):
 
     def _insert_absent_timed_window_pois(self, plan, query, constraints, check):
         """Try grounded insertion slots for the P9 absent-POI timed-window residual."""
+        city = str(query.get("target_city", ""))
         bounds_by_target = {}
         for window in (constraints.get("activity_time_windows", []) or []):
             if not isinstance(window, dict) or not window.get("location"):
@@ -3132,12 +3133,9 @@ class TPCAgent(BaseAgent):
                 if activity_type not in self._WINDOW_ACTIVITY_TYPES:
                     continue
                 location = str(window["location"])
-                key = next(
-                    (existing for existing in bounds_by_target
-                     if existing[1] == activity_type
-                     and self._match_window_location(existing[0], location)),
-                    (location, activity_type),
-                )
+                poi = self._resolve_timed_window_poi(city, location, activity_type)
+                canonical_location = str(poi.get("name", location)) if poi else location
+                key = (canonical_location, activity_type)
                 old_lo, old_hi = bounds_by_target.get(key, (None, None))
                 bounds_by_target[key] = (
                     lo if old_lo is None else (max(old_lo, lo) if lo is not None else old_lo),
@@ -3146,7 +3144,6 @@ class TPCAgent(BaseAgent):
         if not bounds_by_target:
             return False
 
-        city = str(query.get("target_city", ""))
         people = int(query.get("people_number", 1) or 1)
         inserted = False
         for (location, activity_type), (lo, hi) in bounds_by_target.items():
