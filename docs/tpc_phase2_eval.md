@@ -11,42 +11,23 @@ defines their interpretation.
 
 ## Run this next
 
-R1–R7 are closed (see [what the closed queue established](#what-the-closed-queue-r1r7-established)).
+R1–R8 are closed (see [what the closed queue established](#what-the-closed-queue-r1r8-established)).
 R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
 repeats scored bit-for-bit identical (`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok
-36/100`, all three times). Every remaining arm below is judged against that near-zero floor rather
-than the pre-fix `sd 0.35`, so an effect well under `1` point is now resolvable in a single run —
-**no arm on this list needs repeats** unless a future result actually shows spread.
+36/100`, all three times) — every remaining arm below is judged against that near-zero floor rather
+than the pre-fix `sd 0.35`, so an effect well under `1` point is resolvable in a single run and
+**no arm on this list needs repeats** unless a future result actually shows spread. R8
+(2026-08-05) gated the window-aware move **GREEN and full-sized**: `overall 63.58` (`+5.83` over
+R7), `FPR 43.0` (`+11.0`), `constraints_ok 46/100` (`+10`) — close to the paired screen's predicted
+`FPR 32.5 → 42.5`. **`TPC_WINDOW_ANCHOR` is now gate-cleared; flipping it on by default is an
+Implementation-workstream change**, not something this run performs.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R8** | does a window-aware solver move convert into FPR? | nothing — [P1](tpc_phase2_roadmap.md#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move) landed 2026-08-05 and screened GREEN | ~1.5 h |
 | **R9** | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | **R10** | what does removing the oracle cost on the same solver? (report figure) | nothing | ~5 h |
 | **R11** | LLM-backed repair, v2 only | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) | not before the v1 upload |
 | **R3** | does cross-query parallelism convert into score? | a ≥8-core machine | ~5 h |
-
-### R8 — the gate for a window-aware move
-
-```bash
-TPC_WINDOW_ANCHOR=1 .venv/bin/python scripts/phase2_full_run.py \
-  --method phase2_e2e_r8_windows --label "window-aware move (TPC_WINDOW_ANCHOR), 5h"
-```
-
-**The only arm with a plausible multi-point effect**, because P1 targets `timed_visit_named_poi` —
-the sole logical blocker in `45 of 61` failing solver-only queries. Paired against the R7 value
-(`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok 36/100`). Post-R7, sd is measured at
-`0` on this box, so any nonzero delta is real; this arm needs no repeats. Read `FPR` and
-`constraints_ok` first; `overall` follows them.
-
-P1 is implemented as the default-off `TPC_WINDOW_ANCHOR`
-([roadmap](tpc_phase2_roadmap.md#what-was-implemented-tpc_window_anchor)) and its paired `n=80`
-`90 s` screens came back GREEN on **both** axes — FPR `32.5 → 42.5`, `all_pass 26 → 34`, commonsense
-and EPR flat, timeouts `0 → 0`
-([solver-only](../results/phase2_baselines/screens/20260805_solver_only_n80_b90_window_anchor/summary.json),
-[end-to-end](../results/phase2_baselines/screens/20260805_e2e_n80_b90_window_anchor/summary.json)).
-A screen at a reduced budget on 80 records is not a promotion; this run is. If it clears, the flag
-belongs in `apply_deterministic_solver_defaults()`, not in an operator's environment.
 
 ### R9 — the falsification run for "spend the idle envelope" *(needs P5, readable only with P2)*
 
@@ -207,7 +188,7 @@ rows because the solver now canonicalizes its own constraint literals). `EVALUAT
 `c89cfca`; `scripts/phase2_gate.py` refuses to gate across the boundary, including one-sided marker
 presence. Full detail: [competition reference](reference/competition.md#evaluator-version).
 
-## What the closed queue (R1–R7) established
+## What the closed queue (R1–R8) established
 
 Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows under
 `results/phase2_baselines/full_runs/`. **Nothing on this list needs re-running.**
@@ -221,6 +202,7 @@ Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows
 | R5 held-out tripwire | `20260805T042106Z` | `overall 62.59` on the 20-record test split, `constraints_ok 10/20` |
 | R6 packaged archive | no row (checks the zip, not a split) | `fabiundstefan_v1.zip`, `1676` entries, `4.0 MB`, from commit `b44bb73c096b`; unpacked and run with a stripped `PATH`: `valid_output=True` |
 | **R7 seed-variance baseline, 5 h ×3** | `20260805T081535Z`, `20260805T094549Z`, `20260805T110654Z` | **bit-for-bit identical across all three repeats**: `overall 57.74985419574877`, MicEPR `99.67`, MacEPR `98.00`, C-LPR `88.82`, FPR `32.0`, DAV `16.625`, ATT `24.53`, DDR `18.42`; `constraints_ok 36/100`; per-pass telemetry (`improved`/`elapsed_sec`) matches to within noise across the three runs too |
+| **R8 window-aware move, 5 h** (`TPC_WINDOW_ANCHOR=1`) | `20260805T123142Z` | `overall 63.58` (**`+5.83`** over R7); MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.90`, **FPR `43.0`** (**`+11.0`**), DAV `24.71`, ATT `33.65`, DDR `24.50`; `empty_plans 0/100`, `constraints_ok 46/100` (**`+10`**); matches the paired `n=80`/`90 s` screens (predicted FPR `32.5 → 42.5`) closely; used `26%` of the envelope (`4733 s`) |
 
 R7's finding: **sd = 0, range = 0** on this box post-P0 — the pinned restart seed
 ([P0](tpc_phase2_roadmap.md#landed-and-promoted), landed 2026-08-05) removed the salted-`hash()`
@@ -255,6 +237,10 @@ Five findings, and two corrections that matter more than the scores:
 5. **Post-P0, the same-config spread is zero.** R7's three 5 h repeats are bit-for-bit identical.
    The pre-fix variance (`sd 0.35` at 2 h) was entirely the salted-`hash()` restart-seed artifact P0
    removed, not genuine solver or scheduler nondeterminism.
+6. **R8 is the first arm that actually moved FPR** — `+11.0` against a `sd 0` baseline, so the
+   effect is unambiguous, not noise. This is the confirmation of the roadmap's diagnosis: the
+   solver's failure mode was a missing window-aware move, not insufficient search time, and fixing
+   the move (not spending more budget on the old sampler) converts directly into FPR.
 
 R5 is recorded standalone: `familiar_100_test` is a *subset* of `familiar_100` (R1's split), so no
 val↔test gap is computed. `62.59` above R1's `57.99` is consistent with a smaller, easier split, not
