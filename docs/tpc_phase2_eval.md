@@ -47,6 +47,25 @@ explicitly gated to not run before the `v1` upload) that belong to the Implement
 not Evaluation — see the [parallel workstreams](../CLAUDE.md#parallel-workstreams) split. R3 stays
 blocked on an ≥8-core machine, unrelated to this pass.
 
+### What `v1` is expected to score — an expectation, not a measurement
+
+The archive ships R8's configuration, so the honest point estimate is **R8's number: `overall 63.58`,
+`FPR 43.0`** on data drawn like familiar-100. Everything below is uncertainty around that, and the
+[measurement rule](#measurement-rule) still stands: no local row proves held-out performance.
+
+| Source of error | Size | Direction |
+| --- | --- | --- |
+| Solver nondeterminism | **`0`** — R7's three 5 h repeats are bit-for-bit identical | none |
+| Query sampling (100 fresh queries, same distribution) | FPR is binomial: at `p = 0.43`, `n = 100`, `SE = 4.95` FPR points. Empirically `1` FPR point is worth `0.53` overall on this system (`+11.0 FPR → +5.83` from R7 to R8, above the `0.40` weight because C-LPR and the preference terms move with FPR), so **`≈ ±2.6` overall at `1σ`** | symmetric |
+| P1 was designed from the **`val` residual** | unquantified until [R13](#r13--the-held-out-tripwire-on-the-new-default). R8's 100 queries include those 80, so its `+11.0` is partly in-sample | **optimistic** |
+| Evaluation host | unknown core count; the split costs `≤ ~14200` worker-seconds, so even one worker fits the 5 h envelope. [R3](#r3--worker-scaling-still-blocked) never measured whether extra workers *convert* to score | neutral to slightly positive |
+
+So: **low-to-mid 60s, centre `~63.6`, roughly `58–68` as a `±2σ` band**, with the residual
+val-design risk pushing the honest reading toward the lower half of it until R13 runs. For context on
+the held-out subset, R5 measured `FPR 40.0` / `overall 62.59` there on the **pre-P1** configuration —
+that subset is easier than the full 100 (`FPR 40` vs `32` on the same code), which is why R13 is read
+as `constraints_ok/20` against R5's `10/20` rather than as a score comparison.
+
 ### R12 — the promoted default, from a clean tree *(run before the v1 upload)*
 
 R8 turned the flag on **explicitly, from the environment**. The submission turns it on **implicitly,

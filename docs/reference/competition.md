@@ -108,6 +108,36 @@ What changed as a result: the archive verification now solves `VERIFY_QUERIES` (
 
 **Honest limitation:** the integration test catches *deterministic* cold-start breakage reliably, but fired on only about **one run in four** against the known-broken code, because the race window is narrow and raising the worker count made it *worse* (lazy ramp-up, not simultaneous start). The deterministic unit test is the real regression guard for this instance; the integration test covers the class. Do not treat a green cold-start run as proof that no race exists.
 
+### The `v1` archive as built (2026-08-05)
+
+`fabiundstefan_v1.zip` — `1683` entries, `4.3 MB` compressed / `16.6 MB` unpacked, `1680` tracked
+files, `evaluator_parity c89cfca`, first `phase2-v<N>` tag namespace entry (Phase 2 numbering restarts
+at `v1`, and the [resubmission
+email](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)
+disregards everything uploaded before it). It carries the promoted post-R8 configuration.
+
+Verified beyond the assembler's own unpack-and-run, because a warm tree proves nothing about the
+organizers' cold one:
+
+| Check | Result |
+| --- | --- |
+| Install from the archive alone, `uv venv --python 3.12` + `requirements-submission.txt` | `36` packages resolved, no extra index, no GPU stack |
+| Cold tree (no `cache/`), `env -i` with `PATH=/usr/bin:/bin`, `12` queries, `9` workers | `12/12` plans, `180` activities, `0` empty itineraries, `0` fallbacks, no `Exception in initializer` |
+| `solver_flags` on every query | `pin_timed_windows`, `window_anchor`, `commonsense_first` all `true`, `solve_converge_patience 15` — the archive ships the R8 configuration, not the pre-R8 one |
+| LLM / network | `llm_backend=none` on every query; no `.env`, `*.pem`, `.netrc` or SSH key in the zip; `agent_env/config.toml` synthesized credential-free (`[run] harness = "tpc"`, no `split`, no `limit`) |
+| Oracle leakage | no `hard_logic*` key in any emitted plan |
+| **The bare command, no flags at all** (`--split tpc_phase2_familiar_100_test`) | reads its own config, resolves the split, reports `20 queries, 9 worker(s), 285.0 min usable of a 5.00 h envelope`, pre-writes all `20` plans before the first solve |
+| Interrupt safety | `SIGTERM` at `100 s` of a 5 h envelope left `20/20` plans on disk, **all schema-valid**, `18/20` already non-empty |
+
+**Envelope headroom on an unknown host.** R8 spent `4733 s` wall across `3` workers, so the whole
+split costs at most `~14200` worker-seconds. Even a machine that gives us a single worker finishes in
+`~3.9 h`, inside the 5 h budget; more cores only add slack. The `26%` envelope utilization is not
+wasted time (see the [diagnosis](../tpc_phase2_roadmap.md#the-diagnosis)) but it is real robustness.
+
+**Rebuild before uploading if the commit is not on `main`.** `submission_manifest.json` records the
+commit *and branch* it was built from. An archive built from a feature branch is fine to test and
+wrong to upload — the uploaded artifact should be reproducible from the mainline.
+
 ### Verified against the official harness example (2026-08-05)
 
 The organizers' `ChinaTravel_harness_example.zip` (`submissions/`, 687 files) was unpacked and compared against our archive. Findings:
