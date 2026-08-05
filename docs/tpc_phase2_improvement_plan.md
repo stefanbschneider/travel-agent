@@ -6,8 +6,8 @@ it names the files, the mechanism, the flag, the tests, and the bar it has to cl
 
 **The one-paragraph version.** The submission uses only `26%` of its 5-hour envelope, which looks
 like wasted headroom. It is not. Fresh measurement (§2b) shows that giving failing queries `2.5×`
-the time buys `3.4×` the search and flips **zero** of them, because every knob we have — more
-budget, more restarts, more workers, fresh random seeds — is the same intervention: draw more
+the time buys `4.2×` the search and flips **one query in forty-four**, because every knob we have —
+more budget, more restarts, more workers, fresh random seeds — is the same intervention: draw more
 samples from a parameter space that does not contain the answer. `45 of 61` failing queries fail
 on a *single* constraint family the sampler cannot express (§5). **Spend the effort on what the
 solver can represent, not on how long it runs.**
@@ -70,17 +70,24 @@ This is the finding that decides the ranking below, and it is the opposite of wh
 26% of the envelope" suggests. The same diagnostic run's **repair** pass gave the failing queries
 `62 s` each — `2.5×` the triage slice:
 
-| | triage (`25 s`) | repair (`62 s`) |
+| | triage failures (`25 s`, `n=27`) | repair (`62 s`, `n=44`) |
 | --- | --- | --- |
-| restarts used, median | 39 | **134** |
-| `stop_reason` | `budget` | `budget` (still not the restart cap) |
-| best found at restart, median | 14 | 53 |
-| **queries flipped to passing** | — | **0** |
+| restarts used, median | 39 | **166** |
+| `stop_reason` | `budget` ×26 | `budget` ×41, `converged` ×3 — still never the restart cap |
+| best found at restart, median | 14 | 47 |
+| **queries flipped to passing** | — | **1 of 44** |
 
-`2.5×` the time bought `3.4×` the restarts and **zero** newly-satisfied queries. That matches the
-5 h reference run, where the repair pass improved `2 of 66` and polish `11 of 34`. In both, the
-best candidate is found around the halfway point of the restarts and **the entire back half of the
-search changes nothing**.
+`2.5×` the time bought `4.2×` the restarts and flipped **one** query in forty-four. That matches
+the 5 h reference run, where the repair pass improved `2 of 66` and polish `11 of 34` (and those
+"improvements" are mostly preference-key moves on already-passing plans, not new passes). In every
+case the best candidate is found around a third of the way through the restarts and **the whole
+back half of the search changes nothing**.
+
+**A sampling note that is itself a finding.** The triage column above comes from a snapshot taken
+*during* the triage pass. It has to: `on_result` overwrites `telemetry.json` per query, so once
+repair runs, the surviving triage records are only those of queries that never entered repair —
+i.e. the ones that passed. Reading triage stats after a completed run silently measures the
+winners. That is the bug P2 fixes, and it is why P2 ranks above everything except P1.
 
 **Why more restarts cannot help.** A "restart" resamples one parameter tuple
 (`tpc_agent.py:_random_params`): attraction offset, hotel index, attractions per day, visit

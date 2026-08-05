@@ -47,7 +47,7 @@ below. Full detail with each run's row path is inline below; the headline findin
    `57.35 / 57.86 / 57.99`. This queue originally blamed the `300s` per-query ceiling and called
    raising it the top follow-up. **That is now answered and the answer is no.** Per-query search
    telemetry shows failing queries exhaust a *search*, not a clock: given `2.5×` the budget they
-   perform `3.4×` the restarts and flip **zero** queries, because every restart draws from the same
+   perform `4.2×` the restarts and flip **one query in forty-four**, because every restart draws from the same
    bounded parameter space. Extra envelope, a higher cap, more workers and fresh seeds are one
    intervention wearing four hats. See
    [the improvement plan §2b](tpc_phase2_improvement_plan.md#2b-more-search-does-not-help--measured-not-assumed).
