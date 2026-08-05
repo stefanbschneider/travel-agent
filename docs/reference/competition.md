@@ -79,6 +79,30 @@ The bare command also schedules the run against the 5-hour envelope confirmed ab
 
 **Credential exclusion, stated correctly.** An earlier version of this paragraph claimed that reading `git ls-files` is what keeps `.env` and `agent_env/config.toml` out of an archive, "because they are gitignored". That reasoning does not hold: `.gitignore` does not untrack a file that is already tracked, and **`.env` is in fact tracked in this repository** (committed in `82b0455`). What actually protects the archive is the separate `SECRET_PATH_PATTERNS` filter in the assembler, which drops any `.env*`, `config.toml`, `.netrc`, `*.pem` or SSH key path regardless of its git status — verified by `tests/phase2/test_submission_package.py` and by inspecting the built zip. The tracked `.env` remains a repository-hygiene problem in its own right (see below); it is not a submission leak.
 
+### Pre-submission checklist — the cold-start rule (added 2026-08-05)
+
+**Never upload an archive that has not been verified from a pristine tree with more than one worker.** This is not a formality; it caught a bug that would have scored the submission near zero.
+
+```bash
+.venv/bin/python -m pytest tests/phase2 -q                       # unit suite
+.venv/bin/python -m pytest tests/phase2/test_cold_start.py -m integration -q
+.venv/bin/python scripts/assemble_phase2_submission.py --verify-budget-sec 90
+```
+
+**The failure mode this exists for.** Every worker process builds a `TPCAgent` against the same `cache/phase2_solve`, which is resolved relative to the *working directory*. On a tree that has never been run in — exactly what the organizers unpack — `BaseAgent` check-then-created it, so all workers saw it missing, one created it, and the rest raised `FileExistsError`. That happens inside the `ProcessPoolExecutor` **initializer**, so it does not lose one query: it breaks the pool, and the run **still exits 0** while shipping the pre-written empty fallback for every query. Fixed in PR [#60](https://github.com/stefanbschneider/china-travel-agent/pull/60) (`os.makedirs(..., exist_ok=True)`).
+
+Three properties made it nearly invisible, and they generalize to any future start-up bug:
+
+| Property | Consequence |
+| --- | --- |
+| Only reproduces **cold** | A dev tree always has `cache/phase2_solve` from an earlier run, as does the second run in any tree. Every local run, every committed `full_runs/` row and the whole unit suite passed. |
+| Needs **≥2 workers** | `ProcessPoolExecutor` spawns workers lazily, one per submitted task, so a single-query run starts a single worker. The verification used `--limit 1` and never exercised the pool at all. |
+| Fails **silently** | Broken pool → exit code 0, plan files present, empty itineraries. Only a content check sees it. |
+
+What changed as a result: the archive verification now solves `VERIFY_QUERIES` (6) queries rather than 1 so multiple workers actually start, checks **every** plan for a non-empty itinerary rather than just the first, and fails on `Exception in initializer` in stderr. `tests/phase2/test_cold_start.py` runs the same shape in CI, and `tests/phase2/test_log_dir_race.py` pins the specific mechanism deterministically.
+
+**Honest limitation:** the integration test catches *deterministic* cold-start breakage reliably, but fired on only about **one run in four** against the known-broken code, because the race window is narrow and raising the worker count made it *worse* (lazy ramp-up, not simultaneous start). The deterministic unit test is the real regression guard for this instance; the integration test covers the class. Do not treat a green cold-start run as proof that no race exists.
+
 ### Verified against the official harness example (2026-08-05)
 
 The organizers' `ChinaTravel_harness_example.zip` (`submissions/`, 687 files) was unpacked and compared against our archive. Findings:

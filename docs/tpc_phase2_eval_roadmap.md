@@ -489,6 +489,16 @@ about `2` points.** That retroactively covers every arm in R4 and every arm on t
 R8. It also has a known mechanism — the unpinned restart seed
 ([improvement plan §4](tpc_phase2_improvement_plan.md#4-the-restart-rng-is-accidentally-uncontrollably-random)).
 
+**If a row comes back with anomalously many `empty_plans`, suspect a broken worker pool before
+suspecting the solver.** A worker that dies during start-up takes the whole
+`ProcessPoolExecutor` with it, and the run still **exits 0** and writes a complete set of plan
+files — they are just the pre-written empty fallbacks. The row's per-pass `failed` count and
+`empty_plans` are the tells; stderr carries `Exception in initializer`. One instance of this
+(a cold-tree race on `cache/phase2_solve`) was fixed on 2026-08-05, but the failure *shape*
+outlives that specific cause — see the [pre-submission
+checklist](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05).
+Every row committed before that date was produced in a warm tree and is unaffected.
+
 **Protocol requirement, learned the hard way:** run the repeats with **no other work on the box**.
 The diagnostic row above survived scrutiny only because its pass wall clocks could be checked
 against R2's; had they diverged, the row would have been unusable and the slot wasted.
