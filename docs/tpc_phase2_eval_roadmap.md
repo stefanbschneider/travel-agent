@@ -8,6 +8,61 @@ For metric definitions, dataset boundaries and the gate mechanics, see
 [Phase 2 evaluation](tpc_phase2_eval.md). For what to *implement* next, see the
 [roadmap](tpc_phase2_roadmap.md).
 
+## Status: full queue run 2026-08-04/05, this machine (4 cores)
+
+Pre-flight, R1, R2, R4 (control + arms A/B/C + a confirmation repeat), R5, and R6 all completed;
+R3 was skipped (needs ≥8 cores, this machine has 4). Every R1–R6 row is under
+`results/phase2_baselines/full_runs/`, `git_dirty: false`, `evaluator_parity: c89cfca`, same
+machine (the pre-flight *plumbing check* row is the one exception — `git_dirty: true`, labelled and
+excluded from any comparison). Full detail with each run's row path is inline below; the headline
+findings:
+
+1. **R1 reference: `overall 57.99`, `FPR 33.0`, `empty_plans 0/100`.** The scheduler
+   self-terminates at **`26%`** of the 5 h envelope (`1.31 h`) — the last two passes both clamp to
+   exactly `300s`/query (the effective `max_query_sec` ceiling, see point 4 below), so once a query
+   has been solved at the cap no later pass can offer it a meaningfully larger budget, the candidate
+   list empties, and the sweep stops. **This is a capped-search stop, not a proven convergence** —
+   see the correction to point 2.
+2. **R2 envelope sensitivity: flat, but confounded by the `300s` cap.** `1 h / 3 h / 5 h` score
+   `57.35 / 57.86 / 57.99`. The supported claim is narrower than "more budget never helps": **extra
+   envelope buys nothing *given the `300s` per-query ceiling*, because the scheduler has no
+   mechanism to spend it** — every later pass is filtered to candidates whose new budget would beat
+   their last one by `MIN_BUDGET_GROWTH`, and a query stuck at the `300s` cap never clears that bar.
+   Whether raising the cap lets extra envelope convert into score is **untested and is now this
+   queue's top follow-up recommendation** (see point 4).
+3. **R3 worker scaling: not run**, this box is below the roadmap's own 8-core floor for that
+   comparison.
+4. **R4 pass shape: two accidental no-ops surfaced a real ceiling bug, plus one behavioral finding.**
+   - Arms A (`TPC_P2_TRIAGE_CAP_SEC=60`) and B (`TPC_P2_MAX_QUERY_SEC=300`) both landed as
+     same-config reruns of the control — their target caps never bound at a 2 h envelope. Arm B's
+     no-op surfaced a **doc correction that turned out to matter for R1/R2 too**: this roadmap's own
+     table said `TPC_P2_MAX_QUERY_SEC` defaults to `900`, but `phase2_full_run.py` never reaches
+     that default — the effective default on this path is `300` (confirmed against R1's own
+     telemetry, which clamps to exactly `300s`). **Top recommendation: rerun with
+     `TPC_P2_MAX_QUERY_SEC=600` or `900` at the 5 h envelope**, where R1 shows the cap demonstrably
+     binds — this could turn `3.4 h` of currently-unspendable envelope into score, and ranks above
+     the arm C gate below because it is untested rather than merely unconfirmed.
+   - Arm C (`TPC_P2_FAST_TRIAGE=0`) scored `+0.59` over a 2 h control. The strongest evidence here is
+     **categorical, not statistical**: polish improved `0/34` in arm C, versus `10/34`, `14/34`,
+     `13/34`, `14/33` in the other four 2 h runs (control, control repeat, arm A, arm B) — with fast
+     triage off, triage's own full-slice preference polishing already does the later polish pass's
+     job. A same-config control repeat landed `Δ 0.01` from the first control, which is **weak
+     evidence** (n=2, and the two runs' internal trajectories — `constraints_ok 36` vs `35`, repair
+     improved `4` vs `5` — genuinely differ) **that same-config score variance is small relative to
+     arm C's `+0.59`, not proof of a `~60×` noise-floor margin.** The behavioral signature is the
+     part to trust. **Recommended next step: queue `TPC_P2_FAST_TRIAGE=0` for a pinned E2E gate**,
+     which settles the magnitude regardless.
+5. **R5 held-out tripwire: `overall 62.59`** on the 20-record test split, recorded standalone. No
+   val↔test gap is computed — `familiar_100_test` is a subset of `familiar_100` (R1's split), and no
+   comparable `familiar_100_val` row at a matching envelope exists in this queue.
+6. **R6 packaged archive: verified end to end**, `valid_output=True`, from commit `b44bb73c096b`.
+   Checks packaging only, not score; upload/report/tag remain manual follow-ups.
+
+**What this queue does *not* answer:** whether raising `TPC_P2_MAX_QUERY_SEC` converts the unused
+`3.4 h` into score (point 4's top recommendation, untested), whether arm C's gain survives a full
+E2E gate at the real submission split/budget, and whether `100` queries always converge this fast on
+the organizer's actual held-out set (only their harness run will tell).
+
 ---
 
 ## What changed, and why old rows cannot be reused
@@ -114,15 +169,17 @@ this queue does the same).
 | `run_wall_frac_of_budget` | **`0.26`** (`4723 s` of `18000 s`) |
 | passes | 1 triage (`100×120s`, improved 100, 37.3 min) → 2 repair (`66×300s`, improved 2, 37.3 min) → 3 polish (`34×300s`, improved 11, 4.1 min) → stopped: "no pass would do anything new" |
 
-**The headline finding: R1 self-terminates at 26% of the envelope, not 100%.** `3.4 h` of the `5 h`
-went unused because every remaining candidate would have repeated a solve already on file. This
-pre-answers part of R2 before it runs: since R1 itself doesn't need the 5th hour, extra envelope
-past the point of convergence (~`1.3 h` here) cannot move `overall` — there is nothing left for it
-to spend on. R2's 1 h arm is the one to watch instead: `1 h < 1.31 h` natural convergence, so it may
-cut off pass 3 (polish, which alone lifted `constraints_ok` by 11) before it finishes and score
-below R1, even though R1 itself would be flat from ~1.5 h to 5 h. FPR (`33.0`) sits well below
-`constraints_ok/100` (`35`) only because FPR is stricter than the self-scored oracle-free
-`constraints_ok` proxy — expected, not a discrepancy to chase.
+**The headline finding: R1 self-terminates at 26% of the envelope, not 100%** — `3.4 h` of the `5 h`
+went unused. **Read the mechanism before assuming "converged":** repair and polish both clamp to
+exactly `300s`/query (see the R4 arm B correction below: the effective `max_query_sec` default on
+this path is `300`, not sweeps.py's internal `900`). The growth filter in `_choose_pass` drops a
+candidate from a later pass unless its new budget would beat its last one by `MIN_BUDGET_GROWTH`; a
+query already solved at the `300s` cap can never clear that bar again, so the candidate list empties
+and the sweep reports "no pass would do anything new." **This is a capped-search stop, not
+necessarily a quality plateau** — whether a higher cap would let the unused `3.4 h` convert into
+score is untested (see the R4 top recommendation). FPR (`33.0`) sits well below `constraints_ok/100`
+(`35`) only because FPR is stricter than the self-scored oracle-free `constraints_ok` proxy —
+expected, not a discrepancy to chase.
 
 **Three things this row settles that nothing else can:** whether the split fits the envelope at
 all, how much of the 5 h the scheduler actually spends, and how many queries reach
@@ -152,15 +209,17 @@ flat vs R1, within likely run-to-run noise for a single-seed comparison.
 but `constraints_ok 36/100` (vs R1's `35`, +1). `run_wall_frac_of_budget 0.37` (`4015 s` of
 `10800 s`), same three-pass shape, same self-termination reason.
 
-**R2 verdict: flat.** `overall` across 1 h / 3 h / 5 h is `57.35 / 57.86 / 57.99` — a `0.64`-point
-spread, well inside single-seed run-to-run noise, with `constraints_ok` moving by only `±1` query.
-**Extra envelope past ~1.3 h buys nothing at this configuration; every "give it more budget" idea
-on the implementation roadmap is dead as stated.** The scheduler self-terminates once every
-candidate would repeat a solve already on file — the binding constraint is the pass shape (what
-each pass tries and when it gives up), not wall-clock. This makes R4 (pass shape) the one with real
-leverage, and reframes R1's unused `3.4 h`/night as reclaimable rather than wasted: a 5 h submission
-run and a ~1.5 h run should score the same on this split, so the organizer's real held-out set is
-the only remaining unknown on whether 100 queries always converge this fast.
+**R2 verdict: flat, but confounded by the `300s` per-query cap — corrected 2026-08-05 after
+tracing R4 arm B.** `overall` across 1 h / 3 h / 5 h is `57.35 / 57.86 / 57.99`, `constraints_ok`
+moving by only `±1` query. The supported claim is narrower than "extra envelope buys nothing":
+**extra envelope buys nothing *given the effective `300s` `max_query_sec` ceiling*, because a query
+already solved at that cap is filtered out of every later pass by the growth check** (`_choose_pass`
+requires a new budget to beat the last one by `MIN_BUDGET_GROWTH`, which a capped query can never
+do) — so R1 itself never gets the chance to spend hours 2 through 5 on a query stuck at the ceiling.
+Whether raising `TPC_P2_MAX_QUERY_SEC` past `300` lets that unused time convert into score is
+**untested and is this queue's top follow-up recommendation** — it is a materially different
+question from "does the scheduler already extract everything available," which this queue has not
+answered either way.
 
 ### R3 — worker scaling: does parallelism convert into score?
 
@@ -268,17 +327,20 @@ is exactly the mechanism the roadmap predicted for a arm-C win ("the polish pass
 first-accept preference is what actually ships") except inverted: here polish *does* run (on all 34
 candidates) but finds nothing, because triage already did polish's job.
 
-**Confirmed, not just suggestive — see the control repeat below:** a same-config repeat of the 2 h
-control lands at `Δ 0.01` from the first control run, so same-config single-seed noise at this
-envelope is near zero. Arm C's `+0.59` is therefore **~60× the measured noise floor**, not "roughly
-the same magnitude" as I first estimated by comparing across different envelopes (R1-vs-R2, which
-is a different, larger source of variation — see the repeat's note). **Verdict: `TPC_P2_FAST_TRIAGE=0`
-is a real, reproducible-magnitude improvement at this 2 h envelope**, with a clean causal story
-(triage's full-slice polishing subsumes the later polish pass, which becomes dead weight) and no
-`constraints_ok` cost. This is screen-level evidence, not a promotion — per CLAUDE.md a default only
-flips through a full E2E gate — but it is now strong enough to prioritize for one. **Recommended
-next step:** queue `TPC_P2_FAST_TRIAGE=0` for a pinned E2E gate run (`make phase2-baseline` /
-`phase2_gate.py`) rather than another screen.
+**The behavioral signature is the part to trust; the score delta is weaker evidence than I first
+claimed.** A same-config repeat of the 2 h control (below) lands at `Δ 0.01` from the first control
+run — but that is `n=2`, not a variance estimate, and the two control runs' own trajectories differ
+(`constraints_ok 36` vs `35`, repair improved `4` vs `5`, polish improved `10` vs `14`): the process
+is visibly stochastic and these are two nearby samples, not proof the spread is `0.01`. So arm C's
+`+0.59` is **weak evidence of a real effect relative to that one repeat, not a confirmed `~60×`
+noise-floor margin.** What *does* hold up without needing a variance estimate: polish improved
+`0/34` in arm C against `10/34`, `14/34`, `13/34`, and `14/33` in the four other 2 h runs (control,
+control repeat, arm A, arm B) — a categorical difference, not a score wobble, with a clean causal
+story (triage's full-slice polishing subsumes the later polish pass, which becomes dead weight).
+This is screen-level evidence, not a promotion — per CLAUDE.md a default only flips through a full
+E2E gate — but it is strong enough on the behavioral axis to prioritize for one. **Recommended next
+step:** queue `TPC_P2_FAST_TRIAGE=0` for a pinned E2E gate run (`make phase2-baseline` /
+`phase2_gate.py`), which settles the score magnitude regardless.
 
 All three must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
 against R1.
@@ -286,17 +348,19 @@ against R1.
 **2h control, run 2026-08-04:** `results/phase2_baselines/full_runs/20260804T231910Z.json`,
 `--method phase2_e2e_r4_control`. `overall 57.81`, `constraints_ok 36/100`,
 `run_wall_frac_of_budget 0.49` (`3490 s` of `7200 s`), same three-pass shape and self-termination
-as R1/R2 — consistent with the R2 finding that this split converges around `~1–1.3 h` regardless of
-envelope. Arms A/B/C below compare against this row, not R1.
+as R1/R2 — consistent with the pattern seen at every envelope tried so far (see the R2 correction
+above: the stop is cap-driven, not necessarily a quality plateau). Arms A/B/C below compare against
+this row, not R1.
 
 **Control repeat, run 2026-08-05:** `results/phase2_baselines/full_runs/20260805T032037Z.json`,
-`--method phase2_e2e_r4_control_rep2`, identical config/envelope, rerun to bound same-config
-single-seed noise before trusting arm C's delta. `overall 57.82` — **`Δ 0.01`** vs the first control
-run. **Same-config repeat noise at this envelope is near zero**, not the `~0.6` spread seen across
-different envelopes in R2 (that spread reflects genuinely different per-pass budgets, not
-measurement noise — the R2 "flat" conclusion still holds, but the mechanism is small real gains
-from more search, not noise). This changes the read on arm C below: its `+0.59` delta is **~60×**
-the measured repeat-noise floor, so it is a real effect, not noise.
+`--method phase2_e2e_r4_control_rep2`, identical config/envelope, rerun to get a second sample on
+arm C's delta before trusting it. `overall 57.82` — `Δ 0.01` vs the first control run. **This is
+one paired difference, not a variance estimate (`n=2`)** — and the two runs' own trajectories
+differ (`constraints_ok 36` vs `35`, repair improved `4` vs `5`, polish improved `10` vs `14`),
+which argues the process is stochastic and these are two nearby samples rather than proof the
+spread is tightly `0.01`. Treat this as **weak evidence that same-config variance is smaller than
+arm C's `+0.59`**, not confirmation of a precise noise floor — see arm C's write-up for the stronger
+(categorical) evidence that carries the actual recommendation.
 
 ### R5 — the held-out tripwire (once, and only after R1 is settled)
 
