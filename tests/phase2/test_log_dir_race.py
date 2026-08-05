@@ -60,9 +60,11 @@ def test_agent_still_creates_a_missing_log_dir(tmp_path):
     assert log_dir.is_dir()
 
 
-def test_concurrent_agents_on_one_cold_log_dir_all_survive(tmp_path):
-    """The scenario itself: several agents built against the same not-yet-existing directory, as
-    the sweep's worker processes do."""
+def test_repeated_agents_against_one_cold_log_dir_all_survive(tmp_path):
+    """Sequential on purpose -- a genuinely concurrent version would be flaky (measured at roughly
+    one hit in four, see ``test_cold_start.py``). This pins the observable outcome instead: the
+    first agent creates the shared directory and every later one tolerates finding it there, which
+    is what each worker process does after the winner has created it."""
     log_dir = tmp_path / "cache" / "phase2_solve"
     agents = [BaseAgent(name=f"worker-{i}", log_dir=str(log_dir), backbone_llm=_StubLLM()) for i in range(5)]
 

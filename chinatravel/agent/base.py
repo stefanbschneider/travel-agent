@@ -124,11 +124,13 @@ class BaseAgent:
         self.env = kwargs.get('env', None)
 
         self.log_dir = kwargs.get('log_dir', "logs")
-        # exist_ok, not a check-then-create: the Phase 2 sweep builds one agent per worker process
-        # and every one of them points at the same log_dir. On a fresh checkout the directory does
-        # not exist yet, so all workers saw it missing, one created it and the rest raised
-        # FileExistsError -- inside the ProcessPoolExecutor *initializer*, which breaks the whole
-        # pool and makes the run emit empty fallback plans for the entire split.
+        # The exists() check only decides whether to log; exist_ok is what makes this safe. The
+        # Phase 2 sweep builds one agent per worker process, all pointing at the same log_dir, so
+        # on a fresh checkout every worker sees it missing and they all proceed to create it --
+        # and without exist_ok, everyone but the winner raises FileExistsError in the window
+        # between the check and the call. That happens inside the ProcessPoolExecutor
+        # *initializer*, which breaks the whole pool: the run then emits empty fallback plans for
+        # the entire split while still exiting 0.
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir, exist_ok=True)
             print(f"Created log directory: {self.log_dir}")
