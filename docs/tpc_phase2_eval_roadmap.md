@@ -223,6 +223,12 @@ most likely because the polish pass rarely runs, so first-accept preference is w
 All three must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
 against R1.
 
+**2h control, run 2026-08-04:** `results/phase2_baselines/full_runs/20260804T231910Z.json`,
+`--method phase2_e2e_r4_control`. `overall 57.81`, `constraints_ok 36/100`,
+`run_wall_frac_of_budget 0.49` (`3490 s` of `7200 s`), same three-pass shape and self-termination
+as R1/R2 — consistent with the R2 finding that this split converges around `~1–1.3 h` regardless of
+envelope. Arms A/B/C below compare against this row, not R1.
+
 ### R5 — the held-out tripwire (once, and only after R1 is settled)
 
 ```bash
