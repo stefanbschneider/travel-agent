@@ -80,6 +80,17 @@ SECRET_PATH_PATTERNS = (
 def is_secret_path(path: str) -> bool:
     return any(pattern.search(path) for pattern in SECRET_PATH_PATTERNS)
 
+
+def comment_safe(value: str) -> str:
+    """Flatten a value so it cannot escape the TOML comment line it is interpolated into.
+
+    ``--team`` is operator-supplied. A newline in it would end the comment and let the rest of the
+    value be parsed as TOML keys, so the packaged config could carry settings nobody wrote. Line
+    breaks become spaces rather than being stripped, so a mangled team name stays visible instead
+    of silently losing text.
+    """
+    return " ".join(str(value).splitlines()).strip()
+
 # Without these the archive cannot run; a missing one is a packaging bug, not a warning.
 REQUIRED_FILES = (
     "agent_env/scripts/solve_script_with_harness.py",  # the confirmed entry point
@@ -279,7 +290,8 @@ def stage(paths: list[str], out_dir: Path, *, version: str, team: str) -> dict:
     config_path = out_dir / "agent_env" / "config.toml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
-        SUBMISSION_CONFIG_TOML.format(team=team, version=version), encoding="utf-8"
+        SUBMISSION_CONFIG_TOML.format(team=comment_safe(team), version=comment_safe(version)),
+        encoding="utf-8",
     )
 
     manifest = {

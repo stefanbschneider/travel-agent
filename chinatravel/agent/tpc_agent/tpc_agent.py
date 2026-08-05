@@ -38,9 +38,13 @@ def restart_seed(uid, seed_salt):
     ``docs/tpc_phase2_improvement_plan.md`` section 4). ``PYTHONHASHSEED`` cannot be set after
     interpreter start, so pinning it would mean re-exec'ing the entry point; a stable digest is
     local and free.
+
+    Returns a 32-bit seed, matching the range the previous implementation produced. The width is
+    arbitrary -- ``random.Random`` takes an int of any size -- so it comes from the digest directly
+    rather than from masking a wider one.
     """
-    digest = hashlib.blake2b(f"{uid}\x00{seed_salt}".encode("utf-8"), digest_size=8).digest()
-    return int.from_bytes(digest, "big") & 0xFFFFFFFF
+    digest = hashlib.blake2b(f"{uid}\x00{seed_salt}".encode("utf-8"), digest_size=4).digest()
+    return int.from_bytes(digest, "big")
 
 
 def add_minutes(time_str, minutes):

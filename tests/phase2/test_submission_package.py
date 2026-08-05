@@ -271,6 +271,24 @@ class TestSubmissionConfig:
         for marker in ("api_key", "token", "secret", "password", "http://", "https://"):
             assert marker not in text, f"submission config must not carry {marker!r}"
 
+    def test_a_newline_in_the_team_name_cannot_inject_toml_keys(self, tmp_path):
+        """`--team` is operator-supplied and lands in a comment line. A newline would end the
+        comment and let the remainder parse as configuration."""
+        out = tmp_path / "out"
+        asm.stage(
+            ["README.md"],
+            out,
+            version="v1",
+            team='evil\nharness = "opencode"\nlimit = 1',
+        )
+        parsed = tomllib.loads((out / "agent_env" / "config.toml").read_text(encoding="utf-8"))
+        assert parsed["run"]["harness"] == asm_harness_default()
+        assert "limit" not in parsed["run"]
+
+    def test_comment_safe_keeps_the_text_visible(self):
+        assert asm.comment_safe("a\nb") == "a b"
+        assert asm.comment_safe("  spaced  ") == "spaced"
+
 
 def asm_harness_default() -> str:
     """The entry point's own name for the deterministic in-process solver."""
