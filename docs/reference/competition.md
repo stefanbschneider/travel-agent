@@ -116,18 +116,32 @@ at `v1`, and the [resubmission
 email](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)
 disregards everything uploaded before it). It carries the promoted post-R8 configuration.
 
+**Built from `be196d00` on `main`** (the rebuild described below). The first build of this archive came
+from `aba52e7a` on the `claude/phase2-eval-r12-r13` branch and was discarded under the rebuild rule at
+the end of this section; only `docs/tpc_phase2_eval.md` and `docs/tpc_phase2_roadmap.md` differ between
+the two, so no runnable file changed, but the uploaded artifact is the mainline one. The zip is
+committed at `submissions/phase2/fabiundstefan_v1.zip` (force-added past the `submissions/` ignore rule)
+so it can be pulled and tested without a rebuild, and tagged `phase2-v1`. The tag therefore sits one
+commit *after* the `submission_manifest.json` commit: a zip cannot contain the commit that adds it. The
+only difference between the two is this documentation record — no runnable file — and the tested bytes
+are exactly the uploaded bytes, which is the property that matters.
+
 Verified beyond the assembler's own unpack-and-run, because a warm tree proves nothing about the
-organizers' cold one:
+organizers' cold one. Every row below was re-run against the `main` rebuild on a `4`-core box, so the
+worker count is `3` (`CPU-1`) rather than the `9` of the earlier branch build; the requirement the
+cold-start rule states is `>1`, not `9`:
 
 | Check | Result |
 | --- | --- |
-| Install from the archive alone, `uv venv --python 3.12` + `requirements-submission.txt` | `36` packages resolved, no extra index, no GPU stack |
-| Cold tree (no `cache/`), `env -i` with `PATH=/usr/bin:/bin`, `12` queries, `9` workers | `12/12` plans, `180` activities, `0` empty itineraries, `0` fallbacks, no `Exception in initializer` |
+| Unit suite + cold-start integration test | `869` passed, `1` skipped; `tests/phase2/test_cold_start.py -m integration` green |
+| Install from the archive alone, `uv venv --python 3.12` + `requirements-submission.txt` | `34` packages resolved, no extra index, no GPU stack |
+| Cold tree (no `cache/`), `env -i` with `PATH=/usr/bin:/bin`, `12` queries, `3` workers | `12/12` plans, `180` activities, `0` empty itineraries, `0` fallbacks, no `Exception in initializer` |
+| Same again on a **third** pristine tree, driven by the archive's **own installed interpreter** rather than the development venv | `6/6` plans, `67` activities, `0` empty, `llm_backend=none` — the archive plus its own declared dependencies is sufficient |
 | `solver_flags` on every query | `pin_timed_windows`, `window_anchor`, `commonsense_first` all `true`, `solve_converge_patience 15` — the archive ships the R8 configuration, not the pre-R8 one |
 | LLM / network | `llm_backend=none` on every query; no `.env`, `*.pem`, `.netrc` or SSH key in the zip; `agent_env/config.toml` synthesized credential-free (`[run] harness = "tpc"`, no `split`, no `limit`) |
 | Oracle leakage | no `hard_logic*` key in any emitted plan |
-| **The bare command, no flags at all** (`--split tpc_phase2_familiar_100_test`) | reads its own config, resolves the split, reports `20 queries, 9 worker(s), 285.0 min usable of a 5.00 h envelope`, pre-writes all `20` plans before the first solve |
-| Interrupt safety | `SIGTERM` at `100 s` of a 5 h envelope left `20/20` plans on disk, **all schema-valid**, `18/20` already non-empty |
+| **The bare command, no flags at all** (`--split tpc_phase2_familiar_100_test`) | reads its own config, resolves the split, reports `20 queries, 3 worker(s), 285.0 min usable of a 5.00 h envelope, per-query cap 300s`, pre-writes all `20` plans before the first solve |
+| Interrupt safety | `SIGTERM` at `150 s` of a 5 h envelope left `20/20` plans on disk, **all schema-valid**, `7/20` already non-empty (fewer than the branch build's `18/20` because that ran with `9` workers, not `3`) |
 
 **Envelope headroom on an unknown host.** R8 spent `4733 s` wall across `3` workers, so the whole
 split costs at most `~14200` worker-seconds. Even a machine that gives us a single worker finishes in
