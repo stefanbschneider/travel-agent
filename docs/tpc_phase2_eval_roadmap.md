@@ -309,6 +309,19 @@ the measured repeat-noise floor, so it is a real effect, not noise.
 per-change signal. Run it at most once per submission. Note the envelope must scale with the split
 — 20 queries in 5 h is not the same pressure as 100 in 5 h, so use 1 h.
 
+**Run 2026-08-05:** `results/phase2_baselines/full_runs/20260805T042106Z.json`,
+`--method phase2_e2e_r5_test`. `overall 62.59`, `empty_plans 0/20`, `constraints_ok 10/20` (`50%`),
+`run_wall_frac_of_budget 0.25` (`882 s` of `3600 s`), same three-pass self-terminating shape.
+
+**Recorded standalone — no val↔test gap is computed against R1.** `tpc_phase2_familiar_100_test`'s
+20 records are a *subset* of `tpc_phase2_familiar_100`, the split R1 ran on; comparing R5 to R1
+would be comparing 20 records against a superset that contains them, not against an independent val
+partition. This queue produced no `tpc_phase2_familiar_100_val` row at a comparable (non-plumbing)
+envelope, so a genuine val↔test gap check needs a follow-up val run at `1 h`/`3 workers` before it
+can be trusted. At face value `62.59` (test) sits well above R1's `57.99` (full 100, includes these
+20) and R4 control's `57.81`/`57.82` — consistent with a smaller, possibly easier split rather than
+a generalization signal; do not read a "test beats val" story into this without the missing val row.
+
 ### R6 — the packaged archive, end to end
 
 The submission is a zip, not a working tree. Once R1 looks right:
