@@ -305,6 +305,15 @@ The submission is a zip, not a working tree. Once R1 looks right:
 The builder unpacks the archive into a temporary directory and runs the organizers' exact command
 inside it with a stripped `PATH`. That checks the package, not the score.
 
+**Run 2026-08-04/05, this machine.** `--dry-run`: `fabiundstefan_v1`, `1674` files, `16.3 MB`
+unpacked. `--verify-budget-sec 120`: wrote `submissions/fabiundstefan_v1.zip` (`1676` entries,
+`4.0 MB` compressed) from commit `b44bb73c096b`, unpacked it to a scratch dir, and ran the
+organizers' exact entry point inside it with a stripped `PATH`: `valid_output=True` on a 1-query,
+`120 s` smoke slice. **Package verified end to end; this checks packaging only, not the score.**
+Per CLAUDE.md's resubmission note, every pre-2026-08-04 upload is disregarded — this verified
+archive is a candidate for the `{TeamName}_v1.zip` re-upload, not yet uploaded (upload, report PDF,
+and `git tag phase2-v1` remain manual follow-ups outside this eval queue).
+
 ---
 
 ## What to record, and what makes two rows comparable
