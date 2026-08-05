@@ -22,7 +22,7 @@ restarts and seed. **Spend the effort on what the solver can represent, not on h
 
 **That thesis has now been tested at full scale, and it held.** [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)
 gave the solver the move the dominant failure family needs;
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r10-established) measured `FPR 32.0 → 43.0` over a
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r13-established) measured `FPR 32.0 → 43.0` over a
 baseline whose three repeats were bit-for-bit identical, and it is **on by default since
 2026-08-05**. `33 of 80` val queries are still blocked by nothing but that same family, which is what
 [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
@@ -165,7 +165,7 @@ depending on the measurement, with zero missing families. **Parsing works; searc
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move | v2 only |
-| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r10-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
+| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r13-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
@@ -427,7 +427,7 @@ as P8.
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
 
-**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r10-established)
+**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r13-established)
 gated it GREEN (`overall 57.75 → 63.58`, `FPR 32.0 → 43.0`, `constraints_ok 36 → 46`) and
 `TPC_WINDOW_ANCHOR=1` is now a [harness default](#harness-defaults-promoted-through-a-measured-gate-or-screen).
 This was the item, and it delivered.** Diagnosis §4: the *sole* logical blocker in `45 of 61`
