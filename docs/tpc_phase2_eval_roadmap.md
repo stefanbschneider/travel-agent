@@ -189,11 +189,20 @@ Every knob is an environment variable, so these need no code change:
 | `TPC_P2_TRIAGE_CAP_SEC` | `120` | ceiling on the first, everything-once pass |
 | `TPC_P2_TRIAGE_FRACTION` | `0.25` | share of the envelope triage may spend |
 | `TPC_P2_PASS_FRACTION` | `0.5` | share of what remains each later pass may spend |
-| `TPC_P2_MAX_QUERY_SEC` | `900` | ceiling on any single query's solve |
+| `TPC_P2_MAX_QUERY_SEC` | `900`¹ | ceiling on any single query's solve |
 | `TPC_P2_MIN_QUERY_SEC` | `20` | floor below which a query is not worth starting |
 | `TPC_P2_MAX_PASSES` | `24` | hard stop on pass count |
 | `TPC_P2_FAST_TRIAGE` | `1` | triage stops each query at its first accepted plan instead of polishing preference |
 | `TPC_P2_WORKERS` | `CPU - 1` | worker processes |
+
+¹ **Doc correction (2026-08-04), found while running arm B:** `900` is `sweeps.py`'s
+`DEFAULT_MAX_QUERY_SEC`, but `phase2_full_run.py` never reaches it. `solve_phase2.py`'s
+`run_sweeps_split` resolves `budget_sec = budget_sec or DEFAULT_BUDGET_SEC` (`300`, from
+`orch.DEFAULT_BUDGET_SEC`) *before* constructing `SweepConfig(max_query_sec=budget_sec)`, and
+`phase2_full_run.py` never passes `--budget-sec`. **The effective default for every row in this
+queue (R1, R2, R4 control) is `max_query_sec: 300`, not `900`** — confirmed against R1's own
+telemetry, where repair/polish clamped to exactly `300s` per query. Arm B's `TPC_P2_MAX_QUERY_SEC=300`
+therefore restates the existing default rather than raising it.
 
 Two arms worth running once R1 exists, at a **reduced 2 h envelope** so each is ~2 h:
 
@@ -216,6 +225,23 @@ the control, not a real test of the hypothesis. The `-0.47` delta is noise, not 
 **To actually test "cheap triage, more repair," `TPC_P2_TRIAGE_CAP_SEC` needs to be set below the
 default fraction-derived triage slice** (well under `50s` at this envelope), or `TPC_P2_TRIAGE_FRACTION`
 lowered directly — worth a follow-up run, noted rather than re-run now to keep the queue moving.
+
+**Arm B, run 2026-08-04:** `results/phase2_baselines/full_runs/20260805T011733Z.json`,
+`--method phase2_e2e_r4_arm_b`. `overall 58.20` (vs 2h control `57.81`, `Δ +0.39`),
+`constraints_ok 36/100` — same as control. **Also a same-config rerun, for a different reason than
+arm A:** per the ¹ correction above, `300` is already the effective default `max_query_sec` on this
+path, so `TPC_P2_MAX_QUERY_SEC=300` changed nothing. The `+0.39` delta is noise. Separately, at this
+2 h envelope the repair/polish passes' fraction-derived share (`131s`/`151s`, from the control row)
+never even reached `300` — so a `300` cap would not have bound here regardless of the default-value
+confusion. **R1's own telemetry shows the cap does bind at 5 h** (repair and polish both clamped to
+exactly `300s`), so a real test of raising this ceiling needs the larger envelope, not `2 h`, and a
+value above `300` (e.g. `TPC_P2_MAX_QUERY_SEC=600`) — noted as a follow-up rather than re-run now.
+
+**Arms A and B both landed as accidental no-ops, for related reasons: the 2 h envelope used for
+this section's "reduced" arms doesn't generate a large enough per-round share for either cap to
+bind.** Arm C is the only one of the three that changes pass *behavior* rather than a ceiling that
+may or may not be reached, so it is the one likeliest to show a real effect — matching the roadmap's
+own text calling it "the one with the clearest hypothesis."
 
 A third arm worth the same 2 h, and the one with the clearest hypothesis:
 
