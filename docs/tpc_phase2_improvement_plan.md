@@ -190,6 +190,9 @@ not as the headline.
 **If you only do one thing, do P1.** Everything else on this list is worth under a point, and
 three of the items are worth approximately zero by measurement rather than by guess.
 
+The sections below appear in the table's priority order, not in label order — `P0`…`P7` are stable
+identifiers so a later note can refer to "P5" without depending on how the ranking moves.
+
 ---
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
@@ -252,7 +255,7 @@ fourth repair heuristic. Scope this before committing to it — but note it is t
 this page that changes *what can be expressed*, which §2b says is the actual binding limit.
 
 **Ship bar.** Flag, default off, byte-identical floor, unit tests, and a gate against the
-[R7](tpc_phase2_eval_roadmap.md#r7--seed-variance-baseline-the-prerequisite-for-every-a-b-below)
+[R7](tpc_phase2_eval_roadmap.md#r7--seed-variance-baseline-the-prerequisite-for-every-ab-below)
 variance baseline. With `sd ≈ 0.35`, a `+2` effect is comfortably detectable in a single paired
 run; anything smaller needs repeats.
 
@@ -455,15 +458,18 @@ build than a single-shot call — a day or two, not an afternoon.
 floor on a full gate, plus a verified bounded fallback. Absent that, it ships off.
 
 ---
+
 ## What not to spend time on
 
 - **Preference packing (`TPC_PACK_*`).** Bounded by FPR; the entire headroom across DAV, ATT and
   DDR is `~1.5` overall at today's FPR, versus `~0.85` for a single FPR point.
-- **More envelope-sensitivity runs.** `1 h / 3 h / 5 h` is flat and the mechanism is now
-  understood. Re-running it answers nothing new until P1 changes what the scheduler does with the
-  time.
+- **More envelope-sensitivity runs.** `1 h / 3 h / 5 h` is flat and §2b explains why. Re-running it
+  answers nothing new; the search space, not the schedule, is the binding constraint.
+- **Anything justified by "we only use 26% of the budget".** That observation is true and it is a
+  dead end — §2b measured it. If a proposal's rationale is "we have time to spare", it needs a
+  mechanism that makes the extra time *do something new*, not just more of the same sampling.
 - **Single-run A/Bs of small effects.** With `sd ≈ 0.35`, an arm worth `+0.5` needs repeats. Run
-  [R7](tpc_phase2_eval_roadmap.md#r7--seed-variance-baseline-the-prerequisite-for-every-a-b-below)
+  [R7](tpc_phase2_eval_roadmap.md#r7--seed-variance-baseline-the-prerequisite-for-every-ab-below)
   before believing any of them.
 - **Improving the empty-itinerary fallback for score.** `empty_plans` is `0` on every real run.
   It is insurance, not points.

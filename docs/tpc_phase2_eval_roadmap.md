@@ -23,7 +23,7 @@ concluded, so they are stated here rather than only inline:
 - **The "unused `3.4 h`" is not primarily a scheduler-cap artifact.** Per-query search telemetry
   shows the split is bimodal: a query either accepts within seconds, or burns 100% of its slice
   and fails. Raising `TPC_P2_MAX_QUERY_SEC` — this queue's former top recommendation — is
-  therefore demoted. See [R7](#r7--seed-variance-baseline-the-prerequisite-for-every-a-b-below)
+  therefore demoted. See [R7](#r7--seed-variance-baseline-the-prerequisite-for-every-ab-below)
   and the [improvement plan](tpc_phase2_improvement_plan.md).
 
 ## Status: full queue run 2026-08-04/05, this machine (4 cores)
@@ -43,45 +43,48 @@ below. Full detail with each run's row path is inline below; the headline findin
    has been solved at the cap no later pass can offer it a meaningfully larger budget, the candidate
    list empties, and the sweep stops. **This is a capped-search stop, not a proven convergence** —
    see the correction to point 2.
-2. **R2 envelope sensitivity: flat, but confounded by the `300s` cap.** `1 h / 3 h / 5 h` score
-   `57.35 / 57.86 / 57.99`. The supported claim is narrower than "more budget never helps": **extra
-   envelope buys nothing *given the `300s` per-query ceiling*, because the scheduler has no
-   mechanism to spend it** — every later pass is filtered to candidates whose new budget would beat
-   their last one by `MIN_BUDGET_GROWTH`, and a query stuck at the `300s` cap never clears that bar.
-   Whether raising the cap lets extra envelope convert into score is **untested and is now this
-   queue's top follow-up recommendation** (see point 4).
+2. **R2 envelope sensitivity: flat — and as of 2026-08-05, explained.** `1 h / 3 h / 5 h` score
+   `57.35 / 57.86 / 57.99`. This queue originally blamed the `300s` per-query ceiling and called
+   raising it the top follow-up. **That is now answered and the answer is no.** Per-query search
+   telemetry shows failing queries exhaust a *search*, not a clock: given `2.5×` the budget they
+   perform `3.4×` the restarts and flip **zero** queries, because every restart draws from the same
+   bounded parameter space. Extra envelope, a higher cap, more workers and fresh seeds are one
+   intervention wearing four hats. See
+   [the improvement plan §2b](tpc_phase2_improvement_plan.md#2b-more-search-does-not-help--measured-not-assumed).
 3. **R3 worker scaling: not run**, this box is below the roadmap's own 8-core floor for that
    comparison.
-4. **R4 pass shape: two accidental no-ops surfaced a real ceiling bug, plus one behavioral finding.**
+4. **R4 pass shape: three arms, two accidental no-ops, and one mechanism finding.**
    - Arms A (`TPC_P2_TRIAGE_CAP_SEC=60`) and B (`TPC_P2_MAX_QUERY_SEC=300`) both landed as
      same-config reruns of the control — their target caps never bound at a 2 h envelope. Arm B's
-     no-op surfaced a **doc correction that turned out to matter for R1/R2 too**: this roadmap's own
-     table said `TPC_P2_MAX_QUERY_SEC` defaults to `900`, but `phase2_full_run.py` never reaches
-     that default — the effective default on this path is `300` (confirmed against R1's own
-     telemetry, which clamps to exactly `300s`). **Top recommendation: rerun with
-     `TPC_P2_MAX_QUERY_SEC=600` or `900` at the 5 h envelope**, where R1 shows the cap demonstrably
-     binds — this could turn `3.4 h` of currently-unspendable envelope into score, and ranks above
-     the arm C gate below because it is untested rather than merely unconfirmed.
-   - Arm C (`TPC_P2_FAST_TRIAGE=0`) scored `+0.59` over a 2 h control. The strongest evidence here is
-     **categorical, not statistical**: polish improved `0/34` in arm C, versus `10/34`, `14/34`,
-     `13/34`, `14/33` in the other four 2 h runs (control, control repeat, arm A, arm B) — with fast
-     triage off, triage's own full-slice preference polishing already does the later polish pass's
-     job. A same-config control repeat landed `Δ 0.01` from the first control, which is **weak
-     evidence** (n=2, and the two runs' internal trajectories — `constraints_ok 36` vs `35`, repair
-     improved `4` vs `5` — genuinely differ) **that same-config score variance is small relative to
-     arm C's `+0.59`, not proof of a `~60×` noise-floor margin.** The behavioral signature is the
-     part to trust. **Recommended next step: queue `TPC_P2_FAST_TRIAGE=0` for a pinned E2E gate**,
-     which settles the magnitude regardless.
+     no-op surfaced a **doc correction that matters for R1/R2 too**: this roadmap's own table said
+     `TPC_P2_MAX_QUERY_SEC` defaults to `900`, but `phase2_full_run.py` never reaches that default —
+     the effective default on this path is `300` (confirmed against R1's telemetry, which clamps to
+     exactly `300s`). Raising it was this queue's top recommendation; **point 2 above now retires
+     that recommendation on evidence.** Their accidental value is elsewhere: four same-config runs
+     is a variance estimate, and it is the one the arm C claim needed.
+   - Arm C (`TPC_P2_FAST_TRIAGE=0`) scored `58.40` against a `57.81` control. **The mechanism finding
+     stands; the score claim does not.** Polish improved `0/34` here versus `10/33`, `14/33`,
+     `14/34`, `13/34` in the four other 2 h runs — a switch flipping, not a wobble, and the cause is
+     clean: with fast triage off, triage performs the preference search itself, so the later polish
+     pass arrives to find nothing left. **The work moved; it did not grow** — which predicts a
+     near-tie, not a win. And against the four same-config samples (`57.34 / 57.81 / 57.82 / 58.20`,
+     mean `57.79`, **sd `0.35`**), arm C's `+0.59` is `1.7 sd` and only `0.20` above a plain control
+     rerun: not distinguishable from noise. Do not carry `+0.59` forward.
 5. **R5 held-out tripwire: `overall 62.59`** on the 20-record test split, recorded standalone. No
    val↔test gap is computed — `familiar_100_test` is a subset of `familiar_100` (R1's split), and no
    comparable `familiar_100_val` row at a matching envelope exists in this queue.
 6. **R6 packaged archive: verified end to end**, `valid_output=True`, from commit `b44bb73c096b`.
    Checks packaging only, not score; upload/report/tag remain manual follow-ups.
 
-**What this queue does *not* answer:** whether raising `TPC_P2_MAX_QUERY_SEC` converts the unused
-`3.4 h` into score (point 4's top recommendation, untested), whether arm C's gain survives a full
-E2E gate at the real submission split/budget, and whether `100` queries always converge this fast on
-the organizer's actual held-out set (only their harness run will tell).
+**What this queue does *not* answer:** whether any arm on it is worth more than the `sd 0.35` noise
+floor (nothing here was run with repeats — that is [R7](#r7--seed-variance-baseline-the-prerequisite-for-every-ab-below)),
+and whether `100` queries always converge this fast on the organizers' actual held-out set (only
+their harness run will tell).
+
+**What it now answers that it did not on 2026-08-04:** the unused envelope is not recoverable by
+scheduling. Points 2 and 4 above were both rewritten on 2026-08-05 against per-query search
+telemetry; the [improvement plan](tpc_phase2_improvement_plan.md) carries the full argument and
+ranks the work accordingly.
 
 ---
 
@@ -384,7 +387,7 @@ restart sequence, so no two runs (or passes) explore the same search. See
 [the improvement plan](tpc_phase2_improvement_plan.md) item P0.
 
 **Recommended next step, revised:** do **not** gate `TPC_P2_FAST_TRIAGE=0` on its own yet. Run
-[R7](#r7--seed-variance-baseline-the-prerequisite-for-every-a-b-below) first — with `sd ≈ 0.35`
+[R7](#r7--seed-variance-baseline-the-prerequisite-for-every-ab-below) first — with `sd ≈ 0.35`
 and a `+0.59` candidate, a single paired run cannot settle this, and R7 is the prerequisite for
 sizing *any* arm on this list.
 
@@ -487,26 +490,36 @@ Run this *after* P0 (pinned `PYTHONHASHSEED`) lands if P0 is quick — an unpinn
 seed noise *plus* config noise and cannot separate them. If P0 has not landed, run R7 anyway and
 label the rows `unpinned`: an upper bound on the noise floor is still better than none.
 
-### R8 — does spending the idle envelope on fresh seeds convert into score? *(needs P1)*
+### R8 — the gate for a window-aware move *(needs improvement-plan P1)*
 
-The direct test of the biggest open question: every run so far leaves `50–74%` of its envelope
-unused because the scheduler has nothing left to schedule. P1 makes it re-attack failing queries
-with a different `TPC_SEED_SALT` instead of stopping.
+**The only arm on this list with a plausible multi-point effect.** P1 targets
+`timed_visit_named_poi`, the sole logical blocker in `45 of 61` failing solver-only queries.
 
 ```bash
-.venv/bin/python scripts/phase2_full_run.py --method phase2_e2e_r8_seeds --label "seed-diversified, 5h"
+.venv/bin/python scripts/phase2_full_run.py --method phase2_e2e_r8_windows --label "window-aware move, 5h"
 ```
 
-Compare against the R7 mean, not against R1. Read `run_wall_frac_of_budget` (should approach
-`1.0`), `constraints_ok`, and the new per-attempt ledger: **how many queries were flipped by a
-seed that was not their first.** That count is the finding; the score delta is secondary and needs
-the R7 sd to interpret.
+Paired against the R7 mean. At `sd ≈ 0.35` a `+2` effect is comfortably detectable in one run —
+which is exactly why this arm, unlike every arm in R4, does not need repeats to be believed.
+Read `FPR` and `constraints_ok` first; `overall` follows them.
 
-### R9 — does warm-starting later passes recover the re-solve waste? *(needs P2)*
+### R9 — the falsification run for "spend the idle envelope" *(needs improvement-plan P5)*
 
-Today repair and polish re-solve from scratch and rediscover triage's work. Same command shape,
-`--method phase2_e2e_r9_warm`. Read pass `improved` counts and pass `elapsed_sec`: the hypothesis
-is more improvements per pass *and* shorter passes, not just a score move.
+Not expected to work. It is queued because it **closes a recurring question** rather than because
+it is likely to score: P5 re-attacks failing queries with a fresh `TPC_SEED_SALT` instead of
+stopping at `26%` of the envelope.
+
+```bash
+TPC_P2_EXPLORE=1 .venv/bin/python scripts/phase2_full_run.py \
+  --method phase2_e2e_r9_seeds --label "seed-diversified explore, 5h"
+```
+
+**The prediction on record: fewer than 3 of the ~65 failing queries flip.** Read
+`run_wall_frac_of_budget` (should approach `1.0`) and, from the P2 ledger, **how many queries were
+flipped by a seed that was not their first** — that count, not the score delta, is the result. If
+it is 0, the "we aren't using our time" question is settled and nobody needs to reopen it. If it is
+large, [improvement plan §2b](tpc_phase2_improvement_plan.md#2b-more-search-does-not-help--measured-not-assumed)
+is wrong and the ranking there has to be redone.
 
 ### R10 — the Phase 1 split under Phase 2 rules (diagnostic, not a gate)
 
@@ -525,7 +538,7 @@ a 5 h envelope that is a tenth of the per-query pressure, so the result is *not*
 `familiar_100` row and is not evidence about the submission. It answers one question only — oracle
 versus parsed constraints on the same solver — and it should be reported as that.
 
-### R11 — LLM-backed repair arm *(needs P6; v2 only, not before the v1 upload)*
+### R11 — LLM-backed repair arm *(needs improvement-plan P6; v2 only, not before the v1 upload)*
 
 Off by default and stays off for `v1`. The endpoint the organizers confirmed
 (`Qwen3.6-27B` via SGLang, `--max-running-requests 8`) exists only on their host, so any local
