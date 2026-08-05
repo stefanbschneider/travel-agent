@@ -148,6 +148,7 @@ Optional overrides (not needed for evaluation): `--budget-sec` (per-query cap),
 | Path | What |
 | --- | --- |
 | `agent_env/scripts/solve_script_with_harness.py` | the entry point above |
+| `agent_env/config.toml` | run configuration (no credentials); command-line flags override it |
 | `agent_env/` | the no-oracle environment wrapper and its tools |
 | `chinatravel/agent/phase2/` | stage orchestration, budgets, fallback |
 | `chinatravel/agent/tpc_agent/` | the deterministic planner and CP-SAT tier |
@@ -157,6 +158,27 @@ Optional overrides (not needed for evaluation): `--budget-sec` (per-query cap),
 | `tests/` | unit tests (`python -m pytest`) |
 
 Evaluator parity point: upstream `LAMDA-NeSy/ChinaTravel` `main` at `{evaluator_parity}`.
+"""
+
+# The organizers' own harness example ships `agent_env/config.toml` inside its archive even though
+# its repository gitignores the file, so a submission is expected to carry a working one. We never
+# copy the working tree's copy (it can hold API keys -- see SECRET_PATH_PATTERNS); we synthesize a
+# credential-free one instead.
+#
+# Deliberately minimal. `split` is omitted: the organizers pass `--split <split>` and CLI beats
+# config in `solve_script_with_harness.py`'s `choose()` precedence, and we cannot guess the name
+# their held-out data resolves under, so pinning one here could only ever be wrong. `limit` is
+# omitted so a bare invocation solves the whole split rather than the example's one query.
+SUBMISSION_CONFIG_TOML = """# Phase 2 submission configuration -- {team} {version}.
+#
+# Contains no credentials and reaches no network. The deterministic in-process solver is the
+# default harness; `opencode`/`codex` remain opt-in and are never used for evaluation.
+#
+# Command-line flags override every value here.
+
+[run]
+harness = "tpc"
+lang = "en"
 """
 
 
@@ -253,6 +275,12 @@ def stage(paths: list[str], out_dir: Path, *, version: str, team: str) -> dict:
         evaluator_parity=evaluator_parity_sha(),
     )
     (out_dir / "SUBMISSION.md").write_text(readme, encoding="utf-8")
+
+    config_path = out_dir / "agent_env" / "config.toml"
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(
+        SUBMISSION_CONFIG_TOML.format(team=team, version=version), encoding="utf-8"
+    )
 
     manifest = {
         "team": team,

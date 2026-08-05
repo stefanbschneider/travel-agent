@@ -8,6 +8,24 @@ For metric definitions, dataset boundaries and the gate mechanics, see
 [Phase 2 evaluation](tpc_phase2_eval.md). For what to *implement* next, see the
 [roadmap](tpc_phase2_roadmap.md).
 
+## Where this queue stands (updated 2026-08-05)
+
+**R1–R6 are complete and closed. Nothing on the original R1–R6 list needs re-running.** What to
+run next is [Next runs (R7+)](#next-runs-r7--the-open-queue) — that section is the live one; the
+R1–R6 write-ups below are kept as the evidence record, not as a to-do list.
+
+Two corrections landed on 2026-08-05 after re-reading the rows; both change what the queue
+concluded, so they are stated here rather than only inline:
+
+- **Arm C's `+0.59` does not survive the variance estimate this queue actually produced.** See
+  [the corrected arm C write-up](#r4--pass-shape-where-should-the-envelope-go). The *mechanism*
+  finding (polish improved `0/34`) stands; the score claim does not.
+- **The "unused `3.4 h`" is not primarily a scheduler-cap artifact.** Per-query search telemetry
+  shows the split is bimodal: a query either accepts within seconds, or burns 100% of its slice
+  and fails. Raising `TPC_P2_MAX_QUERY_SEC` — this queue's former top recommendation — is
+  therefore demoted. See [R7](#r7--seed-variance-baseline-the-prerequisite-for-every-a-b-below)
+  and the [improvement plan](tpc_phase2_improvement_plan.md).
+
 ## Status: full queue run 2026-08-04/05, this machine (4 cores)
 
 Pre-flight, R1, R2, R4 (control + arms A/B/C + a confirmation repeat), R5, and R6 all completed;
@@ -330,20 +348,45 @@ is exactly the mechanism the roadmap predicted for a arm-C win ("the polish pass
 first-accept preference is what actually ships") except inverted: here polish *does* run (on all 34
 candidates) but finds nothing, because triage already did polish's job.
 
-**The behavioral signature is the part to trust; the score delta is weaker evidence than I first
-claimed.** A same-config repeat of the 2 h control (below) lands at `Δ 0.01` from the first control
-run — but that is `n=2`, not a variance estimate, and the two control runs' own trajectories differ
-(`constraints_ok 36` vs `35`, repair improved `4` vs `5`, polish improved `10` vs `14`): the process
-is visibly stochastic and these are two nearby samples, not proof the spread is `0.01`. So arm C's
-`+0.59` is **weak evidence of a real effect relative to that one repeat, not a confirmed `~60×`
-noise-floor margin.** What *does* hold up without needing a variance estimate: polish improved
-`0/34` in arm C against `10/34`, `14/34`, `13/34`, and `14/33` in the four other 2 h runs (control,
-control repeat, arm A, arm B) — a categorical difference, not a score wobble, with a clean causal
-story (triage's full-slice polishing subsumes the later polish pass, which becomes dead weight).
-This is screen-level evidence, not a promotion — per CLAUDE.md a default only flips through a full
-E2E gate — but it is strong enough on the behavioral axis to prioritize for one. **Recommended next
-step:** queue `TPC_P2_FAST_TRIAGE=0` for a pinned E2E gate run (`make phase2-baseline` /
-`phase2_gate.py`), which settles the score magnitude regardless.
+**The behavioral signature is the part to trust. The score delta does not survive this queue's own
+variance estimate — corrected 2026-08-05.**
+
+The mechanism finding is certain and is the reason to care about arm C at all: polish improved
+`0/34` here against `10/33`, `14/33`, `14/34`, and `13/34` in the four other 2 h runs. That is a
+switch flipping, not a score wobble, and it has a clean causal story — **the preference search did
+not disappear, it moved**. Polish's only job is "take a plan that already passes, find a
+better-preference plan that also passes," which is exactly the search `TPC_P2_FAST_TRIAGE=0` makes
+triage perform. With fast triage on, triage deliberately leaves that work undone and polish has a
+third of the split to win on; with it off, triage already did it and polish arrives to find nothing.
+
+**That reframing predicts a near-tie, not a win** — and the score data agrees once the right
+baseline is used. The first write-up treated the control repeat as the only variance sample (`n=2`,
+`Δ 0.01`). But **arms A and B were themselves same-config runs** (this section documents both as
+accidental no-ops), so the queue actually produced **four same-config samples**:
+
+| same-config 2 h runs | `overall` |
+| --- | --- |
+| arm A (no-op) | `57.34` |
+| control | `57.81` |
+| control repeat | `57.82` |
+| arm B (no-op) | `58.20` |
+| | **mean `57.79`, sd `0.35`, spread `0.86`** |
+
+Arm C's `58.40` sits `1.7 sd` above that mean and only `0.20` above arm B — a plain rerun of the
+control. **At `n=1` against `sd 0.35`, `+0.59` is not distinguishable from run-to-run noise.**
+Do not carry "arm C is worth `+0.59`" forward.
+
+There is now a known mechanism for that `sd 0.35`, which also explains why arm A and arm B differ by
+`0.86` while running identical configurations: the solver's restart RNG is seeded from
+`hash((uid, TPC_SEED_SALT))`, and Python salts string hashing per process unless `PYTHONHASHSEED` is
+pinned — which nothing in this repository does. Every worker process therefore draws a different
+restart sequence, so no two runs (or passes) explore the same search. See
+[the improvement plan](tpc_phase2_improvement_plan.md) item P0.
+
+**Recommended next step, revised:** do **not** gate `TPC_P2_FAST_TRIAGE=0` on its own yet. Run
+[R7](#r7--seed-variance-baseline-the-prerequisite-for-every-a-b-below) first — with `sd ≈ 0.35`
+and a `+0.59` candidate, a single paired run cannot settle this, and R7 is the prerequisite for
+sizing *any* arm on this list.
 
 All three must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
 against R1.
@@ -409,6 +452,101 @@ organizers' exact entry point inside it with a stripped `PATH`: `valid_output=Tr
 Per CLAUDE.md's resubmission note, every pre-2026-08-04 upload is disregarded — this verified
 archive is a candidate for the `{TeamName}_v1.zip` re-upload, not yet uploaded (upload, report PDF,
 and `git tag phase2-v1` remain manual follow-ups outside this eval queue).
+
+---
+
+## Next runs (R7+) — the open queue
+
+**This is the live list.** R1–R6 above are closed; everything below is what has not been run.
+Priority order. R7 gates the rest — do not run R8/R9 before it.
+
+Implementation items these runs measure are specified in the
+[Phase 2 improvement plan](tpc_phase2_improvement_plan.md); an arm marked *(needs Pn)* cannot be
+run until that item lands.
+
+### R7 — seed variance baseline (the prerequisite for every A/B below)
+
+**Why this is now first.** Every arm on this list is worth `≤ +1` and the same-config spread at
+2 h is `sd 0.35` / range `0.86` (n=4, see [R4](#r4--pass-shape-where-should-the-envelope-go)). A
+single paired run cannot resolve an effect that size, so without R7 the queue can only keep
+producing "probably noise" verdicts — which is what happened to arms A, B and C.
+
+```bash
+for i in 1 2 3; do
+  .venv/bin/python scripts/phase2_full_run.py \
+    --method phase2_e2e_r7_var_$i --label "5h variance repeat $i"
+done
+```
+
+Three repeats at the **shipping** contract (5 h envelope, `familiar_100`, default flags). Each
+self-terminates near `1.3 h`, so the set is ~4 h — one overnight slot. Report mean, sd and range of
+`overall`, `FPR` and `constraints_ok`. **Deliverable: the sd that every later arm is judged
+against**, at the envelope that ships, rather than the 2 h proxy.
+
+Run this *after* P0 (pinned `PYTHONHASHSEED`) lands if P0 is quick — an unpinned run measures
+seed noise *plus* config noise and cannot separate them. If P0 has not landed, run R7 anyway and
+label the rows `unpinned`: an upper bound on the noise floor is still better than none.
+
+### R8 — does spending the idle envelope on fresh seeds convert into score? *(needs P1)*
+
+The direct test of the biggest open question: every run so far leaves `50–74%` of its envelope
+unused because the scheduler has nothing left to schedule. P1 makes it re-attack failing queries
+with a different `TPC_SEED_SALT` instead of stopping.
+
+```bash
+.venv/bin/python scripts/phase2_full_run.py --method phase2_e2e_r8_seeds --label "seed-diversified, 5h"
+```
+
+Compare against the R7 mean, not against R1. Read `run_wall_frac_of_budget` (should approach
+`1.0`), `constraints_ok`, and the new per-attempt ledger: **how many queries were flipped by a
+seed that was not their first.** That count is the finding; the score delta is secondary and needs
+the R7 sd to interpret.
+
+### R9 — does warm-starting later passes recover the re-solve waste? *(needs P2)*
+
+Today repair and polish re-solve from scratch and rediscover triage's work. Same command shape,
+`--method phase2_e2e_r9_warm`. Read pass `improved` counts and pass `elapsed_sec`: the hypothesis
+is more improvements per pass *and* shorter passes, not just a score move.
+
+### R10 — the Phase 1 split under Phase 2 rules (diagnostic, not a gate)
+
+Runs the deterministic Phase 2 path (no oracle, constraints parsed from visible text) over
+`tpc_phase1`, where the Phase 1 pipeline — which *is* handed oracle constraints — scores `98.98`.
+The gap between the two is the clean measure of what removing the oracle costs, and it is a figure
+the technical report wants.
+
+```bash
+.venv/bin/python scripts/phase2_full_run.py --split tpc_phase1 \
+  --method phase2_e2e_r10_p1 --label "phase1 split under phase2 rules"
+```
+
+**Read the caveat before reading the number: `tpc_phase1` is 1000 queries, 10× `familiar_100`.** At
+a 5 h envelope that is a tenth of the per-query pressure, so the result is *not* comparable to any
+`familiar_100` row and is not evidence about the submission. It answers one question only — oracle
+versus parsed constraints on the same solver — and it should be reported as that.
+
+### R11 — LLM-backed repair arm *(needs P6; v2 only, not before the v1 upload)*
+
+Off by default and stays off for `v1`. The endpoint the organizers confirmed
+(`Qwen3.6-27B` via SGLang, `--max-running-requests 8`) exists only on their host, so any local
+number is a proxy measured against a different backend. Gate this only if `v1` feedback leaves
+room for a `v2`, and read
+[the LLM item](tpc_phase2_improvement_plan.md#p6--llm-backed-repair-proposer-v2-candidate-default-off)
+for the bounded design before spending a slot on it.
+
+### R3 — worker scaling: still blocked
+
+Unchanged from above: needs a ≥8-core machine. This box has 4.
+
+### Worker auto-detection: verified on this box (2026-08-05)
+
+`sweeps.default_workers()` is `TPC_P2_WORKERS` if set, else `os.cpu_count() - 1`, floored at 1 —
+so a run picks up the machine it is on with no flags. Confirmed here: `nproc` `4`,
+`os.cpu_count()` `4`, `len(os.sched_getaffinity(0))` `4`, `default_workers()` **`3`**, and every
+row in this queue records `workers: 3`. `scripts/phase2_full_run.py --workers` and
+`TPC_P2_WORKERS` both override it. No action needed for this box; see improvement plan item P7 for
+the one case where `os.cpu_count()` is the wrong call (CPU-affinity-restricted containers, where it
+over-reports and would oversubscribe).
 
 ---
 

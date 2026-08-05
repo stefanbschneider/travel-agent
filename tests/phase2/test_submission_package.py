@@ -246,6 +246,40 @@ class TestVersioning:
         assert asm.next_version() == "v3"
 
 
+class TestSubmissionConfig:
+    """The organizers' harness example ships `agent_env/config.toml` inside its archive, so ours
+    must too -- synthesized, never copied from the working tree, which can hold API keys."""
+
+    def _staged_config(self, tmp_path):
+        out = tmp_path / "out"
+        asm.stage(["README.md"], out, version="v1", team="team")
+        return out / "agent_env" / "config.toml"
+
+    def test_archive_carries_a_config_pinning_the_deterministic_harness(self, tmp_path):
+        parsed = tomllib.loads(self._staged_config(tmp_path).read_text(encoding="utf-8"))
+        assert parsed["run"]["harness"] == asm_harness_default()
+
+    def test_config_pins_no_split(self, tmp_path):
+        """The organizers pass `--split <split>`; we cannot guess the held-out split's name, and a
+        wrong pin here would silently solve the wrong queries on a bare invocation."""
+        parsed = tomllib.loads(self._staged_config(tmp_path).read_text(encoding="utf-8"))
+        assert "split" not in parsed["run"]
+        assert "limit" not in parsed["run"]
+
+    def test_config_carries_no_credentials(self, tmp_path):
+        text = self._staged_config(tmp_path).read_text(encoding="utf-8").lower()
+        for marker in ("api_key", "token", "secret", "password", "http://", "https://"):
+            assert marker not in text, f"submission config must not carry {marker!r}"
+
+
+def asm_harness_default() -> str:
+    """The entry point's own name for the deterministic in-process solver."""
+    sys.path.insert(0, str(PROJECT_ROOT / "agent_env" / "scripts"))
+    import solve_script_with_harness as harness  # noqa: PLC0415
+
+    return harness.TPC_HARNESS
+
+
 def test_submission_readme_renders_without_leftover_placeholders():
     text = asm.SUBMISSION_README.format(
         team="team",
