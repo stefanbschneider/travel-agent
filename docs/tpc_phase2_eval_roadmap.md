@@ -47,7 +47,7 @@ below. Full detail with each run's row path is inline below; the headline findin
    `57.35 / 57.86 / 57.99`. This queue originally blamed the `300s` per-query ceiling and called
    raising it the top follow-up. **That is now answered and the answer is no.** Per-query search
    telemetry shows failing queries exhaust a *search*, not a clock: given `2.5×` the budget they
-   perform `4.2×` the restarts and flip **one query in forty-four**, because every restart draws from the same
+   perform `4.2×` the restarts and flip **one query in sixty-eight**, because every restart draws from the same
    bounded parameter space. Extra envelope, a higher cap, more workers and fresh seeds are one
    intervention wearing four hats. See
    [the improvement plan §2b](tpc_phase2_improvement_plan.md#2b-more-search-does-not-help--measured-not-assumed).
@@ -505,21 +505,21 @@ Read `FPR` and `constraints_ok` first; `overall` follows them.
 
 ### R9 — the falsification run for "spend the idle envelope" *(needs improvement-plan P5)*
 
-Not expected to work. It is queued because it **closes a recurring question** rather than because
-it is likely to score: P5 re-attacks failing queries with a fresh `TPC_SEED_SALT` instead of
-stopping at `26%` of the envelope.
+P5 re-attacks failing queries with a fresh `TPC_SEED_SALT` instead of stopping at `26%` of the
+envelope.
 
 ```bash
 TPC_P2_EXPLORE=1 .venv/bin/python scripts/phase2_full_run.py \
   --method phase2_e2e_r9_seeds --label "seed-diversified explore, 5h"
 ```
 
-**The prediction on record: fewer than 3 of the ~65 failing queries flip.** Read
-`run_wall_frac_of_budget` (should approach `1.0`) and, from the P2 ledger, **how many queries were
-flipped by a seed that was not their first** — that count, not the score delta, is the result. If
-it is 0, the "we aren't using our time" question is settled and nobody needs to reopen it. If it is
-large, [improvement plan §2b](tpc_phase2_improvement_plan.md#2b-more-search-does-not-help--measured-not-assumed)
-is wrong and the ranking there has to be redone.
+**Do not read this run's `overall` first — read flips per pass.** One extra sampling pass is
+measured at ~1 flip per 68 queries; the open question is whether that rate *accumulates* over the
+~10 explore passes the idle envelope affords. Independent draws would give `5–10` flips
+(`+1.7..+4.2` overall, promoting P5); an exhausted reachable set gives `1–2` and closes the
+"we aren't using our time" question for good. **A flat flips-per-pass curve and a dying one are the
+two outcomes to distinguish** — the score total cannot separate them, and at `sd 0.35` it could not
+resolve the small case anyway. Needs the P2 per-attempt ledger to be readable at all.
 
 ### R10 — the Phase 1 split under Phase 2 rules (diagnostic, not a gate)
 

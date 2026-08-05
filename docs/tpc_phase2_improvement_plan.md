@@ -6,7 +6,7 @@ it names the files, the mechanism, the flag, the tests, and the bar it has to cl
 
 **The one-paragraph version.** The submission uses only `26%` of its 5-hour envelope, which looks
 like wasted headroom. It is not. Fresh measurement (§2b) shows that giving failing queries `2.5×`
-the time buys `4.2×` the search and flips **one query in forty-four**, because every knob we have —
+the time buys `4.2×` the search and flips **one query in sixty-eight**, because every knob we have —
 more budget, more restarts, more workers, fresh random seeds — is the same intervention: draw more
 samples from a parameter space that does not contain the answer. `45 of 61` failing queries fail
 on a *single* constraint family the sampler cannot express (§5). **Spend the effort on what the
@@ -70,18 +70,23 @@ This is the finding that decides the ranking below, and it is the opposite of wh
 26% of the envelope" suggests. The same diagnostic run's **repair** pass gave the failing queries
 `62 s` each — `2.5×` the triage slice:
 
-| | triage failures (`25 s`, `n=27`) | repair (`62 s`, `n=44`) |
+| | triage failures (`25 s`) | repair (`62 s`) |
 | --- | --- | --- |
 | restarts used, median | 39 | **166** |
-| `stop_reason` | `budget` ×26 | `budget` ×41, `converged` ×3 — still never the restart cap |
+| `stop_reason` | `budget` ×26 of 27 | `budget` ×41, `converged` ×3 — still never the restart cap |
 | best found at restart, median | 14 | 47 |
-| **queries flipped to passing** | — | **1 of 44** |
+| **queries newly satisfying their constraints** | — | **1 of 68** |
 
-`2.5×` the time bought `4.2×` the restarts and flipped **one** query in forty-four. That matches
-the 5 h reference run, where the repair pass improved `2 of 66` and polish `11 of 34` (and those
-"improvements" are mostly preference-key moves on already-passing plans, not new passes). In every
-case the best candidate is found around a third of the way through the restarts and **the whole
-back half of the search changes nothing**.
+The last row is the scheduler's own accounting over the complete pass, not a sample:
+`pass 2 (repair) done: improved 11/68 in 20.8 min; 33/100 queries satisfy their constraints`,
+against `32/100` after triage. **`2.5×` the time bought `4.2×` the restarts and one additional
+solved query.** Note the gap between "improved `11`" and "flipped `1`": ten of those eleven
+improvements are preference-key moves that leave the query still failing, and preference terms are
+zeroed on a failing query — so they are worth nothing. Read `constraints_ok`, never `improved`.
+
+The 5 h reference run says the same thing at a larger budget: repair improved `2 of 66`, polish
+`11 of 34`. In every case the best candidate arrives about a third of the way through the restarts
+and **the whole back half of the search changes nothing**.
 
 **A sampling note that is itself a finding.** The triage column above comes from a snapshot taken
 *during* the triage pass. It has to: `on_result` overwrites `telemetry.json` per query, so once
@@ -190,7 +195,7 @@ not as the headline.
 | P0 | Make the restart seed explicit and reproducible | 30 min | enables trustworthy A/Bs | v1 if time |
 | P3 | Emit commonsense-valid plans when nothing is accepted | 2 h | `≤ +0.5` | v2 |
 | P7 | Worker count from CPU affinity | 15 min | robustness only | v1 if time |
-| P5 | Spend the idle envelope on fresh seeds | half day | **predicted ~0 — read P5 first** | v2 |
+| P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open, see P5** | v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move | v2 only |
 
@@ -365,9 +370,9 @@ Strictly safer, no behaviour change on either machine we care about.
 
 ### P5 — spend the idle envelope on fresh seeds
 
-**Read this before implementing it: the measurement predicts this is worth approximately zero.**
-It is listed because the time is otherwise thrown away and the change is cheap — a lottery ticket
-bought with free money, not an investment.
+**Cheap, and genuinely uncertain — unlike P4, which is settled.** §2b shows one extra sampling
+pass is worth ~1 query in 68. Whether ten passes are worth ten times that is the open question
+below, and the answer spans "not worth the code" to "second-best item on this list."
 
 **The idea.** Every run ends with `50–74%` of its envelope unused because `_choose_pass`'s
 `MIN_BUDGET_GROWTH` filter drops every query already solved at the cap. Giving a failing query a
@@ -379,10 +384,28 @@ keep-best, so an extra attempt can only improve the split.
 failing queries `3.4×` the restarts and flipped `0`. There is no reason a differently-ordered draw
 from a space that does not contain the answer would find it.
 
-**Falsifiable prediction, so this stops being an open question either way:** an explore pass over
-the ~65 failing queries at the 5 h envelope flips **fewer than 3** of them. If it flips more, §2b
-is wrong and this item is promoted; if it flips none, the "we aren't using the time" question is
-closed permanently and nobody needs to raise it again.
+**The one genuinely open question, and why it is worth a run.** §2b measures a *single* budget
+step: one extra pass at `2.5×` flips ~1 query in 68. What it cannot settle is whether that rate
+**accumulates**. On the evaluation host an explore pass over ~65 failing queries costs ~25 min
+(`ceil(65/15)` rounds × `300 s`), so the idle `4.7 h` fits roughly ten of them. If each pass is an
+independent draw at the measured rate, ten passes are worth several FPR points — `+1.7` to `+4.2`
+overall, which would make this the second-best item on the list rather than a throwaway. If instead
+the reachable queries are exhausted in the first pass or two — which is what
+`best_found_at_restart` plateauing at a third of the restarts suggests — the later passes return
+nothing.
+
+**These two readings predict very different results and the run separates them cleanly**, which is
+the whole reason to spend a slot on it:
+
+| Reading | Flips in pass 1 | Flips across ~10 passes |
+| --- | --- | --- |
+| independent draws | ~1 | **5–10** |
+| reachable set exhausted (§2b's reading) | ~1 | **1–2** |
+
+So: do not predict a total. Predict the *shape* — **record flips per pass, and check whether pass
+`k` still flips queries at pass 1's rate.** A flat curve promotes this item; a curve that dies
+after pass 2 closes the "we aren't using our time" question permanently and nobody need raise it
+again.
 
 **Where.**
 
