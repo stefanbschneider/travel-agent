@@ -2936,7 +2936,6 @@ class TPCAgent(BaseAgent):
         except ValueError:
             max_push = 30
         city = str(query.get("target_city", ""))
-        people = int(query.get("people_number", 1) or 1)
         committed = False
 
         for day_idx, day in enumerate(plan.get("itinerary", []) or []):
@@ -3088,11 +3087,22 @@ class TPCAgent(BaseAgent):
             for row in rows or []:
                 candidate = dict(row)
                 name = str(candidate.get("name", ""))
-                if name and self._norm_text(name) == self._norm_text(location):
+                if name and self._match_window_location(name, location):
                     return candidate
         except Exception:
             return None
         return None
+
+    def _match_window_location(self, candidate, location):
+        """Match normalized POI aliases without accepting an arbitrary leading qualifier."""
+        candidate_norm = self._norm_text(candidate)
+        location_norm = self._norm_text(location)
+        return bool(
+            candidate_norm and location_norm
+            and (candidate_norm == location_norm
+                 or candidate_norm.startswith(location_norm)
+                 or location_norm.startswith(candidate_norm))
+        )
 
     def _window_has_planned_position(self, plan, location, activity_type):
         matching_types = ({"breakfast", "lunch", "dinner"}
@@ -3103,7 +3113,7 @@ class TPCAgent(BaseAgent):
                 if activity.get("type") not in matching_types:
                     continue
                 position = str(activity.get("position", ""))
-                if position and self._norm_text(position) == self._norm_text(location):
+                if position and self._match_window_location(position, location):
                     return True
         return False
 
@@ -3121,7 +3131,13 @@ class TPCAgent(BaseAgent):
             for activity_type in self._window_activity_types(window) or ():
                 if activity_type not in self._WINDOW_ACTIVITY_TYPES:
                     continue
-                key = (str(window["location"]), activity_type)
+                location = str(window["location"])
+                key = next(
+                    (existing for existing in bounds_by_target
+                     if existing[1] == activity_type
+                     and self._match_window_location(existing[0], location)),
+                    (location, activity_type),
+                )
                 old_lo, old_hi = bounds_by_target.get(key, (None, None))
                 bounds_by_target[key] = (
                     lo if old_lo is None else (max(old_lo, lo) if lo is not None else old_lo),

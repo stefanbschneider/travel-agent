@@ -76,6 +76,31 @@ def test_insert_skips_a_duplicate_named_poi_and_an_unresolvable_poi():
     assert agent._insert_absent_timed_window_pois(unresolved, QUERY, {"activity_time_windows": [unknown]}, _check) is False
 
 
+def test_insert_matches_existing_and_grounded_poi_aliases():
+    agent = _bare_agent()
+    plan = _plan()
+    plan["itinerary"][0]["activities"][1]["position"] = "Museum"
+    alias = dict(WINDOW, location="Museum Scenic Area")
+
+    assert agent._window_has_planned_position(plan, alias["location"], "attraction") is True
+    assert agent._resolve_timed_window_poi("TestCity", alias["location"], "attraction")["name"] == "Museum"
+    assert agent._insert_absent_timed_window_pois(
+        plan, QUERY, {"activity_time_windows": [alias]}, _check) is False
+
+
+def test_insert_intersects_alias_windows_for_the_same_poi():
+    agent = _bare_agent()
+    plan = _plan()
+    alias = dict(WINDOW, location="Museum Scenic Area", earliest="08:30", end_before="09:00")
+
+    assert agent._insert_absent_timed_window_pois(
+        plan, QUERY, {"activity_time_windows": [WINDOW, alias]}, _check) is False
+    assert all(
+        activity.get("position") != "Museum"
+        for activity in plan["itinerary"][0]["activities"]
+    )
+
+
 def test_insert_does_not_treat_an_accommodation_as_a_matching_visit():
     agent = _bare_agent()
     plan = _plan()
