@@ -831,12 +831,33 @@ def parse_excluded_hotels(text):
 
 _CONTAINED_BETWEEN_WINDOW_RE = re.compile(
     r"^[ \t]*(?:\d+\.[ \t]+)?"
-    r"(?:visit|(?:dine|stay)[ \t]+at)[ \t]+"
+    r"(?P<verb>visit|(?:dine|stay)[ \t]+at)[ \t]+"
     r"(?P<location>.+?)[ \t]+between[ \t]+"
     r"(?P<start>\d{1,2}:\d{2})[ \t]+and[ \t]+(?P<end>\d{1,2}:\d{2})"
     r"[ \t]*[.;]?[ \t]*$",
     re.I | re.M,
 )
+
+# Which itinerary activity types a "<verb> X between A and B" line can be satisfied by. The oracle
+# clause for the same sentence gates on exactly this set (``activity_type(activity) in [...]``), so
+# recording it keeps two windows on the *same* POI name distinguishable -- a hotel routinely carries
+# both a "Dine at <hotel> between 07:45 and 08:40" and a "Stay at <hotel> between 20:10 and 24:00"
+# window, and collapsing them onto the name alone makes the pair unsatisfiable.
+_WINDOW_VERB_ACTIVITY_TYPES = {
+    "visit": ("attraction",),
+    "dine at": ("breakfast", "lunch", "dinner"),
+    "stay at": ("accommodation",),
+}
+
+
+def _window_activity_types(verb):
+    """Activity types a contained-between window applies to, or ``None`` when unknown.
+
+    ``None`` means "any activity at this position", which is how every window without a type-bearing
+    verb (the free-form arrive/leave/visit-between patterns) has always been interpreted.
+    """
+    key = re.sub(r"[ \t]+", " ", (verb or "").strip().lower())
+    return list(_WINDOW_VERB_ACTIVITY_TYPES.get(key, ())) or None
 
 
 def parse_stay_duration(text):
@@ -1160,6 +1181,10 @@ def parse_activity_time_windows(text):
       - "visit/be at X between A and B"          -> latest=A, end_after=B
       - numbered/line-start "Visit/Dine at/Stay at X between A and B"
         -> earliest=A, end_before=B (the activity must fit inside the interval)
+
+    Every window also carries ``activity_types``: the itinerary activity types it can be satisfied
+    by (``["attraction"]``, the three meal types, or ``["accommodation"]``), or ``None`` when the
+    sentence does not name one. Consumers that ignore the key see exactly the previous behaviour.
     """
     def _loc(s):
         return re.sub(r"^the\s+", "", s.strip().rstrip("."), flags=re.I).strip()
@@ -1171,6 +1196,7 @@ def parse_activity_time_windows(text):
             "latest": None,
             "end_after": None,
             "end_before": match.group("end"),
+            "activity_types": _window_activity_types(match.group("verb")),
         }
         for match in _CONTAINED_BETWEEN_WINDOW_RE.finditer(text)
     ]
@@ -1189,7 +1215,8 @@ def parse_activity_time_windows(text):
     def _set(loc, key, val):
         loc = _loc(loc)
         w = by_loc.setdefault(loc, {"location": loc, "earliest": None, "latest": None,
-                                    "end_after": None, "end_before": None})
+                                    "end_after": None, "end_before": None,
+                                    "activity_types": None})
         if w[key] is None:
             w[key] = val
 

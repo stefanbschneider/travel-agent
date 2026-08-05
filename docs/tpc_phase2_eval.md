@@ -18,7 +18,7 @@ The live queue is below, in priority order. **R7 gates the rest** — every rema
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
 | **R7** | the noise floor every later A/B is judged against | nothing | ~4 h (one overnight) |
-| **R8** | does a window-aware solver move convert into FPR? | [P1](tpc_phase2_roadmap.md#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move) | ~1.5 h |
+| **R8** | does a window-aware solver move convert into FPR? | nothing — [P1](tpc_phase2_roadmap.md#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move) landed 2026-08-05 and screened GREEN | ~1.5 h |
 | **R9** | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | **R10** | what does removing the oracle cost on the same solver? (report figure) | nothing | ~5 h |
 | **R11** | LLM-backed repair, v2 only | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) | not before the v1 upload |
@@ -61,16 +61,26 @@ measure.**
 its pass wall clocks could be checked against R2's; had they diverged the row would have been
 unusable and the slot wasted.
 
-### R8 — the gate for a window-aware move *(needs P1)*
+### R8 — the gate for a window-aware move *(P1 landed 2026-08-05; run this)*
 
 ```bash
-.venv/bin/python scripts/phase2_full_run.py --method phase2_e2e_r8_windows --label "window-aware move, 5h"
+TPC_WINDOW_ANCHOR=1 .venv/bin/python scripts/phase2_full_run.py \
+  --method phase2_e2e_r8_windows --label "window-aware move (TPC_WINDOW_ANCHOR), 5h"
 ```
 
 **The only arm with a plausible multi-point effect**, because P1 targets `timed_visit_named_poi` —
 the sole logical blocker in `45 of 61` failing solver-only queries. Paired against the R7 mean. At
 `sd ≈ 0.35` a `+2` effect is detectable in one run, which is why this arm needs no repeats. Read
 `FPR` and `constraints_ok` first; `overall` follows them.
+
+P1 is implemented as the default-off `TPC_WINDOW_ANCHOR`
+([roadmap](tpc_phase2_roadmap.md#what-was-implemented-tpc_window_anchor)) and its paired `n=80`
+`90 s` screens came back GREEN on **both** axes — FPR `32.5 → 42.5`, `all_pass 26 → 34`, commonsense
+and EPR flat, timeouts `0 → 0`
+([solver-only](../results/phase2_baselines/screens/20260805_solver_only_n80_b90_window_anchor/summary.json),
+[end-to-end](../results/phase2_baselines/screens/20260805_e2e_n80_b90_window_anchor/summary.json)).
+A screen at a reduced budget on 80 records is not a promotion; this run is. If it clears, the flag
+belongs in `apply_deterministic_solver_defaults()`, not in an operator's environment.
 
 ### R9 — the falsification run for "spend the idle envelope" *(needs P5, readable only with P2)*
 

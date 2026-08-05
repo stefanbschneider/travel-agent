@@ -132,7 +132,7 @@ depending on the measurement, with zero missing families. **Parsing works; searc
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
-| **P1** | **`timed_visit_named_poi`: a window-aware move** | days | **`+2..+5`; the only item that moves FPR** | not v1 |
+| **P1** | **`timed_visit_named_poi`: a window-aware move** (`TPC_WINDOW_ANCHOR`) | days | **implemented + screened GREEN 2026-08-05: FPR `+10` on both axes at `n=80`; awaiting [R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move-needs-p1)** | pending gate |
 | P2 | Per-attempt telemetry ledger | 2 h | report figures; measures everything else | v2 |
 | P3 | Re-screen commonsense-valid emission when nothing is accepted | 2 h | `≤ +0.5` | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
@@ -173,6 +173,7 @@ inside `_pack_plan` and all deepcopy-trialed and committed only if the full chec
 | `_try_pin_activity` | shifts a present-but-mistimed activity into its window, recomputing its own and the next activity's legs; **reverts on any cascade** | promoted, real gain |
 | `_resequence_day` | reorders the day's meal/attraction activities by target window; **returns early when the window-sorted order equals the current order** | promoted with it |
 | `_enforce_windows_in_order` (`TPC_CASCADE_TIMED_WINDOWS`) | forward-only ripple: re-lays the day's movable block in current order with windows honored | gated at `900 s`, **no measurable effect**, not promoted |
+| `_anchor_timed_windows` (`TPC_WINDOW_ANCHOR`) | the same clamp-and-ripple, with type-aware intersected windows, a re-timable overnight-stay tail, and the two-regime commit rule | added 2026-08-05, [screened GREEN](#step-0-result-2026-08-05) (solver-only FPR `+10`), awaiting R8 |
 
 The residual is therefore not one shape; it is the tail after the two tractable shapes were taken.
 **The known-unhandled shape is the backward shift** — a target that must move *earlier*, pulling its
@@ -189,6 +190,104 @@ predecessors back. Every landed move ignores it.
 Choose a move only if one shape is a large share. **If the shapes do not converge, write that down
 and stop** — a documented dead end is a real deliverable here and worth more than a fourth mechanism
 that gates flat.
+
+#### Step 0 result (2026-08-05)
+
+Family-level attribution cannot answer "which move", so
+[`scripts/phase2_timed_window_shapes.py`](../scripts/phase2_timed_window_shapes.py) was added: it
+re-evaluates each produced plan's oracle clauses with the official `evaluate_constraints_py`, parses
+every failing timed-visit clause back into `(activity types, POI, earliest, end_before)` — the
+familiar-100 template is exact, `149/149` clauses match — locates the target activity, and reports
+the *move* that would satisfy it. Post-sync input: a fresh `familiar_100_val` solver-only run
+(`n=80`, `90 s`/query, harness defaults, `FPR 32.5`).
+
+`51 of 80` queries carry ≥1 failing timed-visit clause (`41` sole logical blocker), `65` failing
+clauses:
+
+| shape | instances | queries | sole-blocker instances |
+| --- | --- | --- | --- |
+| forward-shift (starts too early) | 24 | 22 | 19 |
+| shorten (dwell exceeds the whole window) | 16 | 15 | 14 |
+| absent POI (target not in the plan at all) | 15 | 13 | 11 |
+| backward-shift (ends too late) | 10 | 9 | 10 |
+
+**The shapes do converge, but not on the axis the prior art assumed.** Forward-shift, shorten and
+backward-shift are one move — *clamp the activity into its window and let the day absorb it* —
+covering `50 of 65` instances (`77%`) and `32 of 41` sole-blocker queries. They differ only in which
+direction the consequence ripples. So the deliverable is not a fourth mechanism aimed at a new
+shape; it is fixing why the existing clamp-and-ripple mechanism does nothing.
+
+**Why `_enforce_windows_in_order` gated flat — measured, not guessed.** Replaying it over the
+produced plans fixes `4 of 65` clauses. Its rejections attribute cleanly:
+
+| Rejection | Count | Why it is wrong |
+| --- | --- | --- |
+| the day's fixed tail is unreachable at its recorded `start_time` | 29 | **25 are the overnight `accommodation` stay**, whose start time records when the traveller got back to the hotel, not a departure that can be missed. Correct for a train, wrong for a hotel. |
+| the window is unreachable in the current order | 16 | includes every backward-shift case whose target's window has already passed by the time the forward pass reaches it |
+
+On top of that, `_window_for_position` resolves a window by **position name only**. `11 of 80` val
+queries carry *two* timed windows on the same POI name differing only in activity type — a hotel's
+`Dine at … between 07:45 and 08:40` and its `Stay at … between 20:10 and 24:00` — so the day's
+breakfast gets clamped to the 20:10 stay window and the relayout dies. One query carries two *meal*
+windows on one hotel (`07:45–08:40` and `07:50–08:35`) that only their intersection satisfies.
+
+The `shorten` bucket is the sharpest illustration: `10 of 16` instances are the hard-coded `07:30–08:30`
+hotel breakfast against a `45–55` minute window — off by **5 to 15 minutes**.
+
+#### What was implemented: `TPC_WINDOW_ANCHOR`
+
+A window-anchored day relayout (`_anchor_timed_windows`, `_resolve_slot_windows`), default off, run
+from `_pack_plan` after `_pin_timed_windows`, reusing `_relayout_movable_block` through two new
+opt-in parameters so every existing caller stays byte-identical. Three deltas, each traceable to a
+row above:
+
+1. **Type-aware, intersected window resolution.** A window applies only to an activity whose type it
+   names, and all windows naming one activity are intersected (`max(earliest)`/`min(end_before)`).
+   Both constraint sources now record the types: `parse_constraints` from the sentence's verb
+   (`Visit`/`Dine at`/`Stay at`), `solver_constraints` from the oracle clause's `activity_type` test.
+   The key is additive — nothing reads `activity_types` unless the flag is on.
+2. **A re-timable overnight-stay tail** (`retime_stay_tail`): a ripple may push the `accommodation`
+   tail's `start_time` later, never an intercity departure, and never past `24:00`.
+3. **The two-regime commit rule** already used by `_repair_commit_allowed`: the trial must be fully
+   accepted either way, and must additionally not lower the preference key only when the *input* was
+   already accepted. Requiring a non-regressing key against an unaccepted input rejected layouts
+   that flipped the plan to accepted because a rerouted leg cost a fraction of an ATT point.
+
+Measured on the same produced plans, against the landed forward-only cascade as the control:
+clauses fixed `6 → 9`, queries flipped to full logical pass `5 → 8`. Capability (1) is worth `+1`
+clause, (2) `+2` clauses and `+2` queries.
+
+**Screen result (paired, same subset/budget/seed, only the flag changes).** The post-hoc probe above
+understates it, because in a real solve the pass runs on every candidate inside the restart loop
+rather than once on the finished plan.
+
+| | solver-only | end-to-end |
+| --- | --- | --- |
+| row | [`screens/20260805_solver_only_n80_b90_window_anchor`](../results/phase2_baselines/screens/20260805_solver_only_n80_b90_window_anchor/summary.json) | [`screens/20260805_e2e_n80_b90_window_anchor`](../results/phase2_baselines/screens/20260805_e2e_n80_b90_window_anchor/summary.json) |
+| FPR | `32.50 → 42.50` (**+10.00**) | `32.50 → 42.50` (**+10.00**) |
+| `all_pass` (n=80) | `26 → 34` | `26 → 34` |
+| `overall_true` | `56.95 → 62.27` | `57.81 → 63.13` |
+| C-LPR / logical micro | `86.41 → 87.43` / `90.94 → 91.96` | `88.00 → 89.01` / `90.15 → 91.17` |
+| commonsense pass / EPR-macro | `76 → 76` / `95 → 95` (flat) | `78 → 78` / `97.5 → 97.5` (flat) |
+| timeouts, `used_fallback`, `parse_failures` | `0 → 0` on all three | `0 → 0` on all three |
+| solve `p50` | `53.52 s → 53.58 s` | `50.60 s → 53.13 s` |
+| monotonic gate | PASS — **GREEN LIGHT** | PASS — **GREEN LIGHT** |
+
+`familiar_100_val`, `n=80`, `90 s`/query, `parallel=7`, harness defaults stacked on both arms
+(`TPC_PIN_TIMED_WINDOWS=1,TPC_COMMONSENSE_FIRST=1,TPC_SOLVE_CONVERGE_PATIENCE=15`). The two axes
+agreeing to the query matters: the end-to-end arm reads `activity_types` from the *sentence's verb*,
+the solver-only arm from the *oracle clause's type test*, so both extraction paths are exercised and
+the effect is not an artifact of oracle constraints. Commonsense and EPR being exactly flat while
+`all_pass` moves `+8` is the proof of mechanism: the gain is windows being satisfied, not a side
+effect on another layer. A screen triages and never promotes — this one buys
+[R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move-needs-p1) on the eval machine.
+
+**Two shapes remain open and are deliberately not addressed.** `absent POI` (15 instances, 11
+sole-blocker) needs insertion/reselection, not retiming — `_insert_activity` already accepts a window
+tuple, so the machinery exists. `backward-shift` where the window has already passed on that day
+(the 16 window-unreachable rejections) needs **cross-day relocation**: a coarse check says `22 of 25`
+absent/backward instances have some day whose free span contains the window, so the headroom is
+real, but it is a different move from this one.
 
 **The structurally different option.** The CP-SAT tier (`chinatravel/agent/tpc_agent/cp_solver.py`)
 already exists and already reasons about time, and a timed window is a *native* CP-SAT constraint
@@ -422,6 +521,7 @@ passes are reachable through the `TPC_COMMONSENSE_FIRST` umbrella.
 | Flag | Status |
 | --- | --- |
 | `TPC_CASCADE_TIMED_WINDOWS` | forward-only cascading shift for the post-pin residual. Gated at `900 s`: solver-only — its own target axis — flat (`+0.004` continuous), e2e ranges overlap. Not promoted; see P1's prior-art table. |
+| `TPC_WINDOW_ANCHOR` | **P1's window-anchored day relayout** (2026-08-05). Type-aware intersected windows, a re-timable overnight-stay tail, and the two-regime commit rule — each chosen from the [measured shape classification](#step-0-result-2026-08-05) of the residual. Paired screens (`familiar_100_val`, `n=80`, `90 s`), **both axes agreeing**: FPR `32.5 → 42.5` and `all_pass 26 → 34` on solver-only *and* end-to-end, `overall_true` `56.95 → 62.27` / `57.81 → 63.13`, commonsense and EPR exactly flat, timeouts and fallbacks `0 → 0`, gate PASS. Off by default until [R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move-needs-p1) clears; a screen never promotes. |
 | `TPC_REPAIR_DROP_TRAILING_STAY` | drops a single-day trip's trailing overnight accommodation so `_repair_intercity_endpoints` derives the return floor from the real last activity instead of `24:00`. 1 of 3 target uids fully clears (`overall_true 8.52 → 43.08`); the other 2 have a deeper defect — their day's activities run past every same-day return departure regardless of the accommodation, which no forward-only repair can reach. Its screen was RED, probably because the flag's `_pack_plan` gate also activates the *general* endpoint re-grounding pass on every query. |
 | `TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE` | preference packing. `TPC_PACK_DAV` screened RED, `TPC_PACK_DDR` green on a quick screen but mixed on a full-split comparison, and all of that evidence predates the 2026-07-30 evaluator sync. `TPC_PACK_ATT` is the most plausible Phase 2 candidate — count-preserving, so it cannot cost FPR or C-LPR — but see [what not to spend time on](#what-not-to-spend-time-on). |
 | `TPC_P2_LLM_PARSE` / `TPC_P2_LLM_REFINE` / `TPC_P2_LLM_AGENTIC_REFINE` | LLM stages. Parse audit screened RED once it genuinely fired on every query (`−3.20` `overall_true`); both refine variants commit `improve_committed=0` while their reserved improve slice costs timeouts. |
@@ -487,6 +587,8 @@ is the measured position.
 | --- | --- |
 | Random-restart loop, `restart_seed`, `TPC_MAX_RESTARTS` | `chinatravel/agent/tpc_agent/tpc_agent.py` |
 | `_pin_timed_windows` / `_resequence_day` / `_enforce_windows_in_order` | `chinatravel/agent/tpc_agent/tpc_agent.py` |
+| `_anchor_timed_windows` / `_resolve_slot_windows` / `_relayout_movable_block` (P1) | `chinatravel/agent/tpc_agent/tpc_agent.py` |
+| Timed-window `activity_types` extraction | `parse_constraints.py` (`_window_activity_types`), `chinatravel/agent/tpc_agent/solver_constraints.py` (same name) |
 | `_repair_intercity_endpoints`, `_repair_commit_allowed`, `_flag_enabled_with_umbrella` | `chinatravel/agent/tpc_agent/tpc_agent.py` |
 | CP-SAT tier and worker count | `chinatravel/agent/tpc_agent/cp_solver.py` |
 | Whole-run scheduler (`_choose_pass`, `solve_one`, `default_workers`) | `chinatravel/agent/phase2/sweeps.py` |
@@ -495,3 +597,4 @@ is the measured position.
 | Confirmed entry point | `agent_env/scripts/solve_script_with_harness.py` |
 | Whole-run measurement | `scripts/phase2_full_run.py` |
 | Failure attribution / commonsense headroom | `scripts/phase2_solver_failure_attribution.py`, `scripts/phase2_commonsense_headroom.py` |
+| Timed-window residual **by shape** (which move would fix it) | `scripts/phase2_timed_window_shapes.py` |

@@ -367,6 +367,34 @@ _ACTIVITY_POSITION_EQ_RE = re.compile(
 )
 
 
+_ACTIVITY_TYPE_IN_SET_RE = re.compile(
+    r"activity_type\(\s*activity\s*\)\s*in\s*\[(?P<types>[^\]]*)\]"
+)
+_ACTIVITY_TYPE_EQ_RE = re.compile(
+    r"activity_type\(\s*activity\s*\)\s*==\s*(?P<quote>['\"])(?P<type>[a-z_]+)(?P=quote)"
+)
+
+
+def _window_activity_types(block: str) -> list[str] | None:
+    """Which itinerary activity types a timed-visit block gates on, or ``None`` when it does not.
+
+    The oracle template for a timed visit at a named POI is always
+    ``activity_type(activity) in ['breakfast', 'lunch', 'dinner'] and activity_position(...)==...``
+    or ``activity_type(activity)=='attraction'`` / ``=='accommodation'``. Recording the set keeps two
+    windows that share a POI *name* distinguishable: a hotel commonly carries both a meal window
+    (07:45-08:40) and an accommodation window (20:10-24:00), and a consumer keyed on the name alone
+    resolves the pair to whichever clause happened to be listed first.
+    """
+    match = _ACTIVITY_TYPE_IN_SET_RE.search(block)
+    if match:
+        types = [t.strip().strip("'\"") for t in match.group("types").split(",")]
+        return [t for t in types if t] or None
+    match = _ACTIVITY_TYPE_EQ_RE.search(block)
+    if match:
+        return [match.group("type")]
+    return None
+
+
 def _parse_activity_windows(logic: str, result: dict[str, Any]) -> None:
     positions = list(_ACTIVITY_POSITION_EQ_RE.finditer(logic))
     if not positions:
@@ -392,6 +420,9 @@ def _parse_activity_windows(logic: str, result: dict[str, Any]) -> None:
                     "latest": latest,
                     "end_after": end_after,
                     "end_before": end_before,
+                    # The activity-type test sits *before* the position test in the template, so
+                    # scan the whole clause rather than the position-anchored block.
+                    "activity_types": _window_activity_types(logic),
                 }
             )
 

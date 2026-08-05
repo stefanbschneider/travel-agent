@@ -517,6 +517,33 @@ class TPCAgent(BaseAgent):
         ``TPC_PIN_TIMED_WINDOWS``, since it runs as a fallback inside ``_pin_timed_windows``."""
         return os.environ.get("TPC_CASCADE_TIMED_WINDOWS", "0") not in ("", "0", "false", "False")
 
+    def _window_anchor_enabled(self):
+        """Opt-in window-anchored day relayout for the post-pin ``timed_visit_named_poi`` residual
+        (roadmap P1).
+
+        Default OFF, so the deterministic floor is byte-identical: ``_pack_plan`` skips
+        ``_anchor_timed_windows`` entirely and ``_relayout_movable_block`` keeps its previous
+        window-resolution and fixed-tail behaviour for every existing caller.
+
+        What it adds over the landed moves, both derived from a measured classification of the
+        residual by *shape* (``scripts/phase2_timed_window_shapes.py``, familiar-100 val,
+        solver-only, harness defaults: 65 failing clauses over 51 queries -- forward-shift 24,
+        shorten 16, absent-POI 15, backward-shift 10):
+
+        1. **Type-aware, intersected windows.** 11 of 80 val queries carry two timed windows on the
+           *same* POI name that differ only in activity type (a hotel's breakfast window and its
+           overnight-stay window). ``_window_for_position`` returns whichever clause came first, so
+           the day's breakfast gets clamped to the 20:10-24:00 stay window and the relayout dies.
+        2. **A re-timable overnight-accommodation tail.** The landed relayout rejects any layout
+           whose ripple makes the day's fixed tail unreachable at its recorded ``start_time``. That
+           is right for a train or a flight and wrong for the overnight stay, whose start time is
+           just "when you got back to the hotel": 25 of 29 tail rejections in the residual are that
+           accommodation stay.
+
+        Enable with ``TPC_WINDOW_ANCHOR=1``. Only meaningful together with
+        ``TPC_PIN_TIMED_WINDOWS``, which is what puts the named POI in the plan at all."""
+        return os.environ.get("TPC_WINDOW_ANCHOR", "0") not in ("", "0", "false", "False")
+
     def _repair_intercity_enabled(self):
         """Opt-in flag for intercity endpoint grounding repair.
 
@@ -1273,6 +1300,14 @@ class TPCAgent(BaseAgent):
         if self._pin_windows_enabled():
             self._set_transport_context(constraints or {})
             self._pin_timed_windows(plan, query, constraints or {}, check)
+        # Window-anchored day relayout for whatever the pin passes could not reach (opt-in; roadmap
+        # P1). Same placement rationale as the pin above -- it runs before the acceptance gate
+        # because a window-failing plan is by definition not yet accepted -- and the same
+        # acceptance-gated, deepcopy-trialed commit discipline. Off by default, so the deterministic
+        # floor is unchanged.
+        if self._window_anchor_enabled():
+            self._set_transport_context(constraints or {})
+            self._anchor_timed_windows(plan, query, constraints or {}, check)
         if not self._accepted(*check(plan)):
             return plan
         if not self._packing_enabled():
@@ -2568,7 +2603,8 @@ class TPCAgent(BaseAgent):
             return False
         return False
 
-    def _relayout_movable_block(self, trial, day_idx, movable_slots, order, city, people, windows=None):
+    def _relayout_movable_block(self, trial, day_idx, movable_slots, order, city, people, windows=None,
+                                slot_windows=None, retime_stay_tail=False):
         """Reorder and re-leg one day's contiguous movable (meal/attraction) block in place on
         ``trial``, shared by ``_resequence_day`` (window-driven order) and the Stage 3 LLM refine's
         ``reorder_day``/``swap_activity`` edits (LLM-proposed order, no windows).
@@ -2581,9 +2617,25 @@ class TPCAgent(BaseAgent):
         are never touched. ``windows`` (``activity_time_windows``-shaped dicts), when given, clamps
         a retimed slot into its clause window exactly like ``_resequence_day`` always did; omitted
         for a plain LLM-proposed reorder/swap, which has no window to honor. Returns True on a
-        structurally valid relayout -- callers still apply their own acceptance gate."""
+        structurally valid relayout -- callers still apply their own acceptance gate.
+
+        ``slot_windows`` (opt-in, ``TPC_WINDOW_ANCHOR``) supersedes ``windows`` with an explicit
+        ``{original slot index: (lo_minutes, hi_minutes)}`` map, letting the caller resolve a window
+        *per activity* -- by activity type, and by intersecting every window naming that position --
+        instead of taking the first window whose location matches. ``retime_stay_tail`` lets a
+        ripple that pushes the day later also push the overnight ``accommodation`` tail's
+        ``start_time`` later, which is legitimate (the stay starts when you arrive) whereas moving an
+        intercity departure is not. Both default to the previous behaviour."""
         tacts = trial["itinerary"][day_idx]["activities"]
         reordered = [deepcopy(tacts[movable_slots[k]]) for k in order]
+        # An activity's window belongs to the activity, not to the position it lands in, so key the
+        # per-activity map by the slot it came *from* under ``order``.
+        slot_window_by_new_slot = None
+        if slot_windows is not None:
+            slot_window_by_new_slot = {
+                movable_slots[j]: slot_windows.get(movable_slots[k])
+                for j, k in enumerate(order)
+            }
 
         # No fixed head (movable_slots[0] == 0) leaves prev_pos/prev_end at None: the activity
         # landing in slot 0 keeps its own original start/end time and empty transports, exactly
@@ -2619,7 +2671,15 @@ class TPCAgent(BaseAgent):
             else:
                 new_start = cur_start
                 act["transports"] = []
-            if windows is not None:
+            if slot_window_by_new_slot is not None:
+                bounds = slot_window_by_new_slot.get(slot_i)
+                if bounds is not None:
+                    lo, hi = bounds
+                    new_start = max(new_start, lo)
+                    dwell = min(dwell, hi - new_start)
+                    if dwell <= 0:
+                        return False
+            elif windows is not None:
                 w = self._window_for_position(windows, act.get("position"))
                 if w is not None:
                     lo = time_to_minutes(str(w["earliest"])) if w.get("earliest") else new_start
@@ -2629,6 +2689,12 @@ class TPCAgent(BaseAgent):
                     if dwell <= 0:
                         return False
             new_end = new_start + dwell
+            if slot_window_by_new_slot is not None and new_end > 23 * 60 + 59:
+                # ``minutes_to_time`` clamps at 23:59, so a ripple that overflows the day would
+                # silently truncate this activity's dwell and hand a bogus 23:59 departure to the
+                # next leg. Existing callers keep the old (clamping) behaviour; the anchored path
+                # rejects the layout instead. A day cannot legitimately end after 24:00.
+                return False
             act["start_time"] = minutes_to_time(new_start)
             act["end_time"] = minutes_to_time(new_end)
             tacts[slot_i] = act
@@ -2656,9 +2722,148 @@ class TPCAgent(BaseAgent):
                 return False
             tail_start = str(tail.get("start_time", ""))
             if tail_start and time_to_minutes(tail_arrival) > time_to_minutes(tail_start):
-                return False
+                # The overnight stay's start_time records when the traveller got back to the hotel,
+                # not a departure that can be missed, so a later arrival may simply move it -- but
+                # only within the same calendar day, since a plan's day boundary is 24:00 and the
+                # stay must still end there. An intercity departure is never moved.
+                arrival_min = time_to_minutes(tail_arrival)
+                if not (retime_stay_tail and tail.get("type") == "accommodation"
+                        and arrival_min < 24 * 60):
+                    return False
+                tail["start_time"] = minutes_to_time(arrival_min)
             tail["transports"] = transports_out
         return True
+
+    def _window_activity_types(self, window):
+        """Normalized activity types a window applies to, or ``None`` for "any position match".
+
+        Both constraint sources now record this (``parse_constraints._window_activity_types`` from
+        the sentence's verb, ``solver_constraints._window_activity_types`` from the oracle clause's
+        ``activity_type`` test); a window without the key keeps the previous type-agnostic reading.
+        """
+        raw = window.get("activity_types") if isinstance(window, dict) else None
+        if not raw:
+            return None
+        if isinstance(raw, str):
+            raw = [raw]
+        types = tuple(str(t).strip().lower() for t in raw if str(t).strip())
+        return types or None
+
+    def _resolve_slot_windows(self, activities, windows):
+        """``{slot index: (lo_minutes, hi_minutes)}`` for a day's movable activities (roadmap P1).
+
+        Two things this does that ``_window_for_position`` cannot:
+
+        * **Type matching.** A window that names its activity types only applies to an activity of
+          one of them, so a hotel's ``Stay at ... between 20:10 and 24:00`` window never lands on
+          that hotel's breakfast.
+        * **Intersection.** Several windows may legitimately constrain the same activity (a POI
+          named by two clauses, e.g. ``07:45-08:40`` and ``07:50-08:35``). All of them must hold, so
+          the effective bound is ``max(earliest)``/``min(end_before)``; resolving to just the first
+          match satisfies one clause and breaks the other.
+
+        A slot whose intersected window is empty (``hi <= lo``) is dropped rather than reported as
+        an impossible bound: the clause set is unsatisfiable *for that activity*, and the caller's
+        job is to lay the rest of the day out, not to fabricate a zero-length visit.
+        """
+        resolved = {}
+        for idx, activity in enumerate(activities or []):
+            if activity.get("type") not in self._WINDOW_ACTIVITY_TYPES:
+                continue
+            position = str(activity.get("position", ""))
+            if not position:
+                continue
+            lo = hi = None
+            for window in windows or []:
+                if not isinstance(window, dict) or not window.get("location"):
+                    continue
+                types = self._window_activity_types(window)
+                if types is not None and str(activity.get("type", "")).lower() not in types:
+                    continue
+                location = str(window["location"])
+                if not (self._match_constraint_text(position, location)
+                        or self._match_constraint_text(location, position)):
+                    continue
+                try:
+                    w_lo = time_to_minutes(str(window["earliest"])) if window.get("earliest") else None
+                    w_hi = time_to_minutes(str(window["end_before"])) if window.get("end_before") else None
+                except Exception:
+                    continue
+                if w_lo is not None:
+                    lo = w_lo if lo is None else max(lo, w_lo)
+                if w_hi is not None:
+                    hi = w_hi if hi is None else min(hi, w_hi)
+            if lo is not None and hi is not None and hi > lo:
+                resolved[idx] = (lo, hi)
+        return resolved
+
+    def _anchor_timed_windows(self, plan, query, constraints, check):
+        """Window-anchored day relayout for the post-pin ``timed_visit_named_poi`` residual
+        (roadmap P1; opt-in via ``TPC_WINDOW_ANCHOR``).
+
+        Runs after ``_pin_timed_windows`` on every day that has at least one resolvable window, and
+        re-lays that day's contiguous movable block at the earliest feasible time, clamped into each
+        activity's *own* intersected, type-matched window. Two mechanisms distinguish it from
+        ``_enforce_windows_in_order``, and both were chosen from a measured classification of the
+        residual rather than guessed -- see ``_window_anchor_enabled``.
+
+        Commit rule, matching ``_repair_commit_allowed``'s two regimes: the trial must be fully
+        accepted by the checker either way, and additionally must not lower the preference key when
+        the *input* plan was already accepted. Requiring a non-regressing key against an
+        **unaccepted** input is pure friction -- it can reject a layout that flips the plan to
+        accepted because a rerouted leg cost a fraction of an ATT point.
+        """
+        windows = [
+            w for w in (constraints.get("activity_time_windows", []) or [])
+            if isinstance(w, dict) and w.get("location") and (w.get("earliest") or w.get("end_before"))
+        ]
+        if not windows:
+            return False
+        city = query.get("target_city", "")
+        people = int(query.get("people_number", 1) or 1)
+        committed = False
+
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            activities = day.get("activities", []) or []
+            slot_windows = self._resolve_slot_windows(activities, windows)
+            if not slot_windows:
+                continue
+            movable_slots = [
+                i for i, a in enumerate(activities)
+                if a.get("type") in self._WINDOW_ACTIVITY_TYPES and str(a.get("position", ""))
+            ]
+            if not movable_slots:
+                continue
+            if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+                # Same contiguity requirement as _resequence_day / _enforce_windows_in_order: a
+                # fixed activity between two movable ones is not safe to re-leg across.
+                continue
+            if all(self._activity_in_window(plan, day_idx, slot, *slot_windows[slot])
+                   for slot in slot_windows):
+                continue  # every windowed activity on this day already sits inside its window
+
+            was_accepted = False
+            before_key = self._accepted_eval_key(plan)
+            try:
+                was_accepted = self._accepted(*check(plan))
+            except Exception:
+                was_accepted = False
+
+            trial = deepcopy(plan)
+            if not self._relayout_movable_block(
+                    trial, day_idx, movable_slots, list(range(len(movable_slots))), city, people,
+                    slot_windows=slot_windows, retime_stay_tail=True):
+                continue
+            try:
+                if not self._accepted(*check(trial)):
+                    continue
+                if was_accepted and self._accepted_eval_key(trial) < before_key:
+                    continue
+            except Exception:
+                continue
+            plan["itinerary"][day_idx]["activities"] = trial["itinerary"][day_idx]["activities"]
+            committed = True
+        return committed
 
     # --- Stage 3 LLM refine support (roadmap Next step 7 / TPC_P2_LLM_REFINE) ------------------
     #
