@@ -11,76 +11,33 @@ defines their interpretation.
 
 ## Run this next
 
-R1–R6 are closed (see [what the closed queue established](#what-the-closed-queue-r1r6-established)).
-The live queue is below, in priority order. **R7 gates the rest** — every remaining arm is worth
-`≤ +1` except R8, and a single run cannot resolve an effect that small.
+R1–R10 are closed (see [what the closed queue established](#what-the-closed-queue-r1r10-established)).
+R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
+repeats scored bit-for-bit identical (`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok
+36/100`, all three times) — every remaining arm below is judged against that near-zero floor rather
+than the pre-fix `sd 0.35`, so an effect well under `1` point is resolvable in a single run and
+**no arm on this list needs repeats** unless a future result actually shows spread. R8
+(2026-08-05) gated the window-aware move **GREEN and full-sized**: `overall 63.58` (`+5.83` over
+R7), `FPR 43.0` (`+11.0`), `constraints_ok 46/100` (`+10`) — close to the paired screen's predicted
+`FPR 32.5 → 42.5`. **`TPC_WINDOW_ANCHOR` is now gate-cleared; flipping it on by default is an
+Implementation-workstream change**, not something this run performs. R10 (2026-08-05, diagnostic
+only) put `tpc_phase1` through the same no-oracle path: `overall 85.20` against the oracle-fed
+Phase 1 pipeline's `98.98` — a `13.78`-point removing-the-oracle cost, the report figure this run
+exists to produce.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R7** | the noise floor every later A/B is judged against | nothing | ~4 h (one overnight) |
-| **R8** | does a window-aware solver move convert into FPR? | nothing — [P1](tpc_phase2_roadmap.md#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move) landed 2026-08-05 and screened GREEN | ~1.5 h |
 | **R9** | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
-| **R10** | what does removing the oracle cost on the same solver? (report figure) | nothing | ~5 h |
 | **R11** | LLM-backed repair, v2 only | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) | not before the v1 upload |
 | **R3** | does cross-query parallelism convert into score? | a ≥8-core machine | ~5 h |
 
-### R7 — seed-variance baseline
-
-```bash
-for i in 1 2 3; do
-  .venv/bin/python scripts/phase2_full_run.py \
-    --method phase2_e2e_r7_var_$i --label "5h variance repeat $i"
-done
-```
-
-Three repeats at the **shipping** contract (5 h envelope, `familiar_100`, default flags, no
-overrides). Each self-terminates near `1.3 h`, so the set is ~4 h. Report mean, sd and range of
-`overall`, `FPR` and `constraints_ok`. **Deliverable: the sd every later arm is judged against.**
-
-Why it is first: the same-config spread measured so far is larger than any candidate on the list.
-
-| Envelope | Same-config samples | Spread |
-| --- | --- | --- |
-| 2 h | n=4 (`57.34 / 57.81 / 57.82 / 58.20`) | sd `0.35`, range `0.86` |
-| 1 h | n=2 (`57.35` R2, `56.31` diagnostic) | Δ `1.04` overall, Δ `2.0` FPR |
-
-The 1 h pair is a genuine same-config repeat: identical split, envelope, workers and evaluator
-parity, an identical pass structure at identical budgets (`100×25s → 68×62s → 32×73s`), pass wall
-clocks within `2%` — and `1.04` apart on `overall`. **Conclusion: a single pre-fix run cannot
-resolve anything under about `2` points.**
-
-**Run R7 on a build that includes the pinned restart seed**
-([P0](tpc_phase2_roadmap.md#landed-and-promoted), landed 2026-08-05). Both spreads above were
-measured *before* it, when every worker process drew a different restart sequence because
-`hash()` over strings is salted per process. On the fixed build the remaining variance is only what
-the scheduler's wall-clock timing contributes, so **R7 is now measuring a different and probably
-much smaller quantity. If it comes back near zero, every arm on this list becomes cheap to
-measure.**
-
-**Protocol: no other work on the box.** The 1 h diagnostic row above survived scrutiny only because
-its pass wall clocks could be checked against R2's; had they diverged the row would have been
-unusable and the slot wasted.
-
-### R8 — the gate for a window-aware move
-
-```bash
-TPC_WINDOW_ANCHOR=1 .venv/bin/python scripts/phase2_full_run.py \
-  --method phase2_e2e_r8_windows --label "window-aware move (TPC_WINDOW_ANCHOR), 5h"
-```
-
-**The only arm with a plausible multi-point effect**, because P1 targets `timed_visit_named_poi` —
-the sole logical blocker in `45 of 61` failing solver-only queries. Paired against the R7 mean. At
-`sd ≈ 0.35` a `+2` effect is detectable in one run, which is why this arm needs no repeats. Read
-`FPR` and `constraints_ok` first; `overall` follows them.
-
-P1 is implemented as the default-off `TPC_WINDOW_ANCHOR`
-([roadmap](tpc_phase2_roadmap.md#what-was-implemented-tpc_window_anchor)) and its paired `n=80`
-`90 s` screens came back GREEN on **both** axes — FPR `32.5 → 42.5`, `all_pass 26 → 34`, commonsense
-and EPR flat, timeouts `0 → 0`
-([solver-only](../results/phase2_baselines/screens/20260805_solver_only_n80_b90_window_anchor/summary.json),
-[end-to-end](../results/phase2_baselines/screens/20260805_e2e_n80_b90_window_anchor/summary.json)).
-A screen at a reduced budget on 80 records is not a promotion; this run is. If it clears, the flag
-belongs in `apply_deterministic_solver_defaults()`, not in an operator's environment.
+**R9 and R11 did not run this pass.** Both are blocked on unimplemented work items (R9 needs
+[P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) +
+[P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger); R11 needs
+[P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) and is
+explicitly gated to not run before the `v1` upload) that belong to the Implementation workstream,
+not Evaluation — see the [parallel workstreams](../CLAUDE.md#parallel-workstreams) split. R3 stays
+blocked on an ≥8-core machine, unrelated to this pass.
 
 ### R9 — the falsification run for "spend the idle envelope" *(needs P5, readable only with P2)*
 
@@ -94,20 +51,8 @@ flip per 68 queries; the open question is whether that rate *accumulates* over t
 passes the idle envelope affords. Independent draws would give `5–10` flips (`+1.7..+4.2` overall,
 promoting P5); an exhausted reachable set gives `1–2` and closes the "we aren't using our time"
 question for good. A flat flips-per-pass curve and a dying one are the two outcomes to distinguish;
-the score total cannot separate them and at `sd 0.35` could not resolve the small case anyway.
-
-### R10 — the Phase 1 split under Phase 2 rules (diagnostic, not a gate)
-
-```bash
-.venv/bin/python scripts/phase2_full_run.py --split tpc_phase1 \
-  --method phase2_e2e_r10_p1 --label "phase1 split under phase2 rules"
-```
-
-Runs the deterministic Phase 2 path (no oracle, constraints parsed from visible text) over
-`tpc_phase1`, where the oracle-fed Phase 1 pipeline scores `98.98`. The gap is the clean measure of
-what removing the oracle costs, and the technical report wants it. **Caveat first: `tpc_phase1` is
-1000 queries, 10× `familiar_100`**, so at a 5 h envelope the per-query pressure is a tenth. Not
-comparable to any `familiar_100` row and not evidence about the submission.
+the score total cannot separate them even at R7's now-zero noise floor — the two curves differ in
+*shape* over passes, not in a single aggregate number.
 
 ### R11 — LLM-backed repair arm *(needs P6; v2 only)*
 
@@ -136,7 +81,8 @@ box than the code. This box has 4.
   its constraints, so the whole headroom across DAV/ATT/DDR is `~1.5` overall at today's FPR.
 - **Anything LLM-backed.** The shipped path makes zero LLM calls, the one screened parse arm came
   back RED, and no endpoint is reachable from the evaluation machine.
-- **Single-run A/Bs of small effects.** Run R7 first.
+- ~~Single-run A/Bs of small effects. Run R7 first.~~ R7 is closed (sd `0`); a single run is now
+  sufficient evidence for any nonzero delta.
 
 ## Before the first run
 
@@ -239,7 +185,7 @@ rows because the solver now canonicalizes its own constraint literals). `EVALUAT
 `c89cfca`; `scripts/phase2_gate.py` refuses to gate across the boundary, including one-sided marker
 presence. Full detail: [competition reference](reference/competition.md#evaluator-version).
 
-## What the closed queue (R1–R6) established
+## What the closed queue (R1–R10) established
 
 Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows under
 `results/phase2_baselines/full_runs/`. **Nothing on this list needs re-running.**
@@ -252,8 +198,36 @@ Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows
 | R4 pass shape | `20260804T231910Z` control, `20260805T001808Z` A, `20260805T011733Z` B, `20260805T021805Z` C, `20260805T032037Z` control repeat | arms A/B were accidental no-ops (their caps never bound); arm C (`TPC_P2_FAST_TRIAGE=0`) `58.40` vs `57.81` |
 | R5 held-out tripwire | `20260805T042106Z` | `overall 62.59` on the 20-record test split, `constraints_ok 10/20` |
 | R6 packaged archive | no row (checks the zip, not a split) | `fabiundstefan_v1.zip`, `1676` entries, `4.0 MB`, from commit `b44bb73c096b`; unpacked and run with a stripped `PATH`: `valid_output=True` |
+| **R7 seed-variance baseline, 5 h ×3** | `20260805T081535Z`, `20260805T094549Z`, `20260805T110654Z` | **bit-for-bit identical across all three repeats**: `overall 57.74985419574877`, MicEPR `99.67`, MacEPR `98.00`, C-LPR `88.82`, FPR `32.0`, DAV `16.625`, ATT `24.53`, DDR `18.42`; `constraints_ok 36/100`; per-pass telemetry (`improved`/`elapsed_sec`) matches to within noise across the three runs too |
+| **R8 window-aware move, 5 h** (`TPC_WINDOW_ANCHOR=1`) | `20260805T123142Z` | `overall 63.58` (**`+5.83`** over R7); MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.90`, **FPR `43.0`** (**`+11.0`**), DAV `24.71`, ATT `33.65`, DDR `24.50`; `empty_plans 0/100`, `constraints_ok 46/100` (**`+10`**); matches the paired `n=80`/`90 s` screens (predicted FPR `32.5 → 42.5`) closely; used `26%` of the envelope (`4733 s`) |
+| **R10 phase1-under-phase2, 5 h** (diagnostic, 1000 queries) | `20260805T135254Z` | `overall 85.20`; MicEPR `100.0`, MacEPR `100.0`, C-LPR `95.57`, FPR `85.4`, DAV `29.86`, ATT `59.52`, DDR `53.53`; `empty_plans 0/1000`, `constraints_ok 715/1000`; `1.60 h` of the envelope. `git_dirty: true` (see caveat below) |
 
-Four findings, and two corrections that matter more than the scores:
+**On R10's `git_dirty: true`.** By the letter of the [ledger rule](#ledger-comparability) this row
+is not proven reproducible from its commit alone, and that should not be waved away. What actually
+happened: `git status --porcelain` at record time showed exactly one changed path,
+`chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` (`1` file, `593` insertions,
+reverted — not committed), because `eval_tpc.py`'s `update_suboptimal_split_file` unconditionally
+rewrites that split's suboptimal-ID file on every full-split scoring call. The file is tracked from
+earlier history but is now `.gitignore`d going forward ("regenerated by every scoring run"). This
+makes the dirtiness **structural, not a one-off**: scoring the full `tpc_phase1` split through
+`eval_tpc.py` will reproduce the identical `git_dirty: true` on *any* rerun from *any* commit,
+including a from-scratch rerun of this exact row — there is no clean-tree rerun that fixes it under
+the current tooling. It does not touch solver code or plan outputs, so the `overall`/`FPR`/
+`constraints_ok` figures above are unaffected by it, but achieving a `git_dirty: false` R10 row
+would need an Implementation-workstream change (stop `eval_tpc.py` writing the file during a
+read-only scoring pass, or fully untrack it) — not a rerun.
+
+R7's finding: **sd = 0, range = 0** on this box post-P0 — the pinned restart seed
+([P0](tpc_phase2_roadmap.md#landed-and-promoted), landed 2026-08-05) removed the salted-`hash()`
+source of cross-process variance that produced the pre-fix spreads below (`sd 0.35` at 2 h, `Δ 1.04`
+at 1 h). **Every later arm on this list is now judged against a near-zero floor, not `sd 0.35`** —
+a single run resolves an effect well under `1` point, and no arm needs repeats unless a future
+result actually shows spread. (Pre-fix spreads, kept for context: 2 h `n=4`
+(`57.34 / 57.81 / 57.82 / 58.20`), sd `0.35`, range `0.86`; 1 h `n=2` (`57.35` R2, `56.31`
+diagnostic), Δ `1.04` overall, Δ `2.0` FPR — a single pre-fix run could not resolve anything under
+about `2` points.)
+
+Five findings, and two corrections that matter more than the scores:
 
 1. **The run self-terminates at `26%` of the envelope.** Repair and polish both clamp to the
    effective `max_query_sec` (`300 s`), and `_choose_pass` drops a candidate unless its new budget
@@ -273,14 +247,25 @@ Four findings, and two corrections that matter more than the scores:
 4. **`improved` is not a score signal; `constraints_ok` is.** The 1 h diagnostic row
    (`20260805T061217Z`) has repair `improved 11` with `constraints_ok +1`: ten of the eleven were
    preference-key moves on queries that still fail, and preference is zeroed on a failing query.
+5. **Post-P0, the same-config spread is zero.** R7's three 5 h repeats are bit-for-bit identical.
+   The pre-fix variance (`sd 0.35` at 2 h) was entirely the salted-`hash()` restart-seed artifact P0
+   removed, not genuine solver or scheduler nondeterminism.
+6. **R8 is the first arm that actually moved FPR** — `+11.0` against a `sd 0` baseline, so the
+   effect is unambiguous, not noise. This is the confirmation of the roadmap's diagnosis: the
+   solver's failure mode was a missing window-aware move, not insufficient search time, and fixing
+   the move (not spending more budget on the old sampler) converts directly into FPR.
+7. **Removing the oracle costs `13.78` points on `tpc_phase1`** (R10): `85.20` end-to-end against
+   `98.98` oracle-fed. Not comparable to any `familiar_100` row — `tpc_phase1` is 1000 queries at a
+   tenth the per-query pressure — but it is the clean oracle-ablation figure the technical report
+   wants.
 
 R5 is recorded standalone: `familiar_100_test` is a *subset* of `familiar_100` (R1's split), so no
 val↔test gap is computed. `62.59` above R1's `57.99` is consistent with a smaller, easier split, not
 a generalization signal. R6 checks packaging only, never score.
 
-**What the queue does not answer:** whether any arm is worth more than the noise floor (nothing was
-run with repeats — that is R7), and whether 100 queries converge this fast on the organizers'
-held-out set (only their harness run will tell).
+**What the queue does not answer:** whether 100 queries converge this fast on the organizers'
+held-out set (only their harness run will tell). R7 closes the "is any arm worth more than noise"
+question — the floor is now ~0, so smaller effects are measurable, not that they exist.
 
 ## Dataset boundaries
 
