@@ -11,7 +11,7 @@ defines their interpretation.
 
 ## Run this next
 
-R1–R10 are closed (see [what the closed queue established](#what-the-closed-queue-r1r10-established)).
+R1–R13 are closed (see [what the closed queue established](#what-the-closed-queue-r1r13-established)).
 R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
 repeats scored bit-for-bit identical (`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok
 36/100`, all three times) — every remaining arm below is judged against that near-zero floor rather
@@ -24,7 +24,14 @@ R7), `FPR 43.0` (`+11.0`), `constraints_ok 46/100` (`+10`) — close to the pair
 `63.58` / `FPR 43.0`, never to R1's `57.99` or R7's `57.75`.** R10 (2026-08-05, diagnostic
 only) put `tpc_phase1` through the same no-oracle path: `overall 85.20` against the oracle-fed
 Phase 1 pipeline's `98.98` — a `13.78`-point removing-the-oracle cost, the report figure this run
-exists to produce.
+exists to produce. **R12 (2026-08-05) closed the promotion equality check: the bare organizer
+command with no environment set reproduced R8 bit-for-bit** (`overall 63.58458530360117`, `FPR
+43.0`, `constraints_ok 46/100`, all four `solver_flags` including `window_anchor` read `true`) — the
+promotion path and the explicit-environment path are confirmed to agree, so R8/R12 are one number
+going forward. **R13 (2026-08-05) closed the held-out tripwire: `constraints_ok` moved `10/20 →
+13/20`** against R5's pre-P1 number on the same `familiar_100_test` split (`FPR 40.0 → 55.0`,
+`overall 62.59 → 70.54`) — inside the `13–15/20` "the move generalizes" band the doc set out in
+advance, so the window-aware gain is not an artifact of fitting `val`'s residual.
 
 **Every row from here on must show `solver_flags.window_anchor: true` in its per-query telemetry**
 unless it is deliberately the flags-off arm. That snapshot landed with the promotion precisely so a
@@ -33,8 +40,6 @@ its label says.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R12** | does the promotion reproduce as a *default*, and does the archive that ships it behave? | nothing — run it before the `v1` upload | ~5 h |
-| **R13** | did the `+11` FPR carry to held-out data, or did P1 fit `val`? | nothing (uses `familiar_100_test`) | ~1 h |
 | **R9** | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | **R11** | LLM-backed repair, v2 only | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) | not before the v1 upload |
 | **R3** | does cross-query parallelism convert into score? | a ≥8-core machine | ~5 h |
@@ -57,16 +62,19 @@ The archive ships R8's configuration, so the honest point estimate is **R8's num
 | --- | --- | --- |
 | Solver nondeterminism | **`0`** — R7's three 5 h repeats are bit-for-bit identical | none |
 | Query sampling (100 fresh queries, same distribution) | FPR is binomial: at `p = 0.43`, `n = 100`, `SE = 4.95` FPR points. Empirically `1` FPR point is worth `0.53` overall on this system (`+11.0 FPR → +5.83` from R7 to R8, above the `0.40` weight because C-LPR and the preference terms move with FPR), so **`≈ ±2.6` overall at `1σ`** | symmetric |
-| P1 was designed from the **`val` residual** | unquantified until [R13](#r13--the-held-out-tripwire-on-the-new-default). R8's 100 queries include those 80, so its `+11.0` is partly in-sample | **optimistic** |
+| P1 was designed from the **`val` residual** | **resolved by [R13](#r13--the-held-out-tripwire-on-the-new-default-closed-2026-08-05)**: `constraints_ok 10/20 → 13/20` on the untouched `familiar_100_test` split — inside the pre-registered `13–15/20` "generalizes" band, not the `10/20` "fit val" band. R8's 100 queries include the 80 `val` records, so its `+11.0` FPR is still partly in-sample, but the held-out subset moved in the same direction | **mildly optimistic, not invalidated** |
 | Evaluation host | unknown core count; the split costs `≤ ~14200` worker-seconds, so even one worker fits the 5 h envelope. [R3](#r3--worker-scaling-still-blocked) never measured whether extra workers *convert* to score | neutral to slightly positive |
 
-So: **low-to-mid 60s, centre `~63.6`, roughly `58–68` as a `±2σ` band**, with the residual
-val-design risk pushing the honest reading toward the lower half of it until R13 runs. For context on
-the held-out subset, R5 measured `FPR 40.0` / `overall 62.59` there on the **pre-P1** configuration —
-that subset is easier than the full 100 (`FPR 40` vs `32` on the same code), which is why R13 is read
-as `constraints_ok/20` against R5's `10/20` rather than as a score comparison.
+So: **low-to-mid 60s, centre `~63.6`, roughly `58–68` as a `±2σ` band**. R13 closed the residual
+val-design risk without erasing it: the held-out subset improved (`10/20 → 13/20`), landing at the
+low end of the pre-registered generalization band rather than at its high end or at the "fit val"
+floor, so the centre estimate stands but is not read as conservative. For context on the held-out
+subset, R5 measured `FPR 40.0` / `overall 62.59` there on the **pre-P1** configuration; R13 measured
+`FPR 55.0` / `overall 70.54` on the same 20 records post-P1 — that subset is easier than the full 100
+(`constraints_ok` runs several points above the full-100 rate on both configurations), which is why
+R13 is read as `constraints_ok/20` against R5's `10/20` rather than as a score comparison.
 
-### R12 — the promoted default, from a clean tree *(run before the v1 upload)*
+### R12 — the promoted default, from a clean tree *(closed 2026-08-05)*
 
 R8 turned the flag on **explicitly, from the environment**. The submission turns it on **implicitly,
 inside `apply_deterministic_solver_defaults()`**. Those are different code paths to the same
@@ -84,12 +92,26 @@ the solver is bit-for-bit reproducible, so this is a genuine equality check rath
 "approximately". Any gap means the promotion path and the environment path disagree, which is a bug in
 the promotion, not a new measurement.
 
+**Result** (row `20260805T170120Z`, `git_dirty: false`, `evaluator_parity: c89cfca`): confirmed with
+no `TPC_*` variable exported, all four `solver_flags` read `true` (`pin_timed_windows`,
+`window_anchor`, `commonsense_first`, `solve_converge_patience`) in every checked per-query
+`telemetry.json`, and the score matched R8 **bit-for-bit**: `overall 63.58458530360117`, MicEPR
+`99.67`, MacEPR `98.0`, C-LPR `89.90081154192967`, `FPR 43.0`, DAV `24.70833333333333`, ATT
+`33.645981695708585`, DDR `24.499999999999996`, `empty_plans 0/100`, `constraints_ok 46/100`. The
+run self-terminated at `1.32 h` of the `5.00 h` envelope (`26%`, matching R8's usage), same
+triage→repair→polish shape (`100/54/46` queries, `100/1/13` improved). **The promotion path and the
+explicit-environment path agree exactly** — no bug, no new number; R8 and R12 are the same
+measurement from two entry points.
+
 Pair it with the archive check R6 performed on the old configuration: build with
 `scripts/assemble_phase2_submission.py`, unpack **into a directory that has never been run in**, and
 confirm the plans are real rather than the pre-written empty fallbacks. A worker dying at start-up
 still exits `0`; see the [cold-start rule](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05).
 
-### R13 — the held-out tripwire on the new default
+**Archive check**: see the R12 row in [what the closed queue established](#what-the-closed-queue-r1r13-established)
+— packaged and verified with `scripts/assemble_phase2_submission.py`'s built-in unpack-and-run check.
+
+### R13 — the held-out tripwire on the new default *(closed 2026-08-05)*
 
 P1 was designed from a *measured shape classification of the `val` residual*, which is exactly the
 procedure that can overfit `val`. R5 established the `familiar_100_test` number for the old
@@ -105,6 +127,20 @@ carried: `10/20 → 13–15/20` says the move generalizes; `10/20 → 10/20` say
 and P8/P9 (designed the same way, from the same classification) need a different validation plan.
 Twenty records is a coarse instrument — it is a tripwire, not a second gate — and `familiar_100_test`
 is a *subset* of `familiar_100`, so this is never compared against R8's `63.58` as a val↔test gap.
+
+**Result** (row `20260805T182748Z`, `git_dirty: false`, `evaluator_parity: c89cfca`): `constraints_ok
+13/20`, up from R5's `10/20` on the identical 20-record split — inside the pre-registered `13–15/20`
+"generalizes" band, at its low end rather than its middle or high end. Full decomposition: `overall
+70.53975966861671`, MicEPR `100.0`, MacEPR `100.0`, C-LPR `93.36283185840708`, `FPR
+55.00000000000001` (R5's pre-P1 number on this split was `40.0`), DAV `32.604166666666664`, ATT
+`42.90464519140989`, DDR `28.47222222222222`; `empty_plans 0/20`; all four `solver_flags` including
+`window_anchor` confirmed `true` in per-query telemetry. Ran in `0.26 h` of the `1.00 h` envelope
+(same self-terminating shape as R1/R8/R12). **Reading**: the window-aware move generalizes past the
+80 `val` records it was designed against — it is not an artifact of fitting `val`'s residual — though
+`13/20` sits at the low end of the predicted band rather than the middle, so P8/P9 (designed the same
+way) still deserve their own held-out check rather than an assumption that everything from the same
+classification generalizes equally well. Twenty records stays a coarse instrument: one query flipping
+either way moves this ratio by `5` percentage points.
 
 ### R9 — the falsification run for "spend the idle envelope" *(needs P5, readable only with P2)*
 
@@ -255,7 +291,7 @@ rows because the solver now canonicalizes its own constraint literals). `EVALUAT
 `c89cfca`; `scripts/phase2_gate.py` refuses to gate across the boundary, including one-sided marker
 presence. Full detail: [competition reference](reference/competition.md#evaluator-version).
 
-## What the closed queue (R1–R10) established
+## What the closed queue (R1–R13) established
 
 Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows under
 `results/phase2_baselines/full_runs/`. **Nothing on this list needs re-running.**
@@ -271,6 +307,8 @@ Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows
 | **R7 seed-variance baseline, 5 h ×3** | `20260805T081535Z`, `20260805T094549Z`, `20260805T110654Z` | **bit-for-bit identical across all three repeats**: `overall 57.74985419574877`, MicEPR `99.67`, MacEPR `98.00`, C-LPR `88.82`, FPR `32.0`, DAV `16.625`, ATT `24.53`, DDR `18.42`; `constraints_ok 36/100`; per-pass telemetry (`improved`/`elapsed_sec`) matches to within noise across the three runs too |
 | **R8 window-aware move, 5 h** (`TPC_WINDOW_ANCHOR=1`) | `20260805T123142Z` | `overall 63.58` (**`+5.83`** over R7); MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.90`, **FPR `43.0`** (**`+11.0`**), DAV `24.71`, ATT `33.65`, DDR `24.50`; `empty_plans 0/100`, `constraints_ok 46/100` (**`+10`**); matches the paired `n=80`/`90 s` screens (predicted FPR `32.5 → 42.5`) closely; used `26%` of the envelope (`4733 s`). **Promoted to a harness default 2026-08-05 — this row is the new baseline** |
 | **R10 phase1-under-phase2, 5 h** (diagnostic, 1000 queries) | `20260805T135254Z` | `overall 85.20`; MicEPR `100.0`, MacEPR `100.0`, C-LPR `95.57`, FPR `85.4`, DAV `29.86`, ATT `59.52`, DDR `53.53`; `empty_plans 0/1000`, `constraints_ok 715/1000`; `1.60 h` of the envelope. `git_dirty: true` (see caveat below) |
+| **R12 promotion equality check, 5 h, no env vars** | `20260805T170120Z` | **bit-for-bit identical to R8**: `overall 63.58458530360117`, MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.90`, FPR `43.0`, DAV `24.71`, ATT `33.65`, DDR `24.50`; `empty_plans 0/100`, `constraints_ok 46/100`; `git_dirty: false`; all four `solver_flags` (`pin_timed_windows`, `window_anchor`, `commonsense_first`, `solve_converge_patience`) confirmed `true`/set in per-query telemetry with nothing exported. Paired archive check (no row; checks the zip, not a split; re-run after a rebase moved packaging into `submissions/phase2/` in the same window): `submissions/phase2/fabiundstefan_v1.zip`, `1683` entries, `4.3 MB`, from commit `aba52e7a02c9`; unpacked into a directory that had never been run in and run there with the harness's own worker default (no `--workers` override, so more than one worker starts — see the [cold-start rule](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05)) via `--split tpc_phase2_familiar_100_val --limit 6 --budget-sec 90`: `6/6` plans with a non-empty itinerary, no worker start-up failure, `llm_backend=none`, `valid_output=True` |
+| **R13 held-out tripwire, 1 h** (`familiar_100_test`, post-P1) | `20260805T182748Z` | `overall 70.53975966861671`; MicEPR `100.0`, MacEPR `100.0`, C-LPR `93.36`, FPR `55.0` (R5 pre-P1: `40.0`), DAV `32.60`, ATT `42.90`, DDR `28.47`; `empty_plans 0/20`, **`constraints_ok 13/20`** (R5 pre-P1: `10/20`) — inside the pre-registered `13–15/20` "generalizes" band; `git_dirty: false`; all four `solver_flags` confirmed `true`; `0.26 h` of the `1.00 h` envelope |
 
 **On R10's `git_dirty: true`.** By the letter of the [ledger rule](#ledger-comparability) this row
 is not proven reproducible from its commit alone, and that should not be waved away. What actually
@@ -328,10 +366,23 @@ Five findings, and two corrections that matter more than the scores:
    `98.98` oracle-fed. Not comparable to any `familiar_100` row — `tpc_phase1` is 1000 queries at a
    tenth the per-query pressure — but it is the clean oracle-ablation figure the technical report
    wants.
+8. **The promotion is confirmed, not just applied** (R12): the bare organizer command, with no
+   `TPC_*` variable exported, reproduces R8 bit-for-bit — same `overall`, same `FPR`, same
+   `constraints_ok`, same pass shape, all four promoted `solver_flags` on. `apply_deterministic_solver_defaults()`
+   and the explicit `TPC_WINDOW_ANCHOR=1` environment path are the same configuration in practice, not
+   just in intent.
+9. **The window-aware move generalizes past `val`** (R13): `constraints_ok` on the untouched
+   `familiar_100_test` split moved `10/20 → 13/20` between the pre-P1 (R5) and post-P1 (R13)
+   configurations — inside the pre-registered `13–15/20` band that was defined, before this run, to
+   mean "the move generalizes" rather than "P1 fit `val`'s residual" (which would have held at
+   `10/20`). It lands at the low end of that band, so the finding is "generalizes, with headroom
+   uncertain" rather than "generalizes as strongly as `val` suggested."
 
-R5 is recorded standalone: `familiar_100_test` is a *subset* of `familiar_100` (R1's split), so no
-val↔test gap is computed. `62.59` above R1's `57.99` is consistent with a smaller, easier split, not
-a generalization signal. R6 checks packaging only, never score.
+R5 and R13 are recorded standalone: `familiar_100_test` is a *subset* of `familiar_100` (R1's split),
+so no val↔test gap is computed against R1/R8/R12's `overall`. R13's `70.54` above R8's `63.58` is
+consistent with a smaller, easier split scoring higher on the same code, not a generalization signal
+by itself — the generalization claim rests on the `constraints_ok` movement relative to R5, not on
+the `overall` gap. R6 checks packaging only, never score.
 
 **What the queue does not answer:** whether 100 queries converge this fast on the organizers'
 held-out set (only their harness run will tell). R7 closes the "is any arm worth more than noise"
