@@ -24,7 +24,10 @@ If no accepted candidate appears, it returns the safest grounded candidate it pr
 - Constraint alternatives remain isolated by branch.
 - A proxy score cannot override logic, schema, or commonsense rejection.
 - Packing and densification never trade a valid plan for a higher preference score.
-- Fixed query ID plus `TPC_SEED_SALT` produces repeatable restart choices.
+- Fixed query ID plus `TPC_SEED_SALT` produces repeatable restart choices, across processes and
+  runs (`restart_seed`, a stable digest). Before 2026-08-05 this claim was false in practice: the
+  seed came from the built-in `hash()`, which Python salts per interpreter, so every worker
+  process drew a different restart sequence.
 - CP-SAT stays bounded by the remaining per-query solve budget and defaults to one search worker to avoid nested oversubscription.
 
 ## Primary knobs

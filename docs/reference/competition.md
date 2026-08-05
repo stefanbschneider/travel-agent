@@ -75,7 +75,29 @@ The bare command also schedules the run against the 5-hour envelope confirmed ab
 
 ### Packaging this into a submission
 
-`scripts/assemble_phase2_submission.py` builds `submissions/{team}_v{N}.zip` (archive root `{team}_v{N}/`, version from `phase2-v<N>` git tags, which restart at `v1` for Phase 2) from the **tracked** files at the current commit, minus development-only trees (`results/`, `docs/archive/`, `report/`, `images/`, `slurm/`). Because it reads `git ls-files`, gitignored local state — `.env`, `agent_env/config.toml` — cannot leak into an archive. It writes a `SUBMISSION.md` (install + run) and a `submission_manifest.json` (commit, evaluator parity point) into the archive root, then verifies the result by unpacking it into a temporary directory and running the organizers' command shape there with a stripped `PATH`. It uploads nothing; submission stays manual at the portal above. Installation on the evaluation host is `pip install -r requirements-submission.txt` — nine PyPI packages, no extra index, no GPU stack, database included.
+`scripts/assemble_phase2_submission.py` builds `submissions/{team}_v{N}.zip` (archive root `{team}_v{N}/`, version from `phase2-v<N>` git tags, which restart at `v1` for Phase 2) from the **tracked** files at the current commit, minus development-only trees (`results/`, `submissions/`, `docs/archive/`, `report/`, `images/`, `slurm/`). It writes a `SUBMISSION.md` (install + run), a `submission_manifest.json` (commit, evaluator parity point) and a credential-free `agent_env/config.toml` into the archive root, then verifies the result by unpacking it into a temporary directory and running the organizers' command shape there with a stripped `PATH`. It uploads nothing; submission stays manual at the portal above. Installation on the evaluation host is `pip install -r requirements-submission.txt` — nine PyPI packages, no extra index, no GPU stack, database included.
+
+**Credential exclusion, stated correctly.** An earlier version of this paragraph claimed that reading `git ls-files` is what keeps `.env` and `agent_env/config.toml` out of an archive, "because they are gitignored". That reasoning does not hold: `.gitignore` does not untrack a file that is already tracked, and **`.env` is in fact tracked in this repository** (committed in `82b0455`). What actually protects the archive is the separate `SECRET_PATH_PATTERNS` filter in the assembler, which drops any `.env*`, `config.toml`, `.netrc`, `*.pem` or SSH key path regardless of its git status — verified by `tests/phase2/test_submission_package.py` and by inspecting the built zip. The tracked `.env` remains a repository-hygiene problem in its own right (see below); it is not a submission leak.
+
+### Verified against the official harness example (2026-08-05)
+
+The organizers' `ChinaTravel_harness_example.zip` (`submissions/`, 687 files) was unpacked and compared against our archive. Findings:
+
+| Aspect | Example | Ours | Verdict |
+| --- | --- | --- | --- |
+| Archive root | `ChinaTravel_harness_example/` | `{team}_v{N}/` | matches the `{TeamName}_v{x}.zip` rule |
+| Entry point CLI | 21 flags | the same 21, plus `--budget-sec`, `--total-budget-sec`, `--workers` | strict superset |
+| Missing `config.toml` | `read_config` returns `{}` | byte-identical function | no crash either way |
+| `agent_env/config.toml` in the zip | **shipped** (though gitignored in their repo) | **now shipped**, synthesized | aligned 2026-08-05 |
+| Documented invocation | `uv run python agent_env/scripts/solve_script_with_harness.py` | `pip install -r requirements-submission.txt` then `python ...` | **both verified** |
+| `pyproject.toml` deps | 23, incl. torch/vllm | 8 core, incl. `ortools` | ours is what `uv run` resolves |
+| `.python-version` | `3.12` | `3.12` | matches |
+
+Two things this comparison changed. First, the example ships `agent_env/config.toml` inside its archive even though its own `.gitignore` excludes it — so a submission is expected to carry one, and ours now synthesizes a credential-free `[run] harness = "tpc"` config. It deliberately pins **no** `split` and no `limit`: CLI beats config in `solve_script_with_harness.py`'s `choose()` precedence, and the split name the organizers' held-out data resolves under is not something we can guess.
+
+Second, the example's `RUN_HARNESS.md` drives everything through **`uv run`**, not `pip`. That makes `pyproject.toml`'s `[project.dependencies]` — not `requirements-submission.txt` — the operative dependency contract on that path. Ours lists the 8 core packages including `ortools` (the CP-SAT tier needs it; it is the only package this repository adds to upstream's set), so both install routes work. Confirmed by unpacking the built archive and running `uv run --no-dev python agent_env/scripts/solve_script_with_harness.py --split tpc_phase2_familiar_100 --limit 1 --total-budget-sec 90` inside it with a stripped `PATH`: uv resolved the project, the deterministic solver ran, and passes/plans were written.
+
+**`.env` is tracked in git — deliberately, and it is not a submission risk.** `git ls-files` lists it (598 bytes, committed in `82b0455`) despite `.gitignore` naming it, because gitignore does not untrack an already-tracked file. This is the owner's decision, not an accident: it lets agents working in cloud environments reach the DeepInfra endpoint, and the key is spend-capped at a few euros, so a leak is bounded. **Planned cleanup: remove the file and rotate the key the week after the competition** (rotation is the part that matters — deleting it from future commits does not remove it from history). The submission archive is unaffected either way; `SECRET_PATH_PATTERNS` drops it regardless of git status.
 
 ### Still open after the 2026-08-04 reply
 

@@ -71,12 +71,35 @@ DEFAULT_FAST_TRIAGE = True
 FAST_ACCEPT_ENV = "TPC_SOLVE_STOP_AT_ACCEPT_PACKED"
 
 
-def default_workers() -> int:
-    """One process per available CPU, leaving one for the parent.
+def available_cpus() -> int:
+    """CPUs this process may actually run on, not the ones the machine happens to have.
 
-    The evaluation host assigns all 16 of its logical CPUs to the harness process and a single
-    query's solve is single-threaded (CP-SAT ``num_search_workers`` 1), so the cores are otherwise
-    idle. ``TPC_P2_WORKERS`` overrides.
+    ``os.sched_getaffinity`` respects CPU pinning and container CPU sets; ``os.cpu_count`` does
+    not and reports the host's total, which would oversubscribe inside a restricted container.
+    Falls back to ``cpu_count`` off Linux, where affinity is unavailable.
+    """
+    try:
+        return max(1, len(os.sched_getaffinity(0)))
+    except (AttributeError, OSError):  # pragma: no cover - non-Linux / unsupported
+        return max(1, os.cpu_count() or 2)
+
+
+def default_workers() -> int:
+    """One process per available CPU, leaving one for the parent. ``TPC_P2_WORKERS`` overrides.
+
+    Derived from the machine at run time and needs no flag, because the organizers invoke the
+    entry point with ``--split`` and nothing else: whatever this returns on their host *is* our
+    parallelism. The evaluation host assigns all 16 of its logical CPUs to the harness process
+    and a single query's solve is single-threaded (CP-SAT ``num_search_workers`` 1), so the cores
+    are otherwise idle.
+
+    **Why ``- 1`` rather than every core.** Per-query budgets are wall-clock, so a worker that is
+    descheduled still burns its budget while doing less search -- oversubscription converts
+    directly into worse plans, unlike in a throughput-bound job where it would be nearly free.
+    The upside it would buy is small and lumpy anyway: a pass costs ``ceil(n / workers)`` rounds,
+    and at the split sizes we run (100 triage, ~68 repair) 15 and 16 workers give an identical
+    round count. Decisive point: every measured run self-terminates around 26-57% of its
+    envelope, so wall-clock throughput is not the binding constraint -- there is nothing to buy.
     """
     override = os.environ.get("TPC_P2_WORKERS")
     if override not in (None, ""):
@@ -84,7 +107,7 @@ def default_workers() -> int:
             return max(1, int(override))
         except ValueError:
             pass
-    return max(1, (os.cpu_count() or 2) - 1)
+    return max(1, available_cpus() - 1)
 
 
 def rounds_needed(n_uids: int, workers: int) -> int:
