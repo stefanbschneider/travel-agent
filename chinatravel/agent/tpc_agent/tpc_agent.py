@@ -541,7 +541,13 @@ class TPCAgent(BaseAgent):
            accommodation stay.
 
         Enable with ``TPC_WINDOW_ANCHOR=1``. Only meaningful together with
-        ``TPC_PIN_TIMED_WINDOWS``, which is what puts the named POI in the plan at all."""
+        ``TPC_PIN_TIMED_WINDOWS``, which is what puts the named POI in the plan at all.
+
+        **Promoted 2026-08-05**: gate-cleared on R8 (whole-run row ``20260805T123142Z``, ``overall
+        63.58`` / ``FPR 43.0`` against the zero-variance R7 baseline's ``57.75`` / ``32.0``), so
+        ``solve_phase2.apply_deterministic_solver_defaults()`` now sets this to ``1`` for the shipped
+        harness path. The **library** default stays OFF so the byte-identical floor tests keep
+        holding, and an explicit ``TPC_WINDOW_ANCHOR=0`` still wins everywhere."""
         return os.environ.get("TPC_WINDOW_ANCHOR", "0") not in ("", "0", "false", "False")
 
     def _repair_intercity_enabled(self):

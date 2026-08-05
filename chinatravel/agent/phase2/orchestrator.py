@@ -339,6 +339,38 @@ def make_tpcagent_solve_fn(env, *, backbone_llm=None, log_dir=None, lang="en") -
     return _solve
 
 
+# The deterministic solver passes that ``solve_phase2.apply_deterministic_solver_defaults()``
+# promotes to on for the shipped harness. They are read from the environment by ``TPCAgent`` rather
+# than carried on ``Flags``, so they have to be snapshotted separately for a row to describe itself.
+PROMOTED_SOLVER_FLAGS: tuple[str, ...] = (
+    "TPC_PIN_TIMED_WINDOWS",
+    "TPC_WINDOW_ANCHOR",
+    "TPC_COMMONSENSE_FIRST",
+    "TPC_SOLVE_CONVERGE_PATIENCE",
+)
+
+_OFF_VALUES = ("", "0", "false", "False")
+
+
+def _solver_flag_snapshot(env: Mapping[str, str] | None = None) -> dict[str, Any]:
+    """Snapshot the promoted deterministic solver flags as the agent will read them.
+
+    Booleans use the agent's own off-set so the snapshot cannot disagree with the behaviour it
+    describes; ``TPC_SOLVE_CONVERGE_PATIENCE`` is numeric and recorded verbatim (``None`` when
+    unset, i.e. the library default is in force).
+    """
+    source = os.environ if env is None else env
+    snapshot: dict[str, Any] = {}
+    for name in PROMOTED_SOLVER_FLAGS:
+        raw = source.get(name)
+        key = name[len("TPC_"):].lower()
+        if name == "TPC_SOLVE_CONVERGE_PATIENCE":
+            snapshot[key] = raw
+        else:
+            snapshot[key] = raw is not None and raw not in _OFF_VALUES
+    return snapshot
+
+
 def solve_phase2(
     query: dict,
     *,
@@ -371,6 +403,12 @@ def solve_phase2(
             "dynamic_budget": flags.dynamic_budget,
             "entity_resolution": flags.entity_resolution,
         },
+        # The promoted deterministic solver passes live in the environment, not in ``Flags``, so
+        # until now a row could not say which of them actually ran. The ledger requires a row to
+        # name its solver flags to be comparable, and after R8 promoted ``TPC_WINDOW_ANCHOR`` that
+        # matters concretely: a submission archive whose telemetry shows ``window_anchor: false``
+        # is silently running the pre-R8 configuration.
+        "solver_flags": _solver_flag_snapshot(),
         "budget_sec": budget_sec,
         "stage_sec": {},
         "timed_out": False,

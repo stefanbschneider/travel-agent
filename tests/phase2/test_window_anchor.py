@@ -18,6 +18,7 @@ Plus the floor: with the flag off, ``_pack_plan`` must not reach the pass at all
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -373,3 +374,31 @@ def test_pack_plan_applies_the_pass_with_the_flag_on(monkeypatch):
     assert (out["itinerary"][0]["activities"][0]["start_time"],
             out["itinerary"][0]["activities"][0]["end_time"]) == ("07:50", "08:45")
     assert agent._accepted(*check(out)) is True
+
+
+# --- the two-layer promotion contract (R8, 2026-08-05) ----------------------------------------
+
+
+def test_harness_promotes_the_flag_while_the_library_default_stays_off(monkeypatch):
+    """R8 gated the pass GREEN, so the *harness* runs it by default while the *library* does not.
+
+    Both halves matter and they are easy to break independently: if the library default ever flips,
+    the byte-identical floor tests above stop describing the shipped floor; if the harness promotion
+    is dropped, the submission silently reverts to R7's ``FPR 32.0``.
+    """
+    import solve_phase2 as runner
+
+    # Every var the promotion touches is delenv'd through monkeypatch, so pytest's teardown removes
+    # whatever the call sets and no later test inherits a promoted flag.
+    for name in ("TPC_WINDOW_ANCHOR", "TPC_PIN_TIMED_WINDOWS", "TPC_SOLVE_CONVERGE_PATIENCE",
+                 "TPC_COMMONSENSE_FIRST"):
+        monkeypatch.delenv(name, raising=False)
+    assert _bare_agent()._window_anchor_enabled() is False, "library default must stay off"
+
+    runner.apply_deterministic_solver_defaults()
+
+    assert os.environ["TPC_WINDOW_ANCHOR"] == "1"
+    assert _bare_agent()._window_anchor_enabled() is True
+    # The pass is only meaningful with the pin that puts the named POI in the plan, and R8 measured
+    # the pair -- so the pair has to be what the harness turns on.
+    assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"

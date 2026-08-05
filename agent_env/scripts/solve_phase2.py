@@ -397,16 +397,33 @@ def apply_deterministic_solver_defaults():
       (``TPC_CS_CHECK_TIME_FRAC=0.08`` of the solve budget, ``TPC_CS_CHECK_BUDGET=60``
       confirmations), and ``docs/archive/agents/final_night_eval_commands.md`` carries the ``900 s`` pinned
       confirmation rows.
+    - ``TPC_WINDOW_ANCHOR=1``: the window-anchored day relayout (roadmap P1). Promoted on **R8**, the
+      first *whole-run* row to move FPR by more than a point: ``results/phase2_baselines/full_runs/
+      20260805T123142Z.json`` scored ``overall 63.58`` / ``FPR 43.0`` / ``constraints_ok 46/100``
+      against the R7 baseline's ``57.75`` / ``32.0`` / ``36/100`` (rows ``20260805T081535Z``,
+      ``20260805T094549Z``, ``20260805T110654Z`` -- three repeats, **bit-for-bit identical**, so the
+      ``+5.83`` overall and ``+11.0`` FPR are measured against a zero-variance floor and cannot be
+      seed noise). Same box, same ``18000 s`` envelope, same ``workers 3``, ``evaluator_parity
+      c89cfca`` on both sides. It also cost nothing in wall-clock (``4733 s`` vs ``4786 s``, both
+      ~``26%`` of the envelope) and no robustness (``empty_plans 0/100``), and it matches the paired
+      ``n=80``/``90 s`` screens that queued it (predicted ``FPR 32.5 -> 42.5``, measured ``32.0 ->
+      43.0``). Deterministic and acceptance-gated like the passes above: every relayout is trialed on
+      a deepcopy and committed only if the full checker still accepts and the preference key does not
+      regress.
 
     Must run *before* ``make_tpcagent_solve_fn`` builds the agent: ``TPCAgent.__init__`` reads
-    ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS`` is read lazily at pack time,
-    but both are set here for clarity)."""
+    ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS`` and ``TPC_WINDOW_ANCHOR`` are
+    read lazily at pack time, but all are set here for clarity)."""
     if "TPC_PIN_TIMED_WINDOWS" not in os.environ:
         os.environ["TPC_PIN_TIMED_WINDOWS"] = "1"
     if "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ:
         os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] = "15"
     if "TPC_COMMONSENSE_FIRST" not in os.environ:
         os.environ["TPC_COMMONSENSE_FIRST"] = "1"
+    # Only meaningful with TPC_PIN_TIMED_WINDOWS above, which is what puts the named POI in the plan
+    # for the relayout to anchor. R8 measured the pair, so the pair is what ships.
+    if "TPC_WINDOW_ANCHOR" not in os.environ:
+        os.environ["TPC_WINDOW_ANCHOR"] = "1"
 
 
 def run_sweeps_split(
