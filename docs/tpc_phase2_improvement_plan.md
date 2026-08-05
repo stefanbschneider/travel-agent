@@ -120,9 +120,14 @@ seed salt would make it a *different* solve — but §2b measures what a differe
 the answer is approximately nothing. Fixing the scheduler without fixing the search space would
 convert idle time into idle-time-with-more-restarts.
 
-### 4. The restart RNG is accidentally, uncontrollably random
+### 4. The restart RNG was accidentally, uncontrollably random — fixed 2026-08-05 (P0)
 
-`chinatravel/agent/tpc_agent/tpc_agent.py:891`:
+**Every measurement elsewhere in this document was taken with the bug present**, so the variance
+figures quoted here describe the pre-fix build. Re-measuring the noise floor on the fixed build is
+[R7](tpc_phase2_eval_roadmap.md#r7--seed-variance-baseline-the-prerequisite-for-every-ab-below)'s
+job, and it should now come back much smaller.
+
+The old code, `chinatravel/agent/tpc_agent/tpc_agent.py`:
 
 ```python
 rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
@@ -192,12 +197,17 @@ not as the headline.
 | --- | --- | --- | --- | --- |
 | **P1** | **The `timed_visit_named_poi` residual — a window-aware move** | days | **`+2..+5`; the only item that moves FPR** | not v1 |
 | P2 | Per-attempt telemetry ledger | 2 h | report figures; measures everything else | v2 |
-| P0 | Make the restart seed explicit and reproducible | 30 min | enables trustworthy A/Bs | v1 if time |
+| ~~P0~~ | ~~Make the restart seed explicit and reproducible~~ | — | **landed 2026-08-05** | v1 |
 | P3 | Emit commonsense-valid plans when nothing is accepted | 2 h | `≤ +0.5` | v2 |
-| P7 | Worker count from CPU affinity | 15 min | robustness only | v1 if time |
+| ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open, see P5** | v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move | v2 only |
+
+**P0 and P7 landed before the R7–R11 queue starts**, because both change what the eval measures:
+P0 removes the per-process seed randomness that *is* the noise floor R7 exists to quantify, and P7
+decides the worker count on whatever machine the evals run on. Everything still open is safe to
+implement in parallel with the eval queue — none of it touches the shipping default.
 
 **If you only do one thing, do P1.** Everything else on this list is worth under a point, and
 three of the items are worth approximately zero by measurement rather than by guess.
@@ -299,7 +309,13 @@ matches a hand-computed fixture.
 
 ---
 
-### P0 — make the restart seed explicit and reproducible
+### P0 — make the restart seed explicit and reproducible — LANDED 2026-08-05
+
+**Status: done.** `restart_seed()` in `chinatravel/agent/tpc_agent/tpc_agent.py` replaces the
+`hash()`-based seed with a BLAKE2b digest of `(uid, salt)`; `tests/phase2/test_restart_seed.py`
+pins cross-process stability (the property the old code lacked — an in-process test passes either
+way), salt sensitivity, and range. `chinatravel/agent/tpc_agent/readme.md` no longer claims a
+reproducibility the code did not deliver. The write-up below is kept as the rationale.
 
 **Why.** Diagnosis §4. Without this, no A/B on this list can be attributed to the change rather
 than to the seed, and the repository's own reproducibility claim is untrue.
@@ -349,9 +365,14 @@ the evaluator sync. **Re-screen it; do not re-implement it.**
 
 ---
 
-### P7 — worker count from CPU affinity
+### P7 — worker count from CPU affinity — LANDED 2026-08-05
 
-`sweeps.default_workers()` uses `os.cpu_count() - 1`. Correct on the evaluation host (16 logical
+**Status: done.** `sweeps.available_cpus()` prefers `os.sched_getaffinity(0)` and falls back to
+`os.cpu_count()` off Linux; `default_workers()` is unchanged otherwise. Five tests in
+`tests/phase2/test_sweeps.py::TestWorkerConfiguration` cover the restricted-container case, the
+non-Linux fallback, the env override, a malformed override, and the never-zero floor.
+
+`sweeps.default_workers()` previously used `os.cpu_count() - 1`. Correct on the evaluation host (16 logical
 CPUs, all assigned to the harness) and on the 4-core development box (verified: `nproc` `4`,
 `os.cpu_count()` `4`, `sched_getaffinity` `4`, workers `3`). It is wrong inside a container with a
 restricted CPU set, where `os.cpu_count()` reports the host's CPUs and the scheduler oversubscribes.

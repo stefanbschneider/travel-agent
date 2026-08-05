@@ -9,6 +9,7 @@ from copy import deepcopy
 from agent.base import BaseAgent
 from chinatravel.symbol_verification.hard_constraint import evaluate_constraints_py
 import random
+import hashlib
 import parse_constraints
 from agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
 from agent.tpc_agent.solver_constraints import solver_constraint_variants
@@ -25,6 +26,21 @@ project_root_path = os.path.dirname(
 
 if project_root_path not in sys.path:
     sys.path.insert(0, project_root_path)
+
+
+def restart_seed(uid, seed_salt):
+    """Deterministic RNG seed for the multi-start search, from the query id and the salt.
+
+    Uses a stable digest rather than the built-in ``hash()``. ``hash()`` over strings is salted
+    per interpreter unless ``PYTHONHASHSEED`` is pinned, which nothing here does -- so the search
+    drew a *different* restart sequence in every process, making runs irreproducible and giving
+    same-config runs a score spread of up to ``1.04`` overall (see
+    ``docs/tpc_phase2_improvement_plan.md`` section 4). ``PYTHONHASHSEED`` cannot be set after
+    interpreter start, so pinning it would mean re-exec'ing the entry point; a stable digest is
+    local and free.
+    """
+    digest = hashlib.blake2b(f"{uid}\x00{seed_salt}".encode("utf-8"), digest_size=8).digest()
+    return int.from_bytes(digest, "big") & 0xFFFFFFFF
 
 
 def add_minutes(time_str, minutes):
@@ -888,7 +904,7 @@ class TPCAgent(BaseAgent):
         stop_at_accept = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT", "0") not in ("", "0", "false", "False")
         stop_at_accept_packed = os.environ.get("TPC_SOLVE_STOP_AT_ACCEPT_PACKED", "0") not in ("", "0", "false", "False")
         variants = self._constraint_variants(query) or [None]
-        rng = random.Random(hash((str(query.get("uid", "")), str(self.seed_salt))) & 0xFFFFFFFF)
+        rng = random.Random(restart_seed(query.get("uid", ""), self.seed_salt))
         init_key = (-1, float("-inf"), float("-inf"))
         accepted_init_key = (float("-inf"), float("-inf"), float("-inf"), float("-inf"))
         best = {"plan": None, "key": init_key, "constraints": None, "check": None, "params": None, "found_at": 0}

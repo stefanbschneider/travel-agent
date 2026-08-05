@@ -497,9 +497,12 @@ class TestEnvOverrides:
 
 
 class TestWorkerConfiguration:
+    """The organizers pass only ``--split``, so whatever these functions return on their host is
+    our parallelism. Nothing may depend on a flag being supplied."""
+
     def test_default_workers_leaves_one_core_for_the_parent(self, monkeypatch):
         monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
-        monkeypatch.setattr(sweeps.os, "cpu_count", lambda: 16)
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: set(range(16)))
         assert sweeps.default_workers() == 15
 
     def test_env_override_wins(self, monkeypatch):
@@ -508,5 +511,27 @@ class TestWorkerConfiguration:
 
     def test_a_broken_override_falls_back_instead_of_crashing_the_run(self, monkeypatch):
         monkeypatch.setenv("TPC_P2_WORKERS", "lots")
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: set(range(8)))
+        assert sweeps.default_workers() == 7
+
+    def test_affinity_beats_cpu_count_so_a_restricted_container_is_not_oversubscribed(
+        self, monkeypatch
+    ):
+        """`os.cpu_count` reports the host's CPUs, not the ones this process may use. Budgets are
+        wall-clock, so oversubscribing costs search quality rather than just throughput."""
+        monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
+        monkeypatch.setattr(sweeps.os, "cpu_count", lambda: 64)
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: {0, 1, 2, 3})
+        assert sweeps.available_cpus() == 4
+        assert sweeps.default_workers() == 3
+
+    def test_falls_back_to_cpu_count_where_affinity_is_unavailable(self, monkeypatch):
+        monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
+        monkeypatch.delattr(sweeps.os, "sched_getaffinity", raising=False)
         monkeypatch.setattr(sweeps.os, "cpu_count", lambda: 8)
         assert sweeps.default_workers() == 7
+
+    def test_never_returns_zero_workers(self, monkeypatch):
+        monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: {0})
+        assert sweeps.default_workers() == 1

@@ -469,10 +469,37 @@ run until that item lands.
 
 ### R7 — seed variance baseline (the prerequisite for every A/B below)
 
-**Why this is now first.** Every arm on this list is worth `≤ +1` and the same-config spread at
-2 h is `sd 0.35` / range `0.86` (n=4, see [R4](#r4--pass-shape-where-should-the-envelope-go)). A
-single paired run cannot resolve an effect that size, so without R7 the queue can only keep
-producing "probably noise" verdicts — which is what happened to arms A, B and C.
+**Why this is now first, and why the case got stronger on 2026-08-05.** Every arm on this list is
+worth `≤ +1`, and the same-config spread is larger than any of them:
+
+| Envelope | Same-config samples | Spread |
+| --- | --- | --- |
+| 2 h | n=4 (`57.34 / 57.81 / 57.82 / 58.20`) | sd `0.35`, range `0.86` |
+| **1 h** | **n=2** (`57.35` R2, `56.31` diagnostic) | **Δ `1.04` overall, Δ `2.0` FPR** |
+
+The 1 h pair is a genuine same-config repeat — same split, envelope, workers, evaluator parity,
+and the scheduler produced an identical pass structure at identical budgets
+(`100×25s → 68×62s → 32×73s`) with pass wall clocks within `2%` of each other
+(`562/1234/218 s` vs `574/1245/237 s`). Same configuration, same effective compute per query,
+**`1.04` apart**. Their internal trajectories differ just as much: repair improved `4` in one and
+`11` in the other.
+
+**Conclusion for the whole measurement programme: a single run cannot resolve anything under
+about `2` points.** That retroactively covers every arm in R4 and every arm on this list except
+R8. It also has a known mechanism — the unpinned restart seed
+([improvement plan §4](tpc_phase2_improvement_plan.md#4-the-restart-rng-is-accidentally-uncontrollably-random)).
+
+**Protocol requirement, learned the hard way:** run the repeats with **no other work on the box**.
+The diagnostic row above survived scrutiny only because its pass wall clocks could be checked
+against R2's; had they diverged, the row would have been unusable and the slot wasted.
+
+**Run R7 on a build that includes the seed fix (improvement plan P0, landed 2026-08-05).** Both
+spreads in the table were measured *before* it, when every worker process drew a different restart
+sequence. On the fixed build the remaining variance is whatever the scheduler's wall-clock timing
+contributes — pass composition and per-pass budgets still depend on how long earlier passes took —
+so R7 is now measuring a genuinely different and probably much smaller quantity. **If R7 comes back
+near zero, every arm on this list becomes cheap to measure**, and that is the single biggest
+practical consequence of P0.
 
 ```bash
 for i in 1 2 3; do
@@ -489,6 +516,30 @@ against**, at the envelope that ships, rather than the 2 h proxy.
 Run this *after* P0 (pinned `PYTHONHASHSEED`) lands if P0 is quick — an unpinned run measures
 seed noise *plus* config noise and cannot separate them. If P0 has not landed, run R7 anyway and
 label the rows `unpinned`: an upper bound on the noise floor is still better than none.
+
+### The diagnostic row (2026-08-05) — recorded, and usable as a 1 h variance sample
+
+`results/phase2_baselines/full_runs/20260805T061217Z.json`, `--method phase2_diag_1h`,
+`--label "diagnostic 1h (investigation)"`. Run to collect per-query search telemetry for the
+[improvement plan](tpc_phase2_improvement_plan.md), not to answer a roadmap question — but it is
+`git_dirty: false`, `evaluator_parity: c89cfca`, and configured identically to the R2 1 h arm, so
+it doubles as the second sample in the table above.
+
+`overall 56.31`, `FPR 29.0`, `constraints_ok 33/100`, `empty_plans 0/100`,
+`run_wall_frac_of_budget 0.57`. Pass table: `100×25s` triage (improved 100) → `68×62s` repair
+(improved 11, `constraints_ok 32 → 33`) → `32×73s` polish (improved 14, `constraints_ok` unchanged)
+→ stopped with `1364 s` unused.
+
+**Its main contribution is the repair line**, which is what the improvement plan's §2b is built on:
+`2.5×` the triage budget, `4.2×` the restarts, **one** additional query satisfying its constraints.
+Note also that `improved 11` came with only `+1` on `constraints_ok` — ten of the eleven were
+preference-key moves on queries that still fail, and preference terms are zeroed on a failing
+query. **`improved` is not a score signal; `constraints_ok` is.**
+
+**Caveat on record:** other work (an archive build, a packaging test, a pytest run) shared the box
+during part of this run. The pass wall clocks land within `2%` of R2's, so the contention did not
+materially change the compute each query received — which is the only reason this row is being
+treated as comparable rather than discarded.
 
 ### R8 — the gate for a window-aware move *(needs improvement-plan P1)*
 
