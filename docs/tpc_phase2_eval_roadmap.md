@@ -11,11 +11,13 @@ For metric definitions, dataset boundaries and the gate mechanics, see
 ## Status: full queue run 2026-08-04/05, this machine (4 cores)
 
 Pre-flight, R1, R2, R4 (control + arms A/B/C + a confirmation repeat), R5, and R6 all completed;
-R3 was skipped (needs ≥8 cores, this machine has 4). Every R1–R6 row is under
-`results/phase2_baselines/full_runs/`, `git_dirty: false`, `evaluator_parity: c89cfca`, same
-machine (the pre-flight *plumbing check* row is the one exception — `git_dirty: true`, labelled and
-excluded from any comparison). Full detail with each run's row path is inline below; the headline
-findings:
+R3 was skipped (needs ≥8 cores, this machine has 4). **Every row that solves and scores a split
+(pre-flight through R5, 10 rows total) is under `results/phase2_baselines/full_runs/`,
+`evaluator_parity: c89cfca`, same machine, and `git_dirty: false` except the pre-flight *plumbing
+check* row (`git_dirty: true`, labelled and excluded from any comparison).** R6 is different in
+kind — it verifies the *packaged submission archive*, not a split, so it writes no row under
+`full_runs/`; its result is the `--dry-run`/`--verify-budget-sec` console output recorded inline
+below. Full detail with each run's row path is inline below; the headline findings:
 
 1. **R1 reference: `overall 57.99`, `FPR 33.0`, `empty_plans 0/100`.** The scheduler
    self-terminates at **`26%`** of the 5 h envelope (`1.31 h`) — the last two passes both clamp to
@@ -256,12 +258,13 @@ Every knob is an environment variable, so these need no code change:
 
 ¹ **Doc correction (2026-08-04), found while running arm B:** `900` is `sweeps.py`'s
 `DEFAULT_MAX_QUERY_SEC`, but `phase2_full_run.py` never reaches it. `solve_phase2.py`'s
-`run_sweeps_split` resolves `budget_sec = budget_sec or DEFAULT_BUDGET_SEC` (`300`, from
-`orch.DEFAULT_BUDGET_SEC`) *before* constructing `SweepConfig(max_query_sec=budget_sec)`, and
-`phase2_full_run.py` never passes `--budget-sec`. **The effective default for every row in this
-queue (R1, R2, R4 control) is `max_query_sec: 300`, not `900`** — confirmed against R1's own
-telemetry, where repair/polish clamped to exactly `300s` per query. Arm B's `TPC_P2_MAX_QUERY_SEC=300`
-therefore restates the existing default rather than raising it.
+`run_split` resolves `budget_sec = budget_sec if budget_sec is not None else DEFAULT_BUDGET_SEC`
+(`300`, from `orch.DEFAULT_BUDGET_SEC`) *before* calling `run_sweeps_split`, which constructs
+`SweepConfig(max_query_sec=budget_sec)` from that already-resolved value — and `phase2_full_run.py`
+never passes `--budget-sec`. **The effective default for every row in this queue (R1, R2, R4
+control) is `max_query_sec: 300`, not `900`** — confirmed against R1's own telemetry, where
+repair/polish clamped to exactly `300s` per query. Arm B's `TPC_P2_MAX_QUERY_SEC=300` therefore
+restates the existing default rather than raising it.
 
 Two arms worth running once R1 exists, at a **reduced 2 h envelope** so each is ~2 h:
 
