@@ -257,6 +257,22 @@ terms are zeroed until it passes) and that an early accept hands its remaining s
 pass. That is reasoning, not a measurement. If arm C wins, the reasoning is wrong somewhere —
 most likely because the polish pass rarely runs, so first-accept preference is what actually ships.
 
+**Arm C, run 2026-08-04:** `results/phase2_baselines/full_runs/20260805T021805Z.json`,
+`--method phase2_e2e_r4_arm_c`. `overall 58.40` (vs 2h control `57.81`, **`Δ +0.59`, the largest of
+the three arms**), `constraints_ok 36/100` — same as control. Unlike arms A/B, this run's config
+change actually took effect — and it comes with a clean behavioral signature, not just a score
+wobble: **polish improved `0/34`** (vs control's `10/34`, arm A's `14/34`, arm B's `13/34`). With
+`TPC_P2_FAST_TRIAGE=0`, triage itself already spends its full slice polishing preference, so by the
+time the later polish pass runs there is nothing left for it to find — it becomes dead weight. This
+is exactly the mechanism the roadmap predicted for a arm-C win ("the polish pass rarely runs, so
+first-accept preference is what actually ships") except inverted: here polish *does* run (on all 34
+candidates) but finds nothing, because triage already did polish's job. The `+0.59` score edge is
+still single-seed and roughly the same magnitude as R1-vs-R2's noise floor (`0.64`), so it is
+**suggestive, not conclusive** — but the behavioral finding (a fully redundant polish pass) is real
+regardless of whether the score delta holds up on a repeat, and says fast-triage's "hand the slot
+back early" rationale may be leaving a free, already-computed preference gain on the table without
+costing constraints_ok. Worth a repeat-count confirmation before touching the default.
+
 All three must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
 against R1.
 
