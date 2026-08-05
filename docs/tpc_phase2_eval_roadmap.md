@@ -206,6 +206,17 @@ TPC_P2_MAX_QUERY_SEC=300 .venv/bin/python scripts/phase2_full_run.py \
   --total-budget-sec 7200 --label "per-query cap 300"
 ```
 
+**Arm A, run 2026-08-04:** `results/phase2_baselines/full_runs/20260805T001808Z.json`,
+`--method phase2_e2e_r4_arm_a`. `overall 57.34` (vs 2h control `57.81`, `Δ -0.47`),
+`constraints_ok 35/100` (vs `36`). **The cap never bound**: triage still ran at `50s`/query,
+identical to the control's triage budget — `TPC_P2_TRIAGE_FRACTION`'s default (`0.25`) already
+computes a smaller-than-`60s` triage slice at this envelope/worker count/query count, so
+`TPC_P2_TRIAGE_CAP_SEC=60` was never the binding constraint and this run is a same-config rerun of
+the control, not a real test of the hypothesis. The `-0.47` delta is noise, not a finding.
+**To actually test "cheap triage, more repair," `TPC_P2_TRIAGE_CAP_SEC` needs to be set below the
+default fraction-derived triage slice** (well under `50s` at this envelope), or `TPC_P2_TRIAGE_FRACTION`
+lowered directly — worth a follow-up run, noted rather than re-run now to keep the queue moving.
+
 A third arm worth the same 2 h, and the one with the clearest hypothesis:
 
 ```bash
