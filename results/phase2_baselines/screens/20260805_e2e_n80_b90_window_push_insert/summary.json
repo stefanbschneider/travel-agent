@@ -1,0 +1,117 @@
+{
+  "flag": "TPC_WINDOW_INSERT",
+  "off": "0",
+  "on": "1",
+  "extra_env": {
+    "TPC_WINDOW_PUSH": "1",
+    "TPC_PIN_TIMED_WINDOWS": "1",
+    "TPC_COMMONSENSE_FIRST": "1",
+    "TPC_SOLVE_CONVERGE_PATIENCE": "15",
+    "TPC_WINDOW_ANCHOR": "1"
+  },
+  "mode": "end-to-end",
+  "split": "tpc_phase2_familiar_100_val",
+  "n": 80,
+  "budget_sec": 90.0,
+  "seed": 20260705,
+  "baseline": {
+    "label": "TPC_WINDOW_ANCHOR=1",
+    "env_overrides": {
+      "TPC_WINDOW_ANCHOR": "1",
+      "TPC_PIN_TIMED_WINDOWS": "1",
+      "TPC_COMMONSENSE_FIRST": "1",
+      "TPC_SOLVE_CONVERGE_PATIENCE": "15"
+    },
+    "wall_sec": 601.5,
+    "fpr": 42.5,
+    "continuous_score": 63.13,
+    "parse_failures": 0,
+    "timeouts": 0,
+    "telemetry_coverage": "80/80",
+    "telemetry": {
+      "n_telemetry": 80,
+      "timeouts": 0,
+      "recovered": 0,
+      "used_fallback": 0,
+      "errored": 0,
+      "valid_output": 80,
+      "llm_parse_fired": 0,
+      "llm_parse_skipped": 0,
+      "llm_parse_errored": 0,
+      "refine_called": 0,
+      "refine_committed": 0,
+      "refine_second_attempts": 0,
+      "solve_sec_mean": 45.745098312499934,
+      "solve_sec_p50": 53.12827970800208,
+      "solve_sec_p90": 80.91889345799791
+    },
+    "layers": {
+      "commonsense_pass_count": 78,
+      "commonsense_micro": 99.58333333333333,
+      "commonsense_macro": 97.5,
+      "logical_micro": 91.1664779161948,
+      "logical_macro": 42.5,
+      "conditional_logical_micro": 89.01472253680635,
+      "all_pass_count": 34
+    },
+    "quality_n": {
+      "requested": 80,
+      "evaluated": 80,
+      "missing": 0
+    }
+  },
+  "candidate": {
+    "label": "TPC_WINDOW_INSERT=1",
+    "env_overrides": {
+      "TPC_WINDOW_INSERT": "1",
+      "TPC_WINDOW_PUSH": "1",
+      "TPC_PIN_TIMED_WINDOWS": "1",
+      "TPC_COMMONSENSE_FIRST": "1",
+      "TPC_SOLVE_CONVERGE_PATIENCE": "15",
+      "TPC_WINDOW_ANCHOR": "1"
+    },
+    "wall_sec": 562.8,
+    "fpr": 45.0,
+    "continuous_score": 64.422,
+    "parse_failures": 0,
+    "timeouts": 0,
+    "telemetry_coverage": "80/80",
+    "telemetry": {
+      "n_telemetry": 80,
+      "timeouts": 0,
+      "recovered": 0,
+      "used_fallback": 0,
+      "errored": 0,
+      "valid_output": 80,
+      "llm_parse_fired": 0,
+      "llm_parse_skipped": 0,
+      "llm_parse_errored": 0,
+      "refine_called": 0,
+      "refine_committed": 0,
+      "refine_second_attempts": 0,
+      "solve_sec_mean": 44.04233334786268,
+      "solve_sec_p50": 51.526888000000326,
+      "solve_sec_p90": 80.85124470799929
+    },
+    "layers": {
+      "commonsense_pass_count": 78,
+      "commonsense_micro": 99.58333333333333,
+      "commonsense_macro": 97.5,
+      "logical_micro": 91.39297848244621,
+      "logical_macro": 45.0,
+      "conditional_logical_micro": 89.24122310305775,
+      "all_pass_count": 36
+    },
+    "quality_n": {
+      "requested": 80,
+      "evaluated": 80,
+      "missing": 0
+    }
+  },
+  "gate": {
+    "passed": true,
+    "reasons": [],
+    "advisories": []
+  },
+  "verdict": "GREEN LIGHT: candidate improves its target signal and passes the like-for-like gate on this screen -> worth a pinned end-to-end gate on the eval machine."
+}
