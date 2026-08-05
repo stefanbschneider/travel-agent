@@ -49,6 +49,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEAM = "fabiundstefan"
 TAG_PREFIX = "phase2-v"
+# Queries the unpack-and-run check solves. Must exceed the worker count so more than one worker
+# process actually starts -- see the comment in verify_archive.
+VERIFY_QUERIES = 6
 SUBMISSION_PORTAL = "https://box.nju.edu.cn/u/d/5a1a84297f4b43eda42f/"
 
 # Tracked trees that the system does not need to run. Everything else tracked at HEAD ships:
@@ -342,13 +345,17 @@ def verify_archive(zip_path: Path, name: str, *, split: str, budget_sec: float) 
             "HOME": str(tmp_path),
             "PYTHONIOENCODING": "utf-8",
         }
+        # More queries than workers, deliberately. ProcessPoolExecutor spawns workers lazily, one
+        # per submitted task, so the previous `--limit 1` started a single worker and never
+        # exercised the parallel path at all -- which is how a start-up crash that broke the whole
+        # pool on a cold tree reached a built archive (PR #60).
         cmd = [
             sys.executable,
             "agent_env/scripts/solve_script_with_harness.py",
             "--split",
             split,
             "--limit",
-            "1",
+            str(VERIFY_QUERIES),
             "--budget-sec",
             str(budget_sec),
         ]
@@ -363,13 +370,30 @@ def verify_archive(zip_path: Path, name: str, *, split: str, budget_sec: float) 
                 f"--- stderr ---\n{completed.stderr[-3000:]}"
             )
 
+        # A worker that dies during start-up breaks the pool, yet the run still exits 0 and ships
+        # the pre-written empty fallbacks -- so the exit status above proves nothing on its own.
+        if "Exception in initializer" in completed.stderr:
+            raise SystemExit(
+                "verification FAILED: a worker died during start-up, so the pool is broken and "
+                "every plan is an empty fallback\n"
+                f"--- stderr ---\n{completed.stderr[-3000:]}"
+            )
+
         plans = sorted((pkg / "results").rglob("*.json"))
         plans = [p for p in plans if p.parent.name.startswith("phase2_e2e_")]
         if not plans:
             raise SystemExit("verification FAILED: the run produced no plan file")
-        plan = json.loads(plans[0].read_text(encoding="utf-8"))
-        if not isinstance(plan.get("itinerary"), list) or not plan["itinerary"]:
-            raise SystemExit(f"verification FAILED: {plans[0].name} has no itinerary")
+        empty = [
+            p.name
+            for p in plans
+            if not isinstance(json.loads(p.read_text(encoding="utf-8")).get("itinerary"), list)
+            or not json.loads(p.read_text(encoding="utf-8"))["itinerary"]
+        ]
+        if empty:
+            raise SystemExit(
+                f"verification FAILED: {len(empty)} of {len(plans)} plans have no itinerary "
+                f"(empty pre-written fallbacks, not solved plans): {empty}"
+            )
 
         telemetry_files = sorted((pkg / "agent_env" / "runs").rglob("telemetry.json"))
         if not telemetry_files:
@@ -381,8 +405,9 @@ def verify_archive(zip_path: Path, name: str, *, split: str, budget_sec: float) 
                 "the packaged default must make zero LLM calls"
             )
         print(
-            f"verification OK: {plans[0].name} has {len(plan['itinerary'])} day(s), "
-            f"llm_backend=none, valid_output={telemetry.get('valid_output')}"
+            f"verification OK: {len(plans)} plan(s), all with a non-empty itinerary, "
+            f"no worker start-up failure, llm_backend=none, "
+            f"valid_output={telemetry.get('valid_output')}"
         )
 
 

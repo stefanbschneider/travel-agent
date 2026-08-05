@@ -31,3 +31,10 @@ jobs:
 
       - name: Run unit tests
         run: python -m pytest
+
+      # Runs in a scratch directory with no cache/ or results/, which is the state the organizers
+      # unpack into. A worker crash during start-up breaks the pool, and the run still exits 0
+      # while emitting empty fallback plans for the whole split -- so nothing above catches it.
+      # See tests/phase2/test_cold_start.py.
+      - name: Cold-start check (packaged path, multiple workers, pristine tree)
+        run: python -m pytest tests/phase2/test_cold_start.py -m integration -q
