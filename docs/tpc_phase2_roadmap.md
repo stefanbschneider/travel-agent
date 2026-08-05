@@ -146,7 +146,7 @@ independently report.
 same restart count, same seed — and `all_pass` went `26 → 34` on `n=80`. The gap was representation,
 not search time.
 
-### 5. Parsing is not the bottleneck either
+### 5. Parsing is not the solver bottleneck, but scheduler self-scoring is miscalibrated
 
 Solver-only FPR (`23.75`) sits *below* end-to-end FPR (`25.00`) on the last rehearsal — feeding the
 solver perfect constraints does not improve it. On the reference run `constraints_ok` (`35`, the
@@ -154,12 +154,44 @@ solver's own oracle-free verdict) is within 2 of the official `FPR` (`33`), so t
 fooling itself about which queries it solved. Parser F1 against oracle is `0.9588`–`0.9949`
 depending on the measurement, with zero missing families. **Parsing works; search is the gap.**
 
+**Qualification discovered by the packaged-v1 `tpc_phase2_test` run (2026-08-05).** The conclusion
+above is still supported on the familiar-100 measurements it cites, but it does not generalize to
+the scheduler's `self_overall_mean`. On the released 150-query local test split, the exact final
+plans scored `overall 89.9078` / `FPR 90.6667` under `eval_tpc.py`, while the sweep summary reported
+`self_overall_mean 76.8468` / `self_fpr_mean 68.6667`. A side-by-side replay of every saved plan
+through the archive's `evaluate_one` reproduced the self mean exactly and found:
+
+| official all-pass | parsed all-pass | queries |
+| --- | --- | ---: |
+| yes | yes | 98 |
+| yes | no | **38** |
+| no | yes | **5** |
+| no | no | 9 |
+
+This is not stale output, a denominator error, or a bug in the weighted sum. The self-score
+arithmetic is internally consistent; its constraint model is not equivalent to the one the solver
+actually searched or the oracle evaluated. At least `27 of 38` false negatives contain an oracle
+OR pattern. For example, an official constraint meaning "avoid commercial districts **or** keep
+inner transport at most 190" was flattened and self-checked as requiring both arms. The remaining
+false negatives cluster in cuisine/restaurant entities, timed windows, hotel entities, budgets and
+intercity mode. The five false positives are omitted semantics: required visit ordering, required
+restaurant/attraction lists, a meal end-time window, and an inner-transport budget.
+
+The architectural cause is duplicate parsing. `orchestrator.solve_phase2` searches the
+`parse_to_ir` -> `ir_to_solver_variants` output, including branch-local disjunction expansion and
+entity resolution. The sweep driver separately calls `selfscore.derive_parsed_constraints`, which
+uses `parse_query_no_oracle` -> `solver_constraint_variants(..., use_oracle=False)` and takes only
+`variants[0]`. It then passes that one flat dictionary to every attempt's self-score. The scheduler
+can therefore repair an officially valid plan, preserve the wrong incumbent, or stop repairing an
+officially invalid plan even when the solver's own variant model was better.
+
 ## Work items
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
 | **P8** | **Bounded local window push — the shift/shorten half of the timed-visit residual** (`TPC_WINDOW_PUSH`) | 1 day | **`12 of 80` val sole-blocker queries need only a forward-shift or shorten (`32` clause instances, `11` off by `5–19 min`)** | pending |
 | **P9** | **Place an absent timed-visit POI** | half day | **`6` val queries blocked by nothing but this shape** (`15` instances) | pending |
+| **P10** | **Make scheduler self-scoring use the solver's exact parsed variants** | half day | fixes measured `38` false negatives / `5` false positives in scheduling decisions; score effect unknown until re-run | v2 |
 | P2 | Per-attempt telemetry ledger | 2 h | report figures; measures everything else | v2 |
 | P3 | Re-screen commonsense-valid emission when nothing is accepted | 2 h | `≤ +0.5` | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
@@ -169,9 +201,40 @@ depending on the measurement, with zero missing families. **Parsing works; searc
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
-`P0`…`P9` are stable identifiers, so a later note can refer to "P5" without depending on the
+`P0`…`P10` are stable identifiers, so a later note can refer to "P5" without depending on the
 ranking. Sections below are in priority order. Everything still open is safe to implement in
 parallel with the eval queue — none of it touches the shipping default.
+
+### P10 — make scheduler self-scoring use the solver's exact parsed variants
+
+**Bug.** The whole-run scheduler scores a different constraint representation from the one passed
+to `TPCAgent`. `run_sweeps` precomputes one flat constraint dictionary per uid through
+`selfscore.derive_parsed_constraints`; the orchestrator independently builds the real solver
+variants with disjunction expansion and entity resolution. The 150-query packaged-v1 replay above
+shows this is large enough to change pass selection and keep-best decisions, not merely make a
+diagnostic label noisy.
+
+**Fix the ownership boundary, not the weighted formula.** Parse once per query through the
+orchestrator's canonical `parse_to_ir` -> `ir_to_solver_variants` path and make that exact normalized
+variant list available to both solving and self-scoring. Score every candidate against every
+variant. Parsed logical acceptance is OR across variants (a candidate passes if any complete branch
+passes); ranking uses the best branch-local parsed score, with shared constraints present in every
+branch. Remove or narrow `derive_parsed_constraints` so the scheduler cannot silently recreate a
+flat, non-entity-resolved opinion. Preserve the no-oracle boundary: the shared artifact contains
+visible-query parse output only, never `hard_logic_py` or any verifier field.
+
+This fixes the dominant false-negative mechanism. It does **not** excuse the five false positives:
+add deterministic parser coverage for the omitted required-list, ordering, timed-end and budget
+semantics, or conservatively mark an unrepresented visible requirement as unknown so it cannot
+produce a confident parsed pass. Do not use oracle fields at runtime to patch either class.
+
+**Tests and bar.** Unit-test an `A or B` query where a plan satisfying only B is accepted and kept;
+an entity-resolved variant where solving and scoring receive byte-identical constraints; and a
+non-disjunctive flag-off query whose score is unchanged. Add fixtures for the five omission shapes.
+Then replay the saved 150 plans as a diagnostic and report the four-cell official/parsed cross-tab,
+but gate behavior on a fresh paired `familiar_100_val` screen because `tpc_phase2_test` is a frozen
+tripwire, not a tuning set. Require no increase in parsed-pass/official-fail cases and no regression
+in official FPR; `self_overall_mean` proximity by itself is not a promotion metric.
 
 **If you only do one thing, do [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual).**
 P1 confirmed the family is where the points are and took `8` queries out of it; `33` remain, still
