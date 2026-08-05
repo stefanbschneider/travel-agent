@@ -11,7 +11,7 @@ Two documents carry the current queue; the briefs here are supporting detail, no
 | Workstream | Read this | What it is |
 | --- | --- | --- |
 | **Evaluation** | [Evaluation roadmap](../tpc_phase2_eval.md#run-this-next) | The live run queue under the 5-hour whole-run envelope (R7 onwards), plus what a measurement is allowed to prove. **Start here for any evaluation-machine time.** |
-| **Implementation** | [Implementation roadmap](../tpc_phase2_roadmap.md#work-items) | The search-space diagnosis and the ranked P-items, each a self-contained brief. |
+| **Implementation** | [Implementation roadmap](../tpc_phase2_roadmap.md#work-items) | The search-space diagnosis and the ranked P-items, each a self-contained brief. `P8` also carries an implementation addendum written against the source (flag name, hook point, the push stated as arithmetic, and a retracted paragraph) — read it before writing code. |
 
 ## Active focused prompts
 
