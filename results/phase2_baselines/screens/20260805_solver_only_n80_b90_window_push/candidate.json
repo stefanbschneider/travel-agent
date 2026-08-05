@@ -1,0 +1,47 @@
+{
+  "label": "TPC_WINDOW_PUSH=1",
+  "env_overrides": {
+    "TPC_WINDOW_PUSH": "1",
+    "TPC_PIN_TIMED_WINDOWS": "1",
+    "TPC_COMMONSENSE_FIRST": "1",
+    "TPC_SOLVE_CONVERGE_PATIENCE": "15",
+    "TPC_WINDOW_ANCHOR": "1"
+  },
+  "wall_sec": 594.8,
+  "fpr": 43.75,
+  "continuous_score": 62.952,
+  "parse_failures": 0,
+  "timeouts": 0,
+  "telemetry_coverage": "80/80",
+  "telemetry": {
+    "n_telemetry": 80,
+    "timeouts": 0,
+    "recovered": 0,
+    "used_fallback": 0,
+    "errored": 0,
+    "valid_output": 80,
+    "llm_parse_fired": 0,
+    "llm_parse_skipped": 0,
+    "llm_parse_errored": 0,
+    "refine_called": 0,
+    "refine_committed": 0,
+    "refine_second_attempts": 0,
+    "solve_sec_mean": 46.58893383231325,
+    "solve_sec_p50": 54.844599208001455,
+    "solve_sec_p90": 84.41278575000615
+  },
+  "layers": {
+    "commonsense_pass_count": 76,
+    "commonsense_micro": 99.16666666666667,
+    "commonsense_macro": 95.0,
+    "logical_micro": 92.07248018120046,
+    "logical_macro": 43.75,
+    "conditional_logical_micro": 87.54246885617214,
+    "all_pass_count": 35
+  },
+  "quality_n": {
+    "requested": 80,
+    "evaluated": 80,
+    "missing": 0
+  }
+}

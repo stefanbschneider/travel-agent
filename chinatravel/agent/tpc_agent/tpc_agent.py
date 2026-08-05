@@ -550,6 +550,14 @@ class TPCAgent(BaseAgent):
         holding, and an explicit ``TPC_WINDOW_ANCHOR=0`` still wins everywhere."""
         return os.environ.get("TPC_WINDOW_ANCHOR", "0") not in ("", "0", "false", "False")
 
+    def _window_push_enabled(self):
+        """Opt-in bounded suffix push for the residual forward/shorten window cases (P8)."""
+        return os.environ.get("TPC_WINDOW_PUSH", "0") not in ("", "0", "false", "False")
+
+    def _window_insert_enabled(self):
+        """Opt-in named-POI insertion for absent timed visits (P9)."""
+        return os.environ.get("TPC_WINDOW_INSERT", "0") not in ("", "0", "false", "False")
+
     def _repair_intercity_enabled(self):
         """Opt-in flag for intercity endpoint grounding repair.
 
@@ -1314,6 +1322,12 @@ class TPCAgent(BaseAgent):
         if self._window_anchor_enabled():
             self._set_transport_context(constraints or {})
             self._anchor_timed_windows(plan, query, constraints or {}, check)
+        if self._window_push_enabled():
+            self._set_transport_context(constraints or {})
+            self._push_timed_windows(plan, query, constraints or {}, check)
+        if self._window_insert_enabled():
+            self._set_transport_context(constraints or {})
+            self._insert_absent_timed_window_pois(plan, query, constraints or {}, check)
         if not self._accepted(*check(plan)):
             return plan
         if not self._packing_enabled():
@@ -1629,7 +1643,17 @@ class TPCAgent(BaseAgent):
                 return r_name
         return None
 
-    def _insert_activity_before_first(self, plan, day_idx, poi, kind, window, city, people, check):
+    def _insertion_commit_allowed(self, plan, before, before_key, check, repair_context=None):
+        """Preserve legacy insert scoring unless a named repair supplied its original plan."""
+        if not self._accepted(*check(plan)) or self._activity_counts(plan) <= before:
+            return False
+        if repair_context is None:
+            return self._accepted_eval_key(plan) >= before_key
+        original, query, was_accepted = repair_context
+        return self._repair_commit_allowed(original, plan, query, check, was_accepted)
+
+    def _insert_activity_before_first(self, plan, day_idx, poi, kind, window, city, people, check,
+                                      repair_context=None):
         activities = plan["itinerary"][day_idx].get("activities", [])
         if not activities:
             return False
@@ -1710,11 +1734,7 @@ class TPCAgent(BaseAgent):
         first_act["transports"] = transports_to_next
         activities.insert(0, activity)
         try:
-            if (
-                self._accepted(*check(plan))
-                and self._activity_counts(plan) > before
-                and self._accepted_eval_key(plan) >= before_key
-            ):
+            if self._insertion_commit_allowed(plan, before, before_key, check, repair_context):
                 return True
         except Exception:
             pass
@@ -1722,7 +1742,8 @@ class TPCAgent(BaseAgent):
         first_act["transports"] = old_first_transports
         return False
 
-    def _insert_activity_after_last(self, plan, day_idx, poi, kind, window, city, people, check):
+    def _insert_activity_after_last(self, plan, day_idx, poi, kind, window, city, people, check,
+                                    repair_context=None):
         activities = plan["itinerary"][day_idx].get("activities", [])
         if not activities:
             return False
@@ -1775,18 +1796,15 @@ class TPCAgent(BaseAgent):
         before_key = self._accepted_eval_key(plan)
         activities.append(activity)
         try:
-            if (
-                self._accepted(*check(plan))
-                and self._activity_counts(plan) > before
-                and self._accepted_eval_key(plan) >= before_key
-            ):
+            if self._insertion_commit_allowed(plan, before, before_key, check, repair_context):
                 return True
         except Exception:
             pass
         activities.pop()
         return False
 
-    def _insert_activity(self, plan, day_idx, prev_idx, poi, kind, window, city, people, check):
+    def _insert_activity(self, plan, day_idx, prev_idx, poi, kind, window, city, people, check,
+                         repair_context=None):
         activities = plan["itinerary"][day_idx].get("activities", [])
         if prev_idx < 0 or prev_idx + 1 >= len(activities):
             return False
@@ -1850,11 +1868,7 @@ class TPCAgent(BaseAgent):
         next_act["transports"] = transports_out
         activities.insert(prev_idx + 1, activity)
         try:
-            if (
-                self._accepted(*check(plan))
-                and self._activity_counts(plan) > before
-                and self._accepted_eval_key(plan) >= before_key
-            ):
+            if self._insertion_commit_allowed(plan, before, before_key, check, repair_context):
                 return True
         except Exception:
             pass
@@ -2870,6 +2884,289 @@ class TPCAgent(BaseAgent):
             plan["itinerary"][day_idx]["activities"] = trial["itinerary"][day_idx]["activities"]
             committed = True
         return committed
+
+    def _translate_transport_segments(self, transports, minutes):
+        """Translate a grounded inner-city leg without changing its mode, duration, or cost."""
+        for segment in transports or []:
+            try:
+                start = time_to_minutes(str(segment.get("start_time", ""))) + minutes
+                end = time_to_minutes(str(segment.get("end_time", ""))) + minutes
+            except Exception:
+                return False
+            if start < 0 or end <= start or end >= 24 * 60:
+                return False
+            segment["start_time"] = minutes_to_time(start)
+            segment["end_time"] = minutes_to_time(end)
+        return True
+
+    def _transport_duration_minutes(self, transports):
+        if not transports:
+            return 0
+        try:
+            return time_to_minutes(str(transports[-1]["end_time"])) - time_to_minutes(
+                str(transports[0]["start_time"]))
+        except Exception:
+            return None
+
+    def _push_activity_open(self, city, activity, start_min, end_min):
+        bounds = self._lookup_poi_open_bounds(
+            city, str(activity.get("position", "")), activity.get("type"), activity.get("tickets"))
+        if bounds is None:
+            return True
+        open_min, close_min = bounds
+        return open_min <= start_min and end_min <= close_min
+
+    def _push_timed_windows(self, plan, query, constraints, check):
+        """Bounded local forward push for present timed POIs (roadmap P8).
+
+        The anchor relayout is intentionally broad: it recomputes an entire movable day. This pass
+        instead clamps one forward/shorten target, preserves every successor dwell and route, and
+        propagates only the resulting delay. Existing slack is consumed before a successor's clock
+        moves. The full checker remains the authority for every deepcopy trial.
+        """
+        windows = [
+            window for window in (constraints.get("activity_time_windows", []) or [])
+            if isinstance(window, dict) and window.get("location")
+            and (window.get("earliest") or window.get("end_before"))
+        ]
+        if not windows:
+            return False
+        try:
+            max_push = max(0, int(os.environ.get("TPC_WINDOW_PUSH_MAX_MIN", "30")))
+        except ValueError:
+            max_push = 30
+        city = str(query.get("target_city", ""))
+        people = int(query.get("people_number", 1) or 1)
+        committed = False
+
+        for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+            activities = day.get("activities", []) or []
+            slot_windows = self._resolve_slot_windows(activities, windows)
+            movable_slots = [
+                idx for idx, activity in enumerate(activities)
+                if activity.get("type") in self._WINDOW_ACTIVITY_TYPES and str(activity.get("position", ""))
+            ]
+            if not slot_windows or not movable_slots:
+                continue
+            if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+                continue
+
+            for target_idx in movable_slots:
+                if target_idx not in slot_windows:
+                    continue
+                try:
+                    old_start = time_to_minutes(str(activities[target_idx]["start_time"]))
+                    old_end = time_to_minutes(str(activities[target_idx]["end_time"]))
+                except Exception:
+                    continue
+                lo, hi = slot_windows[target_idx]
+                # P8 deliberately excludes backward relocation: only a forward clamp or a dwell
+                # shortening that fits on this day belongs to this local move.
+                if old_start >= lo and old_end <= hi:
+                    continue
+
+                was_accepted = False
+                try:
+                    was_accepted = self._accepted(*check(plan))
+                except Exception:
+                    pass
+                trial = deepcopy(plan)
+                tacts = trial["itinerary"][day_idx]["activities"]
+                tact = tacts[target_idx]
+                new_start = max(old_start, lo)
+                start_shift = new_start - old_start
+                if start_shift > max_push:
+                    continue
+                if start_shift and not self._translate_transport_segments(
+                        tact.get("transports", []), start_shift):
+                    continue
+                dwell = min(max(1, old_end - old_start), hi - new_start)
+                new_end = new_start + dwell
+                if dwell <= 0 or new_end >= 24 * 60 or not self._push_activity_open(
+                        city, tact, new_start, new_end):
+                    continue
+                delay = new_end - old_end
+                if delay > max_push:
+                    continue
+                tact["start_time"] = minutes_to_time(new_start)
+                tact["end_time"] = minutes_to_time(new_end)
+
+                original_times = {}
+                valid = True
+                for slot in movable_slots:
+                    try:
+                        original_times[slot] = (
+                            time_to_minutes(str(activities[slot]["start_time"])),
+                            time_to_minutes(str(activities[slot]["end_time"])),
+                        )
+                    except Exception:
+                        valid = False
+                        break
+                if not valid:
+                    continue
+
+                target_pos = movable_slots.index(target_idx)
+                carry = max(0, delay)
+                for successor_idx in movable_slots[target_pos + 1:]:
+                    successor = tacts[successor_idx]
+                    predecessor_idx = movable_slots[movable_slots.index(successor_idx) - 1]
+                    duration = self._transport_duration_minutes(successor.get("transports", []))
+                    if duration is None:
+                        valid = False
+                        break
+                    old_successor_start, old_successor_end = original_times[successor_idx]
+                    _old_predecessor_start, old_predecessor_end = original_times[predecessor_idx]
+                    gap = max(0, old_successor_start - (old_predecessor_end + duration))
+                    # The leg must leave with its predecessor's delayed end; its activity clock
+                    # moves only after consuming the idle gap following that leg.
+                    if carry and not self._translate_transport_segments(
+                            successor.get("transports", []), carry):
+                        valid = False
+                        break
+                    activity_shift = max(0, carry - gap)
+                    new_successor_start = old_successor_start + activity_shift
+                    new_successor_end = old_successor_end + activity_shift
+                    if new_successor_end >= 24 * 60 or not self._push_activity_open(
+                            city, successor, new_successor_start, new_successor_end):
+                        valid = False
+                        break
+                    successor["start_time"] = minutes_to_time(new_successor_start)
+                    successor["end_time"] = minutes_to_time(new_successor_end)
+                    carry = activity_shift
+                if not valid:
+                    continue
+
+                tail_idx = movable_slots[-1] + 1
+                if carry and tail_idx < len(tacts):
+                    tail = tacts[tail_idx]
+                    if tail.get("type") != "accommodation":
+                        continue
+                    if not self._translate_transport_segments(tail.get("transports", []), carry):
+                        continue
+                    try:
+                        arrival = (time_to_minutes(str(tail["transports"][-1]["end_time"]))
+                                   if tail.get("transports")
+                                   else time_to_minutes(str(tacts[movable_slots[-1]]["end_time"])))
+                        tail_start = max(time_to_minutes(str(tail.get("start_time", ""))), arrival)
+                    except Exception:
+                        continue
+                    if tail_start >= 24 * 60:
+                        continue
+                    tail["start_time"] = minutes_to_time(tail_start)
+
+                try:
+                    if not self._accepted(*check(trial)):
+                        continue
+                except Exception:
+                    continue
+                if not self._repair_commit_allowed(plan, trial, query, check, was_accepted):
+                    continue
+                plan["itinerary"][day_idx]["activities"] = tacts
+                committed = True
+                break
+        return committed
+
+    def _resolve_timed_window_poi(self, city, location, activity_type):
+        """Resolve a named timed-visit POI from WorldEnv into an insert-helper row dict."""
+        if self.env is None:
+            return None
+        if activity_type == "attraction":
+            pool = getattr(self.env, "attractions", None)
+        elif activity_type in ("breakfast", "lunch", "dinner"):
+            pool = getattr(self.env, "restaurants", None)
+        else:
+            return None
+        if pool is None:
+            return None
+        try:
+            data = getattr(pool, "data", {})
+            rows = data.get(city) if isinstance(data, dict) else None
+            if rows is None:
+                rows = pool.select(city, "name", lambda value: True)
+            if hasattr(rows, "iterrows"):
+                rows = (dict(row) for _idx, row in rows.iterrows())
+            for row in rows or []:
+                candidate = dict(row)
+                name = str(candidate.get("name", ""))
+                if name and self._norm_text(name) == self._norm_text(location):
+                    return candidate
+        except Exception:
+            return None
+        return None
+
+    def _window_has_planned_position(self, plan, location, activity_type):
+        matching_types = ({"breakfast", "lunch", "dinner"}
+                          if activity_type in ("breakfast", "lunch", "dinner")
+                          else {activity_type})
+        for day in plan.get("itinerary", []) or []:
+            for activity in day.get("activities", []) or []:
+                if activity.get("type") not in matching_types:
+                    continue
+                position = str(activity.get("position", ""))
+                if position and self._norm_text(position) == self._norm_text(location):
+                    return True
+        return False
+
+    def _insert_absent_timed_window_pois(self, plan, query, constraints, check):
+        """Try grounded insertion slots for the P9 absent-POI timed-window residual."""
+        bounds_by_target = {}
+        for window in (constraints.get("activity_time_windows", []) or []):
+            if not isinstance(window, dict) or not window.get("location"):
+                continue
+            try:
+                lo = time_to_minutes(str(window["earliest"])) if window.get("earliest") else None
+                hi = time_to_minutes(str(window["end_before"])) if window.get("end_before") else None
+            except Exception:
+                continue
+            for activity_type in self._window_activity_types(window) or ():
+                if activity_type not in self._WINDOW_ACTIVITY_TYPES:
+                    continue
+                key = (str(window["location"]), activity_type)
+                old_lo, old_hi = bounds_by_target.get(key, (None, None))
+                bounds_by_target[key] = (
+                    lo if old_lo is None else (max(old_lo, lo) if lo is not None else old_lo),
+                    hi if old_hi is None else (min(old_hi, hi) if hi is not None else old_hi),
+                )
+        if not bounds_by_target:
+            return False
+
+        city = str(query.get("target_city", ""))
+        people = int(query.get("people_number", 1) or 1)
+        inserted = False
+        for (location, activity_type), (lo, hi) in bounds_by_target.items():
+            if self._window_has_planned_position(plan, location, activity_type):
+                continue
+            poi = self._resolve_timed_window_poi(city, location, activity_type)
+            if poi is None:
+                continue
+            poi_open, poi_close = self._poi_open_bounds(poi)
+            lo = poi_open if lo is None else max(lo, poi_open)
+            hi = poi_close if hi is None else min(hi, poi_close)
+            if hi <= lo:
+                continue
+            try:
+                was_accepted = self._accepted(*check(plan))
+            except Exception:
+                was_accepted = False
+            repair_context = (deepcopy(plan), query, was_accepted)
+            for day_idx, day in enumerate(plan.get("itinerary", []) or []):
+                activities = day.get("activities", []) or []
+                if not activities:
+                    continue
+                if self._insert_activity_before_first(
+                        plan, day_idx, poi, activity_type, (lo, hi), city, people, check, repair_context):
+                    inserted = True
+                    break
+                if any(self._insert_activity(
+                        plan, day_idx, prev_idx, poi, activity_type, (lo, hi), city, people, check,
+                        repair_context) for prev_idx in range(len(activities) - 1)):
+                    inserted = True
+                    break
+                if self._insert_activity_after_last(
+                        plan, day_idx, poi, activity_type, (lo, hi), city, people, check, repair_context):
+                    inserted = True
+                    break
+        return inserted
 
     # --- Stage 3 LLM refine support (roadmap Next step 7 / TPC_P2_LLM_REFINE) ------------------
     #
