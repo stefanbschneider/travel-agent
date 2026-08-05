@@ -282,6 +282,22 @@ the effect is not an artifact of oracle constraints. Commonsense and EPR being e
 effect on another layer. A screen triages and never promotes — this one buys
 [R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move-needs-p1) on the eval machine.
 
+**The floor is intact on real data, not only in unit tests.** The flag-off arm reproduces the
+pre-change run exactly: `FPR 32.5`, `all_pass 26`, `commonsense_pass 76`, `logical_micro 90.94`.
+
+**Independent mechanism check.** Re-running the shape diagnostic on the flag-*on* plans shows the
+residual shrinking on precisely the targeted shapes and nowhere else:
+
+| shape | flag off | flag on |
+| --- | --- | --- |
+| shorten | 16 | **11** |
+| forward-shift | 24 | **21** |
+| absent POI | 15 | 15 (untargeted) |
+| backward-shift | 10 | 10 (untargeted) |
+
+`8` clause instances fixed, `8` queries flipped — the same `8`, and none of them from a shape this
+move does not claim to handle.
+
 **Two shapes remain open and are deliberately not addressed.** `absent POI` (15 instances, 11
 sole-blocker) needs insertion/reselection, not retiming — `_insert_activity` already accepts a window
 tuple, so the machinery exists. `backward-shift` where the window has already passed on that day
