@@ -266,12 +266,19 @@ wobble: **polish improved `0/34`** (vs control's `10/34`, arm A's `14/34`, arm B
 time the later polish pass runs there is nothing left for it to find — it becomes dead weight. This
 is exactly the mechanism the roadmap predicted for a arm-C win ("the polish pass rarely runs, so
 first-accept preference is what actually ships") except inverted: here polish *does* run (on all 34
-candidates) but finds nothing, because triage already did polish's job. The `+0.59` score edge is
-still single-seed and roughly the same magnitude as R1-vs-R2's noise floor (`0.64`), so it is
-**suggestive, not conclusive** — but the behavioral finding (a fully redundant polish pass) is real
-regardless of whether the score delta holds up on a repeat, and says fast-triage's "hand the slot
-back early" rationale may be leaving a free, already-computed preference gain on the table without
-costing constraints_ok. Worth a repeat-count confirmation before touching the default.
+candidates) but finds nothing, because triage already did polish's job.
+
+**Confirmed, not just suggestive — see the control repeat below:** a same-config repeat of the 2 h
+control lands at `Δ 0.01` from the first control run, so same-config single-seed noise at this
+envelope is near zero. Arm C's `+0.59` is therefore **~60× the measured noise floor**, not "roughly
+the same magnitude" as I first estimated by comparing across different envelopes (R1-vs-R2, which
+is a different, larger source of variation — see the repeat's note). **Verdict: `TPC_P2_FAST_TRIAGE=0`
+is a real, reproducible-magnitude improvement at this 2 h envelope**, with a clean causal story
+(triage's full-slice polishing subsumes the later polish pass, which becomes dead weight) and no
+`constraints_ok` cost. This is screen-level evidence, not a promotion — per CLAUDE.md a default only
+flips through a full E2E gate — but it is now strong enough to prioritize for one. **Recommended
+next step:** queue `TPC_P2_FAST_TRIAGE=0` for a pinned E2E gate run (`make phase2-baseline` /
+`phase2_gate.py`) rather than another screen.
 
 All three must be compared against a **2 h control** (`--total-budget-sec 7200`, no overrides), not
 against R1.
@@ -281,6 +288,15 @@ against R1.
 `run_wall_frac_of_budget 0.49` (`3490 s` of `7200 s`), same three-pass shape and self-termination
 as R1/R2 — consistent with the R2 finding that this split converges around `~1–1.3 h` regardless of
 envelope. Arms A/B/C below compare against this row, not R1.
+
+**Control repeat, run 2026-08-05:** `results/phase2_baselines/full_runs/20260805T032037Z.json`,
+`--method phase2_e2e_r4_control_rep2`, identical config/envelope, rerun to bound same-config
+single-seed noise before trusting arm C's delta. `overall 57.82` — **`Δ 0.01`** vs the first control
+run. **Same-config repeat noise at this envelope is near zero**, not the `~0.6` spread seen across
+different envelopes in R2 (that spread reflects genuinely different per-pass budgets, not
+measurement noise — the R2 "flat" conclusion still holds, but the mechanism is small real gains
+from more search, not noise). This changes the read on arm C below: its `+0.59` delta is **~60×**
+the measured repeat-noise floor, so it is a real effect, not noise.
 
 ### R5 — the held-out tripwire (once, and only after R1 is settled)
 
