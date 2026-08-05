@@ -35,7 +35,7 @@ def restart_seed(uid, seed_salt):
     per interpreter unless ``PYTHONHASHSEED`` is pinned, which nothing here does -- so the search
     drew a *different* restart sequence in every process, making runs irreproducible and giving
     same-config runs a score spread of up to ``1.04`` overall (see
-    ``docs/tpc_phase2_improvement_plan.md`` section 4). ``PYTHONHASHSEED`` cannot be set after
+    ``docs/tpc_phase2_roadmap.md``, "Landed and promoted"). ``PYTHONHASHSEED`` cannot be set after
     interpreter start, so pinning it would mean re-exec'ing the entry point; a stable digest is
     local and free.
 

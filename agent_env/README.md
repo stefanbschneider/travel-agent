@@ -104,7 +104,7 @@ clock starts at interpreter start, so the database load counts against the envel
 Override with `--total-budget-sec` (or `TPC_P2_TOTAL_BUDGET_SEC`; `0` disables the envelope and
 falls back to a fixed per-query budget), `--budget-sec` (the per-query cap), `--workers`, and the
 pass-shape variables in
-[the evaluation roadmap](../docs/tpc_phase2_eval_roadmap.md#r4--pass-shape-where-should-the-envelope-go).
+[the Phase 2 design doc](../docs/tpc_phase2_design.md#run-shape).
 It writes the same official layout as `solve_phase2.py` and shares its
 `results/phase2_e2e_<split>/` method directory, so the two entry points build on each other.
 
@@ -114,4 +114,4 @@ Both entry points hide oracle-only fields before the agent path.
 
 The Phase 2 runner writes the plan to `results/<method>/<uid>.json`.
 It writes per-query `evaluation.json` and `telemetry.json` under `agent_env/runs/<method>/<uid>/`, plus `<split>_summary.json` in that method directory.
-Use [README architecture snapshot](../README.md#architecture-at-a-glance) for the no-oracle architecture and [Phase 2 evaluation](../docs/tpc_phase2_eval.md) for measurement.
+Use the [Phase 2 design doc](../docs/tpc_phase2_design.md) for the no-oracle architecture and the [Phase 2 evaluation roadmap](../docs/tpc_phase2_eval.md) for measurement.

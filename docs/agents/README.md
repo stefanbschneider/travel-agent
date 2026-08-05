@@ -10,8 +10,8 @@ Two documents carry the current queue; the briefs here are supporting detail, no
 
 | Workstream | Read this | What it is |
 | --- | --- | --- |
-| **Evaluation** | [Evaluation roadmap](../tpc_phase2_eval_roadmap.md) | The run order for the 5-hour whole-run envelope: R1 (reference row) through R6 (packaged archive), with commands, durations, and what each run settles. **Start here for any evaluation-machine time.** |
-| **Implementation** | [Shortcomings and plan](../tpc_shortcomings_and_plan.md) and the [roadmap's Next steps](../tpc_phase2_roadmap.md#next-steps-priority-order) | Ranked open items, each a self-contained brief. |
+| **Evaluation** | [Evaluation roadmap](../tpc_phase2_eval.md#run-this-next) | The live run queue under the 5-hour whole-run envelope (R7 onwards), plus what a measurement is allowed to prove. **Start here for any evaluation-machine time.** |
+| **Implementation** | [Implementation roadmap](../tpc_phase2_roadmap.md#work-items) | The search-space diagnosis and the ranked P-items, each a self-contained brief. |
 
 ## Active focused prompts
 
@@ -28,7 +28,7 @@ superseded. They now live in [`../archive/agents/`](../archive/README.md) as rec
 | Brief | Why it moved |
 | --- | --- |
 | `final_night_commonsense_first.md` | `TPC_COMMONSENSE_FIRST` landed and is harness-default-on. |
-| `final_night_eval_commands.md` | Copy-paste commands for pinned `900 s` per-query rows; replaced by the [evaluation roadmap](../tpc_phase2_eval_roadmap.md). |
+| `final_night_eval_commands.md` | Copy-paste commands for pinned `900 s` per-query rows; replaced by the [evaluation roadmap](../tpc_phase2_eval.md). |
 | `next_steps_after_final_night.md` | All three tasks resolved (1 and 3 landed; 2 landed as W5 of the plan). |
 | `tier1_transport_repair_gate.md` | Superseded by the commonsense-first brief: the flag's commit rule was the blocker, not its budget. |
 

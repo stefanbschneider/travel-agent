@@ -93,7 +93,7 @@ P2_FAST_FPR_FLAG = $(if $(filter 1,$(P2_FAST_FPR)),--fast-fpr,)
 #   make phase2-query P2_QUERY_ARGS="--query-file my_query.json --budget-sec 120"
 #   make phase2-query P2_QUERY_ARGS='--query-text "3 days Beijing to Chengdu, 2 people" --start-city Beijing --target-city Chengdu --days 3'
 P2_QUERY_ARGS ?=
-# Whole-run evaluation (docs/tpc_phase2_eval_roadmap.md). The envelope is the organizers' confirmed
+# Whole-run evaluation (docs/tpc_phase2_eval.md). The envelope is the organizers' confirmed
 # 5 hours for the whole split; workers default to CPU count - 1 inside the runner.
 P2_FULL_SPLIT ?= tpc_phase2_familiar_100
 P2_TOTAL_BUDGET ?= 18000
@@ -113,7 +113,7 @@ phase2-help:
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
-	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)' \
+	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen)' \
 	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
 	  '  make phase2-harness         - run the ORGANIZER-CONFIRMED entry point exactly as they will' \
@@ -144,7 +144,7 @@ phase2-harness:
 # Whole-run evaluation: run the shipped path under the 5h envelope on all of familiar_100, score it
 # with eval_tpc.py, and record a row under results/phase2_baselines/full_runs/. This is the run that
 # says what we would score; per-query rows (phase2-baseline) answer a different question. See
-# docs/tpc_phase2_eval_roadmap.md. Tunables: P2_TOTAL_BUDGET, P2_WORKERS, P2_SPLIT, P2_LABEL.
+# docs/tpc_phase2_eval.md. Tunables: P2_TOTAL_BUDGET, P2_WORKERS, P2_SPLIT, P2_LABEL.
 phase2-full-run:
 	$(PYTHON) scripts/phase2_full_run.py --split $(P2_FULL_SPLIT) \
 	  --total-budget-sec $(P2_TOTAL_BUDGET) $(if $(P2_WORKERS),--workers $(P2_WORKERS),) \

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Repair the Phase 1 commonsense-tail plans (docs/tpc_shortcomings_and_plan.md W1).
+"""Repair the Phase 1 commonsense-tail plans (docs/tpc_phase1_playbook.md, W1).
 
 Reads results/best/<uid>.json, applies four ordered deterministic repair moves (R1-R4 below) on a
 deepcopy, and writes the repaired plan to results/<method>/<uid>.json only when the full oracle

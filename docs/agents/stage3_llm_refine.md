@@ -7,7 +7,7 @@ explicit off-by-default flag, preserving every invariant. You run in parallel wi
 workstreams; none should block the others.
 
 Read [`CLAUDE.md`](../../CLAUDE.md), the [Phase 2 roadmap](../tpc_phase2_roadmap.md) (Next step 6 and "Shortcomings"
-item 3), the [README architecture snapshot](../../README.md#architecture-at-a-glance) (no-oracle contract and flow), and the
+item 3), the [Phase 2 design doc](../tpc_phase2_design.md) (no-oracle contract and flow), and the
 [TPCAgent internals](../../chinatravel/agent/tpc_agent/readme.md) before writing code. Read the owning code path
 before editing it.
 
@@ -32,7 +32,7 @@ The problem is that **v1 commits nothing yet.** A quick end-to-end screen on fam
 | `llm_error_or_invalid_json` | 5 | the refine call **errored or returned bad JSON** | partly a screen artifact — see below |
 
 **Reproduce it first** (this is your baseline, and how you'll know v2 works): run the screen from
-[Phase 2 quick-screen guidance](../tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage) with
+[Phase 2 quick-screen guidance](../tpc_phase2_eval.md#quick-ab-screen) with
 `--flag TPC_P2_LLM_REFINE`, and read the `LLM activity (cand)` line and the per-uid `improve_skip_reason` in
 `agent_env/runs/phase2_e2e_*/<uid>/telemetry.json`. **Success = `improve_committed` rises above 0 without any regression,
 and the screen verdict moves off `NO BENEFIT`.**
@@ -132,7 +132,7 @@ or a check that the slice can fit both — skip and record a telemetry reason ot
   ```
 
 - **Then screen your change end-to-end on val** (the self-check that tells you it actually worked — see
-  [Phase 2 quick-screen guidance](../tpc_phase2_eval.md#quick-ab-screen-pre-gate-triage)):
+  [Phase 2 quick-screen guidance](../tpc_phase2_eval.md#quick-ab-screen)):
 
   ```bash
   .venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_LLM_REFINE --mode end-to-end \
