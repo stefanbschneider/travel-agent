@@ -498,11 +498,18 @@ class TestEnvOverrides:
 
 class TestWorkerConfiguration:
     """The organizers pass only ``--split``, so whatever these functions return on their host is
-    our parallelism. Nothing may depend on a flag being supplied."""
+    our parallelism. Nothing may depend on a flag being supplied.
+
+    The ``sched_getaffinity`` stubs use ``raising=False`` because the attribute is Linux-only: the
+    evaluation host has it, a macOS development box does not, and these tests assert the *Linux*
+    branch either way. Without it the whole class errors out on the dev box and stops being a
+    tripwire there.
+    """
 
     def test_default_workers_leaves_one_core_for_the_parent(self, monkeypatch):
         monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
-        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: set(range(16)))
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: set(range(16)),
+                            raising=False)
         assert sweeps.default_workers() == 15
 
     def test_env_override_wins(self, monkeypatch):
@@ -511,7 +518,8 @@ class TestWorkerConfiguration:
 
     def test_a_broken_override_falls_back_instead_of_crashing_the_run(self, monkeypatch):
         monkeypatch.setenv("TPC_P2_WORKERS", "lots")
-        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: set(range(8)))
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: set(range(8)),
+                            raising=False)
         assert sweeps.default_workers() == 7
 
     def test_affinity_beats_cpu_count_so_a_restricted_container_is_not_oversubscribed(
@@ -521,7 +529,8 @@ class TestWorkerConfiguration:
         wall-clock, so oversubscribing costs search quality rather than just throughput."""
         monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
         monkeypatch.setattr(sweeps.os, "cpu_count", lambda: 64)
-        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: {0, 1, 2, 3})
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: {0, 1, 2, 3},
+                            raising=False)
         assert sweeps.available_cpus() == 4
         assert sweeps.default_workers() == 3
 
@@ -533,5 +542,5 @@ class TestWorkerConfiguration:
 
     def test_never_returns_zero_workers(self, monkeypatch):
         monkeypatch.delenv("TPC_P2_WORKERS", raising=False)
-        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: {0})
+        monkeypatch.setattr(sweeps.os, "sched_getaffinity", lambda _pid: {0}, raising=False)
         assert sweeps.default_workers() == 1

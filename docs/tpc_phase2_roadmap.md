@@ -12,36 +12,48 @@ How the system is built: [design doc](tpc_phase2_design.md). What to *measure* a
 reference](reference/competition.md). Read [CLAUDE.md](../CLAUDE.md) first for the non-negotiable
 invariants; nothing here overrides them.
 
-**The one-paragraph version.** The submission scores `overall 57.99` on `familiar_100` and uses only
+**The one-paragraph version.** The submission scores `overall 63.58` on `familiar_100` and uses only
 `26%` of its 5-hour envelope, which looks like wasted headroom. It is not. Giving failing queries
 `2.5×` the time buys `4.2×` the search and flips **one query in sixty-eight**, because every knob we
 have — more budget, more restarts, more workers, fresh seeds — is the same intervention: draw more
-samples from a parameter space that does not contain the answer. `45 of 61` failing queries fail on a
-*single* constraint family the sampler cannot express. **Spend the effort on what the solver can
-represent, not on how long it runs.**
+samples from a parameter space that does not contain the answer. What moved the score instead was
+adding **one move the space could not express**: `+5.83` overall and `+11.0` FPR at identical budget,
+restarts and seed. **Spend the effort on what the solver can represent, not on how long it runs.**
 
-**That thesis has now been tested, and it held.** [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)
-gave the solver one move that family needs and screened `FPR 32.5 → 42.5` on both axes — no extra
-time, no extra restarts. `33 of 80` val queries are still blocked by nothing but that same family,
-which is what [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) is for.
+**That thesis has now been tested at full scale, and it held.** [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)
+gave the solver the move the dominant failure family needs;
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r10-established) measured `FPR 32.0 → 43.0` over a
+baseline whose three repeats were bit-for-bit identical, and it is **on by default since
+2026-08-05**. `33 of 80` val queries are still blocked by nothing but that same family, which is what
+[P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
+[P9](#p9--place-an-absent-timed-visit-poi) are for.
 
 ## Where we are
 
-Reference row `results/phase2_baselines/full_runs/20260804T201638Z.json` (`familiar_100`, 5 h
-envelope, 3 workers, `evaluator_parity: c89cfca`, zero LLM calls), finishing in `1.31 h`.
-**This row predates P1** — it is the floor P1 and P8 are measured against, not the current best
-known configuration ([R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move) produces
-the successor):
+Current best known configuration and the row the next arm is measured against:
+`results/phase2_baselines/full_runs/20260805T123142Z.json` — **R8**, `familiar_100`, 5 h envelope,
+3 workers, `evaluator_parity: c89cfca`, zero LLM calls, finishing in `1.31 h`. Its configuration is
+now the default (`TPC_WINDOW_ANCHOR=1`), so this is what the bare organizer command produces:
 
 | | value | weight | contributes |
 | --- | --- | --- | --- |
-| **FPR** | **33.0** | 0.40 | **13.2** |
-| C-LPR | 87.83 | 0.25 | 21.96 |
-| MicEPR | 99.48 | 0.10 | 9.95 |
-| MacEPR | 97.00 | 0.10 | 9.70 |
-| DAV / ATT / DDR | 18.15 / 26.25 / 19.39 | 0.05 ea. | 3.19 |
+| **FPR** | **43.0** | 0.40 | **17.20** |
+| C-LPR | 89.90 | 0.25 | 22.48 |
+| MicEPR | 99.67 | 0.10 | 9.97 |
+| MacEPR | 98.00 | 0.10 | 9.80 |
+| DAV / ATT / DDR | 24.71 / 33.65 / 24.50 | 0.05 ea. | 4.14 |
 
-`empty_plans 0/100`, `constraints_ok 35/100`. The submission path itself is settled: the organizers'
+`empty_plans 0/100`, `constraints_ok 46/100`. **FPR is `63%` of the remaining `36.42` points**: at
+weight `0.40` the `57` failing queries hold `22.8`, and because a failing query is also scored `0` on
+every preference term, they hold most of the `10.86` still missing across DAV/ATT/DDR as well. C-LPR
+(`2.53`) and the two EPR terms (`0.23`) are the rest.
+
+The predecessor row `20260804T201638Z` (`overall 57.99`, FPR `33.0`, `constraints_ok 35/100`) and the
+three bit-identical R7 repeats (`57.74985419574877`, FPR `32.0`) are the pre-P1 floor. They stay in
+the ledger as the baseline R8's `+5.83` is measured against, not as a description of the current
+system.
+
+The submission path itself is settled: the organizers'
 bare command runs this repository's deterministic solver in-process, schedules the split against the
 5 h envelope across `CPU-1` workers, pre-writes a fallback for every query, and makes zero LLM calls
 (see [design](tpc_phase2_design.md) and [landed](#landed-and-promoted)).
@@ -153,7 +165,7 @@ depending on the measurement, with zero missing families. **Parsing works; searc
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move | v2 only |
-| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **implemented 2026-08-05, screened GREEN both axes (FPR `+10`, `all_pass 26 → 34`); awaiting [R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move)** | pending gate |
+| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r10-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
@@ -256,9 +268,11 @@ repeated-attraction commonsense rule, so relocation means move-then-delete, not 
 **Ship bar.** Same as P1: flag, default off, byte-identical floor, unit tests, a paired screen on
 **both** axes (`scripts/phase2_quick_eval.py --flag TPC_WINDOW_PUSH --extra-env
 "TPC_PIN_TIMED_WINDOWS=1,TPC_COMMONSENSE_FIRST=1,TPC_SOLVE_CONVERGE_PATIENCE=15,TPC_WINDOW_ANCHOR=1"`
-— note `TPC_WINDOW_ANCHOR=1` belongs in the *shared* env now, so the screen measures P8's marginal
-effect on top of P1), and a re-run of `phase2_timed_window_shapes.py` showing the residual shrinking
-on the shapes claimed and nowhere else.
+— all four are harness defaults since R8, but the screen sets them explicitly because
+`phase2_quick_eval.py` builds its own arm environments; the point is that both arms carry P1, so the
+screen measures P8's *marginal* effect), and a re-run of `phase2_timed_window_shapes.py` showing the
+residual shrinking on the shapes claimed and nowhere else. **The baseline to beat is now R8's
+`overall 63.58` / `FPR 43.0`, not R1's `57.99`.**
 
 #### P8 implementation addendum (2026-08-05)
 
@@ -413,7 +427,10 @@ as P8.
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
 
-**Landed 2026-08-05; awaiting [R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move). This was the item, and it delivered.** Diagnosis §4: the *sole* logical blocker in `45 of 61`
+**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r10-established)
+gated it GREEN (`overall 57.75 → 63.58`, `FPR 32.0 → 43.0`, `constraints_ok 36 → 46`) and
+`TPC_WINDOW_ANCHOR=1` is now a [harness default](#harness-defaults-promoted-through-a-measured-gate-or-screen).
+This was the item, and it delivered.** Diagnosis §4: the *sole* logical blocker in `45 of 61`
 failing solver-only queries; nothing else on the failure table breaks double digits. Kept in full
 because it is the worked example for the family — the shape classification, the three defects it
 found in the landed machinery, and the measured before/after. The continuation is
@@ -439,7 +456,7 @@ inside `_pack_plan` and all deepcopy-trialed and committed only if the full chec
 | `_try_pin_activity` | shifts a present-but-mistimed activity into its window, recomputing its own and the next activity's legs; **reverts on any cascade** | promoted, real gain |
 | `_resequence_day` | reorders the day's meal/attraction activities by target window; **returns early when the window-sorted order equals the current order** | promoted with it |
 | `_enforce_windows_in_order` (`TPC_CASCADE_TIMED_WINDOWS`) | forward-only ripple: re-lays the day's movable block in current order with windows honored | gated at `900 s`, **no measurable effect**, not promoted |
-| `_anchor_timed_windows` (`TPC_WINDOW_ANCHOR`) | the same clamp-and-ripple, with type-aware intersected windows, a re-timable overnight-stay tail, and the two-regime commit rule | added 2026-08-05, [screened GREEN](#step-0-result-2026-08-05) (FPR `+10` on both axes), awaiting R8 |
+| `_anchor_timed_windows` (`TPC_WINDOW_ANCHOR`) | the same clamp-and-ripple, with type-aware intersected windows, a re-timable overnight-stay tail, and the two-regime commit rule | added 2026-08-05, [screened GREEN](#step-0-result-2026-08-05) (FPR `+10` on both axes), **R8 GREEN (`FPR +11.0`), promoted the same day** |
 
 **This paragraph was wrong, and the measurement that replaced it is below.** It read: *"the residual
 is not one shape; it is the tail after the two tractable shapes were taken, and the known-unhandled
@@ -591,10 +608,13 @@ tried; its ceiling prunes proper transport, producing transport-less plans that 
 Transport information across positions* — and since the evaluator sync a transport-less plan also
 scores ATT `0`, so it is worse than when it was rejected.
 
-**Ship bar.** Flag, default off, byte-identical floor, unit tests, and
-[R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move) against the R7 variance
-baseline. At `sd ≈ 0.35` a `+2` effect is detectable in a single paired run; anything smaller needs
-repeats.
+**Ship bar — cleared.** Flag, byte-identical library-default floor, unit tests, and a whole-run row
+against the R7 variance baseline. R8 delivered `+5.83` overall / `+11.0` FPR against a baseline whose
+three repeats were *bit-for-bit identical*, so the effect needed no repeats: the screen predicted
+`FPR 32.5 → 42.5` and the full run measured `32.0 → 43.0`. It also cost nothing to ship — wall clock
+`4786 s → 4733 s`, `empty_plans 0/100` both sides. `apply_deterministic_solver_defaults()` sets it on
+next to the pin it depends on; the library default stays off so the floor tests keep describing the
+shipped floor, and `TPC_WINDOW_ANCHOR=0` still reproduces the R7 arm.
 
 ### P2 — per-attempt telemetry ledger
 
@@ -759,6 +779,13 @@ byte-identical opt-in unit tests and the eval tooling's flags-off arm both keep 
 | `TPC_PIN_TIMED_WINDOWS=1` | timed-window pinning + within-day resequencer, targeting the dominant solver-only failure family. Failed the `300 s` gate on timeouts, **re-gated clean at `900 s`** (`familiar_100_val`, sha `a72357c3`): e2e continuous `43.72 → 48.04`, FPR `20.0 → 25.0`, timeouts `0 → 0`. The `300 s` regression was a budget-boundary artifact of the per-trial deepcopy + full-checker revalidation. |
 | `TPC_SOLVE_CONVERGE_PATIENCE=15` | early-convergence stop for the restart search. Quality flat vs pin alone, but solve `p50` `366 s → 265 s` — below even the floor's `337 s`. |
 | `TPC_COMMONSENSE_FIRST=1` | commonsense-first finalization: relaxes the repair commit rule for *unaccepted* plans and prefers a schema+commonsense-valid candidate (`best_cs`) at finalization. Paired `120 s` e2e screen: `overall_true 51.34 → 60.98`, C-LPR `67.35 → 89.95`, commonsense pass `30/40 → 40/40`, FPR `32.5 → 35.0`, **`logical_micro` flat** — the proof of mechanism: the gain is the commonsense gate releasing logical credit the solver had already earned. Probe cost is triple-bounded (`_fast_commonsense_prefilter`, `TPC_CS_CHECK_BUDGET=60`, `TPC_CS_CHECK_TIME_FRAC=0.08`), because one official `evaluate_commonsense_constraints` call costs ~`319 ms`. |
+| `TPC_WINDOW_ANCHOR=1` (2026-08-05) | [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)'s window-anchored day relayout. The only flag promoted on a **whole-run** row rather than a per-query gate, and the only one whose effect is unambiguous by construction: R8 (`full_runs/20260805T123142Z`) scored `overall 63.58` / `FPR 43.0` / `constraints_ok 46` against R7's `57.75` / `32.0` / `36` — and R7 is **three bit-identical 5 h repeats**, so `+5.83` cannot be seed noise. Same box, envelope, worker count and `evaluator_parity` on both sides; wall clock `4786 s → 4733 s`, `empty_plans 0/100`. Matches the paired `n=80`/`90 s` screens that queued it (predicted `FPR 32.5 → 42.5`). Set next to `TPC_PIN_TIMED_WINDOWS`, which is what puts the named POI in the plan for it to anchor — R8 measured the pair, so the pair ships. |
+
+Every recorded row now carries a `solver_flags` snapshot of exactly these four (per-query
+`telemetry.json`, `chinatravel/agent/phase2/orchestrator.py`). They are environment reads inside
+`TPCAgent` rather than fields on `Flags`, so before that a row could not state which of them ran —
+and after R8 that is the only way to distinguish an archive running the promoted configuration from
+one silently running the pre-R8 one.
 
 The commonsense-first work also fixed the reason two repair passes had gated flat:
 `TPC_REPAIR_TRANSPORT_GAPS` and `TPC_REPAIR_INTERCITY` ended with `if not self._accepted(...):
@@ -805,13 +832,18 @@ passes are reachable through the `TPC_COMMONSENSE_FIRST` umbrella.
   val/test partition.
 - **Evaluator-parity marker** — every recorded row carries `evaluator_parity`, and
   `scripts/phase2_gate.py` refuses a cross-boundary comparison including one-sided marker presence.
+- **`solver_flags` in per-query telemetry** (2026-08-05). The promoted deterministic passes are
+  environment reads inside `TPCAgent`, not fields on `Flags`, so a row used to be silent about the
+  configuration that produced it — the one thing the ledger's comparability rule demands. Now every
+  `telemetry.json` snapshots all four (`PROMOTED_SOLVER_FLAGS`,
+  `chinatravel/agent/phase2/orchestrator.py`), using the agent's own off-set so the record cannot
+  disagree with the behaviour, and a drift test fails if a flag is promoted without being recorded.
 
 ### Landed, implemented, not promoted (all library-default-off)
 
 | Flag | Status |
 | --- | --- |
 | `TPC_CASCADE_TIMED_WINDOWS` | forward-only cascading shift for the post-pin residual. Gated at `900 s`: solver-only — its own target axis — flat (`+0.004` continuous), e2e ranges overlap. Not promoted; see P1's prior-art table. |
-| `TPC_WINDOW_ANCHOR` | **P1's window-anchored day relayout** (2026-08-05). Type-aware intersected windows, a re-timable overnight-stay tail, and the two-regime commit rule — each chosen from the [measured shape classification](#step-0-result-2026-08-05) of the residual. Paired screens (`familiar_100_val`, `n=80`, `90 s`), **both axes agreeing**: FPR `32.5 → 42.5` and `all_pass 26 → 34` on solver-only *and* end-to-end, `overall_true` `56.95 → 62.27` / `57.81 → 63.13`, commonsense and EPR exactly flat, timeouts and fallbacks `0 → 0`, gate PASS. Off by default until [R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move) clears; a screen never promotes. |
 | `TPC_REPAIR_DROP_TRAILING_STAY` | drops a single-day trip's trailing overnight accommodation so `_repair_intercity_endpoints` derives the return floor from the real last activity instead of `24:00`. 1 of 3 target uids fully clears (`overall_true 8.52 → 43.08`); the other 2 have a deeper defect — their day's activities run past every same-day return departure regardless of the accommodation, which no forward-only repair can reach. Its screen was RED, probably because the flag's `_pack_plan` gate also activates the *general* endpoint re-grounding pass on every query. |
 | `TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE` | preference packing. `TPC_PACK_DAV` screened RED, `TPC_PACK_DDR` green on a quick screen but mixed on a full-split comparison, and all of that evidence predates the 2026-07-30 evaluator sync. `TPC_PACK_ATT` is the most plausible Phase 2 candidate — count-preserving, so it cannot cost FPR or C-LPR — but see [what not to spend time on](#what-not-to-spend-time-on). |
 | `TPC_P2_LLM_PARSE` / `TPC_P2_LLM_REFINE` / `TPC_P2_LLM_AGENTIC_REFINE` | LLM stages. Parse audit screened RED once it genuinely fired on every query (`−3.20` `overall_true`); both refine variants commit `improve_committed=0` while their reserved improve slice costs timeouts. |

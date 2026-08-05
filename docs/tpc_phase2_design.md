@@ -138,10 +138,12 @@ Three tiers, and the distinction is load-bearing:
 - **Library default (env var unset)** — the deterministic floor. Every optional behavior is off and a
   unit test asserts the floor stays byte-identical when its flag is unset.
 - **Harness default** — `solve_phase2.apply_deterministic_solver_defaults()` sets
-  `TPC_PIN_TIMED_WINDOWS=1`, `TPC_SOLVE_CONVERGE_PATIENCE=15` and `TPC_COMMONSENSE_FIRST=1` before the
+  `TPC_PIN_TIMED_WINDOWS=1`, `TPC_WINDOW_ANCHOR=1`, `TPC_SOLVE_CONVERGE_PATIENCE=15` and
+  `TPC_COMMONSENSE_FIRST=1` before the
   agent is built, *unless the operator overrode them*. This is the only sanctioned place a flag
   becomes on-by-default, and only on measured evidence
   ([landed](tpc_phase2_roadmap.md#harness-defaults-promoted-through-a-measured-gate-or-screen)).
+  Each is recorded per query under `solver_flags`, so a row states which of them actually ran.
 - **Eval-only** — `TPC_SOLVE_STOP_AT_ACCEPT` / `TPC_SOLVE_STOP_AT_ACCEPT_PACKED` (early-stop FPR
   measurement) and `TPC_USE_ORACLE` (solver-only attribution). Never set by the real harness;
   `sweeps` does set the packed variant per-task for fast triage, via a save/restore context manager.
@@ -159,8 +161,9 @@ packaging](tpc_phase2_roadmap.md#llm-packaging-the-submission-makes-zero-llm-cal
 - Plans go to `results/<method>/<uid>.json`, with `method` defaulting to `phase2_e2e_<split>` so the
   harness entry point and `solve_phase2.py` share a directory and resume each other.
 - Per-query telemetry (`work_root/<uid>/telemetry.json`) carries `stage_sec`, parse/LLM counters,
-  `used_fallback`, `solve_recovered_from_timeout`, `rss_mb` and `search_telemetry` (`restarts_used`,
-  `stop_reason`, `candidates_evaluated`, `best_found_at_restart`). It is overwritten per attempt —
+  `used_fallback`, `solve_recovered_from_timeout`, `rss_mb`, `search_telemetry` (`restarts_used`,
+  `stop_reason`, `candidates_evaluated`, `best_found_at_restart`) and `solver_flags` (the promoted
+  deterministic passes as the agent read them). It is overwritten per attempt —
   [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) adds the append-only attempt ledger.
 - Committed measurement rows: `results/phase2_baselines/full_runs/` (whole-run) and
   `results/phase2_baselines/runs/` (per-query). Field semantics: [baseline ledger
