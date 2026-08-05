@@ -146,7 +146,8 @@ depending on the measurement, with zero missing families. **Parsing works; searc
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
-| **P8** | **Bounded local window push — the rest of the timed-visit residual** | 1–2 days | **`33 of 80` val queries still blocked *only* by this family; `11` are off by `5–19 min`** | pending |
+| **P8** | **Bounded local window push — the shift/shorten half of the timed-visit residual** (`TPC_WINDOW_PUSH`) | 1 day | **`12 of 80` val sole-blocker queries need only a forward-shift or shorten (`32` clause instances, `11` off by `5–19 min`)** | pending |
+| **P9** | **Place an absent timed-visit POI** | half day | **`6` val queries blocked by nothing but this shape** (`15` instances) | pending |
 | P2 | Per-attempt telemetry ledger | 2 h | report figures; measures everything else | v2 |
 | P3 | Re-screen commonsense-valid emission when nothing is accepted | 2 h | `≤ +0.5` | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
@@ -156,14 +157,18 @@ depending on the measurement, with zero missing families. **Parsing works; searc
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
-`P0`…`P8` are stable identifiers, so a later note can refer to "P5" without depending on the
+`P0`…`P9` are stable identifiers, so a later note can refer to "P5" without depending on the
 ranking. Sections below are in priority order. Everything still open is safe to implement in
 parallel with the eval queue — none of it touches the shipping default.
 
 **If you only do one thing, do [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual).**
 P1 confirmed the family is where the points are and took `8` queries out of it; `33` remain, still
-blocked by nothing else. Every other item on this list is worth under a point, and three are worth
-approximately zero by measurement rather than by guess.
+blocked by nothing else — `12` of them needing only a forward-shift or shorten (P8), `6` only an
+insertion (P9), and `8` a cross-day relocation nobody has scoped yet. Every other item on this list
+is worth under a point, and three are worth approximately zero by measurement rather than by guess.
+**P8 carries an implementation addendum written against the source; read it before writing code** —
+it fixes the flag name, hook point and ordering, states the push as arithmetic, and retracts one
+paragraph of P8's prose that describes a mechanism the environment does not have.
 
 ### P8 — bounded local window push: the rest of the timed-visit residual
 
@@ -221,20 +226,20 @@ Arithmetic over the 32 remaining forward/shorten instances says how far that has
 So a push bounded at, say, `30 minutes` covers most of the near-miss set, and the bound is what keeps
 it from degenerating into P1's cascade. Start there and read the near-miss list from `--detail`.
 
-**The trap to check first.** Translating a leg's `start_time`/`end_time` without re-deriving it can
-claim a metro departure at a time no service runs, which the commonsense checker catches as *Invalid
-Transport information across positions* — the same failure family that killed the
-`arrive_no_later`-from-`end_before` idea. Decide per leg: re-derive through `_get_transport` when the
-mode is scheduled, translate when it is not, and let the acceptance gate arbitrate.
+**~~The trap to check first.~~ Retracted — it describes a mechanism that does not exist.** The
+paragraph read: *"Translating a leg's `start_time`/`end_time` without re-deriving it can claim a
+metro departure at a time no service runs, which the commonsense checker catches as Invalid
+Transport information across positions. Decide per leg: re-derive through `_get_transport` when the
+mode is scheduled, translate when it is not."* There is no timetable, no service window and no
+waiting anywhere in inner-city transport, and the column named is not the one that would catch it.
+**Do not implement that rule** — the verified constraint, and the simpler move it licenses, are in
+[§ Implementation addendum, item 2](#p8-implementation-addendum-2026-08-05).
+Kept visible for the same reason P1 keeps its wrong paragraph: it is why the move was scoped as the
+harder of the two options.
 
-**Also in scope, cheaper, same instrument.** `absent POI` (15 instances, 6 sole-blocker queries
-needing only it) is insertion, not retiming, and `_insert_activity` / `_insert_activity_before_first`
-/ `_insert_activity_after_last` already take a `window` tuple and honour it. **But their commit rule
-is the over-strict one P1 had to fix**: they require `_accepted(*check(plan))` *and*
-`_activity_counts(plan) > before` *and* `_accepted_eval_key(plan) >= before_key`. On an unaccepted
-input that last clause rejects an insertion that flips the plan to accepted because a leg cost a
-fraction of an ATT point — use `_repair_commit_allowed`'s two-regime rule instead, as
-`_anchor_timed_windows` does.
+**`absent POI` is no longer in scope here** — it moved to [P9](#p9--place-an-absent-timed-visit-poi),
+because it is insertion rather than retiming and needs its own POI resolution and slot choice. P8 is
+purely the shift/shorten residual.
 
 **Out of scope, and say so if you skip it.** `backward-shift` where the window has already passed on
 that day (8 sole-blocker queries) needs **cross-day relocation**, a structurally different move. A
@@ -243,11 +248,160 @@ window, so the headroom is real — but a duplicate visit to a POI already in th
 repeated-attraction commonsense rule, so relocation means move-then-delete, not insert.
 
 **Ship bar.** Same as P1: flag, default off, byte-identical floor, unit tests, a paired screen on
-**both** axes (`scripts/phase2_quick_eval.py --flag <flag> --extra-env
+**both** axes (`scripts/phase2_quick_eval.py --flag TPC_WINDOW_PUSH --extra-env
 "TPC_PIN_TIMED_WINDOWS=1,TPC_COMMONSENSE_FIRST=1,TPC_SOLVE_CONVERGE_PATIENCE=15,TPC_WINDOW_ANCHOR=1"`
 — note `TPC_WINDOW_ANCHOR=1` belongs in the *shared* env now, so the screen measures P8's marginal
 effect on top of P1), and a re-run of `phase2_timed_window_shapes.py` showing the residual shrinking
 on the shapes claimed and nowhere else.
+
+#### P8 implementation addendum (2026-08-05)
+
+**Read this before writing code.** Added after a source review of every mechanism P8 names. Items 1,
+4 and 5 are decisions that were missing; item 2 corrects a factual error in the section above; item 3
+flags an unverified claim. **Where this addendum and the prose above disagree, this addendum wins.**
+
+**1. Flag, hook point, ordering.** Name the flag `TPC_WINDOW_PUSH`. Add `_window_push_enabled()`
+beside `_window_anchor_enabled()` (`tpc_agent.py:520`), copying its form exactly
+(`os.environ.get("TPC_WINDOW_PUSH", "0") not in ("", "0", "false", "False")`). Call the new pass from
+`_pack_plan` **immediately after** the `if self._window_anchor_enabled():` block
+(`tpc_agent.py:1308-1310`) and still **before** the `if not self._accepted(*check(plan)): return
+plan` gate, with the same `self._set_transport_context(constraints or {})` prelude. The order is not
+cosmetic: P8 is defined and screened as the *marginal* effect on top of P1, whose screen env sets
+`TPC_WINDOW_ANCHOR=1`, so running the push before the anchor would measure a different thing than the
+ship bar claims. Floor test: with `TPC_WINDOW_PUSH` unset, `_pack_plan` must not reach the pass at
+all (mirror `tests/phase2/test_window_anchor.py`'s floor test).
+
+**2. The verified transport rule — translate, never re-derive.** Three facts from source, replacing
+the retracted trap paragraph:
+
+- `InnerCityTransport.goto` (`chinatravel/environment/tools/transportation/apis.py:190-346`) is pure
+  distance/speed arithmetic for all three modes — walk `5 km/h`, taxi `40 km/h`, metro
+  walk-to-station + `30 km/h` + walk-from-station. **No timetable, no service hours, no waiting.**
+  `add_time` (`apis.py:50-71`) adds `int(hours * 60)` whole minutes, a duration that does not depend
+  on the clock it is added to.
+- What the evaluator actually enforces is stricter than P8 assumed and lives elsewhere:
+  `Is_transport_correct` (`chinatravel/symbol_verification/commonsense_constraint.py:840-1077`)
+  re-calls `goto(city, transports[0]["start"], transports[-1]["end"], transports[0]["start_time"],
+  mode)` for **every** leg — the 3-segment metro shape and the 1-segment walk/taxi shape alike — and
+  requires **exact string equality** of every segment's `start_time` and `end_time` (plus `price` and
+  `distance` within `0.1`). It reports *Incorrect Information of Inner-City Transport on price,
+  distance, and duration*. The column P8 named, *Invalid Transport information across positions*,
+  belongs to `Is_space_correct` (`commonsense_constraint.py:1169-1273`), which only checks endpoint
+  names and non-empty `transports` and **never looks at a time**.
+- Therefore **shifting every segment of a leg by the same whole-minute delta reproduces exactly what
+  `goto` returns at the shifted departure time, for every mode including metro.** Translation is not
+  the risky option; it is the provably exact one.
+
+**Both halves of that were checked against the environment, not only read.** Calling `goto` for the
+same POI pair at `08:30`, `08:45` and `19:05` returns identical per-segment durations, distances and
+costs for walk, taxi *and* a 3-segment metro route. And applying the move itself to real data — take
+each of the `71` commonsense-passing `familiar_100_val` solver-only plans, shift day 1's last movable
+activity by `+15 min` together with every segment of its own `transports`, and retime the overnight
+stay — leaves **`70` still commonsense-valid**. The single failure is not a transport error at all:
+it pushed `Yonghe Temple` past its `17:00` closing time (*The attraction is closed now*), which is
+guard (c) in item 5.
+
+So the move is a pure translation, and that buys two things beyond simplicity: it preserves `mode`,
+`price`, `cost`, `distance` and `tickets`/`cars` verbatim (`_format_transport_segments`,
+`tpc_agent.py:5555-5579`), so a pushed suffix **cannot** move the preference key by re-routing — the
+ATT-fraction friction that forced P1's two-regime commit rule does not arise — and it removes any
+need to reason about mode selection (item 3). Use `_repair_commit_allowed`'s two-regime rule anyway,
+for the same reason `_anchor_timed_windows` does: the input plan is unaccepted by construction.
+
+**3. Unverified: why P1's relayout cascaded.** The section above attributes it to re-derivation drift
+("each re-derived leg lands a little later than the plan's original leg and the error accumulates").
+That cannot be the mechanism as stated, because item 2 establishes a leg's duration is independent of
+its departure time. In the replayed day the same hotel→attraction leg takes `34 min` before and
+`50 min` after, which is a **mode change**, not drift: `_get_transport`
+(`tpc_agent.py:5446-5512`) returns the *first* mode from `mode_order` that grounds, and that order is
+rewritten by `_forced_inner_mode` (a restart parameter), `_budget_limits["inner_transport"]`,
+`conditional_transport` and `excluded_inner_transport` — the relayout runs under whatever
+`_set_transport_context(constraints)` last installed, not under the params the plan was built with.
+Translating sidesteps this completely. **You do not need to resolve this to implement P8**; if you
+ever do call `_get_transport` on an existing leg, pin `_forced_inner_mode` to that leg's own `mode`
+first, and do not repeat either explanation as fact without replaying the uid.
+
+**4. The push, as arithmetic.** Target activity at day `d`, slot `i`, deficit `delta > 0` minutes
+(from `phase2_timed_window_shapes.py --detail`'s `off=<N>m`). On a `deepcopy` trial:
+
+1. Clamp the target into its window with the dwell arithmetic `_try_pin_activity`
+   (`tpc_agent.py:2386`) already computes — `start = max(arrival, lo)`, `dwell = min(dwell, hi -
+   start)` — and re-derive **only the target's own inbound leg**, since its departure time genuinely
+   changed.
+2. Walk slots `i+1 …` forward while `delta > 0`. For each, the free gap to its predecessor is
+   `start_time − (predecessor end_time + its own leg duration)`. Absorb `min(delta, gap)` there; the
+   remaining `delta` is what this activity must move by. Shift that activity's `start_time`,
+   `end_time` and **every segment of its own `transports`** by exactly that remainder (dwell
+   preserved, per item 2 — no `_get_transport` call). Stop as soon as `delta` reaches `0`; that is
+   the "absorbed by the day" case (`2` of the `32` instances). A shift that would run an activity
+   past its POI's closing time bounds the push here (guard (c) in item 5).
+3. If the movable block ends with `delta` still positive, the push has to be taken up by the day's
+   fixed tail. Reuse P1's `retime_stay_tail` rule verbatim: an `accommodation` tail may move later,
+   an intercity departure may not, and nothing may pass `24:00`. Otherwise fail the trial.
+4. Bound the whole thing at `TPC_WINDOW_PUSH_MAX_MIN`, default `30` (the near-miss set is
+   `5–19 min`, so `30` covers it with headroom while keeping this from degenerating into P1's
+   whole-day relayout). A required push above the bound fails the trial rather than truncating.
+5. Commit per day, deepcopy-trialed, through `_repair_commit_allowed`, exactly as
+   `_anchor_timed_windows` does (`tpc_agent.py:2800-2866`).
+
+**5. Guards that will bite.** Three, in the order they will hurt:
+
+(a) `minutes_to_time` clamps at `23:59` (`tpc_agent.py:58`) while the
+evaluator's `add_time` has no wrap and will happily emit `24:05`, so a translated time at or past
+`24:00` silently becomes a bogus `23:59` and hands a wrong departure to the next leg — reject the
+push instead, as the anchored path already does.
+
+(b) Chronological order (`Is_time_correct`,
+`commonsense_constraint.py:1079-1166`) needs `transports[0].start_time >= previous activity's
+end_time` and `activity.start_time >= transports[-1].end_time`; a uniform shift of a contiguous
+suffix preserves both internally, so the only place it can break is the boundary between the last
+shifted activity and the first unshifted one — check that leg explicitly. Keep the contiguity
+precondition every existing mover enforces (`movable_slots[-1] - movable_slots[0] + 1 ==
+len(movable_slots)`).
+
+(c) **POI opening hours — the one that actually broke in the experiment above.** A pushed activity
+must still end before its POI closes (`Is_attractions_correct`, `commonsense_constraint.py:461`;
+`Is_restaurants_correct`, `:680`). Check every shifted activity against
+`_lookup_poi_open_bounds`/`_poi_open_bounds` (`tpc_agent.py:1350`, `1368`) *before* handing the trial
+to the checker, so a push that would close a POI is bounded rather than merely rejected — otherwise
+one late-closing attraction discards the whole day's push. The acceptance gate would catch it either
+way; catching it in the arithmetic is what makes the pass useful.
+
+**6. Unit tests to write** (bare-agent harness, zero-travel `_get_transport` stub, as in
+`tests/phase2/test_window_anchor.py`): slack absorption moves nothing downstream; a `15 min` push
+shifts the suffix by exactly `15 min` with every dwell and every leg segment offset unchanged; a push
+needing more than the bound is rejected; a push that would run an activity past its POI's closing
+time is bounded or rejected; an `accommodation` tail absorbs a push and an intercity tail does not;
+and the flag-off floor.
+
+**7. How to reproduce items 2 and 5(c)** — both were established with two throwaway scripts, not
+committed, and each is a few lines: (i) call
+`Transportation(lang="en").goto(city, a, b, dep, mode)` for one POI pair at three departure times and
+compare per-segment `end_time − start_time`, `distance` and `cost`; (ii) over
+`results/phase2_solver_only_tpc_phase2_familiar_100_val/*.json`, keep the plans
+`func_commonsense_constraints` already accepts, apply the shift by hand, and re-check. Re-run them if
+you doubt any claim in item 2 — that is cheaper than debugging the pass.
+
+### P9 — place an absent timed-visit POI
+
+Split out of [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) on
+2026-08-05, because it is insertion rather than retiming and needs machinery P8 does not touch. `15`
+failing clause instances, `6` sole-blocker queries needing only this shape.
+
+`_insert_activity` / `_insert_activity_before_first` / `_insert_activity_after_last` already take a
+`window` tuple and honour it, and their commit rule is the over-strict one P1 had to fix — they
+require `_accepted(*check(plan))` *and* `_activity_counts(plan) > before` *and*
+`_accepted_eval_key(plan) >= before_key` (`tpc_agent.py:1626`, `1719`, `1783`), so on an unaccepted
+input the last clause rejects an insertion that flips the plan to accepted because a leg cost a
+fraction of an ATT point. Use `_repair_commit_allowed`'s two-regime rule instead.
+
+**What makes this a separate item, not a cheap rider on P8.** All three helpers take a resolved POI
+**dict** (name plus open/close bounds), not a name, and their only callers today are the densify and
+meal-top-up paths (`tpc_agent.py:1617-1622`, `3376`, `3421`, `3559-3612`). Using them for a *named*
+timed-visit POI needs new wiring the paragraph in P8 glossed: resolve the clause's POI name against
+`WorldEnv` into that dict, choose the day, and choose the `prev_idx` slot — plus the
+repeated-attraction commonsense rule if the POI is already in the plan on another day. Same ship bar
+as P8.
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
 
@@ -411,10 +565,11 @@ move does not claim to handle.
 **Two shapes remain open, and the shift family is only partly taken.** `absent POI` (insertion, not
 retiming) and already-passed-window `backward-shift` (cross-day relocation) were never in this move's
 scope, and `32 of the 50` shiftable instances also survived it — `11` of them off by only `5–19`
-minutes, because a whole-day relayout is the wrong granularity for a five-minute fix. All of that is
-scoped, sized and instrumented in
-**[P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual)**, which is now the top
-work item.
+minutes, because a whole-day relayout is the wrong granularity for a five-minute fix. The shift
+residual is scoped, sized and instrumented in
+**[P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual)**, the top work item, and
+`absent POI` in **[P9](#p9--place-an-absent-timed-visit-poi)**; already-passed-window
+`backward-shift` (`8` sole-blocker queries) remains unscoped.
 
 **The structurally different option.** The CP-SAT tier (`chinatravel/agent/tpc_agent/cp_solver.py`)
 already exists and already reasons about time, and a timed window is a *native* CP-SAT constraint
@@ -725,3 +880,5 @@ is the measured position.
 | Whole-run measurement | `scripts/phase2_full_run.py` |
 | Failure attribution / commonsense headroom | `scripts/phase2_solver_failure_attribution.py`, `scripts/phase2_commonsense_headroom.py` |
 | Timed-window residual **by shape** (which move would fix it) | `scripts/phase2_timed_window_shapes.py` |
+| Inner-city transport arithmetic — distance/speed only, **no timetable** | `chinatravel/environment/tools/transportation/apis.py` (`goto`, `add_time`) |
+| The evaluator's exact-equality leg check (what makes a translated leg legal) | `chinatravel/symbol_verification/commonsense_constraint.py` (`Is_transport_correct`, `Is_time_correct`, `Is_space_correct`) |
