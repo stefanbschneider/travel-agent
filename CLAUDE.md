@@ -40,8 +40,17 @@ Phase 2 development is split across concurrent workstreams. Each workstream uses
 | Workstream | Job | Writes | Must not |
 | --- | --- | --- | --- |
 | **Analysis / docs / plan** | Review status, shortcomings, and options; keep the three Phase 2 docs (eval roadmap, implementation roadmap, design) current with the latest `main`. | `docs/tpc_phase2_*.md`, `CLAUDE.md`, `README.md`. | Change agent/solver behavior, or run long e2e itself. |
-| **Evaluation** | Work the [evaluation roadmap](docs/tpc_phase2_eval.md#run-this-next) in order on a separate machine and commit the resulting rows: whole-run rows (`make phase2-full-run`, the 5 h envelope — this is what decides the submission) and per-query rows for solver A/Bs. Non-blocking and long-running. | `results/phase2_baselines/` (generated rows only). | Edit agent, parser, solver, or doc prose. |
-| **Implementation** | Implement the next item from the [implementation roadmap's work items](docs/tpc_phase2_roadmap.md#work-items), with focused tests. | `chinatravel/`, `agent_env/`, `tests/`, `scripts/`. | Rewrite roadmap priorities or promote a row (that is the gate's job). |
+| **Evaluation** | Work the [evaluation roadmap](docs/tpc_phase2_eval.md#run-this-next) in order on a separate machine and commit the resulting rows: whole-run rows (`make phase2-full-run`, the 5 h envelope — this is what decides the submission) and per-query rows for solver A/Bs. Non-blocking and long-running. | `results/phase2_baselines/full_runs/`, `results/phase2_baselines/runs/` (generated rows only). | Edit agent, parser, solver, or doc prose. |
+| **Implementation** | Implement the next item from the [implementation roadmap's work items](docs/tpc_phase2_roadmap.md#work-items), with focused tests, and commit the [pre-gate screen](docs/tpc_phase2_eval.md#quick-ab-screen) that triaged it. | `chinatravel/`, `agent_env/`, `tests/`, `scripts/`, `results/phase2_baselines/screens/`. | Rewrite roadmap priorities or promote a row (that is the gate's job). |
+
+**Who owns which measurement directory**, since the two are easy to confuse. A **screen**
+(`results/phase2_baselines/screens/`) is the *implementation* workstream's own pre-gate triage: it
+runs on the developer's box in 1–2 h, is paired against the same subset/budget/seed, and its whole
+purpose is to decide whether a change is worth an eval-machine slot. It belongs in the PR that makes
+the change, next to the code it justifies — a change whose evidence lives in a different PR cannot be
+reviewed. A **row** (`full_runs/`, `runs/`) is the promotion instrument, produced by the Evaluation
+workstream on the eval machine under a pinned contract. Only a row can flip a default; a screen never
+promotes, whoever commits it.
 
 Shared rules for every workstream: obey the [non-negotiable invariants](#non-negotiable-invariants) and the [change and branch protocol](#change-and-branch-protocol); rebase on the latest `main` before pushing; a measurement promotes a change only through the gate, never by assertion alone. Priority order is maintained in the roadmap, and focused prompts live in [`docs/agents/`](docs/agents/).
 

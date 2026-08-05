@@ -61,7 +61,7 @@ measure.**
 its pass wall clocks could be checked against R2's; had they diverged the row would have been
 unusable and the slot wasted.
 
-### R8 — the gate for a window-aware move *(P1 landed 2026-08-05; run this)*
+### R8 — the gate for a window-aware move
 
 ```bash
 TPC_WINDOW_ANCHOR=1 .venv/bin/python scripts/phase2_full_run.py \
