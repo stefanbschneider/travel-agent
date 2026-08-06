@@ -677,7 +677,9 @@ def _rehearse_body(
                 print(f"fresh: cleared {removed} stale whole-run result(s) for this fold/method")
         m, sweep_summary = _run_whole_run(
             split_name, fold_uids, budget_sec=budget_sec,
-            total_budget_sec=total_budget_sec if total_budget_sec else DEFAULT_TOTAL_BUDGET_SEC,
+            total_budget_sec=(
+                total_budget_sec if total_budget_sec is not None else DEFAULT_TOTAL_BUDGET_SEC
+            ),
             workers=workers, method=m_name,
         )
         mode_report = _evaluate_method(split_name, m, fold_uids, query_data)

@@ -183,6 +183,72 @@ def test_run_condition_end_to_end_does_not_set_method(monkeypatch):
     assert captured[0]["workers"] is None
 
 
+def test_run_condition_end_to_end_aggregates_telemetry_from_unsuffixed_method(monkeypatch):
+    """Regression (Copilot review, PR #77): _run_condition must not look up telemetry under an
+    arm-suffixed directory (e.g. phase2_e2e_<split>_off) for end-to-end/solver-only, because those
+    modes never write one -- only whole-run gets a per-arm method. Passing a non-None arm here
+    would silently undercount timeouts/valid_output/etc for every non-whole-run screen."""
+    import phase2_quick_eval as qe
+
+    monkeypatch.setattr(qe.reh, "rehearse",
+                         lambda **k: {"modes": {"end-to-end": {"fpr": 0.0, "quality": {}}}})
+    captured_telemetry_args = []
+
+    def fake_aggregate_telemetry(mode, split_name, uids, arm=None):
+        captured_telemetry_args.append(arm)
+        return {}
+
+    monkeypatch.setattr(qe, "_aggregate_telemetry", fake_aggregate_telemetry)
+    monkeypatch.setattr(qe, "_layer_metrics", lambda *a, **k: {})
+
+    qe._run_condition(
+        label="off", env_overrides={}, mode="end-to-end", split_name="tpc_phase2_familiar_100_val",
+        fold_uids=["a", "b"], budget_sec=60.0, parallel=3, chunk_size=1, fold=0, folds=1, seed=1,
+        arm=None,
+    )
+
+    assert captured_telemetry_args == [None]
+
+
+def test_main_only_passes_arm_suffix_for_whole_run_mode(monkeypatch, tmp_path):
+    """Regression (Copilot review, PR #77): main() must only pass a non-None arm to
+    _run_condition when --mode is whole-run; otherwise end-to-end/solver-only screens look up
+    telemetry under a method directory (phase2_e2e_<split>_off) that was never written."""
+    import phase2_quick_eval as qe
+
+    captured_arms = []
+
+    def fake_run_condition(*, label, env_overrides, arm=None, **kwargs):
+        captured_arms.append(arm)
+        return {
+            "label": label, "env_overrides": env_overrides, "wall_sec": 0.0, "fpr": 0.0,
+            "continuous_score": 0.0, "parse_failures": 0, "timeouts": 0,
+            "telemetry_coverage": "0/0", "telemetry": {"solve_sec_p50": 0.0, "used_fallback": 0},
+            "layers": {}, "quality_n": {}, "scheduler": {},
+        }
+
+    monkeypatch.setattr(qe, "_run_condition", fake_run_condition)
+    monkeypatch.setattr(qe.splits, "read_split", lambda name: ["a", "b"])
+    monkeypatch.setattr(qe.reh, "select_fold", lambda uids, fold, folds, seed: ["a", "b"])
+    monkeypatch.setattr(qe.reh, "resolve_split_set",
+                         lambda s: ("tpc_phase2_familiar_100_val", False))
+
+    monkeypatch.setattr(
+        "sys.argv",
+        ["phase2_quick_eval.py", "--flag", "TPC_WINDOW_PUSH", "--mode", "end-to-end", "--n", "2"],
+    )
+    qe.main()
+    assert captured_arms == [None, None]
+
+    captured_arms.clear()
+    monkeypatch.setattr(
+        "sys.argv",
+        ["phase2_quick_eval.py", "--flag", "TPC_WINDOW_PUSH", "--mode", "whole-run", "--n", "2"],
+    )
+    qe.main()
+    assert captured_arms == ["off", "on"]
+
+
 def test_whole_run_mode_clears_method_outputs_when_fresh(monkeypatch):
     monkeypatch.setattr(R.splits, "read_split", lambda name: ["a", "b"])
     monkeypatch.setattr(R, "runner_load", lambda split_name, lang: ([], {"a": {}, "b": {}}))
@@ -280,6 +346,29 @@ def test_whole_run_default_total_budget_sec_when_none_passed(monkeypatch):
     assert captured["total_budget_sec"] == R.DEFAULT_TOTAL_BUDGET_SEC
 
 
+def test_whole_run_explicit_zero_total_budget_sec_is_not_replaced_by_default(monkeypatch):
+    """Regression: an explicit --total-budget-sec 0 means "disable the envelope" everywhere else
+    in this codebase (run_split's own `if total_budget_sec` treats 0 as no-envelope). The default
+    substitution must check `is None`, not falsiness, or an explicit 0 gets silently overridden."""
+    monkeypatch.setattr(R.splits, "read_split", lambda name: ["a"])
+    monkeypatch.setattr(R, "runner_load", lambda split_name, lang: ([], {"a": {}}))
+    monkeypatch.setattr(R, "_evaluate_method", lambda *a, **k: {"fpr": 0.0, "raw": {}, "quality": {}})
+
+    captured = {}
+
+    def fake_whole_run(split_name, fold_uids, *, budget_sec, total_budget_sec, workers, method):
+        captured["total_budget_sec"] = total_budget_sec
+        return method, {"constraints_ok": 0, "self_overall_mean": 0.0, "self_fpr_mean": 0.0,
+                         "passes": [], "fallbacks_prewritten": 0, "remaining_sec": 0.0,
+                         "elapsed_sec": 0.0}
+
+    monkeypatch.setattr(R, "_run_whole_run", fake_whole_run)
+
+    R.rehearse(modes=("whole-run",), split_set="val", fold=0, folds=1, total_budget_sec=0.0)
+
+    assert captured["total_budget_sec"] == 0.0
+
+
 # --- report dict key parity: whole-run's per-mode report has the same base keys as end-to-end ---
 
 
@@ -315,37 +404,32 @@ def test_whole_run_report_dict_has_same_base_keys_as_end_to_end(monkeypatch):
 
 
 def test_scheduler_report_counts_empty_plans_and_variants_source(tmp_path, monkeypatch):
+    monkeypatch.setattr(R, "PROJECT_ROOT", tmp_path)
     method = "m_scheduler_report_test"
-    results_dir = PROJECT_ROOT / "results" / method
-    run_dir = PROJECT_ROOT / "agent_env" / "runs" / method
+    results_dir = tmp_path / "results" / method
+    run_dir = tmp_path / "agent_env" / "runs" / method
     results_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "u1").mkdir(parents=True, exist_ok=True)
     (run_dir / "u2").mkdir(parents=True, exist_ok=True)
-    try:
-        import json as _json
+    import json as _json
 
-        (results_dir / "u1.json").write_text(_json.dumps({"itinerary": [{"day": 1}]}))
-        (results_dir / "u2.json").write_text(_json.dumps({"itinerary": []}))
-        (run_dir / "u1" / "telemetry.json").write_text(_json.dumps({"variants_source": "parent"}))
-        (run_dir / "u2" / "telemetry.json").write_text(_json.dumps({"variants_source": "worker"}))
+    (results_dir / "u1.json").write_text(_json.dumps({"itinerary": [{"day": 1}]}))
+    (results_dir / "u2.json").write_text(_json.dumps({"itinerary": []}))
+    (run_dir / "u1" / "telemetry.json").write_text(_json.dumps({"variants_source": "parent"}))
+    (run_dir / "u2" / "telemetry.json").write_text(_json.dumps({"variants_source": "worker"}))
 
-        report = R._scheduler_report(
-            method, ["u1", "u2"],
-            {"constraints_ok": 1, "self_overall_mean": 55.5, "self_fpr_mean": 44.4,
-             "passes": [{"index": 0, "kind": "triage"}], "fallbacks_prewritten": 2,
-             "remaining_sec": 10.0, "elapsed_sec": 5.0},
-        )
+    report = R._scheduler_report(
+        method, ["u1", "u2"],
+        {"constraints_ok": 1, "self_overall_mean": 55.5, "self_fpr_mean": 44.4,
+         "passes": [{"index": 0, "kind": "triage"}], "fallbacks_prewritten": 2,
+         "remaining_sec": 10.0, "elapsed_sec": 5.0},
+    )
 
-        assert report["empty_plans"] == 1  # only u2 has an empty itinerary
-        assert report["variants_source"] == {"parent": 1, "worker": 1}
-        assert report["constraints_ok"] == 1
-        assert report["self_overall_mean"] == 55.5
-        assert report["fallbacks_prewritten"] == 2
-    finally:
-        import shutil
-
-        shutil.rmtree(results_dir, ignore_errors=True)
-        shutil.rmtree(run_dir, ignore_errors=True)
+    assert report["empty_plans"] == 1  # only u2 has an empty itinerary
+    assert report["variants_source"] == {"parent": 1, "worker": 1}
+    assert report["constraints_ok"] == 1
+    assert report["self_overall_mean"] == 55.5
+    assert report["fallbacks_prewritten"] == 2
 
 
 # --- CLI wiring: --mode whole-run is a valid choice on both entry points ------------------------

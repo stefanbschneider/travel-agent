@@ -413,13 +413,13 @@ def main() -> None:
     else:
         print(f"[1/2] baseline  ({args.flag}={args.off}) ...", flush=True)
         baseline = _run_condition(label=f"{args.flag}={args.off}", env_overrides=base_env,
-                                   arm="off", **common)
+                                   arm=("off" if args.mode == "whole-run" else None), **common)
         print(f"      done in {baseline['wall_sec']}s  FPR={baseline['fpr']} "
               f"overall_true={baseline['continuous_score']}\n", flush=True)
 
     print(f"[2/2] candidate ({args.flag}={args.on}) ...", flush=True)
     candidate = _run_condition(label=f"{args.flag}={args.on}", env_overrides=cand_env,
-                                arm="on", **common)
+                                arm=("on" if args.mode == "whole-run" else None), **common)
     print(f"      done in {candidate['wall_sec']}s  FPR={candidate['fpr']} "
           f"overall_true={candidate['continuous_score']}\n", flush=True)
 
