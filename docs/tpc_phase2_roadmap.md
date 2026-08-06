@@ -24,7 +24,7 @@ Two more moves from the same family have since taken the measured best to `64.15
 
 **That thesis has now been tested at full scale, and it held.** [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)
 gave the solver the move the dominant failure family needs;
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r17-established) measured `FPR 32.0 → 43.0` over a
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established) measured `FPR 32.0 → 43.0` over a
 baseline whose three repeats were bit-for-bit identical, and it is **on by default since
 2026-08-05**. The next two moves out of the same family,
 [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
@@ -76,7 +76,7 @@ queries, making it a *measured* no-op on familiar-100 rather than an assumed one
 | [P2](#p2--per-attempt-telemetry-ledger) telemetry ledger | **yes** | append-only telemetry; cannot change a plan provided it leaves `on_result`'s keep-best comparison and pass selection alone |
 | [P3](#p3--emit-commonsense-valid-plans-when-nothing-is-accepted) re-screen | **yes** | screen only, flag already exists, no merge needed to measure |
 | [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) | develop yes, **merge after packaging** | unflagged shipped-path change. Harmless by measurement (`0/100` trigger rate) but it moves the sha |
-| [R18](tpc_phase2_eval.md#r18--regenerate-the-held-out-plans-p12s-residual-needs-open-lower-priority-than-r17) | **not concurrently on the same host as any other whole-run row** | two whole-run solves contend for the same cores and neither row is then comparable to anything |
+| ~~R18~~ | — | closed 2026-08-06, right after R17 on the same host. `4/150` official-fail/parsed-pass uids reported |
 | [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) / [R9](tpc_phase2_eval.md#r9--the-falsification-run-for-spend-the-idle-envelope-needs-p5-readable-only-with-p2) | **no — genuinely blocked** | P5 needs P2's ledger to be readable at all (R9's signal is flips *per pass*, not a total), and R9 needs P5 merged. Strictly serial: P2 → P5 → R9 |
 | [P6](#p6--llm-backed-repair-proposer-v2-candidate-default-off) / R11 | out of scope | 1–2 day build, endpoint unreachable locally, cannot be gated before 2026-08-10 |
 
@@ -300,7 +300,7 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 | ~~P10~~ | ~~Scheduler self-scoring uses the solver's exact parsed variants~~ | — | **landed 2026-08-06 (`21ab422`), default-on, not behind a flag. Measured at `n=100` alongside P8/P9 by [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green): GREEN, `overall +0.0183` vs P10-absent R14, `constraints_ok +5` self-score-only** | v2 |
 | ~~P8~~ | ~~Bounded local window push~~ (`TPC_WINDOW_PUSH`) | — | **gated GREEN 2026-08-06 by [R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green) (stacked with P9: `overall +0.5471`, `FPR +1.0`); promoted by P14** | v2 |
 | ~~P9~~ | ~~Place an absent timed-visit POI~~ (`TPC_WINDOW_INSERT`) | — | **same row, same GREEN, promoted by P14** | v2 |
-| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r17-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
+| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
@@ -456,15 +456,16 @@ you *measure* the gap offline, never how the shipped path closes it — see
 [non-negotiable invariants](../CLAUDE.md#non-negotiable-invariants). If you use the oracle to find
 which five queries these are, say so in the PR and show that the fix itself is oracle-free.
 
-**Where the evidence lives.** The five uids are identifiable by re-running the four-cell cross-tab:
-score every plan under `results/phase2_e2e_tpc_phase2_test*/` with `eval_tpc.py` (official) and with
-`selfscore.score_plan` (parsed), and take the `official=no, parsed=yes` cell. Those plans are **not
-in this checkout** — they were produced by the packaged-`v1` `tpc_phase2_test` run on 2026-08-05, and
-the P10 PR skipped the replay for the same reason. Regenerating them is a whole-run solve over the
-150-query `tpc_phase2_test` split, which is an **Evaluation** task, not an Implementation one, and it
-is now queued as [R18](tpc_phase2_eval.md#r18--regenerate-the-held-out-plans-p12s-residual-needs-open-lower-priority-than-r17):
-ask for it rather than burning a slot yourself, and in the meantime work from the five *categories*
-above, which are recorded and do not need the artifacts.
+**Where the evidence now lives.**
+[R18](tpc_phase2_eval.md#r18--regenerate-the-held-out-plans-p12s-residual-needs-closed-2026-08-06)
+regenerated the 150-query `tpc_phase2_test` split fresh (closed 2026-08-06, `results/phase2_e2e_r18_test150/`)
+and ran the four-cell cross-tab: `official=fail, parsed=pass` is now `4/150`, at uids
+`20250323114048262328`, `20250324082922869744`, `20250324083022806437`, `20250324225301554257`. Down
+from the original diagnosis's `5/150` on the packaged-`v1` replay, but not a clean before/after — the
+tree has changed (P0/P1/P8/P9/P10/P12 all landed since), so this is not proof those four are the same
+five queries, only that the current residual is this size on this tree. Work these four uids by the
+three still-open categories above (required restaurant/attraction lists, inner-transport budget),
+never from `hard_logic*` at runtime.
 
 
 **Tests** (`tests/phase2/`):
@@ -890,7 +891,7 @@ as P8.
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
 
-**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r17-established)
+**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established)
 gated it GREEN (`overall 57.75 → 63.58`, `FPR 32.0 → 43.0`, `constraints_ok 36 → 46`) and
 `TPC_WINDOW_ANCHOR=1` is now a [harness default](#harness-defaults-promoted-through-a-measured-gate-or-screen).
 This was the item, and it delivered.** Diagnosis §4: the *sole* logical blocker in `45 of 61`
@@ -1032,7 +1033,7 @@ the solver-only arm from the *oracle clause's type test*, so both extraction pat
 the effect is not an artifact of oracle constraints. Commonsense and EPR being exactly flat while
 `all_pass` moves `+8` is the proof of mechanism: the gain is windows being satisfied, not a side
 effect on another layer. A screen triages and never promotes — this one buys
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r17-established) on the eval machine.
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established) on the eval machine.
 
 **The floor is intact on real data, not only in unit tests.** The flag-off arm reproduces the
 pre-change run exactly: `FPR 32.5`, `all_pass 26`, `commonsense_pass 76`, `logical_micro 90.94`.
