@@ -347,6 +347,8 @@ PROMOTED_SOLVER_FLAGS: tuple[str, ...] = (
     "TPC_WINDOW_ANCHOR",
     "TPC_COMMONSENSE_FIRST",
     "TPC_SOLVE_CONVERGE_PATIENCE",
+    "TPC_WINDOW_PUSH",
+    "TPC_WINDOW_INSERT",
 )
 
 # Deterministic solver passes that are implemented and screened but **not** promoted: library- and
@@ -355,9 +357,9 @@ PROMOTED_SOLVER_FLAGS: tuple[str, ...] = (
 # comparability rule requires that row to state its own configuration rather than rely on its label.
 # On promotion, move the flag from here into ``PROMOTED_SOLVER_FLAGS`` -- the two tuples must stay
 # disjoint, and the drift guard in ``tests/phase2/test_solver_flag_telemetry.py`` enforces both.
+# ``TPC_WINDOW_PUSH_MAX_MIN`` stays a candidate after P14 promoted the two passes above -- it is a
+# *bound* on TPC_WINDOW_PUSH, not a pass of its own, and R14 measured it at its code default (30 min).
 CANDIDATE_SOLVER_FLAGS: tuple[str, ...] = (
-    "TPC_WINDOW_PUSH",
-    "TPC_WINDOW_INSERT",
     "TPC_WINDOW_PUSH_MAX_MIN",
 )
 

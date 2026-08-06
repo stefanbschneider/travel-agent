@@ -45,22 +45,24 @@ def test_harness_promotion_is_visible_in_the_snapshot():
         "TPC_WINDOW_ANCHOR": "1",
         "TPC_COMMONSENSE_FIRST": "1",
         "TPC_SOLVE_CONVERGE_PATIENCE": "15",
+        "TPC_WINDOW_PUSH": "1",
+        "TPC_WINDOW_INSERT": "1",
     }
     assert _solver_flag_snapshot(env) == {
         "pin_timed_windows": True,
         "window_anchor": True,
         "commonsense_first": True,
         "solve_converge_patience": "15",
-        "window_push": False,
-        "window_insert": False,
+        "window_push": True,
+        "window_insert": True,
         "window_push_max_min": None,
     }
 
 
-def test_a_p8_p9_gate_arm_states_its_own_configuration():
-    """The P8/P9 gate arm (evaluation run R14) turns the two window repairs on from the
-    environment. They are not promoted, so nothing sets them for the arm implicitly -- and without
-    them in the snapshot the resulting row could not be told apart from the promoted baseline."""
+def test_a_window_push_max_min_override_is_visible_in_the_snapshot():
+    """TPC_WINDOW_PUSH_MAX_MIN stays a candidate after P14 promoted TPC_WINDOW_PUSH/
+    TPC_WINDOW_INSERT -- it is a bound on the pass, not a pass of its own, and R14 measured it at
+    its code default (30 min), so it is not part of the harness-default environment."""
     env = {
         "TPC_PIN_TIMED_WINDOWS": "1",
         "TPC_WINDOW_ANCHOR": "1",
@@ -70,8 +72,6 @@ def test_a_p8_p9_gate_arm_states_its_own_configuration():
         "TPC_WINDOW_INSERT": "1",
     }
     snapshot = _solver_flag_snapshot(env)
-    assert snapshot["window_push"] is True
-    assert snapshot["window_insert"] is True
     assert snapshot["window_push_max_min"] is None  # bound left at the code default (30 min)
     assert _solver_flag_snapshot({**env, "TPC_WINDOW_PUSH_MAX_MIN": "45"})[
         "window_push_max_min"
@@ -87,10 +87,19 @@ def test_snapshot_covers_exactly_what_the_harness_promotes(monkeypatch):
         monkeypatch.delenv(name, raising=False)
     before = {k for k in os.environ if k.startswith("TPC_")}
 
-    runner.apply_deterministic_solver_defaults()
+    # apply_deterministic_solver_defaults() writes os.environ directly (mirroring the shipped
+    # harness), not through monkeypatch. monkeypatch.delenv only records an undo action for a key
+    # it has already seen absent-then-set -- calling delenv *after* the write would make monkeypatch
+    # treat the just-written value as "the original" and restore it at teardown, leaking a promoted
+    # flag into every later test in the process. Restore with plain os.environ instead.
+    try:
+        runner.apply_deterministic_solver_defaults()
 
-    promoted = {k for k in os.environ if k.startswith("TPC_")} - before
-    assert promoted == set(PROMOTED_SOLVER_FLAGS)
+        promoted = {k for k in os.environ if k.startswith("TPC_")} - before
+        assert promoted == set(PROMOTED_SOLVER_FLAGS)
+    finally:
+        for name in PROMOTED_SOLVER_FLAGS:
+            os.environ.pop(name, None)
 
 
 def test_candidate_flags_are_recorded_but_never_promoted():
