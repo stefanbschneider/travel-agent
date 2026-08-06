@@ -24,7 +24,7 @@ Two more moves from the same family have since taken the measured best to `64.15
 
 **That thesis has now been tested at full scale, and it held.** [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)
 gave the solver the move the dominant failure family needs;
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established) measured `FPR 32.0 → 43.0` over a
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established) measured `FPR 32.0 → 43.0` over a
 baseline whose three repeats were bit-for-bit identical, and it is **on by default since
 2026-08-05**. The next two moves out of the same family,
 [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
@@ -43,39 +43,40 @@ then measured that exact shipping configuration at `n=100` and closed **GREEN** 
 over R8/R12; `empty_plans 0/100`, no failed jobs). [P11](#p11--a-whole-run-mode-for-the-pre-gate-screen-landed-2026-08-06)
 and [P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics) then landed too.
 
-**The new critical-path item is that P12 moved `main` off the tree R16 measured, in the shipped solve
-path.** R16's row pins `git_sha 241c0524`; `main` is `154ee9e6`. P11 is tooling only, but P12 is
-unflagged production code, and its claim that `evaluate_parsed_constraints` never reaches the
-solve/accept loop is **false**: Phase 2 runs `TPC_USE_ORACLE=0`
+**That critical-path item is now closed: P12 moved `main` off the tree R16 measured, in the shipped
+solve path, and R17 re-measured it.** R16's row pinned `git_sha 241c0524`; P11 is tooling only, but
+P12 was unflagged production code, and its claim that `evaluate_parsed_constraints` never reaches the
+solve/accept loop was **false**: Phase 2 runs `TPC_USE_ORACLE=0`
 (`chinatravel/agent/phase2/orchestrator.py:283`), which makes that function `_make_checker`'s
 `base_check` (`tpc_agent.py:174`) — the gate behind `_accepted`, every `_pack_plan` commit rule and the
 restart loop. Probing it with the adversarial plan from P12's own test returns `accepted (3,3)` pre-P12
-and `rejected (0,3)` post-P12. So a `v2` built from `main` today ships an unmeasured configuration.
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
-is the `~1.3 h` row that resolves it, and it either clears `main` or sends the archive build back to
-`241c0524` — which R16 already proved is `+0.5654` over `v1`.
+and `rejected (0,3)` post-P12.
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+resolved it, GREEN, on 2026-08-06: `git_sha efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`, `overall
+64.17251838310492` (`+0.02` over R16), `FPR 44.0` unchanged. **`v2` ships from `efbfea96`**, not
+R16's `241c0524`.
 
 Implementation continues with [P2](#p2--per-attempt-telemetry-ledger) →
 [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) as capacity allows. These
 improve the *next* cycle and the technical report, not what `v2` contains, since `v2`'s content is
 settled by P14 and R16/R17.
 
-**Sequencing while R17 runs — the one real serialization constraint.** Everything below is safe to
-develop in parallel with R17, but the archive must be built from **the sha R17 reports**, not from
-whatever `main` is when the row lands. So: land parallel work on branches, and merge production-path
-changes to `main` only after `v2` is packaged, or accept that `main` has again drifted from the
-measured tree. [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) is the one to
-watch — it touches the shipped path, though R16 verified its trigger fires on `0/100` queries, making
-it a *measured* no-op on familiar-100 rather than an assumed one.
+**Sequencing after R17 — the one real serialization constraint, now relaxed to a single remaining
+step.** R17 has run and closed; the archive must still be built from **the sha R17 reported**
+(`efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`), not from whatever `main` is when packaging happens. So:
+merge production-path changes to `main` only after `v2` is packaged, or accept that `main` has again
+drifted from the measured tree. [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides)
+is the one to watch — it touches the shipped path, though R16 verified its trigger fires on `0/100`
+queries, making it a *measured* no-op on familiar-100 rather than an assumed one.
 
-| Track | Runs in parallel with R17? | Why |
+| Track | Safe before `v2` is packaged? | Why |
 | --- | --- | --- |
-| [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open) itself | — | Evaluation, own machine, pinned sha. `~1.3 h` |
-| **Technical report** (Table 1 refresh + prose) | **yes, no constraint** | no code; the only coupling is that Table 1 should quote R16 or R17, so write it against R16 and update the one number if R17 clears |
+| ~~R17~~ | — | closed 2026-08-06, GREEN. Evaluation, own machine, pinned sha `efbfea96` |
+| **Technical report** (Table 1 refresh + prose) | **yes, no constraint** | no code; write it against R17's `64.17` (or R16's `64.15` if simpler — the two are within noise) |
 | [P2](#p2--per-attempt-telemetry-ledger) telemetry ledger | **yes** | append-only telemetry; cannot change a plan provided it leaves `on_result`'s keep-best comparison and pass selection alone |
 | [P3](#p3--emit-commonsense-valid-plans-when-nothing-is-accepted) re-screen | **yes** | screen only, flag already exists, no merge needed to measure |
 | [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) | develop yes, **merge after packaging** | unflagged shipped-path change. Harmless by measurement (`0/100` trigger rate) but it moves the sha |
-| [R18](tpc_phase2_eval.md#r18--regenerate-the-held-out-plans-p12s-residual-needs-open-lower-priority-than-r17) | **not concurrently on the same host** | two whole-run solves contend for the same cores and neither row is then comparable to anything. Queue it after R17 |
+| ~~R18~~ | — | closed 2026-08-06, right after R17 on the same host. `4/150` official-fail/parsed-pass uids reported |
 | [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) / [R9](tpc_phase2_eval.md#r9--the-falsification-run-for-spend-the-idle-envelope-needs-p5-readable-only-with-p2) | **no — genuinely blocked** | P5 needs P2's ledger to be readable at all (R9's signal is flips *per pass*, not a total), and R9 needs P5 merged. Strictly serial: P2 → P5 → R9 |
 | [P6](#p6--llm-backed-repair-proposer-v2-candidate-default-off) / R11 | out of scope | 1–2 day build, endpoint unreachable locally, cannot be gated before 2026-08-10 |
 
@@ -88,14 +89,16 @@ should contain, and can it be measured before that deadline?*
 
 ## Where we are
 
-**Current best measured configuration: [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)**
-(`results/phase2_baselines/full_runs/20260806T082724Z.json`, `git_sha 241c0524`, `familiar_100`, 5 h
-envelope, 3 workers on 4-core Linux, `evaluator_parity: c89cfca`, zero LLM calls, `1.31 h` wall) —
-`overall 64.15`, `FPR 44.0`, `empty_plans 0/100`, `constraints_ok 51/100`. That is the bare organizer
-command with nothing exported, carrying `TPC_WINDOW_ANCHOR` + `TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT`
-and P10's parent-parse path. It is `+0.5654` over the uploaded `v1`, and it is the `v2` candidate —
-subject to [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open),
-because `main` has since drifted off that sha.
+**Current best measured configuration: [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)**
+(`results/phase2_baselines/full_runs/20260806T115309Z.json`, `git_sha
+efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`, `familiar_100`, 5 h envelope, 3 workers on 4-core Linux,
+`evaluator_parity: c89cfca`, zero LLM calls, `1.38 h` wall) — `overall 64.17251838310492`, `FPR
+44.0`, `empty_plans 0/100`, `constraints_ok 50/100`. That is the bare organizer command with nothing
+exported, carrying `TPC_WINDOW_ANCHOR` + `TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT`, P10's parent-parse
+path, and P12's tightened acceptance gate. It is `+0.5879` over the uploaded `v1` and `+0.02` over
+[R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
+(`241c0524`, pre-P11/P12) — inside noise, confirming P12 doesn't cost score on the tree that would
+actually ship. **This is the `v2` candidate; build the archive from this sha.**
 
 The decomposition below is **R8**'s (`20260805T123142Z`), kept because it is the row the FPR argument
 was built on and the shape has not changed — R16 moves FPR `43.0 → 44.0` and the preference terms a
@@ -273,41 +276,42 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 
 ## Work items
 
-> **⚠ Read this before queueing any whole-run measurement.** Two unflagged changes now live on the
+> **⚠ Read this before queueing any whole-run measurement.** Two unflagged changes landed on the
 > whole-run path, so a row's `git_sha` decides what it measures. **P10** (`21ab422`) changed
 > `run_sweeps_split`: **R14 (`b54c58ef`) and every earlier row are pre-P10; R15 (`1ac96bbd`) and R16
 > (`241c0524`) are post-P10.** **P12** (`a27d5a35`) then changed `TPCAgent`'s acceptance gate:
-> **every committed row, R16 included, is pre-P12.** So the post-P12 configuration — which is what
-> `main` is and what a `v2` built today would ship — has never been measured.
-> [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
-> is that run.
+> **R16 and every earlier row are pre-P12.**
+> [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+> measured the post-P12 configuration — what `main` is and what `v2` ships — at `git_sha
+> efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`: **GREEN**, `overall +0.02` over R16, `FPR` unchanged. Any
+> row committed after R17 that pins a later sha again needs its own git_sha read against this table.
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
 | ~~P2~~ | ~~Per-attempt telemetry ledger~~ | — | **landed 2026-08-06**: `attempts.jsonl` per uid, additive to `telemetry.json`; aggregated into the committed row by `phase2_full_run.py`. No score effect, as expected — enables the report's distributions and timings, and the instrument P5/R9 need | v2 (report) |
-| P13 | An empty parent parse must mean the same thing on both sides | <1 h | rare (needs a *raised* parse); fixes a query being solved unconstrained while scored constrained. **Verified `0/100` trigger rate by R16**, so it is a measured no-op on familiar-100. **Implemented on branch `claude/p13-empty-parent-parse-consistency`, PR open, held per the sequencing note** — do not merge to `main` until `v2` is packaged from the sha R17 reports | post-v2 |
+| ~~P13~~ | ~~An empty parent parse must mean the same thing on both sides~~ | — | **Verified `0/100` trigger rate by R16**, so a measured no-op on familiar-100 at merge time. **Merged to `main` 2026-08-06 (`de3c8fcb`) — this text originally said "held until `v2` is packaged"; it was merged before that, so `main`'s tip is now past R17's measured sha `efbfea96` too. `v2` must still be built from `efbfea96`, not `main`'s current tip** | post-v2 |
 | P3 | ~~Re-screen commonsense-valid emission when nothing is accepted~~ | 2 h | **closed 2026-08-06: bar cleared (MacEPR +10.0, C-LPR +9.59, FPR +2.5), no code change needed — see [P3](#p3--emit-commonsense-valid-plans-when-nothing-is-accepted)** | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open**; needs P2 first to be readable | post-v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | post-v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move — **out of reach before 2026-08-10** | not v2 |
 | ~~P11~~ | ~~A whole-run mode for the pre-gate screen~~ | — | **landed 2026-08-06 (`8e341181`/`175cf58b`), tooling only. `--mode whole-run` reaches `run_sweeps_split`; per-arm method directories close the incumbent-bleed trap; null screen identical across arms and live `TPC_WINDOW_PUSH` screen `GREEN LIGHT` (`fpr 47.5 → 50.0`), both committed** | tooling |
-| ~~P12~~ | ~~Close P10's false-positive half~~ (five omitted parser semantics) | — | **landed 2026-08-06, not behind a flag. Two of the five were genuine checker gaps and are closed (`required_order`, activity-type-gated `activity_time_windows`); the other three were already correctly represented. Its screen mis-argued that the checker cannot affect the solve — it can, and does ([R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open) measures it)** | v2 if R17 is GREEN |
+| ~~P12~~ | ~~Close P10's false-positive half~~ (five omitted parser semantics) | — | **landed 2026-08-06, not behind a flag. Two of the five were genuine checker gaps and are closed (`required_order`, activity-type-gated `activity_time_windows`); the other three were already correctly represented. Its screen mis-argued that the checker cannot affect the solve — it can, and does: [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green) confirmed it fired on `1/100` shipped-path plans, GREEN, `overall +0.02`** | v2 |
 | ~~P14~~ | ~~Promote P8/P9 to harness defaults~~ | — | **landed 2026-08-06 (`0c80ab6b`/`241c0524`), confirmed live by R16's telemetry with nothing exported** | v2 |
 | ~~P10~~ | ~~Scheduler self-scoring uses the solver's exact parsed variants~~ | — | **landed 2026-08-06 (`21ab422`), default-on, not behind a flag. Measured at `n=100` alongside P8/P9 by [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green): GREEN, `overall +0.0183` vs P10-absent R14, `constraints_ok +5` self-score-only** | v2 |
 | ~~P8~~ | ~~Bounded local window push~~ (`TPC_WINDOW_PUSH`) | — | **gated GREEN 2026-08-06 by [R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green) (stacked with P9: `overall +0.5471`, `FPR +1.0`); promoted by P14** | v2 |
 | ~~P9~~ | ~~Place an absent timed-visit POI~~ (`TPC_WINDOW_INSERT`) | — | **same row, same GREEN, promoted by P14** | v2 |
-| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
+| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
 `P0`…`P14` are stable identifiers, so a later note can refer to "P5" without depending on the
 ranking. Sections below are in priority order.
 
-**No code change is on the critical path to `v2` any more.** The two things that decide the
-submission are both outward-facing or Evaluation-owned: run
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open),
-then package and upload from the sha it clears. Implementation's own top item is therefore the other
-mandatory deliverable.
+**No code change is on the critical path to `v2` any more.** The thing that decides the submission
+content is settled — [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+cleared `main` GREEN at `git_sha efbfea96bea19610f9d725ebec2fd6f5d6b5cceb` — and what remains is
+outward-facing: package and upload from that sha. Implementation's own top item is therefore the
+other mandatory deliverable.
 
 **If you only do one thing, do [P2](#p2--per-attempt-telemetry-ledger).** Not for score — it is worth
 zero — but because the **technical report is mandatory, due 2026-08-10 alongside `v2`, and its current
@@ -316,12 +320,14 @@ open-TODO list). P2 is what makes the report's distributions and timings plottab
 at all, and it is the instrument P5/R9 need afterwards. Two hours, no score risk, and it unblocks the
 deliverable that currently has no owner.
 
-**Then [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides)**, which is under an
-hour and now has a measured blast radius: R16 confirmed `variants_count == 0` on `0/100` queries, so it
-is a no-op on familiar-100 and cannot regress the submission. **Implemented 2026-08-06** on a branch,
-per the [sequencing note](#where-we-are) — held there and not merged to `main` until `v2` is packaged,
-not because it is risky, but because every merge to `main` between R17 and the archive build reopens
-the drift this cycle just spent a row closing.
+**P13 is done** (`#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides`): a measured
+no-op on familiar-100 (R16 confirmed `variants_count == 0` on `0/100` queries), implemented
+2026-08-06 and **merged to `main` the same day (`de3c8fcb`)** — despite that section's own text
+originally saying it would stay held on a branch until `v2` was packaged, which did not happen.
+Net effect: `main`'s tip is now past R17's measured sha (`efbfea96`) by one more unflagged
+production-path change, the same drift shape R16 and R17 each closed once already. **`v2` must still
+be built from `efbfea96`, not `main`'s current tip** — see the note in
+[the evaluation roadmap](tpc_phase2_eval.md#run-this-next).
 
 **After that: P3, then P5/P4.** All three are worth under a point each, and two of them are worth
 approximately zero **by measurement** rather than by guess. P5 additionally depends on P2. P8, P9, P11,
@@ -398,8 +404,8 @@ official scores across arms and a full `tpc_phase2_familiar_100_val` parser-vs-o
 `0.9588`. **That screen argued the identity was structural; it is not** — the checker is also the
 solver's acceptance gate, so P12 can change produced plans. See the correction box at the end of this
 section, and
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open),
-the row that measures it on the shipped path.
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green),
+the row that measured it on the shipped path: fired on `1/100` queries, GREEN, `overall +0.02`.
 
 **Why this and not something scorier (historical).** [P10](#infrastructure-landed)
 fixed the false *negatives* — the scheduler being stricter than the solver. It explicitly deferred the
@@ -450,15 +456,16 @@ you *measure* the gap offline, never how the shipped path closes it — see
 [non-negotiable invariants](../CLAUDE.md#non-negotiable-invariants). If you use the oracle to find
 which five queries these are, say so in the PR and show that the fix itself is oracle-free.
 
-**Where the evidence lives.** The five uids are identifiable by re-running the four-cell cross-tab:
-score every plan under `results/phase2_e2e_tpc_phase2_test*/` with `eval_tpc.py` (official) and with
-`selfscore.score_plan` (parsed), and take the `official=no, parsed=yes` cell. Those plans are **not
-in this checkout** — they were produced by the packaged-`v1` `tpc_phase2_test` run on 2026-08-05, and
-the P10 PR skipped the replay for the same reason. Regenerating them is a whole-run solve over the
-150-query `tpc_phase2_test` split, which is an **Evaluation** task, not an Implementation one, and it
-is now queued as [R18](tpc_phase2_eval.md#r18--regenerate-the-held-out-plans-p12s-residual-needs-open-lower-priority-than-r17):
-ask for it rather than burning a slot yourself, and in the meantime work from the five *categories*
-above, which are recorded and do not need the artifacts.
+**Where the evidence now lives.**
+[R18](tpc_phase2_eval.md#r18--regenerate-the-held-out-plans-p12s-residual-needs-closed-2026-08-06)
+regenerated the 150-query `tpc_phase2_test` split fresh (closed 2026-08-06, `results/phase2_e2e_r18_test150/`)
+and ran the four-cell cross-tab: `official=fail, parsed=pass` is now `4/150`, at uids
+`20250323114048262328`, `20250324082922869744`, `20250324083022806437`, `20250324225301554257`. Down
+from the original diagnosis's `5/150` on the packaged-`v1` replay, but not a clean before/after — the
+tree has changed (P0/P1/P8/P9/P10/P12 all landed since), so this is not proof those four are the same
+five queries, only that the current residual is this size on this tree. Work these four uids by the
+three still-open categories above (required restaurant/attraction lists, inner-transport budget),
+never from `hard_logic*` at runtime.
 
 
 **Tests** (`tests/phase2/`):
@@ -499,19 +506,21 @@ before/after (`git stash`; P10's own PR used the same workaround for the same re
 > different incumbent or on `best_cs`. Our checker's opinion changed; the official evaluator's did
 > not. Where the old opinion was wrong-positive that is a gain; where the new one is over-strict
 > relative to the oracle it discards plans the official evaluator would have passed.
-> [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
-> is the row that settles it, and it is the reason `v2` is not packaged from `main` unread. Expected
-> effect is small — `required_order` matched `0/80` val queries and the type fix did not fire on the 10
-> uids most likely to exercise it — but small is not zero.
+> [R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+> settled it, GREEN: the fix fired on `1/100` queries — matching the "small but not zero" prediction
+> (`required_order` matched `0/80` val queries and the type fix did not fire on the 10 uids most likely
+> to exercise it) — and moved `overall` by `+0.02`, inside noise. `v2` ships from R17's sha.
 
 
 
 ### P13 — an empty parent parse must mean the same thing on both sides
 
-**Implemented 2026-08-06 on branch `claude/p13-empty-parent-parse-consistency`, PR open — held per
-the [sequencing note](#where-we-are): do not merge to `main` before `v2` is packaged from the sha
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
-reports.** Ships exactly the fix this section specifies (resolution (a) below), nothing more:
+**Implemented and merged to `main` 2026-08-06 (`de3c8fcb`).** This section originally said it would
+stay held on branch `claude/p13-empty-parent-parse-consistency` per the [sequencing
+note](#where-we-are) until `v2` was packaged from the sha
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+reported — it merged before that happened instead. `v2` must still be built from R17's `efbfea96`,
+not from `main`'s current tip. Ships exactly the fix this section specifies (resolution (a) below), nothing more:
 `orchestrator.solve_phase2` now tests `if variants:` rather than `if variants is not None:`, so a
 parent-side parse failure (`variants=[]`) re-parses in the worker instead of solving unconstrained.
 `agent_env/scripts/solve_phase2.py`'s parent parse also now records which uids (if any) fell back,
@@ -529,7 +538,7 @@ the full repository suite pass unmodified elsewhere.
 verification step.** Under an hour. **Land it on a branch and merge after `v2` is packaged** — not
 because it is risky (R16 measured its trigger firing on `0/100` queries, so it is a no-op on
 familiar-100) but because every merge to `main` between
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
 and the archive build reopens the measured-tree-vs-shipped-tree drift this cycle just spent a row
 closing.
 
@@ -882,7 +891,7 @@ as P8.
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
 
-**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established)
+**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established)
 gated it GREEN (`overall 57.75 → 63.58`, `FPR 32.0 → 43.0`, `constraints_ok 36 → 46`) and
 `TPC_WINDOW_ANCHOR=1` is now a [harness default](#harness-defaults-promoted-through-a-measured-gate-or-screen).
 This was the item, and it delivered.** Diagnosis §4: the *sole* logical blocker in `45 of 61`
@@ -1024,7 +1033,7 @@ the solver-only arm from the *oracle clause's type test*, so both extraction pat
 the effect is not an artifact of oracle constraints. Commonsense and EPR being exactly flat while
 `all_pass` moves `+8` is the proof of mechanism: the gain is windows being satisfied, not a side
 effect on another layer. A screen triages and never promotes — this one buys
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established) on the eval machine.
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r18-established) on the eval machine.
 
 **The floor is intact on real data, not only in unit tests.** The flag-off arm reproduces the
 pre-change run exactly: `FPR 32.5`, `all_pass 26`, `commonsense_pass 76`, `logical_micro 90.94`.
@@ -1077,8 +1086,8 @@ shipped floor, and `TPC_WINDOW_ANCHOR=0` still reproduces the R7 arm.
 every Phase 2 team and due 2026-08-10, 24:00 Beijing Time**, the same moment as `v2`
 ([report guide](../report/README.md), [competition reference](reference/competition.md#technical-report-2026-08-04-organizer-reply)).
 The draft's own open-TODO list says its **Table 1 is still the pre-P1 reference row** and must be
-replaced by the best whole-run row that lands before the deadline — that is R16, or R17 if it clears.
-P2 is what makes the rest of the report's numbers exist at all.
+replaced by the best whole-run row — that is R17 (`overall 64.17251838310492`, `git_sha efbfea96`),
+now that it has closed GREEN. P2 is what makes the rest of the report's numbers exist at all.
 
 **Why.** Two reasons, one a hard requirement. (a) The technical report needs distributions and
 timings — min/mean/max with spread, per-pass wall clock, restart histograms — which today's
@@ -1098,7 +1107,7 @@ plottable from the committed row alone** — rows are what survive.
 
 **Keep it strictly additive.** Append a ledger and aggregate it; do not touch `on_result`'s keep-best
 comparison or any pass-selection logic. That is what makes P2 safe to develop in parallel with
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
 and, if it lands cleanly, safe to merge without invalidating the row — a telemetry-only diff cannot
 change a plan. Merge after `v2` is packaged anyway, per the [sequencing note](#where-we-are), so the
 archive is built from exactly the sha that was measured.

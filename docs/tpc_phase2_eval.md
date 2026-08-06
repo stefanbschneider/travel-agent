@@ -16,7 +16,31 @@ committed `submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagg
 [the archive record](reference/competition.md#the-v1-archive-as-built-2026-08-05)). The organizers
 aim to return a score within 3 days of a valid submission, so feedback is expected around
 2026-08-08, and **one submission slot remains** (`v2`, due with the technical report on 2026-08-10,
-24:00 Beijing Time = 18:00 CEST). Every evaluation slot from here exists to answer one question:
+24:00 Beijing Time = 18:00 CEST). **[R17](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+closed GREEN on 2026-08-06: the tree `main` would actually ship (`git_sha efbfea96`, post-P11/P12)
+scores `overall 64.17251838310492` — `+0.02254283` over R16's `64.14997555172528`, `FPR 44.0`
+unchanged, `empty_plans 0/100`, zero failed jobs.** P12's tightened accept gate fired on exactly `1`
+of the 100 plans versus R16's tree (byte-diffed against `results/phase2_e2e_r16_v2cand/` still on
+disk), replacing a nonsensical overnight itinerary with a different, coherent one and moving no
+aggregate metric outside noise. **`v2` should now be built from `efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`**,
+not from R16's `241c0524` — see [R17's own section](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+for the full reading. Packaging/upload remains a separate, outward-facing step this row does not
+perform.
+
+**Found while pushing this row: `main` has drifted again, past R17's sha too.**
+[P13](tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) merged
+to `main` (`de3c8fcb`) *after* R17 measured `efbfea96` — its own roadmap-doc text says "PR open, held
+per the sequencing note — do not merge to `main` until `v2` is packaged," but it was merged anyway,
+so `main`'s tip now carries an unflagged production-path change (`agent_env/scripts/solve_phase2.py`,
+`chinatravel/agent/phase2/orchestrator.py`, `chinatravel/agent/phase2/sweeps.py`) that no committed
+row measures at `n=100`. This is the same drift pattern R16 and R17 each closed one PR earlier,
+recurring a third time. **It does not change R17's own reading — `efbfea96` is still the correct sha
+to build `v2` from** — but it means `main`'s current tip is *not* that sha, and a future row (or the
+archive build itself) must not silently substitute one for the other. R16 confirmed P13's trigger
+fires on `0/100` familiar-100 queries, so the expected blast radius is the same "small but not zero"
+shape as P12's, not yet confirmed on the post-P13 tree specifically.
+
+Every evaluation slot before R17 existed to answer one question:
 **is there a configuration worth spending the second slot on?** [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
 was that measurement, and it came back **GREEN** on 2026-08-06 (`overall 64.13`, `+0.5471` over the
 R8/R12 baseline; `FPR 44.0`, `+1.0`; `constraints_ok` unchanged at `46/100` — see the row's own
@@ -38,6 +62,7 @@ of each row settles how that interacts with them:
 | **R14** | `b54c58ef` | **no** | **P8+P9 alone — a clean two-way delta, exactly as registered** |
 | **R15** | `1ac96bbd` | **yes** | P10 **+** P8+P9 against R13's pre-both baseline (20 held-out records) |
 | **R16** | `241c0524` | **yes** | post-P10 `main` at `n=100`, P8/P9 on, nothing exported — **the shipping configuration *as of that commit*** |
+| **R17** | `efbfea96` | **yes** | post-P11/P12 `main` at `n=100` — **confirms P12 does not cost score on the shipped path; this is the sha `v2` ships from** |
 
 So R14's GREEN was *not* confounded — it happened to run one commit before P10 landed — but it also
 meant `+0.5471` was measured with P10 absent, and P10 changes which candidate the scheduler keeps
@@ -50,9 +75,10 @@ reading, including the self-score jump on `constraints_ok` (`46 → 51/100`) tha
 and that the doc's decision rule explicitly excludes from the promotion call. R9 and R11 stay blocked
 on unimplemented work items — see the table below.
 
-**`main` has since moved past the tree R16 measured, and the difference is in the shipped solve path —
-so [R17](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open) is now the
-run that decides what `v2` contains.** R16's row pins `git_sha: 241c0524`. Since then two PRs
+**`main` had moved past the tree R16 measured, and the difference was in the shipped solve path — so
+[R17](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+was the run that decided what `v2` contains, and it closed GREEN.** R16's row pins `git_sha:
+241c0524`. Between R16 and R17, two PRs
 landed: [P11](tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen-landed-2026-08-06)
 (tooling only — `scripts/`, `tests/`, nothing the solver imports) and
 [P12](tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics), which is
@@ -61,7 +87,7 @@ landed: [P11](tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-scree
 
 P12's own screen argued this was safe on the grounds that `evaluate_parsed_constraints` "is consulted
 only by the final self-score, never by the CP-SAT solve/accept loop". **That claim is false, and it is
-the reason this row exists.** Phase 2 runs with `TPC_USE_ORACLE=0`
+the reason R17 existed.** Phase 2 runs with `TPC_USE_ORACLE=0`
 (`chinatravel/agent/phase2/orchestrator.py:283`), and in that mode `TPCAgent._make_checker`'s
 `base_check` *is* `evaluate_parsed_constraints` (`chinatravel/agent/tpc_agent/tpc_agent.py:174`) — the
 same `check(plan)` that drives `_accepted`, every `_pack_plan` commit rule and the restart loop's
@@ -78,12 +104,13 @@ on a different incumbent or on `best_cs`. Our checker's opinion changed; the off
 not. Where the old opinion was wrong-positive that is a gain; where the new one is over-strict
 relative to the oracle it discards plans the official evaluator would have passed. P12's screen was
 `n=10` in per-query mode with a zero-diff result it mis-attributed to structure, so it does not bound
-this. **Expected effect on familiar-100 is small** — `required_order` matched `0/80` val queries and
-the type fix did not fire on the 10 uids most likely to exercise it — but small is not zero, and this
-is exactly the "the measured tree is not the shipped tree" gap R16 existed to close for P10,
-recurring one PR later for P12.
+this. **Expected effect on familiar-100 was small** — `required_order` matched `0/80` val queries and
+the type fix did not fire on the 10 uids most likely to exercise it — and R17 confirmed it: P12 fired
+on exactly `1` of the 100 plans versus R16's tree, and the aggregate score moved `+0.02`, inside
+noise. This was exactly the "the measured tree is not the shipped tree" gap R16 existed to close for
+P10, recurring one PR later for P12 — and R17 closed it the same way.
 
-R1–R16 are closed (see [what the closed queue established](#what-the-closed-queue-r1r16-established)).
+R1–R18 are closed (see [what the closed queue established](#what-the-closed-queue-r1r18-established)).
 R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
 repeats scored bit-for-bit identical (`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok
 36/100`, all three times) — every remaining arm below is judged against that near-zero floor rather
@@ -133,11 +160,11 @@ on its `--label`.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R17** | **does the tree we would actually ship still score what R16 measured?** (post-P11/P12 `main`) | **nothing — run this next** | ~1.3 h |
-| ~~R16~~ | ~~what does the configuration a `v2` would ship actually score?~~ | closed 2026-08-06, GREEN vs R14 — but measured `241c0524`, which is no longer `main` (see above) | done |
+| ~~R17~~ | ~~does the tree we would actually ship still score what R16 measured?~~ (post-P11/P12 `main`) | closed 2026-08-06, GREEN vs R16 — `v2` ships from `efbfea96` | done |
+| ~~R16~~ | ~~what does the configuration a `v2` would ship actually score?~~ | closed 2026-08-06, GREEN vs R14 — but measured `241c0524`, superseded as the ship sha by R17 | done |
 | ~~R14~~ | ~~do P8+P9 hold up on a whole run? → does `v2` exist?~~ | closed 2026-08-06, GREEN (pre-P10 tree) | done |
 | ~~R15~~ | ~~did the P8/P9 gain generalize past the `val` residual?~~ | closed 2026-08-06, tripwire never armed (see result) | done |
-| R18 | which held-out plans are `official=fail, parsed=pass`? (P12's residual false-positive half) | nothing, but **lower priority than R17** — it informs the *next* cycle, not `v2` | ~1.5 h |
+| ~~R18~~ | ~~which held-out plans are `official=fail, parsed=pass`?~~ (P12's residual false-positive half) | closed 2026-08-06 — `4/150` uids reported, informs the *next* cycle, not `v2` | done |
 | R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | R11 | LLM-backed repair | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off), which is not implemented and cannot be verified against the organizers' endpoint from here | out of reach before 2026-08-10 |
 
@@ -147,12 +174,13 @@ split. R11's old "not before the `v1` upload" gate has now been *superseded rath
 `v1` is uploaded, but with `P6` unwritten and the endpoint unreachable locally, there is no arm to
 run before the deadline.
 
-### R17 — does the tree we would actually ship still score what R16 measured? *(open)*
+### R17 — does the tree we would actually ship still score what R16 measured? *(closed 2026-08-06, GREEN)*
 
-**Run this next. It is the only thing standing between a GREEN R16 and a `v2` upload**, and it costs
-`~1.3 h` against a `2026-08-10` deadline.
+**Status: closed.** This was the only thing standing between a GREEN R16 and a `v2` upload, and it
+closed GREEN the same day it was queued.
 
-**Why it exists.** R16 measured `git_sha 241c0524`. `main` is now `154ee9e6`, and the delta contains
+**Why it existed.** R16 measured `git_sha 241c0524`. `main` had moved to `154ee9e6` (and, by the time
+this row ran, `efbfea96`), and the delta contains
 P12 — unflagged production code that changes `TPCAgent`'s **acceptance gate**, not just the
 scheduler's self-score. The reasoning, the source lines and the direct accept-gate probe are in
 [Run this next](#run-this-next) above. Short version: a `v2` built from `main` today ships a
@@ -197,40 +225,113 @@ Expected: **within noise of R16's `64.15`**, because both P12 fixes are rare on 
 vacuous pass, and it is [P12's own predicted signature](tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics).
 **`constraints_ok` is not a promotion metric here**; `overall` and `FPR` are.
 
-**Cheaper alternative if the eval machine is busy**, now that
+**Result** (row `20260806T115309Z`, 4-core Linux, 3 workers, `git_sha:
+efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`, `git_dirty: false`, `evaluator_parity: c89cfca`, `split:
+tpc_phase2_familiar_100` — matches R16's row by construction, confirmed rather than assumed —
+compared against **R16** `20260806T082724Z`):
+
+Telemetry confirmed before the score was read: all 100 per-query `telemetry.json` files showed
+`variants_source: parent`, zero queries with `variants_count == 0` (matching R16's expectation
+exactly), and `window_anchor`/`window_push`/`window_insert` all `true` with nothing exported;
+`window_push_max_min` read `false` (unpromoted candidate, at its code default). All three passes
+(triage/repair/polish) reported `failed: 0`.
+
+`overall 64.17251838310492` (**`+0.02254283`** over R16's `64.14997555172528` — inside noise), MicEPR
+`99.67`, MacEPR `98.00`, C-LPR `90.08`, **`FPR 44.0`** (unchanged from R16), DAV `26.04`, ATT `34.48`,
+DDR `25.19`; `empty_plans 0/100`, zero failed jobs across all three passes. Ran `100/50/50` queries
+through triage/repair/polish with `100/1/14` improved, in `1.38 h` of the `5.00 h` envelope (`27.55%`).
+The scheduler's own self-score, `constraints_ok`, read **`50/100`** — **`-1`** versus R16's `51/100`,
+consistent with P12's predicted signature (the tightened gate no longer counts a vacuous pass) and,
+per the pre-registered rule, not itself a promotion signal.
+
+By the pre-registered rule this is **GREEN**: `overall` is within `0.5` of R16 (in fact fractionally
+above it), `FPR` is not down, `empty_plans 0/100`, and no failed job on any pass. **Action per the
+rule: build `v2` from this row's sha, `efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`** — not from R16's
+`241c0524`. Packaging/upload remains a separate, outward-facing action not performed by this row.
+
+**Cheaper alternative if the eval machine is busy** (not exercised — the full row above already
+exists), now that
 [P11](tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen-landed-2026-08-06) exists: a
 paired `--mode whole-run` screen at `n=40` over the two revisions (`241c0524` vs `main`) bounds P12's
-whole-run effect in `~50 min`. That is a screen — it triages, it never promotes — so it can justify
-*skipping* R17 only if the team decides to ship `241c0524` regardless.
+whole-run effect in `~50 min`. That is a screen — it triages, it never promotes.
 
-**Also worth diffing, and cheap.** Compare this row's plan directory against R16's
-(`results/phase2_e2e_r16_v2cand/`, still on disk) the way R15 was read: if `N of 100` plans are
-byte-identical apart from `elapsed_time(sec)`, P12 fired on `100 − N` queries and those are exactly
-the uids to inspect. That answers "did the fix fire at all on the shipped path", which neither P12's
-screen nor any row currently does.
+**The plan-directory diff, done.** Compared this row's plan directory
+(`results/phase2_e2e_r17_ship/`) against R16's (`results/phase2_e2e_r16_v2cand/`, still on disk) the
+way R15 was read: **99 of 100 plans are byte-identical** apart from `elapsed_time(sec)`. The 100th,
+`phase2_familiar_20250322120414354584_00052`, has a real P12-caused change: the R16-tree plan departed
+its outbound flight at `02:56` and landed at `04:27` (an implausible overnight schedule the old accept
+gate let through), and P12's tightened gate rejected it, sending the solver to a different incumbent —
+a `07:28`–`08:59` flight followed by a coherent lunch/attraction/dinner sequence through the day. This
+answers "did the fix fire at all on the shipped path": **yes, on `1/100` queries**, matching the
+"rare but real" prediction (`required_order` matched `0/80` val queries) and moving no aggregate
+metric outside noise.
 
-Commit the row under `results/phase2_baselines/full_runs/` and add its line to
-[the closed-queue table](#what-the-closed-queue-r1r16-established).
+Committed the row under `results/phase2_baselines/full_runs/` and added its line to
+[the closed-queue table](#what-the-closed-queue-r1r18-established).
 
-### R18 — regenerate the held-out plans P12's residual needs *(open, lower priority than R17)*
+### R18 — regenerate the held-out plans P12's residual needs *(closed 2026-08-06)*
+
+**Status: closed.** Run immediately after R17 on the same host, once R17's row was pushed (the two
+whole-run solves would otherwise contend for the same cores).
 
 [P12](tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics) closed two
 of five omitted semantics and explicitly could not close the other three, because the evidence — the
-`official=fail, parsed=pass` plans from the packaged-`v1` `tpc_phase2_test` run — is **not in this
-checkout**. The roadmap item's own "where the evidence lives" note asks Evaluation for it rather than
-having Implementation guess. This is that request.
+`official=fail, parsed=pass` plans from the packaged-`v1` `tpc_phase2_test` run — was **not in this
+checkout**. The roadmap item's own "where the evidence lives" note asked Evaluation for it rather than
+having Implementation guess. This row is that request.
+
+**Command actually run:**
 
 ```bash
 .venv/bin/python scripts/phase2_full_run.py --split tpc_phase2_test \
   --total-budget-sec 5400 --method phase2_e2e_r18_test150 --label "R18 regenerate tpc_phase2_test plans for the P12 cross-tab"
 ```
 
-Then score every plan twice — officially with `eval_tpc.py`, and with `selfscore.score_plan` — and
-report the four-cell cross-tab plus **the uids in the `official=no, parsed=yes` cell**. Those uids are
-the deliverable; the aggregate score is not the point and this row does not promote anything.
+Then scored every plan twice — officially by replicating `eval_tpc.py`'s `all_pass_id` computation
+(`evaluate_schema_constraints` ∩ `evaluate_commonsense_constraints` ∩ `evaluate_hard_constraints_v2`,
+oracle-fed, local-only, exactly as the official scorer does it), and with the run's own recorded
+`self_score` per query (`chinatravel/agent/phase2/selfscore.score_plan`'s `PlanScore.constraints_ok`,
+taken from each query's final per-query `telemetry.json` rather than recomputed, since that is the
+exact live output of `score_plan` against the exact variants the solver searched — recomputing it
+separately would risk silently deriving a different parse than what was actually solved against).
 
-**This informs the next cycle, not `v2`.** Run it only after R17, and only if a slot is free before
-2026-08-10.
+**Result** (row `20260806T132917Z`, 4-core Linux, 3 workers, `git_sha:
+e7faa9f1ead32f7ae17829fa1d901813e276284c`, `git_dirty: false`, `evaluator_parity: c89cfca`, split
+`tpc_phase2_test`, 150 queries, `empty_plans 0/150`, zero failed jobs, `0.49 h` of the `1.50 h`
+envelope): official pass rate (`FPR`-equivalent on this split) **`90.7%` (136/150)**, matching the
+row's own `official_scores.FPR: 90.66666666666666` exactly — a self-consistency check that the
+replicated `all_pass_id` computation agrees with `eval_tpc.py`'s own. Self-score (`constraints_ok`)
+pass rate **`83.3%` (125/150)**, matching the row's own `constraints_ok: 125`.
+
+**The four-cell cross-tab:**
+
+| | official = pass | official = fail |
+| --- | --- | --- |
+| **parsed = pass** | `121` (agree, pass) | **`4`** — **the deliverable, official=fail/parsed=pass** |
+| **parsed = fail** | `15` (self-score under-counts) | `10` (agree, fail) |
+
+**The deliverable — uids in `official=fail, parsed=pass`:**
+
+- `20250323114048262328`
+- `20250324082922869744`
+- `20250324083022806437`
+- `20250324225301554257`
+
+Four residual false positives out of 150, down from the `5/150` the original packaged-`v1` replay
+found on 2026-08-05 (not a like-for-like comparison — that run predates P0's seed fix and every
+promoted flag since, and its plans are not in this checkout to diff against) — consistent with P12
+having closed some but not all of the five omitted-semantics categories, but not proof of which:
+these four uids may or may not be among the original five, since P12, P10, P8/P9 and P1 have all
+changed what the solver produces since that replay. **Per the roadmap item's own scope, this row does
+not attempt to categorize these four by constraint family** (required restaurant/attraction lists or
+the inner-transport budget, per [P12](tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics)'s
+three still-open categories) — that is Implementation's next-cycle task, working from these four uids
+plus their plans (`results/phase2_e2e_r18_test150/`) and query text
+(`chinatravel/data/phase2_test/query/` or equivalent), never from `hard_logic*` at runtime.
+
+**This informs the next cycle, not `v2`; it does not promote anything.** Cross-tab and uids committed
+under `results/phase2_baselines/full_runs/20260806T132917Z.json`; add this row's line to
+[the closed-queue table](#what-the-closed-queue-r1r18-established).
 
 ### R16 — measure the `v2` candidate (the last run before a rebuild) *(closed 2026-08-06, GREEN)*
 
@@ -349,12 +450,12 @@ checklist](reference/competition.md#pre-submission-checklist--the-cold-start-rul
 and upload as `{team}_v2.zip` — that packaging/upload step is a separate, outward-facing action and
 is not performed by this row.
 
-> **Addendum 2026-08-06: "the measured tree" is `241c0524`, and that is no longer `main`.** P12
-> landed after this row and changes `TPCAgent`'s acceptance gate without a flag, so `main` ships a
-> configuration this row did not measure. Read
-> [R17](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open) before building
-> the archive: it either clears `main` or sends the build back to `241c0524`, which this row proves is
-> a known-GREEN `+0.5654` over `v1`.
+> **Addendum 2026-08-06: "the measured tree" was `241c0524`, and `main` had moved past it.** P12
+> landed after this row and changes `TPCAgent`'s acceptance gate without a flag, so `main` shipped a
+> configuration this row did not measure.
+> [R17](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+> resolved it: **GREEN**, `overall +0.02` over this row, `FPR` unchanged — `v2` ships from R17's
+> `efbfea96`, not from this row's `241c0524`.
 
 
 **On whether `v2` is worth spending at all.** The organizers evaluate at most two versions and **the
@@ -365,7 +466,7 @@ which is what the cold-start checklist exists to prevent, so budget the time for
 than for more score-chasing.
 
 Commit the row under `results/phase2_baselines/full_runs/` and add its line to
-[the closed-queue table](#what-the-closed-queue-r1r16-established) with host, worker count and both
+[the closed-queue table](#what-the-closed-queue-r1r18-established) with host, worker count and both
 baselines above.
 
 ### R14 — the P8/P9 gate: the one run that decides whether `v2` exists *(closed 2026-08-06, GREEN)*
@@ -436,7 +537,7 @@ have more competing search to displace here than they did there.
 solver — see the [cold-start note](#before-the-first-run) above.
 
 Commit the row under `results/phase2_baselines/full_runs/` and add its line to
-[the closed-queue table](#what-the-closed-queue-r1r16-established) with the host, worker count and
+[the closed-queue table](#what-the-closed-queue-r1r18-established) with the host, worker count and
 the baseline it is compared against.
 
 **Result** (row `20260806T052925Z`, 4-core Linux, 3 workers, `git_dirty: false`, `evaluator_parity:
@@ -466,7 +567,7 @@ in advance specifically so a borderline delta cannot be re-read as FLAT after th
 2. **`constraints_ok` did not move at all** (`46/100`, identical to baseline). The `+0.5471` overall
    gain is entirely from one FPR point plus the three preference terms (DAV/ATT/DDR), not from any
    query flipping from failing to passing its constraints — the same distinction this doc's [closed-queue
-   finding #4](#what-the-closed-queue-r1r16-established) already draws between `improved` and
+   finding #4](#what-the-closed-queue-r1r18-established) already draws between `improved` and
    `constraints_ok`. The gain is real (GREEN stands) but thinner than the headline `overall` delta
    reads on its own.
 
@@ -519,7 +620,7 @@ disk). **19 of the 20 plans are byte-identical apart from the recorded `elapsed_
 visit's start/end time is shifted by `14–15` minutes throughout the day — so the flags did fire on
 this split, at least once. That edit left every official aggregate metric unchanged, which is only
 possible if this query's pass/fail status did not change (a query's preference terms are zeroed
-whenever it fails, per this doc's [closed-queue finding #4](#what-the-closed-queue-r1r16-established));
+whenever it fails, per this doc's [closed-queue finding #4](#what-the-closed-queue-r1r18-established));
 the row's telemetry has no per-query pass/fail counter to confirm this beyond the aggregate
 arithmetic, so that is as far as this row can pin it down.
 
@@ -595,7 +696,7 @@ Pair it with the archive check R6 performed on the old configuration: build with
 confirm the plans are real rather than the pre-written empty fallbacks. A worker dying at start-up
 still exits `0`; see the [cold-start rule](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05).
 
-**Archive check**: see the R12 row in [what the closed queue established](#what-the-closed-queue-r1r16-established)
+**Archive check**: see the R12 row in [what the closed queue established](#what-the-closed-queue-r1r18-established)
 — packaged and verified with `scripts/assemble_phase2_submission.py`'s built-in unpack-and-run check.
 
 ### R13 — the held-out tripwire on the new default *(closed 2026-08-05)*
@@ -687,7 +788,7 @@ not needed for the submission decision because the requested 8-worker deployment
 
 ### What not to spend a slot on
 
-- **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible ([R7](#what-the-closed-queue-r1r16-established)),
+- **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible ([R7](#what-the-closed-queue-r1r18-established)),
   so a rerun of the same configuration on the same host returns the same number. [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
   already closed GREEN off a single run; do not repeat it hoping for a different number.
 - **Any whole-run row whose configuration you cannot read off its own telemetry.** Check
@@ -813,7 +914,7 @@ rows because the solver now canonicalizes its own constraint literals). `EVALUAT
 `c89cfca`; `scripts/phase2_gate.py` refuses to gate across the boundary, including one-sided marker
 presence. Full detail: [competition reference](reference/competition.md#evaluator-version).
 
-## What the closed queue (R1–R16) established
+## What the closed queue (R1–R18) established
 
 Run 2026-08-04/05/06 primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
 `evaluator_parity: c89cfca`, rows under `results/phase2_baselines/full_runs/`. **Nothing on this
@@ -835,6 +936,8 @@ list needs re-running.**
 | **R14 P8+P9 gate, 5 h** (`TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1`), 4-core Linux, 3 workers, vs R8/R12 baseline | `20260806T052925Z` | `overall 64.13167839953107` (**`+0.5471`** over R8/R12's `63.58458530360117`); MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.99`, **FPR `44.0`** (**`+1.0`**), DAV `25.54`, ATT `34.53`, DDR `25.28`; `empty_plans 0/100`, **`constraints_ok 46/100` (unchanged)**; `git_dirty: false`; all 100 per-query `telemetry.json` confirmed `window_push`/`window_insert`/`window_anchor` all `true`; `1.32 h` of the `5.00 h` envelope, zero failed jobs across triage/repair/polish (`100/54/46` queries, `100/1/13` improved). **GREEN by the pre-registered rule** (overall up, FPR not down, no empty plans, no failed jobs), but the paired screen over-predicted this row on all three axes (predicted `64.5–65.5`/`45–46`/`48–49`, measured `64.13`/`44.0`/`46`) and `constraints_ok` did not move at all — the gain is one FPR point plus preference terms, not new passing queries. Flag promotion into `PROMOTED_SOLVER_FLAGS` is an Implementation-workstream follow-up, not done in this row |
 | **R15 held-out tripwire, 1 h** (`familiar_100_test`, post-P8/P9), 4-core Linux, 3 workers, vs R13 on the identical 20 records | `20260806T065521Z` | All seven official metrics **bit-for-bit identical to R13**: `overall 70.53975966861671`, MicEPR `100.0`, MacEPR `100.0`, C-LPR `93.36`, FPR `55.0`, DAV `32.60`, ATT `42.90`, DDR `28.47`; `empty_plans 0/20`, **`constraints_ok 13/20`** (tied with R13); `git_dirty: false`; all 20 `solver_flags` confirmed `window_push`/`window_insert`/`window_anchor` `true`; `0.26 h` of the `1.00 h` envelope. Diffing the plan directories on disk (`results/phase2_e2e_r13_test/` vs `results/phase2_e2e_r15_test/`) found **19/20 plans byte-identical** apart from `elapsed_time(sec)`; the 20th query got a real P8/P9 edit (every timed visit shifted `14–15` min) that moved no official metric — consistent with that query's pass/fail status being unchanged either side, though the row's telemetry has no per-query pass/fail counter to confirm that beyond the aggregate arithmetic. **The tripwire never armed**: with the flags changing only 1/20 plans and moving nothing, this row is neither evidence the residual generalizes nor evidence it doesn't |
 | **R16 `v2` candidate gate, 5 h**, post-P10 `main`, P8/P9 promoted, nothing exported, 4-core Linux, 3 workers, vs R14 and R8/R12 | `20260806T082724Z` | `overall 64.14997555172528` (**`+0.0183`** over R14's `64.13167839953107`; **`+0.5654`** over R8/R12's `63.58458530360117`); MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.99`, **FPR `44.0`** (unchanged from R14, **`+1.0`** over R8/R12), DAV `26.04`, ATT `34.48`, DDR `25.19`; `empty_plans 0/100`, zero failed jobs across triage/repair/polish (`100/49/51` queries, `100/1/14` improved); `git_sha: 241c0524`, `git_dirty: false`; all 100 per-query `telemetry.json` confirmed `variants_source=parent`, zero queries with `variants_count == 0`, and `window_push`/`window_insert`/`window_anchor` all `true` with nothing exported; `1.31 h` of the `5.00 h` envelope. **GREEN by the pre-registered rule** (overall within `0.5` of R14, FPR not down, no empty plans, no failed jobs), and this row is also the clean, undiluted `v1 → v2` delta since it is the only row with both P10 and P8/P9 in the tree at `n=100`. `constraints_ok` (the scheduler's own self-score) read `51/100`, **`+5`** over R14 — the self-scoring effect P10 was built to fix, explicitly not a promotion signal by the doc's own rule |
+| **R17 ship candidate, 5 h**, post-P11/P12 `main`, nothing exported, 4-core Linux, 3 workers, vs R16 | `20260806T115309Z` | `overall 64.17251838310492` (**`+0.02254283`** over R16's `64.14997555172528` — inside noise); MicEPR `99.67`, MacEPR `98.00`, C-LPR `90.08`, **FPR `44.0`** (unchanged from R16), DAV `26.04`, ATT `34.48`, DDR `25.19`; `empty_plans 0/100`, zero failed jobs across triage/repair/polish (`100/50/50` queries, `100/1/14` improved); `git_sha: efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`, `git_dirty: false`; all 100 per-query `telemetry.json` confirmed `variants_source=parent`, zero queries with `variants_count == 0`, and `window_push`/`window_insert`/`window_anchor` all `true` with nothing exported; `1.38 h` of the `5.00 h` envelope. **GREEN by the pre-registered rule** (overall within `0.5` of R16, FPR not down, no empty plans, no failed jobs). `constraints_ok` read `50/100`, **`-1`** versus R16 — P12's predicted signature (the tightened gate no longer counts a vacuous pass), not itself a promotion signal. Byte-diffing the plan directory against R16's (`results/phase2_e2e_r16_v2cand/`) found **99/100 plans identical**; the one changed query (`phase2_familiar_20250322120414354584_00052`) had its implausible overnight-flight plan rejected by P12's tightened gate and replaced with a coherent full-day itinerary, moving no aggregate metric outside noise. **Action: `v2` ships from this row's sha, `efbfea96`, not from R16's `241c0524`** |
+| **R18 P12 residual cross-tab, 1.5 h** (`tpc_phase2_test`, 150 queries), 4-core Linux, 3 workers | `20260806T132917Z` | `overall 90.5602691742775`, `FPR 90.67` (official pass rate `136/150`), `empty_plans 0/150`, zero failed jobs; `git_sha: e7faa9f1ead32f7ae17829fa1d901813e276284c`, `git_dirty: false`; `0.49 h` of the `1.50 h` envelope. **Not a promotion row** — not comparable to any `familiar_100` row (different split, different query count). The four-cell official×parsed cross-tab: `121` agree-pass, `15` official-pass/parsed-fail, `10` agree-fail, and **`4` official-fail/parsed-pass** — the P12-residual deliverable — self-score pass rate `125/150` matching the row's own `constraints_ok`. **The four uids**: `20250323114048262328`, `20250324082922869744`, `20250324083022806437`, `20250324225301554257`. Down from the original packaged-`v1` replay's `5/150` (not like-for-like — that replay predates every promoted flag since), consistent with P12 closing some but not all of the five omitted-semantics categories. Hands the four uids to Implementation for the next cycle's category work; does not itself categorize or promote |
 
 **On R10's `git_dirty: true`.** By the letter of the [ledger rule](#ledger-comparability) this row
 is not proven reproducible from its commit alone, and that should not be waved away. What actually
@@ -927,6 +1030,26 @@ Five findings, and two corrections that matter more than the scores:
     (the scheduler stops under-counting its own successes) without moving `overall` — exactly the
     "self-score effect, not a scoring one" the row was registered to check for, and, per the doc's
     own rule, not itself a reason to read the gate any differently.
+13. **P12 does not cost score on the shipped path, and it fires rarely** (R17): the tree `main`
+    would actually ship (`efbfea96`, post-P11/P12) scored `64.17251838310492`, `+0.02254283` over
+    R16's `64.14997555172528` — inside noise — with `FPR` unchanged, `empty_plans 0/100`, and no
+    failed job on any pass. GREEN by the pre-registered rule. `constraints_ok` fell one point
+    (`51 → 50/100`), the tightened gate's predicted self-score signature, not a promotion signal.
+    Byte-diffing the plan directory against R16's found P12 fired on exactly `1/100` queries,
+    replacing an implausible overnight-flight itinerary with a coherent one — confirming both that
+    the fix reaches the shipped path (P12's own screen never established this) and that its blast
+    radius is as small as predicted. `v2` ships from this row's sha, not R16's.
+14. **The `official=fail, parsed=pass` residual is `4/150` on a fresh `tpc_phase2_test` regeneration**
+    (R18): the evidence P12's item asked for and that was missing from this checkout. Official pass
+    rate `90.7%` (`136/150`), self-score pass rate `83.3%` (`125/150`); the four-cell cross-tab is
+    `121` agree-pass / `15` official-pass-parsed-fail / `10` agree-fail / `4` official-fail-parsed-pass.
+    Down from the original diagnosis's `5/150` on the packaged-`v1` replay, though the two counts are
+    not a clean before/after (different git tree, different plans) so this is consistent with, not
+    proof of, P12 having closed part of the gap. The four uids are handed to Implementation for the
+    next cycle's remaining three categories (required restaurant/attraction lists, inner-transport
+    budget); this row does not categorize or promote — `tpc_phase2_test` is a different split at a
+    different query count from `familiar_100`, so its `overall`/`FPR` are not comparable to any
+    promotion baseline in this ledger.
 
 R5 and R13 are recorded standalone: `familiar_100_test` is a *subset* of `familiar_100` (R1's split),
 so no val↔test gap is computed against R1/R8/R12's `overall`. R13's `70.54` above R8's `63.58` is
