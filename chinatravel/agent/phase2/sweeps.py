@@ -660,10 +660,18 @@ def _run_pass(
         if improved:
             best_scores[uid] = score
             record.improved += 1
+        telemetry = result.get("telemetry") or {}
+        # Pure observation, added here rather than inside solve_one so a worker's own returned
+        # dict (`wall_sec`, kept for the pool's own use) does not have to be duplicated by hand
+        # in every caller. Neither key feeds keep-best or pass selection above -- both already
+        # ran by this point in this function.
+        telemetry["wall_sec"] = result.get("wall_sec")
+        telemetry["pass_index"] = record.index
+        telemetry.setdefault("seed_salt", os.environ.get("TPC_SEED_SALT", "0"))
         # Reported either way: a five-hour run has to be readable afterwards, and "this query was
         # retried three times and never improved" is exactly the diagnostic worth having. The
         # caller decides what to persist for a non-improving attempt (telemetry, not the plan).
-        on_result(uid, result["plan"], score, result.get("telemetry") or {}, improved)
+        on_result(uid, result["plan"], score, telemetry, improved)
 
     if executor is None:
         for task in tasks:

@@ -307,6 +307,79 @@ def query_budget_sec(
     return max(float(min_sec), min(float(cap_sec), fair_share))
 
 
+# --- P2: per-attempt telemetry ledger -------------------------------------------------------
+# `on_result` in `run_sweeps_split` used to write `work_root/<uid>/telemetry.json` on *every*
+# attempt, so each later pass's write silently overwrote the previous pass's record -- reading it
+# after a completed run measures only the winners (roadmap diagnosis §3's sampling note). This
+# keeps that file as the latest (other tooling already reads it) and additionally appends one
+# line per attempt to `work_root/<uid>/attempts.jsonl`, so the full attempt history survives.
+ATTEMPT_LEDGER_FILENAME = "attempts.jsonl"
+
+
+def attempt_ledger_record(
+    *,
+    pass_index: int | None,
+    pass_kind: str | None,
+    seed_salt: Any = None,
+    budget_sec: float | None,
+    wall_sec: float | None,
+    telemetry: dict,
+    self_score: dict | None,
+    kept: bool,
+) -> dict:
+    """One JSON-serializable record for a single solve attempt on one query.
+
+    Pulled from ``telemetry``/``self_score`` where those already carry the value (solver search
+    telemetry, pass kind) rather than re-deriving it, so the ledger can never disagree with the
+    telemetry file written alongside it.
+    """
+    search_telemetry = telemetry.get("search_telemetry") or {}
+    return {
+        "pass_index": pass_index,
+        "pass_kind": pass_kind or telemetry.get("pass_kind"),
+        "seed_salt": seed_salt,
+        "budget_sec": budget_sec,
+        "wall_sec": wall_sec,
+        "restarts_used": search_telemetry.get("restarts_used"),
+        "stop_reason": search_telemetry.get("stop_reason"),
+        "candidates_evaluated": search_telemetry.get("candidates_evaluated"),
+        "best_found_at_restart": search_telemetry.get("best_found_at_restart"),
+        "self_score": self_score,
+        "kept": bool(kept),
+    }
+
+
+def append_attempt_ledger(run_dir: Path, record: dict) -> None:
+    """Append one attempt record as a JSON line to ``run_dir/attempts.jsonl``.
+
+    Append-only and additive: this never touches ``telemetry.json`` (still written separately as
+    "the latest attempt", which existing tooling reads), never touches which plan gets written to
+    ``results/<method>/<uid>.json``, and never influences keep-best or pass selection -- it is
+    observation only, called after those decisions are already made.
+    """
+    run_dir.mkdir(parents=True, exist_ok=True)
+    line = json.dumps(record, ensure_ascii=False, default=str)
+    with (run_dir / ATTEMPT_LEDGER_FILENAME).open("a", encoding="utf-8") as f:
+        f.write(line + "\n")
+
+
+def read_attempt_ledger(run_dir: Path) -> list[dict]:
+    """Read every attempt record for one query, oldest first. Missing file -> ``[]``."""
+    path = run_dir / ATTEMPT_LEDGER_FILENAME
+    if not path.exists():
+        return []
+    records = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            records.append(json.loads(line))
+        except Exception:
+            continue
+    return records
+
+
 def _load_queries(split: str, lang: str = "en"):
     """Load queries with oracle fields present when the split has them (evaluation only).
 
@@ -549,6 +622,23 @@ def run_sweeps_split(
         telemetry["kept"] = improved
         run_dir = work_root / quid
         hb.write_json(run_dir / "telemetry.json", telemetry)
+        # P2: append this attempt to the per-uid ledger too, so the full attempt history survives
+        # a run even though telemetry.json above still only ever holds the latest attempt. Purely
+        # additive -- this cannot change which plan is kept (`improved` was already decided by
+        # the caller) or which pass runs next.
+        append_attempt_ledger(
+            run_dir,
+            attempt_ledger_record(
+                pass_index=telemetry.get("pass_index"),
+                pass_kind=telemetry.get("pass_kind"),
+                seed_salt=telemetry.get("seed_salt"),
+                budget_sec=telemetry.get("budget_sec"),
+                wall_sec=telemetry.get("wall_sec"),
+                telemetry=telemetry,
+                self_score=telemetry.get("self_score"),
+                kept=improved,
+            ),
+        )
         if not improved:
             return
         hb.write_json(result_method_dir / f"{quid}.json", plan)

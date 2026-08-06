@@ -98,6 +98,90 @@ def read_json(path: Path):
         return None
 
 
+# --- P2: per-attempt telemetry ledger aggregation ---------------------------------------------
+# `agent_env/scripts/solve_phase2.py`'s `run_sweeps_split` appends one line per attempt to
+# `agent_env/runs/<method>/<uid>/attempts.jsonl` (roadmap P2). This aggregates that ledger into
+# the committed row so the technical report's distributions and timings are plottable from the
+# row alone, without a live checkout of `agent_env/runs/`.
+ATTEMPT_LEDGER_FILENAME = "attempts.jsonl"
+
+
+def _read_attempt_ledger(run_dir: Path) -> list[dict]:
+    path = run_dir / ATTEMPT_LEDGER_FILENAME
+    if not path.exists():
+        return []
+    records = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            records.append(json.loads(line))
+        except Exception:
+            continue
+    return records
+
+
+def _distribution(values: list[float]) -> dict:
+    vals = [float(v) for v in values if v is not None]
+    if not vals:
+        return {"count": 0, "min": None, "mean": None, "max": None}
+    return {
+        "count": len(vals),
+        "min": min(vals),
+        "mean": sum(vals) / len(vals),
+        "max": max(vals),
+    }
+
+
+def _histogram(values: list) -> dict:
+    hist: dict[str, int] = {}
+    for v in values:
+        key = "null" if v is None else str(v)
+        hist[key] = hist.get(key, 0) + 1
+    return hist
+
+
+def aggregate_attempt_ledger(work_root: Path, uids: list[str]) -> dict:
+    """Aggregate every query's ``attempts.jsonl`` under ``work_root`` into one summary dict.
+
+    Read-only over the ledger; never touches ``telemetry.json``, the written plans, or any
+    pass-selection/keep-best state -- this runs after the whole solve is already done.
+    """
+    attempts_per_query: list[int] = []
+    all_wall_sec: list[float] = []
+    all_restarts: list[float] = []
+    all_stop_reasons: list = []
+    first_accept_attempt: list[int] = []  # 1-based index of the first kept attempt, per query
+
+    for uid in uids:
+        records = _read_attempt_ledger(work_root / uid)
+        attempts_per_query.append(len(records))
+        first_kept = None
+        for idx, rec in enumerate(records, start=1):
+            wall = rec.get("wall_sec")
+            if wall is not None:
+                all_wall_sec.append(wall)
+            restarts = rec.get("restarts_used")
+            if restarts is not None:
+                all_restarts.append(restarts)
+            all_stop_reasons.append(rec.get("stop_reason"))
+            if first_kept is None and rec.get("kept"):
+                first_kept = idx
+        if first_kept is not None:
+            first_accept_attempt.append(first_kept)
+
+    return {
+        "queries": len(uids),
+        "queries_with_attempts": sum(1 for n in attempts_per_query if n > 0),
+        "attempts_per_query": _distribution(attempts_per_query),
+        "wall_sec_per_attempt": _distribution(all_wall_sec),
+        "restarts_used_per_attempt": _distribution(all_restarts),
+        "stop_reason_histogram": _histogram(all_stop_reasons),
+        "first_accept_attempt": _distribution(first_accept_attempt),
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -190,6 +274,10 @@ def main() -> int:
     run_summary = read_json(
         ROOT / "agent_env" / "runs" / method / f"{args.split}_summary.json"
     )
+    uids_for_ledger = (run_summary or {}).get("uids") or [p.stem for p in plans]
+    attempt_ledger_summary = aggregate_attempt_ledger(
+        ROOT / "agent_env" / "runs" / method, uids_for_ledger
+    )
     row = {
         "run_id": run_id,
         "kind": "full_run",
@@ -213,6 +301,7 @@ def main() -> int:
         "official_scores": scores,
         "overall": (scores or {}).get("overall"),
         "sweeps": run_summary,
+        "attempt_ledger": attempt_ledger_summary,
         "host": {
             "cpu_count": os.cpu_count(),
             "platform": platform.platform(),
