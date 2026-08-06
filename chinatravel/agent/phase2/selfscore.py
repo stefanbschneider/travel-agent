@@ -148,20 +148,34 @@ def score_plan(
     plan: dict,
     visible_query: dict,
     *,
+    variants: list[dict] | None = None,
     parsed_constraints: dict | None = None,
     lang: str = "en",
     uid: str | None = None,
 ) -> PlanScore:
     """Score ``plan`` for ``visible_query`` without any oracle field.
 
-    ``parsed_constraints`` is the solver-facing constraint set our own parser produced for this
-    query (``solver_constraint_variants(...)[0]``). Passing it in avoids re-parsing per candidate;
-    omitting it re-derives it. Never raises: a scoring failure returns a zero score carrying the
-    error, because the scheduler must keep running.
+    ``variants`` is the *exact* branch-local solver constraint list the query was solved against
+    (``normalize.ir_to_solver_variants`` output: disjunction-expanded, entity-resolved). Logical
+    acceptance is **OR across variants** -- a plan is ``logical_ok`` if any one variant's checks
+    all pass, mirroring how a disjunctive oracle clause itself is satisfied by any one arm. Ranking
+    (and the ``logical_total``/``logical_satisfied``/``clpr`` reported on ``PlanScore``) uses the
+    single best-scoring variant, chosen by ``(all_true, satisfied / total)``, so ``PlanScore``'s
+    shape and ``ranking_key`` stay unchanged.
+
+    ``parsed_constraints`` is a one-variant compatibility alias: passing it is equivalent to
+    ``variants=[parsed_constraints]``, kept so existing callers keep working. When neither is
+    given, this falls back to ``derive_parsed_constraints`` (a coarser, single-variant parse --
+    see its docstring for why that is no longer the scheduler's own path).
+
+    Never raises: a scoring failure returns a zero score carrying the error, because the scheduler
+    must keep running.
     """
     quid = uid or str(visible_query.get("uid") or "query")
+    if variants is None and parsed_constraints is not None:
+        variants = [parsed_constraints]
     try:
-        return _score_plan(plan, visible_query, parsed_constraints, lang, quid)
+        return _score_plan(plan, visible_query, variants, lang, quid)
     except Exception as exc:  # scoring must never take down a run
         return replace(ZERO_SCORE, error=f"{type(exc).__name__}: {exc}")
 
@@ -169,7 +183,7 @@ def score_plan(
 def _score_plan(
     plan: dict,
     visible_query: dict,
-    parsed_constraints: dict | None,
+    variants: list[dict] | None,
     lang: str,
     quid: str,
 ) -> PlanScore:
@@ -191,14 +205,32 @@ def _score_plan(
     )
     commonsense_ok = quid in commonsense_pass_ids
 
-    if parsed_constraints is None:
-        parsed_constraints = derive_parsed_constraints(visible_query)
-    checks = evaluate_parsed_constraints(
-        parsed_constraints, plan, visible_query.get("target_city", "")
-    )
-    total = len(checks)
-    satisfied = sum(1 for check in checks if bool(check))
-    logical_ok = satisfied == total
+    # Only dict variants are meaningful to evaluate_parsed_constraints -- a malformed non-dict
+    # entry makes it return [] (0 checks), which a naive ratio (0/0 => 1.0) would treat as a
+    # vacuously all-true variant and could wrongly flip logical_ok to True. Filter those out
+    # before scoring instead, falling back to the coarse parse if nothing usable remains (the
+    # same fallback as an empty/omitted variants list).
+    variants = [v for v in (variants or []) if isinstance(v, dict)]
+    if not variants:
+        fallback = derive_parsed_constraints(visible_query)
+        variants = [fallback] if fallback else [{}]
+
+    target_city = visible_query.get("target_city", "")
+    best_key: tuple[bool, float] | None = None
+    total = satisfied = 0
+    logical_ok = False
+    for variant in variants:
+        checks = evaluate_parsed_constraints(variant, plan, target_city)
+        v_total = len(checks)
+        v_satisfied = sum(1 for check in checks if bool(check))
+        v_all_true = v_satisfied == v_total
+        v_ratio = (v_satisfied / v_total) if v_total else 1.0
+        # Best variant: prefer an all-true variant, then the highest satisfied/total ratio --
+        # matches the OR semantics of a disjunctive oracle clause (any one satisfied arm passes).
+        key = (v_all_true, v_ratio)
+        if best_key is None or key > best_key:
+            best_key = key
+            total, satisfied, logical_ok = v_total, v_satisfied, v_all_true
     logical_micro = (100.0 * satisfied / total) if total else 100.0
     # C-LPR is the *conditional* logical micro: a commonsense failure forfeits logical credit the
     # solver already earned. That is why commonsense-first finalization is worth so much.
@@ -235,7 +267,16 @@ def _score_plan(
 
 
 def derive_parsed_constraints(visible_query: dict) -> dict:
-    """Our own parse of a visible query, in the shape ``evaluate_parsed_constraints`` wants."""
+    """A coarse, single-variant fallback parse -- **not** the scheduler's constraint path.
+
+    This takes only ``variants[0]`` of a plain no-oracle parse: no disjunction expansion, no
+    entity resolution. It exists as a last resort when the parent has no variants for a query (a
+    parse failure, or a caller that never ran the canonical parse) and as the one-variant
+    compatibility shape some callers/tests still construct by hand. The scheduler itself parses
+    once through the canonical path (``normalize.parse_to_ir`` + ``normalize.ir_to_solver_variants``)
+    and hands the full variant list to both the solver and ``score_plan`` -- see
+    ``agent_env/scripts/solve_phase2.run_sweeps_split``.
+    """
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
     import parse_constraints

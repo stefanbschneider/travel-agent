@@ -397,12 +397,20 @@ def solve_phase2(
     budget_sec: float | None = None,
     flags: Flags | None = None,
     solve_fn: SolveFn | None = None,
+    variants: list[dict] | None = None,
 ) -> tuple[dict, dict]:
     """Run the Phase 2 pipeline for one query. Returns ``(plan, telemetry)``.
 
     Never raises for solver failures: a raising or timed-out solve degrades to a schema-valid
     fallback. ``solve_fn`` may be injected (tests); otherwise a TPCAgent-backed solve is built from
     ``env``.
+
+    ``variants`` lets a caller that already ran the canonical parse (``normalize.parse_to_ir`` +
+    ``normalize.ir_to_solver_variants``) supply the exact branch-local solver constraint list, so
+    Stage 1 is skipped entirely instead of re-parsing the same query. This is what lets the sweep
+    scheduler hand byte-identical constraints to both the solver and ``selfscore.score_plan`` --
+    see ``agent_env/scripts/solve_phase2.run_sweeps_split`` and ``sweeps.solve_one``. ``None``
+    (the default) preserves today's behaviour: parse internally, exactly as before.
     """
     if flags is None:
         flags = Flags.from_env()
@@ -447,6 +455,10 @@ def solve_phase2(
         "llm_parse_error": None,
         "llm_parse_skipped_deadline": False,
         "variants_count": 0,
+        # "parent": the caller supplied the exact variants it parsed (the sweep scheduler, so
+        # solving and self-scoring see byte-identical constraints); "worker": this call parsed
+        # them itself, exactly as before P10.
+        "variants_source": "worker",
         # roadmap W4 step 0: solver search telemetry (restarts_used, stop_reason,
         # candidates_evaluated, best_found_at_restart). Empty when the solve stage didn't run
         # (e.g. no solve_fn) or the underlying solve_fn doesn't expose it (e.g. an injected test
@@ -456,16 +468,21 @@ def solve_phase2(
 
     # --- Stage 1: parse ---------------------------------------------------
     t0 = time.perf_counter()
-    try:
-        ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags, deadline=b.parse_sec)
-        if ir.llm_parse_error:
-            telemetry["llm_parse_error"] = ir.llm_parse_error
-        if ir.llm_parse_skipped_deadline:
-            telemetry["llm_parse_skipped_deadline"] = True
-        variants = normalize.ir_to_solver_variants(ir, query, env=env, flags=flags)
-    except Exception as exc:  # parsing must never crash the harness
-        variants = []
-        telemetry["error"] = f"parse: {exc}"
+    if variants is not None:
+        # Caller already ran the canonical parse (normalize.parse_to_ir + ir_to_solver_variants)
+        # -- skip re-parsing so the solver and the caller's self-score see the same constraints.
+        telemetry["variants_source"] = "parent"
+    else:
+        try:
+            ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags, deadline=b.parse_sec)
+            if ir.llm_parse_error:
+                telemetry["llm_parse_error"] = ir.llm_parse_error
+            if ir.llm_parse_skipped_deadline:
+                telemetry["llm_parse_skipped_deadline"] = True
+            variants = normalize.ir_to_solver_variants(ir, query, env=env, flags=flags)
+        except Exception as exc:  # parsing must never crash the harness
+            variants = []
+            telemetry["error"] = f"parse: {exc}"
     telemetry["stage_sec"]["parse"] = time.perf_counter() - t0
     telemetry["variants_count"] = len(variants)
 

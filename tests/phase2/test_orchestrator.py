@@ -31,6 +31,49 @@ def test_returns_plan_and_telemetry(one_query, fast_solve_fn):
     assert telemetry["used_fallback"] is False
     assert telemetry["timed_out"] is False
     assert telemetry["llm_backend"] == "none"
+    assert telemetry["variants_source"] == "worker"
+
+
+def test_variants_source_is_parent_when_variants_are_supplied(one_query, fast_solve_fn):
+    """Roadmap P10: a caller that already ran the canonical parse (the sweep scheduler) supplies
+    ``variants=`` and Stage 1 must be skipped entirely -- telemetry records which path ran so a
+    row can prove it."""
+    supplied = [{"required_attractions": ["Some POI"]}]
+    seen_variants = {}
+
+    def capturing_solve(query, variants, budget_sec):
+        seen_variants["value"] = variants
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    plan, telemetry = O.solve_phase2(
+        one_query, budget_sec=10.0, solve_fn=capturing_solve, variants=supplied
+    )
+    assert telemetry["variants_source"] == "parent"
+    assert telemetry["variants_count"] == 1
+    assert seen_variants["value"] is supplied
+
+
+def test_variants_source_worker_when_not_supplied(one_query, fast_solve_fn):
+    plan, telemetry = O.solve_phase2(one_query, budget_sec=10.0, solve_fn=fast_solve_fn)
+    assert telemetry["variants_source"] == "worker"
+
+
+def test_empty_variants_list_from_parent_skips_reparse_rather_than_falling_back(one_query):
+    """A parent-side parse failure degrades to ``variants=[]`` (roadmap P10, step 1). The worker
+    must not silently re-parse in that case -- an empty list is still 'the parent supplied
+    variants', just zero of them, so solve and score stay in sync on the degraded state."""
+    seen_variants = {}
+
+    def capturing_solve(query, variants, budget_sec):
+        seen_variants["value"] = variants
+        return {"itinerary": [{"day": 1, "activities": []}]}
+
+    plan, telemetry = O.solve_phase2(
+        one_query, budget_sec=10.0, solve_fn=capturing_solve, variants=[]
+    )
+    assert telemetry["variants_source"] == "parent"
+    assert telemetry["variants_count"] == 0
+    assert seen_variants["value"] == []
 
 
 def test_fallback_on_raise(one_query):

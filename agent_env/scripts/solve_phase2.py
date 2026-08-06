@@ -455,19 +455,33 @@ def run_sweeps_split(
       this function does no post-deadline work (evaluation is a separate step, see
       ``scripts/phase2_full_run.py``) -- the organizers' clock covers the whole process.
     """
-    from chinatravel.agent.phase2 import selfscore, sweeps
+    from chinatravel.agent.phase2 import normalize, selfscore, sweeps
 
     workers = int(workers) if workers else sweeps.default_workers()
+    # Parse once per query, here in the parent, through the same canonical path the solver uses
+    # (normalize.parse_to_ir -> normalize.ir_to_solver_variants) instead of the coarser, single-
+    # variant selfscore.derive_parsed_constraints. That parse used to disagree with the solver's
+    # own on any disjunctive or named-entity query -- see roadmap P10 -- because the two ran two
+    # different parsers. Using the exact same ``flags`` object the workers build
+    # (``resolve_llm_client_and_flags``, which ``sweeps.init_worker`` also calls) means the two
+    # cannot diverge by configuration either. ``llm_client=None`` is deliberate: the parent must
+    # stay zero-LLM even when a backend is configured, and ``flags.llm_parse`` is off by default.
+    _llm_client, flags = resolve_llm_client_and_flags()
     visible: dict[str, dict] = {}
-    parsed: dict[str, dict] = {}
+    variants: dict[str, list[dict]] = {}
     for quid in selected:
         full_query = query_data[quid]
         full_query.setdefault("uid", quid)
         visible[quid] = hb.visible_query(full_query)
         try:
-            parsed[quid] = selfscore.derive_parsed_constraints(visible[quid])
+            ir = normalize.parse_to_ir(visible[quid], llm_client=None, flags=flags)
+            variants[quid] = normalize.ir_to_solver_variants(
+                ir, visible[quid], env=None, flags=flags
+            )
         except Exception:
-            parsed[quid] = {}
+            # A parse failure must not take the run down -- degrade to no variants, exactly as
+            # the per-query orchestrator.solve_phase2 path degrades to an empty parse.
+            variants[quid] = []
 
     # Insurance first: a complete, schema-valid submission before a single query is solved.
     fallbacks_written = 0
@@ -492,7 +506,7 @@ def run_sweeps_split(
         if not isinstance(plan, dict) or not plan.get("itinerary"):
             continue  # a bare fallback is not an incumbent worth defending
         best[quid] = selfscore.score_plan(
-            plan, visible[quid], parsed_constraints=parsed.get(quid), lang=lang, uid=quid
+            plan, visible[quid], variants=variants.get(quid), lang=lang, uid=quid
         )
 
     def on_result(
@@ -523,7 +537,7 @@ def run_sweeps_split(
         config=config,
         on_result=on_result,
         best=best,
-        parsed_constraints=parsed,
+        variants=variants,
     )
 
     summary = {
