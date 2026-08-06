@@ -574,6 +574,10 @@ def run_sweeps_split(
     _llm_client, flags = resolve_llm_client_and_flags()
     visible: dict[str, dict] = {}
     variants: dict[str, list[dict]] = {}
+    # Roadmap P13: which uids the parent parse degraded for. Surfaced in the run summary below --
+    # previously this was discarded, so a run could not tell you which queries (if any) fell back
+    # to the per-worker re-parse in orchestrator.solve_phase2.
+    parent_parse_failed_uids: list[str] = []
     for quid in selected:
         full_query = query_data[quid]
         full_query.setdefault("uid", quid)
@@ -584,9 +588,14 @@ def run_sweeps_split(
                 ir, visible[quid], env=None, flags=flags
             )
         except Exception:
-            # A parse failure must not take the run down -- degrade to no variants, exactly as
-            # the per-query orchestrator.solve_phase2 path degrades to an empty parse.
+            # A parse failure must not take the run down -- degrade to no variants ([]), exactly
+            # as the per-query orchestrator.solve_phase2 path degrades on its own parse failure.
+            # orchestrator.solve_phase2 treats variants=[] the same as variants=None (roadmap
+            # P13: it tests truthiness, not identity) and re-parses independently there, so this
+            # query still solves and scores against a constraint set -- just not the same object
+            # on both sides, the guarantee this parent-side parse exists to provide.
             variants[quid] = []
+            parent_parse_failed_uids.append(quid)
 
     # Insurance first: a complete, schema-valid submission before a single query is solved.
     fallbacks_written = 0
@@ -673,6 +682,7 @@ def run_sweeps_split(
         "resume_requested": resume,
         "incumbents_scored": len(best),
         "fallbacks_prewritten": fallbacks_written,
+        "parent_parse_failed_uids": parent_parse_failed_uids,
         "uids": list(selected),
         **sweep_summary,
     }

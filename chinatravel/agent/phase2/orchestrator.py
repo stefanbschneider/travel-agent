@@ -470,9 +470,22 @@ def solve_phase2(
 
     # --- Stage 1: parse ---------------------------------------------------
     t0 = time.perf_counter()
-    if variants is not None:
+    if variants:
         # Caller already ran the canonical parse (normalize.parse_to_ir + ir_to_solver_variants)
         # -- skip re-parsing so the solver and the caller's self-score see the same constraints.
+        #
+        # Roadmap P13: test truthiness, not identity. A parent whose own parse raised degrades to
+        # variants=[] (agent_env/scripts/solve_phase2.py's `except Exception` wrapping both
+        # normalize.parse_to_ir and normalize.ir_to_solver_variants) meaning "I have nothing for
+        # you" -- not "the query is unconstrained". selfscore.score_plan already treats an
+        # empty/None variants list the same way (`if not variants:` falls back to
+        # derive_parsed_constraints), so testing `is not None` here made this side solve
+        # unconstrained while the scorer judged the same
+        # plan against real constraints: the exact solve/score divergence roadmap P10 exists to
+        # remove, surviving in the parent-parse-failure path. Re-parsing here keeps both sides
+        # constrained (independently, not byte-identically -- see the module docstring below)
+        # rather than manufacturing the false positive roadmap P12 exists to remove (an
+        # unconstrained solve that self-scores logical_ok=True vacuously).
         telemetry["variants_source"] = "parent"
     else:
         try:

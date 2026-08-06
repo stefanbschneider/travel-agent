@@ -285,7 +285,7 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
 | ~~P2~~ | ~~Per-attempt telemetry ledger~~ | — | **landed 2026-08-06**: `attempts.jsonl` per uid, additive to `telemetry.json`; aggregated into the committed row by `phase2_full_run.py`. No score effect, as expected — enables the report's distributions and timings, and the instrument P5/R9 need | v2 (report) |
-| P13 | An empty parent parse must mean the same thing on both sides | <1 h | rare (needs a *raised* parse); fixes a query being solved unconstrained while scored constrained. **Verified `0/100` trigger rate by R16**, so it is a measured no-op on familiar-100 | post-v2 |
+| P13 | An empty parent parse must mean the same thing on both sides | <1 h | rare (needs a *raised* parse); fixes a query being solved unconstrained while scored constrained. **Verified `0/100` trigger rate by R16**, so it is a measured no-op on familiar-100. **Implemented on branch `claude/p13-empty-parent-parse-consistency`, PR open, held per the sequencing note** — do not merge to `main` until `v2` is packaged from the sha R17 reports | post-v2 |
 | P3 | ~~Re-screen commonsense-valid emission when nothing is accepted~~ | 2 h | **closed 2026-08-06: bar cleared (MacEPR +10.0, C-LPR +9.59, FPR +2.5), no code change needed — see [P3](#p3--emit-commonsense-valid-plans-when-nothing-is-accepted)** | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open**; needs P2 first to be readable | post-v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | post-v2 |
@@ -318,10 +318,10 @@ deliverable that currently has no owner.
 
 **Then [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides)**, which is under an
 hour and now has a measured blast radius: R16 confirmed `variants_count == 0` on `0/100` queries, so it
-is a no-op on familiar-100 and cannot regress the submission. Land it on a branch and merge after `v2`
-is packaged, per the [sequencing note](#where-we-are) — not because it is risky, but because every
-merge to `main` between R17 and the archive build reopens the drift this cycle just spent a row
-closing.
+is a no-op on familiar-100 and cannot regress the submission. **Implemented 2026-08-06** on a branch,
+per the [sequencing note](#where-we-are) — held there and not merged to `main` until `v2` is packaged,
+not because it is risky, but because every merge to `main` between R17 and the archive build reopens
+the drift this cycle just spent a row closing.
 
 **After that: P3, then P5/P4.** All three are worth under a point each, and two of them are worth
 approximately zero **by measurement** rather than by guess. P5 additionally depends on P2. P8, P9, P11,
@@ -508,6 +508,23 @@ before/after (`git stash`; P10's own PR used the same workaround for the same re
 
 ### P13 — an empty parent parse must mean the same thing on both sides
 
+**Implemented 2026-08-06 on branch `claude/p13-empty-parent-parse-consistency`, PR open — held per
+the [sequencing note](#where-we-are): do not merge to `main` before `v2` is packaged from the sha
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
+reports.** Ships exactly the fix this section specifies (resolution (a) below), nothing more:
+`orchestrator.solve_phase2` now tests `if variants:` rather than `if variants is not None:`, so a
+parent-side parse failure (`variants=[]`) re-parses in the worker instead of solving unconstrained.
+`agent_env/scripts/solve_phase2.py`'s parent parse also now records which uids (if any) fell back,
+surfaced as `parent_parse_failed_uids` on the run summary (previously discarded, so a run could not
+tell you) — verified on a real harness run (`parent_parse_failed_uids: []` when every parse
+succeeds). `sweeps.solve_one`'s comment is corrected to describe the new behavior. Tests:
+`tests/phase2/test_orchestrator.py` (the existing test rewritten per this section's own instruction,
+plus a floor test that non-empty parent variants still skip re-parse) and
+`tests/phase2/test_run_sweeps_split_variants.py` (the summary field on success and on a simulated
+parent-parse failure, and an end-to-end `sweeps.solve_one` check that the worker re-parse and the
+self-score agree on a non-vacuous constraint set). Full `tests/phase2` (958 passed, 1 skipped) and
+the full repository suite pass unmodified elsewhere.
+
 **Small, mechanical, and found while writing [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)'s
 verification step.** Under an hour. **Land it on a branch and merge after `v2` is packaged** — not
 because it is risky (R16 measured its trigger firing on `0/100` queries, so it is a no-op on
@@ -549,24 +566,30 @@ else:
 Then correct the `solve_one` comment to describe what the code now does. Optionally have the parent
 log which uids failed to parse — today that information is discarded, so a run cannot tell you.
 
-**An existing test asserts the current behavior, and you must replace it deliberately.**
+**An existing test asserted the pre-fix behavior, and was replaced deliberately, not deleted.**
 `tests/phase2/test_orchestrator.py::test_empty_variants_list_from_parent_skips_reparse_rather_than_falling_back`
 was added by P10's PR, and its docstring gives the rationale: *"an empty list is still 'the parent
 supplied variants', just zero of them, so solve and score stay in sync on the degraded state."* The
-intent is right and the code does not achieve it — `score_plan` falls back on `[]` (table above), so
-the two sides are **not** in sync on that state. Only two resolutions restore the intent:
+intent was right and the code did not achieve it — `score_plan` falls back on `[]` (table above), so
+the two sides were **not** in sync on that state. Only two resolutions restore the intent:
 
 | | what it does | verdict |
 | --- | --- | --- |
-| **(a)** `solve_phase2` re-parses on `[]` | both sides parse independently; not byte-identical, but both are *constrained* | **take this one** |
-| (b) `score_plan` stops falling back on `[]` | both sides genuinely unconstrained — but then a parse-failed query self-scores `logical_ok = True` vacuously, the scheduler declares it solved and abandons it | **do not**: it manufactures exactly the false positive [P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics) exists to remove |
+| **(a)** `solve_phase2` re-parses on `[]` | both sides parse independently; not byte-identical, but both are *constrained* | **taken** |
+| (b) `score_plan` stops falling back on `[]` | both sides genuinely unconstrained — but then a parse-failed query self-scores `logical_ok = True` vacuously, the scheduler declares it solved and abandons it | **rejected**: it manufactures exactly the false positive [P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics) exists to remove |
 
-So rewrite that test to assert (a) — `variants=[]` re-parses and reports `"worker"` — and carry the
-reasoning above into its docstring so the next reader does not flip it back.
+The test is now `test_empty_variants_list_from_parent_reparses_like_none`, asserting (a) —
+`variants=[]` re-parses and reports `"worker"` with `variants_count > 0` — with the reasoning above
+carried into its docstring so the next reader does not flip it back. A new companion test,
+`test_nonempty_variants_from_parent_still_skip_reparse`, pins the unchanged half: a genuinely
+non-empty parent-supplied list still reports `"parent"` and skips Stage 1.
 
-**Tests.** `variants=[]` re-parses and reports `variants_source == "worker"`; `variants=[{...}]` still
-reports `"parent"` and skips; a query whose parent parse raised ends up with `variants_count > 0`
-after the worker parse succeeds.
+**Tests, as shipped.** `variants=[]` re-parses and reports `variants_source == "worker"` with
+`variants_count > 0`; `variants=[{...}]` still reports `"parent"` and skips; a query whose parent
+parse raised ends up with `variants_count > 0` after the worker parse succeeds, and the self-score
+computed on the same result agrees the query is constrained (`logical_total > 0`) rather than one
+side searching unconstrained while the other scores against real constraints; the parent's own
+summary records which uids (if any) fell back, both the non-empty and the empty-list case.
 
 ### P8 — bounded local window push: the rest of the timed-visit residual
 

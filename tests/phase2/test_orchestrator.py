@@ -58,22 +58,40 @@ def test_variants_source_worker_when_not_supplied(one_query, fast_solve_fn):
     assert telemetry["variants_source"] == "worker"
 
 
-def test_empty_variants_list_from_parent_skips_reparse_rather_than_falling_back(one_query):
-    """A parent-side parse failure degrades to ``variants=[]`` (roadmap P10, step 1). The worker
-    must not silently re-parse in that case -- an empty list is still 'the parent supplied
-    variants', just zero of them, so solve and score stay in sync on the degraded state."""
-    seen_variants = {}
+def test_empty_variants_list_from_parent_reparses_like_none(one_query, fast_solve_fn):
+    """Roadmap P13: an empty parent-supplied variants list must be treated the same as
+    ``variants=None`` -- "the parent has nothing for you, parse it yourself" -- not as "the
+    parent supplied variants, just zero of them".
 
-    def capturing_solve(query, variants, budget_sec):
-        seen_variants["value"] = variants
-        return {"itinerary": [{"day": 1, "activities": []}]}
+    A prior version of this test (and the code) took the opposite position: ``variants=[]``
+    skipped Stage 1 and reported ``variants_source == "parent"`` with ``variants_count == 0``,
+    on the theory that solve and score would then agree on a shared "unconstrained" state. They
+    did not: ``selfscore.score_plan`` already falls back to ``derive_parsed_constraints`` on any
+    falsy ``variants`` (``if not variants:``), so that plan self-scored against real constraints
+    while the solver searched with none -- reintroducing on the parent-parse-failure path exactly
+    the solve/score divergence roadmap P10 exists to remove, and risking the false positive
+    roadmap P12 exists to remove (a parse-failed query self-scoring ``logical_ok = True``
+    vacuously and getting abandoned by the scheduler while still broken).
 
+    The fix instead makes both sides re-parse independently on an empty list, exactly as they do
+    on ``None`` -- not byte-identically, but both constrained. This is resolution (a) from the
+    roadmap's own table of the two options; resolution (b) (make ``score_plan`` stop falling back
+    on ``[]``) was rejected there for manufacturing the false positive above.
+    """
+    plan, telemetry = O.solve_phase2(one_query, budget_sec=10.0, solve_fn=fast_solve_fn, variants=[])
+    assert telemetry["variants_source"] == "worker"
+    assert telemetry["variants_count"] > 0
+
+
+def test_nonempty_variants_from_parent_still_skip_reparse(one_query, fast_solve_fn):
+    """The counterpart to the test above: a genuinely non-empty parent-supplied list must still
+    report ``variants_source == "parent"`` and skip Stage 1 -- P13 only changes the empty case."""
+    supplied = [{"required_attractions": ["Some POI"]}]
     plan, telemetry = O.solve_phase2(
-        one_query, budget_sec=10.0, solve_fn=capturing_solve, variants=[]
+        one_query, budget_sec=10.0, solve_fn=fast_solve_fn, variants=supplied
     )
     assert telemetry["variants_source"] == "parent"
-    assert telemetry["variants_count"] == 0
-    assert seen_variants["value"] == []
+    assert telemetry["variants_count"] == 1
 
 
 def test_fallback_on_raise(one_query):
