@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 """Solve ChinaTravel queries with a non-interactive agent harness and evaluate them.
 
-This is the organizer-confirmed Phase 2 entry point. The evaluation host runs exactly
+This is the organizer-confirmed Phase 2 entry point. The evaluation host runs, from the root of
+the submitted package (organizers' 2026-08-06 clarification):
 
-    python agent_env/scripts/solve_script_with_harness.py --split <split>
+    python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 
-with no other flags, so a bare invocation must be the whole submission. It therefore defaults to
-``--harness tpc``: this repository's deterministic, no-oracle ``TPCAgent`` solver, run in-process,
-making zero LLM calls and zero subprocess calls. The external-CLI harnesses (``opencode``,
-``codex``) remain available for the LLM-agent baseline comparison, but only when asked for
-explicitly with ``--harness``.
+Both values come from the command line and neither may be hard-coded: ``--split`` names the
+held-out split to load, ``--method`` names the output directory, and every plan must land at
+``results/<method>/<uid>.json``. Nothing else is passed, so this invocation must be the whole
+submission. It therefore defaults to ``--harness tpc``: this repository's deterministic,
+no-oracle ``TPCAgent`` solver, run in-process, making zero LLM calls and zero subprocess calls.
+The external-CLI harnesses (``opencode``, ``codex``) remain available for the LLM-agent baseline
+comparison, but only when asked for explicitly with ``--harness``.
+
+The held-out queries carry no DSL, constraint-code, ground-truth or verifier-only field
+(``hard_logic``, ``hard_logic.py``, ``hard_logic_py``, ``hard_logic_nl``, ...). Every path here
+therefore treats those fields as optional: they are stripped from anything the agent sees
+(``visible_query``) and their *absence* only disables the local oracle-side scoring convenience
+(``evaluate_one``'s ``has_oracle``), never the solve.
 
 Under ``--harness tpc`` the run is also bounded by a whole-run wall-clock envelope (the
 organizers' confirmed 5 hours for 100 queries) rather than by a fixed per-query budget; see
@@ -39,7 +48,11 @@ DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-HIDDEN_QUERY_KEYS = {"hard_logic", "hard_logic_py", "hard_logic_nl"}
+# The verifier-only fields the organizers named (2026-08-06). They are absent from the formal
+# held-out data; this set exists so a *local* run on released data hides them just the same. The
+# ``hard_logic`` prefix rule below is what actually makes the guard exhaustive -- the explicit set
+# is the documented list, not the mechanism.
+HIDDEN_QUERY_KEYS = {"hard_logic", "hard_logic.py", "hard_logic_py", "hard_logic_nl"}
 
 # ``tpc`` is this repository's own deterministic solver and the default; the other two shell out
 # to an external CLI and are opt-in only.
@@ -70,7 +83,7 @@ def normalize_lang(lang: Any) -> str:
     return value
 
 
-def load_queries(split: str, lang: str) -> tuple[list[str], dict[str, Any]]:
+def _load_queries_for_lang(split: str, lang: str) -> tuple[list[str], dict[str, Any]]:
     from chinatravel.data.load_datasets import load_query
 
     args = argparse.Namespace(
@@ -81,6 +94,49 @@ def load_queries(split: str, lang: str) -> tuple[list[str], dict[str, Any]]:
     query_ids, query_data = load_query(args)
     if not query_ids:
         raise RuntimeError(f"No queries found for split: {split}")
+    return query_ids, query_data
+
+
+def load_queries_with_lang(
+    split: str, lang: str
+) -> tuple[str, list[str], dict[str, Any]]:
+    """Load ``split``, falling back to the other language if ``lang`` does not resolve it.
+
+    Returns the language actually used, so the caller can build ``WorldEnv`` and the evaluators
+    to match the queries it got rather than the language it asked for.
+
+    Upstream's loader looks for an ``en`` split under ``chinatravel/data/en/`` and a ``zh`` one
+    under ``chinatravel/data/``, and raises when the split is in neither. The organizers give us
+    the split *name* on the command line but not which of those two trees their held-out queries
+    land in, and an unresolved split is the single worst failure available to us: no plans at all,
+    a zero for the whole run. So try the other language before giving up, and report both
+    failures if neither resolves.
+
+    Costs nothing when the split resolves normally -- the fallback is only reached on the path
+    that was previously an immediate crash.
+    """
+    lang = normalize_lang(lang)
+    try:
+        query_ids, query_data = _load_queries_for_lang(split, lang)
+        return lang, query_ids, query_data
+    except Exception as primary:
+        other = "zh" if lang == "en" else "en"
+        try:
+            query_ids, query_data = _load_queries_for_lang(split, other)
+        except Exception as secondary:
+            raise RuntimeError(
+                f"Split {split!r} did not resolve in either language. "
+                f"lang={lang}: {primary}; lang={other}: {secondary}"
+            ) from primary
+        print(
+            f"warning: split {split!r} did not resolve at lang={lang} ({primary}); "
+            f"loaded {len(query_ids)} queries at lang={other} instead."
+        )
+        return other, query_ids, query_data
+
+
+def load_queries(split: str, lang: str) -> tuple[list[str], dict[str, Any]]:
+    _, query_ids, query_data = load_queries_with_lang(split, lang)
     return query_ids, query_data
 
 
@@ -1055,7 +1111,12 @@ def parse_args() -> argparse.Namespace:
         "--config", default=str(DEFAULT_CONFIG_PATH), help="TOML config path."
     )
     parser.add_argument(
-        "--split", default=None, help="ChinaTravel split name. Overrides [run].split."
+        "--split",
+        default=None,
+        help=(
+            "ChinaTravel split name to solve; the organizers pass the held-out split here. "
+            "Overrides [run].split, which the submission archive deliberately leaves unset."
+        ),
     )
     parser.add_argument(
         "--lang",
@@ -1075,7 +1136,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--method",
         default=None,
-        help="Optional result/eval method override. Default: <model>-<split>-<harness>.",
+        help=(
+            "Method name; plans are written to results/<method>/<uid>.json. Used verbatim, so "
+            "the organizers' value decides the output directory. Overrides [run].method. "
+            "Default: 'phase2_e2e_<split>' for --harness tpc, else <model>-<split>-<harness>."
+        ),
     )
     parser.add_argument(
         "--harness",
@@ -1225,6 +1290,9 @@ def main() -> None:
             f"Run: split={split} lang={lang} harness={harness} method={method} "
             "solver=deterministic TPCAgent (no LLM, no subprocess)"
         )
+        # Echoed before the run, not just after it: the organizers' required output location is
+        # results/<method>/<uid>.json, and a run that is killed mid-split still shows where it wrote.
+        print(f"Results: {PROJECT_ROOT / 'results' / method}/<uid>.json")
         summary = run_tpc_split(
             split=split,
             lang=lang,

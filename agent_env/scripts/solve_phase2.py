@@ -308,14 +308,23 @@ def query_budget_sec(
 
 
 def _load_queries(split: str, lang: str = "en"):
-    """Load queries with oracle fields present (for evaluation only)."""
-    from chinatravel.data.load_datasets import load_query
+    """Load queries with oracle fields present when the split has them (evaluation only).
 
-    args = argparse.Namespace(splits=split, lang=lang, oracle_translation=True)
-    query_ids, query_data = load_query(args)
-    if not query_ids:
-        raise RuntimeError(f"No queries found for split: {split}")
+    Formal Phase 2 data carries no ``hard_logic*`` field at all; ``oracle_translation=True`` only
+    means "do not strip what is there", so this is the same call either way.
+    """
+    _, query_ids, query_data = _load_queries_resolving_lang(split, lang)
     return query_ids, query_data
+
+
+def _load_queries_resolving_lang(split: str, lang: str = "en"):
+    """``_load_queries`` plus the language the split actually resolved under.
+
+    ``run_split`` needs the second value: a split that only exists in the *other* language tree
+    must also build its ``WorldEnv`` and evaluators in that language, or the run grounds English
+    plans against Chinese queries. See ``hb.load_queries_with_lang``.
+    """
+    return hb.load_queries_with_lang(split, lang)
 
 
 def resolve_llm_client_and_flags():
@@ -606,7 +615,9 @@ def run_split(
     if queries is not None:
         query_ids, query_data = list(queries.keys()), queries
     else:
-        query_ids, query_data = _load_queries(split, lang=lang)
+        # The resolved language, not the requested one: a split that only exists in the other
+        # language tree must be solved and evaluated in that language (see the helper's docstring).
+        lang, query_ids, query_data = _load_queries_resolving_lang(split, lang)
     if uids is not None:
         missing = [u for u in uids if u not in query_data]
         if missing:
@@ -715,7 +726,7 @@ def run_split(
         hb.write_json(run_dir / "output.json", plan)
         hb.write_json(run_dir / "telemetry.json", telemetry)
         try:
-            evaluation = hb.evaluate_one(split, quid, full_query, plan)
+            evaluation = hb.evaluate_one(split, quid, full_query, plan, lang)
         except Exception as exc:  # never let evaluation crash the batch
             evaluation = {"uid": quid, "error": f"evaluation: {exc}", "all_pass": False}
         hb.write_json(run_dir / "evaluation.json", evaluation)
@@ -776,7 +787,7 @@ def run_split(
             full_query.setdefault("uid", quid)
             try:
                 plan = hb.read_json(result_path)
-                evaluation = hb.evaluate_one(split, quid, full_query, plan)
+                evaluation = hb.evaluate_one(split, quid, full_query, plan, lang)
                 hb.write_json(eval_path, evaluation)
                 all_selected_evals.append(evaluation)
             except Exception:

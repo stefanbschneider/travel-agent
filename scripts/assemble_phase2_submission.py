@@ -5,9 +5,10 @@ Phase 1 submits predictions (``scripts/assemble_submission.py``); Phase 2 submit
 "agent code, prompts, dependencies, documentation, and all files required to run your system"
 (organizers' 2026-08-03 advancement email). The organizers then run exactly
 
-    python agent_env/scripts/solve_script_with_harness.py --split <split>
+    python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 
-inside the unpacked archive, with no other flags.
+from the root of the unpacked archive, with no other flags, and read every plan back from
+``results/<method>/<uid>.json`` (organizers' 2026-08-06 clarification).
 
 What this script does:
 
@@ -53,6 +54,9 @@ TAG_PREFIX = "phase2-v"
 # Queries the unpack-and-run check solves. Must exceed the worker count so more than one worker
 # process actually starts -- see the comment in verify_archive.
 VERIFY_QUERIES = 6
+# Deliberately not a name the script would ever derive itself: the check asserts plans land in
+# results/<method>/, which only holds if the organizers' --method was honoured verbatim.
+VERIFY_METHOD = "organizer_method_probe"
 SUBMISSION_PORTAL = "https://box.nju.edu.cn/u/d/5a1a84297f4b43eda42f/"
 
 # Tracked trees that the system does not need to run. Everything else tracked at HEAD ships:
@@ -139,10 +143,12 @@ packages, no GPU stack, no model download. The travel database ships inside this
 ## Run
 
 ```bash
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 ```
 
-That single command is the whole system. It:
+That single command is the whole system. Both arguments are read from the command line and
+neither is hard-coded anywhere in the package: `--split` selects the split to load, `--method`
+names the output directory. It:
 
 - loads the split, strips every oracle verifier field (`hard_logic*`) before the agent path sees
   the query, and solves each query with the deterministic `TPCAgent` **in-process**;
@@ -151,8 +157,11 @@ That single command is the whole system. It:
 - keeps the whole run inside a {total_budget_hours:.0f}-hour wall-clock envelope by giving each
   query the smaller of its per-query budget and its fair share of the time remaining, so a slow
   query cannot starve the rest of the split;
-- writes each plan to `results/phase2_e2e_<split>/<uid>.json`, and per-query telemetry plus a
-  split summary under `agent_env/runs/phase2_e2e_<split>/`.
+- writes each plan to **`results/<method>/<uid>.json`**, and per-query telemetry plus a split
+  summary under `agent_env/runs/<method>/`.
+
+Omitting `--method` falls back to `phase2_e2e_<split>`; omitting `--split` falls back to `easy`.
+Neither fallback is used when the arguments above are passed.
 
 Optional overrides (not needed for evaluation): `--budget-sec` (per-query cap),
 `--total-budget-sec` (whole-run envelope; `0` disables), `--limit`, `--resume`,
@@ -180,10 +189,12 @@ Evaluator parity point: upstream `LAMDA-NeSy/ChinaTravel` `main` at `{evaluator_
 # copy the working tree's copy (it can hold API keys -- see SECRET_PATH_PATTERNS); we synthesize a
 # credential-free one instead.
 #
-# Deliberately minimal. `split` is omitted: the organizers pass `--split <split>` and CLI beats
-# config in `solve_script_with_harness.py`'s `choose()` precedence, and we cannot guess the name
-# their held-out data resolves under, so pinning one here could only ever be wrong. `limit` is
-# omitted so a bare invocation solves the whole split rather than the example's one query.
+# Deliberately minimal. `split` and `method` are both omitted: the organizers pass
+# `--method <method> --split <split>` and CLI beats config in `solve_script_with_harness.py`'s
+# `choose()` precedence, and we can guess neither the split name their held-out data resolves
+# under nor the method name they will label the run with -- pinning either could only ever be
+# wrong, and their 2026-08-06 clarification asks explicitly that neither be hard-coded. `limit`
+# is omitted so the run solves the whole split rather than the example's one query.
 SUBMISSION_CONFIG_TOML = """# Phase 2 submission configuration -- {team} {version}.
 #
 # Contains no credentials and reaches no network. The deterministic in-process solver is the
@@ -304,7 +315,10 @@ def stage(paths: list[str], out_dir: Path, *, version: str, team: str) -> dict:
         "version": version,
         "commit": commit,
         "branch": branch,
-        "entry_point": "python agent_env/scripts/solve_script_with_harness.py --split <split>",
+        "entry_point": (
+            "python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>"
+        ),
+        "results_path": "results/<method>/<uid>.json",
         "install": "pip install -r requirements-submission.txt",
         "python": ">=3.12",
         "file_count": len(paths),
@@ -350,9 +364,14 @@ def verify_archive(zip_path: Path, name: str, *, split: str, budget_sec: float) 
         # per submitted task, so the previous `--limit 1` started a single worker and never
         # exercised the parallel path at all -- which is how a start-up crash that broke the whole
         # pool on a cold tree reached a built archive (PR #60).
+        # A method name the code would never pick on its own, so the check below proves the
+        # organizers' `--method <method>` reached `results/<method>/` rather than the default
+        # `phase2_e2e_<split>`. Their 2026-08-06 clarification makes that path a hard requirement.
         cmd = [
             sys.executable,
             "agent_env/scripts/solve_script_with_harness.py",
+            "--method",
+            VERIFY_METHOD,
             "--split",
             split,
             "--limit",
@@ -380,10 +399,16 @@ def verify_archive(zip_path: Path, name: str, *, split: str, budget_sec: float) 
                 f"--- stderr ---\n{completed.stderr[-3000:]}"
             )
 
-        plans = sorted((pkg / "results").rglob("*.json"))
-        plans = [p for p in plans if p.parent.name.startswith("phase2_e2e_")]
+        # Exactly the required location: results/<method>/<uid>.json, with <method> taken from
+        # the command line. Globbing wider would let a run that ignored --method pass.
+        method_dir = pkg / "results" / VERIFY_METHOD
+        plans = sorted(method_dir.glob("*.json"))
         if not plans:
-            raise SystemExit("verification FAILED: the run produced no plan file")
+            stray = sorted(p.parent.name for p in (pkg / "results").rglob("*.json"))
+            raise SystemExit(
+                f"verification FAILED: no plan at results/{VERIFY_METHOD}/<uid>.json "
+                f"(--method was ignored?); result directories present: {sorted(set(stray))}"
+            )
         empty = [
             p.name
             for p in plans

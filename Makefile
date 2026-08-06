@@ -136,10 +136,12 @@ phase2-solve:
 	.venv/bin/python agent_env/scripts/solve_phase2.py --split $(P2_SPLIT) \
 	  --method $(P2_METHOD) --budget-sec $(P2_BUDGET) $(P2_LIMIT_FLAG)
 
-# The exact command the organizers run (2026-08-04 confirmation), with nothing added: no flags
-# beyond --split, no env vars. Use it to rehearse the real submission path end to end.
+# The exact command the organizers run (2026-08-06 clarification), with nothing added: no flags
+# beyond --method and --split, no env vars. Use it to rehearse the real submission path end to end.
+# Both values come from the command line on their side too, so passing P2_METHOD here rehearses the
+# real thing -- results land in results/$(P2_METHOD)/<uid>.json.
 phase2-harness:
-	$(PYTHON) agent_env/scripts/solve_script_with_harness.py --split $(P2_SPLIT)
+	$(PYTHON) agent_env/scripts/solve_script_with_harness.py --method $(P2_METHOD) --split $(P2_SPLIT)
 
 # Whole-run evaluation: run the shipped path under the 5h envelope on all of familiar_100, score it
 # with eval_tpc.py, and record a row under results/phase2_baselines/full_runs/. This is the run that

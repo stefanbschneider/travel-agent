@@ -20,18 +20,27 @@ organizer-facing install-and-run entry point.
 
 ## Entry point
 
-Evaluation runs exactly one command, with no other flags:
+Evaluation runs exactly one command, from the package root, with no other flags:
 
 ```bash
-python agent_env/scripts/solve_script_with_harness.py --split <split>
+python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 ```
+
+Both arguments are the organizers' and neither may be hard-coded (2026-08-06 clarification):
+`--split` selects the held-out split, `--method` names the output directory, and plans must land at
+`results/<method>/<uid>.json`. The shipped `agent_env/config.toml` therefore pins neither, nor a
+`limit`, so no split, query list, query count, or method name is fixed in the package.
 
 Its shipped default is `--harness tpc`, which dispatches **in-process** to
 `solve_phase2.run_split` — no subprocess, no network, no LLM. `--harness opencode` / `--harness codex`
 remain reachable as explicit opt-ins for baseline comparison but never run by default. Language
-defaults to `en` (the competition data), independent of the split's name. Install for this path is
-`requirements-submission.txt`; `scripts/assemble_phase2_submission.py` builds and verifies the
-archive.
+defaults to `en` (the competition data), independent of the split's name, and falls back to `zh` if
+the split resolves only in that tree — an unresolvable split would otherwise produce no plans at all.
+Held-out queries carry no `hard_logic*` (or any other verifier-only) field; every path treats them as
+optional, so their absence disables only the local convenience scoring, never the solve. Install for
+this path is `requirements-submission.txt`; `scripts/assemble_phase2_submission.py` builds and
+verifies the archive, failing the build unless a run with an arbitrary `--method` writes to exactly
+`results/<method>/`.
 
 ## Run shape
 
@@ -158,8 +167,9 @@ packaging](tpc_phase2_roadmap.md#llm-packaging-the-submission-makes-zero-llm-cal
 
 ## Outputs and telemetry
 
-- Plans go to `results/<method>/<uid>.json`, with `method` defaulting to `phase2_e2e_<split>` so the
-  harness entry point and `solve_phase2.py` share a directory and resume each other.
+- Plans go to `results/<method>/<uid>.json` — the organizers' required location, with `<method>`
+  taken verbatim from `--method`. When `--method` is omitted it defaults to `phase2_e2e_<split>`, so
+  the harness entry point and `solve_phase2.py` share a directory and resume each other.
 - Per-query telemetry (`work_root/<uid>/telemetry.json`) carries `stage_sec`, parse/LLM counters,
   `used_fallback`, `solve_recovered_from_timeout`, `rss_mb`, `search_telemetry` (`restarts_used`,
   `stop_reason`, `candidates_evaluated`, `best_found_at_restart`) and `solver_flags` (the promoted

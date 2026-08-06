@@ -992,6 +992,18 @@ passes are reachable through the `TPC_COMMONSENSE_FIRST` umbrella.
   network, no subprocess. `opencode`/`codex` are explicit opt-ins. Previously the bare command ran an
   external-CLI LLM demo, which would have failed outright on the organizers' host. Pinned by
   `tests/phase2/test_harness_entry_point.py`.
+- **The 2026-08-06 harness clarification, checked and enforced** (2026-08-06). The organizers'
+  command is `--method <method> --split <split>` from the package root, results at
+  `results/<method>/<uid>.json`, held-out data with no `hard_logic*` field, and an instruction not to
+  hard-code split, query list, query count, or method name. All four were already satisfied — proven
+  by running the command with an arbitrary method and by running a split rebuilt with the verifier
+  fields physically deleted — and are now *enforced*: the assembler fails the build unless plans
+  appear under an arbitrary `--method`, and `tests/phase2/test_harness_entry_point.py` pins
+  method-verbatim, split-from-the-flag and oracle-free-query behavior. One robustness fix came out of
+  it: a split that resolves only in the other language tree used to raise and produce zero plans;
+  `load_queries_with_lang` now retries and reports which language it used. Upstream `main` advanced to
+  `456b60a` with no change to any scoring file, so the parity point stays `c89cfca`. Full record in
+  the [competition reference](reference/competition.md#dsl-free-data-latest-harnessevaluator-and-the-method-argument-2026-08-06).
 - **The whole-run envelope and scheduler** (2026-08-04). `chinatravel/agent/phase2/sweeps.py`:
   triage → repair → polish across `CPU-1` workers, oracle-free self-scoring, keep-best, fallback
   written before the first solve. See the [design doc](tpc_phase2_design.md#run-shape).

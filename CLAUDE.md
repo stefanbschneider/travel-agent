@@ -10,9 +10,14 @@ The human entry point is [README.md](README.md).
 | Phase 1 | Offline work on released data may use released oracle fields locally. Preserve the accepted-plan and monotonic-merge workflow. |
 | Phase 2 | The agent path receives visible query text and environment tools only. It must not read, derive from, or retain oracle verifier fields. |
 
-Phase 2 runs in an organizer harness on a held-out set, invoked automatically as exactly
-`python agent_env/scripts/solve_script_with_harness.py --split <split>` — no other flags. All
-harness-specific init/launch logic must be integrated behind that one command.
+Phase 2 runs in an organizer harness on a held-out set, invoked automatically from the package root as
+exactly `python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>` —
+no other flags (2026-08-06 clarification; the earlier wording omitted `--method`). Both values are
+the organizers', so **neither the split, the query list, the query count, nor the method name may be
+hard-coded**, and every plan must land at `results/<method>/<uid>.json`. All harness-specific
+init/launch logic must be integrated behind that one command. Held-out queries carry **no**
+`hard_logic`, `hard_logic.py`, `hard_logic_py`, `hard_logic_nl`, or any other DSL / constraint-code /
+ground-truth / verifier-only field — code may treat those fields as absent, never as required.
 There is no per-query timeout: the organizers confirmed (2026-08-04) a single 5-hour wall-clock budget
 for the entire 100-query run, excluding setup. At most two submitted versions are evaluated per team
 (higher score wins if both succeed). Local `300 s`/`900 s` settings remain per-query development gate
@@ -89,7 +94,7 @@ Use `make help` for Phase 1 commands and `make phase2-help` for Phase 2 commands
 - **Flags off is the floor.** Library-default Phase 2 flags must keep the deterministic path and make zero LLM calls. An extension needs a bounded fallback and an explicit measured configuration.
 - **Output honestly.** Return only data that meets the schema and semantic contract. Surface a genuine failure rather than inventing an itinerary fact.
 - **Cold start is the only start that counts.** The submitted archive runs in a tree that has never been run in, with `CPU-1` worker processes. A development tree is always warm, so warm-tree evidence proves nothing about it: verify from a pristine directory with more than one worker before any upload (`tests/phase2/test_cold_start.py`, `scripts/assemble_phase2_submission.py --verify-budget-sec`). A worker that dies during start-up breaks the pool, and the run still **exits 0** while shipping empty fallback plans — check plan contents, never exit status. See the [pre-submission checklist](docs/reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05).
-- **Upstream evaluator parity.** `chinatravel/evaluation/`, `chinatravel/symbol_verification/`, `chinatravel/environment/concept_labels.py`, `chinatravel/environment/tools/`, `eval_tpc.py`'s scoring and `chinatravel/data/load_datasets.py` must reproduce `LAMDA-NeSy/ChinaTravel` `main` exactly (parity point: `c89cfca`, 2026-08-04, integrated 2026-08-04; previously `764614c`, 2026-07-28). Local additions there are limited to performance (lazy per-language tools) and defensive guards on malformed plans; never a scoring difference, and never a private "patched" score. Re-sync upstream before trusting a number.
+- **Upstream evaluator parity.** `chinatravel/evaluation/`, `chinatravel/symbol_verification/`, `chinatravel/environment/concept_labels.py`, `chinatravel/environment/tools/`, `eval_tpc.py`'s scoring and `chinatravel/data/load_datasets.py` must reproduce `LAMDA-NeSy/ChinaTravel` `main` exactly (parity point: `c89cfca`, 2026-08-04, integrated 2026-08-04; previously `764614c`, 2026-07-28). Upstream `main` is at `456b60a` as of 2026-08-06 and is byte-identical to `c89cfca` across every path above (PR #33 touched only `agent_env/` and the baseline harness), so the parity point does **not** move and no recorded row's comparability changes — re-check this, do not assume it, whenever upstream advances. Local additions there are limited to performance (lazy per-language tools) and defensive guards on malformed plans; never a scoring difference, and never a private "patched" score. Re-sync upstream before trusting a number.
 
 ## Measurements and ledgers
 
