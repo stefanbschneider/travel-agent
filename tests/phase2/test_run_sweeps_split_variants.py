@@ -151,7 +151,8 @@ def test_run_sweeps_split_degrades_to_empty_variants_on_parse_failure(tmp_path, 
 def test_run_sweeps_split_records_parent_parse_failures_in_summary(tmp_path, monkeypatch, capsys):
     """Roadmap P13: a parent-side parse failure used to be silently discarded -- a run could not
     tell you which uids (if any) fell back to the per-worker re-parse. It is now surfaced as
-    ``parent_parse_failed_uids`` on the written/printed run summary."""
+    ``parent_parse_failed_uids`` on the returned summary, the written summary file, and the
+    summary ``run_sweeps_split`` prints to stdout."""
     import solve_phase2 as runner
     from chinatravel.agent.phase2 import normalize, sweeps
 
@@ -193,6 +194,8 @@ def test_run_sweeps_split_records_parent_parse_failures_in_summary(tmp_path, mon
     assert summary["parent_parse_failed_uids"] == [uid]
     written = json.loads((work_root / "tpc_phase1_summary.json").read_text(encoding="utf-8"))
     assert written["parent_parse_failed_uids"] == [uid]
+    printed = capsys.readouterr().out
+    assert f'"parent_parse_failed_uids": [\n    "{uid}"\n  ]' in printed
 
 
 def test_run_sweeps_split_records_no_parent_parse_failures_on_success(tmp_path, monkeypatch):
