@@ -419,10 +419,27 @@ def apply_deterministic_solver_defaults():
       43.0``). Deterministic and acceptance-gated like the passes above: every relayout is trialed on
       a deepcopy and committed only if the full checker still accepts and the preference key does not
       regress.
+    - ``TPC_WINDOW_PUSH=1`` / ``TPC_WINDOW_INSERT=1`` (roadmap P8/P9): the bounded local window push
+      (retime/shorten the residual after ``TPC_WINDOW_ANCHOR``) and the absent-timed-visit-POI
+      insertion pass. Promoted on **R14**, the P8/P9 whole-run gate:
+      ``results/phase2_baselines/full_runs/20260806T052925Z.json`` scored ``overall
+      64.13167839953107`` (``+0.5471`` over the ``TPC_WINDOW_ANCHOR``-only baseline) / ``FPR 44.0``
+      (``+1.0``) / ``empty_plans 0/100``, same box/envelope/workers/``evaluator_parity`` as the
+      baseline it is measured against. Gated as a stack (both flags together), matching their paired
+      screens (``results/phase2_baselines/screens/20260805_e2e_n80_b90_window_push_insert``):
+      ``FPR 42.5 -> 45.0``, ``overall_true 63.130 -> 64.422``, ``all_pass 34 -> 36``, zero timeouts,
+      fallbacks or parse regressions. **Two caveats, carried forward rather than dropped:**
+      ``constraints_ok`` did **not** move on R14 (``46/100``, identical to the
+      ``TPC_WINDOW_ANCHOR``-only baseline) -- the gain is one FPR point plus preference terms, not a
+      newly passing query -- and the paired screen *over*-predicted the full run on all three axes,
+      the opposite direction from R8's screen. ``TPC_WINDOW_PUSH_MAX_MIN`` (the push's bound) stays a
+      candidate, unset here: R14 measured it at its code default (30 min), and it is a bound on the
+      pass rather than a pass of its own.
 
     Must run *before* ``make_tpcagent_solve_fn`` builds the agent: ``TPCAgent.__init__`` reads
-    ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS`` and ``TPC_WINDOW_ANCHOR`` are
-    read lazily at pack time, but all are set here for clarity)."""
+    ``TPC_SOLVE_CONVERGE_PATIENCE`` eagerly (``TPC_PIN_TIMED_WINDOWS``, ``TPC_WINDOW_ANCHOR``,
+    ``TPC_WINDOW_PUSH`` and ``TPC_WINDOW_INSERT`` are read lazily at pack time, but all are set here
+    for clarity)."""
     if "TPC_PIN_TIMED_WINDOWS" not in os.environ:
         os.environ["TPC_PIN_TIMED_WINDOWS"] = "1"
     if "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ:
@@ -433,6 +450,12 @@ def apply_deterministic_solver_defaults():
     # for the relayout to anchor. R8 measured the pair, so the pair is what ships.
     if "TPC_WINDOW_ANCHOR" not in os.environ:
         os.environ["TPC_WINDOW_ANCHOR"] = "1"
+    # R14 gated TPC_WINDOW_PUSH and TPC_WINDOW_INSERT as a stack on top of TPC_WINDOW_ANCHOR above --
+    # the pair is what R14 measured, so the pair is what ships.
+    if "TPC_WINDOW_PUSH" not in os.environ:
+        os.environ["TPC_WINDOW_PUSH"] = "1"
+    if "TPC_WINDOW_INSERT" not in os.environ:
+        os.environ["TPC_WINDOW_INSERT"] = "1"
 
 
 def run_sweeps_split(

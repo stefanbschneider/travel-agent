@@ -260,21 +260,35 @@ def test_runner_resume_skips_existing(tmp_path):
 def test_apply_deterministic_solver_defaults_promotes_pin_and_converge(monkeypatch):
     import solve_phase2 as runner
 
-    monkeypatch.delenv("TPC_PIN_TIMED_WINDOWS", raising=False)
-    monkeypatch.delenv("TPC_SOLVE_CONVERGE_PATIENCE", raising=False)
-    monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
-    monkeypatch.delenv("TPC_WINDOW_ANCHOR", raising=False)
+    promoted_flags = ("TPC_PIN_TIMED_WINDOWS", "TPC_SOLVE_CONVERGE_PATIENCE", "TPC_COMMONSENSE_FIRST",
+                       "TPC_WINDOW_ANCHOR", "TPC_WINDOW_PUSH", "TPC_WINDOW_INSERT")
+    for name in promoted_flags:
+        monkeypatch.delenv(name, raising=False)
 
-    runner.apply_deterministic_solver_defaults()
+    # apply_deterministic_solver_defaults() writes os.environ directly (mirroring the shipped
+    # harness), not through monkeypatch -- monkeypatch has never seen these keys set, so a delenv
+    # called *after* this write would capture the just-written value as "the original" and restore
+    # it at teardown, leaking a promoted flag into every later test in the process. Clean up with
+    # plain os.environ instead.
+    try:
+        runner.apply_deterministic_solver_defaults()
 
-    assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"
-    assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "15"
-    # Promoted on the 2026-07-26 paired e2e screen (overall_true 51.34 -> 60.98, C-LPR
-    # 67.35 -> 89.95, commonsense pass 30/40 -> 40/40).
-    assert os.environ["TPC_COMMONSENSE_FIRST"] == "1"
-    # Promoted on R8 (full_runs/20260805T123142Z): overall 63.58 vs R7's 57.75, FPR 43.0 vs 32.0,
-    # constraints_ok 46/100 vs 36/100, against a baseline whose three repeats were bit-identical.
-    assert os.environ["TPC_WINDOW_ANCHOR"] == "1"
+        assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"
+        assert os.environ["TPC_SOLVE_CONVERGE_PATIENCE"] == "15"
+        # Promoted on the 2026-07-26 paired e2e screen (overall_true 51.34 -> 60.98, C-LPR
+        # 67.35 -> 89.95, commonsense pass 30/40 -> 40/40).
+        assert os.environ["TPC_COMMONSENSE_FIRST"] == "1"
+        # Promoted on R8 (full_runs/20260805T123142Z): overall 63.58 vs R7's 57.75, FPR 43.0 vs
+        # 32.0, constraints_ok 46/100 vs 36/100, against a baseline whose three repeats were
+        # bit-identical.
+        assert os.environ["TPC_WINDOW_ANCHOR"] == "1"
+        # Promoted on R14 (full_runs/20260806T052925Z), the P8/P9 gate: overall 64.13167839953107
+        # (+0.5471) vs the TPC_WINDOW_ANCHOR-only baseline, FPR 44.0 (+1.0), empty_plans 0/100.
+        assert os.environ["TPC_WINDOW_PUSH"] == "1"
+        assert os.environ["TPC_WINDOW_INSERT"] == "1"
+    finally:
+        for name in promoted_flags:
+            os.environ.pop(name, None)
 
 
 def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypatch):
@@ -286,6 +300,8 @@ def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypa
     monkeypatch.setenv("TPC_SOLVE_CONVERGE_PATIENCE", "7")
     monkeypatch.setenv("TPC_COMMONSENSE_FIRST", "0")
     monkeypatch.setenv("TPC_WINDOW_ANCHOR", "0")
+    monkeypatch.setenv("TPC_WINDOW_PUSH", "0")
+    monkeypatch.setenv("TPC_WINDOW_INSERT", "0")
 
     runner.apply_deterministic_solver_defaults()
 
@@ -295,19 +311,23 @@ def test_apply_deterministic_solver_defaults_respects_operator_override(monkeypa
     # The R7-vs-R8 style A/B arm has to stay expressible after promotion, or the row that promoted
     # the flag could never be reproduced.
     assert os.environ["TPC_WINDOW_ANCHOR"] == "0"
+    assert os.environ["TPC_WINDOW_PUSH"] == "0"
+    assert os.environ["TPC_WINDOW_INSERT"] == "0"
 
 
 def test_injected_solve_fn_does_not_leak_solver_defaults(tmp_path, monkeypatch):
     """Regression for the env-leak Copilot flagged on PR #41: run_split with an *injected* solve_fn
     builds no agent, so it must not mutate the process-global TPC_PIN_TIMED_WINDOWS /
-    TPC_SOLVE_CONVERGE_PATIENCE / TPC_COMMONSENSE_FIRST / TPC_WINDOW_ANCHOR -- only the
-    agent-building path (solve_fn is None) promotes them."""
+    TPC_SOLVE_CONVERGE_PATIENCE / TPC_COMMONSENSE_FIRST / TPC_WINDOW_ANCHOR / TPC_WINDOW_PUSH /
+    TPC_WINDOW_INSERT -- only the agent-building path (solve_fn is None) promotes them."""
     import solve_phase2 as runner
 
     monkeypatch.delenv("TPC_PIN_TIMED_WINDOWS", raising=False)
     monkeypatch.delenv("TPC_SOLVE_CONVERGE_PATIENCE", raising=False)
     monkeypatch.delenv("TPC_COMMONSENSE_FIRST", raising=False)
     monkeypatch.delenv("TPC_WINDOW_ANCHOR", raising=False)
+    monkeypatch.delenv("TPC_WINDOW_PUSH", raising=False)
+    monkeypatch.delenv("TPC_WINDOW_INSERT", raising=False)
 
     runner.run_split(
         "tpc_phase1",
@@ -323,3 +343,5 @@ def test_injected_solve_fn_does_not_leak_solver_defaults(tmp_path, monkeypatch):
     assert "TPC_SOLVE_CONVERGE_PATIENCE" not in os.environ
     assert "TPC_COMMONSENSE_FIRST" not in os.environ
     assert "TPC_WINDOW_ANCHOR" not in os.environ
+    assert "TPC_WINDOW_PUSH" not in os.environ
+    assert "TPC_WINDOW_INSERT" not in os.environ

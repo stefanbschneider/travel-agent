@@ -388,17 +388,25 @@ def test_harness_promotes_the_flag_while_the_library_default_stays_off(monkeypat
     """
     import solve_phase2 as runner
 
-    # Every var the promotion touches is delenv'd through monkeypatch, so pytest's teardown removes
-    # whatever the call sets and no later test inherits a promoted flag.
-    for name in ("TPC_WINDOW_ANCHOR", "TPC_PIN_TIMED_WINDOWS", "TPC_SOLVE_CONVERGE_PATIENCE",
-                 "TPC_COMMONSENSE_FIRST"):
+    promoted_flags = ("TPC_WINDOW_ANCHOR", "TPC_PIN_TIMED_WINDOWS", "TPC_SOLVE_CONVERGE_PATIENCE",
+                       "TPC_COMMONSENSE_FIRST", "TPC_WINDOW_PUSH", "TPC_WINDOW_INSERT")
+    for name in promoted_flags:
         monkeypatch.delenv(name, raising=False)
     assert _bare_agent()._window_anchor_enabled() is False, "library default must stay off"
 
-    runner.apply_deterministic_solver_defaults()
+    # apply_deterministic_solver_defaults() writes os.environ directly (mirroring the shipped
+    # harness), not through monkeypatch -- monkeypatch has never seen these keys set, so a delenv
+    # called *after* this write would capture the just-written value as "the original" and restore
+    # it at teardown, leaking a promoted flag into every later test in the process. Clean up with
+    # plain os.environ instead.
+    try:
+        runner.apply_deterministic_solver_defaults()
 
-    assert os.environ["TPC_WINDOW_ANCHOR"] == "1"
-    assert _bare_agent()._window_anchor_enabled() is True
-    # The pass is only meaningful with the pin that puts the named POI in the plan, and R8 measured
-    # the pair -- so the pair has to be what the harness turns on.
-    assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"
+        assert os.environ["TPC_WINDOW_ANCHOR"] == "1"
+        assert _bare_agent()._window_anchor_enabled() is True
+        # The pass is only meaningful with the pin that puts the named POI in the plan, and R8
+        # measured the pair -- so the pair has to be what the harness turns on.
+        assert os.environ["TPC_PIN_TIMED_WINDOWS"] == "1"
+    finally:
+        for name in promoted_flags:
+            os.environ.pop(name, None)
