@@ -64,17 +64,31 @@ import rehearse_phase2 as reh  # noqa: E402
 from phase2_gate import check_gate  # noqa: E402
 
 
-def _method_for(mode: str, split_name: str) -> str:
-    return f"phase2_{'solver_only' if mode == 'solver-only' else 'e2e'}_{split_name}"
+def _method_for(mode: str, split_name: str, arm: str | None = None) -> str:
+    """Method name (== results/ and agent_env/runs/ directory) for one screen arm.
+
+    ``whole-run`` mode needs a distinct method per arm (``arm`` is e.g. ``"off"``/``"on"``):
+    ``run_sweeps_split`` treats any non-empty plan already on disk under ``results/<method>/`` as
+    an incumbent to beat regardless of ``resume``, so two arms sharing one directory would measure
+    "arm 2 on top of arm 1" instead of two independent arms (roadmap P11 step 2). end-to-end and
+    solver-only don't need this: ``--fresh`` (always on here, see ``common`` in ``main``) clears
+    their shared per-mode directory before *each* arm runs, so sequential reuse is safe there.
+    """
+    base = f"phase2_{'solver_only' if mode == 'solver-only' else ('whole_run' if mode == 'whole-run' else 'e2e')}_{split_name}"
+    if arm is None:
+        return base
+    return f"{base}_{arm}"
 
 
-def _aggregate_telemetry(mode: str, split_name: str, uids: list[str]) -> dict:
+def _aggregate_telemetry(mode: str, split_name: str, uids: list[str], arm: str | None = None) -> dict:
     """Read per-uid telemetry written by the run and summarize the reliability signals.
 
     Both the solver-only worker (rehearse_phase2._run_solver_only) and the end-to-end runner
     (solve_phase2) write ``agent_env/runs/<method>/<uid>/telemetry.json`` with the same core keys.
+    ``arm`` must match whatever was passed to the run itself (see ``_method_for``) -- required for
+    whole-run mode, where each arm has its own method directory.
     """
-    method = _method_for(mode, split_name)
+    method = _method_for(mode, split_name, arm)
     run_dir = PROJECT_ROOT / "agent_env" / "runs" / method
     n = 0
     timed_out = 0
@@ -177,10 +191,19 @@ def _layer_metrics(mode_report: dict) -> dict:
 
 
 def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
-                   budget_sec, parallel, chunk_size, fold, folds, seed) -> dict:
-    """Run one arm of the A/B with ``env_overrides`` applied, return a metrics dict."""
+                   budget_sec, parallel, chunk_size, fold, folds, seed,
+                   total_budget_sec=None, workers=None, arm=None) -> dict:
+    """Run one arm of the A/B with ``env_overrides`` applied, return a metrics dict.
+
+    ``total_budget_sec``/``workers``/``arm`` matter only in ``whole-run`` mode: ``arm`` (e.g.
+    ``"off"``/``"on"``) becomes the arm's own ``results/``/``agent_env/runs/`` method directory (see
+    ``_method_for``) so the two arms never share incumbents, and ``total_budget_sec``/``workers``
+    are the envelope/worker-count ``run_sweeps_split`` schedules against. Both are ``None`` (and
+    ignored) for end-to-end/solver-only.
+    """
     prev = {k: os.environ.get(k) for k in env_overrides}
     os.environ.update({k: str(v) for k, v in env_overrides.items()})
+    method = _method_for(mode, split_name, arm) if mode == "whole-run" else None
     t0 = time.perf_counter()
     try:
         report = reh.rehearse(
@@ -194,6 +217,9 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
             fresh=True,
             chunk_size=chunk_size,
             parallel=parallel,
+            total_budget_sec=total_budget_sec,
+            workers=workers,
+            method=method,
         )
     finally:
         for k, v in prev.items():
@@ -206,7 +232,7 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
     m = report["modes"][mode]
     quality = m.get("quality", {})
     overall_true = (quality.get("overall_true") or {}).get("mean", 0.0)
-    telem = _aggregate_telemetry(mode, split_name, fold_uids)
+    telem = _aggregate_telemetry(mode, split_name, fold_uids, arm)
     layers = _layer_metrics(m)
     # A uid that produced no result file (`missing`), unreadable JSON, a failed eval, or a solve
     # error is a failure that must count -- otherwise a run where some uids produced no artifact
@@ -232,6 +258,8 @@ def _run_condition(*, label, env_overrides, mode, split_name, fold_uids,
         "telemetry": telem,
         "layers": layers,
         "quality_n": {k: quality.get(k) for k in ("requested", "evaluated", "missing")},
+        # whole-run only (empty dict for end-to-end/solver-only): the scheduler's own numbers.
+        "scheduler": m.get("scheduler", {}),
     }
 
 
@@ -309,7 +337,7 @@ def main() -> None:
     p.add_argument("--off", default="0", help="Baseline value for --flag (default '0').")
     p.add_argument("--extra-env", default="",
                    help="Comma-separated K=V applied to BOTH arms (stack other flags/settings).")
-    p.add_argument("--mode", choices=["solver-only", "end-to-end"], default="solver-only")
+    p.add_argument("--mode", choices=["solver-only", "end-to-end", "whole-run"], default="solver-only")
     p.add_argument(
         "--split-set",
         choices=["val", "test", "familiar_100", "familiar_100_val", "familiar_100_test"],
@@ -319,8 +347,21 @@ def main() -> None:
     )
     p.add_argument("--n", type=int, default=40, help="Queries to screen (subset size).")
     p.add_argument("--budget-sec", type=float, default=60.0)
-    p.add_argument("--parallel", type=int, default=3)
-    p.add_argument("--chunk-size", type=int, default=1)
+    p.add_argument("--parallel", type=int, default=3,
+                   help="Chunk subprocesses to run concurrently. Ignored in --mode whole-run, "
+                   "which uses --workers instead (the sweep scheduler owns its own worker pool).")
+    p.add_argument("--chunk-size", type=int, default=1,
+                   help="Queries per subprocess. Ignored in --mode whole-run; see --workers.")
+    p.add_argument("--total-budget-sec", type=float, default=1800.0,
+                   help="--mode whole-run only: the wall-clock envelope each arm's run_sweeps_split "
+                   "schedules against (default 1800s). Must be large enough for the scheduler to "
+                   "run more than one pass (triage/repair/polish) or the screen degenerates into a "
+                   "slow triage-only run and measures nothing --budget-sec alone would not. "
+                   "Calibrated starting point: --n 40 --total-budget-sec 1800 --budget-sec 90 "
+                   "--workers 6 (~3 passes, ~25 min per arm).")
+    p.add_argument("--workers", type=int, default=None,
+                   help="--mode whole-run only: worker processes for run_sweeps_split (default: "
+                   "CPU count - 1).")
     p.add_argument("--folds", type=int, default=1, help="Fold partition count (1 = whole split).")
     p.add_argument("--fold", type=int, default=0)
     p.add_argument("--seed", type=int, default=reh.DEFAULT_SEED)
@@ -348,6 +389,9 @@ def main() -> None:
     print(f"# phase2 quick A/B screen: {args.flag} ({args.off} -> {args.on})")
     print(f"  mode={args.mode} split={split_name} n={len(fold_uids)} budget={args.budget_sec}s "
           f"parallel={args.parallel} seed={args.seed}")
+    if args.mode == "whole-run":
+        print(f"  whole-run envelope={args.total_budget_sec}s workers="
+              f"{args.workers if args.workers else 'CPU-1'} (--parallel/--chunk-size ignored)")
     if extra:
         print(f"  shared extra-env (both arms): {extra}")
     print(f"  NOTE: reduced-budget SCREEN, not a promotion gate. Trust the delta's sign, not the "
@@ -358,7 +402,9 @@ def main() -> None:
 
     common = dict(mode=args.mode, split_name=split_name, fold_uids=fold_uids,
                   budget_sec=args.budget_sec, parallel=args.parallel, chunk_size=args.chunk_size,
-                  fold=args.fold, folds=args.folds, seed=args.seed)
+                  fold=args.fold, folds=args.folds, seed=args.seed,
+                  total_budget_sec=args.total_budget_sec if args.mode == "whole-run" else None,
+                  workers=args.workers if args.mode == "whole-run" else None)
 
     if args.baseline_json:
         baseline = json.loads(Path(args.baseline_json).read_text(encoding="utf-8"))
@@ -366,12 +412,14 @@ def main() -> None:
               f"overall_true={baseline['continuous_score']}\n", flush=True)
     else:
         print(f"[1/2] baseline  ({args.flag}={args.off}) ...", flush=True)
-        baseline = _run_condition(label=f"{args.flag}={args.off}", env_overrides=base_env, **common)
+        baseline = _run_condition(label=f"{args.flag}={args.off}", env_overrides=base_env,
+                                   arm=("off" if args.mode == "whole-run" else None), **common)
         print(f"      done in {baseline['wall_sec']}s  FPR={baseline['fpr']} "
               f"overall_true={baseline['continuous_score']}\n", flush=True)
 
     print(f"[2/2] candidate ({args.flag}={args.on}) ...", flush=True)
-    candidate = _run_condition(label=f"{args.flag}={args.on}", env_overrides=cand_env, **common)
+    candidate = _run_condition(label=f"{args.flag}={args.on}", env_overrides=cand_env,
+                                arm=("on" if args.mode == "whole-run" else None), **common)
     print(f"      done in {candidate['wall_sec']}s  FPR={candidate['fpr']} "
           f"overall_true={candidate['continuous_score']}\n", flush=True)
 
@@ -419,6 +467,24 @@ def main() -> None:
             bits.append(f"refine called {ct['refine_called']}/committed {ct['refine_committed']}"
                         f"/2nd-attempt {ct.get('refine_second_attempts', 0)}")
         print(f"  LLM activity (cand)   {'; '.join(bits)}")
+    # whole-run only: the scheduler's own numbers (roadmap P11 step 5). A scheduler-level change
+    # (e.g. P10) can move constraints_ok (the scheduler's own oracle-free opinion) without moving
+    # official FPR -- that is the expected shape of a self-scoring fix, and this is what lets the
+    # screen show it rather than only the official metrics above.
+    bs, cs = baseline.get("scheduler") or {}, candidate.get("scheduler") or {}
+    if bs or cs:
+        print("-" * 72)
+        print(f"  [scheduler] constraints_ok   {_fmt_delta(bs.get('constraints_ok', 0), cs.get('constraints_ok', 0))}")
+        print(f"  [scheduler] self_overall_mean {_fmt_delta(bs.get('self_overall_mean', 0), cs.get('self_overall_mean', 0))}")
+        print(f"  [scheduler] self_fpr_mean     {_fmt_delta(bs.get('self_fpr_mean', 0), cs.get('self_fpr_mean', 0))}")
+        print(f"  [scheduler] empty_plans       {_fmt_delta(bs.get('empty_plans', 0), cs.get('empty_plans', 0), higher_better=False)}")
+        print(f"  [scheduler] fallbacks_prewritten {_fmt_delta(bs.get('fallbacks_prewritten', 0), cs.get('fallbacks_prewritten', 0), higher_better=False)}")
+        print(f"  [scheduler] variants_source (cand) {cs.get('variants_source', {})}")
+        for label_, sched in (("baseline", bs), ("candidate", cs)):
+            for p_ in sched.get("passes") or []:
+                print(f"  [scheduler] {label_} pass {p_.get('index')} ({p_.get('kind')}): "
+                      f"queries={p_.get('queries')} improved={p_.get('improved')} "
+                      f"completed={p_.get('completed')} failed={p_.get('failed')}")
     print("-" * 72)
     print(f"  monotonic gate (like-for-like at this budget): "
           f"{'PASS' if gate['passed'] else 'FAIL'}")

@@ -23,6 +23,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import random
 import shutil
@@ -53,6 +54,10 @@ from chinatravel.agent.phase2 import orchestrator as orch  # noqa: E402
 
 DEFAULT_SEED = 20260705
 DEFAULT_FOLDS = 10
+# Whole-run mode's envelope default when the caller (a bare CLI invocation) doesn't set one. The
+# calibrated screen guidance (roadmap P11) is n=40 at 1800s/90s budget/6 workers for ~3 passes in
+# ~25 min per arm; phase2_quick_eval.py's own --total-budget-sec default matches this.
+DEFAULT_TOTAL_BUDGET_SEC = 1800.0
 # Queries per subprocess for the chunked rehearsal. Each subprocess's memory (and any
 # ``func_timeout`` thread that survives a timeout) is fully reclaimed by the OS when it exits, so a
 # small chunk bounds cumulative growth across a large fold. Override with `P2_CHUNK`; <=0 disables
@@ -240,6 +245,61 @@ def _evaluate_method(split_name: str, method: str, fold_uids: list[str], query_d
     return {"fpr": _fpr(metrics, len(fold_uids)), "raw": metrics, "quality": quality}
 
 
+def _scheduler_report(method: str, fold_uids: list[str], sweep_summary: dict) -> dict:
+    """Scheduler-level numbers a whole-run mode uniquely exposes (roadmap P11 step 5).
+
+    ``sweep_summary`` is ``run_sweeps_split``'s return value (``constraints_ok``,
+    ``self_overall_mean``, ``self_fpr_mean``, per-pass ``improved``/``completed``/``failed`` via
+    ``passes``, ``fallbacks_prewritten``). ``empty_plans`` and the ``variants_source`` histogram are
+    not in that summary -- the former is computed the same way ``phase2_full_run.py`` computes it
+    (a written plan with no ``itinerary`` entries), the latter by reading the per-uid telemetry
+    ``run_sweeps_split`` writes via ``on_result``. A scheduler change that moves ``constraints_ok``
+    (the scheduler's own oracle-free opinion) without moving official FPR is the *expected* shape of
+    a self-scoring fix (see roadmap P10) -- this is what lets a screen show that distinction.
+    """
+    import solve_script_with_harness as hb
+
+    result_dir = PROJECT_ROOT / "results" / method
+    run_dir = PROJECT_ROOT / "agent_env" / "runs" / method
+
+    empty_plans = 0
+    for quid in fold_uids:
+        path = result_dir / f"{quid}.json"
+        if not path.exists():
+            continue
+        try:
+            plan = hb.read_json(path)
+        except Exception:
+            continue
+        if not isinstance(plan, dict) or not plan.get("itinerary"):
+            empty_plans += 1
+
+    variants_source: dict[str, int] = {}
+    for quid in fold_uids:
+        tpath = run_dir / quid / "telemetry.json"
+        if not tpath.exists():
+            continue
+        try:
+            t = json.loads(tpath.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        src = t.get("variants_source")
+        if src:
+            variants_source[src] = variants_source.get(src, 0) + 1
+
+    return {
+        "constraints_ok": sweep_summary.get("constraints_ok"),
+        "self_overall_mean": sweep_summary.get("self_overall_mean"),
+        "self_fpr_mean": sweep_summary.get("self_fpr_mean"),
+        "passes": sweep_summary.get("passes"),
+        "fallbacks_prewritten": sweep_summary.get("fallbacks_prewritten"),
+        "remaining_sec": sweep_summary.get("remaining_sec"),
+        "elapsed_sec": sweep_summary.get("elapsed_sec"),
+        "empty_plans": empty_plans,
+        "variants_source": variants_source,
+    }
+
+
 # --- Mode runners (integration; touch WorldEnv/solver) --------------------
 
 
@@ -273,6 +333,37 @@ def _run_end_to_end(split_name, fold_uids, *, budget_sec):
         resume=True,
     )
     return method
+
+
+def _run_whole_run(split_name, fold_uids, *, budget_sec, total_budget_sec, workers, method):
+    """The shipped path: run_split *with* an envelope, so run_sweeps_split does the scheduling.
+
+    Unlike ``_run_end_to_end``/``_run_solver_only``, ``method`` is a required parameter rather than
+    derived from ``split_name`` alone: ``run_sweeps_split`` treats any non-empty plan already on
+    disk under ``results/<method>/`` as an incumbent to beat, *regardless of* ``resume`` (there is
+    no ``resume`` knob here -- ``resume=False`` is passed to ``run_split``, but the incumbent-aware
+    scoring loop reads the directory unconditionally). Two arms that shared a method directory would
+    therefore measure "arm 2 on top of arm 1" instead of two independent arms; giving each arm its
+    own method name and clearing it first (see ``clear_method_outputs``) is the only way to avoid
+    that silent bias -- see roadmap P11 step 2.
+
+    Returns ``(method, sweep_summary)`` -- the summary dict ``run_sweeps_split`` returns (and also
+    writes to ``work_root/<split>_summary.json``), so the caller can report the scheduler's own
+    numbers (constraints_ok, self_overall_mean, per-pass improved/completed/failed, ...) rather than
+    only the official FPR/quality metrics every mode reports.
+    """
+    import solve_phase2 as runner
+
+    sweep_summary = runner.run_split(
+        split_name,
+        method=method,
+        uids=fold_uids,
+        budget_sec=budget_sec,
+        total_budget_sec=total_budget_sec,
+        workers=workers,
+        resume=False,
+    )
+    return method, sweep_summary
 
 
 def _run_solver_only(split_name, fold_uids, *, budget_sec, lang="en"):
@@ -483,6 +574,9 @@ def rehearse(
     parallel=DEFAULT_PARALLEL,
     fast_fpr=False,
     fast_fpr_packed=False,
+    total_budget_sec=None,
+    workers=None,
+    method=None,
 ) -> dict:
     split_name, _is_test = resolve_split_set(split_set)
     uids = splits.read_split(split_name)
@@ -531,7 +625,8 @@ def rehearse(
         return _rehearse_body(
             report, split_name=split_name, fold_uids=fold_uids, query_data=query_data,
             modes=modes, budget_sec=budget_sec, lang=lang, fresh=fresh, chunk_size=chunk_size,
-            parallel=parallel, fold=fold, folds=folds,
+            parallel=parallel, fold=fold, folds=folds, total_budget_sec=total_budget_sec,
+            workers=workers, method=method,
         )
     finally:
         if _fast_fpr_active:
@@ -544,7 +639,7 @@ def rehearse(
 
 def _rehearse_body(
     report, *, split_name, fold_uids, query_data, modes, budget_sec, lang, fresh, chunk_size,
-    parallel, fold, folds,
+    parallel, fold, folds, total_budget_sec=None, workers=None, method=None,
 ) -> dict:
     if "end-to-end" in modes:
         if fresh:
@@ -568,6 +663,28 @@ def _rehearse_body(
         else:
             m = _run_solver_only(split_name, fold_uids, budget_sec=budget_sec, lang=lang)
         report["modes"]["solver-only"] = _evaluate_method(split_name, m, fold_uids, query_data)
+    if "whole-run" in modes:
+        # The shipped path: run_sweeps_split does triage/repair/polish scheduling under a wall-clock
+        # envelope. Chunking/--parallel do not apply here -- the sweep scheduler owns its own worker
+        # pool (see --workers) -- so this branch ignores chunk_size/parallel entirely (roadmap P11
+        # step 4). method defaults to a split-derived name for direct CLI use, but a caller pairing
+        # two arms (phase2_quick_eval.py) MUST pass distinct method values -- see _run_whole_run's
+        # docstring for why a shared method directory silently biases the comparison.
+        m_name = method or f"phase2_whole_run_{split_name}"
+        if fresh:
+            removed = clear_method_outputs(m_name, fold_uids)
+            if removed:
+                print(f"fresh: cleared {removed} stale whole-run result(s) for this fold/method")
+        m, sweep_summary = _run_whole_run(
+            split_name, fold_uids, budget_sec=budget_sec,
+            total_budget_sec=(
+                total_budget_sec if total_budget_sec is not None else DEFAULT_TOTAL_BUDGET_SEC
+            ),
+            workers=workers, method=m_name,
+        )
+        mode_report = _evaluate_method(split_name, m, fold_uids, query_data)
+        mode_report["scheduler"] = _scheduler_report(m, fold_uids, sweep_summary)
+        report["modes"]["whole-run"] = mode_report
 
     # Ceiling from results/best (only meaningful when not writing to a temp results_dir).
     try:
@@ -585,7 +702,9 @@ def _rehearse_body(
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--mode", choices=["end-to-end", "solver-only", "both"], default="both")
+    p.add_argument(
+        "--mode", choices=["end-to-end", "solver-only", "whole-run", "both"], default="both"
+    )
     p.add_argument(
         "--split-set",
         choices=["val", "test", "familiar_100", "familiar_100_val", "familiar_100_test"],
@@ -615,7 +734,8 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=DEFAULT_CHUNK,
         help="Queries per subprocess (default from P2_CHUNK env, else 5); <=0 runs everything "
-        "in-process (original behavior, no subprocess isolation).",
+        "in-process (original behavior, no subprocess isolation). Ignored in --mode whole-run, "
+        "which uses --workers instead (the sweep scheduler owns its own worker pool).",
     )
     p.add_argument(
         "--parallel",
@@ -624,7 +744,34 @@ def parse_args() -> argparse.Namespace:
         help="Chunk subprocesses to run concurrently (default from P2_PARALLEL env, else 1 = "
         "sequential, original behavior). Each query's CP-SAT solve uses 1 core by default, so "
         "size this to (core count - 1). Only applies when --chunk-size > 0. Memory is not "
-        "usually the limit -- see docs/tpc_phase2_design.md for the per-process RSS floor.",
+        "usually the limit -- see docs/tpc_phase2_design.md for the per-process RSS floor. "
+        "Ignored in --mode whole-run; use --workers there instead.",
+    )
+    p.add_argument(
+        "--total-budget-sec",
+        type=float,
+        default=None,
+        help="whole-run mode only: the wall-clock envelope run_sweeps_split schedules against "
+        f"(default {DEFAULT_TOTAL_BUDGET_SEC:.0f}s). Must be large enough that the scheduler runs "
+        "more than one pass (triage/repair/polish) or the mode degenerates into a slow "
+        "triage-only run and measures nothing --budget-sec alone would not. Calibrated starting "
+        "point: n=40, --total-budget-sec 1800, --budget-sec 90, --workers 6 (~3 passes, ~25 min).",
+    )
+    p.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="whole-run mode only: worker processes for run_sweeps_split (default: CPU count - "
+        "1, via sweeps.default_workers()).",
+    )
+    p.add_argument(
+        "--method",
+        default=None,
+        help="whole-run mode only: results/<method>/ output directory. Defaults to "
+        "phase2_whole_run_<split>. A caller pairing two arms against each other MUST pass "
+        "distinct method values for each arm -- run_sweeps_split treats any existing non-empty "
+        "plan under results/<method>/ as an incumbent to beat regardless of --fresh's effect on "
+        "the *next* run, so two arms sharing a directory measure one on top of the other.",
     )
     p.add_argument(
         "--worker",
@@ -683,6 +830,9 @@ def main() -> None:
         parallel=args.parallel,
         fast_fpr=args.fast_fpr,
         fast_fpr_packed=args.fast_fpr_packed,
+        total_budget_sec=args.total_budget_sec,
+        workers=args.workers,
+        method=args.method,
     )
 
 

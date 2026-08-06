@@ -1,0 +1,90 @@
+{
+  "label": "TPC_WINDOW_PUSH=0",
+  "env_overrides": {
+    "TPC_WINDOW_PUSH": "0"
+  },
+  "wall_sec": 550.1,
+  "fpr": 47.5,
+  "continuous_score": 66.324,
+  "parse_failures": 0,
+  "timeouts": 0,
+  "telemetry_coverage": "40/40",
+  "telemetry": {
+    "n_telemetry": 40,
+    "timeouts": 0,
+    "recovered": 0,
+    "used_fallback": 0,
+    "errored": 0,
+    "valid_output": 40,
+    "llm_parse_fired": 0,
+    "llm_parse_skipped": 0,
+    "llm_parse_errored": 0,
+    "refine_called": 0,
+    "refine_committed": 0,
+    "refine_second_attempts": 0,
+    "solve_sec_mean": 38.46892086242478,
+    "solve_sec_p50": 40.12673649999488,
+    "solve_sec_p90": 71.630592875008
+  },
+  "layers": {
+    "commonsense_pass_count": 40,
+    "commonsense_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "logical_micro": 91.32420091324201,
+    "logical_macro": 47.5,
+    "conditional_logical_micro": 91.32420091324201,
+    "all_pass_count": 19
+  },
+  "quality_n": {
+    "requested": 40,
+    "evaluated": 40,
+    "missing": 0
+  },
+  "scheduler": {
+    "constraints_ok": 20,
+    "self_overall_mean": 67.6013,
+    "self_fpr_mean": 50.0,
+    "passes": [
+      {
+        "index": 1,
+        "kind": "triage",
+        "queries": 40,
+        "budget_sec": 61.0,
+        "workers": 6,
+        "improved": 40,
+        "completed": 40,
+        "failed": 0,
+        "elapsed_sec": 242.5
+      },
+      {
+        "index": 2,
+        "kind": "repair",
+        "queries": 20,
+        "budget_sec": 90.0,
+        "workers": 6,
+        "improved": 0,
+        "completed": 20,
+        "failed": 0,
+        "elapsed_sec": 213.8
+      },
+      {
+        "index": 3,
+        "kind": "polish",
+        "queries": 20,
+        "budget_sec": 90.0,
+        "workers": 6,
+        "improved": 5,
+        "completed": 20,
+        "failed": 0,
+        "elapsed_sec": 87.3
+      }
+    ],
+    "fallbacks_prewritten": 40,
+    "remaining_sec": 1163.5,
+    "elapsed_sec": 546.5187441249873,
+    "empty_plans": 0,
+    "variants_source": {
+      "parent": 40
+    }
+  }
+}
