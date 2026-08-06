@@ -20,7 +20,9 @@ for _p in (str(PROJECT_ROOT), str(PROJECT_ROOT / "agent_env" / "scripts")):
         sys.path.insert(0, _p)
 
 from chinatravel.agent.phase2.orchestrator import (  # noqa: E402
+    CANDIDATE_SOLVER_FLAGS,
     PROMOTED_SOLVER_FLAGS,
+    RECORDED_SOLVER_FLAGS,
     _solver_flag_snapshot,
 )
 
@@ -31,6 +33,9 @@ def test_unset_environment_reports_the_library_floor():
         "window_anchor": False,
         "commonsense_first": False,
         "solve_converge_patience": None,
+        "window_push": False,
+        "window_insert": False,
+        "window_push_max_min": None,
     }
 
 
@@ -46,7 +51,31 @@ def test_harness_promotion_is_visible_in_the_snapshot():
         "window_anchor": True,
         "commonsense_first": True,
         "solve_converge_patience": "15",
+        "window_push": False,
+        "window_insert": False,
+        "window_push_max_min": None,
     }
+
+
+def test_a_p8_p9_gate_arm_states_its_own_configuration():
+    """The P8/P9 gate arm (evaluation run R14) turns the two window repairs on from the
+    environment. They are not promoted, so nothing sets them for the arm implicitly -- and without
+    them in the snapshot the resulting row could not be told apart from the promoted baseline."""
+    env = {
+        "TPC_PIN_TIMED_WINDOWS": "1",
+        "TPC_WINDOW_ANCHOR": "1",
+        "TPC_COMMONSENSE_FIRST": "1",
+        "TPC_SOLVE_CONVERGE_PATIENCE": "15",
+        "TPC_WINDOW_PUSH": "1",
+        "TPC_WINDOW_INSERT": "1",
+    }
+    snapshot = _solver_flag_snapshot(env)
+    assert snapshot["window_push"] is True
+    assert snapshot["window_insert"] is True
+    assert snapshot["window_push_max_min"] is None  # bound left at the code default (30 min)
+    assert _solver_flag_snapshot({**env, "TPC_WINDOW_PUSH_MAX_MIN": "45"})[
+        "window_push_max_min"
+    ] == "45"
 
 
 def test_snapshot_covers_exactly_what_the_harness_promotes(monkeypatch):
@@ -62,6 +91,16 @@ def test_snapshot_covers_exactly_what_the_harness_promotes(monkeypatch):
 
     promoted = {k for k in os.environ if k.startswith("TPC_")} - before
     assert promoted == set(PROMOTED_SOLVER_FLAGS)
+
+
+def test_candidate_flags_are_recorded_but_never_promoted():
+    """A screened-but-unpromoted flag belongs in exactly one of the two tuples, and both are
+    recorded. Promotion means *moving* it, so this fails if it is ever duplicated or dropped."""
+    assert not set(PROMOTED_SOLVER_FLAGS) & set(CANDIDATE_SOLVER_FLAGS)
+    assert set(RECORDED_SOLVER_FLAGS) == set(PROMOTED_SOLVER_FLAGS) | set(CANDIDATE_SOLVER_FLAGS)
+    assert set(_solver_flag_snapshot({})) == {
+        name[len("TPC_"):].lower() for name in RECORDED_SOLVER_FLAGS
+    }
 
 
 def test_off_values_match_the_agents_own_off_set():
