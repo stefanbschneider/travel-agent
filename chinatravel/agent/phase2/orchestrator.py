@@ -349,22 +349,40 @@ PROMOTED_SOLVER_FLAGS: tuple[str, ...] = (
     "TPC_SOLVE_CONVERGE_PATIENCE",
 )
 
+# Deterministic solver passes that are implemented and screened but **not** promoted: library- and
+# harness-default-off, so an ordinary row records them as off. They are snapshotted anyway because a
+# gate arm turns them on from the environment (roadmap P8/P9, evaluation run R14), and the ledger's
+# comparability rule requires that row to state its own configuration rather than rely on its label.
+# On promotion, move the flag from here into ``PROMOTED_SOLVER_FLAGS`` -- the two tuples must stay
+# disjoint, and the drift guard in ``tests/phase2/test_solver_flag_telemetry.py`` enforces both.
+CANDIDATE_SOLVER_FLAGS: tuple[str, ...] = (
+    "TPC_WINDOW_PUSH",
+    "TPC_WINDOW_INSERT",
+    "TPC_WINDOW_PUSH_MAX_MIN",
+)
+
+RECORDED_SOLVER_FLAGS: tuple[str, ...] = PROMOTED_SOLVER_FLAGS + CANDIDATE_SOLVER_FLAGS
+
+# Recorded verbatim rather than as a boolean, because their value (not their presence) is what a
+# later row has to match to be comparable.
+_NUMERIC_SOLVER_FLAGS = ("TPC_SOLVE_CONVERGE_PATIENCE", "TPC_WINDOW_PUSH_MAX_MIN")
+
 _OFF_VALUES = ("", "0", "false", "False")
 
 
 def _solver_flag_snapshot(env: Mapping[str, str] | None = None) -> dict[str, Any]:
-    """Snapshot the promoted deterministic solver flags as the agent will read them.
+    """Snapshot the recorded deterministic solver flags as the agent will read them.
 
     Booleans use the agent's own off-set so the snapshot cannot disagree with the behaviour it
-    describes; ``TPC_SOLVE_CONVERGE_PATIENCE`` is numeric and recorded verbatim (``None`` when
-    unset, i.e. the library default is in force).
+    describes; the numeric ones (``TPC_SOLVE_CONVERGE_PATIENCE``, ``TPC_WINDOW_PUSH_MAX_MIN``) are
+    recorded verbatim (``None`` when unset, i.e. the library default is in force).
     """
     source = os.environ if env is None else env
     snapshot: dict[str, Any] = {}
-    for name in PROMOTED_SOLVER_FLAGS:
+    for name in RECORDED_SOLVER_FLAGS:
         raw = source.get(name)
         key = name[len("TPC_"):].lower()
-        if name == "TPC_SOLVE_CONVERGE_PATIENCE":
+        if name in _NUMERIC_SOLVER_FLAGS:
             snapshot[key] = raw
         else:
             snapshot[key] = raw is not None and raw not in _OFF_VALUES

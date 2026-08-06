@@ -11,6 +11,16 @@ defines their interpretation.
 
 ## Run this next
 
+**Where this stands as of 2026-08-06.** `v1` was **uploaded to the portal on 2026-08-05** (the
+committed `submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagged `phase2-v1` — see
+[the archive record](reference/competition.md#the-v1-archive-as-built-2026-08-05)). The organizers
+aim to return a score within 3 days of a valid submission, so feedback is expected around
+2026-08-08, and **one submission slot remains** (`v2`, due with the technical report on 2026-08-10,
+24:00 Beijing Time = 18:00 CEST). Every evaluation slot from here exists to answer one question:
+**is there a configuration worth spending the second slot on?** [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
+is that measurement and it is runnable **now** — P8/P9 are implemented, screened GREEN, and
+default-off on `main`.
+
 R1–R13 are closed (see [what the closed queue established](#what-the-closed-queue-r1r13-established)).
 R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
 repeats scored bit-for-bit identical (`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok
@@ -38,28 +48,137 @@ closed the ≥8-core deployment check on a 10-core Mac with 8 workers**: `overal
 the same `120/300 s` per-query caps and the hosts differ, so the defensible conclusion is that the
 8-worker path is healthy and non-regressing, not that worker count alone caused the flip.
 
+**Pick the baseline that matches your host, not the highest number in the ledger.** Whole-run rows
+are only comparable on the same machine and worker count ([ledger comparability](#ledger-comparability)),
+and two promoted-default baselines now exist:
+
+| Host you are running on | Workers | Baseline row | `overall` / `FPR` / `constraints_ok` |
+| --- | --- | --- | --- |
+| 4-core Linux box | 3 (`CPU-1`) | R8 `20260805T123142Z` = R12 `20260805T170120Z` | `63.58458530360117` / `43.0` / `46/100` |
+| 10-core Apple Silicon Mac | 8 | R3 `20260805T215107Z` | `64.0773462893086` / `44.0` / `47/100` |
+
+If you are on a third machine, produce your own flags-off baseline row there first; a cross-host
+delta is not evidence.
+
 **Every row from here on must show `solver_flags.window_anchor: true` in its per-query telemetry**
 unless it is deliberately the flags-off arm. That snapshot landed with the promotion precisely so a
 row states its own configuration; a run that reports `false` is measuring the pre-R8 system whatever
-its label says.
+its label says. Since 2026-08-06 the same snapshot also carries the **screened-but-unpromoted**
+window repairs (`window_push`, `window_insert`, `window_push_max_min`, from
+`orchestrator.CANDIDATE_SOLVER_FLAGS`), so an R14 arm states which repairs actually ran instead of
+relying on its `--label`.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R9** | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
-| **R11** | LLM-backed repair, v2 only | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) | not before the v1 upload |
+| **[R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)** | **do P8+P9 (`TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT`) hold up on a whole run? → does `v2` exist?** | **nothing — run it now** | 1 baseline-matching run: `~0.3 h` on the Mac, `~1.3 h` on the 4-core box (5 h envelope, self-terminating) |
+| **[R15](#r15--held-out-tripwire-for-p8p9)** | did the P8/P9 gain generalize past the `val` residual it was designed from? | R14 coming back GREEN | `~0.3 h` (1 h envelope, 20 records) |
+| R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
+| R11 | LLM-backed repair | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off), which is not implemented and cannot be verified against the organizers' endpoint from here | out of reach before 2026-08-10 |
 
-**R9 and R11 did not run this pass.** Both are blocked on unimplemented work items (R9 needs
-[P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) +
-[P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger); R11 needs
-[P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) and is
-explicitly gated to not run before the `v1` upload) that belong to the Implementation workstream,
-not Evaluation — see the [parallel workstreams](../CLAUDE.md#parallel-workstreams) split.
+**R9 and R11 remain blocked on unimplemented work items** that belong to the Implementation
+workstream, not Evaluation — see the [parallel workstreams](../CLAUDE.md#parallel-workstreams)
+split. R11's old "not before the `v1` upload" gate has now been *superseded rather than satisfied*:
+`v1` is uploaded, but with `P6` unwritten and the endpoint unreachable locally, there is no arm to
+run before the deadline.
 
-### What `v1` is expected to score — an expectation, not a measurement
+### R14 — the P8/P9 gate: the one run that decides whether `v2` exists
 
-The archive ships R8's configuration, so the honest point estimate is **R8's number: `overall 63.58`,
-`FPR 43.0`** on data drawn like familiar-100. Everything below is uncertainty around that, and the
-[measurement rule](#measurement-rule) still stands: no local row proves held-out performance.
+**Status: open, unblocked, highest value. Run this first.** P8 (`TPC_WINDOW_PUSH`) and P9
+(`TPC_WINDOW_INSERT`) landed on `main` in `0c2cc395`, both **library- and harness-default-off**, each
+screened GREEN individually and stacked ([roadmap P8](tpc_phase2_roadmap.md#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual),
+[P9](tpc_phase2_roadmap.md#p9--place-an-absent-timed-visit-poi)). A screen never promotes, so
+without this row the two passes cannot ship and `v2` has nothing new in it.
+
+Gate the **stack**, not each flag alone: both screens are already paired against the same P1-on
+candidate artifact, the stacked end-to-end screen showed no destructive interaction
+(`FPR 42.5 → 45.0`, `overall_true 63.130 → 64.422`, `all_pass 34 → 36`), and the
+[cadence rule](#cadence-for-per-query-work-daily-screen-nightly-batched-run) is explicit that a
+batch measures the net effect that would actually ship. One run, one decision.
+
+```bash
+# 1. baseline: only needed if your host has no promoted-default row yet (see the host table above).
+.venv/bin/python scripts/phase2_full_run.py \
+  --method phase2_e2e_r14_base --label "R14 baseline, promoted defaults, 5h"
+
+# 2. candidate: promoted defaults plus the two window repairs.
+TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 .venv/bin/python scripts/phase2_full_run.py \
+  --method phase2_e2e_r14_pushinsert --label "R14 P8+P9 stacked, 5h"
+```
+
+Export nothing else. `apply_deterministic_solver_defaults()` supplies the four promoted flags and
+respects the two you set, so the candidate arm differs from the baseline in exactly those two.
+
+**Use a distinct `--method` per arm, as above, or pass `--fresh`.** `phase2_full_run.py` resumes by
+default, and the run treats any real plan already in the method directory as an incumbent to beat —
+so pointing a second arm at a directory the first arm filled measures "arm 2 plus whatever arm 1
+left", which is biased upward and not a like-for-like row.
+
+**Before reading the score, verify the arm actually ran what it claims** — one per-query
+`telemetry.json` under `agent_env/runs/phase2_e2e_r14_pushinsert/` must show `window_push: true`,
+`window_insert: true` *and* `window_anchor: true`. A row whose `window_push` reads `false` is a
+repeat of the baseline, whatever its label says:
+
+```bash
+.venv/bin/python - <<'PY'
+import json, pathlib
+root = pathlib.Path("agent_env/runs/phase2_e2e_r14_pushinsert")
+for path in sorted(root.rglob("telemetry.json"))[:3]:
+    print(path, json.loads(path.read_text())["solver_flags"])
+PY
+```
+
+**Expected, from the stacked `n=80` / `90 s` end-to-end screen** (`+1.29` `overall_true`, `+2.5`
+FPR): `overall ≈ 64.5–65.5`, `FPR 45–46`, `constraints_ok ≈ 48–49/100` against the 4-core baseline,
+or the same deltas on top of R3's `64.08` on the Mac. R8's screen slightly *under*-predicted its full
+run (`+10.0` predicted, `+11.0` measured), so treat the screen as a floor rather than a ceiling — but
+also note the screen ran at `90 s`/query while the whole run spends `120/300 s`, so the two passes
+have more competing search to displace here than they did there.
+
+**Decision rule, fixed in advance so the result cannot be read after the fact:**
+
+| Outcome | Read | Action |
+| --- | --- | --- |
+| `overall` up **and** `FPR` not down **and** `empty_plans 0/100` **and** no failed jobs | GREEN | Promote both flags: move them from `CANDIDATE_SOLVER_FLAGS` into `PROMOTED_SOLVER_FLAGS` and set them in `apply_deterministic_solver_defaults()` with this row cited (Implementation task), then run [R15](#r15--held-out-tripwire-for-p8p9), then rebuild and upload `v2`. |
+| `abs(Δ overall) ≤ 0.5` with `FPR` unchanged | FLAT | Do not promote. `v1`'s configuration stays the submission. Record the row and stop — do **not** spend a second 5 h run hoping for a different number; the solver is deterministic. |
+| `FPR` down, `empty_plans > 0`, or any failed job | RED | Do not promote. Commit the row, then hand it to Implementation with the failing uids; run **drop-one-out screens** (`--flag TPC_WINDOW_PUSH` alone, then `--flag TPC_WINDOW_INSERT` alone) rather than more full runs. |
+
+`empty_plans > 0` or a nonzero per-pass `failed` count means suspect the **worker pool** before the
+solver — see the [cold-start note](#before-the-first-run) above.
+
+Commit the row under `results/phase2_baselines/full_runs/` and add its line to
+[the closed-queue table](#what-the-closed-queue-r1r13-established) with the host, worker count and
+the baseline it is compared against.
+
+### R15 — held-out tripwire for P8/P9
+
+**Only after R14 comes back GREEN.** [R13](#r13--the-held-out-tripwire-on-the-new-default-closed-2026-08-05)
+closed the same question for P1 and said so explicitly: P8/P9 were designed from the *same* `val`
+shape classification, so they get their own held-out check rather than inheriting P1's.
+
+```bash
+TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 .venv/bin/python scripts/phase2_full_run.py \
+  --split tpc_phase2_familiar_100_test --total-budget-sec 3600 \
+  --method phase2_e2e_r15_test --label "held-out tripwire, post-P8/P9"
+```
+
+**Read `constraints_ok` out of 20, not `overall`**, against R13's `13/20` on the identical 20
+records (`overall 70.54`, `FPR 55.0`). `14–15/20` says the residual moves on unseen records too;
+`13/20` is a tie and is *not* a reason to withhold promotion by itself — one query is `5` percentage
+points on this instrument, and R14 on 100 records is the gate. `≤ 12/20` is a real warning: promote
+nothing without re-reading it, because a held-out regression next to a `val` gain is what
+overfitting looks like. Never compare this row to R14's `overall`: `familiar_100_test` is a *subset*
+of `familiar_100` and an easier one.
+
+
+### What the submitted `v1` is expected to score — an expectation, not a measurement
+
+**`v1` was uploaded 2026-08-05** and carries R8's configuration (`TPC_WINDOW_ANCHOR` on, P8/P9 off),
+so the honest point estimate is **R8's number: `overall 63.58`, `FPR 43.0`** on data drawn like
+familiar-100. Everything below is uncertainty around that, and the
+[measurement rule](#measurement-rule) still stands: no local row proves held-out performance. When
+the organizers' score arrives (expected ~2026-08-08), record it next to this estimate — it is the
+only external calibration this project will get, and the gap between it and `63.58` is the single
+most informative number for deciding what `v2` should be.
 
 | Source of error | Size | Direction |
 | --- | --- | --- |
@@ -160,11 +279,14 @@ question for good. A flat flips-per-pass curve and a dying one are the two outco
 the score total cannot separate them even at R7's now-zero noise floor — the two curves differ in
 *shape* over passes, not in a single aggregate number.
 
-### R11 — LLM-backed repair arm *(needs P6; v2 only)*
+### R11 — LLM-backed repair arm *(needs P6; not reachable before 2026-08-10)*
 
-Off by default and stays off for `v1`. The confirmed endpoint (`Qwen3.6-27B` via SGLang,
-`--max-running-requests 8`) exists only on the organizers' host, so any local number is a proxy
-against a different backend. Gate only if `v1` feedback leaves room for a `v2`.
+Off by default, and it stayed off for the uploaded `v1`. The confirmed endpoint (`Qwen3.6-27B` via
+SGLang, `--max-running-requests 8`) exists only on the organizers' host, so any local number is a
+proxy against a different backend. [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off)
+is also unwritten, and it is a 1–2 day build that would then need its own gate. With `v2` due
+2026-08-10 and one slot left, this arm is out of scope for this competition round; it stays recorded
+as the one untried *kind* of move, not as a queued run.
 
 ### R3 — worker scaling *(closed 2026-08-05)*
 
@@ -200,6 +322,11 @@ not needed for the submission decision because the requested 8-worker deployment
 
 ### What not to spend a slot on
 
+- **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible ([R7](#what-the-closed-queue-r1r13-established)),
+  so a rerun of the same configuration on the same host returns the same number. If [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
+  comes back flat, that *is* the answer.
+- **Any whole-run row whose configuration you cannot read off its own telemetry.** Check
+  `solver_flags` first, score second. A mislabelled arm costs a full envelope and proves nothing.
 - **The old per-query `900 s` pinned gate as a ship signal.** It measures a contract the competition
   does not use. Keep it for solver-change A/Bs only.
 - **More envelope-sensitivity runs.** `1 h / 3 h / 5 h` is flat and the

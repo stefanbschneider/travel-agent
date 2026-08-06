@@ -110,6 +110,36 @@ What changed as a result: the archive verification now solves `VERIFY_QUERIES` (
 
 ### The `v1` archive as built (2026-08-05)
 
+**Submission status: uploaded 2026-08-05.** `v1` is the team's first official post-reset submission,
+and **one slot (`v2`) remains**. The organizers aim to return a score within 3 days of a valid
+submission, i.e. around **2026-08-08**; both `v2` and the technical report are due
+**2026-08-10, 24:00 Beijing Time** (16:00 UTC / 18:00 CEST). Identity of the uploaded bytes:
+
+| | |
+| --- | --- |
+| File | `submissions/phase2/fabiundstefan_v1.zip` (committed, so the tested bytes are the uploaded bytes) |
+| SHA-256 | `fab8a85f7b9b7714f28fbdf2b7ae510caae9e501e34a76f09600ca70d8e3e416` |
+| Built from | `be196d005f6e61177d69c9e536c8a461bb1af91a` on `main`; committed and tagged `phase2-v1` at `96296dd8` |
+| Configuration | R8 / R12's promoted defaults — `TPC_WINDOW_ANCHOR` on, P8/P9 (`TPC_WINDOW_PUSH`, `TPC_WINDOW_INSERT`) **off** |
+| Expected score | `overall ≈ 63.58`, `FPR ≈ 43.0`, `±2σ` roughly `58–68` — see [the expectation table](../tpc_phase2_eval.md#what-the-submitted-v1-is-expected-to-score--an-expectation-not-a-measurement) |
+
+**What `v2` requires, in order.** `scripts/assemble_phase2_submission.py` resolves `v2` automatically
+from the `phase2-v1` tag, so packaging is not the work; deciding what goes in it is:
+
+1. a GREEN [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
+   whole-run row promoting P8+P9 — the only measured candidate that exists today;
+2. the promotion committed on `main` (`apply_deterministic_solver_defaults()` plus the flag moved from
+   `CANDIDATE_SOLVER_FLAGS` to `PROMOTED_SOLVER_FLAGS`), because an archive is built from tracked
+   files at a commit and never from an operator's environment;
+3. the full [pre-submission checklist](#pre-submission-checklist--the-cold-start-rule-added-2026-08-05)
+   re-run on a **pristine** tree with more than one worker, and `solver_flags` re-read from the
+   unpacked archive to confirm the new configuration actually ships;
+4. rebuild from `main` (never a feature branch — see the rebuild rule at the end of this section),
+   tag `phase2-v2`, upload as `fabiundstefan_v2.zip`.
+
+If R14 is flat or RED, **do not upload a `v2`**: an identical-configuration resubmission spends the
+last slot for nothing, and the two-version cap means there is no third attempt.
+
 `fabiundstefan_v1.zip` — `1683` entries, `4.3 MB` compressed / `16.6 MB` unpacked, `1680` tracked
 files, `evaluator_parity c89cfca`, first `phase2-v<N>` tag namespace entry (Phase 2 numbering restarts
 at `v1`, and the [resubmission
@@ -236,9 +266,9 @@ report deadline"). Six new or reconfirmed facts:
    `{TeamName}_v1.zip` — this becomes the team's first official submission regardless of anything
    uploaded earlier. The `{TeamName}_v1.zip` / `{TeamName}_v2.zip` naming and the two-version cap are
    unchanged from the [confirmed packaging](#confirmed-packaging-2026-08-03-advancement-email) note
-   above; only the "what counts as v1" clock reset. **Nothing in this repository's git history has
-   been uploaded to the portal yet, so this reset costs us nothing — treat the first archive
-   `scripts/assemble_phase2_submission.py` produces from now on as the real `v1`.**
+   above; only the "what counts as v1" clock reset. **Uploaded 2026-08-05** — the archive described
+   in [The `v1` archive as built](#the-v1-archive-as-built-2026-08-05) is our post-reset `v1`, so the
+   reset cost us nothing and **one slot (`v2`) remains.**
 4. **Hardware, reconfirmed unchanged.** 16 OS-visible logical CPUs (all assigned to the harness
    process), 112 GiB total host RAM, 2 × NVIDIA A800 80 GB PCIe without NVLink, driver `575.57.08` —
    identical to the [2026-07-30 confirmation](#confirmed-evaluation-host-2026-07-30) above.
