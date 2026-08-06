@@ -15,20 +15,23 @@ Two documents carry the current queue; the briefs here are supporting detail, no
 
 **Current assignment (2026-08-06), so neither agent has to infer it:**
 
-P14 and R16 — the two items this table used to point agents at — are both **done**: P14 landed
-(`0c80ab6b`/`241c0524`, `TPC_WINDOW_PUSH`/`TPC_WINDOW_INSERT` promoted to defaults), and
+P14, R16 and R17 — the items this table used to point agents at — are all **done**: P14 landed
+(`0c80ab6b`/`241c0524`, `TPC_WINDOW_PUSH`/`TPC_WINDOW_INSERT` promoted to defaults),
 [R16](../tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
-then measured that exact shipping configuration at `n=100` and closed **GREEN** (`overall
-64.14997555172528`, `+0.0183` over R14, `+0.5654` over R8/R12; `FPR 44.0` unchanged from R14). Per
-R16's pre-registered rule, `main` is the `v2` candidate to ship; packaging/upload is a separate,
-deliberate follow-up not covered by either row.
+measured that exact shipping configuration at `n=100` and closed **GREEN** (`overall
+64.14997555172528`, `+0.0183` over R14, `+0.5654` over R8/R12; `FPR 44.0` unchanged from R14), and
+[R17](../tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+then re-measured the tree `main` had moved to since (`P11`+`P12` landed) and also closed **GREEN**
+(`overall 64.17251838310492`, `+0.02` over R16, `FPR 44.0` unchanged, `git_sha efbfea96`). Per R17's
+pre-registered rule, `v2` ships from `efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`, not R16's `241c0524`;
+packaging/upload is a separate, deliberate follow-up not covered by any of these rows.
 
 | Workstream | Do exactly this | Finish criterion |
 | --- | --- | --- |
 | **Implementation** | [P11](../tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen), [P13](../tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) — improve the *next* cycle, not `v2`'s contents ([P12](../tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics) landed 2026-08-06, out of order) | listed unit tests green plus a paired screen under `results/phase2_baselines/screens/` |
 | **Evaluation** | R9/R11 remain blocked on unimplemented work items ([P5](../tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds)/[P2](../tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger), [P6](../tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off)) | code that does not exist yet and cannot be run before the deadline |
 
-R14/R15/R16 are closed (2026-08-06).
+R14/R15/R16/R17 are closed (2026-08-06).
 
 ## Active focused prompts
 

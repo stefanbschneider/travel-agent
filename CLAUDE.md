@@ -35,16 +35,21 @@ subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed
 promoted post-R8 configuration). It is the team's first official submission under the 2026-08-04
 resubmission reset — every Phase 2 file uploaded before that email was disregarded and did not count
 against the limit — so **one slot (`v2`) remains**, due with the technical report on 2026-08-10,
-24:00 Beijing Time. A measured `v2` candidate exists:
+24:00 Beijing Time. **A measured `v2` candidate is settled:**
 [R16](docs/tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
-closed GREEN at `overall 64.15` / `FPR 44.0`, `+0.5654` over `v1`. **But R16 measured `git_sha
-241c0524`, and `main` has since moved: P12 landed unflagged and changes `TPCAgent`'s acceptance gate
-(`TPC_USE_ORACLE=0` makes `evaluate_parsed_constraints` the `_make_checker` base check), so a `v2`
-built from `main` today would ship an unmeasured configuration.** The gate that resolves it is
-[R17](docs/tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
-(`~1.3 h`); it either clears `main` or sends the archive build back to `241c0524`. **The archive must
-be built from the sha R17 reports**, so avoid merging production-path changes to `main` between that
-row and the upload. The packaging path is in the [competition
+closed GREEN at `overall 64.15` / `FPR 44.0`, `+0.5654` over `v1`, but measured `git_sha 241c0524`
+while `main` had since moved (P12 landed unflagged and changes `TPCAgent`'s acceptance gate —
+`TPC_USE_ORACLE=0` makes `evaluate_parsed_constraints` the `_make_checker` base check), so that
+configuration was unmeasured on the tree that would actually ship.
+[R17](docs/tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+closed that gap GREEN on 2026-08-06: `overall 64.17251838310492` (`+0.02` over R16, inside noise),
+`FPR 44.0` unchanged, `empty_plans 0/100`, no failed jobs, at `git_sha
+efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`. P12 fired on exactly `1/100` plans versus R16's tree (byte-diff
+against `results/phase2_e2e_r16_v2cand/`), replacing an implausible overnight-flight itinerary with a
+coherent one. **The archive must be built from `efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`** — R16's
+sha, `241c0524`, is superseded. Packaging/upload is a separate, outward-facing action not yet taken;
+avoid merging further production-path changes to `main` before that upload, or the shipped sha drifts
+again. The packaging path is in the [competition
 reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
 email also gave the
 organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,
