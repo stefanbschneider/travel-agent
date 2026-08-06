@@ -195,7 +195,10 @@ def test_run_sweeps_split_records_parent_parse_failures_in_summary(tmp_path, mon
     written = json.loads((work_root / "tpc_phase1_summary.json").read_text(encoding="utf-8"))
     assert written["parent_parse_failed_uids"] == [uid]
     printed = capsys.readouterr().out
-    assert f'"parent_parse_failed_uids": [\n    "{uid}"\n  ]' in printed
+    # run_sweeps_split prints the summary as a single json.dumps(..., indent=2) blob; parse it
+    # back out rather than matching exact whitespace, so this stays robust to formatting changes.
+    printed_summary = json.loads(printed[printed.index("{"):])
+    assert printed_summary["parent_parse_failed_uids"] == [uid]
 
 
 def test_run_sweeps_split_records_no_parent_parse_failures_on_success(tmp_path, monkeypatch):

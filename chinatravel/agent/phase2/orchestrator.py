@@ -479,8 +479,8 @@ def solve_phase2(
         # normalize.parse_to_ir and normalize.ir_to_solver_variants) meaning "I have nothing for
         # you" -- not "the query is unconstrained". selfscore.score_plan already treats an
         # empty/None variants list the same way (`if not variants:` falls back to
-        # same way (`if not variants:` falls back to derive_parsed_constraints), so testing
-        # `is not None` here made this side solve unconstrained while the scorer judged the same
+        # derive_parsed_constraints), so testing `is not None` here made this side solve
+        # unconstrained while the scorer judged the same
         # plan against real constraints: the exact solve/score divergence roadmap P10 exists to
         # remove, surviving in the parent-parse-failure path. Re-parsing here keeps both sides
         # constrained (independently, not byte-identically -- see the module docstring below)
