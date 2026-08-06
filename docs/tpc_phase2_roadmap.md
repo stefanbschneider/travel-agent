@@ -284,9 +284,9 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
-| **P2** | **Per-attempt telemetry ledger** — now the top item: a hard requirement for the technical report, which is **mandatory and due 2026-08-10** | 2 h | no score effect; the report's distributions and timings, and the instrument P5/R9 need | v2 (report) |
+| ~~P2~~ | ~~Per-attempt telemetry ledger~~ | — | **landed 2026-08-06**: `attempts.jsonl` per uid, additive to `telemetry.json`; aggregated into the committed row by `phase2_full_run.py`. No score effect, as expected — enables the report's distributions and timings, and the instrument P5/R9 need | v2 (report) |
 | P13 | An empty parent parse must mean the same thing on both sides | <1 h | rare (needs a *raised* parse); fixes a query being solved unconstrained while scored constrained. **Verified `0/100` trigger rate by R16**, so it is a measured no-op on familiar-100 | post-v2 |
-| P3 | Re-screen commonsense-valid emission when nothing is accepted | 2 h | `≤ +0.5` | v2 |
+| P3 | ~~Re-screen commonsense-valid emission when nothing is accepted~~ | 2 h | **closed 2026-08-06: bar cleared (MacEPR +10.0, C-LPR +9.59, FPR +2.5), no code change needed — see [P3](#p3--emit-commonsense-valid-plans-when-nothing-is-accepted)** | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open**; needs P2 first to be readable | post-v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | post-v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move — **out of reach before 2026-08-10** | not v2 |
@@ -1083,6 +1083,21 @@ archive is built from exactly the sha that was measured.
 **Tests.** Two attempts on one uid append two lines and do not clobber; row aggregation matches a
 hand-computed fixture.
 
+**Landed 2026-08-06.** `agent_env/scripts/solve_phase2.py` gained `ATTEMPT_LEDGER_FILENAME`,
+`attempt_ledger_record`, `append_attempt_ledger`, `read_attempt_ledger`; `run_sweeps_split`'s
+`on_result` still writes `telemetry.json` as the latest attempt (unchanged) and now additionally
+appends one line per attempt to `work_root/<uid>/attempts.jsonl`.
+`chinatravel/agent/phase2/sweeps.py`'s `_run_pass.handle` adds `wall_sec`/`pass_index`/`seed_salt` to
+the telemetry dict handed to `on_result` — added after `improved`/keep-best is already decided, so
+it cannot influence either. `scripts/phase2_full_run.py` gained `aggregate_attempt_ledger()`
+(`attempts_per_query`, `wall_sec_per_attempt`, `restarts_used_per_attempt`,
+`stop_reason_histogram`, `first_accept_attempt` distributions/histograms), wired into the committed
+row as `row["attempt_ledger"]`. Tests: `tests/phase2/test_attempt_ledger.py` (append-without-
+clobbering, `on_result` wiring, non-improving attempts still ledgered, `run_sweeps`'s pass-selection/
+keep-best behavior byte-identical to pre-P2) and `tests/phase2/test_phase2_full_run_ledger.py`
+(aggregation against a hand-computed fixture, all-missing floor, malformed-line tolerance). No
+existing test's behavior changed; `test_sweeps.py`, `test_run_sweeps_split_variants.py`,
+`test_solve_phase2_runner.py` and `test_phase2_timing.py` all pass unmodified.
 
 ### P3 — emit commonsense-valid plans when nothing is accepted
 
@@ -1098,6 +1113,20 @@ and prefers it when nothing is fully accepted; its evidence predates the evaluat
 fallback is insurance against a cut-off run, not points. Do not spend a day on it.
 
 **Bar.** MacEPR and C-LPR up, FPR not down. Ceiling `~+0.5` — one screen, then stop either way.
+
+**Closed 2026-08-06 — re-screened, bar cleared, no code change needed.** Paired
+`--mode end-to-end` screen (`familiar_100_val`, `n=40`, `budget_sec=90`, seed `20260705`, every
+other promoted deterministic flag on both arms):
+[`results/phase2_baselines/screens/20260806_e2e_n40_b90_p12_commonsense_first_rescreen`](../results/phase2_baselines/screens/20260806_e2e_n40_b90_p12_commonsense_first_rescreen/README.md).
+`FPR 47.5 → 50.0` (**up, not down**), MacEPR (`commonsense_macro`) `90.0 → 100.0` (**+10.0**),
+C-LPR (`conditional_logical_micro`) `82.42 → 92.01` (**+9.59**), `overall_true 63.264 → 67.794`
+(+4.53) — clearing the bar on all three named axes, with `logical_micro` exactly flat
+(`92.00913242009132` both arms, to 11 decimals) as proof the gain is commonsense-gate credit
+release, not new solving. `GREEN LIGHT`, monotonic gate `PASS`, zero timeouts/fallbacks/parse
+failures on either arm. `TPC_COMMONSENSE_FIRST` was already a harness default before this cycle;
+this screen only confirms the default still holds its measured shape on the current tree, so there
+is nothing to promote and no code to change — the item closes as re-verified, per its own
+"one screen, then stop either way" bar.
 
 ### P5 — spend the idle envelope on fresh seeds
 
