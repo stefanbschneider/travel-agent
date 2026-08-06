@@ -187,9 +187,10 @@ ATT `34.63`, DDR `25.06`; `constraints_ok 47/100`; `empty_plans 0/100`. The run 
 `1112 s` (`18.5 min`, `6.18%` of the envelope) with triage→repair→polish at `120/300/300 s`,
 `100/53/47` queries, zero failed jobs, and `100/0/13` improvements.
 
-Against the promoted R8/R12 baseline (`63.58458530360117`, `FPR 43.0`, `constraints_ok 46/100`,
-`4769 s` on 3 workers / 4-core Linux), the 8-worker row is `+0.4928` overall and one passing query
-higher while taking `4.29×` less cross-host wall time. **Reading:** the ≥8-worker scheduler is
+Against the promoted R8/R12 score baseline (`63.58458530360117`, `FPR 43.0`, `constraints_ok
+46/100`) and R12's matching bare-default wall time (`4769 s` on 3 workers / 4-core Linux), the
+8-worker row is `+0.4928` overall and one passing query higher while taking `4.29×` less cross-host
+wall time. **Reading:** the ≥8-worker scheduler is
 operationally safe and does not trade score for throughput. It does *not* prove that worker count
 caused the one-query gain: the host changed, and both configurations already reached the same
 per-query caps, so extra workers bought completion speed rather than deeper per-query search. R3 is
@@ -323,7 +324,7 @@ list needs re-running.**
 | --- | --- | --- |
 | R1 reference, 5 h | `20260804T201638Z` | `overall 57.99`; MicEPR `99.48`, MacEPR `97.00`, C-LPR `87.83`, **FPR `33.00`**, DAV `18.15`, ATT `26.25`, DDR `19.39`; `empty_plans 0/100`, `constraints_ok 35/100`; **used `26%` of the envelope** (`4723 s` of `18000 s`) |
 | R2 envelope sensitivity | `20260804T213636Z` (1 h), `20260804T221103Z` (3 h) | `57.35 / 57.86 / 57.99` at 1/3/5 h — **flat** |
-| **R3 worker scaling, 5 h** | `20260805T215107Z` | 8 workers on a 10-core Mac: `overall 64.08`, FPR `44.0`, `constraints_ok 47/100`, `empty_plans 0/100`; `1112 s` (`6.18%` of envelope), zero failed jobs. Versus R8/R12: `+0.49` overall, `+1` FPR, `+1` passing query, and `4.29×` lower cross-host wall time. Same per-query caps on different hosts mean **healthy/non-regressing 8-worker deployment**, not a clean worker-only causal score gain |
+| **R3 worker scaling, 5 h** | `20260805T215107Z` | 8 workers on a 10-core Mac: `overall 64.08`, FPR `44.0`, `constraints_ok 47/100`, `empty_plans 0/100`; `1112 s` (`6.18%` of envelope), zero failed jobs. Versus the R8/R12 score baseline and R12's bare-default wall time: `+0.49` overall, `+1` FPR, `+1` passing query, and `4.29×` lower cross-host wall time. Same per-query caps on different hosts mean **healthy/non-regressing 8-worker deployment**, not a clean worker-only causal score gain |
 | R4 pass shape | `20260804T231910Z` control, `20260805T001808Z` A, `20260805T011733Z` B, `20260805T021805Z` C, `20260805T032037Z` control repeat | arms A/B were accidental no-ops (their caps never bound); arm C (`TPC_P2_FAST_TRIAGE=0`) `58.40` vs `57.81` |
 | R5 held-out tripwire | `20260805T042106Z` | `overall 62.59` on the 20-record test split, `constraints_ok 10/20` |
 | R6 packaged archive | no row (checks the zip, not a split) | `fabiundstefan_v1.zip`, `1676` entries, `4.0 MB`, from commit `b44bb73c096b`; unpacked and run with a stripped `PATH`: `valid_output=True` |
