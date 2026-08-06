@@ -25,7 +25,7 @@ deliberate follow-up not covered by either row.
 
 | Workstream | Do exactly this | Finish criterion |
 | --- | --- | --- |
-| **Implementation** | [P11](../tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen), [P12](../tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics), [P13](../tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) — improve the *next* cycle, not `v2`'s contents | listed unit tests green plus a paired screen under `results/phase2_baselines/screens/` |
+| **Implementation** | [P11](../tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen), [P13](../tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) — improve the *next* cycle, not `v2`'s contents ([P12](../tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics) landed 2026-08-06, out of order) | listed unit tests green plus a paired screen under `results/phase2_baselines/screens/` |
 | **Evaluation** | R9/R11 remain blocked on unimplemented work items ([P5](../tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds)/[P2](../tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger), [P6](../tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off)) | code that does not exist yet and cannot be run before the deadline |
 
 R14/R15/R16 are closed (2026-08-06).
