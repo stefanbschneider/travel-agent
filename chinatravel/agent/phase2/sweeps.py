@@ -318,6 +318,9 @@ def solve_one(task: dict) -> dict:
     uid = task["uid"]
     visible_query = task["query"]
     budget_sec = float(task["budget_sec"])
+    # The same list object goes to the solver and the scorer -- that's what makes "solving and
+    # scoring receive byte-identical constraints" true rather than merely likely (roadmap P10).
+    variants = task.get("variants")
     started = time.monotonic()
     try:
         init_worker(task.get("lang", "en"))
@@ -329,11 +332,12 @@ def solve_one(task: dict) -> dict:
                 budget_sec=budget_sec,
                 solve_fn=_WORKER["solve_fn"],
                 flags=_WORKER["flags"],
+                variants=variants,
             )
         score = selfscore.score_plan(
             plan,
             visible_query,
-            parsed_constraints=task.get("parsed_constraints"),
+            variants=variants,
             lang=task.get("lang", "en"),
             uid=uid,
         )
@@ -381,15 +385,19 @@ def run_sweeps(
     config: SweepConfig,
     on_result: Callable[[str, dict, selfscore.PlanScore, dict, bool], None],
     best: dict[str, selfscore.PlanScore] | None = None,
-    parsed_constraints: dict[str, dict] | None = None,
+    variants: dict[str, list[dict]] | None = None,
     log: Callable[[str], None] = print,
 ) -> dict[str, Any]:
     """Run triage -> repair -> polish passes until the deadline.
 
-    ``queries`` holds **visible** queries only. ``on_result(uid, plan, score, telemetry, improved)``
-    is called for every completed attempt, with ``improved`` saying whether it beat the incumbent
-    for that query. The caller owns writing: persisting an improved plan immediately is what makes
-    the run safe to kill at any moment. Returns a summary dict.
+    ``queries`` holds **visible** queries only. ``variants`` holds, per uid, the exact
+    branch-local solver constraint list the caller already parsed for that query (roadmap P10) --
+    the same list is handed to both the solver and ``selfscore.score_plan`` for every attempt, so
+    the scheduler's own opinion of a plan can never diverge from what the solver actually searched.
+    ``on_result(uid, plan, score, telemetry, improved)`` is called for every completed attempt,
+    with ``improved`` saying whether it beat the incumbent for that query. The caller owns
+    writing: persisting an improved plan immediately is what makes the run safe to kill at any
+    moment. Returns a summary dict.
     """
     best_scores: dict[str, selfscore.PlanScore] = dict(best or {})
     last_budget: dict[str, float] = {}
@@ -443,7 +451,7 @@ def run_sweeps(
                 deadline=deadline,
                 best_scores=best_scores,
                 on_result=on_result,
-                parsed_constraints=parsed_constraints or {},
+                variants=variants or {},
                 record=record,
                 log=log,
             )
@@ -620,7 +628,7 @@ def _run_pass(
     deadline: float,
     best_scores: dict[str, selfscore.PlanScore],
     on_result: Callable[[str, dict, selfscore.PlanScore, dict, bool], None],
-    parsed_constraints: dict[str, dict],
+    variants: dict[str, list[dict]],
     record: PassRecord,
     log: Callable[[str], None],
 ) -> None:
@@ -632,7 +640,7 @@ def _run_pass(
             "lang": config.lang,
             "kind": kind,
             "fast_accept": kind == "triage" and config.fast_triage,
-            "parsed_constraints": parsed_constraints.get(uid),
+            "variants": variants.get(uid),
         }
         for uid in pass_uids
     ]

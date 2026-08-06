@@ -116,9 +116,9 @@ class TestScorePlan:
 
         original = selfscore._score_plan
 
-        def spy(plan, visible_query, parsed_constraints, lang, quid):
+        def spy(plan, visible_query, variants, lang, quid):
             seen.update(visible_query)
-            return original(plan, visible_query, parsed_constraints, lang, quid)
+            return original(plan, visible_query, variants, lang, quid)
 
         selfscore._score_plan = spy
         try:
