@@ -61,7 +61,7 @@ If a requirement or verifier behavior is unclear, inspect the source or query th
 **`solve_script_with_harness.py --method <method> --split <split>` (no other flags, run from the
 repository root) is the organizer-confirmed Phase 2 evaluation command** (2026-08-06 clarification;
 see [competition
-reference](../docs/reference/competition.md#dsl-free-data-latest-harnessevaluator-and-the-method-argument-2026-08-06)).
+reference](../docs/reference/competition.md#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06)).
 Both values are theirs: `--split` picks the held-out split, `--method` names the output directory,
 and plans must land at `results/<method>/<uid>.json`. Neither may be hard-coded, and neither is.
 It runs the deterministic no-oracle solver in-process — no external CLI, no LLM call, no subprocess:

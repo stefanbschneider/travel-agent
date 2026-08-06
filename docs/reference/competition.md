@@ -1,6 +1,6 @@
 # TPC @ IJCAI 2026 Competition Reference
 
-**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site; execution, versioning, feedback, per-query timeout, and technical-report answers added 2026-08-04 from the organizers' direct email reply to our clarification questions; harness resubmission requirement, runtime reconfirmation, and the confirmed SGLang/LLM endpoint added 2026-08-04 (later the same day) from the organizers' second update email — see [below](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email); the DSL-free held-out data, the "latest harness example / latest evaluation code" instructions, and the `--method <method>` argument added 2026-08-06 from the organizers' fourth email — see [below](#dsl-free-data-latest-harnessevaluator-and-the-method-argument-2026-08-06).
+**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site; execution, versioning, feedback, per-query timeout, and technical-report answers added 2026-08-04 from the organizers' direct email reply to our clarification questions; harness resubmission requirement, runtime reconfirmation, and the confirmed SGLang/LLM endpoint added 2026-08-04 (later the same day) from the organizers' second update email — see [below](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email); the DSL-free held-out data, the "latest harness example / latest evaluation code" instructions, and the `--method <method>` argument added 2026-08-06 from the organizers' fourth email — see [below](#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06).
 The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative when this note conflicts with local material.
 This is a concise repository reference, not a replacement for the rules.
 
@@ -60,7 +60,7 @@ We asked the organizers directly (email + would-be GitHub issue) how evaluation 
   ```
 
   **Amended 2026-08-06** — the command also carries `--method <method>`; see [the clarification
-  below](#dsl-free-data-latest-harnessevaluator-and-the-method-argument-2026-08-06).
+  below](#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06).
 
   "All harness-specific initialization and launch logic" must be integrated behind this single command; setup (dependency install, database download, config) is documented separately in the README and is not part of the timed run (see timeout below). Any extra environment must be reproducible with plain `pip`/`conda` — they explicitly asked teams to avoid dependencies needing special package sources or complicated system-level installs, since the evaluation machines sit on an internal network and slow installs cost their limited eval time.
   **This is now a hard, load-bearing fact for our submission layout — see the critical gap flagged just below and the top roadmap priority it drives.**
@@ -68,7 +68,7 @@ We asked the organizers directly (email + would-be GitHub issue) how evaluation 
 - **Feedback.** Teams get feedback after *every* evaluation run: the score plus "relevant execution information." Feedback can be delayed because each run takes a while. If the organizers hit an environment issue, runtime error, or apparent bug during evaluation, they'll contact the team proactively.
 - **Per-query timeout: there isn't one.** Instead there's a **single 5-hour wall-clock budget for the whole 100-query run**, starting when the command above is invoked; environment creation, dependency installation, and other setup are excluded from that 5 hours. This replaces every `300 s`/`900 s` per-query assumption this repository has carried since Phase 2 planning began — see the [design doc](../tpc_phase2_design.md#run-shape) for how the run is scheduled against it.
 
-### DSL-free data, latest harness/evaluator, and the `--method` argument (2026-08-06)
+### DSL-free data, the latest harness and evaluator, and the method argument (2026-08-06)
 
 A fourth organizer email, sent "to ensure that all Phase 2 teams prepare and test their harnesses
 under consistent requirements". Four items, each checked against this repository on the day it
@@ -201,7 +201,7 @@ submission, i.e. around **2026-08-08**; both `v2` and the technical report are d
 **What `v2` requires, in order.** `scripts/assemble_phase2_submission.py` resolves `v2` automatically
 from the `phase2-v1` tag, so packaging is not the work; deciding what goes in it is:
 
-1. a GREEN [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
+1. a GREEN [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
    whole-run row promoting P8+P9 — the only measured candidate that exists today;
 2. the promotion committed on `main` (`apply_deterministic_solver_defaults()` plus the flag moved from
    `CANDIDATE_SOLVER_FLAGS` to `PROMOTED_SOLVER_FLAGS`), because an archive is built from tracked
@@ -288,7 +288,7 @@ Second, the example's `RUN_HARNESS.md` drives everything through **`uv run`**, n
   includes it (direct reply, same day)~~ **Resolved 2026-08-06:** the fourth email states the command
   as `--method <method> --split <split>` and asks that neither be hard-coded — see [DSL-free data,
   latest harness/evaluator, and the `--method`
-  argument](#dsl-free-data-latest-harnessevaluator-and-the-method-argument-2026-08-06).
+  argument](#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06).
 - Final-results date remains "to be announced."
 
 ### Confirmed evaluation host (2026-07-30)

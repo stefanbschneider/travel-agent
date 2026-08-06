@@ -72,7 +72,7 @@ CHINATRAVEL_LANG=en .venv/bin/python -m agent_env.mcp_stdio
 **`agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>` is the
 organizer-confirmed Phase 2 evaluation command** (2026-08-06 clarification, run from the repository
 root, no other flags — see the [competition
-reference](../docs/reference/competition.md#dsl-free-data-latest-harnessevaluator-and-the-method-argument-2026-08-06)).
+reference](../docs/reference/competition.md#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06)).
 `--split` names the held-out split, `--method` names the output directory (`results/<method>/<uid>.json`),
 and neither is hard-coded anywhere in the package. Omitting them falls back to `phase2_e2e_<split>`
 and `easy`, which is only ever a local convenience.

@@ -36,7 +36,7 @@ promoted post-R8 configuration). It is the team's first official submission unde
 resubmission reset — every Phase 2 file uploaded before that email was disregarded and did not count
 against the limit — so **one slot (`v2`) remains**, due with the technical report on 2026-08-10,
 24:00 Beijing Time. A `v2` is worth spending only on a measured improvement: the gate that decides
-whether one exists is [R14](docs/tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists),
+whether one exists is [R14](docs/tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green),
 and the packaging path is in the [competition
 reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
 email also gave the
