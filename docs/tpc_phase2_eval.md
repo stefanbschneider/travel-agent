@@ -17,11 +17,12 @@ committed `submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagg
 aim to return a score within 3 days of a valid submission, so feedback is expected around
 2026-08-08, and **one submission slot remains** (`v2`, due with the technical report on 2026-08-10,
 24:00 Beijing Time = 18:00 CEST). Every evaluation slot from here exists to answer one question:
-**is there a configuration worth spending the second slot on?** [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
-is that measurement and it is runnable **now** — P8/P9 are implemented, screened GREEN, and
-default-off on `main`.
+**is there a configuration worth spending the second slot on?** [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
+was that measurement, and it came back **GREEN** on 2026-08-06 (`overall 64.13`, `+0.5471` over the
+R8/R12 baseline; `FPR 44.0`, `+1.0`; `constraints_ok` unchanged at `46/100` — see the row's own
+section for the two caveats that temper it). [R15](#r15--held-out-tripwire-for-p8p9) is next.
 
-R1–R13 are closed (see [what the closed queue established](#what-the-closed-queue-r1r13-established)).
+R1–R14 are closed (see [what the closed queue established](#what-the-closed-queue-r1r14-established)).
 R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
 repeats scored bit-for-bit identical (`overall 57.74985419574877`, `FPR 32.0`, `constraints_ok
 36/100`, all three times) — every remaining arm below is judged against that near-zero floor rather
@@ -70,8 +71,8 @@ relying on its `--label`.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **[R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)** | **do P8+P9 (`TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT`) hold up on a whole run? → does `v2` exist?** | **nothing — run it now** | 1 baseline-matching run: `~0.3 h` on the Mac, `~1.3 h` on the 4-core box (5 h envelope, self-terminating) |
-| **[R15](#r15--held-out-tripwire-for-p8p9)** | did the P8/P9 gain generalize past the `val` residual it was designed from? | R14 coming back GREEN | `~0.3 h` (1 h envelope, 20 records) |
+| ~~R14~~ | ~~do P8+P9 hold up on a whole run? → does `v2` exist?~~ | closed 2026-08-06, GREEN | done |
+| **[R15](#r15--held-out-tripwire-for-p8p9)** | did the P8/P9 gain generalize past the `val` residual it was designed from? | nothing — R14 came back GREEN | `~0.3 h` (1 h envelope, 20 records) |
 | R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | R11 | LLM-backed repair | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off), which is not implemented and cannot be verified against the organizers' endpoint from here | out of reach before 2026-08-10 |
 
@@ -81,9 +82,9 @@ split. R11's old "not before the `v1` upload" gate has now been *superseded rath
 `v1` is uploaded, but with `P6` unwritten and the endpoint unreachable locally, there is no arm to
 run before the deadline.
 
-### R14 — the P8/P9 gate: the one run that decides whether `v2` exists
+### R14 — the P8/P9 gate: the one run that decides whether `v2` exists *(closed 2026-08-06, GREEN)*
 
-**Status: open, unblocked, highest value. Run this first.** P8 (`TPC_WINDOW_PUSH`) and P9
+**Status: closed.** P8 (`TPC_WINDOW_PUSH`) and P9
 (`TPC_WINDOW_INSERT`) landed on `main` in `0c2cc395`, both **library- and harness-default-off**, each
 screened GREEN individually and stacked ([roadmap P8](tpc_phase2_roadmap.md#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual),
 [P9](tpc_phase2_roadmap.md#p9--place-an-absent-timed-visit-poi)). A screen never promotes, so
@@ -108,10 +109,12 @@ TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 .venv/bin/python scripts/phase2_full_run.p
 Export nothing else. `apply_deterministic_solver_defaults()` supplies the four promoted flags and
 respects the two you set, so the candidate arm differs from the baseline in exactly those two.
 
-**Use a distinct `--method` per arm, as above, or pass `--fresh`.** `phase2_full_run.py` resumes by
-default, and the run treats any real plan already in the method directory as an incumbent to beat —
-so pointing a second arm at a directory the first arm filled measures "arm 2 plus whatever arm 1
-left", which is biased upward and not a like-for-like row.
+**Use a distinct `--method` per arm, as above.** `phase2_full_run.py`'s `--fresh` is the default
+(confirmed against the script's `argparse` defaults and this run's own row: `"fresh": true`,
+`"incumbents_scored": 0`), so each named method starts from a clean directory; `--resume` is the
+opt-in flag that would instead treat a filled directory as an incumbent to beat. A distinct
+`--method` per arm is still the right habit — it keeps arms separable on disk and in the ledger —
+but the resume-by-default risk this paragraph used to describe does not apply to the current script.
 
 **Before reading the score, verify the arm actually ran what it claims** — one per-query
 `telemetry.json` under `agent_env/runs/phase2_e2e_r14_pushinsert/` must show `window_push: true`,
@@ -146,8 +149,45 @@ have more competing search to displace here than they did there.
 solver — see the [cold-start note](#before-the-first-run) above.
 
 Commit the row under `results/phase2_baselines/full_runs/` and add its line to
-[the closed-queue table](#what-the-closed-queue-r1r13-established) with the host, worker count and
+[the closed-queue table](#what-the-closed-queue-r1r14-established) with the host, worker count and
 the baseline it is compared against.
+
+**Result** (row `20260806T052925Z`, 4-core Linux, 3 workers, `git_dirty: false`, `evaluator_parity:
+c89cfca`, compared against the same-host R8 `20260805T123142Z` = R12 `20260805T170120Z` baseline):
+all 100 per-query `telemetry.json` files confirmed `window_push: true`, `window_insert: true` *and*
+`window_anchor: true` before the score was read. `overall 64.13167839953107` (**`+0.5471`** over
+`63.58458530360117`), MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.99` (`+0.09`), **`FPR 44.0`**
+(**`+1.0`** over `43.0`), DAV `25.54` (`+0.83`), ATT `34.53` (`+0.88`), DDR `25.28` (`+0.78`);
+`empty_plans 0/100`, zero failed jobs across all three passes, **`constraints_ok 46/100` — unchanged
+from baseline**. Ran `100/54/46` queries through triage/repair/polish with `100/1/13` improved, in
+`1.32 h` of the `5.00 h` envelope (`26%`, matching the R8/R12/R3 shape).
+
+By the pre-registered rule this is **GREEN**: `overall` up, `FPR` not down, `empty_plans 0/100`, no
+failed job. The FLAT row does not apply even though `Δoverall` (`0.5471`) sits just above its `0.5`
+threshold, because that row's condition is `FPR unchanged` and FPR moved (`+1.0`); the rule was fixed
+in advance specifically so a borderline delta cannot be re-read as FLAT after the fact, and R7's
+`sd = 0` means this is a real deterministic effect, not noise around a threshold.
+
+**Two things temper how much this GREEN buys, worth reading before spending `v2` on it:**
+
+1. **The screen over-predicted, in the opposite direction from R8's screen.** The paired `n=80`/`90 s`
+   screen predicted `overall 64.5–65.5`, `FPR 45–46`, `constraints_ok 48–49/100`; the full run landed
+   at `64.13` / `44.0` / `46` — below the low end on all three, not above it. R8's screen had
+   *under*-predicted its full run, which is why this doc told readers to treat a screen as "a floor
+   rather than a ceiling"; R14 is the counter-example, so that heuristic no longer holds in general
+   and a screen's full-run outcome should be read as uncertain in either direction, not just upward.
+2. **`constraints_ok` did not move at all** (`46/100`, identical to baseline). The `+0.5471` overall
+   gain is entirely from one FPR point plus the three preference terms (DAV/ATT/DDR), not from any
+   query flipping from failing to passing its constraints — the same distinction this doc's [closed-queue
+   finding #4](#what-the-closed-queue-r1r14-established) already draws between `improved` and
+   `constraints_ok`. The gain is real (GREEN stands) but thinner than the headline `overall` delta
+   reads on its own.
+
+Per the GREEN action: promoting the flags into `PROMOTED_SOLVER_FLAGS` /
+`apply_deterministic_solver_defaults()` is an Implementation-workstream change (CLAUDE.md's
+[parallel workstreams](../CLAUDE.md#parallel-workstreams) bar Evaluation from solver code) and is not
+done in this row's branch. [R15](#r15--held-out-tripwire-for-p8p9) does not depend on that promotion
+— its command sets both flags via environment variable — so it can and does run next.
 
 ### R15 — held-out tripwire for P8/P9
 
@@ -230,7 +270,7 @@ Pair it with the archive check R6 performed on the old configuration: build with
 confirm the plans are real rather than the pre-written empty fallbacks. A worker dying at start-up
 still exits `0`; see the [cold-start rule](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05).
 
-**Archive check**: see the R12 row in [what the closed queue established](#what-the-closed-queue-r1r13-established)
+**Archive check**: see the R12 row in [what the closed queue established](#what-the-closed-queue-r1r14-established)
 — packaged and verified with `scripts/assemble_phase2_submission.py`'s built-in unpack-and-run check.
 
 ### R13 — the held-out tripwire on the new default *(closed 2026-08-05)*
@@ -322,9 +362,9 @@ not needed for the submission decision because the requested 8-worker deployment
 
 ### What not to spend a slot on
 
-- **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible ([R7](#what-the-closed-queue-r1r13-established)),
-  so a rerun of the same configuration on the same host returns the same number. If [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
-  comes back flat, that *is* the answer.
+- **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible ([R7](#what-the-closed-queue-r1r14-established)),
+  so a rerun of the same configuration on the same host returns the same number. [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
+  already closed GREEN off a single run; do not repeat it hoping for a different number.
 - **Any whole-run row whose configuration you cannot read off its own telemetry.** Check
   `solver_flags` first, score second. A mislabelled arm costs a full envelope and proves nothing.
 - **The old per-query `900 s` pinned gate as a ship signal.** It measures a contract the competition
@@ -442,9 +482,9 @@ rows because the solver now canonicalizes its own constraint literals). `EVALUAT
 `c89cfca`; `scripts/phase2_gate.py` refuses to gate across the boundary, including one-sided marker
 presence. Full detail: [competition reference](reference/competition.md#evaluator-version).
 
-## What the closed queue (R1–R13) established
+## What the closed queue (R1–R14) established
 
-Run 2026-08-04/05 primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
+Run 2026-08-04/05/06 primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
 `evaluator_parity: c89cfca`, rows under `results/phase2_baselines/full_runs/`. **Nothing on this
 list needs re-running.**
 
@@ -461,6 +501,7 @@ list needs re-running.**
 | **R10 phase1-under-phase2, 5 h** (diagnostic, 1000 queries) | `20260805T135254Z` | `overall 85.20`; MicEPR `100.0`, MacEPR `100.0`, C-LPR `95.57`, FPR `85.4`, DAV `29.86`, ATT `59.52`, DDR `53.53`; `empty_plans 0/1000`, `constraints_ok 715/1000`; `1.60 h` of the envelope. `git_dirty: true` (see caveat below) |
 | **R12 promotion equality check, 5 h, no env vars** | `20260805T170120Z` | **bit-for-bit identical to R8**: `overall 63.58458530360117`, MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.90`, FPR `43.0`, DAV `24.71`, ATT `33.65`, DDR `24.50`; `empty_plans 0/100`, `constraints_ok 46/100`; `git_dirty: false`; all four `solver_flags` (`pin_timed_windows`, `window_anchor`, `commonsense_first`, `solve_converge_patience`) confirmed `true`/set in per-query telemetry with nothing exported. Paired archive check (no row; checks the zip, not a split; re-run after a rebase moved packaging into `submissions/phase2/` in the same window): `submissions/phase2/fabiundstefan_v1.zip`, `1683` entries, `4.3 MB`, from commit `aba52e7a02c9`; unpacked into a directory that had never been run in and run there with the harness's own worker default (no `--workers` override, so more than one worker starts — see the [cold-start rule](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05)) via `--split tpc_phase2_familiar_100_val --limit 6 --budget-sec 90`: `6/6` plans with a non-empty itinerary, no worker start-up failure, `llm_backend=none`, `valid_output=True` |
 | **R13 held-out tripwire, 1 h** (`familiar_100_test`, post-P1) | `20260805T182748Z` | `overall 70.53975966861671`; MicEPR `100.0`, MacEPR `100.0`, C-LPR `93.36`, FPR `55.0` (R5 pre-P1: `40.0`), DAV `32.60`, ATT `42.90`, DDR `28.47`; `empty_plans 0/20`, **`constraints_ok 13/20`** (R5 pre-P1: `10/20`) — inside the pre-registered `13–15/20` "generalizes" band; `git_dirty: false`; all four `solver_flags` confirmed `true`; `0.26 h` of the `1.00 h` envelope |
+| **R14 P8+P9 gate, 5 h** (`TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1`), 4-core Linux, 3 workers, vs R8/R12 baseline | `20260806T052925Z` | `overall 64.13167839953107` (**`+0.5471`** over R8/R12's `63.58458530360117`); MicEPR `99.67`, MacEPR `98.00`, C-LPR `89.99`, **FPR `44.0`** (**`+1.0`**), DAV `25.54`, ATT `34.53`, DDR `25.28`; `empty_plans 0/100`, **`constraints_ok 46/100` (unchanged)**; `git_dirty: false`; all 100 per-query `telemetry.json` confirmed `window_push`/`window_insert`/`window_anchor` all `true`; `1.32 h` of the `5.00 h` envelope, zero failed jobs across triage/repair/polish (`100/54/46` queries, `100/1/13` improved). **GREEN by the pre-registered rule** (overall up, FPR not down, no empty plans, no failed jobs), but the paired screen over-predicted this row on all three axes (predicted `64.5–65.5`/`45–46`/`48–49`, measured `64.13`/`44.0`/`46`) and `constraints_ok` did not move at all — the gain is one FPR point plus preference terms, not new passing queries. Flag promotion into `PROMOTED_SOLVER_FLAGS` is an Implementation-workstream follow-up, not done in this row |
 
 **On R10's `git_dirty: true`.** By the letter of the [ledger rule](#ledger-comparability) this row
 is not proven reproducible from its commit alone, and that should not be waved away. What actually
@@ -529,6 +570,12 @@ Five findings, and two corrections that matter more than the scores:
    mean "the move generalizes" rather than "P1 fit `val`'s residual" (which would have held at
    `10/20`). It lands at the low end of that band, so the finding is "generalizes, with headroom
    uncertain" rather than "generalizes as strongly as `val` suggested."
+10. **P8/P9 gate GREEN, but on a thinner margin than `overall` alone suggests** (R14): `+0.5471`
+    overall and `+1.0` FPR against the R8/R12 baseline, with `constraints_ok` flat at `46/100` — the
+    gain is FPR plus preference terms, not new passing queries, and it landed below every axis of the
+    paired screen's prediction rather than above. The rule still says GREEN (overall up, FPR not
+    down, no empty plans, no failed jobs), so the flags queue for promotion, but the margin is the
+    thinnest of any GREEN gate run so far.
 
 R5 and R13 are recorded standalone: `familiar_100_test` is a *subset* of `familiar_100` (R1's split),
 so no val↔test gap is computed against R1/R8/R12's `overall`. R13's `70.54` above R8's `63.58` is
