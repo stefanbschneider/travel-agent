@@ -35,9 +35,16 @@ subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed
 promoted post-R8 configuration). It is the team's first official submission under the 2026-08-04
 resubmission reset — every Phase 2 file uploaded before that email was disregarded and did not count
 against the limit — so **one slot (`v2`) remains**, due with the technical report on 2026-08-10,
-24:00 Beijing Time. A `v2` is worth spending only on a measured improvement: the gate that decides
-whether one exists is [R14](docs/tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green),
-and the packaging path is in the [competition
+24:00 Beijing Time. A measured `v2` candidate exists:
+[R16](docs/tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
+closed GREEN at `overall 64.15` / `FPR 44.0`, `+0.5654` over `v1`. **But R16 measured `git_sha
+241c0524`, and `main` has since moved: P12 landed unflagged and changes `TPCAgent`'s acceptance gate
+(`TPC_USE_ORACLE=0` makes `evaluate_parsed_constraints` the `_make_checker` base check), so a `v2`
+built from `main` today would ship an unmeasured configuration.** The gate that resolves it is
+[R17](docs/tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
+(`~1.3 h`); it either clears `main` or sends the archive build back to `241c0524`. **The archive must
+be built from the sha R17 reports**, so avoid merging production-path changes to `main` between that
+row and the upload. The packaging path is in the [competition
 reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
 email also gave the
 organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,

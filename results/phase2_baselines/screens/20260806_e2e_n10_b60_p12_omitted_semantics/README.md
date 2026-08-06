@@ -1,7 +1,7 @@
 # P12 screen (2026-08-06): close P10's false-positive half
 
-**What this is not:** a `--mode whole-run` screen ([P11](../../../../docs/tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen)
-does not exist on this branch) or a `--flag` screen (`scripts/phase2_quick_eval.py`; P12 has no
+**What this is not:** a `--mode whole-run` screen ([P11](../../../../docs/tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen-landed-2026-08-06)
+did not exist on this branch; it landed later the same day) or a `--flag` screen (`scripts/phase2_quick_eval.py`; P12 has no
 flag -- it is a correctness fix, always active). The roadmap item's own bar calls for the former
 once P11 lands; until then it explicitly accepts a hand-rolled comparison, the same workaround
 P10's own PR used (`docs/tpc_phase2_roadmap.md`, "Then P11" section).
@@ -15,14 +15,30 @@ between C and D" window on the same POI name. `before` = `git stash` (pre-fix tr
 
 **Result: byte-identical.** Every one of `schema_pass` / `commonsense_pass` / `logical_pass` /
 `all_pass` / `overall_true` matches per uid between `baseline.json` and `candidate.json` --
-confirmed programmatically, 0 diffs. This is **expected and structurally guaranteed** in
-per-query mode: `parsed_verifier.evaluate_parsed_constraints` is consulted only by the final
-self-score (`selfscore.py`), never by the CP-SAT solve/accept loop this path runs, so the produced
-plan cannot differ between arms no matter what the checker fix changes -- official score identity
-across arms is a compile-time guarantee of *this specific screen mode*, not evidence the fix does
-nothing. (Whole-run mode, where the scheduler *does* feed self-score back into repair/restart
-decisions, could in principle produce a different plan; that is exactly the measurement P11 exists
-to make possible, and is out of scope here.)
+confirmed programmatically, 0 diffs.
+
+> **⚠ Correction (2026-08-06, added by the docs workstream after this screen was committed).**
+> This paragraph originally called that identity **"expected and structurally guaranteed"** on the
+> grounds that `parsed_verifier.evaluate_parsed_constraints` "is consulted only by the final
+> self-score (`selfscore.py`), never by the CP-SAT solve/accept loop this path runs, so the produced
+> plan cannot differ between arms no matter what the checker fix changes". **That is wrong.** The
+> checker is consulted by *both*. Phase 2 runs with `TPC_USE_ORACLE=0`
+> (`chinatravel/agent/phase2/orchestrator.py:283`), and in that mode
+> `TPCAgent._make_checker`'s `base_check` **is** `evaluate_parsed_constraints`
+> (`chinatravel/agent/tpc_agent/tpc_agent.py:174`) -- the same `check(plan)` that drives
+> `_accepted`, every `_pack_plan` commit rule and the restart loop's `consider()`. Probing that gate
+> with the adversarial plan from this PR's own test (an `accommodation` activity inside a meal-only
+> window at the right POI) returns `check -> (3, 3)`, **accepted**, under pre-P12 semantics and
+> `(0, 3)`, **rejected**, under post-P12 semantics.
+>
+> So the 0 diffs below are a genuine **empirical** result on this sample, not a compile-time
+> guarantee: the fix did not fire, which is exactly what the next paragraph reports when it finds the
+> *self*-score checks byte-identical too. The fix can and does change what the shipped solver
+> accepts, so it needs a measurement on the shipped path. That is
+> [R17](../../../../docs/tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open).
+> Nothing else in this README changes -- the mechanism evidence, the unit tests and the F1 check all
+> stand.
+
 
 More surprising: the *self*-score side (`parsed_constraints_eval.checks`, the actual per-clause
 booleans the fix touches) is also byte-identical on this sample -- 0 diffs. The fix did not fire.
