@@ -22,7 +22,7 @@ restarts and seed. **Spend the effort on what the solver can represent, not on h
 
 **That thesis has now been tested at full scale, and it held.** [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)
 gave the solver the move the dominant failure family needs;
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r15-established) measured `FPR 32.0 → 43.0` over a
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established) measured `FPR 32.0 → 43.0` over a
 baseline whose three repeats were bit-for-bit identical, and it is **on by default since
 2026-08-05**. The next two moves out of the same family,
 [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
@@ -30,19 +30,21 @@ baseline whose three repeats were bit-for-bit identical, and it is **on by defau
 ([R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green):
 `overall +0.5471`, `FPR +1.0`) and are now waiting on the promotion that GREEN authorizes.
 
-**Where the two workstreams stand on 2026-08-06 (evening)** — read this before picking anything up.
-Both queues changed when R14/R15 landed:
+**Where the two workstreams stood as of 2026-08-06 (evening) — both critical-path items are now
+done.** [P14](#p14--promote-p8p9-to-harness-defaults-r14s-green-action) landed
+(`0c80ab6b`/`241c0524`: `TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT` promoted to defaults), and
+[R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
+then measured that exact shipping configuration at `n=100` and closed **GREEN** (`overall
+64.14997555172528`, `+0.0183` over R14, `+0.5654` over R8/R12; `FPR 44.0` unchanged from R14, `+1.0`
+over R8/R12; `empty_plans 0/100`, no failed jobs). Per R16's pre-registered rule, `main` is the `v2`
+candidate to ship — packaging/upload is a separate, deliberate follow-up, not done by either of these
+rows.
 
-| | Do this | Why it is next |
-| --- | --- | --- |
-| **Implementation** | [P14](#p14--promote-p8p9-to-harness-defaults-r14s-green-action) — promote `TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT` to defaults | R14 came back GREEN and its pre-registered GREEN action is exactly this. It is the **critical path to `v2`**: until the flags are defaults, the shipped archive still runs `v1`'s configuration. Under an hour. |
-| **Evaluation** | [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) — measure the `v2` candidate | R14 ran on `b54c58ef`, one commit *before* P10, so its `+0.5471` is a clean P8/P9 delta but was measured with P10 absent. `main` has P10 default-on. **The configuration a `v2` would ship has never been run at `n=100`.** `~1.3 h`. |
-
-After those two, Implementation continues with [P11](#p11--a-whole-run-mode-for-the-pre-gate-screen)
+Implementation continues with [P11](#p11--a-whole-run-mode-for-the-pre-gate-screen)
 → [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) as capacity allows.
 ([P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics) landed 2026-08-06 out of
 order — it had no flag and didn't need P11's whole-run mode to screen safely.) These improve the
-*next* cycle; only P14 and R16 change what `v2` contains.
+*next* cycle, not what `v2` contains, since `v2`'s content is now settled by P14 and R16.
 
 `v1` was **uploaded 2026-08-05**; the organizers aim to return its score within 3 days, and **one
 slot (`v2`) remains**, due with the technical report on **2026-08-10, 24:00 Beijing Time** (18:00
@@ -221,7 +223,7 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 40-query subset at `90 s`, not the 150-plan replay. Two things follow, and neither is optional:
 
 - the **false-negative** half is fixed *by construction* and needs a whole-run row to be believed —
-  that is [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild), which must
+  that is [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green), which must
   run before R14 is readable at all (see the warning at the top of the work items);
 - the **false-positive** half (the five omitted parser semantics) is untouched and is now
   [P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics).
@@ -234,7 +236,7 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 > **R14 (`b54c58ef`) and every earlier row are pre-P10; R15 (`1ac96bbd`) is post-P10.** That makes
 > R14's P8/P9 delta clean and R15's a P10+P8+P9 bundle, and it means the post-P10 configuration has
 > never been measured at `n=100` —
-> [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) is that run.
+> [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green) is that run.
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
@@ -247,10 +249,10 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | v2 |
 | P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move — **out of reach before 2026-08-10** | not v2 |
-| ~~P10~~ | ~~Scheduler self-scoring uses the solver's exact parsed variants~~ | — | **landed 2026-08-06 (`21ab422`), default-on, not behind a flag. Still unmeasured at `n=100`: [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) is the row that covers it** | v2 |
+| ~~P10~~ | ~~Scheduler self-scoring uses the solver's exact parsed variants~~ | — | **landed 2026-08-06 (`21ab422`), default-on, not behind a flag. Measured at `n=100` alongside P8/P9 by [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green): GREEN, `overall +0.0183` vs P10-absent R14, `constraints_ok +5` self-score-only** | v2 |
 | ~~P8~~ | ~~Bounded local window push~~ (`TPC_WINDOW_PUSH`) | — | **gated GREEN 2026-08-06 by [R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green) (stacked with P9: `overall +0.5471`, `FPR +1.0`). Back on Implementation's plate as [P14](#p14--promote-p8p9-to-harness-defaults-r14s-green-action)** | v2 |
 | ~~P9~~ | ~~Place an absent timed-visit POI~~ (`TPC_WINDOW_INSERT`) | — | **same row, same GREEN, same follow-up** | v2 |
-| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r15-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
+| ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
 
@@ -332,7 +334,7 @@ for p in sorted(pathlib.Path('agent_env/runs/p14_check').rglob('telemetry.json')
 ```
 
 with `window_push`, `window_insert` and `window_anchor` all `true` and **nothing exported**. Then
-hand [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) to
+hand [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green) to
 Evaluation: it measures the promoted configuration at `n=100`, which is what a `v2` would ship and
 what no row has covered.
 
@@ -548,7 +550,7 @@ FPR given the structural argument above plus the small, one-directional expected
 
 ### P13 — an empty parent parse must mean the same thing on both sides
 
-**Small, mechanical, and found while writing [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild)'s
+**Small, mechanical, and found while writing [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)'s
 verification step.** Do it alongside P11 or P12; it is under an hour.
 
 **The inconsistency.** P10 made the parent parse each query and pass `variants` down. When that parse
@@ -894,7 +896,7 @@ as P8.
 
 ### P1 — the `timed_visit_named_poi` residual: give the search a window-aware move
 
-**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r15-established)
+**Landed and promoted 2026-08-05 — [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established)
 gated it GREEN (`overall 57.75 → 63.58`, `FPR 32.0 → 43.0`, `constraints_ok 36 → 46`) and
 `TPC_WINDOW_ANCHOR=1` is now a [harness default](#harness-defaults-promoted-through-a-measured-gate-or-screen).
 This was the item, and it delivered.** Diagnosis §4: the *sole* logical blocker in `45 of 61`
@@ -1036,7 +1038,7 @@ the solver-only arm from the *oracle clause's type test*, so both extraction pat
 the effect is not an artifact of oracle constraints. Commonsense and EPR being exactly flat while
 `all_pass` moves `+8` is the proof of mechanism: the gain is windows being satisfied, not a side
 effect on another layer. A screen triages and never promotes — this one buys
-[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r15-established) on the eval machine.
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r16-established) on the eval machine.
 
 **The floor is intact on real data, not only in unit tests.** The flag-off arm reproduces the
 pre-change run exactly: `FPR 32.5`, `all_pass 26`, `commonsense_pass 76`, `logical_micro 90.94`.
@@ -1285,7 +1287,7 @@ passes are reachable through the `TPC_COMMONSENSE_FIRST` umbrella.
   `--workers 6`): official FPR `47.5 → 47.5`, overall `66.183 → 66.229`, scheduler `constraints_ok
   19 → 20`, one false→true flip and zero true→false, and exactly one of the 40 itineraries changed.
   **Two things it still owes.** The screen was reported in the PR but **never committed under
-  `results/phase2_baselines/screens/`** — [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild)
+  `results/phase2_baselines/screens/`** — [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
   supersedes it and is the row that promotes this. And the false-*positive* half was deferred by
   design: that is [P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics).
 - **The 2026-08-06 harness clarification, checked and enforced** (2026-08-06). The organizers'

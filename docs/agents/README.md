@@ -15,14 +15,20 @@ Two documents carry the current queue; the briefs here are supporting detail, no
 
 **Current assignment (2026-08-06), so neither agent has to infer it:**
 
+P14 and R16 — the two items this table used to point agents at — are both **done**: P14 landed
+(`0c80ab6b`/`241c0524`, `TPC_WINDOW_PUSH`/`TPC_WINDOW_INSERT` promoted to defaults), and
+[R16](../tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
+then measured that exact shipping configuration at `n=100` and closed **GREEN** (`overall
+64.14997555172528`, `+0.0183` over R14, `+0.5654` over R8/R12; `FPR 44.0` unchanged from R14). Per
+R16's pre-registered rule, `main` is the `v2` candidate to ship; packaging/upload is a separate,
+deliberate follow-up not covered by either row.
+
 | Workstream | Do exactly this | Finish criterion |
 | --- | --- | --- |
-| **Implementation** | [P14](../tpc_phase2_roadmap.md#p14--promote-p8p9-to-harness-defaults-r14s-green-action) — promote `TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT` to defaults; **then** [P11](../tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen), [P12](../tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics), [P13](../tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) | for P14: `pytest tests` green and a 2-query harness run showing `window_push`/`window_insert`/`window_anchor` all `true` with nothing exported. For the rest: listed unit tests green plus a paired screen under `results/phase2_baselines/screens/` |
-| **Evaluation** | [R16](../tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) — measure the `v2` candidate (post-P10 `main`, P8/P9 promoted) | the row committed under `results/phase2_baselines/full_runs/`, its `solver_flags` / `variants_source` / `variants_count` quoted, and the pre-registered decision rule applied verbatim |
+| **Implementation** | [P11](../tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen), [P12](../tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics), [P13](../tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) — improve the *next* cycle, not `v2`'s contents | listed unit tests green plus a paired screen under `results/phase2_baselines/screens/` |
+| **Evaluation** | R9/R11 remain blocked on unimplemented work items ([P5](../tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds)/[P2](../tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger), [P6](../tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off)) | code that does not exist yet and cannot be run before the deadline |
 
-**P14 comes first and R16 depends on it** — R16 is only the `v2` candidate once the flags are
-defaults; run before that and it measures `v1`'s configuration. R14/R15 are closed (2026-08-06);
-R9/R11 need code that does not exist yet and cannot be run before the deadline.
+R14/R15/R16 are closed (2026-08-06).
 
 ## Active focused prompts
 
