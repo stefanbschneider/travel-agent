@@ -25,9 +25,16 @@ its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (z
 subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
 (roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
 `scripts/assemble_phase2_submission.py` packages and verifies the archive.
-**Resubmission (2026-08-04, second organizer email): every Phase 2 file uploaded before that email is
-disregarded and does not count toward the two-version limit** — re-verify the package against the
-latest harness submission example and upload it as `{TeamName}_v1.zip`. That same email also gave the
+**Submission status (2026-08-06): `v1` is uploaded** (2026-08-05,
+`submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagged `phase2-v1`, carrying the
+promoted post-R8 configuration). It is the team's first official submission under the 2026-08-04
+resubmission reset — every Phase 2 file uploaded before that email was disregarded and did not count
+against the limit — so **one slot (`v2`) remains**, due with the technical report on 2026-08-10,
+24:00 Beijing Time. A `v2` is worth spending only on a measured improvement: the gate that decides
+whether one exists is [R14](docs/tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists),
+and the packaging path is in the [competition
+reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
+email also gave the
 organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,
 OpenAI-compatible); see the [competition
 reference](docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)

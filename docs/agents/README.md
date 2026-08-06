@@ -11,7 +11,17 @@ Two documents carry the current queue; the briefs here are supporting detail, no
 | Workstream | Read this | What it is |
 | --- | --- | --- |
 | **Evaluation** | [Evaluation roadmap](../tpc_phase2_eval.md#run-this-next) | The live run queue under the 5-hour whole-run envelope (R7 onwards), plus what a measurement is allowed to prove. **Start here for any evaluation-machine time.** |
-| **Implementation** | [Implementation roadmap](../tpc_phase2_roadmap.md#work-items) | The search-space diagnosis and the ranked P-items, each a self-contained brief. `P8` also carries an implementation addendum written against the source (flag name, hook point, the push stated as arithmetic, and a retracted paragraph) — read it before writing code. |
+| **Implementation** | [Implementation roadmap](../tpc_phase2_roadmap.md#work-items) | The search-space diagnosis and the ranked P-items, each a self-contained brief. |
+
+**Current assignment (2026-08-06), so neither agent has to infer it:**
+
+| Workstream | Do exactly this | Finish criterion |
+| --- | --- | --- |
+| **Evaluation** | [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists) — the P8+P9 whole-run gate — then [R15](../tpc_phase2_eval.md#r15--held-out-tripwire-for-p8p9) if R14 is GREEN | the row committed under `results/phase2_baselines/full_runs/`, its `solver_flags` quoted, and the pre-registered decision rule applied verbatim |
+| **Implementation** | [P10](../tpc_phase2_roadmap.md#p10--make-scheduler-self-scoring-use-the-solvers-exact-parsed-variants) — make scheduler self-scoring use the solver's exact parsed variants | the five listed unit tests green, `pytest tests` green, and a paired `familiar_100_val` screen committed under `results/phase2_baselines/screens/` |
+
+Do not swap these: P8/P9 are code-complete and need a measurement, not more code; R9/R11 need code
+that does not exist yet and cannot be run.
 
 ## Active focused prompts
 

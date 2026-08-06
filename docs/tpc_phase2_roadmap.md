@@ -24,16 +24,30 @@ restarts and seed. **Spend the effort on what the solver can represent, not on h
 gave the solver the move the dominant failure family needs;
 [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r13-established) measured `FPR 32.0 → 43.0` over a
 baseline whose three repeats were bit-for-bit identical, and it is **on by default since
-2026-08-05**. `33 of 80` val queries are still blocked by nothing but that same family, which is what
+2026-08-05**. The next two moves out of the same family,
 [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
-[P9](#p9--place-an-absent-timed-visit-poi) are for.
+[P9](#p9--place-an-absent-timed-visit-poi), are **implemented and screened GREEN, default-off,
+waiting on one whole-run gate** ([R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)).
+
+**Where the two workstreams stand on 2026-08-06** — read this before picking anything up:
+
+| | Do this | Why it is next |
+| --- | --- | --- |
+| **Evaluation** | [R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists), then [R15](tpc_phase2_eval.md#r15--held-out-tripwire-for-p8p9) if it is GREEN | P8/P9 are written and screened but a screen never promotes. Without R14 they cannot ship, and `v2` has nothing new in it. |
+| **Implementation** | [P10](#p10--make-scheduler-self-scoring-use-the-solvers-exact-parsed-variants) | The only open item with a measured defect behind it (`38` false negatives / `5` false positives in the scheduler's own keep-best and repair decisions) and no dependency on R14's outcome. |
+
+`v1` was **uploaded 2026-08-05**; the organizers aim to return its score within 3 days, and **one
+slot (`v2`) remains**, due with the technical report on **2026-08-10, 24:00 Beijing Time** (18:00
+CEST). So the practical question every item below is now ranked by is: *does this change what `v2`
+should contain, and can it be measured before that deadline?*
 
 ## Where we are
 
 Current best known configuration and the row the next arm is measured against:
 `results/phase2_baselines/full_runs/20260805T123142Z.json` — **R8**, `familiar_100`, 5 h envelope,
 3 workers, `evaluator_parity: c89cfca`, zero LLM calls, finishing in `1.31 h`. Its configuration is
-now the default (`TPC_WINDOW_ANCHOR=1`), so this is what the bare organizer command produces:
+now the default (`TPC_WINDOW_ANCHOR=1`), so this is what the bare organizer command produces, and it
+is what the uploaded `v1` archive ships:
 
 | | value | weight | contributes |
 | --- | --- | --- | --- |
@@ -47,6 +61,12 @@ now the default (`TPC_WINDOW_ANCHOR=1`), so this is what the bare organizer comm
 weight `0.40` the `57` failing queries hold `22.8`, and because a failing query is also scored `0` on
 every preference term, they hold most of the `10.86` still missing across DAV/ATT/DDR as well. C-LPR
 (`2.53`) and the two EPR terms (`0.23`) are the rest.
+
+The same configuration on a 10-core Mac with 8 workers scores `64.08` / `FPR 44.0` / `constraints_ok
+47` ([R3](tpc_phase2_eval.md#r3--worker-scaling-closed-2026-08-05), row `20260805T215107Z`), in
+`1112 s`. That is **not** a better configuration — it is the same one on a different host, and
+whole-run rows only compare within a host. Which of the two is your baseline depends on where you
+run; the [eval doc's host table](tpc_phase2_eval.md#run-this-next) states both.
 
 The predecessor row `20260804T201638Z` (`overall 57.99`, FPR `33.0`, `constraints_ok 35/100`) and the
 three bit-identical R7 repeats (`57.74985419574877`, FPR `32.0`) are the pre-P1 floor. They stay in
@@ -189,14 +209,14 @@ officially invalid plan even when the solver's own variant model was better.
 
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
-| ~~P8~~ | ~~Bounded local window push — the shift/shorten half of the timed-visit residual~~ (`TPC_WINDOW_PUSH`) | — | **implemented and screened GREEN 2026-08-05: paired `n=80` / `90 s` FPR `42.5 → 43.75` on both solver-only and end-to-end; default off pending a full gate** | v2 candidate |
-| ~~P9~~ | ~~Place an absent timed-visit POI~~ (`TPC_WINDOW_INSERT`) | — | **implemented and screened GREEN 2026-08-05: solver-only FPR `42.5 → 45.0`, end-to-end `42.5 → 43.75`; stacked P8+P9 end-to-end `42.5 → 45.0`; default off pending a full gate** | v2 candidate |
-| **P10** | **Make scheduler self-scoring use the solver's exact parsed variants** | half day | fixes measured `38` false negatives / `5` false positives in scheduling decisions; score effect unknown until re-run | v2 |
+| **P10** | **Make scheduler self-scoring use the solver's exact parsed variants** — the next thing to implement | half day | fixes measured `38` false negatives / `5` false positives in scheduling decisions; score effect unknown until re-run | v2 |
+| ~~P8~~ | ~~Bounded local window push~~ (`TPC_WINDOW_PUSH`) | — | **implemented, screened GREEN 2026-08-05, default off. Not Implementation's ball any more: it is waiting on [R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)** | v2 candidate |
+| ~~P9~~ | ~~Place an absent timed-visit POI~~ (`TPC_WINDOW_INSERT`) | — | **same: implemented, screened GREEN 2026-08-05, default off, waiting on R14** | v2 candidate |
 | P2 | Per-attempt telemetry ledger | 2 h | report figures; measures everything else | v2 |
 | P3 | Re-screen commonsense-valid emission when nothing is accepted | 2 h | `≤ +0.5` | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open** | v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | v2 |
-| P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move | v2 only |
+| P6 | LLM-backed repair proposer | 1–2 days | unknown; the one untried *kind* of move — **out of reach before 2026-08-10** | not v2 |
 | ~~P1~~ | ~~`timed_visit_named_poi`: a window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05: [R8](tpc_phase2_eval.md#what-the-closed-queue-r1r13-established) GREEN, `overall +5.83`, `FPR +11.0`; on by default** | v1 |
 | ~~P0~~ | ~~Explicit, reproducible restart seed~~ | — | **landed 2026-08-05** | v1 |
 | ~~P7~~ | ~~Worker count from CPU affinity~~ | — | **landed 2026-08-05** | v1 |
@@ -205,49 +225,111 @@ officially invalid plan even when the solver's own variant model was better.
 ranking. Sections below are in priority order. Everything still open is safe to implement in
 parallel with the eval queue — none of it touches the shipping default.
 
+**If you only do one thing, do [P10](#p10--make-scheduler-self-scoring-use-the-solvers-exact-parsed-variants).**
+It is the only open item backed by a measurement rather than an expectation: on the 150-query
+packaged-`v1` replay the scheduler's own constraint opinion disagreed with the official verdict on
+`43 of 150` queries, in the direction that makes it repair plans that already pass and stop repairing
+plans that do not. Everything it decides — which pass a query enters, which candidate is kept, when
+the run stops — is downstream of that opinion, so it is the one remaining item that can raise FPR
+*without* adding a new move. The three items after it are worth under a point each, and two of them
+are worth approximately zero **by measurement** rather than by guess. P8 and P9, the previous top
+items, are done: what they need now is an evaluation slot, not code.
+
 ### P10 — make scheduler self-scoring use the solver's exact parsed variants
+
+**This is the next thing to implement. It is self-contained, needs no evaluation-machine time to
+write, and the brief below is written against the source so it can be executed top to bottom.**
 
 **Bug.** The whole-run scheduler scores a different constraint representation from the one passed
 to `TPCAgent`. `run_sweeps` precomputes one flat constraint dictionary per uid through
 `selfscore.derive_parsed_constraints`; the orchestrator independently builds the real solver
-variants with disjunction expansion and entity resolution. The 150-query packaged-v1 replay above
+variants with disjunction expansion and entity resolution. The 150-query packaged-v1 replay in
+[diagnosis §5](#5-parsing-is-not-the-solver-bottleneck-but-scheduler-self-scoring-is-miscalibrated)
 shows this is large enough to change pass selection and keep-best decisions, not merely make a
 diagnostic label noisy.
 
-**Fix the ownership boundary, not the weighted formula.** Parse once per query through the
-orchestrator's canonical `parse_to_ir` -> `ir_to_solver_variants` path and make that exact normalized
-variant list available to both solving and self-scoring. Score every candidate against every
-variant. Parsed logical acceptance is OR across variants (a candidate passes if any complete branch
-passes); ranking uses the best branch-local parsed score, with shared constraints present in every
-branch. Remove or narrow `derive_parsed_constraints` so the scheduler cannot silently recreate a
-flat, non-entity-resolved opinion. Preserve the no-oracle boundary: the shared artifact contains
-visible-query parse output only, never `hard_logic_py` or any verifier field.
+**The three divergences, at source level.** Both paths start from
+`parse_constraints.parse_query_no_oracle`, then split:
 
-This fixes the dominant false-negative mechanism. It does **not** excuse the five false positives:
-add deterministic parser coverage for the omitted required-list, ordering, timed-end and budget
-semantics, or conservatively mark an unrepresented visible requirement as unknown so it cannot
-produce a confident parsed pass. Do not use oracle fields at runtime to patch either class.
+| | solving path | self-scoring path |
+| --- | --- | --- |
+| entry | `orchestrator.solve_phase2` → `normalize.parse_to_ir` (`orchestrator.py:442`) then `normalize.ir_to_solver_variants` (`:447`) | `selfscore.derive_parsed_constraints` (`selfscore.py:237`), called once per uid in `run_split` (`agent_env/scripts/solve_phase2.py:468`) |
+| OR branches | `disjunction_stub` expands `ir.or_groups` into one variant per arm (`normalize.py:1489`), `flags.disjunction` on in the harness | none — takes `variants[0]` and throws the rest away (`selfscore.py:247`) |
+| entity resolution | `resolve_entities` canonicalizes every variant against the city POI catalog (`normalize.py:1495`), `flags.entity_resolution` on in the harness | none — raw parser literals |
+| consumer | injected into the agent as `_injected_variants` (`orchestrator.py:306-313`) | one flat dict handed to `evaluate_parsed_constraints` (`parsed_verifier.py:56`) via `score_plan` (`selfscore.py:147`), threaded through `task["parsed_constraints"]` (`sweeps.py:635`, `:336`) |
 
-**Tests and bar.** Unit-test an `A or B` query where a plan satisfying only B is accepted and kept;
-an entity-resolved variant where solving and scoring receive byte-identical constraints; and a
-non-disjunctive flag-off query whose score is unchanged. Add fixtures for the five omission shapes.
-Then replay the saved 150 plans as a diagnostic and report the four-cell official/parsed cross-tab,
-but gate behavior on a fresh paired `familiar_100_val` screen because `tpc_phase2_test` is a frozen
-tripwire, not a tuning set. Require no increase in parsed-pass/official-fail cases and no regression
-in official FPR; `self_overall_mean` proximity by itself is not a promotion metric.
+So the scheduler's opinion is *systematically* stricter than the solver's on any disjunctive query
+(it demands every arm) and *differently grounded* on any query with a named entity. That is exactly
+the shape of the measured `38` false negatives, `27` of which contain an oracle OR pattern.
 
-**If you only do one thing, do [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual).**
-P1 confirmed the family is where the points are and took `8` queries out of it; `33` remain, still
-blocked by nothing else — `12` of them needing only a forward-shift or shorten (P8), `6` only an
-insertion (P9), and `8` a cross-day relocation nobody has scoped yet. Every other item on this list
-is worth under a point, and three are worth approximately zero by measurement rather than by guess.
-**P8 carries an implementation addendum written against the source; read it before writing code** —
-it fixes the flag name, hook point and ordering, states the push as arithmetic, and retracts one
-paragraph of P8's prose that describes a mechanism the environment does not have.
+**The fix, decided — do not re-litigate the design.** Parse **once per query in the parent** through
+the canonical path, and hand that one variant list to *both* the solve and the self-score:
+
+1. **Parent.** In `run_split` (`agent_env/scripts/solve_phase2.py:460-470`) replace the
+   `selfscore.derive_parsed_constraints(visible[quid])` call with the canonical pair, using the same
+   `flags` object the workers will build (`resolve_llm_client_and_flags()`, which `init_worker` also
+   calls — `sweeps.py:279`), so the two cannot diverge by configuration:
+   `ir = normalize.parse_to_ir(visible[quid], llm_client=None, flags=flags)` then
+   `variants = normalize.ir_to_solver_variants(ir, visible[quid], env=None, flags=flags)`. Keep the
+   `try/except` that degrades to `[]` — a parse failure must not take the run down. Pass `llm_client=None`
+   deliberately: the parent must stay zero-LLM even if a backend is configured, and `flags.llm_parse`
+   is off by default.
+2. **Transport.** Rename the task key `parsed_constraints` → `variants` (`sweeps.py:384`, `:446`,
+   `:623`, `:635`, `run_sweeps`'s keyword, and the `run_split` call sites at
+   `agent_env/scripts/solve_phase2.py:495` and `:526`). Variants are plain dicts, so they stay
+   picklable across the worker boundary.
+3. **Scoring.** Give `selfscore.score_plan` a `variants: list[dict] | None` parameter and evaluate
+   `evaluate_parsed_constraints` once per variant. Acceptance is **OR across variants** — the plan is
+   logically OK if *any* variant has all checks true. Ranking uses the **best** variant, chosen by
+   `(all_true, satisfied / total)`; report that variant's `logical_satisfied` / `logical_total` /
+   `logical_micro` so `PlanScore`'s shape and `ranking_key` are unchanged. Keep `parsed_constraints=`
+   working as a one-variant alias (`variants=[parsed_constraints]`) so existing callers and tests do
+   not break, and narrow `derive_parsed_constraints` to that compatibility use with a docstring saying
+   it is not the scheduler's path any more.
+4. **Same input for solving.** Once the parent owns the variants, add an optional `variants=` to
+   `orchestrator.solve_phase2` that skips the internal parse stage when supplied, and pass the same
+   list from `solve_one` (`sweeps.py:325-333`, next to the existing `score_plan` call at `:333`).
+   This is what makes "solving and scoring receive
+   byte-identical constraints" true rather than merely likely, and it also stops re-parsing the same
+   query once per attempt. Record `variants_source: "parent" | "worker"` in telemetry so a row can
+   prove which path ran.
+5. **Optional, and say so in the PR if you skip it.** The five false *positives* are omitted parser
+   semantics (required visit ordering, required restaurant/attraction lists, a meal end-time window,
+   an inner-transport budget), not a plumbing bug. Either add deterministic coverage for them or
+   conservatively mark an unrepresented visible requirement as unknown so it cannot produce a
+   confident parsed pass. Do **not** use oracle fields at runtime to patch either class.
+
+**No-oracle boundary.** `visible[quid]` is already `hb.visible_query(...)` output, so the parent sees
+no `hard_logic*`. Do not read the full `query_data[quid]` record in the new code path, and do not add
+an oracle fallback when a parse comes back empty.
+
+**Tests** (`tests/phase2/`, mirroring the existing style):
+
+- an `A or B` query where a plan satisfying only `B` scores `logical_ok` and is kept — this is the
+  regression the whole item exists for, and it fails on `main` today;
+- a query whose variants carry a resolved entity name: assert the dict the agent receives and the
+  dict the scorer receives are `==`;
+- a non-disjunctive query: `PlanScore` is unchanged field-for-field against the pre-change value
+  (the floor);
+- an empty/failed parse still yields a score rather than raising (`ZERO_SCORE` path);
+- `run_sweeps` passes the same object to solve and score (assert on a captured task).
+
+**Bar.** A paired `familiar_100_val` screen (`scripts/phase2_quick_eval.py`, `--mode end-to-end`,
+`n ≥ 40`), plus the 150-plan replay re-run as a **diagnostic** to report the four-cell
+official/parsed cross-tab. Require: no increase in parsed-pass/official-fail cases, and official FPR
+not down. `self_overall_mean` moving closer to the official score is *not* a promotion metric on its
+own — the point is better scheduling decisions, and the score is what proves it. This change is not
+behind a flag (it is a correctness fix to a scheduler-internal opinion, not a new solver move), so
+the floor to protect is the *unchanged* `PlanScore` on non-disjunctive queries, and the screen is
+what shows the whole-run behaviour did not regress.
+
 
 ### P8 — bounded local window push: the rest of the timed-visit residual
 
-**Implemented and screened GREEN 2026-08-05; default off pending a full gate.**
+**Implemented and screened GREEN 2026-08-05; default off, waiting on
+[R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists) — the
+whole-run gate, which is an Evaluation task, not an Implementation one. Do not re-open the code
+unless R14 comes back RED.**
 `TPC_WINDOW_PUSH` runs after P1's anchor and translates the target and following grounded transport
 segments without re-routing, consumes existing slack before moving successor activity clocks,
 honours POI closing times and the `30 min` default bound, and commits only through the existing
@@ -490,7 +572,9 @@ you doubt any claim in item 2 — that is cheaper than debugging the pass.
 
 ### P9 — place an absent timed-visit POI
 
-**Implemented and screened GREEN 2026-08-05; default off pending a full gate.**
+**Implemented and screened GREEN 2026-08-05; default off, waiting on the same
+[R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists) gate as P8 —
+the two are gated as a stack, because their stacked screen showed no destructive interaction.**
 `TPC_WINDOW_INSERT` resolves named attractions/restaurants through `WorldEnv`, intersects duplicate
 windows, rejects a POI already used anywhere in the trip (all meal types share the restaurant-use
 family), and tries the existing grounded before/between/after insertion helpers with the two-regime
@@ -673,7 +757,7 @@ the solver-only arm from the *oracle clause's type test*, so both extraction pat
 the effect is not an artifact of oracle constraints. Commonsense and EPR being exactly flat while
 `all_pass` moves `+8` is the proof of mechanism: the gain is windows being satisfied, not a side
 effect on another layer. A screen triages and never promotes — this one buys
-[R8](tpc_phase2_eval.md#r8--the-gate-for-a-window-aware-move) on the eval machine.
+[R8](tpc_phase2_eval.md#what-the-closed-queue-r1r13-established) on the eval machine.
 
 **The floor is intact on real data, not only in unit tests.** The flag-off arm reproduces the
 pre-change run exactly: `FPR 32.5`, `all_pass 26`, `commonsense_pass 76`, `logical_micro 90.94`.
@@ -886,7 +970,9 @@ byte-identical opt-in unit tests and the eval tooling's flags-off arm both keep 
 | `TPC_WINDOW_ANCHOR=1` (2026-08-05) | [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)'s window-anchored day relayout. The only flag promoted on a **whole-run** row rather than a per-query gate, and the only one whose effect is unambiguous by construction: R8 (`full_runs/20260805T123142Z`) scored `overall 63.58` / `FPR 43.0` / `constraints_ok 46` against R7's `57.75` / `32.0` / `36` — and R7 is **three bit-identical 5 h repeats**, so `+5.83` cannot be seed noise. Same box, envelope, worker count and `evaluator_parity` on both sides; wall clock `4786 s → 4733 s`, `empty_plans 0/100`. Matches the paired `n=80`/`90 s` screens that queued it (predicted `FPR 32.5 → 42.5`). Set next to `TPC_PIN_TIMED_WINDOWS`, which is what puts the named POI in the plan for it to anchor — R8 measured the pair, so the pair ships. |
 
 Every recorded row now carries a `solver_flags` snapshot of exactly these four (per-query
-`telemetry.json`, `chinatravel/agent/phase2/orchestrator.py`). They are environment reads inside
+`telemetry.json`, `chinatravel/agent/phase2/orchestrator.py`) — plus, since 2026-08-06, the three
+screened-but-unpromoted keys in `CANDIDATE_SOLVER_FLAGS` (`window_push`, `window_insert`,
+`window_push_max_min`), so an R14 arm names the repairs it ran. They are environment reads inside
 `TPCAgent` rather than fields on `Flags`, so before that a row could not state which of them ran —
 and after R8 that is the only way to distinguish an archive running the promoted configuration from
 one silently running the pre-R8 one.
@@ -942,6 +1028,14 @@ passes are reachable through the `TPC_COMMONSENSE_FIRST` umbrella.
   `telemetry.json` snapshots all four (`PROMOTED_SOLVER_FLAGS`,
   `chinatravel/agent/phase2/orchestrator.py`), using the agent's own off-set so the record cannot
   disagree with the behaviour, and a drift test fails if a flag is promoted without being recorded.
+- **The screened-but-unpromoted window repairs are recorded too** (2026-08-06). `CANDIDATE_SOLVER_FLAGS`
+  (`TPC_WINDOW_PUSH`, `TPC_WINDOW_INSERT`, `TPC_WINDOW_PUSH_MAX_MIN`) joins the same snapshot, because
+  nothing sets them implicitly: [R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
+  turns them on from the environment, and without them recorded its row would be indistinguishable
+  from the promoted baseline it is measured against — exactly the failure the promoted-flag snapshot
+  was added to prevent. Promotion means *moving* a name from `CANDIDATE_SOLVER_FLAGS` into
+  `PROMOTED_SOLVER_FLAGS`; `tests/phase2/test_solver_flag_telemetry.py` fails if the two ever overlap
+  or if a recorded key goes missing.
 
 ### Landed, implemented, not promoted (all library-default-off)
 
