@@ -32,13 +32,31 @@ SPLIT = "tpc_phase2_test"
 
 
 def load_result(query_index, path):
+    """Load every query's plan; raise rather than silently scoring a partial artifact.
+
+    A missing or corrupt plan file would otherwise score as {} -- which the schema/commonsense/
+    logical evaluators will likely (but not reliably) fail -- skewing the cross-tab without any
+    signal that anything was wrong. Collect every problem uid and fail with the full list instead.
+    """
     plans = {}
+    missing = []
+    corrupt = []
     for query_id in query_index:
         result_file = os.path.join(path, "{}.json".format(query_id))
+        if not os.path.exists(result_file):
+            missing.append(query_id)
+            continue
         try:
-            plans[query_id] = load_json_file(result_file) if os.path.exists(result_file) else {}
-        except Exception:
-            plans[query_id] = {}
+            plans[query_id] = load_json_file(result_file)
+        except Exception as exc:
+            corrupt.append("{} ({})".format(query_id, exc))
+    if missing or corrupt:
+        raise RuntimeError(
+            "cannot build the cross-tab from partial artifacts: {} missing plan file(s) {}; "
+            "{} corrupt/unreadable plan file(s) {}".format(
+                len(missing), missing, len(corrupt), corrupt
+            )
+        )
     return plans
 
 
@@ -56,7 +74,7 @@ def main():
     result_data = load_result(query_index, results_dir)
 
     schema_file_path = "chinatravel/evaluation/output_schema.json"
-    schema = json.load(open(schema_file_path))
+    schema = load_json_file(schema_file_path)
     _schema_rate, _schema_agg, schema_pass_id = evaluate_schema_constraints(
         query_index, result_data, schema=schema
     )
@@ -83,7 +101,7 @@ def main():
         if not os.path.exists(tpath):
             parsed_missing.append(uid)
             continue
-        t = json.loads(open(tpath).read())
+        t = load_json_file(tpath)
         ss = t.get("self_score") or {}
         if ss.get("schema_ok") and ss.get("commonsense_ok") and ss.get("logical_ok"):
             parsed_pass.add(uid)
