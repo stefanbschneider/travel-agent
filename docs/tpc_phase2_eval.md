@@ -173,10 +173,11 @@ against a different backend. Gate only if `v1` feedback leaves room for a `v2`.
   --method phase2_e2e_r3_workers8 --label "R3 worker scaling, 8 workers, 5h"
 ```
 
-The direct test of the claim behind the whole-run rewrite: with `W` workers a pass costs
-`ceil(n/W)` query-budgets instead of `n`, so each query can afford a much larger budget. Compare
-against R1 at the same envelope. **Skip below 8 cores** — the comparison would say more about the
-box than the code. This box has 4.
+R3 was registered to test the ≥8-worker deployment directly: whether parallel passes remain healthy
+under the shared envelope and whether the extra throughput converts into score. Compare against the
+current promoted R8/R12 baseline. The completed run shows that both worker counts already reach the
+same per-query caps, so under the current scheduler this is primarily a throughput and operational
+safety check rather than a test of deeper per-query search.
 
 **Result** (row `20260805T215107Z`, `git_dirty: false`, `evaluator_parity: c89cfca`): run on a
 10-core Apple Silicon Mac with exactly 8 workers and no `TPC_*` environment variables. All 100
