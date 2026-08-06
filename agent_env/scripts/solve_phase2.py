@@ -320,7 +320,7 @@ def attempt_ledger_record(
     *,
     pass_index: int | None,
     pass_kind: str | None,
-    seed_salt: Any = None,
+    seed_salt: object = None,
     budget_sec: float | None,
     wall_sec: float | None,
     telemetry: dict,
