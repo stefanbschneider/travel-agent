@@ -352,13 +352,13 @@ PROMOTED_SOLVER_FLAGS: tuple[str, ...] = (
 )
 
 # Deterministic solver passes that are implemented and screened but **not** promoted: library- and
-# harness-default-off, so an ordinary row records them as off. They are snapshotted anyway because a
-# gate arm turns them on from the environment (roadmap P8/P9, evaluation run R14), and the ledger's
-# comparability rule requires that row to state its own configuration rather than rely on its label.
-# On promotion, move the flag from here into ``PROMOTED_SOLVER_FLAGS`` -- the two tuples must stay
-# disjoint, and the drift guard in ``tests/phase2/test_solver_flag_telemetry.py`` enforces both.
-# ``TPC_WINDOW_PUSH_MAX_MIN`` stays a candidate after P14 promoted the two passes above -- it is a
-# *bound* on TPC_WINDOW_PUSH, not a pass of its own, and R14 measured it at its code default (30 min).
+# harness-default-off, so an ordinary row records them as off. The only remaining candidate,
+# ``TPC_WINDOW_PUSH_MAX_MIN``, is snapshotted anyway because it is a *bound* on the now-promoted
+# ``TPC_WINDOW_PUSH`` pass rather than a pass of its own -- R14 measured it at its code default
+# (30 min) rather than exporting an override, and the ledger's comparability rule requires a row to
+# state its own configuration rather than rely on its label. On promotion, move a flag from here
+# into ``PROMOTED_SOLVER_FLAGS`` -- the two tuples must stay disjoint, and the drift guard in
+# ``tests/phase2/test_solver_flag_telemetry.py`` enforces both.
 CANDIDATE_SOLVER_FLAGS: tuple[str, ...] = (
     "TPC_WINDOW_PUSH_MAX_MIN",
 )
