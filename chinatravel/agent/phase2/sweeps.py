@@ -321,10 +321,14 @@ def solve_one(task: dict) -> dict:
     # The same object goes to both the solver and the scorer, so whenever the parent supplied
     # real variants (the whole-run path; task["variants"] is a non-empty list), solving and
     # scoring see byte-identical constraints -- the guarantee roadmap P10 exists for. When the
-    # parent has none (task.get("variants") is None or []), each of orch.solve_phase2 and
-    # selfscore.score_plan falls back to its own parse independently (the canonical path inside
-    # the orchestrator; the coarser derive_parsed_constraints inside score_plan) -- the same
-    # pre-P10 behaviour, not a byte-identical guarantee.
+    # parent has none (task.get("variants") is None or [], the latter meaning its own parse
+    # raised), each of orch.solve_phase2 and selfscore.score_plan falls back to its own parse
+    # independently (the canonical path inside the orchestrator; the coarser
+    # derive_parsed_constraints inside score_plan) -- the same pre-P10 behaviour, not a
+    # byte-identical guarantee. Roadmap P13: this used to be true only of score_plan --
+    # orch.solve_phase2 tested `variants is not None` and treated `[]` as "solve unconstrained",
+    # diverging from the scorer on exactly the parent-parse-failure path P10 exists to remove. It
+    # now tests truthiness too, so `[]` re-parses on both sides.
     variants = task.get("variants")
     started = time.monotonic()
     try:
