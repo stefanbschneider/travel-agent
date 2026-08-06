@@ -30,26 +30,26 @@ its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (z
 subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
 (roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
 `scripts/assemble_phase2_submission.py` packages and verifies the archive.
-**Submission status (2026-08-06): `v1` is uploaded** (2026-08-05,
-`submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagged `phase2-v1`, carrying the
-promoted post-R8 configuration). It is the team's first official submission under the 2026-08-04
-resubmission reset — every Phase 2 file uploaded before that email was disregarded and did not count
-against the limit — so **one slot (`v2`) remains**, due with the technical report on 2026-08-10,
-24:00 Beijing Time. **A measured `v2` candidate is settled:**
-[R16](docs/tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
-closed GREEN at `overall 64.15` / `FPR 44.0`, `+0.5654` over `v1`, but measured `git_sha 241c0524`
-while `main` had since moved (P12 landed unflagged and changes `TPCAgent`'s acceptance gate —
-`TPC_USE_ORACLE=0` makes `evaluate_parsed_constraints` the `_make_checker` base check), so that
-configuration was unmeasured on the tree that would actually ship.
-[R17](docs/tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
-closed that gap GREEN on 2026-08-06: `overall 64.17251838310492` (`+0.02` over R16, inside noise),
-`FPR 44.0` unchanged, `empty_plans 0/100`, no failed jobs, at `git_sha
-efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`. P12 fired on exactly `1/100` plans versus R16's tree (byte-diff
-against `results/phase2_e2e_r16_v2cand/`), replacing an implausible overnight-flight itinerary with a
-coherent one. **The archive must be built from `efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`** — R16's
-sha, `241c0524`, is superseded. Packaging/upload is a separate, outward-facing action not yet taken;
-avoid merging further production-path changes to `main` before that upload, or the shipped sha drifts
-again. The packaging path is in the [competition
+**Submission status (2026-08-06): `v1` is uploaded and its held-out score came back at `33.2473`.**
+The archive (`submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagged `phase2-v1`) was
+the team's first official submission under the 2026-08-04 resubmission reset, so **one slot (`v2`)
+remains**, due with the technical report on 2026-08-10, 24:00 Beijing Time.
+
+**`33.2473` is roughly half the `64.17` the same code scores locally on familiar-100
+([R17](docs/tpc_phase2_eval.md#the-closed-queue-r1r18), `git_sha efbfea96`), and closing that gap is
+now the work.** The largest identified cause is measured, not suspected: our constraint extraction has
+**zero** clause-level gaps on familiar-100 — the numbered-template split it was built against — and
+**12–29 %** on every differently-phrased released set, so we optimized against the one register we were
+already perfect on. Read
+[the eval doc's opening section](docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document)
+before trusting any local number, and treat a familiar-100 result as evidence about *one phrasing
+register* only. A first fix landed (bare total budgets, plain room-type wording; free-prose e2e
+`41.62 → 49.99`, familiar-100 byte-identical), and the ranked residual is
+[P15–P18](docs/tpc_phase2_roadmap.md#work-items).
+
+**Do not package or upload `v2`. Never upload automatically.** The owner submits manually, after the
+Phase 2 leaderboard publishes and only with a substantial measured improvement; agents prepare and
+measure, nothing more. The packaging path, when it is wanted, is in the [competition
 reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
 email also gave the
 organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,
@@ -116,7 +116,7 @@ Compare rows only when data source, split/fold/limit, budget, repeat count, flag
 Parser diagnostics prioritize a failure investigation; they do not by themselves promote a change.
 Gate a like-for-like end-to-end candidate and inspect parse failures, timeouts, recovery/fallback use, stage telemetry, and LLM failure telemetry.
 Familiar-100, local released data, HF data, and final held-out evaluation remain separate signals.
-Familiar-100 is split 80/20 into `tpc_phase2_familiar_100_val` (screens + development gates) and a held-out `tpc_phase2_familiar_100_test` (occasional overfitting tripwire, never a per-change signal); `make phase2-familiar-splits` regenerates them and the [eval doc](docs/tpc_phase2_eval.md#1-official-familiar-100-preferred-signal) states the boundary.
+Familiar-100 is split 80/20 into `tpc_phase2_familiar_100_val` (screens + development gates) and a held-out `tpc_phase2_familiar_100_test` (occasional overfitting tripwire, never a per-change signal); `make phase2-familiar-splits` regenerates them and the [eval doc](docs/tpc_phase2_eval.md#1-official-familiar-100) states the boundary.
 
 ## Change and branch protocol
 
