@@ -97,10 +97,35 @@ def _load_queries_for_lang(split: str, lang: str) -> tuple[list[str], dict[str, 
     return query_ids, query_data
 
 
+def _is_split_resolution_failure(exc: BaseException) -> bool:
+    """Is ``exc`` "this split is not in this language tree", as opposed to "this data is broken"?
+
+    Only the former may trigger the cross-language retry below. The distinction matters because
+    the two failures want opposite handling: a split that lives in the other tree should be found
+    there, while a corrupt query file or an unreadable directory must surface as itself rather
+    than be papered over by silently solving a *different* dataset.
+
+    - ``FileNotFoundError`` -- the split's ``default_splits/<split>.txt`` or one of its query files
+      is not in this tree. (Deliberately not ``OSError``: ``PermissionError`` and friends are
+      environment faults, not resolution answers.)
+    - ``ValueError`` -- upstream's ``_resolve_local_query_paths`` raises it for "unable to resolve
+      local split" and "does not contain every configured UID", and ``load_query_local`` for a UID
+      mismatch. ``json.JSONDecodeError`` subclasses ``ValueError`` and is excluded by name: a query
+      file that exists but is malformed is broken data, not a wrong tree.
+    - ``RuntimeError`` -- ``_load_queries_for_lang``'s own "no queries found" guard.
+
+    Anything else (an HF ``datasets`` error on the ``zh`` path, an ``OSError``, an import failure)
+    propagates unchanged.
+    """
+    if isinstance(exc, json.JSONDecodeError):
+        return False
+    return isinstance(exc, (FileNotFoundError, ValueError, RuntimeError))
+
+
 def load_queries_with_lang(
     split: str, lang: str
 ) -> tuple[str, list[str], dict[str, Any]]:
-    """Load ``split``, falling back to the other language if ``lang`` does not resolve it.
+    """Load ``split``, falling back to the other language if ``lang`` does not *resolve* it.
 
     Returns the language actually used, so the caller can build ``WorldEnv`` and the evaluators
     to match the queries it got rather than the language it asked for.
@@ -112,6 +137,10 @@ def load_queries_with_lang(
     a zero for the whole run. So try the other language before giving up, and report both
     failures if neither resolves.
 
+    The retry is limited to resolution failures (``_is_split_resolution_failure``). A broken query
+    file or an unreadable tree raises as itself: falling back there would mask a real data fault
+    *and* silently solve a different dataset than the one that was asked for.
+
     Costs nothing when the split resolves normally -- the fallback is only reached on the path
     that was previously an immediate crash.
     """
@@ -120,6 +149,8 @@ def load_queries_with_lang(
         query_ids, query_data = _load_queries_for_lang(split, lang)
         return lang, query_ids, query_data
     except Exception as primary:
+        if not _is_split_resolution_failure(primary):
+            raise
         other = "zh" if lang == "en" else "en"
         try:
             query_ids, query_data = _load_queries_for_lang(split, other)
@@ -924,6 +955,37 @@ def safe_path_component(value: str) -> str:
     return sanitized.strip("_") or "unnamed"
 
 
+def validate_method(method: str) -> str:
+    """Reject a ``--method`` that would write outside ``results/``. Returns it unchanged.
+
+    Deliberately a *guard*, not a sanitizer. The organizers' contract is that each plan lands at
+    ``results/<method>/<uid>.json`` for the ``<method>`` they passed, so rewriting the value would
+    put plans where they will not be read -- the failure this validation exists to prevent, not a
+    fix for it. Nesting is therefore allowed: ``--method a/b`` writes ``results/a/b/<uid>.json``,
+    which *is* ``results/<method>/<uid>.json`` for that method.
+
+    What cannot be honoured is a method that escapes ``results/`` altogether (``..`` components, an
+    absolute path). There the required layout is unsatisfiable by construction, so fail loudly at
+    startup -- before a 5-hour run writes a complete set of plans somewhere nobody will look.
+    """
+    results_root = (PROJECT_ROOT / "results").resolve()
+    candidate = Path(method)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        raise ValueError(
+            f"--method {method!r} must name a location inside results/; plans have to land at "
+            "results/<method>/<uid>.json."
+        )
+    try:
+        target = (results_root / candidate).resolve()
+        target.relative_to(results_root)
+    except (ValueError, OSError) as exc:
+        raise ValueError(
+            f"--method {method!r} resolves outside results/, so plans could not be written to "
+            f"results/<method>/<uid>.json ({exc})."
+        ) from None
+    return method
+
+
 def default_method(model: str | None, split: str, harness: str) -> str:
     if harness == TPC_HARNESS:
         # No model to name (the deterministic path has none); reuse solve_phase2.py's method
@@ -1273,11 +1335,13 @@ def main() -> None:
     limit = choose(args.limit, run_config.get("limit"), None)
 
     if harness == TPC_HARNESS:
-        method = str(
-            choose_nonempty(
-                args.method,
-                run_config.get("method"),
-                default_method(None, split, harness),
+        method = validate_method(
+            str(
+                choose_nonempty(
+                    args.method,
+                    run_config.get("method"),
+                    default_method(None, split, harness),
+                )
             )
         )
         work_dir = str(
@@ -1318,11 +1382,13 @@ def main() -> None:
         harness_model_arg = choose(args.model, args.codex_model, None)
         selected_config = codex_config
     model = choose(harness_model_arg, selected_config.get("model"), None)
-    method = str(
-        choose_nonempty(
-            args.method,
-            run_config.get("method"),
-            default_method(model, split, harness),
+    method = validate_method(
+        str(
+            choose_nonempty(
+                args.method,
+                run_config.get("method"),
+                default_method(model, split, harness),
+            )
         )
     )
     timeout = int(choose(args.timeout, selected_config.get("timeout"), 900))

@@ -76,6 +76,11 @@ so plans land at `results/<method>/<uid>.json` — nothing is sanitized, prefixe
 split. Any name works; the run behaves identically for all of them, because the solver has exactly
 one path.
 
+The single exception is a method that would write *outside* `results/` (a leading `/`, or a `..`
+component). That layout is unsatisfiable by definition, so the run refuses to start rather than
+sanitizing the value — a rewritten method would put a whole split's plans somewhere they are never
+read, which is the failure the check exists to prevent, not a fix for it.
+
 Omitting `--method` falls back to `phase2_e2e_<split>` (which is also what `make phase2-run` and
 `agent_env/scripts/solve_phase2.py` use, so the two entry points resume each other's work). The
 shipped `agent_env/config.toml` deliberately pins **no** `method` and **no** `split`, so a

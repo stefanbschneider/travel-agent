@@ -257,6 +257,84 @@ class TestSplitLanguageFallback:
         assert "missing under en" in str(excinfo.value)
         assert "missing under zh" in str(excinfo.value)
 
+    @pytest.mark.parametrize(
+        "exc",
+        [
+            json.JSONDecodeError("Expecting value", "{bad", 0),  # broken query file
+            PermissionError("unreadable data directory"),
+            ImportError("datasets is not installed"),
+        ],
+        ids=["malformed-json", "unreadable-tree", "missing-dependency"],
+    )
+    def test_a_broken_tree_raises_instead_of_silently_using_the_other_language(
+        self, monkeypatch, exc
+    ):
+        """The retry answers "which tree is this split in", not "is this tree healthy".
+
+        Falling back here would mask a real data fault *and* solve a different dataset than the
+        one asked for -- the run would look successful and be wrong.
+        """
+        seen: list[str] = []
+
+        def fake_load(split, lang):
+            seen.append(lang)
+            if lang == "en":
+                raise exc
+            return ["u1"], {"u1": {"uid": "u1"}}
+
+        monkeypatch.setattr(hb, "_load_queries_for_lang", fake_load)
+
+        with pytest.raises(type(exc)):
+            hb.load_queries_with_lang("s", "en")
+        assert seen == ["en"], "a broken tree must not trigger the other-language retry"
+
+
+class TestMethodStaysInsideResults:
+    """``--method`` is used verbatim, so the only thing to check is that it can be honoured."""
+
+    @pytest.mark.parametrize(
+        "method",
+        [
+            "tpc2026",
+            "Team_A.v2-final",
+            "phase2_e2e_easy",
+            # Nesting is fine: results/a/b/<uid>.json *is* results/<method>/<uid>.json here.
+            "a/b",
+        ],
+    )
+    def test_a_method_that_can_be_honoured_is_returned_unchanged(self, method):
+        assert hb.validate_method(method) == method
+
+    @pytest.mark.parametrize(
+        "method", ["../escape", "a/../../escape", "..", "/tmp/absolute"]
+    )
+    def test_a_method_that_escapes_results_is_rejected_not_rewritten(self, method):
+        """Rejected rather than sanitized, and rejected at startup.
+
+        Sanitizing would silently relocate the plans, which is the failure this guards against
+        rather than a fix for it; the required layout is simply unsatisfiable for these values,
+        so a 5-hour run must not begin and then write a full split somewhere nobody reads.
+        """
+        with pytest.raises(ValueError, match="results/"):
+            hb.validate_method(method)
+
+    def test_the_cli_rejects_it_before_any_solving_starts(
+        self, monkeypatch, no_local_config, no_subprocess
+    ):
+        monkeypatch.setattr(
+            hb,
+            "run_tpc_split",
+            lambda **kw: pytest.fail("an unusable --method must not reach the solver"),
+        )
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["solve_script_with_harness.py", "--method", "../escape", "--split", "s"],
+        )
+
+        with pytest.raises(ValueError, match="results/"):
+            hb.main()
+
 
 def test_run_tpc_split_defaults_to_the_confirmed_five_hour_envelope(monkeypatch):
     captured: dict = {}
