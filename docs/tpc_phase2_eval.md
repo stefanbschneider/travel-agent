@@ -122,31 +122,32 @@ run before the deadline.
 (`0c80ab6b`/`241c0524`) before this row ran, so the command below needed no exported environment —
 the arm *is* the shipped default.
 
-**What it answers.** No committed row measures the configuration a `v2` would ship. Reading the two
-new rows' `git_sha` fields (table in [Run this next](#run-this-next)) shows why:
+**What it answered.** Before this row, no committed row measured the configuration a `v2` would
+ship. Reading R14/R15's `git_sha` fields (table in [Run this next](#run-this-next)) shows why:
 
 - **R14 ran on `b54c58ef`, one commit before P10 merged.** Good news for R14 itself — its `+0.5471`
   is a clean two-way P8+P9 delta, exactly as registered, with no P10 confound.
 - **But that means `+0.5471` was measured with P10 absent**, while `main` has had P10 default-on
   since `21ab422`. P10 changes which candidate `run_sweeps_split` keeps; P8/P9 change what the
   candidates are. They interact by construction, so the sum is not guaranteed to be the parts.
-- **R15 is the only post-P10 whole-run row**, and it is 20 held-out records on which nothing fired
-  (19 of 20 plans byte-identical to R13). It bounds P10's effect at "not large on that fold" and
-  nothing more.
+- **R15 is the only post-P10 whole-run row that predates this one**, and it is 20 held-out records
+  on which nothing fired (19 of 20 plans byte-identical to R13). It bounded P10's effect at "not
+  large on that fold" and nothing more.
 
-So the shipping configuration has never been run at `n=100`. That is a gap worth `~1.3 h` when the
-deadline is 2026-08-10 and the alternative is uploading an unmeasured archive.
+So before R16, the shipping configuration had never been run at `n=100` — a gap worth `~1.3 h`
+against the 2026-08-10 deadline, closed by the row below.
 
-**Command** — after the promotion lands, export nothing:
+**Command actually run** (the promotion had already landed, so nothing needed exporting — the arm
+*is* the shipped default; retained here for reproducibility):
 
 ```bash
 .venv/bin/python scripts/phase2_full_run.py \
   --method phase2_e2e_r16_v2cand --label "R16 v2 candidate: post-P10 main, P8/P9 promoted, 5h"
 ```
 
-If the promotion has *not* landed yet, set the two flags explicitly instead
-(`TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 …`) — the measurement is identical, but then the row does
-not also prove the promotion took effect, which is half its value.
+(If run before the promotion lands, set the two flags explicitly instead
+— `TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 …` — the measurement is identical, but then the row does
+not also prove the promotion took effect, which is half its value.)
 
 **Verify the arm before reading the score**, from per-query telemetry under
 `agent_env/runs/phase2_e2e_r16_v2cand/`:

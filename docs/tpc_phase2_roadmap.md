@@ -28,7 +28,9 @@ baseline whose three repeats were bit-for-bit identical, and it is **on by defau
 [P8](#p8--bounded-local-window-push-the-rest-of-the-timed-visit-residual) and
 [P9](#p9--place-an-absent-timed-visit-poi), **passed their whole-run gate GREEN on 2026-08-06**
 ([R14](tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green):
-`overall +0.5471`, `FPR +1.0`) and are now waiting on the promotion that GREEN authorizes.
+`overall +0.5471`, `FPR +1.0`) and are now promoted to harness defaults, confirmed at full scale by
+[R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild-closed-2026-08-06-green)
+(see the next paragraph).
 
 **Where the two workstreams stood as of 2026-08-06 (evening) — both critical-path items are now
 done.** [P14](#p14--promote-p8p9-to-harness-defaults-r14s-green-action) landed
