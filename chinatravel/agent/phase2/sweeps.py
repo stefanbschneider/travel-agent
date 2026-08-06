@@ -318,8 +318,13 @@ def solve_one(task: dict) -> dict:
     uid = task["uid"]
     visible_query = task["query"]
     budget_sec = float(task["budget_sec"])
-    # The same list object goes to the solver and the scorer -- that's what makes "solving and
-    # scoring receive byte-identical constraints" true rather than merely likely (roadmap P10).
+    # The same object goes to both the solver and the scorer, so whenever the parent supplied
+    # real variants (the whole-run path; task["variants"] is a non-empty list), solving and
+    # scoring see byte-identical constraints -- the guarantee roadmap P10 exists for. When the
+    # parent has none (task.get("variants") is None or []), each of orch.solve_phase2 and
+    # selfscore.score_plan falls back to its own parse independently (the canonical path inside
+    # the orchestrator; the coarser derive_parsed_constraints inside score_plan) -- the same
+    # pre-P10 behaviour, not a byte-identical guarantee.
     variants = task.get("variants")
     started = time.monotonic()
     try:

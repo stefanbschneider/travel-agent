@@ -205,6 +205,12 @@ def _score_plan(
     )
     commonsense_ok = quid in commonsense_pass_ids
 
+    # Only dict variants are meaningful to evaluate_parsed_constraints -- a malformed non-dict
+    # entry makes it return [] (0 checks), which a naive ratio (0/0 => 1.0) would treat as a
+    # vacuously all-true variant and could wrongly flip logical_ok to True. Filter those out
+    # before scoring instead, falling back to the coarse parse if nothing usable remains (the
+    # same fallback as an empty/omitted variants list).
+    variants = [v for v in (variants or []) if isinstance(v, dict)]
     if not variants:
         fallback = derive_parsed_constraints(visible_query)
         variants = [fallback] if fallback else [{}]

@@ -174,6 +174,33 @@ class TestEmptyOrFailedParseNeverRaises:
         score = selfscore.score_plan(plan, query, variants=["not a dict", None], uid="malformed")
         assert score.error is None
 
+    def test_malformed_variants_never_vacuously_pass(self, query, monkeypatch):
+        """Regression for a real bug flagged in review: evaluate_parsed_constraints returns []
+        for a non-dict variant (0 checks), and a naive ratio (0/0 => 1.0) would treat that as an
+        all-true variant and wrongly flip logical_ok to True. Non-dict entries must be filtered
+        out before scoring, not evaluated as if they were an unconstrained (trivially-passing)
+        variant."""
+
+        def fake_derive(visible_query):
+            return {"required_attractions": ["Nonexistent Place"]}
+
+        monkeypatch.setattr(selfscore, "derive_parsed_constraints", fake_derive)
+        plan = _plan_with_attraction("Summer Palace")  # does not satisfy the fallback constraint
+        score = selfscore.score_plan(plan, query, variants=["not a dict", None], uid="malformed-2")
+        assert score.logical_ok is False
+
+    def test_a_real_failing_variant_is_still_evaluated_alongside_malformed_ones(self, query):
+        """A malformed entry must not short-circuit scoring of the real variants in the same
+        list -- the failing real variant's checks must still be reported."""
+        variant = {"required_attractions": ["Nonexistent Place"]}
+        plan = _plan_with_attraction("Summer Palace")
+        score = selfscore.score_plan(
+            plan, query, variants=["not a dict", variant, None], uid="malformed-3"
+        )
+        assert score.logical_ok is False
+        assert score.logical_total == 1
+        assert score.logical_satisfied == 0
+
 
 class TestSolveOneUsesTheSameVariantsForSolveAndScore:
     """run_sweeps (via solve_one) must pass the identical object to solve_phase2 and score_plan."""
