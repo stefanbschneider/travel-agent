@@ -62,6 +62,7 @@ _LIST_KEYS = {
     "poi_distance_hotel",
     "excluded_inner_transport",
     "position_presence",
+    "required_order",
 }
 
 _BUDGET_FIELDS = (
@@ -105,6 +106,7 @@ _POI_NAME_LIST_KEYS = (
     "required_hotels",
     "excluded_hotels",
     "position_presence",
+    "required_order",
 )
 _POI_NAME_DICT_FIELDS = (
     ("stay_duration", "location"),

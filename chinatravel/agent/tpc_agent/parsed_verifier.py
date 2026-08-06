@@ -90,8 +90,11 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
         except Exception:
             results.append(False)
 
-    def acts_at(location):
-        return [a for a in acts if _match_text(activity_position(a), location)]
+    def acts_at(location, types=None):
+        candidates = [a for a in acts if _match_text(activity_position(a), location)]
+        if types:
+            candidates = [a for a in candidates if activity_type(a) in types]
+        return candidates
 
     # --- Budgets -----------------------------------------------------------
     budgets = constraints.get("budgets")
@@ -211,6 +214,15 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
         latest = _time_to_min(w.get("latest"))
         end_after = _time_to_min(w.get("end_after"))
         end_before = _time_to_min(w.get("end_before"))
+        # A "Dine at X between A and B" / "Stay at X between A and B" window is gated by activity
+        # type in the oracle (activity_type(activity) in [...] and activity_position(...)==X), not
+        # by location alone -- the same POI name routinely carries both a meal window and an
+        # accommodation window (a hotel with an on-site restaurant). Filtering acts_at() by the
+        # parsed activity_types here (roadmap P12) keeps an accommodation-stay activity from
+        # satisfying a meal-only window purely because it happens to overlap in time, and vice
+        # versa; a window without a type-bearing verb keeps ``types=None`` (any activity, the prior
+        # behaviour).
+        window_types = w.get("activity_types")
 
         def _fits(a):
             st = _time_to_min(activity_start_time(a))
@@ -225,7 +237,30 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
                 return False
             return True
 
-        add(any(_fits(a) for a in acts_at(w["location"])))
+        add(any(_fits(a) for a in acts_at(w["location"], types=window_types)))
+
+    # --- Required visit ordering --------------------------------------------
+    # "Visit X first, then Y": X's earliest chronological occurrence (day order, then in-day
+    # activity order -- allactivities()'s own iteration order) must precede Y's. Both POIs must
+    # actually appear; a missing one fails the check rather than defaulting to pass, which is
+    # stricter than -- and therefore never more lenient than -- the oracle's own index-comparison
+    # DSL (roadmap P12; the oracle initializes both indices to 0, so a plan that omits the first
+    # POI but visits the second at any later index can flip the oracle's own check True by
+    # accident. Mirroring that quirk would let a false positive back in, exactly what this item
+    # exists to remove).
+    order = _as_list(constraints.get("required_order"))
+    if len(order) >= 2:
+        def _first_index(name):
+            for i, a in enumerate(acts):
+                if _match_text(activity_position(a), name):
+                    return i
+            return None
+
+        indices = [_first_index(name) for name in order]
+        ok = all(i is not None for i in indices) and all(
+            indices[i] < indices[i + 1] for i in range(len(indices) - 1)
+        )
+        add(ok)
 
     # --- Intercity mode ----------------------------------------------------
     mode = constraints.get("intercity_mode")

@@ -39,9 +39,10 @@ Both queues changed when R14/R15 landed:
 | **Evaluation** | [R16](tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) — measure the `v2` candidate | R14 ran on `b54c58ef`, one commit *before* P10, so its `+0.5471` is a clean P8/P9 delta but was measured with P10 absent. `main` has P10 default-on. **The configuration a `v2` would ship has never been run at `n=100`.** `~1.3 h`. |
 
 After those two, Implementation continues with [P11](#p11--a-whole-run-mode-for-the-pre-gate-screen)
-→ [P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics) →
-[P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) as capacity allows. Those
-three improve the *next* cycle; only P14 and R16 change what `v2` contains.
+→ [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) as capacity allows.
+([P12](#p12--close-p10s-false-positive-half-omitted-parser-semantics) landed 2026-08-06 out of
+order — it had no flag and didn't need P11's whole-run mode to screen safely.) These improve the
+*next* cycle; only P14 and R16 change what `v2` contains.
 
 `v1` was **uploaded 2026-08-05**; the organizers aim to return its score within 3 days, and **one
 slot (`v2`) remains**, due with the technical report on **2026-08-10, 24:00 Beijing Time** (18:00
@@ -239,7 +240,7 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 | --- | --- | --- | --- | --- |
 | **P14** | **Promote P8/P9 to harness defaults** — R14's GREEN action, and the critical path to `v2` | <1 h | no new behaviour; makes the measured-GREEN configuration the shipped one | **v2** |
 | **P11** | **A whole-run mode for the pre-gate screen** | half day | no score effect; unblocks screening every scheduler-level change, which today is unscreenable | tooling |
-| **P12** | **Close P10's false-positive half** (five omitted parser semantics) | half day | removes `5/150` confidently-wrong parsed passes; score effect small and one-directional | post-v2 |
+| ~~P12~~ | ~~Close P10's false-positive half~~ (five omitted parser semantics) | — | **landed 2026-08-06, not behind a flag. Two of the five were genuine checker gaps and are closed (`required_order`, activity-type-gated `activity_time_windows`); the other three were already correctly represented. Screened with a hand-rolled paired comparison (P11 still doesn't exist) — `results/phase2_baselines/screens/20260806_e2e_n10_b60_p12_omitted_semantics/`** | post-v2 |
 | P13 | An empty parent parse must mean the same thing on both sides | <1 h | rare (needs a *raised* parse); fixes a query being solved unconstrained while scored constrained. Do it alongside P11/P12 | post-v2 |
 | P2 | Per-attempt telemetry ledger | 2 h | report figures; measures everything else | v2 |
 | P3 | Re-screen commonsense-valid emission when nothing is accepted | 2 h | `≤ +0.5` | v2 |
@@ -272,11 +273,13 @@ way and had to hand-roll a paired whole-run comparison to get any pre-merge evid
 P11 exists, every scheduler change either ships unscreened or burns a 5 h evaluation slot to find out
 it was flat, and we have **one submission slot and until 2026-08-10**.
 
-After P11, the ranking is: **P12** (the half of P10 that was explicitly deferred, and the only known
-source of *confidently wrong* scheduler passes), then **P2** (a hard requirement for the technical
-report, and the instrument P5 needs), then P3/P5/P4 — the last three are worth under a point each,
-and two of them are worth approximately zero **by measurement** rather than by guess. P8 and P9 are
-done: what they need is an evaluation slot, not code.
+~~After P11, the ranking is: **P12**~~ — P12 landed 2026-08-06 without waiting on P11 (a correctness
+fix with no flag, screened with the same hand-rolled workaround the P10 author used; see P12's own
+"Bar" note for why that was sufficient here). The remaining ranking is **P2** (a hard requirement
+for the technical report, and the instrument P5 needs), then P3/P5/P4 — the last three are worth
+under a point each, and two of them are worth approximately zero **by measurement** rather than by
+guess. P8 and P9 are done: what they need is an evaluation slot, not code. P11 itself is still open
+and still blocks screening any *scheduler-level* (whole-run-feedback) change, which P12 was not.
 
 ### P14 — promote P8/P9 to harness defaults (R14's GREEN action)
 
@@ -438,7 +441,25 @@ Commit both under `results/phase2_baselines/screens/` as the PR's evidence.
 
 ### P12 — close P10's false-positive half (omitted parser semantics)
 
-**Why this and not something scorier.** [P10](#infrastructure-landed)
+**Closed 2026-08-06, not behind a flag.** Investigating the five categories below against real
+released-data phrasing and `hard_logic_py` (Phase 1, offline, permitted — no held-out uid or field
+was read) found only two were genuine checker gaps: **required visit ordering** had no
+representation at all, and the **meal end-time window** family turned out to be an activity-type
+confusion inside the *existing* `activity_time_windows` check (a "Dine at HOTEL between A and B"
+window could be satisfied by an accommodation-typed activity at the same POI purely by time
+overlap, because the checker never read the `activity_types` the parser already recorded per
+window). Both are fixed — `chinatravel/agent/tpc_agent/parsed_verifier.py` (the checker) and
+`parse_constraints.py` (`parse_required_order`, new). The other three (required restaurant lists,
+required attraction lists, the inner-transport budget) were already correctly represented on every
+case tried; see the resolution note below the fix list for why the item does not close those with
+new code. Tests: `tests/phase2/test_parsed_verifier_p12_omitted_semantics.py`. Screen: hand-rolled
+paired before/after (`git stash`), since [P11](#p11--a-whole-run-mode-for-the-pre-gate-screen)
+still doesn't exist — `results/phase2_baselines/screens/20260806_e2e_n10_b60_p12_omitted_semantics/`,
+byte-identical official scores across arms (structurally guaranteed in per-query mode — see that
+screen's README for why that's a safety result, not a null result) and a full
+`tpc_phase2_familiar_100_val` parser-vs-oracle F1 unchanged at `0.9588`.
+
+**Why this and not something scorier (historical).** [P10](#infrastructure-landed)
 fixed the false *negatives* — the scheduler being stricter than the solver. It explicitly deferred the
 false *positives*, and its PR says so. Those are the dangerous direction: `5 of 150` queries where
 the scheduler is **confident a plan satisfies its constraints when the official evaluator says it
@@ -464,6 +485,23 @@ text that the parsed-constraint checker does not represent, so it is silently tr
    the query carries a requirement it could not express, and have `selfscore` refuse to report
    `logical_ok = True` for that query. A scheduler that says "I do not know" keeps working on the
    query; one that says "passed" abandons it. Conservative in the right direction, and cheap.
+
+**Resolution (2026-08-06): only two of the five needed fix 1, and none needed fix 2.** Neither
+`required_restaurants`/`required_attractions` (list membership, checked per-name) nor
+`budgets.inner_transport` were actually missing from `evaluate_parsed_constraints` — each was
+already unit-tested here to correctly score `False` on a violating plan built for exactly that
+family. The diagnosis's `5/150` count is real, but for these three the checker was never the gap;
+whatever produced those specific false positives on the held-out `tpc_phase2_test` run is a parser
+*recall* miss on phrasing this checkout's released data (Phase 1's 1000 queries, familiar-100's
+100) does not contain an example of, which is exactly the kind of thing the item's own "where the
+evidence lives" note below says needs the held-out artifacts, not a guess. Marking these three
+"unknown" (fix 2) was considered and rejected: a signal-phrase heuristic imprecise enough to fire
+on queries that already parse correctly would manufacture the *false negative* P10 exists to
+remove, in the family P12 exists to fix — the wrong direction, for an unverified gain. The two that
+*did* need fix 1 confirm the item's own hint that both are close to existing families: ordering is
+literally the oracle's own index-comparison DSL, byte-matched against three real Phase-1 queries;
+the meal-window fix reuses an `activity_types` field the parser already computed and the checker
+already had in hand.
 
 **Hard boundary.** Do **not** read `hard_logic*` at runtime to detect either class. The oracle is how
 you *measure* the gap offline, never how the shipped path closes it — see
@@ -491,7 +529,21 @@ above, which are recorded and do not need the artifacts.
 exists (this is the first real customer for it). Require: official FPR not down, and the count of
 parsed-pass/official-fail cases down. `constraints_ok` is *expected to fall* — that is the fix
 working, not a regression, and it is exactly why official FPR and not `self_*` is the promotion
-metric. Do this after P11; screening it any other way means a 5 h slot.
+metric. **P11 still doesn't exist**, so this shipped instead with a hand-rolled paired
+before/after (`git stash`; P10's own PR used the same workaround for the same reason) — `n=10`,
+`tpc_phase2_familiar_100_val`, `budget_sec=60`, per-query mode. That mode makes official-FPR-not-down
+a *structural* guarantee rather than a measured one for this specific fix: `evaluate_parsed_constraints`
+is consulted only by the final self-score in the per-query path, never by the CP-SAT solve/accept
+loop, so the produced plan is provably identical between arms regardless of the checker change —
+confirmed (0 diffs, `schema_pass`/`commonsense_pass`/`logical_pass`/`overall_true` per uid). The
+`constraints_ok`-falls signature the bar predicts did not show up on this `n=10` sample (self-score
+was also byte-identical); the roadmap's own `5/150`-across-all-five-categories rate makes that
+unsurprising at this sample size, and the fix's mechanism is instead demonstrated by the unit tests
+built from the real oracle DSL and real query phrasing that motivated it. Full detail and honest
+caveats: `results/phase2_baselines/screens/20260806_e2e_n10_b60_p12_omitted_semantics/README.md`.
+A whole-run measurement (where the scheduler's self-score does feed back into repair/restart
+decisions, unlike this screen) remains open once P11 lands, but is not expected to move official
+FPR given the structural argument above plus the small, one-directional expected effect size.
 
 
 ### P13 — an empty parent parse must mean the same thing on both sides
