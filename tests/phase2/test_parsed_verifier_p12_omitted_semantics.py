@@ -106,6 +106,13 @@ def test_parse_required_order_matches_real_released_phrasing():
     ) == ["Squirrel Paradise", "Chef's Wife in Charge (East Lake Branch)"]
 
 
+def test_parse_required_order_chain_split_is_case_insensitive():
+    # Copilot review (PR #78): the >2-stop chain split on "then" was case-sensitive, so a
+    # capitalized "Then" (e.g. starting a new sentence/clause) fell through as part of the
+    # previous POI's name instead of splitting.
+    assert pc.parse_required_order("visit A first, then B, Then C.") == ["A", "B", "C"]
+
+
 # --- 2. Meal end-time window (activity-type-gated POI window) --------------------------------
 
 

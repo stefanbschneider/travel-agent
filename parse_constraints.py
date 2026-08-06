@@ -1192,7 +1192,7 @@ def parse_required_order(text):
         rest = m.group("rest").strip().rstrip(".")
         # A chain longer than two stops repeats "then" ("X, then Y, then Z"); split the remainder
         # on further separators so those are captured too, though the released data only shows two.
-        parts = re.split(r",?\s*(?:and\s+)?then\s+(?:to\s+)?", rest)
+        parts = re.split(r",?\s*(?:and\s+)?then\s+(?:to\s+)?", rest, flags=re.I)
         names = [first] + [p.strip() for p in parts if p.strip()]
         seen = set()
         ordered = []
