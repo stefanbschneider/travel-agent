@@ -969,13 +969,13 @@ byte-identical opt-in unit tests and the eval tooling's flags-off arm both keep 
 | `TPC_COMMONSENSE_FIRST=1` | commonsense-first finalization: relaxes the repair commit rule for *unaccepted* plans and prefers a schema+commonsense-valid candidate (`best_cs`) at finalization. Paired `120 s` e2e screen: `overall_true 51.34 → 60.98`, C-LPR `67.35 → 89.95`, commonsense pass `30/40 → 40/40`, FPR `32.5 → 35.0`, **`logical_micro` flat** — the proof of mechanism: the gain is the commonsense gate releasing logical credit the solver had already earned. Probe cost is triple-bounded (`_fast_commonsense_prefilter`, `TPC_CS_CHECK_BUDGET=60`, `TPC_CS_CHECK_TIME_FRAC=0.08`), because one official `evaluate_commonsense_constraints` call costs ~`319 ms`. |
 | `TPC_WINDOW_ANCHOR=1` (2026-08-05) | [P1](#p1--the-timed_visit_named_poi-residual-give-the-search-a-window-aware-move)'s window-anchored day relayout. The only flag promoted on a **whole-run** row rather than a per-query gate, and the only one whose effect is unambiguous by construction: R8 (`full_runs/20260805T123142Z`) scored `overall 63.58` / `FPR 43.0` / `constraints_ok 46` against R7's `57.75` / `32.0` / `36` — and R7 is **three bit-identical 5 h repeats**, so `+5.83` cannot be seed noise. Same box, envelope, worker count and `evaluator_parity` on both sides; wall clock `4786 s → 4733 s`, `empty_plans 0/100`. Matches the paired `n=80`/`90 s` screens that queued it (predicted `FPR 32.5 → 42.5`). Set next to `TPC_PIN_TIMED_WINDOWS`, which is what puts the named POI in the plan for it to anchor — R8 measured the pair, so the pair ships. |
 
-Every recorded row now carries a `solver_flags` snapshot of exactly these four (per-query
-`telemetry.json`, `chinatravel/agent/phase2/orchestrator.py`) — plus, since 2026-08-06, the three
-screened-but-unpromoted keys in `CANDIDATE_SOLVER_FLAGS` (`window_push`, `window_insert`,
-`window_push_max_min`), so an R14 arm names the repairs it ran. They are environment reads inside
-`TPCAgent` rather than fields on `Flags`, so before that a row could not state which of them ran —
-and after R8 that is the only way to distinguish an archive running the promoted configuration from
-one silently running the pre-R8 one.
+Every recorded row's per-query `telemetry.json` names all four of these under `solver_flags`
+(`PROMOTED_SOLVER_FLAGS`, `chinatravel/agent/phase2/orchestrator.py`), alongside the three
+screened-but-unpromoted keys added 2026-08-06 (`CANDIDATE_SOLVER_FLAGS`: `window_push`,
+`window_insert`, `window_push_max_min`), so an R14 arm names the repairs it ran too. They are
+environment reads inside `TPCAgent` rather than fields on `Flags`, so before that a row could not
+state which of them ran — and after R8 that is the only way to distinguish an archive running the
+promoted configuration from one silently running the pre-R8 one.
 
 The commonsense-first work also fixed the reason two repair passes had gated flat:
 `TPC_REPAIR_TRANSPORT_GAPS` and `TPC_REPAIR_INTERCITY` ended with `if not self._accepted(...):
