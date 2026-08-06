@@ -31,7 +31,12 @@ promotion path and the explicit-environment path are confirmed to agree, so R8/R
 going forward. **R13 (2026-08-05) closed the held-out tripwire: `constraints_ok` moved `10/20 →
 13/20`** against R5's pre-P1 number on the same `familiar_100_test` split (`FPR 40.0 → 55.0`,
 `overall 62.59 → 70.54`) — inside the `13–15/20` "the move generalizes" band the doc set out in
-advance, so the window-aware gain is not an artifact of fitting `val`'s residual.
+advance, so the window-aware gain is not an artifact of fitting `val`'s residual. **R3 (2026-08-05)
+closed the ≥8-core deployment check on a 10-core Mac with 8 workers**: `overall 64.08`, `FPR 44.0`,
+`constraints_ok 47/100`, `empty_plans 0/100`, and `1112 s` wall time. Against R8/R12's 3-worker
+4-core Linux baseline this is `+0.49` overall and one additional passing query, but both runs hit
+the same `120/300 s` per-query caps and the hosts differ, so the defensible conclusion is that the
+8-worker path is healthy and non-regressing, not that worker count alone caused the flip.
 
 **Every row from here on must show `solver_flags.window_anchor: true` in its per-query telemetry**
 unless it is deliberately the flags-off arm. That snapshot landed with the promotion precisely so a
@@ -42,15 +47,13 @@ its label says.
 | --- | --- | --- | --- |
 | **R9** | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | **R11** | LLM-backed repair, v2 only | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) | not before the v1 upload |
-| **R3** | does cross-query parallelism convert into score? | a ≥8-core machine | ~5 h |
 
 **R9 and R11 did not run this pass.** Both are blocked on unimplemented work items (R9 needs
 [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) +
 [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger); R11 needs
 [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off) and is
 explicitly gated to not run before the `v1` upload) that belong to the Implementation workstream,
-not Evaluation — see the [parallel workstreams](../CLAUDE.md#parallel-workstreams) split. R3 stays
-blocked on an ≥8-core machine, unrelated to this pass.
+not Evaluation — see the [parallel workstreams](../CLAUDE.md#parallel-workstreams) split.
 
 ### What `v1` is expected to score — an expectation, not a measurement
 
@@ -63,7 +66,7 @@ The archive ships R8's configuration, so the honest point estimate is **R8's num
 | Solver nondeterminism | **`0`** — R7's three 5 h repeats are bit-for-bit identical | none |
 | Query sampling (100 fresh queries, same distribution) | FPR is binomial: at `p = 0.43`, `n = 100`, `SE = 4.95` FPR points. Empirically `1` FPR point is worth `0.53` overall on this system (`+11.0 FPR → +5.83` from R7 to R8, above the `0.40` weight because C-LPR and the preference terms move with FPR), so **`≈ ±2.6` overall at `1σ`** | symmetric |
 | P1 was designed from the **`val` residual** | **resolved by [R13](#r13--the-held-out-tripwire-on-the-new-default-closed-2026-08-05)**: `constraints_ok 10/20 → 13/20` on the untouched `familiar_100_test` split — inside the pre-registered `13–15/20` "generalizes" band, not the `10/20` "fit val" band. R8's 100 queries include the 80 `val` records, so its `+11.0` FPR is still partly in-sample, but the held-out subset moved in the same direction | **mildly optimistic, not invalidated** |
-| Evaluation host | unknown core count; the split costs `≤ ~14200` worker-seconds, so even one worker fits the 5 h envelope. [R3](#r3--worker-scaling-still-blocked) never measured whether extra workers *convert* to score | neutral to slightly positive |
+| Evaluation host | unknown core count; the split costs `≤ ~14200` worker-seconds, so even one worker fits the 5 h envelope. [R3](#r3--worker-scaling-closed-2026-08-05) confirmed the 8-worker path is healthy (`64.08`, no empty plans), but because both measured worker counts hit the same per-query caps it did not establish a worker-only score gain | neutral |
 
 So: **low-to-mid 60s, centre `~63.6`, roughly `58–68` as a `±2σ` band**. R13 closed the residual
 val-design risk without erasing it: the held-out subset improved (`10/20 → 13/20`), landing at the
@@ -163,16 +166,35 @@ Off by default and stays off for `v1`. The confirmed endpoint (`Qwen3.6-27B` via
 `--max-running-requests 8`) exists only on the organizers' host, so any local number is a proxy
 against a different backend. Gate only if `v1` feedback leaves room for a `v2`.
 
-### R3 — worker scaling: still blocked
+### R3 — worker scaling *(closed 2026-08-05)*
 
 ```bash
-TPC_P2_WORKERS=1 .venv/bin/python scripts/phase2_full_run.py --workers 1 --label "1 worker, 5h"
+.venv/bin/python scripts/phase2_full_run.py --workers 8 \
+  --method phase2_e2e_r3_workers8 --label "R3 worker scaling, 8 workers, 5h"
 ```
 
 The direct test of the claim behind the whole-run rewrite: with `W` workers a pass costs
 `ceil(n/W)` query-budgets instead of `n`, so each query can afford a much larger budget. Compare
 against R1 at the same envelope. **Skip below 8 cores** — the comparison would say more about the
 box than the code. This box has 4.
+
+**Result** (row `20260805T215107Z`, `git_dirty: false`, `evaluator_parity: c89cfca`): run on a
+10-core Apple Silicon Mac with exactly 8 workers and no `TPC_*` environment variables. All 100
+telemetry snapshots reported the promoted defaults (`pin_timed_windows`, `window_anchor`,
+`commonsense_first`, `solve_converge_patience`); P8/P9 remained default-off. Official score:
+`overall 64.0773462893086`, MicEPR `99.67`, MacEPR `98.0`, C-LPR `89.90`, `FPR 44.0`, DAV `25.02`,
+ATT `34.63`, DDR `25.06`; `constraints_ok 47/100`; `empty_plans 0/100`. The run completed in
+`1112 s` (`18.5 min`, `6.18%` of the envelope) with triage→repair→polish at `120/300/300 s`,
+`100/53/47` queries, zero failed jobs, and `100/0/13` improvements.
+
+Against the promoted R8/R12 baseline (`63.58458530360117`, `FPR 43.0`, `constraints_ok 46/100`,
+`4769 s` on 3 workers / 4-core Linux), the 8-worker row is `+0.4928` overall and one passing query
+higher while taking `4.29×` less cross-host wall time. **Reading:** the ≥8-worker scheduler is
+operationally safe and does not trade score for throughput. It does *not* prove that worker count
+caused the one-query gain: the host changed, and both configurations already reached the same
+per-query caps, so extra workers bought completion speed rather than deeper per-query search. R3 is
+closed; a worker-only causal estimate would require paired worker counts on the same host, which is
+not needed for the submission decision because the requested 8-worker deployment passed directly.
 
 ### What not to spend a slot on
 
@@ -293,14 +315,15 @@ presence. Full detail: [competition reference](reference/competition.md#evaluato
 
 ## What the closed queue (R1–R13) established
 
-Run 2026-08-04/05 on a 4-core box (3 workers), `evaluator_parity: c89cfca`, rows under
-`results/phase2_baselines/full_runs/`. **Nothing on this list needs re-running.**
+Run 2026-08-04/05 primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
+`evaluator_parity: c89cfca`, rows under `results/phase2_baselines/full_runs/`. **Nothing on this
+list needs re-running.**
 
 | Run | Row | Result |
 | --- | --- | --- |
 | R1 reference, 5 h | `20260804T201638Z` | `overall 57.99`; MicEPR `99.48`, MacEPR `97.00`, C-LPR `87.83`, **FPR `33.00`**, DAV `18.15`, ATT `26.25`, DDR `19.39`; `empty_plans 0/100`, `constraints_ok 35/100`; **used `26%` of the envelope** (`4723 s` of `18000 s`) |
 | R2 envelope sensitivity | `20260804T213636Z` (1 h), `20260804T221103Z` (3 h) | `57.35 / 57.86 / 57.99` at 1/3/5 h — **flat** |
-| R3 worker scaling | — | not run: 4-core box, below the 8-core floor |
+| **R3 worker scaling, 5 h** | `20260805T215107Z` | 8 workers on a 10-core Mac: `overall 64.08`, FPR `44.0`, `constraints_ok 47/100`, `empty_plans 0/100`; `1112 s` (`6.18%` of envelope), zero failed jobs. Versus R8/R12: `+0.49` overall, `+1` FPR, `+1` passing query, and `4.29×` lower cross-host wall time. Same per-query caps on different hosts mean **healthy/non-regressing 8-worker deployment**, not a clean worker-only causal score gain |
 | R4 pass shape | `20260804T231910Z` control, `20260805T001808Z` A, `20260805T011733Z` B, `20260805T021805Z` C, `20260805T032037Z` control repeat | arms A/B were accidental no-ops (their caps never bound); arm C (`TPC_P2_FAST_TRIAGE=0`) `58.40` vs `57.81` |
 | R5 held-out tripwire | `20260805T042106Z` | `overall 62.59` on the 20-record test split, `constraints_ok 10/20` |
 | R6 packaged archive | no row (checks the zip, not a split) | `fabiundstefan_v1.zip`, `1676` entries, `4.0 MB`, from commit `b44bb73c096b`; unpacked and run with a stripped `PATH`: `valid_output=True` |
