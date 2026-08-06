@@ -289,7 +289,7 @@ whole-run screen in the P10 PR showed one false→true flip and zero true→fals
 | | Item | Effort | Expected | Ships in |
 | --- | --- | --- | --- | --- |
 | ~~P2~~ | ~~Per-attempt telemetry ledger~~ | — | **landed 2026-08-06**: `attempts.jsonl` per uid, additive to `telemetry.json`; aggregated into the committed row by `phase2_full_run.py`. No score effect, as expected — enables the report's distributions and timings, and the instrument P5/R9 need | v2 (report) |
-| P13 | An empty parent parse must mean the same thing on both sides | <1 h | rare (needs a *raised* parse); fixes a query being solved unconstrained while scored constrained. **Verified `0/100` trigger rate by R16**, so it is a measured no-op on familiar-100. **Implemented on branch `claude/p13-empty-parent-parse-consistency`, PR open, held per the sequencing note** — do not merge to `main` until `v2` is packaged from the sha R17 reports | post-v2 |
+| ~~P13~~ | ~~An empty parent parse must mean the same thing on both sides~~ | — | **Verified `0/100` trigger rate by R16**, so a measured no-op on familiar-100 at merge time. **Merged to `main` 2026-08-06 (`de3c8fcb`) — this text originally said "held until `v2` is packaged"; it was merged before that, so `main`'s tip is now past R17's measured sha `efbfea96` too. `v2` must still be built from `efbfea96`, not `main`'s current tip** | post-v2 |
 | P3 | ~~Re-screen commonsense-valid emission when nothing is accepted~~ | 2 h | **closed 2026-08-06: bar cleared (MacEPR +10.0, C-LPR +9.59, FPR +2.5), no code change needed — see [P3](#p3--emit-commonsense-valid-plans-when-nothing-is-accepted)** | v2 |
 | P5 | Spend the idle envelope on fresh seeds | half day | **`~0` or `+1.7..+4.2` — genuinely open**; needs P2 first to be readable | post-v2 |
 | P4 | Derive `max_query_sec` from the envelope | 1 h | ~0 by the same evidence | post-v2 |
@@ -320,12 +320,14 @@ open-TODO list). P2 is what makes the report's distributions and timings plottab
 at all, and it is the instrument P5/R9 need afterwards. Two hours, no score risk, and it unblocks the
 deliverable that currently has no owner.
 
-**Then [P13](#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides)**, which is under an
-hour and now has a measured blast radius: R16 confirmed `variants_count == 0` on `0/100` queries, so it
-is a no-op on familiar-100 and cannot regress the submission. **Implemented 2026-08-06** on a branch,
-per the [sequencing note](#where-we-are) — held there and not merged to `main` until `v2` is packaged,
-not because it is risky, but because every merge to `main` between R17 and the archive build reopens
-the drift this cycle just spent a row closing.
+**P13 is done** (`#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides`): a measured
+no-op on familiar-100 (R16 confirmed `variants_count == 0` on `0/100` queries), implemented
+2026-08-06 and **merged to `main` the same day (`de3c8fcb`)** — despite that section's own text
+originally saying it would stay held on a branch until `v2` was packaged, which did not happen.
+Net effect: `main`'s tip is now past R17's measured sha (`efbfea96`) by one more unflagged
+production-path change, the same drift shape R16 and R17 each closed once already. **`v2` must still
+be built from `efbfea96`, not `main`'s current tip** — see the note in
+[the evaluation roadmap](tpc_phase2_eval.md#run-this-next).
 
 **After that: P3, then P5/P4.** All three are worth under a point each, and two of them are worth
 approximately zero **by measurement** rather than by guess. P5 additionally depends on P2. P8, P9, P11,
@@ -512,10 +514,12 @@ before/after (`git stash`; P10's own PR used the same workaround for the same re
 
 ### P13 — an empty parent parse must mean the same thing on both sides
 
-**Implemented 2026-08-06 on branch `claude/p13-empty-parent-parse-consistency`, PR open — held per
-the [sequencing note](#where-we-are): do not merge to `main` before `v2` is packaged from the sha
-[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-open)
-reports.** Ships exactly the fix this section specifies (resolution (a) below), nothing more:
+**Implemented and merged to `main` 2026-08-06 (`de3c8fcb`).** This section originally said it would
+stay held on branch `claude/p13-empty-parent-parse-consistency` per the [sequencing
+note](#where-we-are) until `v2` was packaged from the sha
+[R17](tpc_phase2_eval.md#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
+reported — it merged before that happened instead. `v2` must still be built from R17's `efbfea96`,
+not from `main`'s current tip. Ships exactly the fix this section specifies (resolution (a) below), nothing more:
 `orchestrator.solve_phase2` now tests `if variants:` rather than `if variants is not None:`, so a
 parent-side parse failure (`variants=[]`) re-parses in the worker instead of solving unconstrained.
 `agent_env/scripts/solve_phase2.py`'s parent parse also now records which uids (if any) fell back,

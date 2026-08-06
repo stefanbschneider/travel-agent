@@ -25,7 +25,22 @@ disk), replacing a nonsensical overnight itinerary with a different, coherent on
 aggregate metric outside noise. **`v2` should now be built from `efbfea96bea19610f9d725ebec2fd6f5d6b5cceb`**,
 not from R16's `241c0524` — see [R17's own section](#r17--does-the-tree-we-would-actually-ship-still-score-what-r16-measured-closed-2026-08-06-green)
 for the full reading. Packaging/upload remains a separate, outward-facing step this row does not
-perform. Every evaluation slot before R17 existed to answer one question:
+perform.
+
+**Found while pushing this row: `main` has drifted again, past R17's sha too.**
+[P13](tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) merged
+to `main` (`de3c8fcb`) *after* R17 measured `efbfea96` — its own roadmap-doc text says "PR open, held
+per the sequencing note — do not merge to `main` until `v2` is packaged," but it was merged anyway,
+so `main`'s tip now carries an unflagged production-path change (`agent_env/scripts/solve_phase2.py`,
+`chinatravel/agent/phase2/orchestrator.py`, `chinatravel/agent/phase2/sweeps.py`) that no committed
+row measures at `n=100`. This is the same drift pattern R16 and R17 each closed one PR earlier,
+recurring a third time. **It does not change R17's own reading — `efbfea96` is still the correct sha
+to build `v2` from** — but it means `main`'s current tip is *not* that sha, and a future row (or the
+archive build itself) must not silently substitute one for the other. R16 confirmed P13's trigger
+fires on `0/100` familiar-100 queries, so the expected blast radius is the same "small but not zero"
+shape as P12's, not yet confirmed on the post-P13 tree specifically.
+
+Every evaluation slot before R17 existed to answer one question:
 **is there a configuration worth spending the second slot on?** [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
 was that measurement, and it came back **GREEN** on 2026-08-06 (`overall 64.13`, `+0.5471` over the
 R8/R12 baseline; `FPR 44.0`, `+1.0`; `constraints_ok` unchanged at `46/100` — see the row's own
