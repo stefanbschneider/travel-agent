@@ -3,7 +3,11 @@
 # Same shape as the generalization probe's §4 runs: n=30, --total-budget-sec 1800, --workers 3,
 # lang en, zero LLM calls. Sequential, never overlapping, so neither arm steals the other's CPU.
 set -u
-ROOT="/Users/stefanshschneider/Projects/private/china-travel-agent"
+# Derive the repository root from this script's own location, so the script runs on any machine
+# and carries no developer-specific path. This file lives at
+# results/phase2_baselines/screens/<screen>/run_paired_e2e.sh, i.e. four levels below the root.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
 cd "$ROOT" || exit 1
 OUT="results/phase2_baselines/screens/20260806_parser_phrasing_fix/e2e"
 PY=".venv/bin/python"

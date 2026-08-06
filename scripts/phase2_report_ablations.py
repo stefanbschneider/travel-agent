@@ -143,6 +143,20 @@ DEFAULT_PRICE_OUT_PER_MTOK = 3.20
 
 TELEMETRY_ROOT = PROJECT_ROOT / "results" / "phase2_baselines" / "screens" / "report_ablations"
 
+
+def _repo_relative(path: Path | str) -> str:
+    """Render *path* relative to the repository root when it lives inside it.
+
+    Committed screen artefacts are read on other machines and in review, so they must not carry
+    the developer's absolute filesystem layout. Paths outside the repository are returned
+    unchanged, since there is no meaningful relative form for them.
+    """
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return str(resolved)
+
 #: Upstream's own "the request failed" sentinel (see ``llms.GPT4o._get_response``). Returning it
 #: instead of raising is what lets an agent loop absorb one bad call and keep going.
 LLM_ERROR_SENTINEL = '{"error": "Request failed, please try again."}'
@@ -1383,8 +1397,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             "fold": args.fold,
             "folds": args.folds,
             "method": method,
-            "results_dir": str(results_dir),
-            "telemetry_dir": str(telemetry_dir),
+            # Repo-relative, so a committed screen artefact is portable and does not leak the
+            # developer's filesystem layout.
+            "results_dir": _repo_relative(results_dir),
+            "telemetry_dir": _repo_relative(telemetry_dir),
             "max_steps": args.max_steps,
             "max_calls": args.max_calls,
             "call_timeout_sec": args.call_timeout_sec,
