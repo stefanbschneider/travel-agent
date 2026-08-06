@@ -230,6 +230,118 @@ _LINE_SCOPED_BUDGET_PATTERNS = (
 )
 
 
+# --- Bare ("un-scoped") total-budget phrasing -----------------------------
+#
+# Added 2026-08-06 after the generalization probe
+# (results/phase2_baselines/screens/20260806_generalization_probe/README.md §6) measured that the
+# total-budget family is missed on 91.7-100 % of the released differently-phrased sets: the old
+# total-budget route required either the familiar-100 template line ("Keep the total activity and
+# in-city transportation cost within N") or the literal word "total". Ordinary prose says
+# "with a budget of 6000 RMB" / "Our budget is 4000" / "a travel budget of 4000".
+#
+# familiar-100 contains the word "budget" in 0/100 queries and "within <N> <currency>" in 0/100, so
+# none of these alternatives can fire on it -- the guard is by construction, not by tuning.
+_BARE_BUDGET_VALUE = r"(?P<value>\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)"
+_BARE_BUDGET_APPROX = (
+    r"(?:(?:about|around|approximately|roughly|up\s+to|at\s+most|max(?:imum)?(?:\s+of)?|"
+    r"no\s+more\s+than|no\s+higher\s+than|not\s+exceeding|does\s+not\s+exceed|less\s+than|"
+    r"limited\s+to|capped\s+at|under|below|within)\s+)?"
+)
+_BARE_BUDGET_CURRENCY_PRE = r"(?:(?:RMB|CNY|¥|￥)\s*)?"
+_BARE_BUDGET_CURRENCY_POST = r"(?:\s*(?:RMB|CNY|yuan|元|¥|￥))"
+
+# Scope words: if one of these sits immediately before "budget" (or immediately after the amount as
+# "... for accommodation"), the amount is a *scoped* budget already handled above, never the total.
+_BARE_BUDGET_SCOPE = (
+    r"(?:accommodation|hotel|lodging|room|dining|meal|meals|food|restaurant|catering|"
+    r"sightseeing|attraction|attractions|ticket|tickets|entrance|entry|shopping|souvenir|"
+    r"transport|transportation|transit|taxi|cab|metro|subway|bus|flight|airfare|train|"
+    r"intercity|inter-city|cross-city|intra-city|inner-city|city|local|"
+    r"daily|nightly|per\s*day|per\s*night|per\s*person|each\s+day|each\s+person)"
+)
+_BARE_BUDGET_SCOPE_BEFORE = re.compile(
+    _BARE_BUDGET_SCOPE + r"['\u2019]?s?[\s\-]*"
+    # A scope word may be separated from "budget" by a generic filler ("intra-city *travel*
+    # budget", "hotel *cost* budget"); "travel"/"trip" on their own are NOT scope words, since
+    # "a travel budget of 4000" is a total.
+    r"(?:(?:travel|trip|transport(?:ation)?|transit|cost|costs|expense|expenses|spending|fee|fees)"
+    r"[\s\-]*)?$",
+    re.I,
+)
+_BARE_BUDGET_SCOPE_AFTER = re.compile(
+    r"^(?:\s*(?:RMB|CNY|yuan|元|¥|￥))?\s*(?:"
+    # "... 500 for accommodation" -- a scoped family, already parsed above.
+    r"(?:for|on|towards?)\s+(?:the\s+|our\s+|my\s+)?" + _BARE_BUDGET_SCOPE
+    # "... 10,000 RMB per person" / "each" -- a per-head figure, not the plan total, and the
+    # oracle's total_cost is plan-wide. Dropping it is safer than multiplying by party size.
+    + r"|(?:per|/|a|an|each)\s*(?:person|people|head|adult|traveler|traveller|pax|of\s+us"
+    # "... 70 RMB per meal" / "500 a day" / "200 per night" -- a per-unit *rate*. The oracle scores
+    # a plan-wide total_cost, so reading a per-meal rate as the trip total imposes a budget an
+    # order of magnitude too small and makes the query unsatisfiable -- strictly worse than not
+    # extracting it (measured: HF medium e20241028161351544529 "spend no more than 70 RMB per
+    # meal" was being read as total=70).
+    + r"|meal|meals|dish|day|days|night|nights|room|rooms|hotel|attraction|attractions)"
+    + r")",
+    re.I,
+)
+
+_BARE_TOTAL_BUDGET_PATTERNS = (
+    # "with a budget of 6000 RMB", "a travel budget of 4000", "budget of about 8,000 yuan"
+    re.compile(r"\bbudget\s+(?:of|at)\s+" + _BARE_BUDGET_APPROX + _BARE_BUDGET_CURRENCY_PRE
+               + _BARE_BUDGET_VALUE, re.I),
+    # "Our budget is 4000", "the budget: 4000", "budget = 4000", "budget is under 3000"
+    re.compile(r"\bbudget\s*(?:is|was|will\s+be|would\s+be|:|=)\s*" + _BARE_BUDGET_APPROX
+               + _BARE_BUDGET_CURRENCY_PRE + _BARE_BUDGET_VALUE, re.I),
+    # "budget within 5000", "budget under 5000", "budget no more than 5000" -- the qualifier is
+    # required here, so a bare "budget 5000 attractions" cannot match.
+    re.compile(r"\bbudget\s+" + _BARE_BUDGET_APPROX[:-1] + _BARE_BUDGET_CURRENCY_PRE
+               + _BARE_BUDGET_VALUE, re.I),
+    # "budget 1000" -- amount immediately after the word, no connector at all (observed in the
+    # human-written set: "Budget travel in Beijing, budget 1000, travel by train").
+    re.compile(r"\bbudget\s+" + _BARE_BUDGET_CURRENCY_PRE + _BARE_BUDGET_VALUE, re.I),
+)
+
+# "keep it within 3000 RMB" / "spend no more than 2000 yuan" -- currency word REQUIRED, because a
+# bare "within N" is the familiar-100 scoped-cost template and must not be re-read as a total.
+_BARE_TOTAL_SPEND_PATTERN = re.compile(
+    r"\b(?:within|under|below|no\s+more\s+than|not\s+exceeding|at\s+most|up\s+to|spend(?:ing)?"
+    r"(?:\s+(?:no\s+more\s+than|less\s+than|up\s+to|at\s+most|under|within))?)\s+"
+    + _BARE_BUDGET_CURRENCY_PRE + _BARE_BUDGET_VALUE + _BARE_BUDGET_CURRENCY_POST,
+    re.I,
+)
+
+
+def _bare_total_budget(text):
+    """Total budget from un-scoped prose, or None.
+
+    A candidate is rejected when a scope word (accommodation / dining / sightseeing / transport /
+    per-day ...) sits immediately before the word "budget" or immediately after the amount, since
+    that amount belongs to one of the scoped families parsed above.
+    """
+    best = None
+    patterns = _BARE_TOTAL_BUDGET_PATTERNS + (_BARE_TOTAL_SPEND_PATTERN,)
+    for pattern in patterns:
+        for match in pattern.finditer(text):
+            head = text[max(0, match.start() - 32):match.start()]
+            if _BARE_BUDGET_SCOPE_BEFORE.search(head):
+                continue
+            if _BARE_BUDGET_SCOPE_AFTER.match(text[match.end():match.end() + 48]):
+                continue
+            try:
+                value = float(match.group("value").replace(",", ""))
+            except (TypeError, ValueError):
+                continue
+            # A total budget below ~50 is not a trip budget (it is a count, a rating, a distance);
+            # the released data's smallest total is in the hundreds.
+            if value < 50:
+                continue
+            if best is None or match.start() < best[0]:
+                best = (match.start(), value)
+        if best is not None:
+            return best[1]
+    return None
+
+
 def parse_budget(text):
     """Extract budget constraints from text."""
     budgets = {}
@@ -296,10 +408,16 @@ def parse_budget(text):
     if m:
         budgets["inner_transport"] = float(m.group(1))
 
-    # Total travel budget
-    m = re.search(r"total\s*(?:travel\s*|trip\s*)?budget[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
+    # Total travel budget. The value alternation must try the comma-grouped form first: the old
+    # `(\d+)` read "total budget of 10,000" as 10.0 (2026-08-06 audit, hf_human).
+    m = re.search(r"total\s*(?:travel\s*|trip\s*)?budget[^0-9]*?" + _BARE_BUDGET_VALUE, text, re.I)
     if m:
-        budgets["total"] = float(m.group(1))
+        budgets["total"] = float(m.group("value").replace(",", ""))
+    elif "total" not in budgets:
+        # Un-scoped prose phrasing ("with a budget of 6000 RMB"). See _bare_total_budget.
+        bare = _bare_total_budget(text)
+        if bare is not None:
+            budgets["total"] = bare
 
     return budgets
 
@@ -704,27 +822,64 @@ def parse_free_attractions(text):
     return bool(re.search(r"(?:only|just)\s+(?:want\s+to\s+)?(?:visit\s+)?free\s+attractions", text, re.I))
 
 
+# --- Room type -------------------------------------------------------------
+#
+# Semantics, read off the verifier: room_type is the *bed count* per room
+# (chinatravel/symbol_verification/concept_func.py room_type() -> the hotel's ``numbed``). So the
+# oracle's code 1 is a one-bed room and code 2 is a two-bed room. In hotel English a "big bed" /
+# "large bed" / "king bed" / "double bed" room is *one* bed (numbed 1) and a "twin" room is *two*
+# (numbed 2). Verified against every released English query carrying a room_type clause
+# (2026-08-06 audit): big bed -> 1, large bed -> 1, double bed -> 1, king bed -> 1, single(-bed) -> 1,
+# twin / twin-bed -> 2, with no counterexample. The pre-fix code returned "double" for "double bed",
+# which parsed_verifier._room_type_to_numbed maps to 2 -- the opposite of the oracle.
+#
+# familiar-100 only ever says "single-bed rooms" / "twin-bed rooms" (audited: 4x single-bed -> code 1,
+# 5x twin-bed -> code 2, no other wording), both of which these patterns read exactly as before.
+_ROOM_TYPE_BED_WORD_TWIN = r"twin"
+_ROOM_TYPE_BED_WORD_SINGLE = (
+    r"(?:single|big|large|king(?:[\s-]*size[d]?)?|queen(?:[\s-]*size[d]?)?|double)"
+)
+_ROOM_TYPE_PATTERNS = (
+    # two beds / twin, in any of the observed shapes
+    ("twin", re.compile(r"\btwin[\s-]*(?:bed(?:ded|s)?[\s-]*)?rooms?\b", re.I)),
+    ("twin", re.compile(r"\btwin[\s-]*beds?\b", re.I)),
+    ("twin", re.compile(r"\b(?:two|2)\s+(?:separate\s+|individual\s+|single\s+)?beds?\b", re.I)),
+    ("twin", re.compile(r"\brooms?\s+with\s+(?:two|2)\s+(?:separate\s+|single\s+)?beds?\b", re.I)),
+    ("twin", re.compile(r"\btwin\s+rooms?\b", re.I)),
+    # "a double room is sufficient" -- a *double room* (双人间) is a two-person room = 2 beds, the
+    # opposite of a "double BED room" (大床房) = 1 bed, which the single patterns below own. The one
+    # released instance confirms it: HF medium e20241028161347428726, 2 travelers, oracle
+    # room_type == 2. Deliberately NOT extended to "family room": its two released instances
+    # disagree (easy m20241028164807696509 -> 2, medium e20241028161318465643 -> 1), so it carries
+    # no reliable bed count.
+    ("twin", re.compile(r"\bdouble\s+rooms?\b", re.I)),
+    # one bed, whatever its marketing name
+    ("single", re.compile(r"\b" + _ROOM_TYPE_BED_WORD_SINGLE
+                          + r"[\s-]*bed(?:ded)?[\s-]*rooms?\b", re.I)),
+    ("single", re.compile(r"\b" + _ROOM_TYPE_BED_WORD_SINGLE + r"[\s-]*beds?\b", re.I)),
+    ("single", re.compile(r"\brooms?\s+with\s+(?:a\s+|one\s+|1\s+)?"
+                          + _ROOM_TYPE_BED_WORD_SINGLE + r"[\s-]*bed\b", re.I)),
+    ("single", re.compile(r"\bsingle\s+rooms?\b", re.I)),
+)
+
+
 def parse_room_type(text):
-    """Extract preferred room type."""
-    # Triggers: "stay in a ... room", "prefer a ... room", "want ... room", and the familiar-100
-    # "(Each accommodation stay must) use ...-bed rooms" phrasing.
-    m = re.search(
-        r"(?:stay\s+in\s+(?:a\s+)?|prefer\s+(?:a\s+)?|want\s+|(?:must\s+)?use\s+)"
-        r"(single-bed|double-bed|twin-bed|single\s+bed|double\s+bed|twin)\s*rooms?",
-        text, re.I,
-    )
-    if m:
-        rt = m.group(1).lower()
-        if "single" in rt:
-            return "single"
-        elif "double" in rt:
-            return "double"
-        elif "twin" in rt:
-            return "twin"
-    # "stay in twin rooms"
-    if re.search(r"stay\s+in\s+(?:a\s+)?twin\s+rooms?", text, re.I):
-        return "twin"
-    return None
+    """Extract preferred room type ("single" = one bed per room, "twin" = two).
+
+    Un-anchored: the pre-fix version required a trigger verb ("stay in a ... room", "prefer a ...",
+    "use ...-bed rooms"), which the released prose sets do not use ("... and stay in two twin
+    rooms.", "book a single-bed room", "a room with a big bed"). The earliest match in the text
+    wins, so "two single beds" reads as twin rather than single.
+    """
+    best = None
+    for label, pattern in _ROOM_TYPE_PATTERNS:
+        match = pattern.search(text)
+        if match is None:
+            continue
+        key = (match.start(), -(match.end() - match.start()))
+        if best is None or key < best[0]:
+            best = (key, label)
+    return best[1] if best else None
 
 
 def parse_hotel_type(text):
