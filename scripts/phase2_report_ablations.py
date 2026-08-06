@@ -291,6 +291,7 @@ def make_budgeted_llm(
     retries: int,
     max_tokens: int | None,
     extra_body: dict | None,
+    thinking_enabled: bool = False,
     client_factory: Callable[..., Any] | None = None,
 ) -> Any:
     """Build an ``AbstractLLM`` that drives any OpenAI-compatible endpoint under hard bounds.
@@ -325,6 +326,10 @@ def make_budgeted_llm(
             self.max_tokens = max_tokens
             self.extra_body = extra_body
             self.telemetry = LLMTelemetry()
+            # Thinking mode changes the response contract (see _get_response): the answer arrives
+            # in ``content`` with the chain-of-thought in ``reasoning_content``, and a stop sequence
+            # on "\n" truncates the reasoning and empties ``content``.
+            self._thinking_enabled = bool(thinking_enabled)
             factory = client_factory or _default_openai_factory
             self._client = factory(base_url=base_url, api_key=api_key, timeout=float(timeout_sec))
 
@@ -345,7 +350,16 @@ def make_budgeted_llm(
                 kwargs["max_tokens"] = int(self.max_tokens)
             if self.extra_body:
                 kwargs["extra_body"] = self.extra_body
-            if one_line:
+            # ``one_line`` is upstream's way of forcing a single action line, implemented as
+            # stop=["\n"]. That is *incompatible with thinking mode*: a Qwen3 reasoning response
+            # puts the chain-of-thought in ``reasoning_content`` and the answer in ``content``, but
+            # the stop sequence fires on the first newline of the reasoning, so ``content`` comes
+            # back EMPTY and every action is unparseable (verified live against DeepInfra
+            # 2026-08-06: thinking off + stop -> 'attractions_keys("Beijing")'; thinking on + stop
+            # -> ''; thinking on, no stop -> the same correct action after 644 reasoning tokens).
+            # Suppressing the stop sequence when thinking is on is therefore the difference between
+            # measuring the model and measuring our own harness bug.
+            if one_line and not self._thinking_enabled:
                 kwargs["stop"] = ["\n"]
             elif json_mode:
                 kwargs["response_format"] = {"type": "json_object"}
@@ -366,6 +380,11 @@ def make_budgeted_llm(
                         continue
                     return LLM_ERROR_SENTINEL
                 self.telemetry.latencies_sec.append(time.perf_counter() - started)
+                if one_line and self._thinking_enabled:
+                    # The stop sequence was suppressed above, so honour ``one_line`` client-side:
+                    # take the first non-empty line, which is what stop=["\n"] would have produced
+                    # for a non-reasoning model. Upstream's action parser reads exactly one line.
+                    text = _first_nonempty_line(text)
                 return _repair_if_json(text, json_mode)
             return LLM_ERROR_SENTINEL
 
@@ -384,6 +403,21 @@ def make_budgeted_llm(
             return (completion.choices[0].message.content or "").strip()
 
     return BudgetedChatLLM()
+
+
+def _first_nonempty_line(text: str) -> str:
+    """First non-blank line of ``text``, stripped of markdown fences.
+
+    Only used when ``one_line`` was requested but the ``stop=["\\n"]`` sequence had to be suppressed
+    for thinking mode. A reasoning model's ``content`` typically starts with blank lines, and
+    occasionally wraps the action in a fence.
+    """
+    for line in (text or "").splitlines():
+        candidate = line.strip()
+        if not candidate or candidate.startswith("```"):
+            continue
+        return candidate
+    return (text or "").strip()
 
 
 def _default_openai_factory(*, base_url: str | None, api_key: str | None, timeout: float) -> Any:
@@ -998,6 +1032,7 @@ def build_llm(config: ArmConfig) -> Any:
         retries=config.retries,
         max_tokens=config.max_tokens,
         extra_body=extra_body,
+        thinking_enabled=bool(config.enable_thinking),
     )
 
 
