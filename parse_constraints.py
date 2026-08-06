@@ -1170,6 +1170,43 @@ def _hhmm_to_min(t):
     return int(h) * 60 + int(m)
 
 
+# Required visit ordering ("visit X first, then Y", "first go to X, then Y") -- roadmap P12.
+# The oracle encodes this as an index comparison over allactivities(plan) (see _parse_single_logic
+# below for the matching hard_logic_py shape); the NL always uses "first"/"then" for it in the
+# released data, never "before"/"after" (those words are already claimed by the "leave/depart X
+# before/after T" time-window family, so a generic "X before Y" pattern here would collide with
+# that family instead of adding a new one).
+_ORDER_PATTERNS = (
+    re.compile(r"visit\s+(?P<first>.+?)\s+first,?\s*then\s+(?:to\s+)?(?P<rest>.+?)(?:\.|;|$)", re.I),
+    re.compile(r"first\s+(?:go\s+to|visit)\s+(?P<first>.+?),\s*then\s+(?:to\s+)?(?P<rest>.+?)(?:\.|;|$)", re.I),
+)
+
+
+def parse_required_order(text):
+    """Extract a required visit order as a list of >=2 POI names, earliest first, or None."""
+    for pattern in _ORDER_PATTERNS:
+        m = pattern.search(text)
+        if not m:
+            continue
+        first = m.group("first").strip().rstrip(".")
+        rest = m.group("rest").strip().rstrip(".")
+        # A chain longer than two stops repeats "then" ("X, then Y, then Z"); split the remainder
+        # on further separators so those are captured too, though the released data only shows two.
+        parts = re.split(r",?\s*(?:and\s+)?then\s+(?:to\s+)?", rest, flags=re.I)
+        names = [first] + [p.strip() for p in parts if p.strip()]
+        seen = set()
+        ordered = []
+        for name in names:
+            name = re.sub(r"^to\s+", "", name, flags=re.I).strip()
+            key = name.lower()
+            if name and key not in seen:
+                seen.add(key)
+                ordered.append(name)
+        if len(ordered) >= 2:
+            return ordered
+    return None
+
+
 def parse_activity_time_windows(text):
     """Extract per-location time windows in the oracle shape.
 
@@ -1378,6 +1415,10 @@ def parse_single_constraint_text(text):
     if time_windows:
         result["activity_time_windows"] = time_windows
 
+    order = parse_required_order(text)
+    if order:
+        result["required_order"] = order
+
     cond = parse_conditional_transport(text)
     if cond:
         result["conditional_transport"] = cond
@@ -1405,6 +1446,13 @@ def parse_single_constraint_text(text):
         loc = sd.get("location")
         if loc and loc not in presence:
             presence.append(loc)
+    # required_order names deliberately do NOT feed position_presence: that field is solver
+    # guidance consumed as an *attraction* requirement pool (tpc_agent.py:5048,
+    # `list(required_attractions) + list(constraints.get("position_presence", []) or [])`), and an
+    # ordering pair is routinely a restaurant (real examples: "Chef's Wife in Charge (East Lake
+    # Branch)", "The Boots Muddy Boots & MINI (Optics Valley Branch)") -- forcing a restaurant name
+    # into attraction handling would make a solvable query infeasible. P12's scope is the checker;
+    # solver-side guidance for required_order is future work, not a drive-by here.
     if presence:
         result["position_presence"] = presence
 
@@ -1666,6 +1714,22 @@ def _parse_single_logic(logic):
     m = re.search(r'distance[^<>]*>\s*([\d.]+).*?transport.*?(taxi|metro|walk)', logic, re.S)
     if m:
         result["conditional_transport"] = {"threshold_km": float(m.group(1)), "mode": m.group(2)}
+
+    # --- Required visit ordering (roadmap P12) ---
+    # Generated as a fixed index-comparison template: two named POIs, first found index compared
+    # against second found index. The name capture runs to the last "':" on its line (greedy `.+`
+    # backtracking) rather than the first, because the generated data itself contains at least one
+    # POI name with an embedded, unescaped apostrophe inside the single-quoted literal.
+    m = re.search(
+        r"idx_activity0=0\s*\n\s*idx_activity1=0\s*\n\s*i=0\s*\n\s*for activity in allactivities\(plan\):\s*\n"
+        r"\s*if activity_position\(activity\)=='(?P<first>.+)':\s*\n\s*idx_activity0=i\s*\n"
+        r"\s*if activity_position\(activity\)=='(?P<second>.+)':\s*\n\s*idx_activity1=i\s*\n"
+        r"\s*i\+=1\s*\n"
+        r"if idx_activity0<idx_activity1:",
+        logic,
+    )
+    if m:
+        result["required_order"] = [m.group("first"), m.group("second")]
 
     return result if result else None
 

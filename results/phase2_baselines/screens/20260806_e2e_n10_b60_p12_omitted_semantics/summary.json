@@ -1,0 +1,41 @@
+{
+  "item": "P12 -- close P10's false-positive half (omitted parser semantics)",
+  "change": "no flag -- correctness fix to chinatravel/agent/tpc_agent/parsed_verifier.py (required_order check, added; activity_time_windows now filters acts_at() by the parsed activity_types) and parse_constraints.py (parse_required_order, new)",
+  "mode": "end-to-end",
+  "split": "tpc_phase2_familiar_100_val",
+  "n": 10,
+  "budget_sec": 60.0,
+  "method": "hand-rolled paired before/after (git stash / git stash pop) on the same uids/budget, per P11's absence -- see README.md. Not a --mode whole-run screen (P11 does not exist on this branch); not a --flag screen (P12 has no flag).",
+  "uids": [
+    "phase2_familiar_20250321040138918100_00001",
+    "phase2_familiar_20250321210015834839_00021",
+    "phase2_familiar_20250323001701860855_00088",
+    "phase2_familiar_m20241028164839232455_00049",
+    "phase2_familiar_20250321114538807334_00042",
+    "phase2_familiar_20250322231032581051_00033",
+    "phase2_familiar_20250323001836416953_00016",
+    "phase2_familiar_20250322133107994604_00079",
+    "phase2_familiar_20250324220050355278_00077",
+    "phase2_familiar_20250322184829394258_00094"
+  ],
+  "uid_selection": "the 10 (of the 51 in val whose NL matches 'dine|stay at ... between') most likely to exercise the activity_types fix -- a same-position dine+stay window pair.",
+  "before": {
+    "official_all_pass": 3,
+    "self_all_pass": 3,
+    "false_positives(official_fail_self_pass)": 0,
+    "overall_true_mean": 55.889144744144744,
+    "overall_parsed_mean": 55.4636396936397
+  },
+  "after": {
+    "official_all_pass": 3,
+    "self_all_pass": 3,
+    "false_positives(official_fail_self_pass)": 0,
+    "overall_true_mean": 55.889144744144744,
+    "overall_parsed_mean": 55.4636396936397
+  },
+  "result": "byte-identical aggregate and per-uid official scores (schema_pass/commonsense_pass/logical_pass/overall_true all match every uid -- see baseline.json vs candidate.json). This is expected and structurally guaranteed in per-query (non-whole-run) mode: parsed_verifier.evaluate_parsed_constraints is consulted only by the final self-score (selfscore.py), not by the CP-SAT solve/accept loop that this path uses, so the produced plan is bit-identical between arms regardless of what the checker fix changes. No false positive (official=fail, self=pass) was present in this n=10 sample either before or after, so this screen demonstrates SAFETY (zero regression to the official metric, zero change to any produced plan) rather than the fix's effect size -- the roadmap item's own diagnosis put the omitted-semantics false-positive rate at 5/150 across all five categories combined, so an n=10 sample has low power to observe one. The fix's correctness and mechanism are demonstrated instead by targeted unit tests (tests/phase2/test_parsed_verifier_p12_omitted_semantics.py) built from the exact oracle DSL pattern and real released-data NL phrasing that motivated it (see that file's docstring and the PR description).",
+  "full_familiar_100_val_parser_f1": {
+    "before_and_after": 0.9588,
+    "note": "parser_vs_oracle --split tpc_phase2_familiar_100_val is unaffected: the two fixes are checker-side (parsed_verifier.py); the one new parser field (required_order) matched 0/80 val queries, so no family_stats entry changed."
+  }
+}
