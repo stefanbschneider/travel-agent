@@ -1,0 +1,92 @@
+{
+  "familiar_100_first30": {
+    "n": 30,
+    "parse_precision": 0.9582,
+    "parse_recall": 0.9582,
+    "parse_f1": 0.9582,
+    "oracle_clauses_per_query": 10.83,
+    "n_oracle_clauses": 325,
+    "n_parse_gap": 0,
+    "n_schema_gap": 22,
+    "clpr_ceiling_parse_gap_only": 100.0,
+    "pct_queries_with_parse_gap": 0.0,
+    "fpr_ceiling_from_parse_gaps": 100.0,
+    "parse_gap_by_kind": {},
+    "realized_official_scores": {
+      "MicEPR": 100.0,
+      "MacEPR": 100.0,
+      "C-LPR": 91.6923076923077,
+      "FPR": 43.333333333333336,
+      "DAV": 25.833333333333336,
+      "ATT": 33.77018214693284,
+      "DDR": 26.574074074074073,
+      "overall": 64.56528973412726,
+      "self_fpr_mean": 50.0,
+      "self_overall_mean": 68.0507
+    }
+  },
+  "hf_human_probe30": {
+    "n": 30,
+    "parse_precision": 0.8611,
+    "parse_recall": 0.6278,
+    "parse_f1": 0.7262,
+    "oracle_clauses_per_query": 4.13,
+    "n_oracle_clauses": 124,
+    "n_parse_gap": 26,
+    "n_schema_gap": 4,
+    "clpr_ceiling_parse_gap_only": 79.03,
+    "pct_queries_with_parse_gap": 63.3,
+    "fpr_ceiling_from_parse_gaps": 36.67,
+    "parse_gap_by_kind": {
+      "attraction_type": 9,
+      "restaurant_type": 8,
+      "cost_total": 6,
+      "attraction_name": 3
+    },
+    "realized_official_scores": {
+      "MicEPR": 100.0,
+      "MacEPR": 100.0,
+      "C-LPR": 75.0,
+      "FPR": 33.33333333333333,
+      "DAV": 23.27777777777778,
+      "ATT": 29.535430550563042,
+      "DDR": 23.185185185185183,
+      "overall": 55.883253009009636,
+      "self_fpr_mean": 76.6667,
+      "self_overall_mean": 81.8865
+    }
+  },
+  "hf_medium_probe30": {
+    "n": 30,
+    "parse_precision": 0.8611,
+    "parse_recall": 0.3,
+    "parse_f1": 0.445,
+    "oracle_clauses_per_query": 8,
+    "n_oracle_clauses": 240,
+    "n_parse_gap": 74,
+    "n_schema_gap": 9,
+    "clpr_ceiling_parse_gap_only": 69.17,
+    "pct_queries_with_parse_gap": 100.0,
+    "fpr_ceiling_from_parse_gaps": 0.0,
+    "parse_gap_by_kind": {
+      "cost_total": 29,
+      "room_type": 27,
+      "restaurant_type": 10,
+      "attraction_type": 6,
+      "cost_accommodation": 1,
+      "attraction_name": 1
+    },
+    "realized_official_scores": {
+      "MicEPR": 100.0,
+      "MacEPR": 100.0,
+      "C-LPR": 72.5,
+      "FPR": 6.666666666666667,
+      "DAV": 4.166666666666666,
+      "ATT": 6.656084656084656,
+      "DDR": 5.740740740740741,
+      "overall": 41.619841269841274,
+      "self_fpr_mean": 86.6667,
+      "self_overall_mean": 88.1697
+    }
+  }
+}
