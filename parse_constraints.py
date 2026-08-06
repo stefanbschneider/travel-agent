@@ -1446,9 +1446,13 @@ def parse_single_constraint_text(text):
         loc = sd.get("location")
         if loc and loc not in presence:
             presence.append(loc)
-    for loc in result.get("required_order", []) or []:
-        if loc and loc not in presence:
-            presence.append(loc)
+    # required_order names deliberately do NOT feed position_presence: that field is solver
+    # guidance consumed as an *attraction* requirement pool (tpc_agent.py:5048,
+    # `list(required_attractions) + list(constraints.get("position_presence", []) or [])`), and an
+    # ordering pair is routinely a restaurant (real examples: "Chef's Wife in Charge (East Lake
+    # Branch)", "The Boots Muddy Boots & MINI (Optics Valley Branch)") -- forcing a restaurant name
+    # into attraction handling would make a solvable query infeasible. P12's scope is the checker;
+    # solver-side guidance for required_order is future work, not a drive-by here.
     if presence:
         result["position_presence"] = presence
 

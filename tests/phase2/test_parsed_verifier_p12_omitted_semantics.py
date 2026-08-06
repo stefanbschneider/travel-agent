@@ -20,6 +20,20 @@ checks, so those get a regression lock instead of a new check:
    already correct on every case tried here; the residual gap for those, if any, is parser
    *recall* on the specific held-out phrasing, not a checker representation gap -- out of scope
    without the held-out artifacts (see the roadmap item's own "where the evidence lives" note).
+
+Both fixes were corpus-scanned against every locally available query (the 1000-query
+``TPC_IJCAI_2026_phase1_EN`` set plus the 100-query familiar-100 set, 1100 total -- Phase 1 data,
+offline dev, permitted; the same corpus ``test_parser_accuracy.py``'s 5d section cites) before
+landing, not just spot-checked against the three/one examples below:
+
+- ``parse_required_order`` vs. the oracle's ``idx_activity0``/``idx_activity1`` DSL: 3 NL hits,
+  3 oracle hits, the same 3 uids, the same names in the same order both sides -- zero spurious,
+  zero missed.
+- the ``activity_types`` a contained "<verb> X between A and B" window carries, vs. the
+  ``activity_type(activity)`` gate on the matching oracle clause (matched by location + start/end):
+  149 type-bearing windows, zero mismatches, zero unmatched -- covers every "visit"/"dine at"/
+  "stay at" instance the corpus has, so ``_WINDOW_VERB_ACTIVITY_TYPES`` is not just plausible on
+  the one dine+stay example below, it is exact everywhere it was checkable offline.
 """
 
 from __future__ import annotations
