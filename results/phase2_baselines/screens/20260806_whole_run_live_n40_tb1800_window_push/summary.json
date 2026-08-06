@@ -1,0 +1,197 @@
+{
+  "flag": "TPC_WINDOW_PUSH",
+  "off": "0",
+  "on": "1",
+  "extra_env": {},
+  "mode": "whole-run",
+  "split": "tpc_phase2_familiar_100_val",
+  "n": 40,
+  "budget_sec": 90.0,
+  "seed": 20260705,
+  "baseline": {
+    "label": "TPC_WINDOW_PUSH=0",
+    "env_overrides": {
+      "TPC_WINDOW_PUSH": "0"
+    },
+    "wall_sec": 555.5,
+    "fpr": 47.5,
+    "continuous_score": 66.324,
+    "parse_failures": 0,
+    "timeouts": 0,
+    "telemetry_coverage": "40/40",
+    "telemetry": {
+      "n_telemetry": 40,
+      "timeouts": 0,
+      "recovered": 0,
+      "used_fallback": 0,
+      "errored": 0,
+      "valid_output": 40,
+      "llm_parse_fired": 0,
+      "llm_parse_skipped": 0,
+      "llm_parse_errored": 0,
+      "refine_called": 0,
+      "refine_committed": 0,
+      "refine_second_attempts": 0,
+      "solve_sec_mean": 39.77429263845151,
+      "solve_sec_p50": 41.57145716701052,
+      "solve_sec_p90": 74.25674387501203
+    },
+    "layers": {
+      "commonsense_pass_count": 40,
+      "commonsense_micro": 100.0,
+      "commonsense_macro": 100.0,
+      "logical_micro": 91.32420091324201,
+      "logical_macro": 47.5,
+      "conditional_logical_micro": 91.32420091324201,
+      "all_pass_count": 19
+    },
+    "quality_n": {
+      "requested": 40,
+      "evaluated": 40,
+      "missing": 0
+    },
+    "scheduler": {
+      "constraints_ok": 20,
+      "self_overall_mean": 67.6013,
+      "self_fpr_mean": 50.0,
+      "passes": [
+        {
+          "index": 1,
+          "kind": "triage",
+          "queries": 40,
+          "budget_sec": 61.0,
+          "workers": 6,
+          "improved": 40,
+          "completed": 40,
+          "failed": 0,
+          "elapsed_sec": 246.3
+        },
+        {
+          "index": 2,
+          "kind": "repair",
+          "queries": 20,
+          "budget_sec": 90.0,
+          "workers": 6,
+          "improved": 1,
+          "completed": 20,
+          "failed": 0,
+          "elapsed_sec": 212.5
+        },
+        {
+          "index": 3,
+          "kind": "polish",
+          "queries": 20,
+          "budget_sec": 90.0,
+          "workers": 6,
+          "improved": 5,
+          "completed": 20,
+          "failed": 0,
+          "elapsed_sec": 89.9
+        }
+      ],
+      "fallbacks_prewritten": 40,
+      "remaining_sec": 1158.5,
+      "elapsed_sec": 551.5130720419984,
+      "empty_plans": 0,
+      "variants_source": {
+        "parent": 40
+      }
+    }
+  },
+  "candidate": {
+    "label": "TPC_WINDOW_PUSH=1",
+    "env_overrides": {
+      "TPC_WINDOW_PUSH": "1"
+    },
+    "wall_sec": 558.0,
+    "fpr": 50.0,
+    "continuous_score": 67.698,
+    "parse_failures": 0,
+    "timeouts": 0,
+    "telemetry_coverage": "40/40",
+    "telemetry": {
+      "n_telemetry": 40,
+      "timeouts": 0,
+      "recovered": 0,
+      "used_fallback": 0,
+      "errored": 0,
+      "valid_output": 40,
+      "llm_parse_fired": 0,
+      "llm_parse_skipped": 0,
+      "llm_parse_errored": 0,
+      "refine_called": 0,
+      "refine_committed": 0,
+      "refine_second_attempts": 0,
+      "solve_sec_mean": 39.97117805410053,
+      "solve_sec_p50": 42.76710633399489,
+      "solve_sec_p90": 74.85901237500366
+    },
+    "layers": {
+      "commonsense_pass_count": 40,
+      "commonsense_micro": 100.0,
+      "commonsense_macro": 100.0,
+      "logical_micro": 91.55251141552512,
+      "logical_macro": 50.0,
+      "conditional_logical_micro": 91.55251141552512,
+      "all_pass_count": 20
+    },
+    "quality_n": {
+      "requested": 40,
+      "evaluated": 40,
+      "missing": 0
+    },
+    "scheduler": {
+      "constraints_ok": 21,
+      "self_overall_mean": 68.9752,
+      "self_fpr_mean": 52.5,
+      "passes": [
+        {
+          "index": 1,
+          "kind": "triage",
+          "queries": 40,
+          "budget_sec": 61.0,
+          "workers": 6,
+          "improved": 40,
+          "completed": 40,
+          "failed": 0,
+          "elapsed_sec": 247.5
+        },
+        {
+          "index": 2,
+          "kind": "repair",
+          "queries": 19,
+          "budget_sec": 90.0,
+          "workers": 6,
+          "improved": 1,
+          "completed": 19,
+          "failed": 0,
+          "elapsed_sec": 197.6
+        },
+        {
+          "index": 3,
+          "kind": "polish",
+          "queries": 21,
+          "budget_sec": 90.0,
+          "workers": 6,
+          "improved": 5,
+          "completed": 21,
+          "failed": 0,
+          "elapsed_sec": 108.2
+        }
+      ],
+      "fallbacks_prewritten": 40,
+      "remaining_sec": 1154.2,
+      "elapsed_sec": 555.8035264999926,
+      "empty_plans": 0,
+      "variants_source": {
+        "parent": 40
+      }
+    }
+  },
+  "gate": {
+    "passed": true,
+    "reasons": [],
+    "advisories": []
+  },
+  "verdict": "GREEN LIGHT: candidate improves its target signal and passes the like-for-like gate on this screen -> worth a pinned end-to-end gate on the eval machine."
+}
