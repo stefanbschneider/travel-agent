@@ -24,8 +24,27 @@ section for the two caveats that temper it). [R15](#r15--held-out-tripwire-for-p
 run the same day, found `constraints_ok 13/20` — tied with R13, but the plans on disk show P8/P9
 changed only 1 of the 20 held-out queries and that edit moved no metric, so the tripwire never
 actually armed; read together with R14 the two rows say **P8/P9 fire rarely** on this distribution,
-which tempers rather than overturns the GREEN. With R9 and R11 both still blocked on unimplemented
-work items, no unblocked arm remains on this queue before the 2026-08-10 deadline.
+which tempers rather than overturns the GREEN.
+
+**One arm is still unrun, and it is now the last one that matters:
+[R16](#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild).**
+[P10](tpc_phase2_roadmap.md#infrastructure-landed) merged to `main` (`21ab422`) **not behind a flag**,
+and it changes `run_sweeps_split` — the whole-run scheduler, which is the path every `full_runs/` row
+measures and the only path the submission uses. Checking the two new rows' own `git_sha` fields
+settles how that interacts with them, and the answer differs per row:
+
+| Row | `git_sha` | P10 in the tree? | What it therefore measures |
+| --- | --- | --- | --- |
+| R8/R12 baseline | `2298b4ba` | no | promoted defaults, pre-P10 |
+| **R14** | `b54c58ef` | **no** | **P8+P9 alone — a clean two-way delta, exactly as registered** |
+| **R15** | `1ac96bbd` | **yes** | P10 **+** P8+P9 against R13's pre-both baseline |
+
+So R14's GREEN is *not* confounded — it happened to run one commit before P10 landed. What no row
+has measured is **the configuration a `v2` would actually ship**: post-P10 `main` with P8/P9 on.
+P10 changes which candidate the scheduler keeps, and P8/P9 change what the candidates are, so they
+interact by construction; R14's `+0.5471` was measured with P10 absent. R16 closes that, and it is
+cheap (`~1.3 h` on the 4-core box) against a 2026-08-10 deadline. R9 and R11 stay blocked on
+unimplemented work items.
 
 R1–R15 are closed (see [what the closed queue established](#what-the-closed-queue-r1r15-established)).
 R7 (2026-08-05, post-P0) found the same-config spread is now **zero**: three independent 5 h
@@ -76,7 +95,8 @@ relying on its `--label`.
 
 | Run | What it answers | Blocked on | Cost |
 | --- | --- | --- | --- |
-| ~~R14~~ | ~~do P8+P9 hold up on a whole run? → does `v2` exist?~~ | closed 2026-08-06, GREEN | done |
+| **[R16](#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild)** | **what does the configuration a `v2` would ship actually score?** (post-P10 `main`, P8/P9 on — never measured together) | **nothing — run it now**, after Implementation promotes the two flags | `~0.3 h` on the Mac, `~1.3 h` on the 4-core box |
+| ~~R14~~ | ~~do P8+P9 hold up on a whole run? → does `v2` exist?~~ | closed 2026-08-06, GREEN (pre-P10 tree) | done |
 | ~~R15~~ | ~~did the P8/P9 gain generalize past the `val` residual?~~ | closed 2026-08-06, tripwire never armed (see result) | done |
 | R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#p5--spend-the-idle-envelope-on-fresh-seeds) + [P2](tpc_phase2_roadmap.md#p2--per-attempt-telemetry-ledger) | ~5 h |
 | R11 | LLM-backed repair | [P6](tpc_phase2_roadmap.md#p6--llm-backed-repair-proposer-v2-candidate-default-off), which is not implemented and cannot be verified against the organizers' endpoint from here | out of reach before 2026-08-10 |
@@ -86,6 +106,103 @@ workstream, not Evaluation — see the [parallel workstreams](../CLAUDE.md#paral
 split. R11's old "not before the `v1` upload" gate has now been *superseded rather than satisfied*:
 `v1` is uploaded, but with `P6` unwritten and the endpoint unreachable locally, there is no arm to
 run before the deadline.
+
+### R16 — measure the `v2` candidate (the last run before a rebuild)
+
+**Status: open, unblocked, and the only arm left that can change the submission.** Run it after
+Implementation promotes `TPC_WINDOW_PUSH` / `TPC_WINDOW_INSERT` into `PROMOTED_SOLVER_FLAGS`
+(R14's GREEN action, [roadmap](tpc_phase2_roadmap.md#work-items)); it then needs no exported
+environment at all, which is the point — the arm *is* the shipped default.
+
+**What it answers.** No committed row measures the configuration a `v2` would ship. Reading the two
+new rows' `git_sha` fields (table in [Run this next](#run-this-next)) shows why:
+
+- **R14 ran on `b54c58ef`, one commit before P10 merged.** Good news for R14 itself — its `+0.5471`
+  is a clean two-way P8+P9 delta, exactly as registered, with no P10 confound.
+- **But that means `+0.5471` was measured with P10 absent**, while `main` has had P10 default-on
+  since `21ab422`. P10 changes which candidate `run_sweeps_split` keeps; P8/P9 change what the
+  candidates are. They interact by construction, so the sum is not guaranteed to be the parts.
+- **R15 is the only post-P10 whole-run row**, and it is 20 held-out records on which nothing fired
+  (19 of 20 plans byte-identical to R13). It bounds P10's effect at "not large on that fold" and
+  nothing more.
+
+So the shipping configuration has never been run at `n=100`. That is a gap worth `~1.3 h` when the
+deadline is 2026-08-10 and the alternative is uploading an unmeasured archive.
+
+**Command** — after the promotion lands, export nothing:
+
+```bash
+.venv/bin/python scripts/phase2_full_run.py \
+  --method phase2_e2e_r16_v2cand --label "R16 v2 candidate: post-P10 main, P8/P9 promoted, 5h"
+```
+
+If the promotion has *not* landed yet, set the two flags explicitly instead
+(`TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 …`) — the measurement is identical, but then the row does
+not also prove the promotion took effect, which is half its value.
+
+**Verify the arm before reading the score**, from per-query telemetry under
+`agent_env/runs/phase2_e2e_r16_v2cand/`:
+
+```bash
+.venv/bin/python - <<'PY'
+import collections, json, pathlib
+root = pathlib.Path("agent_env/runs/phase2_e2e_r16_v2cand")
+sources, flags, empty = collections.Counter(), collections.Counter(), []
+for path in sorted(root.rglob("telemetry.json")):
+    t = json.loads(path.read_text())
+    sources[t.get("variants_source")] += 1
+    if not t.get("variants_count"):
+        empty.append(path.parent.name)
+    for k, v in (t.get("solver_flags") or {}).items():
+        flags[(k, bool(v))] += 1
+print("variants_source:", dict(sources))
+print("queries solved with zero variants:", len(empty), empty[:5])
+print("solver_flags:", {f"{k}={v}": n for (k, v), n in sorted(flags.items())})
+PY
+```
+
+- `window_anchor`, `window_push`, `window_insert` all **`true`** on every query — with nothing
+  exported, that is what proves the promotion is real rather than a code comment.
+- `variants_source` must read **`parent`** everywhere: that is the P10 path, and a row reading
+  `worker` is measuring pre-P10 behaviour whatever its label says.
+- **`variants_count == 0` is the check that actually matters**, and it is *not* the same as
+  `variants_source == "worker"`. `orchestrator.solve_phase2` branches on `variants is not None`
+  (`chinatravel/agent/phase2/orchestrator.py:471`), so a query whose *parent* parse raised gets
+  `variants=[]`, still reports `source="parent"`, and **skips its own parse entirely** — it is solved
+  against no constraints at all. Expect `0`. A nonzero count is a finding, not noise: report it with
+  the uids and see [P13](tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides).
+
+**Two comparisons, both from this one row** (4-core Linux / 3 workers; on another host produce your
+own flags-off baseline first — a cross-host delta is not evidence):
+
+| Against | Isolates | Baseline |
+| --- | --- | --- |
+| **R14** `20260806T052925Z` | **P10 alone** — same flags, only P10 differs | `overall 64.13167839953107`, `FPR 44.0`, `constraints_ok 46/100` |
+| R8/R12 `20260805T123142Z` | the whole `v1 → v2` delta | `overall 63.58458530360117`, `FPR 43.0`, `constraints_ok 46/100` |
+
+**Decision rule, fixed in advance:**
+
+| Outcome vs **R14** | Read | Action |
+| --- | --- | --- |
+| `overall` ≥ R14 − `0.5`, `FPR` not down, `empty_plans 0/100`, no failed jobs | GREEN | Ship it. The `v2` candidate is at least as good as the configuration R14 gated, and better than `v1` by the R8/R12 comparison. Rebuild the archive from `main` per the [packaging path](reference/competition.md#packaging-this-into-a-submission), run the [cold-start checklist](reference/competition.md#pre-submission-checklist--the-cold-start-rule-added-2026-08-05), upload as `{team}_v2.zip`. |
+| `overall` down by more than `0.5` vs R14, or `FPR` down | RED — **P10 costs more than P8/P9 gain** | Do not ship `main` as-is. Two options, in order: (1) build `v2` from `b54c58ef` + the flag promotion — the exact tree R14 measured, which is a known-GREEN configuration; or (2) hand the row to Implementation to find the P10 interaction. Option 1 is the safe one with the deadline this close. |
+| `empty_plans > 0` or any failed job | RED — infrastructure | Suspect the **worker pool** before the solver ([cold-start note](#before-the-first-run)), fix, re-run. Do not read the score. |
+
+Expected: **within noise of R14's `64.13`**, since P10 was ~flat on its own `n=40` screen and
+inert on R15's 20 records. `constraints_ok` may rise while `overall` does not — P10's whole purpose
+is that the scheduler stops under-counting its own successes, and that is a self-score effect, not a
+scoring one. **`constraints_ok` is not a promotion metric here.**
+
+**On whether `v2` is worth spending at all.** The organizers evaluate at most two versions and **the
+higher score wins if both succeed** ([competition reference](reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)),
+so a `v2` that scores *worse* than `v1` costs nothing but the slot — `v1`'s score stands. The
+asymmetry says: with a GREEN R16 in hand, ship it. The only real risk is a `v2` that fails to *run*,
+which is what the cold-start checklist exists to prevent, so budget the time for that check rather
+than for more score-chasing.
+
+Commit the row under `results/phase2_baselines/full_runs/` and add its line to
+[the closed-queue table](#what-the-closed-queue-r1r15-established) with host, worker count and both
+baselines above.
 
 ### R14 — the P8/P9 gate: the one run that decides whether `v2` exists *(closed 2026-08-06, GREEN)*
 
@@ -102,17 +219,16 @@ candidate artifact, the stacked end-to-end screen showed no destructive interact
 batch measures the net effect that would actually ship. One run, one decision.
 
 ```bash
-# 1. baseline: only needed if your host has no promoted-default row yet (see the host table above).
-.venv/bin/python scripts/phase2_full_run.py \
-  --method phase2_e2e_r14_base --label "R14 baseline, promoted defaults, 5h"
-
+# 1. baseline: R16's row on this host. Do not re-run it, and do not substitute a pre-P10 row.
 # 2. candidate: promoted defaults plus the two window repairs.
 TPC_WINDOW_PUSH=1 TPC_WINDOW_INSERT=1 .venv/bin/python scripts/phase2_full_run.py \
-  --method phase2_e2e_r14_pushinsert --label "R14 P8+P9 stacked, 5h"
+  --method phase2_e2e_r14_pushinsert --label "R14 P8+P9 stacked, 5h, vs R16"
 ```
 
-Export nothing else. `apply_deterministic_solver_defaults()` supplies the four promoted flags and
-respects the two you set, so the candidate arm differs from the baseline in exactly those two.
+Export nothing else. `apply_deterministic_solver_defaults()` supplies the promoted flags and respects
+the two you set, so the candidate arm differs from **R16's** baseline in exactly those two — which is
+the whole reason R16 has to exist. Comparing this arm to R8/R12 instead folds P10 into the delta and
+makes the decision rule below meaningless.
 
 **Use a distinct `--method` per arm, as above.** `phase2_full_run.py`'s `--fresh` is the default
 (confirmed against the script's `argparse` defaults and this run's own row: `"fresh": true`,
@@ -136,8 +252,10 @@ PY
 ```
 
 **Expected, from the stacked `n=80` / `90 s` end-to-end screen** (`+1.29` `overall_true`, `+2.5`
-FPR): `overall ≈ 64.5–65.5`, `FPR 45–46`, `constraints_ok ≈ 48–49/100` against the 4-core baseline,
-or the same deltas on top of R3's `64.08` on the Mac. R8's screen slightly *under*-predicted its full
+FPR): `overall` and `FPR` roughly `+1.3` and `+2.5` **on top of R16's numbers**, whatever those turn
+out to be. The absolute targets this section used to quote (`overall ≈ 64.5–65.5`, `FPR 45–46`) were
+computed off the pre-P10 `63.58` and are only still right if R16 lands flat; take the deltas, not the
+absolutes. R8's screen slightly *under*-predicted its full
 run (`+10.0` predicted, `+11.0` measured), so treat the screen as a floor rather than a ceiling — but
 also note the screen ran at `90 s`/query while the whole run spends `120/300 s`, so the two passes
 have more competing search to displace here than they did there.
@@ -216,8 +334,14 @@ of `familiar_100` and an easier one.
 
 **Result** (row `20260806T065521Z`, 4-core Linux, 3 workers, `git_dirty: false`, `evaluator_parity:
 c89cfca`, `git_sha: 1ac96bbd` — this row sits on top of the [R14](#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
-commit, one revision after R14's own `b54c58ef`; the intervening commit is an unrelated
-self-scoring-variants refactor, confirmed not to touch flag semantics): all 20 per-query
+commit, one revision after R14's own `b54c58ef`; the intervening commit is
+[P10](tpc_phase2_roadmap.md#infrastructure-landed), which does not touch flag semantics but **is
+not unrelated** — it rewrites how `run_sweeps_split` self-scores and therefore which candidate each
+pass keeps, so this row is a P10 **+** P8/P9 delta against R13's pre-both baseline, while R14 is
+P8/P9 alone. That makes R15 the only post-P10 whole-run row in the ledger, and the fact that it
+reproduces R13 to 15 significant digits bounds P10's effect on *these 20 records* at zero. It says
+nothing about P10 at `n=100`, which is
+[R16](#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild)): all 20 per-query
 `telemetry.json` files confirmed `window_push: true`, `window_insert: true` and `window_anchor:
 true`. `overall 70.53975966861671`, MicEPR `100.0`, MacEPR `100.0`, C-LPR `93.36`, FPR `55.0`, DAV
 `32.60`, ATT `42.90`, DDR `28.47`; `empty_plans 0/20`; **`constraints_ok 13/20`** — identical to
@@ -464,6 +588,12 @@ questions and two run shapes. Mixing their rows is the easiest way to reach a wr
 | Tool | `scripts/phase2_full_run.py` (`make phase2-full-run`) | `make phase2-baseline` / `phase2-rehearse` |
 | Rows | `results/phase2_baselines/full_runs/` | `results/phase2_baselines/runs/` |
 | Promotes | the submission configuration | a solver change, via the [gate](#gates) |
+| Pre-gate screen | **none yet** — see [the screen cannot reach the whole-run scheduler](#the-screen-cannot-reach-the-whole-run-scheduler-until-p11) | `scripts/phase2_quick_eval.py` |
+
+**The asymmetry in that last row is the current tooling gap.** A per-query change is screened in
+1–2 h before it costs an evaluation slot; a whole-run change has no equivalent, so it either ships
+unscreened or spends 5 h to find out it was flat.
+[P11](tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen) closes it.
 
 **Rows from the two contracts are never comparable**, whatever else matches: different budget
 contract, scheduler and parallelism. Every whole-run row records `kind: "full_run"`. The per-query
@@ -803,10 +933,44 @@ yourself; export only the backend selector.
 - With the backend at `none` (library default) the end-to-end path makes zero LLM calls, so
   deterministic flags can also be screened `--mode end-to-end` on a box with no key.
 
+### The screen cannot reach the whole-run scheduler (until P11)
+
+**Both existing modes take the per-query path.** `--mode end-to-end` calls
+`rehearse._run_end_to_end`, which invokes `run_split` **without** `total_budget_sec`; `run_split`
+only dispatches to `run_sweeps_split` when an envelope is set. So triage/repair/polish pass
+selection, incumbent keep-best, deadline-aware budgeting and `selfscore` — everything the shipped
+run actually does — are **structurally unreachable from `phase2_quick_eval.py`**. A green screen
+says nothing about a change that lives there. This was found while screening
+[P10](tpc_phase2_roadmap.md#infrastructure-landed),
+whose entire effect is in that path.
+
+[P11](tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen) adds `--mode whole-run`
+and is the top implementation item. **Until it lands**, screen a scheduler change by hand — this is
+the recipe P10 used, and it is a screen, not a row:
+
+```bash
+# One arm. Run the other on the other revision (or with the flag set), then compare by hand.
+# Distinct --method per arm is mandatory: run_sweeps_split treats existing plans as incumbents.
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --harness tpc \
+  --split tpc_phase2_familiar_100_val --limit 40 \
+  --total-budget-sec 1800 --budget-sec 90 --workers 6 \
+  --method screen_whole_run_<arm>
+.venv/bin/python eval_tpc.py --splits tpc_phase2_familiar_100_val --method screen_whole_run_<arm>
+```
+
+Run the arms **sequentially**, not concurrently — two 6-worker pools on one box contend for cores
+and the timing difference alone changes which passes fit. Beyond the official numbers, diff the
+itineraries: a scheduler change that leaves 39 of 40 plans byte-identical except for
+`elapsed_time(sec)` has one real effect, and finding which query moved is worth more than the
+aggregate delta.
+
 ### Limits — read before trusting a screen
 
 - **A screen never promotes.** It authorizes a real run; only a committed row through the
   [gate](#gates) promotes a default.
+- **A per-query screen does not screen the scheduler** — see the section directly above. If the
+  change touches `chinatravel/agent/phase2/sweeps.py`, `selfscore.py`, or `run_sweeps_split`, the
+  default modes measure the wrong path entirely.
 - **Absolute numbers are not ledger-comparable** (reduced budget/subset). Do not commit screen
   outputs into `results/phase2_baselines/`.
 - **Timeout counts carry run-to-run noise** — a `±1–2` swing at a tight budget is nondeterminism.

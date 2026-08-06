@@ -58,15 +58,16 @@ If a requirement or verifier behavior is unclear, inspect the source or query th
 
 ## Harness entry points
 
-**`solve_script_with_harness.py --split <split>` (no other flags) is the organizer-confirmed Phase 2
-evaluation command** (2026-08-04 direct reply; a second same-day email shows the same command without
-`--split` — either way it's optional here, see [competition
-reference](../docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)).
-Bare, it runs the deterministic no-oracle solver
-in-process — no external CLI, no LLM call, no subprocess:
+**`solve_script_with_harness.py --method <method> --split <split>` (no other flags, run from the
+repository root) is the organizer-confirmed Phase 2 evaluation command** (2026-08-06 clarification;
+see [competition
+reference](../docs/reference/competition.md#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06)).
+Both values are theirs: `--split` picks the held-out split, `--method` names the output directory,
+and plans must land at `results/<method>/<uid>.json`. Neither may be hard-coded, and neither is.
+It runs the deterministic no-oracle solver in-process — no external CLI, no LLM call, no subprocess:
 
 ```bash
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 ```
 
 The same script drives an external agent CLI only when asked explicitly, for baseline comparison:

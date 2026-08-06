@@ -309,7 +309,11 @@ def test_submission_readme_renders_without_leftover_placeholders():
         evaluator_parity="c89cfca",
     )
     assert "{" not in text.replace("{TeamName}", "")
-    assert "solve_script_with_harness.py --split <split>" in text
+    # The organizers' 2026-08-06 command shape, verbatim, plus the output path they read back.
+    assert (
+        "solve_script_with_harness.py --method <method> --split <split>" in text
+    ), "the shipped run instruction must be the organizers' exact command"
+    assert "results/<method>/<uid>.json" in text
     assert "requirements-submission.txt" in text
 
 

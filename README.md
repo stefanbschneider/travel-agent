@@ -35,27 +35,32 @@ dependencies mirror `requirements-submission.txt`). The travel database ships in
 
 ## Run
 
+Run this from the root of this directory:
+
 ```bash
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 ```
 
-With the venv on `PATH`, plain `python agent_env/scripts/solve_script_with_harness.py --split
-<split>` is the same thing, and so is `uv run python agent_env/scripts/solve_script_with_harness.py
---split <split>` (both routes verified from the packaged archive).
+With the venv on `PATH`, plain `python agent_env/scripts/solve_script_with_harness.py --method
+<method> --split <split>` is the same thing, and so is `uv run python
+agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>` (both routes
+verified from the packaged archive).
 
 That single command is the whole system. No other flags are needed, and it is exactly the command
 the organizers confirmed for automated evaluation. It:
 
-- loads the split and **strips every oracle verifier field** (`hard_logic*`) before the agent path
-  sees a query;
+- loads the split named by `--split` and **strips every oracle verifier field** (`hard_logic`,
+  `hard_logic.py`, `hard_logic_py`, `hard_logic_nl`) before the agent path sees a query — the
+  formal held-out data contains none of them, and the solver never needed them;
 - solves each query with the deterministic `TPCAgent` **in-process** — no subprocess, no external
   CLI, no LLM, no network (`--harness tpc` is the shipped default; `opencode`/`codex` remain
   explicit opt-ins and never run by default);
-- defaults language to `en`, whatever the split is named;
+- defaults language to `en`, whatever the split is named, and falls back to `zh` if the split
+  resolves only there;
 - keeps the whole run inside a **5-hour wall-clock envelope**, spending it adaptively across the
   split rather than giving each query a fixed budget;
-- writes each plan to `results/phase2_e2e_<split>/<uid>.json`, with per-query telemetry and a split
-  summary under `agent_env/runs/phase2_e2e_<split>/`.
+- writes each plan to **`results/<method>/<uid>.json`**, with per-query telemetry and a split
+  summary under `agent_env/runs/<method>/`.
 
 A schema-valid plan for every query is written **before the first solve**, and every later result is
 kept only if it beats what is already on disk. The run can therefore be interrupted at any instant
@@ -63,6 +68,51 @@ and still leaves a complete, non-regressed set of plans.
 
 Optional overrides, none needed for evaluation: `--budget-sec` (per-query cap), `--total-budget-sec`
 (whole-run envelope; `0` disables it), `--workers`, `--limit`, `--resume`, `--harness`.
+
+### `--method`: naming the output directory
+
+`--method` is a label, not a mode. Whatever string is passed becomes the output directory verbatim,
+so plans land at `results/<method>/<uid>.json` — nothing is sanitized, prefixed, or derived from the
+split. Any name works; the run behaves identically for all of them, because the solver has exactly
+one path.
+
+The single exception is a method that would write *outside* `results/` (a leading `/`, or a `..`
+component). That layout is unsatisfiable by definition, so the run refuses to start rather than
+sanitizing the value — a rewritten method would put a whole split's plans somewhere they are never
+read, which is the failure the check exists to prevent, not a fix for it.
+
+Omitting `--method` falls back to `phase2_e2e_<split>` (which is also what `make phase2-run` and
+`agent_env/scripts/solve_phase2.py` use, so the two entry points resume each other's work). The
+shipped `agent_env/config.toml` deliberately pins **no** `method` and **no** `split`, so a
+command-line value is never overridden.
+
+The directory is reused, not overwritten: an existing non-empty plan is treated as an incumbent and
+is replaced only by a strictly better one. To start clean, delete `results/<method>/` first.
+
+### `--split`: selecting and adding a split
+
+`--split <name>` resolves through upstream's loader (`chinatravel/data/load_datasets.py`, unmodified),
+which needs two things:
+
+| What | Where |
+| --- | --- |
+| The UID list, one per line | `chinatravel/evaluation/default_splits/<name>.txt` |
+| One JSON file per UID, named `<uid>.json` | `chinatravel/data/en/<name>/` for `--lang en` (the default), `chinatravel/data/<name>/` for `--lang zh` |
+
+So adding a split is: drop the query JSON files into a directory, and write a `.txt` file listing
+their UIDs. The directory may also be named `<name>_EN`, and if no directory matches the split name
+the loader falls back to scanning the language tree for the listed UIDs — a query set can therefore
+live in a directory whose name has nothing to do with the split. If the split does not resolve under
+the requested language, this harness retries the other one and reports which it used, rather than
+failing the run.
+
+Each query JSON needs only the visible fields: `uid`, `nature_language`, `start_city`,
+`target_city`, `days`, `people_number`. Verifier fields are optional and, when absent, only the
+local convenience scoring in `agent_env/runs/<method>/<uid>/evaluation.json` degrades to its
+oracle-free half (`has_oracle: false`); the solve is unaffected.
+
+Splits already present include `tpc_phase2_familiar_100` and its `_val` / `_test` folds
+(`make phase2-familiar-splits` regenerates the folds), plus upstream's `easy`, `medium`, `human`.
 
 ## How the run spends its 5 hours
 
@@ -86,10 +136,14 @@ acceptance-gated packing → finalize with telemetry. Details:
 `chinatravel/data/load_datasets.py` and `eval_tpc.py`'s scoring reproduce upstream
 [`LAMDA-NeSy/ChinaTravel`](https://github.com/LAMDA-NeSy/ChinaTravel) `main` at `c89cfca`. The only
 local deltas there are performance (lazy per-language tool loading) and defensive guards against
-malformed plans — never a scoring difference. Score a produced split the usual way:
+malformed plans — never a scoring difference. Upstream `main` has since advanced to `456b60a`
+(English language propagation in the agent harness, upstream PR #33), which touches **no** scoring
+file: the parity point stays `c89cfca` because the two commits are byte-identical across every path
+listed above, so scores recorded on either side remain comparable. Score a produced split the usual
+way, passing the same `--method` the run used:
 
 ```bash
-.venv/bin/python eval_tpc.py --splits <split> --method phase2_e2e_<split>
+.venv/bin/python eval_tpc.py --splits <split> --method <method>
 ```
 
 ## Development

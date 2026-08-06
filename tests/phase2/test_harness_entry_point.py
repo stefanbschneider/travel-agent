@@ -1,13 +1,18 @@
 """The organizer-confirmed entry point must run *our* solver, bare.
 
-The organizers invoke exactly ``python agent_env/scripts/solve_script_with_harness.py --split
-<split>`` -- no other flags, no environment beyond a clean checkout -- so whatever a bare
-invocation does *is* the Phase 2 submission. These tests pin the two facts that makes true:
+The organizers invoke exactly ``python agent_env/scripts/solve_script_with_harness.py --method
+<method> --split <split>`` -- no other flags, no environment beyond a clean checkout -- so
+whatever that invocation does *is* the Phase 2 submission. These tests pin the facts that makes
+true:
 
 1. bare (no ``--harness``, no local ``config.toml``) dispatches to the deterministic in-process
    solver and never shells out to ``opencode``/``codex``;
 2. the run is bounded by the confirmed whole-run wall-clock envelope, not by a fixed per-query
-   budget that would overrun it.
+   budget that would overrun it;
+3. ``--method`` and ``--split`` are honoured verbatim -- neither is hard-coded -- and plans land
+   at ``results/<method>/<uid>.json`` (organizers' 2026-08-06 clarification);
+4. queries carrying no ``hard_logic*`` field at all, which is the shape of the formal held-out
+   data, solve and score exactly as well as released ones.
 
 See ``docs/tpc_phase2_design.md`` ("Entry point") for the shipped contract.
 """
@@ -99,6 +104,236 @@ def test_external_harness_is_still_reachable_but_opt_in(monkeypatch, no_local_co
 def test_tpc_method_matches_solve_phase2_so_the_two_entry_points_share_results():
     split = "tpc_phase2_familiar_100_val"
     assert hb.default_method(None, split, "tpc") == sp2._default_method_for_split(split)
+
+
+class TestOrganizerArguments:
+    """``--method <method> --split <split>``: both come from the command line, neither is fixed."""
+
+    @pytest.mark.parametrize(
+        "method",
+        [
+            "tpc2026",  # a plain name
+            "Team_A.v2-final",  # punctuation the default-name sanitizer would rewrite
+            "phase2_e2e_easy",  # collides with our own default naming; still theirs, not ours
+        ],
+    )
+    def test_explicit_method_is_used_verbatim(
+        self, monkeypatch, no_local_config, no_subprocess, method
+    ):
+        captured: dict = {}
+        monkeypatch.setattr(hb, "run_tpc_split", lambda **kw: captured.update(kw) or {})
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["solve_script_with_harness.py", "--method", method, "--split", "heldout_split"],
+        )
+
+        hb.main()
+
+        # Verbatim: `results/<method>/` is a contract with the organizers, so no sanitizing,
+        # prefixing, or split-name mangling may happen on the way through.
+        assert captured["method"] == method
+        assert captured["split"] == "heldout_split"
+
+    def test_the_split_is_never_inferred_from_anything_but_the_flag(
+        self, monkeypatch, no_local_config, no_subprocess
+    ):
+        captured: dict = {}
+        monkeypatch.setattr(hb, "run_tpc_split", lambda **kw: captured.update(kw) or {})
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["solve_script_with_harness.py", "--method", "m", "--split", "a_split_we_never_saw"],
+        )
+
+        hb.main()
+
+        assert captured["split"] == "a_split_we_never_saw"
+        # No query list and no query count may be baked in: the whole split runs.
+        assert captured["limit"] is None
+        assert captured["uid"] is None
+
+    def test_run_split_writes_plans_under_results_slash_method(self, tmp_path, monkeypatch):
+        """The required output path, checked on the real writer rather than by inspection."""
+        queries = {
+            "uid_a": {"uid": "uid_a", "target_city": "上海", "days": 1, "people_number": 1},
+            "uid_b": {"uid": "uid_b", "target_city": "上海", "days": 1, "people_number": 1},
+        }
+        monkeypatch.setattr(
+            sp2.hb, "evaluate_one", lambda *a, **k: {"uid": a[1], "all_pass": False}
+        )
+
+        sp2.run_split(
+            "any_split",
+            method="organizer_chosen_name",
+            queries=queries,
+            results_dir=str(tmp_path / "results"),
+            work_dir=str(tmp_path / "runs"),
+            budget_sec=1,
+            solve_fn=lambda query, **kwargs: ({"itinerary": []}, {}),
+        )
+
+        method_dir = tmp_path / "results" / "organizer_chosen_name"
+        assert sorted(p.name for p in method_dir.glob("*.json")) == [
+            "uid_a.json",
+            "uid_b.json",
+        ]
+
+
+class TestNoVerifierFields:
+    """Formal Phase 2 data ships no DSL / constraint-code / verifier-only field at all."""
+
+    ORGANIZER_HIDDEN_FIELDS = ("hard_logic", "hard_logic.py", "hard_logic_py", "hard_logic_nl")
+
+    def test_every_named_field_is_hidden_from_the_agent(self):
+        query = {"uid": "u", "nature_language": "text", "target_city": "上海"}
+        query.update({field: "oracle" for field in self.ORGANIZER_HIDDEN_FIELDS})
+
+        visible = hb.visible_query(query)
+
+        assert set(visible) == {"uid", "nature_language", "target_city"}
+        for field in self.ORGANIZER_HIDDEN_FIELDS:
+            assert hb._is_oracle_query_key(field), field
+
+    def test_a_query_with_no_oracle_field_still_scores(self):
+        """``evaluate_one`` must degrade to the oracle-free half, not raise."""
+        query = {
+            "uid": "u",
+            "nature_language": "text",
+            "start_city": "北京",
+            "target_city": "上海",
+            "days": 1,
+            "people_number": 1,
+        }
+        assert not any(key.startswith("hard_logic") for key in query)
+
+        evaluation = hb.evaluate_one("s", "u", query, {"itinerary": []})
+
+        assert evaluation["has_oracle"] is False
+        # The oracle-side numbers are absent, not zero -- a missing oracle is not a failed check.
+        assert evaluation["overall_true"] is None
+        assert evaluation["logical_pass"] is None
+        # The oracle-free side is still computed, which is what the solver steers on.
+        assert evaluation["overall_parsed"] is not None
+
+
+class TestSplitLanguageFallback:
+    """An unresolvable split is the one failure that zeroes the whole run; try both trees."""
+
+    def test_falls_back_to_the_other_language_and_reports_it(self, monkeypatch):
+        def fake_load(split, lang):
+            if lang == "en":
+                raise ValueError(f"Unable to resolve local split {split!r}")
+            return ["u1"], {"u1": {"uid": "u1"}}
+
+        monkeypatch.setattr(hb, "_load_queries_for_lang", fake_load)
+
+        lang, ids, data = hb.load_queries_with_lang("heldout", "en")
+
+        assert (lang, ids) == ("zh", ["u1"]), "the caller must learn the language it actually got"
+        assert data["u1"]["uid"] == "u1"
+
+    def test_no_fallback_when_the_requested_language_resolves(self, monkeypatch):
+        seen: list[str] = []
+
+        def fake_load(split, lang):
+            seen.append(lang)
+            return ["u1"], {"u1": {"uid": "u1"}}
+
+        monkeypatch.setattr(hb, "_load_queries_for_lang", fake_load)
+
+        assert hb.load_queries_with_lang("s", "en")[0] == "en"
+        assert seen == ["en"], "the happy path must not touch the other language tree"
+
+    def test_both_failures_are_reported_when_neither_resolves(self, monkeypatch):
+        def fake_load(split, lang):
+            raise ValueError(f"missing under {lang}")
+
+        monkeypatch.setattr(hb, "_load_queries_for_lang", fake_load)
+
+        with pytest.raises(RuntimeError) as excinfo:
+            hb.load_queries_with_lang("nope", "en")
+
+        assert "missing under en" in str(excinfo.value)
+        assert "missing under zh" in str(excinfo.value)
+
+    @pytest.mark.parametrize(
+        "exc",
+        [
+            json.JSONDecodeError("Expecting value", "{bad", 0),  # broken query file
+            PermissionError("unreadable data directory"),
+            ImportError("datasets is not installed"),
+        ],
+        ids=["malformed-json", "unreadable-tree", "missing-dependency"],
+    )
+    def test_a_broken_tree_raises_instead_of_silently_using_the_other_language(
+        self, monkeypatch, exc
+    ):
+        """The retry answers "which tree is this split in", not "is this tree healthy".
+
+        Falling back here would mask a real data fault *and* solve a different dataset than the
+        one asked for -- the run would look successful and be wrong.
+        """
+        seen: list[str] = []
+
+        def fake_load(split, lang):
+            seen.append(lang)
+            if lang == "en":
+                raise exc
+            return ["u1"], {"u1": {"uid": "u1"}}
+
+        monkeypatch.setattr(hb, "_load_queries_for_lang", fake_load)
+
+        with pytest.raises(type(exc)):
+            hb.load_queries_with_lang("s", "en")
+        assert seen == ["en"], "a broken tree must not trigger the other-language retry"
+
+
+class TestMethodStaysInsideResults:
+    """``--method`` is used verbatim, so the only thing to check is that it can be honoured."""
+
+    @pytest.mark.parametrize(
+        "method",
+        [
+            "tpc2026",
+            "Team_A.v2-final",
+            "phase2_e2e_easy",
+            # Nesting is fine: results/a/b/<uid>.json *is* results/<method>/<uid>.json here.
+            "a/b",
+        ],
+    )
+    def test_a_method_that_can_be_honoured_is_returned_unchanged(self, method):
+        assert hb.validate_method(method) == method
+
+    @pytest.mark.parametrize(
+        "method", ["../escape", "a/../../escape", "..", "/tmp/absolute"]
+    )
+    def test_a_method_that_escapes_results_is_rejected_not_rewritten(self, method):
+        """Rejected rather than sanitized, and rejected at startup.
+
+        Sanitizing would silently relocate the plans, which is the failure this guards against
+        rather than a fix for it; the required layout is simply unsatisfiable for these values,
+        so a 5-hour run must not begin and then write a full split somewhere nobody reads.
+        """
+        with pytest.raises(ValueError, match="results/"):
+            hb.validate_method(method)
+
+    def test_the_cli_rejects_it_before_any_solving_starts(
+        self, monkeypatch, no_local_config, no_subprocess
+    ):
+        monkeypatch.setattr(
+            hb,
+            "run_tpc_split",
+            lambda **kw: pytest.fail("an unusable --method must not reach the solver"),
+        )
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["solve_script_with_harness.py", "--method", "../escape", "--split", "s"],
+        )
+
+        with pytest.raises(ValueError, match="results/"):
+            hb.main()
 
 
 def test_run_tpc_split_defaults_to_the_confirmed_five_hour_envelope(monkeypatch):

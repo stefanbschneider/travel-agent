@@ -66,16 +66,17 @@ CHINATRAVEL_LANG=en .venv/bin/python -m agent_env.mcp_stdio
 
 ```bash
 # The organizer-confirmed Phase 2 evaluation command
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split <split>
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 ```
 
-**`agent_env/scripts/solve_script_with_harness.py --split <split>` is the organizer-confirmed Phase 2
-evaluation command** (2026-08-04 direct reply, no other flags — see the
-[competition reference](../docs/reference/competition.md#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)).
-A second same-day email restates the command without showing `--split`; `--split` has always been
-optional here (default `split="easy"`, `lang="en"`), so both invocation shapes run identically — see
-the [wording-discrepancy note](../docs/reference/competition.md#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email).
-Bare, it runs `--harness tpc`: this repository's deterministic no-oracle solver, in-process, via
+**`agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>` is the
+organizer-confirmed Phase 2 evaluation command** (2026-08-06 clarification, run from the repository
+root, no other flags — see the [competition
+reference](../docs/reference/competition.md#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06)).
+`--split` names the held-out split, `--method` names the output directory (`results/<method>/<uid>.json`),
+and neither is hard-coded anywhere in the package. Omitting them falls back to `phase2_e2e_<split>`
+and `easy`, which is only ever a local convenience.
+It runs `--harness tpc`: this repository's deterministic no-oracle solver, in-process, via
 `solve_phase2.run_split`. Zero LLM calls, zero network calls, no subprocess. The external-CLI
 harnesses are still there for the LLM-agent baseline comparison, but only on an explicit
 `--harness opencode` / `--harness codex`, never by default.

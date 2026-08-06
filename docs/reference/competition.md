@@ -1,6 +1,6 @@
 # TPC @ IJCAI 2026 Competition Reference
 
-**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site; execution, versioning, feedback, per-query timeout, and technical-report answers added 2026-08-04 from the organizers' direct email reply to our clarification questions; harness resubmission requirement, runtime reconfirmation, and the confirmed SGLang/LLM endpoint added 2026-08-04 (later the same day) from the organizers' second update email — see [below](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email).
+**Accessed:** 2026-07-15; dates and Phase 2 packaging updated 2026-08-03 from the organizers' advancement email and a re-check of the competition site; execution, versioning, feedback, per-query timeout, and technical-report answers added 2026-08-04 from the organizers' direct email reply to our clarification questions; harness resubmission requirement, runtime reconfirmation, and the confirmed SGLang/LLM endpoint added 2026-08-04 (later the same day) from the organizers' second update email — see [below](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email); the DSL-free held-out data, the "latest harness example / latest evaluation code" instructions, and the `--method <method>` argument added 2026-08-06 from the organizers' fourth email — see [below](#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06).
 The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative when this note conflicts with local material.
 This is a concise repository reference, not a replacement for the rules.
 
@@ -59,11 +59,86 @@ We asked the organizers directly (email + would-be GitHub issue) how evaluation 
   python agent_env/scripts/solve_script_with_harness.py --split <split>
   ```
 
+  **Amended 2026-08-06** — the command also carries `--method <method>`; see [the clarification
+  below](#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06).
+
   "All harness-specific initialization and launch logic" must be integrated behind this single command; setup (dependency install, database download, config) is documented separately in the README and is not part of the timed run (see timeout below). Any extra environment must be reproducible with plain `pip`/`conda` — they explicitly asked teams to avoid dependencies needing special package sources or complicated system-level installs, since the evaluation machines sit on an internal network and slow installs cost their limited eval time.
   **This is now a hard, load-bearing fact for our submission layout — see the critical gap flagged just below and the top roadmap priority it drives.**
 - **Versioning.** They evaluate **at most two submitted versions per team** (limited eval resources). If both run successfully, **the higher score is the team's final score.** (Unspecified: what happens if only one of two succeeds, or a third version is submitted anyway — treat "at most two" as the operative constraint and don't rely on a third attempt.)
 - **Feedback.** Teams get feedback after *every* evaluation run: the score plus "relevant execution information." Feedback can be delayed because each run takes a while. If the organizers hit an environment issue, runtime error, or apparent bug during evaluation, they'll contact the team proactively.
 - **Per-query timeout: there isn't one.** Instead there's a **single 5-hour wall-clock budget for the whole 100-query run**, starting when the command above is invoked; environment creation, dependency installation, and other setup are excluded from that 5 hours. This replaces every `300 s`/`900 s` per-query assumption this repository has carried since Phase 2 planning began — see the [design doc](../tpc_phase2_design.md#run-shape) for how the run is scheduled against it.
+
+### DSL-free data, the latest harness and evaluator, and the method argument (2026-08-06)
+
+A fourth organizer email, sent "to ensure that all Phase 2 teams prepare and test their harnesses
+under consistent requirements". Four items, each checked against this repository on the day it
+arrived:
+
+**1. The held-out data contains no verifier fields.** Explicitly named as absent: `hard_logic`,
+`hard_logic.py`, `hard_logic_py`, `hard_logic_nl`, "and any other DSL, constraint-code,
+ground-truth, answer-related, or verifier-only fields."
+
+*Conforming, and now tested on that shape rather than inferred.* The no-oracle contract was already
+the design (`visible_query` strips anything matching `hard_logic*`, which covers the dotted
+`hard_logic.py` spelling too), but every local run had oracle fields present and merely hidden. A
+split rebuilt with the fields physically deleted was run end-to-end through both the whole-run
+(sweeps) and per-query paths: plans written, exit 0, no code path required a verifier field.
+`evaluate_one`'s `has_oracle` degrades to the oracle-free half — the numbers become `None`, not
+zero, so a missing oracle is never mistaken for a failed check. Pinned by
+`tests/phase2/test_harness_entry_point.py::TestNoVerifierFields`.
+
+**2. Use the latest harness example.** Downloaded fresh from the competition site on 2026-08-06:
+`sha256 758ca81e…f049`, **byte-identical** to the copy already committed at
+`submissions/phase2/ChinaTravel_harness_example.zip` and already compared against our archive
+([2026-08-05](#verified-against-the-official-harness-example-2026-08-05)). Its
+`solve_script_with_harness.py` is byte-identical to upstream `main` at `456b60a`, and our entry
+point remains a strict superset of its CLI. No action needed.
+
+**3. Use the latest evaluation code.** Upstream `main` advanced `c89cfca` → `456b60a` ("Fix English
+language propagation in agent harness", PR #33). That commit touches `agent_env/` and the baseline
+harness only: `git diff c89cfca 456b60a` is **empty** across `chinatravel/evaluation/`,
+`chinatravel/symbol_verification/`, `chinatravel/environment/concept_labels.py`,
+`chinatravel/environment/tools/`, `eval_tpc.py` and `chinatravel/data/load_datasets.py`. So the
+evaluator we score against is already the latest one, the parity point stays `c89cfca`, and
+`EVALUATOR_PARITY_SHA` deliberately does **not** move — bumping it would mark every existing row
+non-comparable to a new one across a boundary where no scoring code changed, which would break the
+R14 gate for nothing.
+
+**4. The evaluation command takes `--method`, and results have a fixed path.** Run from the root of
+the submitted package:
+
+```
+python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
+```
+
+with each query's result at `results/<method>/<uid>.json`, and an explicit instruction: *"Do not
+hard-code the public dataset split, query list, number of queries, or method name."*
+
+*Conforming; the required behavior predates the email, the enforcement does not.* `--method` has
+always been accepted and is used verbatim — nothing sanitizes, prefixes, or derives it — and both
+the whole-run and per-query writers already emit `results/<method>/<uid>.json`. Verified by running
+`--method tpc_submission --split tpc_phase2_familiar_100_val` and reading the plans back out of
+`results/tpc_submission/`. The archive's `agent_env/config.toml` pins neither `method` nor `split`
+nor `limit`, so a command-line value is never overridden and no query list or count is fixed.
+What changed on 2026-08-06:
+
+- the assembler's unpack-and-run check now passes an `--method` value the code would never derive
+  on its own and fails the build unless plans appear at exactly `results/<that value>/` — the
+  organizers' path is now a build-blocking assertion, not an inspection;
+- `SUBMISSION.md`, `submission_manifest.json` (`entry_point`, new `results_path`), `README.md`
+  and this reference all state the two-argument command;
+- the entry point echoes `Results: …/results/<method>/<uid>.json` before the run starts, so a run
+  killed mid-split still shows where it wrote;
+- `tests/phase2/test_harness_entry_point.py::TestOrganizerArguments` pins method-verbatim and
+  split-from-the-flag behavior.
+
+**One robustness fix this prompted.** `--split <name>` resolves through upstream's loader, which
+looks for `en` splits under `chinatravel/data/en/` and `zh` splits under `chinatravel/data/` and
+*raises* when the name is in neither. We are told the split name but not which tree the organizers
+drop their held-out queries into, and an unresolved split is the worst failure available to us: no
+plans at all, a zero for the whole run. `hb.load_queries_with_lang` now retries the other language
+before giving up and reports which one it used, and `solve_phase2.run_split` builds `WorldEnv` and
+the evaluators in the language the queries actually came from. The happy path never reaches it.
 
 ### The gap this reply surfaced — CLOSED 2026-08-04
 
@@ -126,7 +201,7 @@ submission, i.e. around **2026-08-08**; both `v2` and the technical report are d
 **What `v2` requires, in order.** `scripts/assemble_phase2_submission.py` resolves `v2` automatically
 from the `phase2-v1` tag, so packaging is not the work; deciding what goes in it is:
 
-1. a GREEN [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists)
+1. a GREEN [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
    whole-run row promoting P8+P9 — the only measured candidate that exists today;
 2. the promotion committed on `main` (`apply_deterministic_solver_defaults()` plus the flag moved from
    `CANDIDATE_SOLVER_FLAGS` to `PROMOTED_SOLVER_FLAGS`), because an archive is built from tracked
@@ -209,9 +284,11 @@ Second, the example's `RUN_HARNESS.md` drives everything through **`uv run`**, n
   endpoint](#harness-resubmission-and-the-confirmed-llm-endpoint-2026-08-04-second-organizer-email)
   below: `http://127.0.0.1:30000/v1`, served model name `Qwen3.6-27B`, OpenAI-compatible.
 - Behavior when only one of two submitted versions runs successfully (see versioning above) — inferred as "that one counts," not confirmed.
-- Whether the confirmed evaluation command literally omits `--split` (second email) or literally
-  includes it (direct reply, same day) — see the wording discrepancy noted in the same section below.
-  Does not change our behavior either way, since `--split` has always been optional here.
+- ~~Whether the confirmed evaluation command literally omits `--split` (second email) or literally
+  includes it (direct reply, same day)~~ **Resolved 2026-08-06:** the fourth email states the command
+  as `--method <method> --split <split>` and asks that neither be hard-coded — see [DSL-free data,
+  latest harness/evaluator, and the `--method`
+  argument](#dsl-free-data-the-latest-harness-and-evaluator-and-the-method-argument-2026-08-06).
 - Final-results date remains "to be announced."
 
 ### Confirmed evaluation host (2026-07-30)
@@ -282,7 +359,11 @@ report deadline"). Six new or reconfirmed facts:
    2026-08-04 to 2026-08-10, both the harness and the technical report due 2026-08-10, 24:00 Beijing
    Time.
 
-**A wording discrepancy, flagged, not resolved.** This second email's own invocation line (item 1) is
+**A wording discrepancy, since resolved (2026-08-06).** The fourth email settles it: the command is
+`--method <method> --split <split>`, run from the package root. The paragraph below records what was
+uncertain at the time and why it never changed our behavior.
+
+This second email's own invocation line (item 1) is
 `python agent_env/scripts/solve_script_with_harness.py` with no `--split` argument shown, unlike the
 [explicit `--split <split>` command](#confirmed-execution-versioning-feedback-and-timeout-2026-08-04-organizer-reply)
 the organizers gave in direct reply to our clarification question earlier the same day. We have not

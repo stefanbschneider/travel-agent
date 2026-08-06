@@ -17,11 +17,12 @@ Two documents carry the current queue; the briefs here are supporting detail, no
 
 | Workstream | Do exactly this | Finish criterion |
 | --- | --- | --- |
-| **Evaluation** | [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists) — the P8+P9 whole-run gate — then [R15](../tpc_phase2_eval.md#r15--held-out-tripwire-for-p8p9) if R14 is GREEN | the row committed under `results/phase2_baselines/full_runs/`, its `solver_flags` quoted, and the pre-registered decision rule applied verbatim |
-| **Implementation** | [P10](../tpc_phase2_roadmap.md#p10--make-scheduler-self-scoring-use-the-solvers-exact-parsed-variants) — make scheduler self-scoring use the solver's exact parsed variants | the five listed unit tests green, `pytest tests` green, and a paired `familiar_100_val` screen committed under `results/phase2_baselines/screens/` |
+| **Implementation** | [P14](../tpc_phase2_roadmap.md#p14--promote-p8p9-to-harness-defaults-r14s-green-action) — promote `TPC_WINDOW_PUSH` + `TPC_WINDOW_INSERT` to defaults; **then** [P11](../tpc_phase2_roadmap.md#p11--a-whole-run-mode-for-the-pre-gate-screen), [P12](../tpc_phase2_roadmap.md#p12--close-p10s-false-positive-half-omitted-parser-semantics), [P13](../tpc_phase2_roadmap.md#p13--an-empty-parent-parse-must-mean-the-same-thing-on-both-sides) | for P14: `pytest tests` green and a 2-query harness run showing `window_push`/`window_insert`/`window_anchor` all `true` with nothing exported. For the rest: listed unit tests green plus a paired screen under `results/phase2_baselines/screens/` |
+| **Evaluation** | [R16](../tpc_phase2_eval.md#r16--measure-the-v2-candidate-the-last-run-before-a-rebuild) — measure the `v2` candidate (post-P10 `main`, P8/P9 promoted) | the row committed under `results/phase2_baselines/full_runs/`, its `solver_flags` / `variants_source` / `variants_count` quoted, and the pre-registered decision rule applied verbatim |
 
-Do not swap these: P8/P9 are code-complete and need a measurement, not more code; R9/R11 need code
-that does not exist yet and cannot be run.
+**P14 comes first and R16 depends on it** — R16 is only the `v2` candidate once the flags are
+defaults; run before that and it measures `v1`'s configuration. R14/R15 are closed (2026-08-06);
+R9/R11 need code that does not exist yet and cannot be run before the deadline.
 
 ## Active focused prompts
 
