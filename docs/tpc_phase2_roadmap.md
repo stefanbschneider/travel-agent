@@ -10,13 +10,21 @@ non-negotiable invariants; nothing here overrides them. Phase 1's record is in t
 ## The one-paragraph version
 
 **Our held-out score is `33.2473`. Our local score is `64.17`. That gap, not the local score, is the
-work.** The largest identified cause is measured: our constraint extraction has **zero** clause-level
-gaps on the familiar-100 split it was built against and **12–29 %** on every differently-phrased
-released set. We optimized, screened and gated against the one register we were already perfect on,
-and our held-out tripwire was a 20-record subset of that same templated artifact, so nothing in the
-process could have caught it. The first fix is landed and free on familiar-100 by construction; the
-next ones are ranked below. The earlier diagnosis — that the score was *representation*-bound rather
-than compute-bound — was correct and still holds, but it was a diagnosis of one distribution.
+work.** Two causes are now measured, and the second is new as of 2026-08-07. **(1) Recall.** Our
+constraint extraction has **zero** clause-level gaps on the familiar-100 split it was built against
+and **12–29 %** on every differently-phrased released set. We optimized, screened and gated against
+the one register we were already perfect on, and our held-out tripwire was a 20-record subset of that
+same templated artifact, so nothing in the process could have caught it. **(2) Precision, and it may
+matter more than the recall story.** On free prose our parser invents a required-POI-name constraint
+that **no POI in the city can satisfy** in `23–50 %` of queries — capturing a whole sentence
+(`"Nanjing for a day by myself with a budget of 1800 RMB"`) as an attraction name. Such a query is
+*provably* unacceptable at any budget, so it is pinned at `FPR = 0` and at zero on all three
+preference terms, and the scheduler keeps paying for it. That is
+[§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves) and
+[P22](#p22--drop-provably-unsatisfiable-required-name-constraints), and it reproduces the held-out
+signature (`EPR-micro 99.48`, `C-LPR 55.20`, `FPR 0.0000`) without needing the clause-independence
+argument reading 2 relies on. The earlier diagnosis — that the score was *representation*-bound
+rather than compute-bound — was correct and still holds, but it was a diagnosis of one distribution.
 
 ## Where we are
 
@@ -25,7 +33,23 @@ than compute-bound — was correct and still holds, but it was a diagnosis of on
 | **Organizer held-out, `v1`** | **`33.2473`** | the only external calibration, and since 2026-08-07 **broken out per metric** — see below |
 | familiar-100, [R19](tpc_phase2_eval.md#the-closed-queue-r1r19) `20260807T043142Z` | `64.17251838310492`, FPR `44.0` | best local row (byte-identical to R17 `20260806T115309Z`); a configuration on one phrasing register |
 | local released 150, R18 | `90.5603` | **nothing about generalization** — same template, a third the constraint density |
-| free prose (HF `medium`), matched-budget screen | `41.62 → 49.99` after the phrasing fix | the register the held-out set most resembles, though it is *easier* than held-out |
+| free prose (HF `medium`), matched-budget screen | `41.62 → 49.99` after the phrasing fix | the register the held-out set most resembles, though it is *easier* than held-out — and read its FPR against a **ceiling of `38.67`**, not `100` (see below) |
+
+**Two corrections to how the rows above must be read, both new on 2026-08-07.**
+
+1. **No row exists on the current `main`.** The best row (R19, `git_sha ae0bd319`) predates P15, P16,
+   P19, P20 and R25. Nothing can be promoted, and no `v2` decision can be taken, until
+   [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main) produces a current-tip whole-run
+   row. That is the first thing an evaluation machine should do.
+2. **Every free-prose FPR we have ever measured was scored against a cap we did not know about.**
+   The four HF splits' `hard_logic_py` literals are native Chinese while their query text is English,
+   so under `--lang en` a clause like `'博物馆' in attraction_type(x)` can never be true — the plan's
+   own facts come from `database_en/`. Measured with `scripts/phase2_oracle_literal_translation.py`:
+   `59–61 %` of HF queries contain at least one such clause and **none of them is negated**, so the
+   highest FPR *any* solver can score there is `38.67` (`medium`), `40.0` (`easy`), `40.91` (`human`),
+   `46.0` (`preference_base50`). C-LPR caps at `82.97–90.03`. `hf_medium`'s measured `FPR 16.67` is
+   therefore `43 %` of its ceiling, not `17 %` of it. [P23](#p23--make-the-free-prose-register-scoreable)
+   lifts the cap.
 
 **The held-out breakdown, published 2026-08-07** ([artifact](../results/phase2_baselines/heldout/20260807_v1_leaderboard.json),
 analysis `scripts/analyze_heldout_breakdown.py`):
@@ -49,6 +73,12 @@ change your plans:
    predicts `39.3` against familiar-100's measured `44.0`, so it is calibrated. **Do not spend time
    looking for a systematic single-query failure**; density, query count and clause correlation are
    unknown, so this is a consistency check rather than a prediction.
+   **Amended 2026-08-07:** there is now a *simpler* mechanism that reaches the same place without
+   assuming clause independence — in `23–50 %` of free-prose queries we emit a required-POI-name
+   constraint that no POI can satisfy, which pins those queries at `FPR = 0` outright
+   ([§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves)). The two explanations are
+   not rivals; the point that changes is that a *third* of the split may be failing for a reason
+   with a known, deterministic fix rather than for a diffuse statistical one.
 3. **`55 %` of the total weight yields exactly zero, and it unlocks at a threshold.** FPR is `0.40`
    alone and gates the `0.15` of preference terms. Because FPR is multiplicative in the per-clause
    rate, it is flat below `p ≈ 0.75` and steep above it: `p = 0.70 → overall 37`, `p = 0.80 → 43`,
@@ -169,20 +199,88 @@ missing families. **Both statements are true and both are scoped to familiar-100
 recall falls to `0.30`. This is the single clearest case in the project of a component's measured
 quality being mistaken for a property of the component.
 
+### 6. We make a third of free-prose queries infeasible ourselves
+
+**New 2026-08-07, and it is the largest single mechanically-certain finding in this document.**
+Instrument: `scripts/phase2_unsatisfiable_names_probe.py` (static, no solve, no LLM).
+
+The solver can only place POIs that exist in the target city's catalog. So a `required_attractions` /
+`required_restaurants` / `required_hotels` / `position_presence` value that resolves to **nothing** in
+that catalog is not a constraint we might fail — it is a constraint with **no feasible point**. Every
+query carrying one can never be accepted, at any budget, under any search; it scores `FPR = 0` and
+zero on all three preference terms by construction, and the scheduler leaves it in the repair queue
+paying for it.
+
+| set | n | queries with ≥1 unsatisfiable required name | with `TPC_P2_ENTITY_RESOLUTION=1` |
+| --- | --- | --- | --- |
+| familiar-100 (control) | 100 | `7` (`7 %`) | **`0`** |
+| `local_released_150` | 150 | `24` (`16 %`) | `21` (`14 %`) |
+| HF `easy` | 300 | **`127` (`42 %`)** | `127` — unchanged |
+| HF `medium` | 150 | **`53` (`35 %`)** | `53` — unchanged |
+| HF `human` | 154 | **`36` (`23 %`)** | `36` — unchanged |
+| HF `preference_base50` | 50 | **`25` (`50 %`)** | `25` — unchanged |
+
+The values are not near-misses. `parse_required_attractions` matches
+`(?:want|wish|hope)\s+to\s+visit\s+(.+?)` and filters the capture through a **stoplist of type
+words** only, so on free prose it returns whole sentences: `"Nanjing for a day by myself with a
+budget of 1800 RMB"`, `"book two twin rooms"`, `"relax"`, `"Guangzhou for a few days to see the
+rivers"`. `chinatravel/agent/phase2/normalize.py`'s `_resolve_one_required_name` ends in
+`{"kind": "keep", "value": cleaned}` — an unresolvable name is **kept verbatim as a hard
+constraint** — and entity resolution is off on the shipped path anyway, so nothing filters it.
+
+**Why this fits the held-out breakdown better than any other single cause.** `EPR-micro 99.48`: an
+invented *constraint* never becomes an invented *fact*, so grounding is untouched — exactly what the
+leaderboard shows. `C-LPR 55.20`: the query still emits a plan and still earns its other clauses.
+`FPR 0.0000`: a third of the split is structurally excluded from passing. No assumption about clause
+density or independence is needed.
+
+**And the fix has an unusually clean dominance argument.** Dropping an unsatisfiable required name is
+never worse than keeping it. If the oracle never had that family (the majority — `spurious` on
+`required_attractions` is `105` on `hf_easy` alone), dropping it is a pure gain: the query becomes
+acceptable and its FPR and preference terms unlock. If the oracle *did* have it and our value is
+garbage, we were failing that clause either way, so dropping costs nothing and frees the search to
+satisfy the rest. It cannot lower C-LPR. See [P22](#p22--drop-provably-unsatisfiable-required-name-constraints).
+
+**A smaller sibling, in the category-valued families** (measured 2026-08-07 with the same probe's
+`--types` arm, prompted by [R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets)'s open
+question). A `required_attraction_types` / `cuisine_preference` / `required_hotel_*_types` value that
+matches no row of the target city's vocabulary is unsatisfiable for the same reason: `0 %` of
+familiar-100, `3 %` of `local_released_150`, `2 / 5 / 1 / 0 %` of the four HF sets. An order of
+magnitude smaller than the name half, dominated by `required_hotel_all_types` (`"King-size bed"`,
+`"Sea view"` — hotel features outside the closed vocabulary), and notable for one case that is *not* a
+parsing error at all: `required_attraction_types: "Cultural Landscape"` is canonical but absent from
+**Suzhou's and Hangzhou's** catalogs, so the check has to be city-scoped. Folded into P22's scope.
+
+**Related but separate: constraints we invent that *are* satisfiable.** Over-extraction is not
+limited to unresolvable values. From the committed
+[post-P15 probe](../results/phase2_baselines/screens/20260807_generalization_post_p15/probe.json),
+free-prose `spurious` counts: `required_attractions` `105/25/25/20` across
+`easy/medium/human/preference_base50`, `intercity_mode` `49/52/5/11` against **zero** oracle
+instances on all four sets, `required_hotels` `14/35/6/0`. The `intercity_mode` cause is one line — a
+bare `(?:take|by|use)\s+(?:a\s+|the\s+)?(train|airplane|plane|flight)` fallback that pins **both**
+legs whenever free prose mentions a mode in passing. A wrongly pinned intercity mode fixes arrival
+and departure times, which is the same axis
+[R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits) found to be the
+recurring blocker on failing queries, so this is a plausible mechanism for *creating* timed-window
+infeasibility. That is [P24](#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+
 ## Work items
 
-Ranked. `P0`…`P20` are stable identifiers. Nothing below is on a critical path to an upload, because
+Ranked. `P0`…`P25` are stable identifiers. Nothing below is on a critical path to an upload, because
 [there is no scheduled upload](tpc_phase2_eval.md#submission-policy-owners-instruction-2026-08-06);
 they are ranked by expected effect on the held-out score.
 
-**The ranking changed on 2026-08-07**, when the leaderboard breakdown showed the score is gated by a
+**The ranking changed again on 2026-08-07 (second revision), when the unsatisfiable-name measurement
+landed.** The 2026-08-07 leaderboard breakdown had already established that the score is gated by a
 *threshold* in the per-clause pass rate rather than by a linear clause count (see
-[where we are](#where-we-are), reading 3). Two implications, and they cut in opposite directions from
-the previous ranking:
+[where we are](#where-we-are), reading 3). Three implications now, in order:
 
-- **Coverage items are worth more than they looked**, because they compound: they raise C-LPR at weight
-  `0.25` *and*, past `p ≈ 0.8`, unlock the `0.55` of weight that is currently dead. P15 and P16 are both
-  coverage items.
+- **Removing a self-inflicted blocker outranks adding coverage.** A query with an unsatisfiable
+  parsed constraint contributes exactly zero to `0.55` of the total weight and cannot be rescued by
+  any amount of extraction or search. `23–50 %` of free-prose queries are in that state
+  ([§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves)). P22 and P24 are these.
+- **Coverage items compound**, because they raise C-LPR at weight `0.25` *and*, past `p ≈ 0.8`, unlock
+  the `0.55` of weight that is currently dead. P15, P16 and P20 are coverage items.
 - **Anything that cannot plausibly move `p` by a lot is worth close to nothing right now.** That
   demotes P17(b): it buys preference points, and every preference term is `0` while FPR is `0`.
   **This bullet previously demoted P5 and P4 for the same reason, which was wrong** — both target
@@ -191,12 +289,22 @@ the previous ranking:
   by [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits), which tested the
   ordering argument directly rather than by inference.
 
+**And one process fact that gates everything.** No whole-run row exists on the current `main`: R19
+predates P15, P16, P19, P20 and P18. Until
+[R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main) lands, "promote" is not an available
+verb — a default can only flip against a like-for-like current-tip baseline.
+
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07; R22 GREEN; R26 GREEN 2026-08-07 (e2e no-regression + per-family gain confirmed)** |
-| **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
-| **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07; R22 GREEN** |
+| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **open — do this first** |
+| **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | screen only, no new code | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **open; needs [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end) only** |
+| **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | `117` invented `intercity_mode` clauses against **zero** oracle instances on free prose, from one over-broad fallback; plausibly *creates* the timed-window infeasibility R25 found binding | **open** |
+| **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
+| **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
+| **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
+| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | landed | P19 attributed `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07 (`f413eb2a`); R22 GREEN; [R26 GREEN](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) 2026-08-07 — authorizes one current-`main` whole-run row, i.e. [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main)** |
+| **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
 | P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | open, correctness-only |
 | P5 | [Spend the idle envelope on fresh seeds](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | R25's own gate ("a positive R25 arm before default-on implementation") was not met — `0/10` flips at 10x restarts; the recurring blocker (timed-window placement) does not respond to search volume | **not implemented; R25 removed the case for default-on** |
@@ -213,7 +321,269 @@ the previous ranking:
 | ~~P14~~ | ~~Promote P8/P9 to harness defaults~~ | — | **landed 2026-08-06** | landed |
 | ~~P0/P7~~ | ~~Reproducible restart seed; worker count from affinity~~ | — | **landed 2026-08-05** | landed |
 
+### P22 — drop provably unsatisfiable required-name constraints
+
+**Do this first.** Diagnosis and measurement:
+[§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves). This is the only open item whose
+value rests on a dominance argument rather than an estimate.
+
+**What to change.** `chinatravel/agent/phase2/normalize.py`, `_resolve_one_required_name`. Its
+terminal branch is `return {"kind": "keep", "value": cleaned}` — after exact match, list
+segmentation, fuzzy match, type-vocabulary match and cross-category rerouting have all failed, it
+keeps the raw string as a hard required-POI name. Add a terminal `{"kind": "drop"}` outcome, handled
+in `resolve_entities`'s per-field loop (which already pops the field when `new_names` ends up empty,
+so the plumbing exists), behind a new flag `TPC_P2_DROP_UNSATISFIABLE_NAMES`, **library default
+off**, with the usual byte-identical-floor unit test.
+
+**Two design points that decide whether this is safe.**
+
+- **It must run on the deterministic path, not only when `TPC_P2_ENTITY_RESOLUTION` is on.** Today
+  resolution is skipped entirely on the shipped path, which is why nothing filters these values.
+  Either compose the drop rule with [P21](#p21--promote-deterministic-entity-resolution)'s promotion
+  (preferred — one gate, one row) or gate the drop rule to run its own catalog lookup. Do not ship a
+  drop rule that no shipped configuration reaches.
+- **Drop the *value*, not the *query*.** A query whose only requirement was unresolvable becomes an
+  unconstrained query, which is correct: we could not represent what it asked for, and an
+  unconstrained plan still earns EPR and any clause it satisfies incidentally. It must **not** be
+  routed to the empty-plan fallback.
+
+**Consider and record, do not silently choose:** whether to downgrade rather than drop — e.g. an
+unresolvable `required_attractions` value that contains a type word could become a
+`required_attraction_types` entry. `_resolve_one_required_name` already does exactly this via
+`_match_type_vocab` for values that *are* type phrases, so the residual here is genuinely
+name-shaped garbage. Downgrading a whole sentence would re-introduce P15's spurious-constraint trap.
+Prefer dropping; if you downgrade, screen the two separately.
+
+**Cover the category-valued families too, with a city-scoped check** (added 2026-08-07, from
+[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets)'s open question). The same
+no-feasible-point class applies to `required_attraction_types` / `cuisine_preference` /
+`required_hotel_*_types` when the value matches no row of the target city's own vocabulary. Measured
+with `--types`, it is an order of magnitude smaller than the name half — `0 %` familiar-100, `3 %`
+`local_released_150`, `2 / 5 / 1 / 0 %` on the four HF sets — and dominated by
+`required_hotel_all_types` (`"King-size bed"`, `"Large bed"`, `"Sea view"`), a family that predates
+P20. **The interesting case is `required_attraction_types: "Cultural Landscape"`, which is
+ungroundable in Suzhou and Hangzhou specifically**: a perfectly canonical value that is absent from
+*those* cities' catalogs. So the check must be per-city, not against the global vocabulary — which is
+also the hazard `_attraction_type_vocab`'s own casing-disagreement note already warns about. Do this in
+the same commit as the name half only if the screen reports the two counts separately; they have
+different magnitudes and would otherwise be indistinguishable.
+
+**Bar.** `pytest tests` green with no pre-existing test edited; a unit test that
+`Flags.from_env({})` leaves the behaviour byte-identical; a unit test pinning that a resolvable name
+is never dropped. Then the screen:
+
+```bash
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
+  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types \
+  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
+```
+
+Require the per-set count to fall to `0` on every set in **both** arms (it is a definitional check —
+the probe uses the same matchers the acceptance gate does), familiar-100 parse gaps still `0/1109` via
+[R22](tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change),
+and no set's `spurious` rising. Promotion needs
+[R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries), a paired e2e A/B on
+both registers. **Expect the local free-prose e2e gain to be capped**: `59–61 %` of HF queries also
+carry a structurally unpassable CJK oracle clause ([P23](#p23--make-the-free-prose-register-scoreable)),
+so a query this fix un-pins may still be unable to pass for an unrelated reason. Read per-query flips
+and the target subset, not the split mean.
+
+### P21 — promote deterministic entity resolution
+
+**The cheapest promotable thing on the board: no new code, one screen and one e2e A/B.**
+
+`TPC_P2_ENTITY_RESOLUTION` has been landed and default-off since Phase 2 plan 3. **Every measurement
+of it ever taken ran it composed with `TPC_P2_LLM_PARSE_MODE=extract_fill` against a live DeepInfra
+backend** — all three arms of the
+[P16 screen](../results/phase2_baselines/screens/20260807_p16_entity_resolution_probe/) are
+`mode: extract_fill`. So its value on the **shipped deterministic path**, which makes zero LLM calls,
+had never been read. Isolated with `scripts/phase2_entity_resolution_arms_probe.py` (both arms
+deterministic, one flag differing):
+
+| set | n | parse F1 off → on | `matched` | `wrong_value` | `spurious` |
+| --- | --- | --- | --- | --- | --- |
+| familiar-100 (control) | 100 | `0.9552` → **`0.9949`** | `661 → 688` | `30 → 3` | `0 → 0` |
+| `local_released_150` | 150 | `0.8222` → **`0.8451`** | `325 → 335` | `36 → 26` | `40 → 39` |
+| HF `easy` | 300 | `0.6891` → `0.6886` | flat | flat | `177 → 179` |
+| HF `medium` | 150 | `0.7404` → `0.7384` | flat | flat | `114 → 119` |
+| HF `human` / `preference_base50` | 154 / 50 | exactly flat | flat | flat | flat |
+
+It also takes familiar-100's unsatisfiable-name count from `7` to **`0`**
+([§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves)), by repairing fragmented real
+names (`"Honey Lake 1979 Cultural"` + `"Creative Park"` → one POI).
+
+**Read the two arms honestly.** The gain is concentrated where values are English literals, which is
+where value equality is measurable at all; the HF sets are flat because their oracle literals are
+Chinese, not because the flag does nothing there ([P23](#p23--make-the-free-prose-register-scoreable)).
+The `−0.002` F1 wobble on `hf_easy`/`hf_medium` is `+2`/`+5` `position_presence` clauses from the
+category-misrouting reroute firing where the oracle has no such family — the one residual risk, and
+small. **This is a static parse-diff and cannot promote anything by itself**: the corrected values
+must convert into satisfied clauses end-to-end.
+
+**Bar.** [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end): a
+paired e2e A/B on familiar-100 *and* free prose. GREEN → add `entity_resolution` to
+`PROMOTED_SOLVER_FLAGS` and set it in `apply_deterministic_solver_defaults()`, leaving
+`Flags.from_env({})` untouched, then a `full_runs/` row against
+[R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main). Note that promoting this flag is
+also the natural carrier for [P22](#p22--drop-provably-unsatisfiable-required-name-constraints) — do
+them as one candidate configuration if both screen clean, so one row settles both.
+
+### P24 — stop inventing satisfiable but unrequested constraints
+
+**The other half of the precision story, and unlike P22 these constraints *are* satisfiable — which
+is why they are harder to spot and possibly more harmful.** A satisfiable invented constraint does not
+make the query infeasible; it makes the solver optimize the wrong problem, and it consumes the
+degrees of freedom a real clause needed.
+
+Measured on free prose from the committed
+[post-P15 probe](../results/phase2_baselines/screens/20260807_generalization_post_p15/probe.json)
+(`spurious`, i.e. we emit the family and the oracle has none for that query):
+
+| family | `easy` | `medium` | `human` | `preference_base50` | oracle instances on those sets |
+| --- | --- | --- | --- | --- | --- |
+| `intercity_mode` | `49` | `52` | `5` | `11` | **`0` / `0` / `0` / `0`** |
+| `required_attractions` | `105` | `25` | `25` | `20` | `30` / `41` / `23` / `5` |
+| `required_hotels` | `14` | `35` | `6` | `0` | `30` / `0` / `0` / `1` |
+
+Read the last column carefully, because it separates two different defects. `intercity_mode` is
+**pure invention**: `117` emitted clauses against `0` oracle instances anywhere on free prose. The
+other two families do exist in those oracles, so their `spurious` counts are over-extraction on the
+*wrong queries* rather than a family that should never fire — `required_hotels` emits `35` clauses on
+`hf_medium` where the oracle has none at all, and `required_attractions` emits `105` on `hf_easy`
+against `30` real instances, none of which it matches.
+
+**`intercity_mode` first — the cause is one pattern.** `parse_constraints.py`'s intercity block ends
+with a direction-free fallback,
+`(?:take|by|use)\s+(?:a\s+|the\s+)?(train|airplane|plane|flight)`, which assigns the matched mode to
+**both** `outbound` and `return`. On free prose any passing mention ("we'll take the high-speed train
+in", "flights are fine") pins both legs. Zero oracle instances across all four HF sets means every one
+of those `117` clauses is invented. The harm is not hypothetical: a pinned mode fixes arrival and
+departure times, and
+[R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits) found timed-window
+placement to be the recurring blocker on failing queries — so this plausibly *manufactures* the
+infeasibility P25 would then have to search around. Note `local_released_150` has `16 matched / 1
+spurious` for this family, so the fallback earns its keep on the templated register; the fix is to
+require a direction or destination cue, not to delete it.
+
+**`required_attractions` second**, same root cause as [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves):
+a `(?:want|wish|hope)\s+to\s+visit\s+(.+?)` capture filtered by a stoplist. P22 removes the
+*unsatisfiable* subset; the remainder are capture fragments that happen to fuzzy-match a real POI,
+which is worse because they look legitimate. A lexical anchor (the capture must look like a proper
+noun, or must fuzzy-match the catalog **above a high threshold**) is the same shape of fix P15 and
+P20 each needed and each documented.
+
+**Bar.** One family per commit. R22 GREEN (familiar-100 `0/1109`, no free-prose set's gaps rising),
+plus the target family's `spurious` falling on at least two free-prose sets with `matched` not falling
+on any set. A precision-only change cannot be gated on `matched` alone — state the `spurious` delta
+per set explicitly. Then [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries)
+or its own e2e arm; a precision fix whose e2e effect is unmeasured stays default-off.
+
+### P23 — make the free-prose register scoreable
+
+**A measurement fix, and it is the reason several of the items above cannot currently be gated.**
+Instrument: `scripts/phase2_oracle_literal_translation.py`.
+
+The four HF splits are our only free-prose register — the one the held-out set most resembles. Their
+`nature_language_en` is English; their `hard_logic_py` literals are **native Chinese**, and upstream
+never translated them. Scored under `--lang en` the plan's own facts come from
+`chinatravel/environment/database_en/`, so a clause like `'博物馆' in attraction_type(x)` is
+**structurally unsatisfiable whatever we do**. Measured:
+
+| HF split | n | oracle clauses | unsatisfiable under `en` | of those, mappable | queries blocked | **FPR ceiling** | C-LPR ceiling |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `easy` | 300 | 1579 | `180` | `135` | `180` | **`40.00`** | `88.60` |
+| `medium` | 150 | 1264 | `126` | `125` | `92` | **`38.67`** | `90.03` |
+| `human` | 154 | 687 | `117` | `105` | `91` | **`40.91`** | `82.97` |
+| `preference_base50` | 50 | 260 | `27` | `19` | `27` | **`46.00`** | `89.62` |
+
+**None of those clauses is negated**, so none is trivially true; the cap is real in one direction
+only. Every free-prose FPR in this repository was read against `100` and should have been read against
+`~39`.
+
+**The fix is derivable from the shipped data, not translated by a model.** `database/` and
+`database_en/` are **row-parallel** — identical row counts, same order, verified per file — so a
+zh→en value map falls straight out of them. After `normalize_concept_value` canonicalizes the English
+casing variants the map is **1:1** with zero ambiguity: 14 attraction types, 43 cuisines, 74 hotel
+features, 11,810 POI names, `11957` entries total. The builder raises rather than guessing if that
+ever stops holding.
+
+**What to build.** Extend `scripts/materialize_hf_split.py` with an opt-in
+`--translate-oracle-literals` pass that rewrites the materialized split's `hard_logic_py` literals
+through the verified map, emitting a report of what it changed and what it could not. `85 %` of the
+blocking clauses map as-is; the residual is POI-name *fragments* (branch suffixes like `前门店`,
+"Qianmen branch") and generic locations (`河边`, riverside), which need substring matching rather than
+token lookup — leave them, and have the pass report them, rather than approximating.
+
+**Three hard constraints on this item.**
+
+1. **Evaluation-only, and it must never ship.** Same rule as the existing materializer: delete the
+   split after scoring. Add it to the archive-verification denylist if one exists.
+2. **It does not touch `chinatravel/evaluation/` or `chinatravel/symbol_verification/`.** It rewrites
+   *query files in a materialized local split*, so [upstream evaluator parity](../CLAUDE.md#non-negotiable-invariants)
+   is untouched. Say so in the screen; a reviewer will ask.
+3. **A translated-oracle row is a new register.** It is never comparable with an untranslated HF row.
+   Label it distinctly (`hf_medium_en_oracle`) and record the map's entry count in the row.
+
+**Why it is worth half a day.** It is the difference between "P20's `required_attraction_types` half
+can only be judged by the held-out set" and "it can be judged this afternoon". It gives us the first
+free-prose **FPR** gate the project has ever had — the `0.40`-weight metric — and FPR is what the
+whole ranking above is trying to move.
+
+**One qualification, from [R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets).** P20's
+own screen reported *zero* locally-measurable English-literal `required_attraction_types` misses; R26
+found one (`10 → 11 matched` on `tpc_phase2_test`), a **disjunctive-branch** clause that
+`scripts/phase2_family_recall_gap_partition.py` does not enumerate the way
+`scripts/parser_vs_oracle.py --per-variant-family-stats` does. So the local measurable universe for
+that family is `1`, not `0` — which does not change this item's case (`1` against the `~380` clauses
+the translation unlocks) but does mean two of our own instruments disagree about what is measurable.
+**Fix the partition script's disjunction handling while you are here**, or at minimum note in the
+screen which of the two tools a "zero measurable misses" claim came from; an item scoped by a tool with
+a blind spot is how P20 came to ship a fallback it believed it could not measure at all.
+
+### P25 — cross-day timed-window relocation
+
+**The one solver move R25 pointed at, and the only member of its family still unbuilt.** Newly given
+an identifier on 2026-08-07; the residual itself was measured on 2026-08-06 and has been sitting in
+[§4](#4-one-constraint-family-accounted-for-almost-all-of-the-in-distribution-loss) without an item.
+
+`timed_visit_named_poi` is the family that produced this project's single largest gain — one new move
+(`TPC_WINDOW_ANCHOR`) moved FPR `32.5 → 42.5` on a screen and `+11.0` on a full run, at identical
+budget and restart count. Three moves have landed (anchor, push, insert). The residual on
+`familiar_100_val` (`n=80`) is `43` queries still failing a timed-visit clause, `33` with nothing else
+failing; by shape, forward-shift `21`, absent POI `15`, shorten `11`, backward-shift `10`.
+
+**What is missing is one shape: a window that has already passed on the day the POI is scheduled.**
+`8` sole-blocker queries need the activity moved to a **different day**, which no landed move can do —
+all three operate within a day. A coarse check found `22 of 25` absent/backward instances have some day
+whose free span contains the window, so the headroom is real. Instrument:
+`scripts/phase2_timed_window_shapes.py`.
+
+**Why it is ranked below the precision items despite that.** R25 established that this family does not
+respond to more search of the same move (`0/10` flips at 10x restarts and 10x CP time) — which is an
+argument *for* a new move, exactly as §4 was. But it is scoped to familiar-100, where extraction is
+clean; on the held-out register a third of queries may be failing for the reason in
+[§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves), and a solver move cannot help a
+query with no feasible point. Do the precision items first, then this.
+
+**The known trap, already paid for once.** Relocation means **move-then-delete**, not copy: a
+duplicate visit trips the repeated-attraction commonsense rule, and since the evaluator sync a
+commonsense failure zeroes C-LPR *and* the EPR-macro point for that query. So the move must be atomic
+across two days and re-grounded through `ground_and_check` before it may occupy a `best` slot.
+
+**Where.** `chinatravel/agent/tpc_agent/tpc_agent.py`, alongside `_anchor_timed_windows` /
+`_relayout_movable_block`. Behind `TPC_WINDOW_RELOCATE_DAY`, library default off, bounded (one
+relocation per attempt, a fixed candidate-day order — the search space here is small and does not need
+randomizing).
+
+**Bar.** A unit test per shape (window already passed; no day has a free span; relocation would
+duplicate a POI). Then the [quick A/B screen](tpc_phase2_eval.md#quick-ab-screen) on
+`familiar_100_val` at `n=40`, reading the timed-window shape counts from
+`scripts/phase2_timed_window_shapes.py` before and after, not only FPR — a move that fires on `1/40`
+plans is measurable by shape and invisible in the mean, which is what happened to P8/P9.
+
 ### P15 — finish phrasing-robust extraction
+
 
 **The budget/room-type half is [landed](#the-phrasing-fix-landed-2026-08-06). This entry covers the
 residual: 9 of its 15 `local_released_150` clauses landed 2026-08-07
@@ -528,7 +898,7 @@ a quarter of its envelope, and it silently disabled a mechanism the design inten
   **is** scheduled. Reproduce both halves with `pass_budget_sec(13000, 50, workers=3, fraction=0.5,
   cap_sec=300 | 900)`.
 
-**This means [§3](#3-the-solver-is-bimodal-and-more-search-does-not-help) overclaimed, and the record is
+**This means [§3](#3-the-current-fixed-search-saturates-deeper-search-is-not-yet-tested) overclaimed, and the record is
 corrected here.** Across **all 25 recorded rows** `budget_sec` is `300.0` and no pass ever exceeded
 `300 s`. So "more search does not help" is established for `25 s → 62 s`, for `120 s → 300 s`, and for
 the whole-envelope `1/3/5 h` ladder — but **no query has ever been solved above `300 s` on the whole-run
@@ -633,6 +1003,19 @@ resource we have in surplus.
 **Landed 2026-08-07** (`scripts/phase2_generalization_probe.py`, `tests/phase2/test_phrasing_generalization_gate.py`;
 [screen](../results/phase2_baselines/screens/20260807_generalization_post_p20/README.md)).
 
+**The recall half is landed. Two precision conditions are still open**, and they are a cheap follow-up
+commit rather than a new item. The gate compares each set's `n_parse_gap` against a recorded floor,
+which is a recall-only criterion: a change that *invents* constraints instead of missing them passes it
+silently. That is exactly how
+[§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves) survived every screen this
+project ran. Both instruments now exist:
+
+- **No set's `spurious` count may rise.** `phase2_generalization_probe.py` already emits it per set and
+  per family; the floor file needs one more recorded number per set, alongside `n_parse_gap`.
+- **No set's unsatisfiable-required-name count may rise**, from
+  `scripts/phase2_unsatisfiable_names_probe.py`. This is the condition that would have caught the
+  `23–50 %` finding, and it costs the same two minutes as the check that landed.
+
 **The process fix, and the cheapest item here.** Nothing in the previous gate could detect a phrasing
 dependency: every screen and gate ran on familiar-100 val, and the held-out tripwire was a 20-record
 subset of the same templated artifact.
@@ -702,6 +1085,13 @@ LLM parsing being promoted.
 
 - **Anything justified by a familiar-100 number alone.** That is the error that cost this cycle. Pair
   it with a free-prose measurement or it does not count.
+- **Reading a free-prose FPR against `100`.** Under `--lang en` the HF splits cap at `38.67–46.0`
+  because their oracle literals are Chinese ([P23](#p23--make-the-free-prose-register-scoreable)).
+  Every such number in this repository's history was read against the wrong denominator; do not add
+  another.
+- **Hunting for a further systematic cause of `FPR = 0.0000`.** There are now two sufficient
+  explanations — the clause-product model and self-inflicted infeasibility — and the second one has a
+  fix. Build the fix; do not commission a third diagnosis.
 - **`audit`-mode LLM parsing, free-form LLM-only JSON planning, or another one-shot refine prompt.**
   All measured at or below the deterministic floor. This does not exclude P6's bounded
   validator-in-loop edit proposer; that experiment has deterministic grounding and rejection
@@ -822,6 +1212,7 @@ Tests: `tests/phase2/test_parser_phrasing_generalization.py` (50 cases), `test_p
 
 | Flag | Status |
 | --- | --- |
+| `TPC_P2_ENTITY_RESOLUTION=1` | deterministic POI-name canonicalization against the target city's catalog. **Never measured on its own until 2026-08-07** — every prior arm composed it with LLM `extract_fill`. Isolated: parse F1 `0.9552 → 0.9949` familiar-100, `0.8222 → 0.8451` `local_released_150`, flat on the CJK-literal HF sets, zero LLM calls. The strongest promotion candidate on the board; needs [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end). See [P21](#p21--promote-deterministic-entity-resolution) |
 | `TPC_P2_LLM_PARSE_MODE=extract_fill` | fill-only LLM extraction merge: may populate an absent family, never overwrite a regex one. Strictly better than `extract` on every set, and the only merge policy that leaves familiar-100 intact. [P16](#p16--ground-llm-extracted-values-into-the-closed-vocabulary)'s grounding (landed 2026-08-07, `TPC_P2_ENTITY_RESOLUTION=1` composed with this) now moves `matched` too; e2e screen GREEN on familiar-100, flat on `hf_medium`. Still library-default off pending a pinned `full_runs/` gate |
 | `TPC_CASCADE_TIMED_WINDOWS` | forward-only cascading shift. Gated at `900 s`: its own target axis flat. Superseded by `TPC_WINDOW_ANCHOR` |
 | `TPC_REPAIR_DROP_TRAILING_STAY` | 1 of 3 target uids fully clears; the other 2 have a deeper defect no forward-only repair can reach. Screen was RED, probably because its `_pack_plan` gate also activates general endpoint re-grounding on every query |
@@ -882,6 +1273,12 @@ pins it. The optional autodetect only activates when an operator points an env v
 | Confirmed entry point | `agent_env/scripts/solve_script_with_harness.py` |
 | Whole-run measurement | `scripts/phase2_full_run.py` |
 | **Phrasing-robustness probe** (which families we fail to extract, per register) | `scripts/phase2_generalization_probe.py` |
+| **Unsatisfiable required-POI names** (§6's instrument) | `scripts/phase2_unsatisfiable_names_probe.py` |
+| **Deterministic entity-resolution arms** (P21's instrument, zero LLM) | `scripts/phase2_entity_resolution_arms_probe.py` |
+| **zh→en oracle-literal map + the free-prose FPR ceiling** (P23's instrument) | `scripts/phase2_oracle_literal_translation.py` |
+| Family-recall gap partition by oracle literal language | `scripts/phase2_family_recall_gap_partition.py` |
+| Bilingual concept vocabularies and their English casing aliases | `chinatravel/environment/concept_labels.py`, `chinatravel/environment/database{,_en}/` |
+| Required-name resolution and its `keep` terminal branch (P22's edit site) | `chinatravel/agent/phase2/normalize.py` (`_resolve_one_required_name`, `resolve_entities`) |
 | Report ablations (LLM-only, upstream baselines) | `scripts/phase2_report_ablations.py` |
 | Timed-window residual by shape | `scripts/phase2_timed_window_shapes.py` |
 | Failure attribution / commonsense headroom | `scripts/phase2_solver_failure_attribution.py`, `scripts/phase2_commonsense_headroom.py` |

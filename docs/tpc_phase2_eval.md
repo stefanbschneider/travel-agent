@@ -52,6 +52,20 @@ it is calibrated and slightly conservative. Held-out density, query count and wi
 are all unknown and all move this estimate, so read it as an order-of-magnitude consistency check
 rather than a prediction.
 
+**Amended 2026-08-07 — a second, simpler mechanism reaches `FPR = 0` without the independence
+assumption, and it has a fix.** In `23–50 %` of free-prose queries our own parser emits a
+required-POI-name constraint that resolves to nothing in the target city's catalog
+(`scripts/phase2_unsatisfiable_names_probe.py`; `42 %` on HF `easy`, `35 %` on `medium`, `23 %` on
+`human`, `50 %` on `preference_base50`, against `7 %` on familiar-100). The solver can only place
+catalog POIs, so such a query has **no feasible point**: it is pinned at `FPR = 0` and at zero on all
+three preference terms at any budget. That is consistent with the whole published breakdown — an
+invented *constraint* never becomes an invented *fact*, so `EPR-micro 99.48` is untouched, and the
+query still earns its other clauses, so `C-LPR 55.20` is untouched. The two explanations are not
+rivals, but they imply different work: the clause-product model says grind up the per-clause rate,
+while this one says a third of the split may be recoverable by deleting constraints we should never
+have emitted. See [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints)
+and [R30](#r30--does-dropping-unsatisfiable-names-flip-queries).
+
 **3. `55 %` of the total weight currently yields exactly zero.** FPR is `0.40` on its own and gates all
 three preference terms (`0.15`), since a failing query scores `0` on each. Everything in our `33.2473`
 comes from `0.45` of the weight.
@@ -115,14 +129,22 @@ classified as satisfied and promoted to polish. Observed on the free-prose run: 
 `FPR 86.67` against a real `6.67` and stopped with `1546 s` of `1800 s` **unspent**. Under parse gaps
 the envelope is not merely insufficient — it is spent on the wrong queries and then partly not spent.
 
-**How much is accounted for.** Phrasing brittleness is measured and is the largest identified cause,
-but the leaderboard shows it is **not sufficient**: held-out C-LPR (`55.2`) sits below our *pre-fix*
-free-prose number, so a second factor of comparable size is still unidentified. Most plausible
-candidates, in order: higher constraint density per query (which `FPR = 0.0000` independently implies
-is `≥ ~10`), constraint families we have no local example of, and a *partial* infrastructure failure.
-A total infrastructure failure is now excluded outright by EPR-micro `99.48`. The standing uncertainty
-is that the organizers describe the held-out set as same-distribution as familiar-100; the phrasing
-evidence says the two do not behave alike, whatever the intent.
+**How much is accounted for.** Phrasing brittleness is measured and is the largest identified *recall*
+cause, but the leaderboard shows it is **not sufficient**: held-out C-LPR (`55.2`) sits below our
+*pre-fix* free-prose number, so a second factor of comparable size is still unidentified.
+**Update 2026-08-07: a second factor of comparable size is now measured, and it is precision, not
+recall.** On free prose we emit a required-POI name that resolves to nothing in `23–50 %` of queries,
+and `117` `intercity_mode` clauses against **zero** oracle instances across all four HF sets. The
+first class is provably unsatisfiable and pins those queries at `FPR = 0`; the second constrains
+arrival and departure times, which is the axis
+[R25](#r25--separate-the-cp-restart-and-outer-budget-limits) found binding on failing queries. See
+[roadmap §6](tpc_phase2_roadmap.md#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves).
+Remaining unmeasured candidates, in order: higher constraint density per query (which `FPR = 0.0000`
+independently implies is `≥ ~10`), and a *partial* infrastructure failure. A total infrastructure
+failure is excluded outright by EPR-micro `99.48`; constraint families we have no local example of were
+ruled out by [R23](#r23--what-else-separates-the-held-out-set-open-static-1-h). The standing uncertainty
+is that the organizers describe the held-out set as same-distribution as familiar-100; the phrasing and
+precision evidence says the two do not behave alike, whatever the intent.
 
 ### Submission policy (owner's instruction, 2026-08-06)
 
@@ -142,33 +164,177 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-07:** P16, P18, P19, P20 and R25 are merged on `main`. P16 lands useful grounding
-machinery but is **not promoted**: its same-tree parse arm has `matched 311 < 320` deterministic and
-its `hf_medium` e2e arm is flat. P19 closes the residual diagnosis and points directly at
-`required_attraction_types` and `cuisine_preference`. R24 changed only the outer timeout; it did not
-raise the fixed 400-restart cap or the default 30-second CP-SAT cap. **R25 is closed**: both internal
-limits were tested directly and neither flips a query; do not schedule the combined
-`CP=300/restarts=4000` 30-uid arm on this evidence. **R26 is now closed too** (below, GREEN): P20's
-parser fix is confirmed precision-safe on every register measured (static probe + per-family stats),
-and, as a bonus beyond what P20's own screen found, it also moves one `required_attraction_types`
-clause locally (a disjunctive branch P20's partition script didn't enumerate). The e2e arm on P20's
-own 3-uid target set showed no FPR movement, but only because all 3 queries already passed regardless
-of the bug — read that as "no power on this sample," not "the fix is inert." R26 authorizes one
-current-main whole-run row; it does not estimate held-out score.
+**Current state, 2026-08-07 (second revision).** `main`'s tip carries P16, **P18**, P19, **P20**, R25
+and **R26**. P16 lands useful grounding machinery but is **not promoted** (same-tree parse arm
+`matched 311 < 320` deterministic, `hf_medium` e2e flat). P19 closed the residual diagnosis. R24
+changed only the outer timeout; **R25 is closed** — both internal limits were tested directly and
+neither flips a query, so do not schedule the combined `CP=300/restarts=4000` 30-uid arm. **R26 is
+closed GREEN** (below): P20's parser fix is precision-safe on every register measured, it also moves
+one `required_attraction_types` clause locally (a disjunctive branch P20's own partition script didn't
+enumerate), and its flat 3-uid e2e arm is a power problem — all 3 queries already passed regardless of
+the bug — not evidence the fix is inert. P18's tripwire is now an executable gate inside
+`pytest tests/phase2`, with two precision conditions still to add (see
+[R22](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)).
+
+**Three things changed the queue since the last revision, and the first is a blocker.**
+
+1. **No whole-run row exists on the current `main`.** The best row, R19 `20260807T043142Z`, is
+   `git_sha ae0bd319` — before P15, P16, P18, P19 and P20. So there is presently **no like-for-like
+   baseline to gate anything against**, and "promote" is not an available verb. R26's GREEN
+   [authorizes exactly one such row](#r26--gate-p20-on-the-registers-it-targets), which is
+   [R28](#r28--a-whole-run-row-on-the-current-main): it is therefore both authorized and blocking, and
+   it is the evaluation machine's first slot.
+2. **A landed, default-off, zero-LLM flag turns out to be the strongest promotion candidate we have,
+   and it had never been measured on its own.** Every prior arm for `TPC_P2_ENTITY_RESOLUTION`
+   composed it with LLM `extract_fill`. Isolated deterministically it moves familiar-100 parse F1
+   `0.9552 → 0.9949` and `local_released_150` `0.8222 → 0.8451`. [R29](#r29--does-deterministic-entity-resolution-convert-end-to-end)
+   asks whether that converts end-to-end.
+3. **Every free-prose FPR this document reports was read against the wrong denominator.** The HF
+   splits' oracle literals are Chinese while their query text is English, so under `--lang en`
+   `59–61 %` of their queries contain a clause no solver can satisfy. Their FPR ceilings are
+   `38.67–46.0`. It is also why the *e2e* half of R26's out-of-scope open question cannot be answered
+   on an HF split today — the static half is answered in
+   [R26's addendum](#r26--gate-p20-on-the-registers-it-targets). See
+   [the corrected dataset boundary](#3-hugging-face-chinatravel) and
+   [R31](#r31--the-first-real-free-prose-fpr-gate).
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
+| **R28** | what does the current `main` actually score on the whole-run contract? | nothing — authorized by R26, **run this first** | 1.4 h of a 5 h envelope |
+| **R29** | does deterministic entity resolution convert end-to-end? | [P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution) — no code needed | ~1 h, two registers |
+| **R30** | does dropping unsatisfiable required names flip queries? | [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) | ~1 h after merge |
+| R31 | with the oracle literals translated, what is our real free-prose FPR? | [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable) | ~1 h after merge |
+| R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
+| R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
+| R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** On implementation machines, the P6 spike may start independently.
-R25 and R26 are closed, so the evaluation machine's next slot is R27 (after P6 merges) or the
-current-main whole-run row R26 authorized; do not run two solver screens concurrently on one host
-because wall-clock limits then change the number of restarts. R20 needs no expensive run unless a new
-parse-level arm first beats the current deterministic floor. **R9 is closed**, per R25's own gating
-text: it needed a genuine per-uid flip on the restart axis, and R25 measured `0/10`.
+**Parallel execution plan.** The evaluation machine's order is **R28, then R29** — R28 is the row R26
+authorized and every later gate needs it as a baseline, and R29 needs no implementation work at all
+since the flag is already on `main`. Then R30/R31 as P22 and P23 merge, and R27 after P6. On
+implementation machines, P22, P23, P24 and the P6 spike may start independently. Do not run two solver
+screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
+R20 needs no expensive run unless a new parse-level arm first beats the current deterministic floor.
+**R9 is closed**, per R25's own gating text: it needed a genuine per-uid flip on the restart axis, and
+R25 measured `0/10`.
 
+### R28 — a whole-run row on the current `main`
+
+**The first slot, and everything else's prerequisite.** Five changes have merged
+since R19 measured `ae0bd319`, and the ledger's own comparability rule forbids gating a candidate
+against a baseline from a different source revision. Right now every open item's promotion path is
+blocked on an absent denominator.
+
+```bash
+make phase2-full-run P2_LABEL="current main baseline, post P15/P16/P18/P19/P20"
+```
+
+Same host as R19 (4-core Linux, 3 workers) so the row is comparable with it; nothing exported, so
+`apply_deterministic_solver_defaults()` alone configures the run — R12 established that the
+promotion path and the explicit-environment path are the same configuration, and this row re-checks it.
+
+**Read it two ways.** Against R19 it says whether the parser work since is a no-op, a gain or a
+regression **on familiar-100 only** — the register R19 already showed the phrasing fix cannot move, so
+byte-identity here is the *expected* result and is not evidence about free prose. Its real job is to
+become the baseline every later candidate is gated against. Record it and update the
+[promoted-default baselines table](#ledger-comparability).
+
+**If it is not byte-identical to R19, stop and attribute before running anything else.** P20's
+free-prose fallbacks are structurally unable to fire on familiar-100 (the template always populates
+both families), and P15's fixes touch families familiar-100 does not carry, so a delta means one of
+those structural claims is wrong and that matters more than any queued arm.
+
+### R29 — does deterministic entity resolution convert end-to-end?
+
+**No implementation work is needed; the flag has been on `main` and default-off since Phase 2 plan 3.**
+The static case is measured and strong ([P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution)):
+parse F1 `0.9552 → 0.9949` on familiar-100, `0.8222 → 0.8451` on `local_released_150`, `matched`
+`661 → 688` and `wrong_value` `30 → 3` on the control, `spurious` flat or down on both. Reproduce it in
+two minutes before spending the slot:
+
+```bash
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_entity_resolution_arms_probe.py \
+  --out-dir results/phase2_baselines/screens/<date>_entity_resolution_arms
+```
+
+Then the paired e2e A/B, **both registers**, `flag=off` vs `flag=on`, nothing else differing:
+
+```bash
+make phase2-quick-eval P2_FLAG=TPC_P2_ENTITY_RESOLUTION P2_N=40 P2_BUDGET=90 P2_PARALLEL=3
+# and the free-prose arm, on a materialized hf_medium subset (delete it after scoring)
+.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_ENTITY_RESOLUTION \
+  --split <materialized hf_medium subset> --n 30 --budget-sec 90 --parallel 3
+```
+
+The backend stays at the library default `none`, so **both arms make zero LLM calls** — this is a
+deterministic screen and must be confirmed as one from telemetry, since every historical measurement of
+this flag was entangled with a live LLM arm.
+
+**GREEN:** `overall` and FPR up or flat on familiar-100, and up on free prose, with no new timeouts and
+`EPR-macro` not falling. **RED:** any FPR fall on either register, or a rise in `spurious` clauses at
+the parse level. **NEUTRAL is a real outcome here** and would be informative: it would say the
+corrected POI values were already being satisfied incidentally, which would in turn raise the priority
+of [R30](#r30--does-dropping-unsatisfiable-names-flip-queries) over this.
+
+A GREEN screen authorizes adding `entity_resolution` to `PROMOTED_SOLVER_FLAGS` plus one whole-run row
+against [R28](#r28--a-whole-run-row-on-the-current-main). If
+[P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) has merged by
+then, gate the two together as one candidate configuration — they share a code path and one row can
+settle both.
+
+### R30 — does dropping unsatisfiable names flip queries?
+
+Needs [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints). The
+static part is definitional and costs two minutes:
+
+```bash
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
+  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
+```
+
+Require every set's count at `0`. The scoring question is separate: P22 removes a *blocker*, it does
+not satisfy anything, so a query it un-pins still has to pass all its real clauses.
+
+**Run it on the queries it targets**, not a random subset: the probe writes the affected `uids` per set,
+so build the target file from the free-prose sets' lists. Baseline and candidate on the same uids, same
+budget, same worker count, distinct method directories, no `--resume`.
+
+**GREEN:** at least one target uid flips to fully passing, familiar-100 `overall` does not fall, and no
+emitted fact fails to ground (an over-eager drop must not turn into an unconstrained plan that loses
+EPR). **RED:** zero flips *and* no C-LPR movement on the target subset. **Expect the ceiling to bind:**
+`59–61 %` of HF queries also carry a structurally unpassable CJK oracle clause, so the honest reading of
+a small flip count on this register is ambiguous, and [R31](#r31--the-first-real-free-prose-fpr-gate)
+is what removes that ambiguity. If P23 has merged, run R30 on the translated split instead and say so.
+
+### R31 — the first real free-prose FPR gate
+
+Needs [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable). Price the cap first —
+it costs seconds and needs no solve:
+
+```bash
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_oracle_literal_translation.py \
+  --out-dir results/phase2_baselines/screens/<date>_oracle_literal_translation
+```
+
+Then score the same free-prose subset twice: untranslated (today's contract) and translated. The
+untranslated arm is the control that proves the translation is what moved the number.
+
+**Acceptance is unusual for this document, because the object being validated is the measurement rather
+than the solver.** GREEN means: the translated arm's C-LPR and FPR are **higher**, the *set of clauses
+we satisfy* is unchanged except for previously-unsatisfiable ones becoming satisfiable, and no clause
+that passed before now fails. A clause flipping pass → fail means the translation changed a literal's
+meaning and the map is wrong — treat that as RED and stop, do not tune around it.
+
+**Then re-read the history.** Every free-prose row and screen in this document was scored under the cap.
+Do not retroactively rewrite their numbers, but record the ceiling next to them so nobody reads
+`hf_medium FPR 16.67` as `17 %` of the achievable range again — it is `43 %` of it.
+
+**The materialized translated split must never ship.** Delete it after scoring, exactly as with
+`scripts/materialize_hf_split.py`'s output.
+
+<a id="r20--does-grounded-fill-only-llm-extraction-convert"></a>
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
 P16 fixed two real grounding defects and remains useful infrastructure. It does not yet satisfy the
@@ -294,11 +460,11 @@ satisfies a tight window," which is what the residual failures on this subset ac
 <a id="r26--gate-p20-on-the-registers-it-targets"></a>
 ### R26 — gate P20 on the registers it targets *(closed 2026-08-07, GREEN)*
 
-P20 must commit an R22 screen and a `target_uids.txt` containing only released English-visible
-`required_attraction_types`/`cuisine_preference` misses used to develop it. Evaluation checks out the
-pre-P20 main SHA and candidate SHA in separate worktrees, runs the same uid file at the same
-`90 s`/query budget and worker count with distinct method directories, then scores both. Also run the
-unchanged familiar-100 first-30 control.
+P20 merged at `f413eb2a` with its R22 screen and a `target_uids.txt` containing only released
+English-visible `required_attraction_types`/`cuisine_preference` misses used to develop it. Evaluation
+checks out the pre-P20 main SHA and candidate SHA in separate worktrees, runs the same uid file at the
+same `90 s`/query budget and worker count with distinct method directories, then scores both. Also run
+the unchanged familiar-100 first-30 control.
 
 **GREEN:** familiar-100 parse gaps remain `0/1109`; no free-prose set gains gaps or spurious clauses;
 target-family `matched` rises; target-subset C-LPR rises; FPR and EPR-macro do not fall on either
@@ -341,6 +507,35 @@ explained by ceiling, not inertness). **This authorizes one current-main whole-r
 more** — it does not estimate held-out score, and an HF-set e2e arm (whether the
 `missing -> wrong_value` fallback value can ever locally *hurt* a plan by narrowing the solver to an
 ungrounded English type) is explicitly out of this row's scope and remains open for future work.
+
+**R26's open question, answered 2026-08-07 (static, no solve).** R26 left open whether the
+`missing → wrong_value` fallback can locally *hurt* a plan by narrowing the solver to an English type
+value with zero grounded candidates in the target city. Measured directly, with
+`parsed_verifier._match_text` — the matcher the acceptance gate itself uses — against each city's own
+`database_en/` vocabulary:
+
+| set | queries with ≥1 ungroundable type value | dominant field |
+| --- | --- | --- |
+| familiar-100 | `0 / 100` | — |
+| `local_released_150` | `5 / 150` (`3 %`) | `cuisine_preference` (3), `required_hotel_*_types` (3) |
+| HF `easy` | `7 / 300` (`2 %`) | `required_hotel_all_types` (8) |
+| HF `medium` | `8 / 150` (`5 %`) | `required_hotel_all_types` (7), `required_attraction_types` (2) |
+| HF `human` | `2 / 154` (`1 %`) | `required_hotel_all_types` (4) |
+| HF `preference_base50` | `0 / 50` | — |
+
+**The answer is "yes, but rarely, and mostly not in P20's families."** The risk is real — it is the
+same no-feasible-point class as
+[roadmap §6](tpc_phase2_roadmap.md#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves), an
+order of magnitude smaller (`1–5 %` of queries against `23–50 %` for names). P20's two target families
+contribute `5` instances in total across every set measured, so this does **not** qualify R26's GREEN.
+Two things are worth carrying forward instead: the dominant field is `required_hotel_all_types`
+(`"King-size bed"`, `"Large bed"`, `"Sea view"`, `"Movie-watching facilities"` — hotel features outside
+the closed vocabulary), which is a different family and predates P20; and
+`required_attraction_types: "Cultural Landscape"` is ungroundable specifically in **Suzhou and
+Hangzhou**, i.e. a canonical value that is absent from *those* cities' catalogs — the city-scoping
+hazard `_attraction_type_vocab` already warns about. Both fold into
+[P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints), whose drop
+rule should cover category-valued families with a **city-scoped** check, not only name-valued ones.
 
 ### R27 — validator-in-loop Qwen repair *(needs P6)*
 
@@ -527,6 +722,25 @@ alone — a second, unfitted confirmation that a fix scoped as family-recall (no
 past familiar-100. This is a recurring instrument, not a one-time run — re-run it on the next parser
 change, same acceptance criteria.
 
+**Two conditions are still missing, and they are the reason this gate would not have caught the
+largest defect we have found** (2026-08-07). The floor compares `n_parse_gap` per set, which is a
+recall-only criterion: a change that *invents* constraints rather than missing them passes it
+silently. Add both to the floor file and the test as a follow-up to P18 — the instruments exist and
+each costs the same two minutes as the check that landed:
+
+- **No set's `spurious` count may rise.** `phase2_generalization_probe.py` already emits it per set and
+  per family; it needs one more recorded number per set, next to `n_parse_gap`.
+- **No set's unsatisfiable-required-name count may rise:**
+
+```bash
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
+  --out-dir results/phase2_baselines/screens/<date>_unsatisfiable_names_<change>
+```
+
+  This is the condition that would have flagged the `23–50 %` of free-prose queries carrying a
+  provably unsatisfiable required-POI name
+  ([roadmap §6](tpc_phase2_roadmap.md#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves)).
+
 ### R21 — spend the unspent envelope *(needs P17)*
 
 Every run ends early, and under parse gaps it ends early *and* mis-ranks its queue (see the amplifier
@@ -560,6 +774,12 @@ configuration (e.g. after a P20/P6 move changes what "failing" means for these q
 
 - **Any local row read as a held-out estimate.** That is the error this cycle paid for. A local row
   measures a *configuration*, never a *distribution*.
+- **Any free-prose FPR read against `100`.** The HF splits cap at `38.67–46.0` under `--lang en`
+  ([dataset boundaries](#3-hugging-face-chinatravel)). Quote the ceiling with the number or do not
+  quote the number.
+- **Any candidate gated against R19.** R19 is `git_sha ae0bd319`, four parser changes behind `main`.
+  Gate against [R28](#r28--a-whole-run-row-on-the-current-main) once it exists; until then a candidate
+  row has no valid baseline.
 - **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible
   ([R7](#the-closed-queue-r1r19)); the same configuration on the same host returns the same number.
 - **Any whole-run row whose configuration you cannot read off its own telemetry.** Check
@@ -640,12 +860,15 @@ for what they do and do not predict.
 | R18 released-150 regeneration | `20260806T132917Z` | `tpc_phase2_test` (150): `overall 90.5603`, FPR `90.67`, `constraints_ok 125/150`. P12's residual cross-tab is `4/150`. **Do not read `90.56` as generalization** — same template, a third the constraint density |
 | **R19 phrasing-fix regression check, 5 h** | `20260807T043142Z` | `git_sha ae0bd319` (`main` tip at launch; also carries **P13** `27d31efe`/`de3c8fcb`, which merged *after* R17's measured `efbfea96` and was flagged in `e7faa9f1` as unmeasured on this tree — so this row confirms P13, not only the phrasing fix). All 7 official metrics **byte-identical** to R17: `overall 64.17251838310492`, FPR `44.0`, C-LPR `90.08115419296664`, `constraints_ok 50/100`, `empty_plans 0/100`, `1.36 h` of `5 h`. All 100 plans byte-identical to `results/phase2_e2e_r17_ship/` modulo per-attempt timing fields (`parent_parse_failed_uids: []`, confirming P13's changed branch never fires here either). **GREEN — expected, and read narrowly**: familiar-100 contains the phrasing the fix targets (bare budgets, plain room-type wording) in `0/100` queries, so this shows the fix and P13 are true no-ops on the one register the parser was already perfect on. It is not evidence the phrasing fix helps — that evidence is the free-prose screen's `41.62 → 49.99`, which this run does not touch |
 
-**Drift note, same shape as `e7faa9f1`.** P15 (`a4d028bb`/`8688439c`, closes `9/15` `local_released_150`
-phrasing gaps) merged to `main` while this run was in flight, so `main`'s tip is again one parser
-change past what R19 measured. P15 carries its own screen and floor test
-([roadmap](tpc_phase2_roadmap.md#p15--finish-phrasing-robust-extraction)); it is not remeasured here,
-and familiar-100 byte-identity is not itself evidence about it — P15 touches families the budget/
-room-type floor test does not cover.
+**Drift note, same shape as `e7faa9f1`, and now five changes deep.** P15 (`a4d028bb`/`8688439c`),
+P16 (`3c1d3e8e`…`d65785c8`, library-default off), P19 (`f9e8233f`, analysis only), P20 (`e6cc0e65`)
+and P18 (`dfdace2a`, gate and tooling only) all merged after this run's `ae0bd319`, so **no recorded
+row measures the current `main`**. Each
+carries its own screen and floor test; none is remeasured here, and familiar-100 byte-identity is not
+itself evidence about them — P15 and P20 touch families the budget/room-type floor test does not cover,
+and P20's free-prose fallbacks are structurally unable to fire on familiar-100 at all.
+[R28](#r28--a-whole-run-row-on-the-current-main) closes this drift, and until it does, this row is not
+a valid gate baseline for any new candidate.
 
 **On R10's `git_dirty: true`.** `eval_tpc.py`'s `update_suboptimal_split_file` rewrites
 `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` on every full-split scoring call, so
@@ -840,6 +1063,24 @@ trusting a number from it:** the `hard_logic_py` literals are native **Chinese**
 parser — correct for it by restricting to ASCII-literal clauses; and `15/150` `medium` English texts
 are a rendered plan title rather than a query, so ~10 % of that set's gap is unreachable by any parser.
 
+**The first artifact is now priced, and it is larger than "correct for it" suggested** (2026-08-07,
+`scripts/phase2_oracle_literal_translation.py`). It does not merely bias a parse-diff; it caps the
+official metrics on any scored run:
+
+| HF split | n | oracle clauses | unsatisfiable under `en` | negated (trivially true) | queries blocked | **FPR ceiling** | C-LPR ceiling |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `easy` | 300 | 1579 | `180` | `0` | `180` (`60 %`) | **`40.00`** | `88.60` |
+| `medium` | 150 | 1264 | `126` | `0` | `92` (`61 %`) | **`38.67`** | `90.03` |
+| `human` | 154 | 687 | `117` | `0` | `91` (`59 %`) | **`40.91`** | `82.97` |
+| `preference_base50` | 50 | 260 | `27` | `0` | `27` (`54 %`) | **`46.00`** | `89.62` |
+
+**So `hf_medium`'s measured `FPR 16.67` is `43 %` of what is achievable there, not `17 %`.** Every
+free-prose FPR in this document was reported against `100`. Not one of the blocking clauses is negated,
+so the cap only ever suppresses. [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable)
+lifts it: `database/` and `database_en/` are row-parallel, so a **1:1** zh→en literal map (`11957`
+entries; the builder raises rather than guessing) is derivable from the shipped data, and `85 %` of the
+blocking clauses map as-is. [R31](#r31--the-first-real-free-prose-fpr-gate) is the gate.
+
 It is still not a tuning target and still not the held-out distribution. Delete materialized splits
 after scoring so none ships in an archive.
 
@@ -865,7 +1106,9 @@ and recovery counts, fallback use, stage timings, LLM attempts/failures, and the
 axes. Low-`n` rows are smoke checks, not promotion evidence. Field semantics:
 [baseline ledger guide](phase2_baselines/README.md).
 
-**Two promoted-default baselines exist; pick the one matching your host, not the highest number:**
+**Two promoted-default baselines exist; pick the one matching your host, not the highest number.
+Both are stale as of `main` `0d6f1837` — see [R28](#r28--a-whole-run-row-on-the-current-main), which
+exists to replace the first row here:**
 
 | Host | Workers | Baseline row | `overall` / `FPR` / `constraints_ok` |
 | --- | --- | --- | --- |
@@ -1004,10 +1247,14 @@ make phase2-harness P2_SPLIT=tpc_phase2_familiar_100_val              # the orga
 make phase2-parser-report P2_LIMIT=20
 ```
 
-Plus the two instruments this cycle added:
+Plus the instruments this cycle added — all static, read-only, no solve, no LLM, no network beyond the
+local HF cache:
 
 ```bash
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py --out-dir <screen dir>
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --out-dir <screen dir>
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_entity_resolution_arms_probe.py --out-dir <screen dir>
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_oracle_literal_translation.py --out-dir <screen dir>
 .venv/bin/python scripts/phase2_report_ablations.py --arm llm-only --n 2 --llm-backend stub
 ```
 
