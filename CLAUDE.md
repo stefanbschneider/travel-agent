@@ -45,16 +45,22 @@ things follow, and every agent should read them before choosing work: the failur
 what to satisfy, not in grounding it; `FPR = 0` is the expected consequence of a `58 %` per-clause
 rate over ~11 clauses, **not a second bug to hunt**; and `55 %` of the total weight yields exactly zero
 and unlocks at a *threshold* (`p ≈ 0.8`), so rank work by whether it can cross that, not by how many
-clauses it fixes. The largest identified cause is measured: our constraint extraction has **zero**
+clauses it fixes. Two causes are now measured. **Recall:** our constraint extraction has **zero**
 clause-level gaps on familiar-100 — the numbered-template split it was built against — and
 **12–29 %** on every differently-phrased released set, so we optimized against the one register we were
-already perfect on. It is not the *only* cause: held-out C-LPR sits below our worst local free-prose
-number, which is [P19](docs/tpc_phase2_roadmap.md#p19--find-the-unidentified-half-of-the-gap). Read
+already perfect on. **Precision, found 2026-08-07 and possibly larger:** in **23–50 %** of free-prose
+queries we emit a required-POI-name constraint that resolves to *nothing* in the target city's catalog
+(a whole sentence captured as an attraction name), giving the query **no feasible point** — it is pinned
+at `FPR = 0` at any budget, while the scheduler keeps paying for it. That reproduces the entire held-out
+signature with no clause-independence assumption. Read
 [the eval doc's opening section](docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document)
-before trusting any local number, and treat a familiar-100 result as evidence about *one phrasing
-register* only. A first fix landed (bare total budgets, plain room-type wording; free-prose e2e
-`41.62 → 49.99`, familiar-100 byte-identical), and the ranked residual is
-[P15–P19](docs/tpc_phase2_roadmap.md#work-items).
+before trusting any local number; treat a familiar-100 result as evidence about *one phrasing register*
+only; and **never read a free-prose FPR against `100`** — under `--lang en` the HF splits cap at
+`38.67–46.0`, because their oracle literals are Chinese while their query text is English. The ranked
+work is [P22, P21, P24, P23, P25](docs/tpc_phase2_roadmap.md#work-items), and **no default can flip
+until a whole-run row exists on the current `main`** — the best row predates P15/P16/P19/P20, so there
+is currently no valid gate baseline
+([R28](docs/tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main)).
 
 **Do not package or upload `v2`. Never upload automatically.** The owner submits manually, shortly
 before the deadline and only with a substantial measured improvement; agents prepare and measure,
