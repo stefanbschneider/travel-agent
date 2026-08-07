@@ -1,0 +1,44 @@
+{
+  "label": "TPC_P2_ENTITY_RESOLUTION=0",
+  "env_overrides": {
+    "TPC_P2_ENTITY_RESOLUTION": "0"
+  },
+  "wall_sec": 846.8,
+  "fpr": 45.0,
+  "continuous_score": 64.834,
+  "parse_failures": 0,
+  "timeouts": 0,
+  "telemetry_coverage": "40/40",
+  "telemetry": {
+    "n_telemetry": 40,
+    "timeouts": 0,
+    "recovered": 0,
+    "used_fallback": 0,
+    "errored": 0,
+    "valid_output": 40,
+    "llm_parse_fired": 0,
+    "llm_parse_skipped": 0,
+    "llm_parse_errored": 0,
+    "refine_called": 0,
+    "refine_committed": 0,
+    "refine_second_attempts": 0,
+    "solve_sec_mean": 60.261482283717484,
+    "solve_sec_p50": 81.13658410776407,
+    "solve_sec_p90": 81.31760768406093
+  },
+  "layers": {
+    "commonsense_pass_count": 40,
+    "commonsense_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "logical_micro": 91.0958904109589,
+    "logical_macro": 45.0,
+    "conditional_logical_micro": 91.0958904109589,
+    "all_pass_count": 18
+  },
+  "quality_n": {
+    "requested": 40,
+    "evaluated": 40,
+    "missing": 0
+  },
+  "scheduler": {}
+}

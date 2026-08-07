@@ -1,0 +1,1393 @@
+{
+  "measurement_kind": "screen",
+  "flag": "TPC_P2_ENTITY_RESOLUTION",
+  "llm_backend": "none",
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "source": "local:tpc_phase2_familiar_100",
+      "n": 100,
+      "off": {
+        "entity_resolution": false,
+        "precision": 0.9552,
+        "recall": 0.9552,
+        "f1": 0.9552,
+        "totals": {
+          "matched": 661,
+          "missing": 0,
+          "wrong_value": 30,
+          "spurious": 0,
+          "defaulted": 87
+        },
+        "families": {
+          "activity_time_windows": {
+            "matched": 84,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "budgets": {
+            "matched": 70,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 12,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_attraction_types": {
+            "matched": 49,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_attractions": {
+            "matched": 52,
+            "missing": 0,
+            "wrong_value": 2,
+            "spurious": 0
+          },
+          "excluded_cuisine_types": {
+            "matched": 55,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_hotels": {
+            "matched": 39,
+            "missing": 0,
+            "wrong_value": 16,
+            "spurious": 0
+          },
+          "excluded_inner_transport": {
+            "matched": 60,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_restaurants": {
+            "matched": 48,
+            "missing": 0,
+            "wrong_value": 5,
+            "spurious": 0
+          },
+          "position_presence": {
+            "matched": 84,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_attraction_types": {
+            "matched": 20,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_attractions": {
+            "matched": 19,
+            "missing": 0,
+            "wrong_value": 4,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 16,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_hotels": {
+            "matched": 16,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_restaurants": {
+            "matched": 15,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 9,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 13,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "on": {
+        "entity_resolution": true,
+        "precision": 0.9949,
+        "recall": 0.9949,
+        "f1": 0.9949,
+        "totals": {
+          "matched": 688,
+          "missing": 0,
+          "wrong_value": 3,
+          "spurious": 0,
+          "defaulted": 87
+        },
+        "families": {
+          "activity_time_windows": {
+            "matched": 84,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "budgets": {
+            "matched": 70,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 12,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_attraction_types": {
+            "matched": 49,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_attractions": {
+            "matched": 54,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_cuisine_types": {
+            "matched": 55,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_hotels": {
+            "matched": 52,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "excluded_inner_transport": {
+            "matched": 60,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_restaurants": {
+            "matched": 53,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "position_presence": {
+            "matched": 84,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_attraction_types": {
+            "matched": 20,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_attractions": {
+            "matched": 23,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 16,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_hotels": {
+            "matched": 16,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_restaurants": {
+            "matched": 18,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 9,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 13,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "delta": {
+        "f1": 0.0397,
+        "matched": 27,
+        "missing": 0,
+        "wrong_value": -27,
+        "spurious": 0,
+        "defaulted": 0
+      },
+      "families_changed": {
+        "excluded_attractions": {
+          "off": {
+            "matched": 52,
+            "missing": 0,
+            "wrong_value": 2,
+            "spurious": 0
+          },
+          "on": {
+            "matched": 54,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        },
+        "excluded_hotels": {
+          "off": {
+            "matched": 39,
+            "missing": 0,
+            "wrong_value": 16,
+            "spurious": 0
+          },
+          "on": {
+            "matched": 52,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 0
+          }
+        },
+        "excluded_restaurants": {
+          "off": {
+            "matched": 48,
+            "missing": 0,
+            "wrong_value": 5,
+            "spurious": 0
+          },
+          "on": {
+            "matched": 53,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        },
+        "required_attractions": {
+          "off": {
+            "matched": 19,
+            "missing": 0,
+            "wrong_value": 4,
+            "spurious": 0
+          },
+          "on": {
+            "matched": 23,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        },
+        "required_restaurants": {
+          "off": {
+            "matched": 15,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "on": {
+            "matched": 18,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      }
+    },
+    {
+      "label": "local_released_150",
+      "source": "local:tpc_phase2_test",
+      "n": 150,
+      "off": {
+        "entity_resolution": false,
+        "precision": 0.82,
+        "recall": 0.8243,
+        "f1": 0.8222,
+        "totals": {
+          "matched": 325,
+          "missing": 32,
+          "wrong_value": 36,
+          "spurious": 40,
+          "defaulted": 128
+        },
+        "families": {
+          "required_restaurants": {
+            "matched": 5,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 10
+          },
+          "required_attractions": {
+            "matched": 5,
+            "missing": 2,
+            "wrong_value": 4,
+            "spurious": 6
+          },
+          "budgets": {
+            "matched": 76,
+            "missing": 7,
+            "wrong_value": 1,
+            "spurious": 4
+          },
+          "required_hotels": {
+            "matched": 7,
+            "missing": 1,
+            "wrong_value": 8,
+            "spurious": 4
+          },
+          "required_hotel_all_types": {
+            "matched": 5,
+            "missing": 2,
+            "wrong_value": 2,
+            "spurious": 3
+          },
+          "required_attraction_types": {
+            "matched": 11,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 3
+          },
+          "required_hotel_any_types": {
+            "matched": 1,
+            "missing": 4,
+            "wrong_value": 0,
+            "spurious": 2
+          },
+          "excluded_inner_transport": {
+            "matched": 18,
+            "missing": 3,
+            "wrong_value": 0,
+            "spurious": 2
+          },
+          "excluded_attractions": {
+            "matched": 1,
+            "missing": 1,
+            "wrong_value": 1,
+            "spurious": 2
+          },
+          "excluded_attraction_types": {
+            "matched": 3,
+            "missing": 2,
+            "wrong_value": 0,
+            "spurious": 1
+          },
+          "intercity_mode": {
+            "matched": 16,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 1
+          },
+          "cuisine_preference": {
+            "matched": 14,
+            "missing": 0,
+            "wrong_value": 4,
+            "spurious": 1
+          },
+          "position_presence": {
+            "matched": 16,
+            "missing": 4,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "activity_time_windows": {
+            "matched": 14,
+            "missing": 3,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "excluded_cuisine_types": {
+            "matched": 3,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 18,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_hotels": {
+            "matched": 1,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_restaurants": {
+            "matched": 9,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "free_attractions_only": {
+            "matched": 7,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "poi_distance_hotel": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 9,
+            "spurious": 0
+          },
+          "required_order": {
+            "matched": 1,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "stay_duration": {
+            "matched": 5,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 77,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "on": {
+        "entity_resolution": true,
+        "precision": 0.843,
+        "recall": 0.8471,
+        "f1": 0.8451,
+        "totals": {
+          "matched": 335,
+          "missing": 32,
+          "wrong_value": 26,
+          "spurious": 39,
+          "defaulted": 128
+        },
+        "families": {
+          "required_restaurants": {
+            "matched": 6,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 10
+          },
+          "required_attractions": {
+            "matched": 6,
+            "missing": 2,
+            "wrong_value": 3,
+            "spurious": 5
+          },
+          "budgets": {
+            "matched": 76,
+            "missing": 7,
+            "wrong_value": 1,
+            "spurious": 4
+          },
+          "required_hotels": {
+            "matched": 14,
+            "missing": 1,
+            "wrong_value": 1,
+            "spurious": 4
+          },
+          "required_attraction_types": {
+            "matched": 11,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 4
+          },
+          "required_hotel_all_types": {
+            "matched": 5,
+            "missing": 2,
+            "wrong_value": 2,
+            "spurious": 3
+          },
+          "required_hotel_any_types": {
+            "matched": 1,
+            "missing": 4,
+            "wrong_value": 0,
+            "spurious": 2
+          },
+          "excluded_inner_transport": {
+            "matched": 18,
+            "missing": 3,
+            "wrong_value": 0,
+            "spurious": 2
+          },
+          "excluded_attractions": {
+            "matched": 2,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 2
+          },
+          "excluded_attraction_types": {
+            "matched": 3,
+            "missing": 2,
+            "wrong_value": 0,
+            "spurious": 1
+          },
+          "intercity_mode": {
+            "matched": 16,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 1
+          },
+          "cuisine_preference": {
+            "matched": 14,
+            "missing": 0,
+            "wrong_value": 4,
+            "spurious": 1
+          },
+          "position_presence": {
+            "matched": 16,
+            "missing": 4,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "activity_time_windows": {
+            "matched": 14,
+            "missing": 3,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "excluded_cuisine_types": {
+            "matched": 3,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 18,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_hotels": {
+            "matched": 1,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "excluded_restaurants": {
+            "matched": 9,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "free_attractions_only": {
+            "matched": 7,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "poi_distance_hotel": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 9,
+            "spurious": 0
+          },
+          "required_order": {
+            "matched": 1,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "stay_duration": {
+            "matched": 5,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 77,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "delta": {
+        "f1": 0.0229,
+        "matched": 10,
+        "missing": 0,
+        "wrong_value": -10,
+        "spurious": -1,
+        "defaulted": 0
+      },
+      "families_changed": {
+        "excluded_attractions": {
+          "off": {
+            "matched": 1,
+            "missing": 1,
+            "wrong_value": 1,
+            "spurious": 2
+          },
+          "on": {
+            "matched": 2,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 2
+          }
+        },
+        "required_attraction_types": {
+          "off": {
+            "matched": 11,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 3
+          },
+          "on": {
+            "matched": 11,
+            "missing": 0,
+            "wrong_value": 3,
+            "spurious": 4
+          }
+        },
+        "required_attractions": {
+          "off": {
+            "matched": 5,
+            "missing": 2,
+            "wrong_value": 4,
+            "spurious": 6
+          },
+          "on": {
+            "matched": 6,
+            "missing": 2,
+            "wrong_value": 3,
+            "spurious": 5
+          }
+        },
+        "required_hotels": {
+          "off": {
+            "matched": 7,
+            "missing": 1,
+            "wrong_value": 8,
+            "spurious": 4
+          },
+          "on": {
+            "matched": 14,
+            "missing": 1,
+            "wrong_value": 1,
+            "spurious": 4
+          }
+        },
+        "required_restaurants": {
+          "off": {
+            "matched": 5,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 10
+          },
+          "on": {
+            "matched": 6,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 10
+          }
+        }
+      }
+    },
+    {
+      "label": "hf_easy",
+      "source": "hf:easy",
+      "n": 300,
+      "off": {
+        "entity_resolution": false,
+        "precision": 0.6644,
+        "recall": 0.7156,
+        "f1": 0.6891,
+        "totals": {
+          "matched": 391,
+          "missing": 97,
+          "wrong_value": 84,
+          "spurious": 177,
+          "defaulted": 0
+        },
+        "families": {
+          "required_attractions": {
+            "matched": 0,
+            "missing": 11,
+            "wrong_value": 19,
+            "spurious": 105
+          },
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 49
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 18,
+            "wrong_value": 12,
+            "spurious": 14
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 7,
+            "wrong_value": 23,
+            "spurious": 9
+          },
+          "required_restaurants": {
+            "matched": 0,
+            "missing": 25,
+            "wrong_value": 5,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 0,
+            "missing": 21,
+            "wrong_value": 9,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 14,
+            "wrong_value": 16,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 31,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "budgets": {
+            "matched": 60,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 300,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "on": {
+        "entity_resolution": true,
+        "precision": 0.6636,
+        "recall": 0.7156,
+        "f1": 0.6886,
+        "totals": {
+          "matched": 391,
+          "missing": 97,
+          "wrong_value": 84,
+          "spurious": 179,
+          "defaulted": 0
+        },
+        "families": {
+          "required_attractions": {
+            "matched": 0,
+            "missing": 11,
+            "wrong_value": 19,
+            "spurious": 105
+          },
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 49
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 18,
+            "wrong_value": 12,
+            "spurious": 14
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 7,
+            "wrong_value": 23,
+            "spurious": 9
+          },
+          "position_presence": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 2
+          },
+          "required_restaurants": {
+            "matched": 0,
+            "missing": 25,
+            "wrong_value": 5,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 0,
+            "missing": 21,
+            "wrong_value": 9,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 14,
+            "wrong_value": 16,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 31,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "budgets": {
+            "matched": 60,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 300,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "delta": {
+        "f1": -0.0005,
+        "matched": 0,
+        "missing": 0,
+        "wrong_value": 0,
+        "spurious": 2,
+        "defaulted": 0
+      },
+      "families_changed": {
+        "position_presence": {
+          "off": {},
+          "on": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 2
+          }
+        }
+      }
+    },
+    {
+      "label": "hf_medium",
+      "source": "hf:medium",
+      "n": 150,
+      "off": {
+        "entity_resolution": false,
+        "precision": 0.7209,
+        "recall": 0.7609,
+        "f1": 0.7404,
+        "totals": {
+          "matched": 391,
+          "missing": 68,
+          "wrong_value": 86,
+          "spurious": 114,
+          "defaulted": 0
+        },
+        "families": {
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 52
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 35
+          },
+          "required_attractions": {
+            "matched": 0,
+            "missing": 17,
+            "wrong_value": 24,
+            "spurious": 25
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 12,
+            "wrong_value": 19,
+            "spurious": 1
+          },
+          "required_hotel_all_types": {
+            "matched": 1,
+            "missing": 11,
+            "wrong_value": 9,
+            "spurious": 1
+          },
+          "budgets": {
+            "matched": 133,
+            "missing": 14,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 107,
+            "missing": 13,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 32,
+            "spurious": 0
+          },
+          "required_restaurants": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 150,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "on": {
+        "entity_resolution": true,
+        "precision": 0.7172,
+        "recall": 0.7609,
+        "f1": 0.7384,
+        "totals": {
+          "matched": 391,
+          "missing": 68,
+          "wrong_value": 86,
+          "spurious": 119,
+          "defaulted": 0
+        },
+        "families": {
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 52
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 35
+          },
+          "required_attractions": {
+            "matched": 0,
+            "missing": 17,
+            "wrong_value": 24,
+            "spurious": 25
+          },
+          "position_presence": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 5
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 12,
+            "wrong_value": 19,
+            "spurious": 1
+          },
+          "required_hotel_all_types": {
+            "matched": 1,
+            "missing": 11,
+            "wrong_value": 9,
+            "spurious": 1
+          },
+          "budgets": {
+            "matched": 133,
+            "missing": 14,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 107,
+            "missing": 13,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 32,
+            "spurious": 0
+          },
+          "required_restaurants": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 150,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "delta": {
+        "f1": -0.002,
+        "matched": 0,
+        "missing": 0,
+        "wrong_value": 0,
+        "spurious": 5,
+        "defaulted": 0
+      },
+      "families_changed": {
+        "position_presence": {
+          "off": {},
+          "on": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 5
+          }
+        }
+      }
+    },
+    {
+      "label": "hf_human",
+      "source": "hf:human",
+      "n": 154,
+      "off": {
+        "entity_resolution": false,
+        "precision": 0.7758,
+        "recall": 0.6725,
+        "f1": 0.7205,
+        "totals": {
+          "matched": 195,
+          "missing": 80,
+          "wrong_value": 45,
+          "spurious": 44,
+          "defaulted": 0
+        },
+        "families": {
+          "required_attractions": {
+            "matched": 0,
+            "missing": 15,
+            "wrong_value": 8,
+            "spurious": 25
+          },
+          "budgets": {
+            "matched": 45,
+            "missing": 2,
+            "wrong_value": 1,
+            "spurious": 6
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 6
+          },
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 5
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 36,
+            "wrong_value": 24,
+            "spurious": 2
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 24,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 0,
+            "missing": 3,
+            "wrong_value": 2,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 3,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 147,
+            "missing": 0,
+            "wrong_value": 7,
+            "spurious": 0
+          }
+        }
+      },
+      "on": {
+        "entity_resolution": true,
+        "precision": 0.7758,
+        "recall": 0.6725,
+        "f1": 0.7205,
+        "totals": {
+          "matched": 195,
+          "missing": 80,
+          "wrong_value": 45,
+          "spurious": 44,
+          "defaulted": 0
+        },
+        "families": {
+          "required_attractions": {
+            "matched": 0,
+            "missing": 15,
+            "wrong_value": 8,
+            "spurious": 25
+          },
+          "budgets": {
+            "matched": 45,
+            "missing": 2,
+            "wrong_value": 1,
+            "spurious": 6
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 6
+          },
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 5
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 36,
+            "wrong_value": 24,
+            "spurious": 2
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 24,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 0,
+            "missing": 3,
+            "wrong_value": 2,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 3,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 147,
+            "missing": 0,
+            "wrong_value": 7,
+            "spurious": 0
+          }
+        }
+      },
+      "delta": {
+        "f1": 0.0,
+        "matched": 0,
+        "missing": 0,
+        "wrong_value": 0,
+        "spurious": 0,
+        "defaulted": 0
+      },
+      "families_changed": {}
+    },
+    {
+      "label": "hf_preference_base50",
+      "source": "hf:preference_base50",
+      "n": 50,
+      "off": {
+        "entity_resolution": false,
+        "precision": 0.6283,
+        "recall": 0.7333,
+        "f1": 0.6768,
+        "totals": {
+          "matched": 62,
+          "missing": 14,
+          "wrong_value": 13,
+          "spurious": 32,
+          "defaulted": 0
+        },
+        "families": {
+          "required_attractions": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 4,
+            "spurious": 20
+          },
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 11
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 4,
+            "spurious": 1
+          },
+          "required_restaurants": {
+            "matched": 0,
+            "missing": 7,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 4,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "budgets": {
+            "matched": 11,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 1,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 50,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "on": {
+        "entity_resolution": true,
+        "precision": 0.6283,
+        "recall": 0.7333,
+        "f1": 0.6768,
+        "totals": {
+          "matched": 62,
+          "missing": 14,
+          "wrong_value": 13,
+          "spurious": 32,
+          "defaulted": 0
+        },
+        "families": {
+          "required_attractions": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 4,
+            "spurious": 20
+          },
+          "intercity_mode": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 11
+          },
+          "required_attraction_types": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 4,
+            "spurious": 1
+          },
+          "required_restaurants": {
+            "matched": 0,
+            "missing": 7,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "cuisine_preference": {
+            "matched": 0,
+            "missing": 4,
+            "wrong_value": 3,
+            "spurious": 0
+          },
+          "required_hotel_all_types": {
+            "matched": 0,
+            "missing": 1,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "budgets": {
+            "matched": 11,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "required_hotels": {
+            "matched": 0,
+            "missing": 0,
+            "wrong_value": 1,
+            "spurious": 0
+          },
+          "room_type": {
+            "matched": 1,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          },
+          "taxi_cars_equals": {
+            "matched": 50,
+            "missing": 0,
+            "wrong_value": 0,
+            "spurious": 0
+          }
+        }
+      },
+      "delta": {
+        "f1": 0.0,
+        "matched": 0,
+        "missing": 0,
+        "wrong_value": 0,
+        "spurious": 0,
+        "defaulted": 0
+      },
+      "families_changed": {}
+    }
+  ]
+}

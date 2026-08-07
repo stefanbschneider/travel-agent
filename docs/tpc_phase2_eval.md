@@ -164,32 +164,41 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-07 (third revision).** `main`'s tip carries P16, **P18**, P19, **P20**, R25,
-**R26** and **R28**. P16 lands useful grounding machinery but is **not promoted** (same-tree parse arm
-`matched 311 < 320` deterministic, `hf_medium` e2e flat). P19 closed the residual diagnosis. R24
-changed only the outer timeout; **R25 is closed** — both internal limits were tested directly and
-neither flips a query, so do not schedule the combined `CP=300/restarts=4000` 30-uid arm. **R26 is
-closed GREEN**: P20's parser fix is precision-safe on every register measured, it also moves
-one `required_attraction_types` clause locally (a disjunctive branch P20's own partition script didn't
-enumerate), and its flat 3-uid e2e arm is a power problem — all 3 queries already passed regardless of
-the bug — not evidence the fix is inert. P18's tripwire is now an executable gate inside
+**Current state, 2026-08-07 (fourth revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
+**P22**, R25, **R26**, **R28** and **R29**. P16 lands useful grounding machinery but is **not
+promoted** (same-tree parse arm `matched 311 < 320` deterministic, `hf_medium` e2e flat). P19 closed
+the residual diagnosis. R24 changed only the outer timeout; **R25 is closed** — both internal limits
+were tested directly and neither flips a query, so do not schedule the combined `CP=300/restarts=4000`
+30-uid arm. **R26 is closed GREEN**: P20's parser fix is precision-safe on every register measured, it
+also moves one `required_attraction_types` clause locally (a disjunctive branch P20's own partition
+script didn't enumerate), and its flat 3-uid e2e arm is a power problem — all 3 queries already passed
+regardless of the bug — not evidence the fix is inert. P18's tripwire is now an executable gate inside
 `pytest tests/phase2`, with two precision conditions still to add (see
 [R22](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)). **R28 is now
-closed too** (below): the current-`main` whole-run row is byte-identical to R19 on all seven metrics
-and on all 100 plan files — the drift is closed, and this row is now the baseline for every later
-gate.
+closed too**: the current-`main` whole-run row is byte-identical to R19 on all seven metrics and on
+all 100 plan files — the drift is closed, and this row is now the baseline for every later gate.
+**R29 is closed GREEN**, and its real finding is a doc-framing correction, not a new promotion: the
+"default-off" flag it measured was already forced on for every real harness run (including R28 and
+`v1`) since `b53a0747` (2026-07-13) — see item 2 below.
 
-**The queue's blocker is resolved; two things remain open.**
+**The queue's blocker is resolved; one thing remains open (R30/R31), plus one correction from R29.**
 
 1. **A whole-run row now exists on the current `main`.** [R28](#r28--a-whole-run-row-on-the-current-main)
    (`20260807T152009Z`, `git_sha aed4363e`) replaces R19 `ae0bd319` as the baseline every later
    candidate is gated against — same host, same config, byte-identical score. "Promote" is available
    again.
-2. **A landed, default-off, zero-LLM flag turns out to be the strongest promotion candidate we have,
-   and it had never been measured on its own.** Every prior arm for `TPC_P2_ENTITY_RESOLUTION`
-   composed it with LLM `extract_fill`. Isolated deterministically it moves familiar-100 parse F1
-   `0.9552 → 0.9949` and `local_released_150` `0.8222 → 0.8451`. [R29](#r29--does-deterministic-entity-resolution-convert-end-to-end)
-   asks whether that converts end-to-end.
+2. **R29 is closed GREEN, and it found something bigger than the question it set out to answer:**
+   `TPC_P2_ENTITY_RESOLUTION` is *not* off-by-default on the harness path — `solve_phase2.py`'s
+   `resolve_llm_client_and_flags()` has force-defaulted it on since `b53a0747` (2026-07-13), an
+   ancestor of both R28 (`aed4363e`) and the `v1` submission build (`be196d00`). **R28's baseline and
+   the held-out `v1` score already ran with this flag on** — confirmed directly against R28's own
+   on-disk telemetry, not just by reading code. The isolated e2e measurement itself is still real and
+   useful: familiar-100 FPR `45.00 → 50.00`, `overall_true` `64.83 → 67.53`, two more queries fully
+   pass, zero LLM calls confirmed from telemetry (n=40 screen); free prose (`hf_medium`, n=30) is
+   NEUTRAL — all 30 plans byte-identical between arms, matching the static probe's prediction that the
+   English-literal-value fix has nothing to convert on a Chinese-oracle-literal register. See
+   [R29](#r29--does-deterministic-entity-resolution-convert-end-to-end) for the full result and the
+   doc-framing correction it requires.
 3. **Every free-prose FPR this document reports was read against the wrong denominator.** The HF
    splits' oracle literals are Chinese while their query text is English, so under `--lang en`
    `59–61 %` of their queries contain a clause no solver can satisfy. Their FPR ceilings are
@@ -201,16 +210,15 @@ gate.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R29** | does deterministic entity resolution convert end-to-end? | [P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution) — no code needed, **run this first** | ~1 h, two registers |
-| **R30** | does dropping unsatisfiable required names flip queries? | [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) | ~1 h after merge |
+| **R30** | does dropping unsatisfiable required names flip queries? | [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) — landed, **run this first** | ~1 h after merge |
 | R31 | with the oracle literals translated, what is our real free-prose FPR? | [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable) | ~1 h after merge |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** **R28 is closed**, so the evaluation machine's next slot is **R29** — it
-needs no implementation work at all since the flag is already on `main`. Then R30/R31 as P22 and P23
-merge, and R27 after P6. On implementation machines, P22, P23, P24 and the P6 spike may start
+**Parallel execution plan.** **R28 and R29 are both closed**, so the evaluation machine's next slot is
+**R30** — P22 has already landed. Then R31 as P23 merges, and R27 after P6. On implementation
+machines, P23, P24 and the P6 spike may start
 independently. Do not run two solver screens concurrently on one host: wall-clock limits then change
 the number of restarts each arm gets. R20 needs no expensive run unless a new parse-level arm first
 beats the current deterministic floor. **R9 is closed**, per R25's own gating text: it needed a
@@ -256,43 +264,58 @@ baseline for R29, R30, R31 and any later candidate gate on this host/config; the
 [promoted-default baselines table](#ledger-comparability) and [closed queue](#the-closed-queue-r1r19)
 are updated below.
 
-### R29 — does deterministic entity resolution convert end-to-end?
+### R29 — does deterministic entity resolution convert end-to-end? *(closed 2026-08-07, GREEN)*
 
-**No implementation work is needed; the flag has been on `main` and default-off since Phase 2 plan 3.**
-The static case is measured and strong ([P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution)):
-parse F1 `0.9552 → 0.9949` on familiar-100, `0.8222 → 0.8451` on `local_released_150`, `matched`
-`661 → 688` and `wrong_value` `30 → 3` on the control, `spurious` flat or down on both. Reproduce it in
-two minutes before spending the slot:
+**Correction to this section's own former premise, found while running it.** This section used to say
+"the flag has been on `main` and default-off since Phase 2 plan 3," citing only
+`Flags()`/`Flags.from_env({})`. That is true of the bare library constructor, but the code path every
+real run actually takes — `agent_env/scripts/solve_phase2.py:resolve_llm_client_and_flags()`, called
+from `run_split`, which both the CLI and the organizer harness entry point dispatch to — has silently
+force-defaulted `entity_resolution = True` (unless the operator explicitly sets
+`TPC_P2_ENTITY_RESOLUTION`) since `b53a0747` (2026-07-13, the same auto-promotion pattern already used
+for `disjunction`/`dynamic_budget`). `b53a0747` is an ancestor of both R28's `aed4363e` and the `v1`
+submission's build ancestor `be196d00`. **Confirmed directly against R28's own on-disk telemetry**
+(`agent_env/runs/phase2_e2e_tpc_phase2_familiar_100/*/telemetry.json`, mtimes matching R28's run
+window): every query's `flags.entity_resolution` is `true`. **R28's baseline and the held-out `v1`
+score already ran with this flag on** — the "isolate an off-by-default flag" framing below describes
+what R29 measured, not what shipped.
 
-```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_entity_resolution_arms_probe.py \
-  --out-dir results/phase2_baselines/screens/<date>_entity_resolution_arms
-```
+Full result, method and every number:
+[`results/phase2_baselines/screens/20260807_r29_entity_resolution/README.md`](../results/phase2_baselines/screens/20260807_r29_entity_resolution/README.md).
 
-Then the paired e2e A/B, **both registers**, `flag=off` vs `flag=on`, nothing else differing:
+**Static probe** (`scripts/phase2_entity_resolution_arms_probe.py`) reproduced byte-identical to the
+numbers already recorded in
+[P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution): parse F1 `0.9552 → 0.9949`
+on familiar-100, `0.8222 → 0.8451` on `local_released_150`, `matched` `661 → 688` and `wrong_value`
+`30 → 3` on the control, `hf_medium`/`hf_easy` roughly flat with a small `spurious` uptick.
 
-```bash
-make phase2-quick-eval P2_FLAG=TPC_P2_ENTITY_RESOLUTION P2_N=40 P2_BUDGET=90 P2_PARALLEL=3
-# and the free-prose arm, on a materialized hf_medium subset (delete it after scoring)
-.venv/bin/python scripts/phase2_quick_eval.py --flag TPC_P2_ENTITY_RESOLUTION \
-  --split <materialized hf_medium subset> --n 30 --budget-sec 90 --parallel 3
-```
+**Familiar-100 e2e A/B** (`--mode end-to-end` — the default `solver-only` never invokes the parser, so
+this had to be added explicitly to actually exercise the flag; the literal `make phase2-quick-eval`
+command in the doc's prior revision omitted it), n=40, budget=90s: **GREEN**. FPR `45.00 → 50.00`
+(`+5.00`), `overall_true` `64.83 → 67.53` (`+2.70`), C-LPR `91.10 → 91.55` (`+0.46`), `all_pass`
+`18 → 20`, zero timeouts and zero LLM calls in both arms (`llm_parse_fired: 0`, confirmed from
+telemetry), monotonic gate PASS. Two queries flip from failing to fully-passing — the first row that
+turns P21's static parse-diff gain into an actual scored flip.
 
-The backend stays at the library default `none`, so **both arms make zero LLM calls** — this is a
-deterministic screen and must be confirmed as one from telemetry, since every historical measurement of
-this flag was entangled with a live LLM arm.
+**Free-prose e2e A/B** (`hf_medium`, materialized 30-uid subset, direct sharded `solve_phase2.py`
+since `phase2_quick_eval.py` has no `--split` flag for an arbitrary materialized split — deleted after
+scoring): **NEUTRAL**, exactly the sanctioned "informative, not a promotion" outcome this section's
+acceptance bar named. FPR `16.67` flat, `overall` `49.99` flat, C-LPR `86.25` flat, and **all 30/30
+plan files are byte-identical between arms**, not just the aggregate — matching the static probe's
+prediction that the English-literal-value repair has nothing to convert on a Chinese-oracle-literal
+register. (Remember `hf_medium`'s own FPR ceiling under `--lang en` is `38.67`, not `100` — see
+[the corrected dataset boundary](#3-hugging-face-chinatravel).)
 
-**GREEN:** `overall` and FPR up or flat on familiar-100, and up on free prose, with no new timeouts and
-`EPR-macro` not falling. **RED:** any FPR fall on either register, or a rise in `spurious` clauses at
-the parse level. **NEUTRAL is a real outcome here** and would be informative: it would say the
-corrected POI values were already being satisfied incidentally, which would in turn raise the priority
-of [R30](#r30--does-dropping-unsatisfiable-names-flip-queries) over this.
-
-A GREEN screen authorizes adding `entity_resolution` to `PROMOTED_SOLVER_FLAGS` plus one whole-run row
-against [R28](#r28--a-whole-run-row-on-the-current-main). If
-[P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) has merged by
-then, gate the two together as one candidate configuration — they share a code path and one row can
-settle both.
+No RED condition on either register (no FPR fall, no `spurious` rise on the measured e2e sample).
+**Verdict: GREEN**, and per this section's own former bar that authorizes formalizing
+`entity_resolution` as a recorded, committed-default configuration — but since it already fires on
+every harness run today, that action is documentation and bookkeeping (making an existing default
+explicit and durably recorded), not a behavioral change, and does **not** require a new whole-run row
+to re-confirm familiar-100 (R28 already is that row, with the flag on). The genuinely new, still-open
+question is the mirror image of what this section asked: would explicitly turning the flag *off*
+regress a `full_runs/` row — this screen says yes on a 40-query sample, but nobody has run that at
+n=100 yet, and it is not currently queued (the flag is not at risk of being turned off, so a
+confirmatory row is low priority relative to R30/R31).
 
 ### R30 — does dropping unsatisfiable names flip queries?
 
