@@ -1,0 +1,295 @@
+{
+  "measurement_kind": "screen",
+  "entity_resolution": false,
+  "drop_unsatisfiable_names": false,
+  "types": true,
+  "fields": [
+    "required_attraction_types",
+    "cuisine_preference",
+    "required_hotel_all_types",
+    "required_hotel_any_types"
+  ],
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "source": "local:tpc_phase2_familiar_100",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 100,
+      "queries_with_unsatisfiable_constraint": 0,
+      "share_of_queries": 0.0,
+      "unsatisfiable_values_by_field": {},
+      "examples": [],
+      "uids": []
+    },
+    {
+      "label": "local_released_150",
+      "source": "local:tpc_phase2_test",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 150,
+      "queries_with_unsatisfiable_constraint": 5,
+      "share_of_queries": 0.0333,
+      "unsatisfiable_values_by_field": {
+        "cuisine_preference": 3,
+        "required_hotel_any_types": 2,
+        "required_hotel_all_types": 1
+      },
+      "examples": [
+        {
+          "uid": "20250322130847337844",
+          "field": "required_hotel_any_types",
+          "value": "Of restaurants: Hot pot",
+          "target_city": "Suzhou"
+        },
+        {
+          "uid": "20250322150025121412",
+          "field": "cuisine_preference",
+          "value": "one of these restaurants: Shangzuo cuisine",
+          "target_city": "Chengdu"
+        },
+        {
+          "uid": "20250322165721791741",
+          "field": "cuisine_preference",
+          "value": "and I would like to stay at the following hotel: Qingpu Culture Museum Royal Inn",
+          "target_city": "Suzhou"
+        },
+        {
+          "uid": "20250322221022354837",
+          "field": "required_hotel_all_types",
+          "value": "Or",
+          "target_city": "Chengdu"
+        },
+        {
+          "uid": "20250323094730230054",
+          "field": "cuisine_preference",
+          "value": "one of the following types of",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "20250323094730230054",
+          "field": "required_hotel_any_types",
+          "value": "Of restaurants: Southeast Asian cuisine",
+          "target_city": "Hangzhou"
+        }
+      ],
+      "uids": [
+        "20250322130847337844",
+        "20250322150025121412",
+        "20250322165721791741",
+        "20250322221022354837",
+        "20250323094730230054"
+      ]
+    },
+    {
+      "label": "hf_easy",
+      "source": "hf:easy",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 300,
+      "queries_with_unsatisfiable_constraint": 7,
+      "share_of_queries": 0.0233,
+      "unsatisfiable_values_by_field": {
+        "required_hotel_all_types": 8
+      },
+      "examples": [
+        {
+          "uid": "m20241028164708678530",
+          "field": "required_hotel_all_types",
+          "value": "Movie-watching facilities",
+          "target_city": "Beijing"
+        },
+        {
+          "uid": "m20241028164714075557",
+          "field": "required_hotel_all_types",
+          "value": "Large bed",
+          "target_city": "Shanghai"
+        },
+        {
+          "uid": "m20241028164714075557",
+          "field": "required_hotel_all_types",
+          "value": "Trendy pool",
+          "target_city": "Shanghai"
+        },
+        {
+          "uid": "m20241028164715213722",
+          "field": "required_hotel_all_types",
+          "value": "Large bed that feels as cozy as a homestay",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "m20241028164724408368",
+          "field": "required_hotel_all_types",
+          "value": "King-size bed",
+          "target_city": "Chongqing"
+        },
+        {
+          "uid": "m20241028164806059008",
+          "field": "required_hotel_all_types",
+          "value": "King-size bed",
+          "target_city": "Guangzhou"
+        },
+        {
+          "uid": "m20241028164809233884",
+          "field": "required_hotel_all_types",
+          "value": "King-size bed that offers video gaming facilities",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "m20241028164812917723",
+          "field": "required_hotel_all_types",
+          "value": "King-size bed that allows me to watch movies",
+          "target_city": "Nanjing"
+        }
+      ],
+      "uids": [
+        "m20241028164708678530",
+        "m20241028164714075557",
+        "m20241028164715213722",
+        "m20241028164724408368",
+        "m20241028164806059008",
+        "m20241028164809233884",
+        "m20241028164812917723"
+      ]
+    },
+    {
+      "label": "hf_medium",
+      "source": "hf:medium",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 150,
+      "queries_with_unsatisfiable_constraint": 8,
+      "share_of_queries": 0.0533,
+      "unsatisfiable_values_by_field": {
+        "required_hotel_all_types": 7,
+        "required_attraction_types": 2
+      },
+      "examples": [
+        {
+          "uid": "e20241028160857444675",
+          "field": "required_hotel_all_types",
+          "value": "Single-bed room for no more than 500 RMB per night",
+          "target_city": "Shanghai"
+        },
+        {
+          "uid": "e20241028160939613971",
+          "field": "required_attraction_types",
+          "value": "Cultural Landscape",
+          "target_city": "Suzhou"
+        },
+        {
+          "uid": "e20241028161032890887",
+          "field": "required_attraction_types",
+          "value": "Cultural Landscape",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "e20241028161223030634",
+          "field": "required_hotel_all_types",
+          "value": "King-size bed",
+          "target_city": "Beijing"
+        },
+        {
+          "uid": "e20241028161241981481",
+          "field": "required_hotel_all_types",
+          "value": "Large bed",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "e20241028161241981481",
+          "field": "required_hotel_all_types",
+          "value": "Preferably a nice view from the window",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "e20241028161244805289",
+          "field": "required_hotel_all_types",
+          "value": "King-size bed",
+          "target_city": "Shenzhen"
+        },
+        {
+          "uid": "e20241028161347428726",
+          "field": "required_hotel_all_types",
+          "value": "Double room is sufficient",
+          "target_city": "Shenzhen"
+        },
+        {
+          "uid": "e20241028161353723055",
+          "field": "required_hotel_all_types",
+          "value": "Smart control system in a room with a large bed",
+          "target_city": "Guangzhou"
+        }
+      ],
+      "uids": [
+        "e20241028160857444675",
+        "e20241028160939613971",
+        "e20241028161032890887",
+        "e20241028161223030634",
+        "e20241028161241981481",
+        "e20241028161244805289",
+        "e20241028161347428726",
+        "e20241028161353723055"
+      ]
+    },
+    {
+      "label": "hf_human",
+      "source": "hf:human",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 154,
+      "queries_with_unsatisfiable_constraint": 2,
+      "share_of_queries": 0.013,
+      "unsatisfiable_values_by_field": {
+        "required_hotel_all_types": 4
+      },
+      "examples": [
+        {
+          "uid": "h20241029143701815147",
+          "field": "required_hotel_all_types",
+          "value": "Sea view",
+          "target_city": "Guangzhou"
+        },
+        {
+          "uid": "h20241029143701815147",
+          "field": "required_hotel_all_types",
+          "value": "But the price should not exceed 500 yuan per night",
+          "target_city": "Guangzhou"
+        },
+        {
+          "uid": "h20241029143920003060",
+          "field": "required_hotel_all_types",
+          "value": "Historical backgrounds",
+          "target_city": "Beijing"
+        },
+        {
+          "uid": "h20241029143920003060",
+          "field": "required_hotel_all_types",
+          "value": "Themes",
+          "target_city": "Beijing"
+        }
+      ],
+      "uids": [
+        "h20241029143701815147",
+        "h20241029143920003060"
+      ]
+    },
+    {
+      "label": "hf_preference_base50",
+      "source": "hf:preference_base50",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 50,
+      "queries_with_unsatisfiable_constraint": 0,
+      "share_of_queries": 0.0,
+      "unsatisfiable_values_by_field": {},
+      "examples": [],
+      "uids": []
+    }
+  ]
+}

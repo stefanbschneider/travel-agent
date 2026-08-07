@@ -1,0 +1,48 @@
+config file for testing split: /root/china-travel-agent/chinatravel/evaluation/default_splits/tpc_phase2_familiar_100_r30targets.txt
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 237.84it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 42.73it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 298.08it/s]
+conditional_micro_succ_count:  12
+conditional_macro_succ_count:  0
+[1/2] phase2_familiar_20250322111042021223_00006 valid=True fallback=False budget_sec=90 solve_sec=27.24 overall_true=43.0769 overall_parsed=92.8824
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 149.80it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 31.32it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 183.09it/s]
+conditional_micro_succ_count:  10
+conditional_macro_succ_count:  0
+[2/2] phase2_familiar_20250323022540312612_00032 valid=True fallback=False budget_sec=90 solve_sec=81.18 overall_true=42.7273 overall_parsed=43.0769
+[overall/solved_this_run] true(mean/min/max/std)=42.9021/42.7273/43.0769/0.1748 parsed(mean/min/max/std)=67.9797/43.0769/92.8824/24.9027
+{
+  "split": "tpc_phase2_familiar_100_r30targets",
+  "method": "phase2_e2e_r30_familiar100_on",
+  "budget_sec": 90.0,
+  "total_budget_sec": null,
+  "elapsed_sec": 109.76430091867223,
+  "llm_backend": "deepinfra",
+  "llm_backend_source": "config",
+  "llm_parse_attempts": 0,
+  "llm_fixture_missing": 0,
+  "llm_parse_failed": 0,
+  "selected": 2,
+  "skipped": 0,
+  "uids": [
+    "phase2_familiar_20250322111042021223_00006",
+    "phase2_familiar_20250323022540312612_00032"
+  ],
+  "overall_solved_this_run": {
+    "overall_true": {
+      "count": 2,
+      "mean": 42.90209790209791,
+      "min": 42.72727272727273,
+      "max": 43.07692307692308,
+      "std": 0.1748251748251768
+    },
+    "overall_parsed": {
+      "count": 2,
+      "mean": 67.97965922965923,
+      "min": 43.07692307692308,
+      "max": 92.88239538239537,
+      "std": 24.902736152736146
+    }
+  }
+}

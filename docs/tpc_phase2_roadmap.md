@@ -297,7 +297,7 @@ is available again — gate any candidate against R28.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07 (code + tests + static screen GREEN); promotion needs [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries) only** |
+| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07, library default off; [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) closed 2026-08-07 with a negative e2e result (0/103 flip to passing, 2 regress) — stays default-off; a salvage-before-drop follow-up is identified but not built** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
@@ -345,10 +345,29 @@ themselves use):
 [`results/phase2_baselines/screens/20260807_p22_unsatisfiable_names`](../results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md)
 — **GREEN**: both `familiar_100 (control)` and `local_released_150` reach `0` unsatisfiable-constraint
 queries in both arms (required-name and category-value), `Flags.from_env({})` stays byte-identical,
-and `pytest tests` is green with no pre-existing test edited. **Promotion still needs
-[R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries)** — a paired e2e A/B on
-both registers, Evaluation-workstream work on the eval machine; this static check only proves the
-*drop* removes what the probe measures, not that it flips any query to passing end-to-end.
+and `pytest tests` is green with no pre-existing test edited. This static check only proved the *drop*
+removes what the probe measures, not that it flips any query to passing end-to-end.
+
+**R30 (closed 2026-08-07) answered the e2e question, and it is a negative result: the flag stays
+default-off.** Paired A/B on the 103 queries the probe flags (fresh re-run on current `main`, which
+also carries [P24](#p24--stop-inventing-satisfiable-but-unrequested-constraints) and therefore a
+smaller target set than the static screen above recorded): **0/103 flip to fully passing, and
+`local_released_150` loses 2 (0 gained)**. One loss is a genuine gap in the drop rule itself — the
+garbage capture contained a real, salvageable POI name as its prefix, and dropping the whole value
+threw that away; the other is search perturbation (removing the constraint changed what the
+solver's fixed budget explored, unrelated to the dropped value's content). HF free prose stayed
+FPR-flat (predetermined by the CJK-oracle ceiling, not informative) but gained 2 satisfied clauses
+each on `hf_easy`/`hf_medium` with none lost. The flag's real, measured effect is solve time
+(`5.8–6.1×` faster convergence on three HF sets when the flag drops what the solver could never
+satisfy anyway) — real and large, but this per-query-budget screen can't show whether the real
+envelope scheduler (`sweeps.py`) turns that into more passes elsewhere; that needs a `full_runs/`
+row, not a screen. Full causal analysis:
+[screen README](../results/phase2_baselines/screens/20260807_r30_unsatisfiable_names_e2e/README.md).
+**Follow-up, not yet built:** before falling back to a full drop, try to salvage a real catalog POI
+name that is a prefix/cleanly-separable substring of an otherwise-unmatched capture, using the same
+matcher the solver's own constraint-application step already relies on more leniently than
+`_exact_catalog_match`/`_match_catalog_name`. That would keep the demonstrated solve-time win while
+closing the one clean-causal loss R30 found.
 
 **Two design points that decided the shape of the fix.**
 

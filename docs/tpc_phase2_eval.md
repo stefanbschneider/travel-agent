@@ -164,24 +164,27 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-07 (fourth revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
-**P22**, R25, **R26**, **R28** and **R29**. P16 lands useful grounding machinery but is **not
-promoted** (same-tree parse arm `matched 311 < 320` deterministic, `hf_medium` e2e flat). P19 closed
-the residual diagnosis. R24 changed only the outer timeout; **R25 is closed** — both internal limits
-were tested directly and neither flips a query, so do not schedule the combined `CP=300/restarts=4000`
-30-uid arm. **R26 is closed GREEN**: P20's parser fix is precision-safe on every register measured, it
-also moves one `required_attraction_types` clause locally (a disjunctive branch P20's own partition
-script didn't enumerate), and its flat 3-uid e2e arm is a power problem — all 3 queries already passed
-regardless of the bug — not evidence the fix is inert. P18's tripwire is now an executable gate inside
-`pytest tests/phase2`, with two precision conditions still to add (see
+**Current state, 2026-08-07 (fifth revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
+**P22**, **P24**, R25, **R26**, **R28**, **R29** and **R30**. P16 lands useful grounding machinery but
+is **not promoted** (same-tree parse arm `matched 311 < 320` deterministic, `hf_medium` e2e flat). P19
+closed the residual diagnosis. R24 changed only the outer timeout; **R25 is closed** — both internal
+limits were tested directly and neither flips a query, so do not schedule the combined
+`CP=300/restarts=4000` 30-uid arm. **R26 is closed GREEN**: P20's parser fix is precision-safe on every
+register measured, it also moves one `required_attraction_types` clause locally (a disjunctive branch
+P20's own partition script didn't enumerate), and its flat 3-uid e2e arm is a power problem — all 3
+queries already passed regardless of the bug — not evidence the fix is inert. P18's tripwire is now an
+executable gate inside `pytest tests/phase2`, with two precision conditions still to add (see
 [R22](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)). **R28 is now
 closed too**: the current-`main` whole-run row is byte-identical to R19 on all seven metrics and on
 all 100 plan files — the drift is closed, and this row is now the baseline for every later gate.
 **R29 is closed GREEN**, and its real finding is a doc-framing correction, not a new promotion: the
 "default-off" flag it measured was already forced on for every real harness run (including R28 and
-`v1`) since `b53a0747` (2026-07-13) — see item 2 below.
+`v1`) since `b53a0747` (2026-07-13) — see item 2 below. **R30 is closed with a negative result**: 0/103
+target queries flip to fully passing, and 2 regress on `local_released_150` (one a genuine
+salvage-before-drop gap, one search perturbation) — see item 4 below.
+`TPC_P2_DROP_UNSATISFIABLE_NAMES` stays library-default-off; nothing promotes.
 
-**The queue's blocker is resolved; one thing remains open (R30/R31), plus one correction from R29.**
+**The queue's blocker is resolved; R31 remains open, plus corrections from R29 and R30.**
 
 1. **A whole-run row now exists on the current `main`.** [R28](#r28--a-whole-run-row-on-the-current-main)
    (`20260807T152009Z`, `git_sha aed4363e`) replaces R19 `ae0bd319` as the baseline every later
@@ -207,22 +210,35 @@ all 100 plan files — the drift is closed, and this row is now the baseline for
    [R26's addendum](#r26--gate-p20-on-the-registers-it-targets). See
    [the corrected dataset boundary](#3-hugging-face-chinatravel) and
    [R31](#r31--the-first-real-free-prose-fpr-gate).
+4. **R30 is closed with a negative result, not a promotion.** 0/103 targeted queries flip to fully
+   passing; `local_released_150` loses 2 (0 gained) with two distinct, now-diagnosed causes — one a
+   genuine "the garbage capture contained a real POI name we should have salvaged before dropping"
+   gap, the other search perturbation from the freed repair-queue budget landing on a worse plan on an
+   unrelated dimension. HF free prose is FPR-flat everywhere (predetermined by the CJK-oracle ceiling
+   above, not informative) but gains real ground at the **clause** level on two of four sets
+   (`hf_easy 172→174/214`, `hf_medium 82→84/113`). The mechanism P22 targets — solve time — is real and
+   large (`5.8–6.1×` faster convergence on three HF sets), but this per-query screen contract cannot
+   measure whether the real envelope scheduler converts that into more passes elsewhere; that needs a
+   `full_runs/`-shaped measurement. `TPC_P2_DROP_UNSATISFIABLE_NAMES` stays library-default-off. See
+   [R30](#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) and
+   the [screen README](../results/phase2_baselines/screens/20260807_r30_unsatisfiable_names_e2e/README.md)
+   for the full causal analysis and a concrete follow-up (salvage-before-drop) for the implementation
+   workstream.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R30** | does dropping unsatisfiable required names flip queries? | [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) — landed, **run this first** | ~1 h after merge |
 | R31 | with the oracle literals translated, what is our real free-prose FPR? | [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable) | ~1 h after merge |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** **R28 and R29 are both closed**, so the evaluation machine's next slot is
-**R30** — P22 has already landed. Then R31 as P23 merges, and R27 after P6. On implementation
-machines, P23, P24 and the P6 spike may start
-independently. Do not run two solver screens concurrently on one host: wall-clock limits then change
-the number of restarts each arm gets. R20 needs no expensive run unless a new parse-level arm first
-beats the current deterministic floor. **R9 is closed**, per R25's own gating text: it needed a
-genuine per-uid flip on the restart axis, and R25 measured `0/10`.
+**Parallel execution plan.** **R28, R29 and R30 are all closed**, so the evaluation machine's next slot
+is **R31** as P23 merges, then R27 after P6. On implementation machines, P23 and the P6 spike may start
+independently, plus the salvage-before-drop follow-up R30 identified for P22. Do not run two solver
+screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
+R20 needs no expensive run unless a new parse-level arm first beats the current deterministic floor.
+**R9 is closed**, per R25's own gating text: it needed a genuine per-uid flip on the restart axis, and
+R25 measured `0/10`.
 
 ### R28 — a whole-run row on the current `main` *(closed 2026-08-07)*
 
@@ -317,37 +333,59 @@ regress a `full_runs/` row — this screen says yes on a 40-query sample, but no
 n=100 yet, and it is not currently queued (the flag is not at risk of being turned off, so a
 confirmatory row is low priority relative to R30/R31).
 
-### R30 — does dropping unsatisfiable names flip queries?
+### R30 — does dropping unsatisfiable names flip queries? *(closed 2026-08-07, negative result)*
 
 [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) **landed
-2026-08-07** (`TPC_P2_DROP_UNSATISFIABLE_NAMES`, library default off). **The static part is done and
-GREEN**:
+2026-08-07** (`TPC_P2_DROP_UNSATISFIABLE_NAMES`, library default off). **The static part was already
+done and GREEN**:
 [`results/phase2_baselines/screens/20260807_p22_unsatisfiable_names`](../results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md) —
-every set's count is `0` in both the required-name and category-value (`--types`) arms. Reproduce
-(definitional, costs two minutes; the probe uses the same matchers the drop rule and the acceptance
-gate themselves use):
+every set's count was `0` in both the required-name and category-value (`--types`) arms.
 
-```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --drop-unsatisfiable-names \
-  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types --drop-unsatisfiable-names \
-  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
-```
+**The e2e half is now measured too, and it is a negative result — nothing promotes.** Full write-up:
+[`results/phase2_baselines/screens/20260807_r30_unsatisfiable_names_e2e/README.md`](../results/phase2_baselines/screens/20260807_r30_unsatisfiable_names_e2e/README.md).
+Paired A/B (`TPC_P2_DROP_UNSATISFIABLE_NAMES=0` vs `=1`), `budget-sec 90`, on the **103** queries the
+probe flags across all six released/HF sets (re-run fresh on current `main` — P24, merged after the
+last static screen, independently shrinks some of the same over-captured values, so the target set
+moved from the stale `24/150` on `local_released_150` to `20/150`; the fresh numbers are what this row
+gates against).
 
-**What's left is the e2e half only** (below) — the scoring question is separate: P22 removes a
-*blocker*, it does not satisfy anything, so a query it un-pins still has to pass all its real
-clauses.
+Measured against the doc's own bar, clause by clause: **GREEN's condition (≥1 target uid flips to
+fully passing) is not met — 0/103.** The literal **RED condition (zero flips *and* no C-LPR movement)
+is also not met** — C-LPR moved on three of six sets (two up, one down). So this is neither GREEN nor
+literal RED; the honest reading is a **negative result**: no query gained, one register lost two, and
+the flag stays library-default-off (no default changes).
 
-**Run it on the queries it targets**, not a random subset: the probe writes the affected `uids` per set,
-so build the target file from the free-prose sets' lists. Baseline and candidate on the same uids, same
-budget, same worker count, distinct method directories, no `--resume`.
+**By register:** familiar-100 control (n=7) is byte-identical between arms — the flag provably changes
+nothing there. `local_released_150` (n=24) is the only register where a flip was measurable (its
+targets were mostly *near*-passing, `22/24` already passing pre-drop): **0 gained, 2 lost**
+(`FPR 91.67 → 83.33`), both reproduced deterministically on rerun. One loss
+(`20250324075652034944`) is a clean causal case — the garbage capture
+`"Xixi Paradise Commercial Street, wish to stay in single-bed rooms"` contains a real attraction name
+as its prefix; the solver's own (more lenient) constraint matcher apparently placed the real POI
+anyway when the value was kept verbatim, but P22 drops the whole value, so the ON plan never targets
+it and the oracle clause requiring it fails — realizing exactly the risk this section's acceptance bar
+named. The other (`20250322180344489669`) is a different mechanism: its dropped value had no causal
+path to the OFF pass at all (checked directly against the oracle's OR clause), so the flip is search
+perturbation from freed repair-queue attention landing on a worse-luck plan, not requirement loss. HF
+free prose (n=72 across 4 sets) stayed FPR-flat everywhere — **predetermined, not informative**, since
+every target query already carries the `59–61 %`-of-queries CJK-oracle ceiling this document already
+flags; the real, positive signal there is at the **clause** level: `hf_easy` and `hf_medium` each gain
+2 satisfied clauses with the flag on and lose none (`172→174/214`, `82→84/113`).
 
-**GREEN:** at least one target uid flips to fully passing, familiar-100 `overall` does not fall, and no
-emitted fact fails to ground (an over-eager drop must not turn into an unconstrained plan that loses
-EPR). **RED:** zero flips *and* no C-LPR movement on the target subset. **Expect the ceiling to bind:**
-`59–61 %` of HF queries also carry a structurally unpassable CJK oracle clause, so the honest reading of
-a small flip count on this register is ambiguous, and [R31](#r31--the-first-real-free-prose-fpr-gate)
-is what removes that ambiguity. If P23 has merged, run R30 on the translated split instead and say so.
+**The mechanism P22 actually targets — solve time — is confirmed directly, and it's large:** with the
+flag on, free-prose queries converge in `~9–18 s` instead of exhausting the `90 s` per-query cap
+(`5.8–6.1×` on three of four HF sets, `stage_sec.solve` telemetry). This fixed-budget screen contract
+is structurally blind to what that freed time is worth — a real harness run (`sweeps.py`'s
+triage/repair/polish envelope) reallocates it to other queries within the `5 h` budget; a per-query
+screen just discards it. **The cost side is measured here and is real; the benefit side is plausible
+from this evidence but needs an envelope-shaped (`full_runs/`) measurement, not a per-query one, to
+confirm.**
+
+**Follow-up, not yet built:** the clean-causal loss above is a specific, fixable gap — before falling
+back to a full drop, try to salvage a real catalog POI name that is a prefix/cleanly-separable
+substring of an otherwise-unmatched capture. That would keep P22's demonstrated solve-time win while
+closing the loss this row found. Not done here (eval-workstream row; does not edit
+`chinatravel/agent/`).
 
 ### R31 — the first real free-prose FPR gate
 

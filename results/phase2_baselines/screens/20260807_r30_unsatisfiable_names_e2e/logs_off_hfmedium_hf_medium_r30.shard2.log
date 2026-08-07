@@ -1,0 +1,62 @@
+config file for testing split: /root/china-travel-agent/chinatravel/evaluation/default_splits/hf_medium_r30.txt
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 196.11it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 38.89it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 276.18it/s]
+conditional_micro_succ_count:  7
+conditional_macro_succ_count:  0
+[1/4] e20241028161032890887 valid=True fallback=False budget_sec=90 solve_sec=8.64 overall_true=41.8750 overall_parsed=96.3542
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 120.97it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 30.72it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 518.84it/s]
+conditional_micro_succ_count:  7
+conditional_macro_succ_count:  0
+[2/4] e20241028161236945933 valid=True fallback=False budget_sec=90 solve_sec=11.99 overall_true=37.5000 overall_parsed=97.0833
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 236.47it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 35.39it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 254.25it/s]
+conditional_micro_succ_count:  7
+conditional_macro_succ_count:  0
+[3/4] e20241028161347428726 valid=True fallback=False budget_sec=90 solve_sec=78.24 overall_true=35.9091 overall_parsed=35.6250
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 188.33it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 41.55it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 273.30it/s]
+conditional_micro_succ_count:  6
+conditional_macro_succ_count:  0
+[4/4] e20241028161422443540 valid=True fallback=False budget_sec=90 solve_sec=71.46 overall_true=35.0000 overall_parsed=40.0000
+[overall/solved_this_run] true(mean/min/max/std)=37.5710/35.0000/41.8750/2.6411 parsed(mean/min/max/std)=67.2656/35.6250/97.0833/29.4948
+{
+  "split": "hf_medium_r30",
+  "method": "phase2_e2e_r30_hfmedium_off",
+  "budget_sec": 90.0,
+  "total_budget_sec": null,
+  "elapsed_sec": 171.6236034920439,
+  "llm_backend": "deepinfra",
+  "llm_backend_source": "config",
+  "llm_parse_attempts": 0,
+  "llm_fixture_missing": 0,
+  "llm_parse_failed": 0,
+  "selected": 4,
+  "skipped": 0,
+  "uids": [
+    "e20241028161032890887",
+    "e20241028161236945933",
+    "e20241028161347428726",
+    "e20241028161422443540"
+  ],
+  "overall_solved_this_run": {
+    "overall_true": {
+      "count": 4,
+      "mean": 37.57102272727273,
+      "min": 35.0,
+      "max": 41.875,
+      "std": 2.64109067547766
+    },
+    "overall_parsed": {
+      "count": 4,
+      "mean": 67.265625,
+      "min": 35.625,
+      "max": 97.08333333333334,
+      "std": 29.494840411402418
+    }
+  }
+}

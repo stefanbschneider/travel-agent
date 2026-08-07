@@ -1,0 +1,286 @@
+{
+  "people_number": 5,
+  "start_city": "Nanjing",
+  "target_city": "Beijing",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "type": "train",
+          "start_time": "07:16",
+          "end_time": "12:08",
+          "start": "Nanjing South Railway Station",
+          "end": "Beijing South Railway Station",
+          "price": 583.83,
+          "cost": 2919.15,
+          "tickets": 5,
+          "transports": [],
+          "TrainID": "G2578"
+        },
+        {
+          "type": "lunch",
+          "position": "Tidu (Beijing Fang Branch)",
+          "start_time": "12:13",
+          "end_time": "13:13",
+          "price": 337.0,
+          "cost": 1685.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing South Railway Station",
+              "end": "Tidu (Beijing Fang Branch)",
+              "mode": "taxi",
+              "start_time": "12:08",
+              "end_time": "12:13",
+              "distance": 3.87,
+              "price": 18.26,
+              "cost": 36.52,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "National Museum of China",
+          "start_time": "13:15",
+          "end_time": "14:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tidu (Beijing Fang Branch)",
+              "end": "National Museum of China",
+              "mode": "taxi",
+              "start_time": "13:13",
+              "end_time": "13:15",
+              "distance": 1.91,
+              "price": 11.37,
+              "cost": 22.74,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Old Summer Palace",
+          "start_time": "14:36",
+          "end_time": "15:36",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "National Museum of China",
+              "end": "Old Summer Palace",
+              "mode": "taxi",
+              "start_time": "14:15",
+              "end_time": "14:36",
+              "distance": 14.34,
+              "price": 59.25,
+              "cost": 118.5,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "China Science and Technology Museum",
+          "start_time": "15:48",
+          "end_time": "16:48",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Old Summer Palace",
+              "end": "China Science and Technology Museum",
+              "mode": "taxi",
+              "start_time": "15:36",
+              "end_time": "15:48",
+              "distance": 8.14,
+              "price": 33.19,
+              "cost": 66.38,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "dinner",
+          "position": "Jumbo Seafood (Beijing SKP Branch)",
+          "start_time": "17:07",
+          "end_time": "18:07",
+          "price": 401.0,
+          "cost": 2005.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "China Science and Technology Museum",
+              "end": "Jumbo Seafood (Beijing SKP Branch)",
+              "mode": "taxi",
+              "start_time": "16:48",
+              "end_time": "17:07",
+              "distance": 12.95,
+              "price": 52.96,
+              "cost": 105.92,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "accommodation",
+          "position": "Beijing Hongqiqu Jinglong Hotel",
+          "start_time": "18:22",
+          "end_time": "24:00",
+          "price": 478.0,
+          "cost": 2390.0,
+          "rooms": 5,
+          "room_type": 1,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Jumbo Seafood (Beijing SKP Branch)",
+              "end": "Beijing Hongqiqu Jinglong Hotel",
+              "mode": "taxi",
+              "start_time": "18:07",
+              "end_time": "18:22",
+              "distance": 10.22,
+              "price": 40.67,
+              "cost": 81.34,
+              "cars": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "type": "breakfast",
+          "position": "Beijing Hongqiqu Jinglong Hotel",
+          "start_time": "07:30",
+          "end_time": "08:30",
+          "price": 0,
+          "cost": 0,
+          "tickets": 0,
+          "transports": []
+        },
+        {
+          "type": "attraction",
+          "position": "Olympic Park",
+          "start_time": "08:54",
+          "end_time": "09:54",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Hongqiqu Jinglong Hotel",
+              "end": "Olympic Park",
+              "mode": "taxi",
+              "start_time": "08:30",
+              "end_time": "08:54",
+              "distance": 16.4,
+              "price": 68.51,
+              "cost": 137.02,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Tiananmen Square",
+          "start_time": "10:08",
+          "end_time": "11:08",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Olympic Park",
+              "end": "Tiananmen Square",
+              "mode": "taxi",
+              "start_time": "09:54",
+              "end_time": "10:08",
+              "distance": 9.91,
+              "price": 39.38,
+              "cost": 78.76,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "attraction",
+          "position": "Yonghe Temple",
+          "start_time": "11:15",
+          "end_time": "12:15",
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Tiananmen Square",
+              "end": "Yonghe Temple",
+              "mode": "taxi",
+              "start_time": "11:08",
+              "end_time": "11:15",
+              "distance": 5.09,
+              "price": 22.5,
+              "cost": 45.0,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "lunch",
+          "position": "Beijing Puxuan Hotel · Left Bank",
+          "start_time": "12:20",
+          "end_time": "13:20",
+          "price": 733.0,
+          "cost": 3665.0,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Yonghe Temple",
+              "end": "Beijing Puxuan Hotel · Left Bank",
+              "mode": "taxi",
+              "start_time": "12:15",
+              "end_time": "12:20",
+              "distance": 3.48,
+              "price": 16.87,
+              "cost": 33.74,
+              "cars": 2
+            }
+          ]
+        },
+        {
+          "type": "airplane",
+          "start_time": "19:54",
+          "end_time": "21:01",
+          "start": "Beijing Capital International Airport",
+          "end": "Nanjing Lukou International Airport",
+          "price": 479.32,
+          "cost": 2396.6,
+          "tickets": 5,
+          "transports": [
+            {
+              "start": "Beijing Puxuan Hotel · Left Bank",
+              "end": "Beijing Capital International Airport",
+              "mode": "taxi",
+              "start_time": "13:20",
+              "end_time": "13:55",
+              "distance": 23.96,
+              "price": 102.52,
+              "cost": 205.04,
+              "cars": 2
+            }
+          ],
+          "FlightID": "FL160"
+        }
+      ]
+    }
+  ],
+  "elapsed_time(sec)": 30.859222888946533
+}
